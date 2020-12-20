@@ -133,7 +133,6 @@ the graph. We assume that there is a path, with zero hops, from each
 vertex to itself:
 \(\forall v: \; v \rightarrow v \)
 
-<<<<<<< HEAD
 <p style="color:red;"><b>Example of paths</b></p>
 \(
 1 \stackrel{*}{\rightarrow} 1, \; 1 \stackrel{*}{\rightarrow} 7, \;
@@ -148,62 +147,6 @@ vertex to itself:
 		      vertices.
 		      All formulae containing these terms are
 implicitly universally qualified.
-=======
-<!--<h4>Hop Forward. H(X) or hop(X)</h4>
-\(H(X)\) is the set of vertices reachable from any vertex in \(X\)
-in a single hop. Read \(H(X)\) as "hop \(X\)."
-</p>
-<p>
-\(
-w \in H(X) \; \equiv \; \exists v \in X : (v \rightarrow w)
-\)
-  </p> -->
-
-<!--------------------------------------------------------------->
- <!-- <a href="GraphRunningExample.html#H">
-  <p style="color:#009BCF;"><b>
-  Examples of H(X)
-  </b></p></a> -->
-<!--------------------------------------------------------------->
-
-
-<!--------------------------------------------------------------->
- <!-- <a href="GraphPicturesOfBasicConcepts.html#H">
-  <p style="color:#009BCF;"><b>
-  Diagram illustrating H(X)
-  </b></p></a> -->
-<!--------------------------------------------------------------->
-<div class="section-top-border">
-  <div class="row">
-
-    <div class="col-md-8 mt-sm-20" id = "definition_left">
-        <h4 class="mb-30"><span class="definition">Definition:</span> <span class=definition_title> Hop Back. N(Y) or next(Y)</span> </h4>  
-      <p> \(v\) is in \(N(Y)\) exactly when every single hop from \(v\) ends at
-        a vertex in \(Y\). </p>
-        <p>
-          Read \(N(Y)\) as "next \(Y\)."
-          </p>
-          <p>
-            \(
-            v \in N(Y) \; \equiv \; \forall w: (v \rightarrow w) \Rightarrow ( w \in Y) 
-            \)
-            </p>
-          </h2><a href="GraphRunningExample.html#N">
-              <h5 class = "example_link">
-              Examples of N(Y)</h5></a> 
-    </div>
-    <div class="col-md-4">
-        <img src="N.jpg" alt="" class="img-fluid mx-auto d-block definition_right" >
-      </div>
-  </div>
-</div>
-<hr>
-
-<!--<h4 id=N>Hop Back. N(Y) or next(Y)</i></h4> -->
-
-<!--\(v\) is in \(N(Y)\) exactly when every single hop from \(v\) ends at
-a vertex in \(Y\).
->>>>>>> 00af60a96be970aaad33508ee2b049f14dee8f77
 </p>
 
 <p>
@@ -216,153 +159,21 @@ to sets of vertices as follows.
 \(
 \forall v \in P: (v \rightarrow w) \; \Rightarrow \; (w \in Q)
 \)
-<<<<<<< HEAD
 
-=======
-</p> -->
-
-<!--------------------------------------------------------------->
-  <!--<a href="GraphRunningExample.html#N">
-  <p style="color:#009BCF;"><b>
-  Examples of N(Y)
-  </b></p></a> -->
-<!--------------------------------------------------------------->
-
-<!--------------------------------------------------------------->
-  <!--<a href="GraphPicturesOfBasicConcepts.html#N">
-  <p style="color:#009BCF;"><b>
-  Diagram of N(Y)
-  </b></p></a> -->
-<!--------------------------------------------------------------->
-
-
-<div class="section-top-border">
-  <div class="row">
-
-    <div class="col-md-8 mt-sm-20" id = "definition_left">
-        <h4 class="mb-30"><span class="definition">Definition:</span> <span class=definition_title> Reachable Forward. R(X) or Reachable(X)</span> </h4>  
-      <p> Let \(R(X)\) be the set of vertices reachable from any vertex in
-        \(X\). \(w\) is reachable from \(v\) exactly when there exists a path
-        from \(v\) to \(w\). Recall that there exists an empty path from a
-        vertex to itself and so \(X\) is a subset of \(R(X)\).
-        Read \(R(X)\) as "reachable \(X\)."
-        </p>
-        <p>
-        \(
-        w \in R(X)  \; \equiv \;  \exists v \in X: (v \stackrel{*}{\rightarrow} w)
-        \)
-        </p>
-          </h2><a href="GraphRunningExample.html#R">
-              <h5 class = "example_link">
-              Examples of R(X)</h5></a> 
-    </div>
-    <div class="col-md-4">
-        <img src="R.jpg" alt="" class="img-fluid mx-auto d-block definition_right" >
-      </div>
-  </div>
-</div>
-<hr>
-
-
- <!--<h4 id=R>Reachable Forward. R(X) or Reachable(X)</h4>
->>>>>>> 00af60a96be970aaad33508ee2b049f14dee8f77
 
 <p style="color:red;"><b>Example of \(P \rightarrow Q\)</b></p>
 \(
 \{2, 3\} \rightarrow \{4, 5, 6\}
 \)
-<<<<<<< HEAD
   Explanation: Every outgoing edge from vertices \(2\) and \(3\)
   terminate at vertices in \(\{4, 5, 6\}\).
   
 <h3>Next and Always</h3>
-=======
-</p> -->
-
-<!--------------------------------------------------------------->
- <!-- <a href="GraphRunningExample.html#R">
-  <p style="color:#009BCF;"><b>
-  Examples of R(X)
-  </b></p></a> -->
-<!--------------------------------------------------------------->
-
-<!--------------------------------------------------------------->
- <!-- <a href="GraphPicturesOfBasicConcepts.html#R">
-  <p style="color:#009BCF;"><b>
-  Diagram illustrating R(X)
-  </b></p></a> -->
-<!--------------------------------------------------------------->
-
-<div class="section-top-border">
-  <div class="row">
-
-    <div class="col-md-8 mt-sm-20" id = "definition_left">
-        <h4 class="mb-30"><span class="definition">Definition:</span> <span class=definition_title> Reachable Back. A(Y) or always(Y)</span> </h4>  
-      <p> 
-        \(v\) is in \(A(Y)\) exactly when every path from \(v\) ends at
-        a vertex in \(Y\).  Read \(A(Y)\) as "always \(Y\)."
-        </p>
-         <p>
-         
-        \(
-        v \in A(Y) \; \equiv \; \forall w:  (v \stackrel{*}{\rightarrow} w) \Rightarrow ( w \in Y) 
-        \)
-        </p>
-          </h2><a href="GraphRunningExample.html#A">
-              <h5 class = "example_link">
-              Examples of A(Y)</h5></a> 
-    </div>
-    <div class="col-md-4">
-        <img src="A.jpg" alt="" class="img-fluid mx-auto d-block definition_right" >
-      </div>
-  </div>
-</div>
-<hr>
-
-
-<!--<h4 id=A>Reachable Back. A(Y) or always(Y)</h4>
->>>>>>> 00af60a96be970aaad33508ee2b049f14dee8f77
 
 \(N\), read as "<b>next</b>", and \(A\), read as "<b>always</b>" are
 functions from vertex sets to vertex sets.
 </p>
-<<<<<<< HEAD
 
-=======
- <p>
- 
-\(
-v \in A(Y) \; \equiv \; \forall w:  (v \stackrel{*}{\rightarrow} w) \Rightarrow ( w \in Y) 
-\)
-</p> -->
-
-<!--------------------------------------------------------------->
-<!--  <a href="GraphRunningExample.html#A">
-  <p style="color:#009BCF;"><b>
-  Examples of A(Y)
-  </b></p></a> -->
-<!--------------------------------------------------------------->
-   
-<!--------------------------------------------------------------->
- <!-- <a href="GraphPicturesOfBasicConcepts.html#A">
-  <p style="color:#009BCF;"><b>
-  Diagram illustrating A(Y)
-  </b></p></a> -->
-<!--------------------------------------------------------------->
-
-<h4 id=FB>Forward & Back: Relationship</h4>
-\(
-(H(X) \subseteq Y) \; \equiv \; (X \subseteq N(Y))
-\)
- </p>
- 
-<p>
-\(
-(R(X) \subseteq Y) \; \equiv \; (X \subseteq A(Y))
-\)
- </p>
- 
->>>>>>> 00af60a96be970aaad33508ee2b049f14dee8f77
 <p>
       \(v\) is in \(N(Y)\) exactly when every single hop from \(v\)
       ends at a vertex in \(Y\). 
@@ -389,7 +200,6 @@ a vertex in \(Y\).
 \(
   N(\{0, 1, 2, 3\}) = \{0\}
   \)
-<<<<<<< HEAD
   <br>
   Explanation: Every edge from \(0\) terminates at vertices in \(\{0,
   1, 2, 3\}\), and so \(0\) is in \(N(\{0, 1, 2, 3\})\).
@@ -399,34 +209,11 @@ a vertex in \(Y\).
   and so these vertices are not 
 in \(N(\{0, 1, 2, 3\}\).
 
-=======
-  </p>
-  <figure>
-    <a href="#"><img class="img-fluid mx-auto d-block" src="edgesXtoY.jpg" alt=""></a>
-    <figcaption class="figure-caption text-center"> X \(\rightarrow\) Y</figcaption>
-</figure>
->>>>>>> 00af60a96be970aaad33508ee2b049f14dee8f77
 
 <p style="color:red;"><b>Example of Always</b></p>
 
-<<<<<<< HEAD
   \(
   A(\{0, 1, 3, 6, 7\}) = \{1, 6, 7\}
-=======
-<!--------------------------------------------------------------->
- <!-- <a href="GraphPicturesOfBasicConcepts.html#rightarrow">
-  <p style="color:#009BCF;"><b>
-  Diagram illustrating X \(\rightarrow\) Y
-  </b></p></a> -->
-<!--------------------------------------------------------------->
-
-\(X \stackrel{*}{\rightarrow} Y\) holds exactly when every path from every vertex in
-\(X\) ends at a vertex in \(Y\). So,
-  </p>
-  <p>
-\(
-X \stackrel{*}{\rightarrow} Y \; \equiv \; R(X) \subseteq Y
->>>>>>> 00af60a96be970aaad33508ee2b049f14dee8f77
   \)
   <br>
   Explanation: The only edge from vertex \(6\) is \(6 \rightarrow
@@ -454,102 +241,21 @@ X \stackrel{*}{\rightarrow} Y \; \equiv \; R(X) \subseteq Y
   from \(v\) to \(v\), and so these vertices are not in \(A(\{0, 1, 3,
   6, 7\})\). 
 
-<<<<<<< HEAD
-
-=======
-    <figure>
-      <a href="#"><img class="img-fluid mx-auto d-block" src="pathsXtoY.jpg" alt=""></a>
-      <figcaption class="figure-caption text-center"> X \stackrel{*}{\rightarrow} Y</figcaption>
-  </figure>
-
-<!--------------------------------------------------------------->
-  <a href="GraphRunningExample.html#paths">
-  <p style="color:#009BCF;"><b>
-  Example of \(X \stackrel{*}{\rightarrow} Y\)
-  </b></p></a>
-<!--------------------------------------------------------------->
-
-<!--------------------------------------------------------------->
- <!-- <a href="GraphPicturesOfBasicConcepts.html#paths">
-  <p style="color:#009BCF;"><b>
-  Diagram of \(X \stackrel{*}{\rightarrow} Y\)
-  </b></p></a> -->
-<!--------------------------------------------------------------->
->>>>>>> 00af60a96be970aaad33508ee2b049f14dee8f77
 
 
-<hr>
-
-<div class="section-top-border">
-  <div class="row">
-
-    <div class="col-md-8 mt-sm-20" id = "definition_left">
-        <h4 class="mb-30"><span class="definition">Definition:</span> <span class=definition_title> Stable Sets </span> </h4>  
-        <b>stable</b> is a function from sets of vertices to the Booleans.
-        <p>
-        \(stable(X)\) holds exactly when every edge from a vertex in \(X\) is
-        to a vertex in \(X\).
-        </p>
-        
-        <p>
-        \(
-        stable(X) \; \equiv \; (X \rightarrow X)
-        \)
-          </p>
-          </h2><a href="GraphRunningExample.html#stable">
-              <h5 class = "example_link">
-              Examples of A(Y)</h5></a> 
-    </div>
-    <div class="col-md-4">
-        <img src="Stable1.jpg" alt="" class="img-fluid mx-auto d-block definition_right" >
-      </div>
-  </div>
-</div>
 
 
-<<<<<<< HEAD
 <h4>stable</h4>
 <b>stable</b> is a function from sets of vertices to the Booleans.
 \(stable(P)\) holds exactly when every edge from a vertex in \(P\) is
 to a vertex in \(P\).
-=======
-  <h4 id=stable>Stable Sets</h4>
-   
-<!--<b>stable</b> is a function from sets of vertices to the Booleans.
-<p>
-\(stable(X)\) holds exactly when every edge from a vertex in \(X\) is
-to a vertex in \(X\).
->>>>>>> 00af60a96be970aaad33508ee2b049f14dee8f77
 </p>
 
 <p>
 \(
 stable(P) \; \equiv \; (P \rightarrow P)
 \)
-<<<<<<< HEAD
 </p>
-=======
-  </p> -->
-
-<!--------------------------------------------------------------->
-  <!--<a href="GraphRunningExample.html#stable">
-  <p style="color:#009BCF;"><b>
-  Examples of stable
-  </b></p></a> -->
-<!--------------------------------------------------------------->
-  
-<!--------------------------------------------------------------->
-<!--  <a href="GraphPicturesOfBasicConcepts.html#stable">
-  <p style="color:#009BCF;"><b>
-  Diagram of stable
-  </b></p></a> -->
-<!--------------------------------------------------------------->
-
- <!--- <p>
-  So, \(X\) is stable exactly when all paths from vertices in \(X\)
-  are to vertices in \(X\). 
-
->>>>>>> 00af60a96be970aaad33508ee2b049f14dee8f77
 <p>
 Therefore \(P\) is stable exactly when there are no paths from
 vertices in \(P\) to vertices outside \(P\).
@@ -558,7 +264,6 @@ vertices in \(P\) to vertices outside \(P\).
 \(
 \textrm{stable}(\{4, 5\})
 \)
-<<<<<<< HEAD
 <br>
 Explanation: Every outgoing edge from vertex \(4\) is to vertex \(5\)
 which is in set \(\{4, 5\}\), and every 
@@ -576,23 +281,6 @@ systems are safe.
 <a href="LabeledGraph.html">
 <h3 style="color:green;">Next module:
 		System Progress</h3></a>
-=======
-  </p> -->
-
-  <figure>
-    <a href="#"><img class="img-fluid mx-auto d-block" src="StablePaths.jpg" alt=""></a>
-    <figcaption class="figure-caption text-center">Stable paths.</figcaption>
-</figure>
-
-<!--------------------------------------------------------------->
-  <!--<a href="GraphPicturesOfBasicConcepts.html#StablePaths">
-  <p style="color:#009BCF;"><b>
-  Diagram of paths in stable sets.
-  </b></p></a> -->
-<!--------------------------------------------------------------->
-<hr>
-
->>>>>>> 00af60a96be970aaad33508ee2b049f14dee8f77
 
 		<p>
 		<a href="Chapter2_Organization.html"><b>Previous module:
@@ -609,7 +297,6 @@ systems are safe.
   <p style="color:green;">
 <b>Modules that Explore more Examples</b> </p> </a>
 
-<<<<<<< HEAD
 <!---------------------------------------------------------------------->
 <a href="SafetyProperties.html">
 <p style="color:green;">
@@ -629,34 +316,6 @@ This module is a collection of formulae relating the concepts ---
   <b>Explore Why Study This? An example of a graph representation of a distributed
 		system</b> </p> </a>
 
-=======
-  <div id="theorem">
-    <h4>Invariance Theorem</h4>
-    A system, specified by a graph and vertex sets \(init\) and
-    \(safe\), is safe if it has an invariant set \(I\). 
-  </div>
-  <p>
-  <p id = "proof">Proof:</p>
-  </p>
-  <p>
-  Since \(init \subseteq I \):
-  \(
-  R(init) \subseteq R(I)
-  \)
-  </br>
-  
-  Because \(stable(I) \):
-  \(
-  R(I) = I
-\) \Box
-<br>
-
-  Because \(I \subseteq safe\):
-\(
-  R(init) \subseteq R(I) = I \subseteq safe
-  \)$$\tag*{$\blacksquare$}$$
-  </p>
->>>>>>> 00af60a96be970aaad33508ee2b049f14dee8f77
 
 
 <!----------------------------------------------------------->
@@ -908,23 +567,13 @@ This module is a collection of formulae relating the concepts ---
 <a name="SelfTest"></a>
 <!-- Self Tests are Here-->
 <hr>
-<!--<a href="#"><img class="img-fluid mx-auto d-block left-align" id="icon"  src="../img/stop-01.png" alt=""></a> -->
-  <div class="row">
-    <div class="span4">
-      <img class="img-fluid mx-auto d-block" id="icon" style="float:left" src="../img/stop-01.png"/>
-      <div class="content-heading"><h3>Self-Test</h3></div>
-    </div>
-  </div>
-
-
+<a href="#"><img class="img-fluid mx-auto d-block" id="icon"  src="../img/pencil.jpg" alt=""></a>
+<h3 class="text-center"> Self-Test </h3>
+<! ----- div class = "text-center">
+  
 <figure>
-<<<<<<< HEAD
   <img src="Graph.jpg" alt="Fig1" style="width:100%">
   <figcaption>Fig.2 - An Example Graph.</figcaption>
-=======
-  <a href="#"><img class="img-fluid mx-auto d-block" src="Graph.jpg" alt=""></a>
-  <figcaption class="figure-caption text-center">Fig. 1 An Example Graph.</figcaption>
->>>>>>> 00af60a96be970aaad33508ee2b049f14dee8f77
 </figure>
 
   For the graph of Fig. 2, what are the following:
@@ -994,8 +643,8 @@ This module is a collection of formulae relating the concepts ---
      </li>
    </ol>
    <a href="GraphSolutionsToSelfTests.html">Solutions.</a>
+ </div>
 
-<<<<<<< HEAD
                     <hr>    
                     <div class="col-lg-2 col-med-2 col-sm-1"></div>
                     
@@ -1008,52 +657,6 @@ This module is a collection of formulae relating the concepts ---
                 </div>
             </section>
         <hr class="m-0" />
-=======
-   <hr>
-   <h3>Conclusion</h3>
- You know the graph properties that you will use in this course to prove
- that a system is safe.
-
-<p>
-<h4>Links to Related Modules</h4>
-<a href="InfinitePaths.html">
-<b>Next module: Fairness</b></a>
- This module introduces the concept of <b>fairness</b> which is used to
- prove that systems progress towards their goals.
-
-<p>
-<!---------------------------------------------------------------------->
-<a href="GraphPicturesOfBasicConcepts.html">
-  <p style="color:#68D6FB;">
-  <b>Visual exploration: Pictorial representations of basic
-concepts.</b></p> </a>
-
-<p>
-<!---------------------------------------------------------------------->
-<a href="SafetyProperties.html">
-<p style="color:black;">
-<b>
-Formal methods exploration: module that develops formulae
-relating \(H\), \(N\), \(R\) and \(A\).
-</b>
-</p>
-</a>                                           
-
- </div>
-
- 
- 
-                    
-                          
-</div>
-</section>
-		
-
-
-<!---------------------------------------------------------------------->
- <!---------------------------------------------------------------------->
- 
->>>>>>> 00af60a96be970aaad33508ee2b049f14dee8f77
         
                 <!--<div class="resume-section-content">
                     <h1 class="mb-0">
