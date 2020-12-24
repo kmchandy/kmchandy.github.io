@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>GraphExampleSafeFileAccess</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+<style> p.ex1 {margin-left: 50px;} </style>
+<style type="text/css">.mw { max-width:22em }
+
+
+.div2 {
+width: 360px;
+border: 1px solid red;
+padding: 1px;
+margin: 2px;
+background-color: lightyellow;
+}
+
+.div3 {
+width: 360px;
+border: 1px solid black;
+padding: 1px;
+margin: 2px;
+background-color: lightblue;
+}
+</style>
+</head>
+<body>
+<div class="mw">
+<h1 style="color:red;">Example: Safe File Access</h1>
+  We want to develop an algorithm by which agents in a distributed
+  system share access to a set of files. Safety means that each file
+  is modified by at most one agent at a time, and no agent reads a
+  file while it is being modified by another agent.  The state of the
+  system is specified by the states of the agents and the states of
+  message channels. In the graph representation, the system is at one
+  vertex, representing a state, at any point in time. We will show
+  that the paths that the system takes in the graph visit only safe
+  states.
+  </p>
+
+  <p>
+  We will show that a system progresses towards desired or goal states
+  from properties of sets of infinite paths in graphs.
+  </p>
+
+  <p>
+  <a href="Graph.html#Graph2">Return to main page.</a>
+  </div>
+</body>
+</html>

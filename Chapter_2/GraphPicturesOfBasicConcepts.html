@@ -1,0 +1,214 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>GraphPicturesOfBasicConcepts</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+<style> p.ex1 {margin-left: 50px;} </style>
+<style type="text/css">.mw { max-width:22em }
+
+
+.div2 {
+width: 360px;
+border: 1px solid red;
+padding: 1px;
+margin: 2px;
+background-color: lightyellow;
+}
+
+.div3 {
+width: 360px;
+border: 1px solid black;
+padding: 1px;
+margin: 2px;
+background-color: lightblue;
+}
+</style>
+</head>
+<body>
+<div class="mw">
+  <h1 style="color:red;">Pictures of Basic Concepts</h1>
+
+  
+  <h2 id=H>Single Hop Forward: H(X) or hop</h2>
+  <figure>
+  <img src="H.jpg" alt="Fig1" style="width:100%">
+  <figcaption>Fig.1 - Single Hop Forward: H(X).</figcaption>
+  </figure>
+
+  The set of vertices in \(X\) is shown in yellow and \(H(X)\) is
+  shown in green. A vertex \(w\) is in \(H(X)\) exactly when there
+  exists an edge from a vertex \(v\) in \(X\) to \(w\). In the figure
+  you can see that (1) all the edges from the vertices in \(X\) end in
+  \(H(X)\), and (2) there is no vertex outside \(H(X)\) that can
+  be reached in a <i>single</i> hop from a vertex in \(X\).
+
+  </p>
+
+  
+  <!--------------------------------------------------------------->
+  <a href="Graph.html#N">
+  <p style="color:green;"><b>
+  Return to main page: definition of N(Y)
+  </b></p></a>
+  <!--------------------------------------------------------------->
+
+
+  <h2 id=N>Single Hop Backward: N(Y) or <i>next</i></h2>
+  <figure>
+  <img src="N.jpg" alt="Fig2" style="width:100%">
+  <figcaption>Fig.2 - Single Hop Backward: N(Y).</figcaption>
+  </figure>
+
+  The set of vertices in \(N(Y)\) is shown in yellow and \(Y\) is
+  shown in green. A vertex \(v\) is in \(N(Y)\) exactly when all edges
+  from \(v\) end at vertices in \(Y\).
+  In the figure
+  you can see that (1) all the edges from the yellow zone
+  (i.e. vertices in \(N(Y)\)) end in the blue zone, i.e. vertices in
+  \(Y\), and (2) there is no vertex \(u\) outside \(N(Y)\) such that
+  all edges from \(u\) end at \(Y\).
+  </p>
+
+  <p>
+  Look at vertex \(A\). It is \(Y\) and it has an edge to \(B\) which
+  is also in \(Y\). Why isn't \(A\) in \(N(Y)\)? Because there is an
+  edge from \(A\) to \(C\) which is outside \(Y\).
+  </p>
+
+  
+  <!--------------------------------------------------------------->
+  <a href="Graph.html#R">
+  <p style="color:green;"><b>
+  Return to main page: definition of R(X)
+  </b></p></a>
+  <!--------------------------------------------------------------->
+ 
+  <h2 id=R>Reachable Forward: R(X)</h2>
+  <figure>
+  <img src="R.jpg" alt="Fig3" style="width:100%">
+  <figcaption>Fig.3 - Path Forward: R(X).</figcaption>
+  </figure>
+  The vertices in \(X\) are shown in the yellow circle, and the
+  vertices in \(R(X)\) are shown in both the yellow and blue circle. Note
+  that \(X\) is a subset of \(R(X)\) because there is an empty path
+  from each vertex to itself.
+  </p>
+
+  <p>A vertex \(w\) is in \(R(X)\)
+exactly when there exists a path from a vertex in \(X\) to \(w\).
+</p>
+
+  
+  <!--------------------------------------------------------------->
+  <a href="Graph.html#A">
+  <p style="color:green;"><b>
+  Return to main page: definition of A(Y)
+  </b></p></a>
+  <!--------------------------------------------------------------->
+
+
+  <h2 id=A>Reachable Backward: A(Y)</h2>
+  <figure>
+  <img src="A.jpg" alt="Fig4" style="width:100%">
+  <figcaption>Fig.4 - Path Backward: A(Y).</figcaption>
+  </figure>
+  The vertices in \(Y\) are shown in both the blue and yellow circles, and the
+  vertices in \(A(Y)\) are shown in the yellow circle. Note
+  that \(A(Y)\) is a subset of \(Y\) because there is an empty path
+from each vertex to itself.
+</p>
+<p>
+A vertex \(v\) is \(A(Y)\) exactly when all paths from \(v\) end in
+  \(Y\). You can see that (1) all paths from the yellow zone stay inside
+  the yellow zone and hence stay inside \(Y\), and (2) there is no
+  vertex \(u\) outisde the yellow zone and inside \(Y\) such that
+<b>all</b> paths from \(u\) end inside \(Y\).
+</p>
+
+  
+  <!--------------------------------------------------------------->
+  <a href="Graph.html#FB">
+  <p style="color:green;"><b>
+  Return to main page: definition of Forward, Back Relationship
+  </b></p></a>
+  <!--------------------------------------------------------------->
+
+
+<h2 id=rightarrow>Edges from X to Y, \(X \rightarrow Y\)</h2>
+  <figure>
+  <img src="edgesXtoY.jpg" alt="Fig5" style="width:100%">
+  <figcaption>Fig.5 - Edge from X to Y.</figcaption>
+</figure>
+<p>
+The vertices in \(X\) are in the yellow circle and those in \(Y\) are
+  in the blue annular ring around \(X\). Every edge from the yellow
+  circle ends in the blue ring. Note that \(Y\) may not be the same as 
+  \(H(X)\) because \(Y\) may have vertices, such as \(A\),
+that are not in \(H(X)\).
+</p>
+
+  
+  <!--------------------------------------------------------------->
+  <a href="Graph.html#stackrel">
+  <p style="color:green;"><b>
+  Return to main page: definition of \(\stackrel{*}{\rightarrow}\)
+  </b></p></a>
+  <!--------------------------------------------------------------->
+
+
+
+<h2 id=paths>Paths from X to Y, \(X \stackrel{*}{\rightarrow} Y\)</h2>
+  <figure>
+  <img src="pathsXtoY.jpg" alt="Fig6" style="width:100%">
+  <figcaption>Fig.6 - Path from X to Y.</figcaption>
+  </figure>
+
+
+The vertices in \(X\) are in the yellow circle and those in \(Y\) are
+  in the blue or yellow circles. Note that \(X\) is a subset of \(Y\)
+  because there is an empty path from each vertex to itself. Every
+  path from the yellow 
+  circle ends in the blue or yellow circles. Note that \(Y\) may not be the same as 
+  \(R(X)\) because \(Y\) may have vertices, such as \(A\) and \(B\),
+that are not in \(R(X)\).
+</p>
+
+  
+  <!--------------------------------------------------------------->
+  <a href="Graph.html#stable">
+  <p style="color:green;"><b>
+  Return to main page: definition of stable.
+  </b></p></a>
+  <!--------------------------------------------------------------->
+
+
+
+<h2 id="stable">Stable Vertex Sets</h2>
+  <figure>
+  <img src="Stable1.jpg" alt="Fig7" style="width:100%">
+  <figcaption>Fig.7 - Stable(X).</figcaption>
+</figure>
+Every edge from every vertex in \(X\) terminates in \(X\). So,
+\(stable(X)\) holds.
+Note that \(X\) can be stable even though there are edges from outside
+  \(X\) into \(X\). 
+</p>
+
+<h3 id="StablePaths">Paths in Stable Vertex Sets</h3>
+<p>
+\(stable(X)\) holds exactly when all paths from vertices in \(X\) are
+  to vertices in \(X\). 
+  <figure>
+  <img src="StablePaths.jpg" alt="Fig7" style="width:100%">
+  <figcaption>Paths in X when Stable(X) holds</figcaption>
+</figure>
+
+  <p>
+  <a href="Graph.html#Graph4">Return to main page.</a>
+  </div>
+</body>
+</html>
