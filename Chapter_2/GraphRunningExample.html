@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>GraphRunningExample</title>
+        <title>Graphs and Safety</title>
         <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
@@ -48,334 +48,342 @@
                     <div class="col-lg-2 col-med-2 col-sm-1"></div>
                     <div class="col-lg-8 col-med-8 col-sm-10">
 
-<!----------------------------------------------------------->
-  <!----------------------------------------------------------->
-  
-<a name="GraphExample"></a>
-  <h2 style="color:red;" id=V>Example of a Graph and its Attributes</h2>
-  <figure>
-  <img src="GraphExample.jpg" alt="Fig2" style="width:75%">
-  <figcaption>Fig.2 - An Example of a Graph</figcaption>
-</figure>
+<a name="Examples"></a>
+  <h3>Examples</h3>
 
-<p>Vertices:
+  <figure>
+      <a href="#"><img class="img-fluid mx-auto d-block" src="GraphExample.jpg" alt=""></a>
+      <figcaption class="figure-caption text-center">Fig. 2 - An Example of a Graph.</figcaption>
+  </figure>
+
+  <!--<figure>
+  <img src="GraphExample.jpg" alt="Fig2" style="width:100%">
+  <figcaption>Fig.2 - An Example of a Graph</figcaption>
+</figure> -->
+
+<p><b>Vertices:
 \( V = \{0, 1, 2, 3, 4, 5, 6, 7 \} \)
-		      </p>
+		      </b>
 		     
 
-<p>Examples of edges \(\rightarrow\):</p>
+<p><b>Examples of edges:</b>
 \( 0 \rightarrow 1, \; 0 \rightarrow 2, \;  0 \rightarrow 3, \; 0 \rightarrow 7, \;
 \; 1 \rightarrow 7, \; 2 \rightarrow 4\)
 \(2 \rightarrow 5 , \; 3 \rightarrow 5, \;  3 \rightarrow 6, \; 4 \rightarrow 5, \; 5
-  \rightarrow 4, \; 7 \rightarrow 6\)
+\rightarrow 4, \; 7 \rightarrow 6\)
 
-  <p id="Path">Examples of paths \(\stackrel{*}{\rightarrow}\)</p>
+
+
+  <p id="Path"><b>Examples of paths:</b>
   \(
   1 \stackrel{*}{\rightarrow} 1, \; 1 \stackrel{*}{\rightarrow} 7,
-  \; 1 \stackrel{*}{\rightarrow} 6
+  \; 1 \stackrel{*}{\rightarrow} 6,
   \)
 
   \(
   3 \stackrel{*}{\rightarrow} 3, \; 3 \stackrel{*}{\rightarrow} 4,
-  \; 3 \stackrel{*}{\rightarrow} 5, \; 3 \stackrel{*}{\rightarrow} 6
+  \; 3 \stackrel{*}{\rightarrow} 5, \; 3 \stackrel{*}{\rightarrow} 6,
   \) 
 
   \(
   2 \stackrel{*}{\rightarrow} 2, \; 2 \stackrel{*}{\rightarrow} 4,
   \; 2 \stackrel{*}{\rightarrow} 5
   \)
-
-  <!--------------------------------------------------------------->
-  <a href="Graph.html#Graph3">
-  <p style="color:green;"><b>
-  Return to main page: Conventions.
-  </b></p></a>
 		     
-<!--------------------------------------------------------------->
-  <a href="Graph.html#N">
-  <p style="color:blue;"><b>
-  Return to main page: definition of N(Y)
-  </b></p></a>
-  <!--------------------------------------------------------------->
 
-<h4 id="N">Examples of \(N\)</h4>
+
+
+<p id="N"><b>Examples of next, \(N\)</b>
 <ol>
   <li>
   \(
-  N(\{4, 5, 6\} = \{2, 3, 7\}
+  N(\{0, 1, 2, 3\}) = \{0\}
   \)
+  <br>
+  Explanation: Every edge from \(0\) terminates at vertices in \(\{0,
+  1, 2, 3\}\), and so \(0\) is in \(N(\{0, 1, 2, 3\})\).
+  There exist outgoing edges from 
+  vertices other than \(0\) that terminate at vertices outside \(\{0,
+  1, 2, 3\}\), 
+  and so these vertices are not 
+  in \(N(\{0, 1, 2, 3\}\). 
   </li>
   <li>
   \(
-  N(\{4, 5\} = \{2\}
+  N(\{0, 1, 7\} = \{1\}
   \)
+  <br>
+  Explanation: The only edge from \(1\) terminates at \(7\) which is
+  in \(\{0, 1, 7\}\). Therefore, \(1\) is in \(N(\{0, 1, 7\})\).
+  There exist outgoing edges from all vertices other than \(1\) that
+  terminate at vertices outside \(\{0, 1, 7\}\), and so these vertices
+  are not in \(N(\{0, 1, 7\})\).
   </li>
   <li>
   \(
-  N(\{5\} = \{\}
+  N(\{4, 5, 6\}) = \{2, 3, 4, 5, 6, 7\}
   \)
+  <br>
+  Explanation: The outgoing edge from vertices \(2, 3, 4, 5, 6, 7\) terminate
+  at vertices in set \(\{4, 5, 6\}\) and so these vertices are in
+  \(N(\{4, 5,6\})\). Vertices \(0\) and \(1\) have an
+  outgoing edge that terminates at a
+  vertex that is not in \(\{4, 5, 6\}\); so these vertices are not in
+  \(N(\{4, 5,6\})\).
+  </li>
+  
+  <li>
+  \(
+  N(\{4, 5\}) = \{2, 4, 5\}
+  \)
+  <br>
+  Explanation: The outgoing edges from vertices \(2, 4, 5\) terminate
+  at vertices in \(\{4, 5\}\) and so these vertices are in
+  \(N(\{4, 5\})\).
+  The vertices that are not in \(2, 4,
+  5\) have at least one outgoing edge that does not terminate at a
+  vertex in \(\{4, 5\}\), and so these vertices are not in \(N(\{4, 5\})\).
   </li>
   <li>
   \(
-  N(\{4\} = \{5\}
+  N(\{5\} = \{4\}
   \)
-  </li>
-  <li>
-  \(
-  N(\{3, 5, 6\} = \{7\}
-  \)
+  <br>
+  Explanation: Vertex \(4\) has a single outgoing edge which
+  terminates at \(5\) and so \(4\) is in \(N(\{5\})\). All the
+  vertices other than \(4\) have have at least one outgoing edge that
+  does not terminate at \(5\), and so these vertices  are not in
+  \(N(\{5\})\). 
   </li>
 </ol>
-  <!--------------------------------------------------------------->
-  <a href="Graph.html#A">
-  <p style="color:green;"><b>
-  Return to main page: definition of A(Y)
-  </b></p></a>
-  <!--------------------------------------------------------------->
 
-<h4 id="A">Examples of \(A\)</h4>
+
+
+<p id="A"><b>Examples of always, \(A\)</b>
 <ol>
   <li>
   \(
-  A(\{0, 1, 3, 6, 7\} = \{1, 6, 7\}
+  A(\{0, 1, 3, 6, 7\}) = \{1, 6, 7\}
   \)
+  <br>
+  Explanation: The only edge from vertex \(6\) is \(6 \rightarrow
+  6\). So, all paths from vertex \(6\) visit only vertex \(6\) which
+  is in the set \(\{0, 1, 3, 6, 7\}\). Therefore \(6\) is in
+  \(A(\{0, 1, 3, 6, 7\})\).
+  <p>
+  The only edge from vertex \(7\) is 
+  \(7 \rightarrow 6\).
+  So, all paths from vertex \(7\) visit only vertices \(6\) and \(7\),
+  both of which
+  are in the set \(\{0, 1, 3, 6, 7\}\).
+  Therefore \(7\) is in
+  \(A(\{0, 1, 3, 6, 7\})\).
+  By the same argument, all paths from vertex \(1\) visit only
+  vertices \(1\), \(6\) and \(7\), all of which are in set \(\{0, 1,
+  3, 6, 7\}\), and so \(1\) is in \(A(\{0, 1, 3, 6, 7\})\).
+  <p>
+  Why isn't \(0\) in \(A(\{0, 1, 3, 6, 7\})\)? Because there is a path
+  from \(0\) to \(2\) which is not in \(\{0, 1, 3, 6, 7\}\).
+  Similarly \(3\) is not in \(A(\{0, 1, 3, 6, 7\})\) because of paths
+  from \(3\) to \(5\).
+  <p>
+  Every vertex \(v\) that is not in \(\{0, 1, 3, 6, 7\}\) has a path
+  from \(v\) to \(v\), and so \(v\) is not in \(A(\{0, 1, 3, 6, 7\})\).
   </li>
   <li>
   \(
   A(\{0, 1, 2, 3, 4, 5\} = \{2, 4, 5\}
   \)
+  <br>
+  Explanation: All paths from \(4\) and \(5\) visit only \(4\) and
+  \(5\) which are in \(\{0, 1, 2, 3, 4, 5\}\), and therefore both
+  \(4\) and \(5\) are in \(A(\{0, 1, 2, 3, 4, 5\}\). All paths from
+  \(2\) visit only \(2\), \(4\) and \(5\), and so \(2\) is also in
+  \(A(\{0, 1, 2, 3, 4, 5\}\).
+  <p>
+  Vertices \(0\), \(1\) and \(3\) have paths to \(6\) and therefore
+  they are not in \(A(\{0, 1, 2, 3, 4, 5\}\).
+  <p>
+  Every vertex \(v\) that is not in \(\{0, 1, 2, 3, 4, 5\}\) has a path
+  from \(v\) to \(v\), and so \(v\) is not in \(A(\{0, 1, 2, 3, 4, 5\})\).
+  </li>
   </li>
   <li>
   \(
   A(\{1, 2, 3, 4, 5, 6, 7\} = \{1, 2, 3, 4, 5, 6, 7\}
   \)
   </li>
-  <li>
-  \(
-  A(\{3, 4, 5\} = \{4, 5\}
-  \)
-  </li>
-  <li>
-  \(
-  A(\{2, 4, 5\} = \{2, 4, 5\}
-  \)
-  </li>
-  <li>
-  \(
-  A(\{3, 6, 7\} = \{6, 7\}
-  \)
-  </li>
 </ol>
 
-<h4 id="rightarrow">Examples of \(X \rightarrow Y\)</h4>
+
+<!------------------------------------------------------->
+<p id="rightarrow"><b>Examples of \(P \rightarrow Q\)</b>
+
 <ol>
   <li>
   \(
   \{2, 3\} \rightarrow \{4, 5, 6\}
   \)
+  <br>
+  Explanation: Every outgoing edge from vertices \(2\) and \(3\)
+  terminate at vertices in \(\{4, 5, 6\}\).
   </li>
   <li>
   \(
   \{2, 3\} \rightarrow \{3, 4, 5, 6, 7\}
   \)
+  <br>
+  Explanation: Every outgoing edge from vertices \(2\) and \(3\)
+  terminate at vertices in \(\{4, 5, 6\}\), and so also
+  terminate at vertices in \(\{3, 4, 5, 6, 7\}\).
+  </li>
+  <li>
+  \(
+  \{5\} \rightarrow \{4, 6\}
+  \)
+  <br>
+  Explanation: Every outgoing edge from vertex \(5\)
+  terminates at vertex \(4\) which is in \(\{4, 6\}\).
   </li>
   <li>
   \(
   \{5, 7\} \rightarrow \{4, 6\}
   \)
+  <br>
+  Explanation: Every outgoing edge from vertices \(5\) and \(7\)
+  terminate at vertices in \(\{4, 6\}\).
   </li>
   <li>
   \(
   \{5, 7\} \rightarrow \{3, 4, 5, 6\}
   \)
-  </li>
-  <li>
-  \(
-  \{2, 3\} \rightarrow \{4, 5, 6\}
-  \)
-  </li>
-  <li>
-  \(
-  \{2, 3\} \rightarrow \{0, 4, 5, 6\}
-  \)
-  </li>
-  <li>
-  \(
-  (\{0, 2\} \rightarrow \{1, 2, 3, 4, 5, 6, 7\}
-  \)
+  <br>
+  Explanation: Every outgoing edge from vertices \(5\) and \(7\)
+  terminate at vertices in \(\{4, 6\}\) and so terminate at vertices
+  in \(\{3, 4, 5, 6\}\).
   </li>
 </ol>
 
 
-<h4>Examples of NOT \(X \rightarrow Y\)</h4>
+<!------------------------------------------------------->
+<p><b>Examples of NOT \(X \rightarrow Y\)</b>
 <ol>
   <li>
   \(
-  \neg(\{2, 3\} \rightarrow \{4, 5\}
+  \neg(\{2, 3\} \rightarrow \{2, 3, 4, 5\}
   \)
+  <br>
+  Explanation: There is an edge from \(3\) to \(6\), and vertex \(6\) is
+  not in set \(\{2, 3, 4, 5\}\).
   </li>
   <li>
   \(
-  \neg(\{5, 7\} \rightarrow \{3, 5, 6\})
+  \neg(\{5, 7\} \rightarrow \{3, 5, 6, 7\})
   \)
-  </li>
-  <li>
-  \(
-  \neg(\{2, 3\} \rightarrow \{4, 6\})
-  \)
+  <br>
+  Explanation: There is an edge from \(5\) to \(4\), and vertex \(4\) is
+  not in set \(\{3, 5, 6, 7\}\).
   </li>
 </ol>
 
 
 
-<h4 id="paths">Examples of \(X \stackrel{*}{\rightarrow} Y\)</h4>
-<ol>
-  <li>
-  \(
-  \{0\} \stackrel{*}{\rightarrow} \{0, 1, 2, 3, 4, 5, 6, 7\}
-  \)
-  </li>
-  <li>
-  \(
-  \{1\} \stackrel{*}{\rightarrow} \{1, 6, 7\}
-  \)
-  </li>
-  <li>
-  \(
-  \{0, 1\} \stackrel{*}{\rightarrow} \{0, 1, 2, 3, 4, 5, 6, 7\}
-  \)
-  </li>
-  <li>
-  \(
-  \{3\} \stackrel{*}{\rightarrow} \{3, 4, 5, 6\}
-  \)
-  </li>
-  <li>
-  \(
-  \{2\} \stackrel{*}{\rightarrow} \{4, 5\}
-  \)
-  </li>
-  <li>
-  \(
-  \{2, 3\} \stackrel{*}{\rightarrow} \{3, 4, 5, 6\}
-  \)
-  </li>
-</ol>
 
 
-<h4>Examples of NOT \(X \stackrel{*}{\rightarrow} Y\)</h4>
-<ol>
-  <li>
-  \(
-  \neg(\{1\} \stackrel{*}{\rightarrow} \{6\})
-  \)
-  </li>
-  <li>
-  \(
-  \neg(\{1\} \stackrel{*}{\rightarrow} \{7\})
-  \)
-  </li>
-  <li>
-  \(
-  \neg(\{1\} \stackrel{*}{\rightarrow} \{6, 7\})
-  \)
-  </li>
-  <li>
-  \(
-  \neg(\{1\} \stackrel{*}{\rightarrow} \{1, 3, 6, 7\})
-  \)
-  </li>
-  <li>
-  \(
-  \neg(\{3\} \stackrel{*}{\rightarrow} \{3, 5, 6\})
-  \)
-  </li>
-  <li>
-  \(
-  \neg(\{3\} \stackrel{*}{\rightarrow} \{3, 5, 6\})
-  \)
-  </li>
-  <li>
-  \(
-  \neg(\{2, 3\} \stackrel{*}{\rightarrow} \{2, 3, 4, 5\})
-  \)
-  </li>
-  <li>
-  \(
-  \neg(\{2, 3\} \stackrel{*}{\rightarrow} \{3, 4, 5, 6, 7\})
-  \)
-  </li>
-</ol>
-
-
-
-  <!--------------------------------------------------------------->
-  <a href="Graph.html#stable">
-  <p style="color:green;"><b>
-  Return to main page: definition of stable
-  </b></p></a>
-  <!--------------------------------------------------------------->
-
-
-<h4 id="stable">Examples of \(X \rightarrow X\)</h4>
-<ol>
-  <li>
-  \(
-  X= \{2, 4, 5\}
-  \)
-  </li>
-  <li>
-  \(
-  X = \{4, 5\}
-  \)
-  </li>
-  <li>
-  \(
-  X = \{6\}
-  \)
-  </li>
-  <li>
-  \(
-  X = \{6, 7\}
-  \)
-  </li>
-  <li>
-  \(
-  X = \{1, 6, 7\}
-  \)
-  </li>
-  <li>
-  \(
-  X = \{2, 3, 4, 5 , 6\}
-  \)
-  </li>
-</ol>
-
-<h4>Examples of NOT \(X \rightarrow X\)</h4>
-<ol>
-  <li>
-  \(
-  X= \{0\}
-  \)
-  </li>
-  <li>
-  \(
-  X = \{0, 1, 2, 3, 6, 7\}
-  \)
-  </li>
-  <li>
-  \(
-  X = \{2, 3, 4, 5\}
-  \)
-  </li>
-  <li>
-  \(
-  X = \{1, 7\}
-  \)
-  </li>
-</ol>
+<!---------------------------------------------------------------------->
+<!---------------------------------------------------------------------->
+<a name="SelfTest"></a>
+<!-- Self Tests are Here-->
+<hr>
+<a href="#"><img class="img-fluid mx-auto d-block" id="icon"  src="../img/pencil.jpg" alt=""></a>
+<h3 class="text-center"> Self-Test </h3>
+<! ----- div class = "text-center">
   
+<figure>
+  <img src="Graph.jpg" alt="Fig1" style="width:100%">
+  <figcaption>Fig.2 - An Example Graph.</figcaption>
+</figure>
 
+  For the graph of Fig. 2, what are the following:
+  </p>
+  <p>
+  \(
+  N(X), A(X)
+  \)
+  </p>
+  for the following values of \(X\)?
+  
+  <ol>
+    <li>
+    \(
+    \{2\}
+    \)
+    </li>
+    <li>
+    \(
+    \{2, 3\}
+    \)
+    </li>
+    <li>
+    \(
+    \{2, 3, 4, 5\}
+    \)
+    </li>
+    <li>
+    \(
+    \{0, 1, 2\}
+    \)
+    </li>
+   </ol>
+  
+  Are the following formulae correct for the graph of Fig. 1?
+   <ol>
+     <li>
+  <p class="ex1">
+\(\{3, 4, 5 \}  \rightarrow \{3, 4, 5\}\)
+  </p>
+     </li>
+  <li>
+  <p class="ex1">
+  \(\{0, 3 \} \rightarrow  \; \{1, 4 \}\)
+  </p>
+  </li>
+  
+  <li>
+  <p class="ex1">
+  \( \{0, 3 \} \rightarrow  \; \{1, 2, 5 \} \)
+  </p>
+  </li>
+     <li>
+     <p class="ex1">
+     \(\{2, 3 \} \rightarrow  \; \{1, 3, 4, 5 \}\)
+     </li>
+     <li>
+     <p class="ex1">
+     \(  \{3, 4, 5 \}  \rightarrow \{2, 3, 4, 5\}  \)
+     </p>
+     </li>
+     
+     <li>
+     <p class="ex1">
+     \(  \{3, 4, 5 \}  \rightarrow \{4, 5\}  \)
+     </p>
+     </li>
+   </ol>
+   <a href="GraphSolutionsToSelfTests.html">Solutions.</a>
+ </div>
+
+                    <hr>    
+                    <div class="col-lg-2 col-med-2 col-sm-1"></div>
+                    
+                          
+                    <!-- Force next columns to break to new line -->
+                    <!--<div class="w-100"></div>
+                          
+                    <div class="col-6 col-sm-3">.col-6 .col-sm-3</div>
+                    <div class="col-6 col-sm-3">.col-6 .col-sm-3</div>-->
+                </div>
+            </section>
         <hr class="m-0" />
         
                 <!--<div class="resume-section-content">
@@ -400,8 +408,8 @@
                         <a class="social-icon" href="#"><i class="fab fa-facebook-f"></i></a>
                     </div> -->
                 <!--</div>
-            </section> -->
-		
+
+
         <!-- Bootstrap core JS-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>

@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Labeled Graphs and System Progress</title>
+        <title>Progress Example</title>
         <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
@@ -48,187 +48,76 @@
                     <div class="col-lg-2 col-med-2 col-sm-1"></div>
                     <div class="col-lg-8 col-med-8 col-sm-10">
 
-
-<h2>Progress</h2>
-
-
-		      <b>Outline</b>
-		      This module introduces all the concepts that we use in this course
-		      to prove that system trajectories progress
-		      towards their goals. These concepts are described in
-		      terms of
-		      <a
-		      href=https://en.wikipedia.org/wiki/Multigraph#Directed_multigraph_(edges_with_own_identity)">
-		      </a>labeled graphs</a>.
-
-
-  <h4>Labeled Graphs</h4>
-  <p>
-  A labeled graph is defined by: (1) a set of vertices, (2) a set of labels and
-  (3) a set of edges. An edge is defined by its originating vertex,
-  its label and its terminating vertex. We use the notation \( v
-  \stackrel{a}{\rightarrow} w \) to represent an edge from \(v\) to
-  \(w\) with label \(a\).
-
-  There can be multiple outgoing edges with the same label from a
-  vertex. For example, \(v \stackrel{a}{\rightarrow} w \) and \(v
-  \stackrel{a}{\rightarrow} u \) can both exist where \(w\) and \(u\)
-  are different.
-
-
-  There can be multiple edges between a pair
-  of vertices. For example, \(v \stackrel{a}{\rightarrow} w \) and \(v \stackrel{b}{\rightarrow}
-  w \) can both exist.
-  </p>
-  <p>
-  <p><b>Restriction</b>:
-  We restrict attention to graphs in which for every vertex \(v\) and
-  every label \(a\) there exists at least
-  one  outgoing edge from \(v\)  with label \(a\):
-		      Note that an edge can be from a vertex back to itself.
-		      </p>
-
-
-  <!------------------------------------------------------>
-  <!------------------------------------------------------>  
-  <h3 style="color:red;">Example</h3>
+<h3 style="color:red;">Example</h3>
   <figure>
   <img src="LabeledGraph.jpg" alt="Fig2" style="width:50%">
   <figcaption>Fig.1 - Example of a Labeled Graph</figcaption>
   </figure>
-  <p>
-In this example, the edges are labeled \(a\), \(b\), \(c\). An edge from
-vertex back to itself is not shown in the diagram (so as not to crowd
-the picture). For example there are edges labeled \(a\), \(b\) and
-\(c\) from vertex \(2\) back to itself. Similarly, there is an edge
-labeled \(c\) from vertex \(7\) back to itself.
-		      </p>
-
-<!------------------------------------------------------>
-<!------------------------------------------------------>
-  <p><b>Paths in Labeled Graphs</b>:
-  A path is defined by a sequence of edges where the terminating
-  vertex of an edge is the originating vertex of the next edge in the
-  sequence. For example, a path \(p\) is denoted by:
-  <br>
-  \(
-  p_{0} \stackrel{a_{0}}{\rightarrow} p_{1}
-\stackrel{a_{1}}{\rightarrow} p_{2}
-\stackrel{a_{2}}{\rightarrow}
-\ldots p_{i}
-\stackrel{a_{i}}{\rightarrow} p_{i+1}
-\stackrel{a_{i+1}}{\rightarrow}
-\ldots
-  \)
-  <br>
-  where \(p_{i}\) is the \(i\)-th vertex visited on the path, and the
-  sequence of edges in the path are \(p_{i}
-  \stackrel{a_{i}}{\rightarrow} p_{i+1}\) for \(i \geq 0\).
-</p>
-
-
-<!------------------------------------------------------>
-<p style="color:red;"><b>Example of a Path</b>: 
-\(
-  7 \stackrel{a}{\rightarrow} 8 \stackrel{b}{\rightarrow} 2
-  \stackrel{c}{\rightarrow} 2 \stackrel{a}{\rightarrow} 2
-\stackrel{b}{\rightarrow} 2 \stackrel{c }{\rightarrow} 2\ldots
-\)
-
-<!------------------------------------------------------>
-<p><b>Paths that Traverse a Label Infinitely Often</b>
-A path \(p\) traverses label \(L\) infinitely often exactly
-when at every point in \(p\) there is always a later point at
-which \(p\) traverses an edge labeled \(L\). So, the interval between
-successive traversals of an edge labeled \(L\) is finite; the interval
-may not follow any pattern - all we know is that the interval ends in
-a finite number of hops.
-</p>
-
-<p class="ex1">
-\(\forall j: \; \exists k > j: \; a_{k} = L \)
-</p>
-
-<!------------------------------------------------------>
-<p style="color:red;"><b>Example of label traversed infinitely often</b></p>
 <p>
-Let \(p\) be the path that repeatedly cycles through vertices \(3\) and \(4\)
-traversing an edge with label \(a\) and then an edge with label \(b\).
-</p>
-<p>
-\(
-    3 \stackrel{a}{\rightarrow} 4 \stackrel{b}{\rightarrow} 3
-  \stackrel{a}{\rightarrow} 4 \stackrel{b}{\rightarrow} 3
-  \stackrel{a}{\rightarrow} 4 \stackrel{b}{\rightarrow} 3 \ldots
-\)
-</p>
-<p>
-\(p\) traverses edges with label \(a\) infinitely often, and it also
-traverses edges with label \(b\) infinitely often.
 
 
 <!------------------------------------------------------>
-<!------------------------------------------------------>
-<h4>Infinitely Often Labels</h4>
-Some labels are designated <b>infinitely-often
-labels</b>. We 
-define a <b>fair path</b> as follows:
-A path \(p\) is a
-<i>fair</i> path exactly when \(p\) traverses every infinitely-often
-label infinitely often.
-</p>
-  <p>
-  A label that is not infinitely-often may appear an
-  arbitrary number of times in fair paths: it may
-  appear a finite number of
-  times or it may appear infinitely often.
-  Labels that are not infinitely often represent events, such as errors, that may
-  or may not occur.
-  </p>
-
-
-  <!------------------------------------------------------>
   <p style="color:red;"><b>Examples of Fair Paths</b></p>
-  Consider the case where the infinitely-often labels are \(a\) and
-\(b\). An examples of a fair path is:
-\(
+
+  <ol>
+    <li>
+    \(
     3 \stackrel{a}{\rightarrow} 4 \stackrel{b}{\rightarrow} 3
   \stackrel{a}{\rightarrow} 4 \stackrel{b}{\rightarrow} 3
   \stackrel{a}{\rightarrow} 4 \stackrel{b}{\rightarrow} 3 \ldots
-\)
-
-  <!------------------------------------------------------>
-  <p style="color:red;"><b>An example of a path that is not
-  fair</b></p> is:
-  \(
+    \)
+    <br>
+    This path cycles between vertices \(3\) and \(4\) traversing edges
+  labeled \(a\) and \(b\) for ever.
+    </li>
+    <li>
+    \(
+    8 \stackrel{a}{\rightarrow} 9 \stackrel{a}{\rightarrow} 8
+  \stackrel{a}{\rightarrow} 9 \stackrel{c}{\rightarrow} 1
+    \stackrel{a}{\rightarrow} 1 \stackrel{b}{\rightarrow} 1
+    \stackrel{a}{\rightarrow} 1 \stackrel{b}{\rightarrow} 1 \ldots
+    \)
+    <br>
+    This path reaches vertex \(1\) and loops around it traversing edges
+  labeled \(a\) and \(b\) for ever.
+    </li>
+  </ol>
+  
+<!------------------------------------------------------>
+  <p style="color:red;"><b>Examples of paths that are not
+  fair</b></p>
+  <ol>
+    <li>
+    \(
     8 \stackrel{b}{\rightarrow} 8
     \stackrel{a}{\rightarrow} 9 \stackrel{a}{\rightarrow} 8
     \stackrel{a}{\rightarrow} 9 \stackrel{a}{\rightarrow} 8
     \stackrel{a}{\rightarrow} 9 \stackrel{a}{\rightarrow} 8
     \ldots
-  \)
-  This path traverses an edge labeled \(b\) once and thereafter
+    \)
+    <br>
+    This path traverses an edge labeled \(b\) once and thereafter
   traverses only edges labeled \(a\). This path is not fair because it
-  only traverses infinitely-often label \(b\) only a finite number of
-times.
-</p>
+  only traverses infinitely-often label \(b\) only a finite number of times.
+    </li>
+    <li>
+    \(
+    6 \stackrel{a}{\rightarrow} 5 \stackrel{b}{\rightarrow} 3 \stackrel{b}{\rightarrow} 0
+    \stackrel{b}{\rightarrow} 5 \stackrel{b}{\rightarrow} 3 \stackrel{b}{\rightarrow} 0
+    \stackrel{b}{\rightarrow} 5 \stackrel{b}{\rightarrow} 3 \stackrel{b}{\rightarrow} 0
+    \ldots
+    \)
+    <br>
+    This path traverses an edge labeled \(a\) once and thereafter
+  traverses only edges labeled \(b\). This path is not fair because it
+  only traverses infinitely-often label \(a\) only a finite number of times.
+    </li>
+  </ol>
 
-<h4>Leads-To, \(\leadsto\), and Eventually, E </h4>
-  \(\leadsto\), read as "leads to," is a binary relation on vertex sets.
-  \(P \leadsto Q\) holds exactly when every fair path that visits a vertex in
-  \(P\) later visits a vertex in \(Q\).
-  </p>
-  <p>
-  \(
-  P \leadsto Q \; \equiv \;
-  \forall \; \textrm{fair} \; p: \; p_{i} \in P \;
-  \Rightarrow \; \exists j > i: p_{j} \in Q
-  \)
-  </p>
 
 
   <!------------------------------------------------------>
-  <p style="color:red;"><b>An example of \(P \leadsto Q\)</b></p>:
+  <p style="color:red;"><b>An example of \(P \leadsto Q\)</b></p> is:
   
     \(
     \{8, 9\} \leadsto \{1, 2\}
@@ -239,31 +128,91 @@ times.
   path will traverse
   infinitely-often label \(b\) which takes the path out of \(\{8,
   9\}\). Transitions out of \(\{8, 9\}\) are to \(\{1, 2\}\).
+  
+  <ol>
+    <li>
+    \(
+    \{1, 2\} \leadsto \{1, 2\}
+    \)
+    <br>
+    There is a path, with no hops, from every vertex to itself. So
+  \(v\) is in \(E(\{v\})\) for all vertices \(v\).
+    </li>
+    <li>
+    \(
+    \{8, 9\} \leadsto \{1, 2\}
+    \)
+    <br>
+    A fair path that enters any vertex in \(\{8, 9\}\) cannot remain
+  in \(\{8, 9\}\) for ever because the 
+  path will traverse
+  infinitely-often label \(b\) which takes the path out of \(\{8,
+  9\}\). Transitions out of \(\{8, 9\}\) are to \(\{1, 2\}\).
+    </li>
+    <li>
+    \(
+    \{8\} \leadsto \{1, 2\}
+    \) and\(
+    \{9\} \leadsto \{1, 2\}
+    \) 
+    <br>
+     Follows from the discussion above.
+    </li>
+    <li>
+    \(
+    \{10\} \leadsto \{9\}
+    \)
+    <br>
+     A fair path that enters \(\{10\}\) cannot remain in \(\{10\}\) for ever because the
+  path will traverse
+    infinitely-often label \(a\) which takes the path out of \(\{10\}\).
+    Transitions out of \(\{10\}\) are to \(\{9\}\).
+    </li>
+    <li>
+    \(
+    \{10\} \leadsto \{1, 2\}
+    \)
+    <br>
+     A fair path that enters \(\{10\}\) later enters \(\{8, 9\}\), and
+  a path that enters \(\{8, 9\}\) later enters \(\{1, 2\}\).
+    </li>
+    <li>
+    \(
+    \{1, 2, 8, 9, 10\} \leadsto \{1, 2\}
+    \)
+    <br>
+     Follows from the previous results.
+    </li>
+    </li>
+  </ol>
+
   <!------------------------------------------------------>
-  <p style="color:red;"><b>An example of \(\neg (P \leadsto
+  <p style="color:red;"><b>An examples of \(\neg (P \leadsto
   Q)\)</b></p> is:
     \(
     \neg (\{7\} \leadsto \{1, 2\})
     \)
     <br>
     There is a fair path from \(7\) throug \(6\) that
-never visits \(\{1, 2\}\).
-
-
-
-  <p><b>Eventually, \(E\)</b></p>
-  We define a function \(E\) from vertex sets to vertex sets as
-  follows. A vertex \(v\) is in \(E(Q)\) exactly when all fair paths
-		      from \(v\) visit \(Q\).
-		      </p>
-  <p>
-  \(
-  v \in E(X) \; \equiv \; v \leadsto X
-  \)
-</p>
-<p>
-Read \(E(Q)\) as "<i>eventually</i> Q."
-</p>
+  never visits \(\{1, 2\}\).
+  <ol>
+    <li>
+    \(
+    \neg (\{7\} \leadsto \{1, 2\})
+    \)
+    <br>
+    There is a fair path from \(7\) throug \(6\) that
+  never visits \(\{1, 2\}\).
+    </li>
+    <li>
+    \(
+    \neg (\{0, 3, 4, 5, 6\} \leadsto \{1, 2\})
+    \)
+    <br>
+    There exist fair paths from these vertices that never visit \(\{1,
+  2\}\). 
+    </li>
+  </ol>
 
 
   <!------------------------------------------------------>
@@ -272,111 +221,38 @@ Read \(E(Q)\) as "<i>eventually</i> Q."
     \(
     E({1, 2}) = \{1, 2, 8, 9, 10\}
   \)
-  because all paths that start at vertices in \(\{1, 2, 8, 9, 10\}\) and
+  because all paths that start at vertices in \{1, 2, 8, 9, 10\} and
     that traverse labels \(a\) and \(b\) infinitely
     often, visit vertices \(1\) and \(2\).
-
-
-  <h4>Relationship between Labeled and Unlabeled Graphs</h4>
-  The concepts we use to reason about safety are \(P
-  \rightarrow Q\), <i>next</i>, and <i>always</i>, which are defined
-  using unlabeled graphs. The concepts used
-  for proving progress are \(P \leadsto Q\), and <i>eventually</i>
-  which are defined using labeled graphs.
-</p>
-
-<p>
-We obtain an unlabeled graph from a labeled graph by removing labels
-and keeping at most one edge from a vertex \(v\) to a vertex \(w\).
-For example, if the labeled graph has edges \(v
-\stackrel{a}{\rightarrow} w\) and \(v \stackrel{b}{\rightarrow} w\),
-then the unlabeled graph has a single edge \(v \rightarrow w\).
-</p>
-
-<hr>
-  <!---------------------------------------------------------------------->
-  <a href="LeadsToProperties.html">
-<h4 style="color:green;">
-Next Module: Leads-To and Eventually
-  </h4>
-</a>
-
-  This module introduces the two concepts - <b>leads-to</b> and <b>eventually</b> -
-  that we use to prove that system trajectories progress towards their
-goals.
-</p>
-
-<p>
-<a href="Graph.html"><b>Previous Module: Graphs and Safety</b></a>
-
-</p>
-
-<!---------------------------------------------------------------------->
-<!---------------------------------------------------------------------->
-<h4 style="color:green;">Explore</h4>
-<!---------------------------------------------------------------------->
-
-<!---------------------------------------------------------------------->
-		<a href="ProgressExample.html">
-  <p style="color:green;">
-<b>Explore Examples of Labeled Graphs, Infinitely-Often and Fair
-		Paths</b> </p> </a> 
-
-
-<!---------------------------------------------------------------------->
-<a href="GraphPicturesOfBasicConcepts.html">
-  <p style="color:green;">
-  <b>Explore Diagrams: Pictorial representations of Infinitely-Often
-and Fair Paths</b></p> </a>
-		
-<!---------------------------------------------------------------------->
-		<a href="GraphExampleSafeFileAccess.html">
-  <p style="color:green;">
-  <b>Explore Why Study This? Why labeled graphs help us reason about
-		systems</b> </p> </a> 
-
-
-
-<!---------------------------------------------------------------------->
-<!-- Self Tests are Here-->
-<hr>
-<a href="#"><img class="img-fluid mx-auto d-block" id="icon"  src="../img/pencil.jpg" alt=""></a>
-<h3 class="text-center"> Self-Test </h3>
-
-<div class = "text-center">
-                                
-  <figure>
-  <img src="LabeledGraphSelfTest.jpg" alt="Fig2" style="width:50%">
-  <figcaption>Fig.2 - Labeled Graph: Example.</figcaption>
-  </figure>
-
-  The graph shown in Fig.2 has three labels red, black and blue shown
-  in edges colored red, black and blue. Red and black are fair
-  while blue is unfair. Recall that edges that are self loops are not
-  shown in the figure. For example, the black edge from \(6\) to
-  itself is not shown. Likewise, the blue edge from \(8\) to
-  itself is not shown. Also, note that there can be multiple outgoing
-  edges of the same color from the same vertex. For example, \(8\) has
-  two outgoing red edges.
-  </p>
-
-  <p> For each of the following vertex sets \(X\), does there exist an
-  edge with a fair label from \(X\) to \(\overline{X}\)? Which of
-  these sets, or their complements, are visited infinitely often by
-  all fair paths?
   <ol>
-    <li> \(\{2, 3, 4\}\) </li>
-    <li> \(\{5, 6, 7\}\) </li>
-    <li> \(\{12, 13\}\) </li>
-    <li> \(\{0\}\) </li>
-    <li> \(\{10, 11\}\) </li>
-    <li> \(\{9, 11\}\) </li>
-    <li> \(\{9, 10, 11, 12, 13, 14\}\) </li>
+    <li>
+    \(
+    E({1, 2}) = \{1, 2, 8, 9, 10\}
+    \)
+    <br>
+    From the earlier discussion, 
+    \(
+    \{1, 2, 8, 9, 10\} \leadsto \{1, 2\}
+    \)
+    and
+    \(
+    \neg (\{0, 3, 4, 5, 6, 7\} \leadsto \{1, 2\})
+    \)
+    </li>
+    <li>
+    \(
+    E({0}) = \{0\}
+    \)
+    <br>
+    Every path from \(0\) visits \(0\), by definition; so, all fair
+  paths from \(0\) visit \(0\). So, \(0\) is in \(E({0})\). One can
+  construct fair paths from all the vertices other than \(0\) that
+  never visit \(0\).
+    </li>
+
   </ol>
-</div>
 
-
-                          
+           
                     <!-- Force next columns to break to new line -->
                     <!--<div class="w-100"></div>
                           
