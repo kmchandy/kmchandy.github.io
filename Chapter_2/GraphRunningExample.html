@@ -1,65 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Graphs and Safety</title>
-        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
-        <!-- Font Awesome icons (free version)-->
-        <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
-        <!-- Some  -->
-        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-        <script id="MathJax-script" async
-      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-      </script>
-        <!-- Google fonts-->
-        <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
-        <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="../css/styles.css" rel="stylesheet" />
-    </head>
-    <body id="page-top">
-        <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-            <a class="nav-item navbar-text" href="#about"> CS142. </a>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">Home</a></li>
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#experience">Lectures</a></li>
-                        <!--<ul class = "navbar-nav dropdown-submenu">
-                            <li><a class="dropdown-item" href="#">1A Graphs & Paths</a></li>
-                            <li><a class="dropdown-item" href="#">1B Reachability</a></li>
-                            <li><a class="dropdown-item" href="#">1C Vertex Sets</a></li>
-                        </ul> -->
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#education">Assignments</a></li>
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#education">Explore</a></li>
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#skills">About</a></li>
-                </ul>
-            </div>
-        </nav>
-        <!-- Page Content-->
-        <div class="container-fluid p-0">
-            <!-- About-->
-            <section class="resume-section" id="about">
-                <div class="row">
-                    <div class="col-lg-2 col-med-2 col-sm-1"></div>
-                    <div class="col-lg-8 col-med-8 col-sm-10">
+<title>GraphRunningExample</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
 
-<a name="Examples"></a>
-  <h3>Examples</h3>
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="#" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About</a>
+    <a href="#" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contents</a>
+    <a href="#" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+  
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Chapter2_Organization.html">Chapter: Concepts in Temporal Logic</a>
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Safety.html">Module: Safety</a>
+  <a class="w3-bar-item w3-button w3-hover-black" href="GraphRunningExample.html">More Examples</a>
+  <a class="w3-bar-item w3-button w3-hover-black" href="GraphPicturesOfBasicConcepts.html">More Diagrams</a>
+  <a class="w3-bar-item w3-button w3-hover-black" href="GraphExampleSafeFileAccess.html">System Example</a>
+  <a class="w3-bar-item w3-button w3-hover-black" href="GraphSelfTest.html">Self Test</a>
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="LabeledGraph.html">Next Module: Progress</a>
+</nav>
+
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+    <div class="w3-twothird w3-container">
+      <h1 class="w3-text-teal">Examples</h1>
+
 
   <figure>
-      <a href="#"><img class="img-fluid mx-auto d-block" src="GraphExample.jpg" alt=""></a>
-      <figcaption class="figure-caption text-center">Fig. 2 - An Example of a Graph.</figcaption>
+      <img src="GraphExample.jpg" alt="Fig1" style="width:50%">
+      <figcaption>Fig.1 - An Example of a Graph</figcaption>
   </figure>
-
-  <!--<figure>
-  <img src="GraphExample.jpg" alt="Fig2" style="width:100%">
-  <figcaption>Fig.2 - An Example of a Graph</figcaption>
-</figure> -->
 
 <p><b>Vertices:
 \( V = \{0, 1, 2, 3, 4, 5, 6, 7 \} \)
@@ -289,133 +299,33 @@
 
 
 
+<!-- END MAIN -->
+</div>
 
-<!---------------------------------------------------------------------->
-<!---------------------------------------------------------------------->
-<a name="SelfTest"></a>
-<!-- Self Tests are Here-->
-<hr>
-<a href="#"><img class="img-fluid mx-auto d-block" id="icon"  src="../img/pencil.jpg" alt=""></a>
-<h3 class="text-center"> Self-Test </h3>
-<! ----- div class = "text-center">
-  
-<figure>
-  <img src="Graph.jpg" alt="Fig1" style="width:100%">
-  <figcaption>Fig.2 - An Example Graph.</figcaption>
-</figure>
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
 
-  For the graph of Fig. 2, what are the following:
-  </p>
-  <p>
-  \(
-  N(X), A(X)
-  \)
-  </p>
-  for the following values of \(X\)?
-  
-  <ol>
-    <li>
-    \(
-    \{2\}
-    \)
-    </li>
-    <li>
-    \(
-    \{2, 3\}
-    \)
-    </li>
-    <li>
-    \(
-    \{2, 3, 4, 5\}
-    \)
-    </li>
-    <li>
-    \(
-    \{0, 1, 2\}
-    \)
-    </li>
-   </ol>
-  
-  Are the following formulae correct for the graph of Fig. 1?
-   <ol>
-     <li>
-  <p class="ex1">
-\(\{3, 4, 5 \}  \rightarrow \{3, 4, 5\}\)
-  </p>
-     </li>
-  <li>
-  <p class="ex1">
-  \(\{0, 3 \} \rightarrow  \; \{1, 4 \}\)
-  </p>
-  </li>
-  
-  <li>
-  <p class="ex1">
-  \( \{0, 3 \} \rightarrow  \; \{1, 2, 5 \} \)
-  </p>
-  </li>
-     <li>
-     <p class="ex1">
-     \(\{2, 3 \} \rightarrow  \; \{1, 3, 4, 5 \}\)
-     </li>
-     <li>
-     <p class="ex1">
-     \(  \{3, 4, 5 \}  \rightarrow \{2, 3, 4, 5\}  \)
-     </p>
-     </li>
-     
-     <li>
-     <p class="ex1">
-     \(  \{3, 4, 5 \}  \rightarrow \{4, 5\}  \)
-     </p>
-     </li>
-   </ol>
-   <a href="GraphSolutionsToSelfTests.html">Solutions.</a>
- </div>
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
 
-                    <hr>    
-                    <div class="col-lg-2 col-med-2 col-sm-1"></div>
-                    
-                          
-                    <!-- Force next columns to break to new line -->
-                    <!--<div class="w-100"></div>
-                          
-                    <div class="col-6 col-sm-3">.col-6 .col-sm-3</div>
-                    <div class="col-6 col-sm-3">.col-6 .col-sm-3</div>-->
-                </div>
-            </section>
-        <hr class="m-0" />
-        
-                <!--<div class="resume-section-content">
-                    <h1 class="mb-0">
-                        CS 142
-                        <span class="text-primary">Distributed Systems</span>
-                    </h1>
-                    <div class="subheading mb-4">
-                        Course Instructor: Mani Chandy, Instructional Designer: Karena Cai                    </div>
-                    <h3 class="mb-3">
-                        Course Prerequisites
-                    </h3>
-                    <p> </p>
-                    <h3 class="mb-3">
-                        Course Overview
-                    </h3>
-                    <p class="lead mb-5">This course is about distributed algorithms. You will learn...</p> -->
-                    <!--<div class="social-icons">
-                        <a class="social-icon" href="#"><i class="fab fa-linkedin-in"></i></a>
-                        <a class="social-icon" href="#"><i class="fab fa-github"></i></a>
-                        <a class="social-icon" href="#"><i class="fab fa-twitter"></i></a>
-                        <a class="social-icon" href="#"><i class="fab fa-facebook-f"></i></a>
-                    </div> -->
-                <!--</div>
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
 
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
 
-        <!-- Bootstrap core JS-->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
-        <!-- Third party plugin JS-->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
-    </body>
+</body>
 </html>

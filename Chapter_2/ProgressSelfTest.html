@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>Chapter Organization</title>
+<title>Progress</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -41,15 +41,16 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <a class="w3-bar-item w3-button w3-hover-black"
   href="Chapter2_Organization.html">Chapter: Concepts in Temporal Logic</a>
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Safety.html">Module: Safety</a>
-  <a class="w3-bar-item w3-button w3-hover-black" href="GraphRunningExample.html">More Examples</a>
-  <a class="w3-bar-item w3-button w3-hover-black" href="GraphPicturesOfBasicConcepts.html">More Diagrams</a>
-  <a class="w3-bar-item w3-button w3-hover-black" href="GraphExampleSafeFileAccess.html">System Example</a>
+  href="LabeledGraph.html">Module: Progress</a>
+  <a class="w3-bar-item w3-button w3-hover-black" href="ProgressExample.html">Examples</a>
   <a class="w3-bar-item w3-button w3-hover-black" href="GraphSelfTest.html">Self Test</a>
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="LabeledGraph.html">Next Module: Progress</a>
-</nav>
+  href="Safety.html">Previous Module: Safety</a>
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href=*>Next Chapter: Properties of Temporal Operators</a>
+  </nav>
 
+  
 <!-- Overlay effect when opening sidebar on small screens -->
 <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
@@ -61,30 +62,42 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 </script>
   
   <div class="w3-row w3-padding-64">
-  <div class="w3-twothird w3-container">
-    <h1 class="w3-text-teal">Example of a System Represented by a
-    Graph: Sharing Files Safely</h1>
-  We want to develop an algorithm by which agents in a distributed
-  system share access to a set of files. Safety means that each file
-  is modified by at most one agent at a time, and no agent reads a
-  file while it is being modified by another agent.  The state of the
-  system is specified by the states of the agents and the states of
-  message channels. In the graph representation, the system is at one
-  vertex, representing a state, at any point in time. We will show
-  that the paths that the system takes in the graph visit only safe
-  states.
+    <div class="w3-twothird w3-container">
+      <h1 class="w3-text-teal">Self Test</h1>
+
+
+  <figure>
+  <img src="LabeledGraphSelfTest.jpg" alt="Fig2" style="width:50%">
+  <figcaption>Fig.2 - Labeled Graph: Example.</figcaption>
+  </figure>
+
+  The graph shown in Fig.2 has three labels red, black and blue shown
+  in edges colored red, black and blue. Red and black are fair
+  while blue is unfair. Recall that edges that are self loops are not
+  shown in the figure. For example, the black edge from \(6\) to
+  itself is not shown. Likewise, the blue edge from \(8\) to
+  itself is not shown. Also, note that there can be multiple outgoing
+  edges of the same color from the same vertex. For example, \(8\) has
+  two outgoing red edges.
   </p>
 
-  <p>
-  We will show that a system progresses towards desired or goal states
-  from properties of sets of infinite paths in graphs.
-  </p>
+  <p> For each of the following vertex sets \(X\), does there exist an
+  edge with a fair label from \(X\) to \(\overline{X}\)? Which of
+  these sets, or their complements, are visited infinitely often by
+  all fair paths?
+  <ol>
+    <li> \(\{2, 3, 4\}\) </li>
+    <li> \(\{5, 6, 7\}\) </li>
+    <li> \(\{12, 13\}\) </li>
+    <li> \(\{0\}\) </li>
+    <li> \(\{10, 11\}\) </li>
+    <li> \(\{9, 11\}\) </li>
+    <li> \(\{9, 10, 11, 12, 13, 14\}\) </li>
+  </ol>
 
-  <p>
-  <a href="Graph.html#Graph2">Return to main page.</a>
-  </div>
 
 <!-- END MAIN -->
+</div>
 
 <script>
 // Get the Sidebar
@@ -113,4 +126,3 @@ function w3_close() {
 
 </body>
 </html>
-
