@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>Chapter Organization</title>
+<title>SafetyProperties</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -41,17 +41,16 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <h3 class="w3-bar-item"><b>An Introduction to Distributed
   Algorithms</h3>
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Chapter2_Organization.html">Chapter: Concepts in Temporal Logic</a>
+  href="Chapter2_Organization.html">Chapter: Properties of Temporal Operators</a>
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Safety.html">Module: Safety</a>
-  <a class="w3-bar-item w3-button w3-hover-black" href="GraphRunningExample.html">More Examples</a>
-  <a class="w3-bar-item w3-button w3-hover-black" href="GraphPicturesOfBasicConcepts.html">More Diagrams</a>
-  <a class="w3-bar-item w3-button w3-hover-black" href="GraphExampleSafeFileAccess.html">System Example</a>
-  <a class="w3-bar-item w3-button w3-hover-black" href="GraphSelfTest.html">Self Test</a>
+  href="SafetyProperties.html">Module: Safety Properties</a>
+  <a class="w3-bar-item w3-button w3-hover-black" href="Example.html">Examples</a>
+  <a class="w3-bar-item w3-button w3-hover-black" href="Diagrams.html">Diagrams</a>
+  <a class="w3-bar-item w3-button w3-hover-black" href="SelfTest.html">Self Test</a>
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="LabeledGraph.html">Next Module: Progress</a>
+  href="ProgressProperties.html">Next Module: Progress Properties</a>
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_3/Overview.html">Next Chapter: Properties of Temporal Operators</a>
+  href="StateTransitionSystems.html">Next Chapter: State Transition Systems</a>
 </nav>
 
 <!-- Overlay effect when opening sidebar on small screens -->
@@ -67,30 +66,105 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
     
-    <h1 class="w3-text-teal">Example of a System Represented by a
-    Graph: Sharing Files Safely</h1>
-  We want to develop an algorithm by which agents in a distributed
-  system share access to a set of files. Safety means that each file
-  is modified by at most one agent at a time, and no agent reads a
-  file while it is being modified by another agent.  The state of the
-  system is specified by the states of the agents and the states of
-  message channels. In the graph representation, the system is at one
-  vertex, representing a state, at any point in time. We will show
-  that the paths that the system takes in the graph visit only safe
-  states.
-  </p>
+    <h1 class="w3-text-teal">Safety Properties</h1>
+    
+    <p>
+    This module presents theorems about 
+    <i>next</i>, <i>always</i> and <i>stable</i> which are defined
+    in the previous module
+    <a href="../Chapter_2/Chapter2_Organization.html">Concepts in
+    Temporal Logic</a>.
+    The proofs of the theorems are straightforward applications of
+    properties of
+    <a href="https://en.wikipedia.org/wiki/Directed_graph">
+    directed (unlabeled) graphs</a>.
+    The proofs are given in the module:
+    <a href="Proofs.html">Proofs</a>.
+    We will refer back to this chapter when we use results from it to
+    prove the correctness of algorithms.
+    </p>
 
+  <h4 class="w3-text-teal"><a
+    href="https://en.wikipedia.org/wiki/Monotonic_function">
+    Monotonicity
+    </a>
+  </h4>
+    
   <p>
-  We will show that a system progresses towards desired or goal states
-  from properties of sets of infinite paths in graphs.
+  \(
+  P \subseteq Q \quad \Rightarrow \quad N(P) \subseteq N(Q)
+  \)
   </p>
-
   <p>
-    <a href="Graph.html#Graph2">Return to main page.</a>
+  \(
+  P \subseteq Q \quad \Rightarrow \quad A(P) \subseteq A(Q)
+  \)
+    </p>
+
+  <h4 class="w3-text-teal">
+  <a href="https://en.wikipedia.org/wiki/Distributive_property"><b>Distributivity</b></a>
+  </h4>
+
+    <p>
+    \(
+    N(X \cap Y) = N(X) \cap N(Y)
+    \)
+    </p>
+
+    <p>
+    \(
+    A(X \cap Y) = A(X) \cap A(Y)
+    \)
+    </p>
+
+
+    <h4 class="w3-text-teal">Stable Sets</h4>
+
+    <p>
+    \(
+    stable(X) \quad \equiv \quad X \subseteq N(X)
+    \)
+    </p>
+
+    <p>
+    \(
+    stable(X) \quad \equiv \quad A(X) = X
+    \)
+    </p>
+
+   
+  <p>
+  \(
+  stable(A(X))
+  \)
   </p>
 
+<h4 class="w3-text-teal">Intersections and Unions of Stable Sets are Stable</h4>
+  <p>
+  \(  \textit{stable}(X) \wedge \textit{stable}(Y) \; \Rightarrow
+  \textit{stable}(X \cap Y) \)
+  </p>
+  <p>
+  \(  
+  \textit{stable}(X) \wedge \textit{stable}(Y) \; \Rightarrow
+  \textit{stable}(X \cup Y)
+  \)
+  </p>
 
+  <p><b>Corollary</b></p>
+  <p>
+  The stable sets that are subsets of \(X\) form a
+  <a href="https://en.wikipedia.org/wiki/Lattice_(order)">lattice</a>
+  with the 
+  empty set at the bottom and \(A(X)\) at the top.
+</p>
+<!---------------------------------------->
+<h2 class="w3-text-teal">Summary</h2>
 
+</p>
+
+    
+<!---------------------------------------->
   <footer id="myFooter">
 
     <div class="w3-container w3-theme-l1">
@@ -99,6 +173,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
       Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
     </div>
   </footer>
+
 
 <!-- END MAIN -->
 </div>
@@ -130,4 +205,3 @@ function w3_close() {
 
 </body>
 </html>
-

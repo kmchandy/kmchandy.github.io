@@ -48,6 +48,8 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <a class="w3-bar-item w3-button w3-hover-black" href="ProgressSelfTest.html">Self Test</a>
   <a class="w3-bar-item w3-button w3-hover-black"
   href="Safety.html">Previous Module: Safety</a>
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_3/Overview.html">Next Chapter: Properties of Temporal Operators</a>
   </nav>
 
   
@@ -79,7 +81,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 		      </a>labeled graphs</a>.
 
 
-  <h4>Labeled Graphs</h4>
+  <h2 class="w3-text-teal">Labeled Graphs</h2>
   <p>
   A labeled graph is defined by: (1) a set of vertices, (2) a set of labels and
   (3) a set of edges. An edge is defined by its originating vertex,
@@ -123,7 +125,7 @@ labeled \(c\) from vertex \(7\) back to itself.
 
 <!------------------------------------------------------>
 <!------------------------------------------------------>
-  <p><b>Paths in Labeled Graphs</b>:
+  <h3 class="w3-text-teal">Paths in Labeled Graphs</h3>
   A path is defined by a sequence of edges where the terminating
   vertex of an edge is the originating vertex of the next edge in the
   sequence. For example, a path \(p\) is denoted by:
@@ -153,7 +155,7 @@ labeled \(c\) from vertex \(7\) back to itself.
 \)
 
 <!------------------------------------------------------>
-<p><b>Paths that Traverse a Label Infinitely Often</b>
+<h3 class="w3-text-teal">Paths that Traverse a Label Infinitely Often</h3>
 A path \(p\) traverses label \(L\) infinitely often exactly
 when at every point in \(p\) there is always a later point at
 which \(p\) traverses an edge labeled \(L\). So, the interval between
@@ -186,7 +188,7 @@ traverses edges with label \(b\) infinitely often.
 
 <!------------------------------------------------------>
 <!------------------------------------------------------>
-<h4>Infinitely Often Labels</h4>
+<h3 class="w3-text-teal">Infinitely Often Labels</h3>
 Some labels are designated <b>infinitely-often
 labels</b>. We 
 define a <b>fair path</b> as follows:
@@ -199,8 +201,8 @@ label infinitely often.
   arbitrary number of times in fair paths: it may
   appear a finite number of
   times or it may appear infinitely often.
-  Labels that are not infinitely often represent events, such as errors, that may
-  or may not occur.
+  Labels that are not infinitely often represent events, such as
+errors, over which system designers have no control.
   </p>
 
 
@@ -230,7 +232,7 @@ label infinitely often.
 times.
 </p>
 
-<h4>Leads-To, \(\leadsto\), and Eventually, E </h4>
+<h3 class="w3-text-teal">Leads-To, \(\leadsto\)</h3>
   \(\leadsto\), read as "leads to," is a binary relation on vertex sets.
   \(P \leadsto Q\) holds exactly when every fair path that visits a vertex in
   \(P\) later visits a vertex in \(Q\).
@@ -245,7 +247,7 @@ times.
 
 
   <!------------------------------------------------------>
-  <p style="color:red;"><b>An example of \(P \leadsto Q\)</b></p>:
+  <p style="color:red;"><b>An example of \(P \leadsto Q\)</b></p>
   
     \(
     \{8, 9\} \leadsto \{1, 2\}
@@ -258,7 +260,7 @@ times.
   9\}\). Transitions out of \(\{8, 9\}\) are to \(\{1, 2\}\).
   <!------------------------------------------------------>
   <p style="color:red;"><b>An example of \(\neg (P \leadsto
-  Q)\)</b></p> is:
+  Q)\)</b></p>
     \(
     \neg (\{7\} \leadsto \{1, 2\})
     \)
@@ -268,7 +270,7 @@ never visits \(\{1, 2\}\).
 
 
 
-  <p><b>Eventually, \(E\)</b></p>
+  <h3 class="w3-text-teal">Eventually, \(E\)</h3>
   We define a function \(E\) from vertex sets to vertex sets as
   follows. A vertex \(v\) is in \(E(Q)\) exactly when all fair paths
 		      from \(v\) visit \(Q\).
@@ -294,7 +296,7 @@ Read \(E(Q)\) as "<i>eventually</i> Q."
     often, visit vertices \(1\) and \(2\).
 
 
-  <h4>Relationship between Labeled and Unlabeled Graphs</h4>
+  <h3 class="w3-text-teal">Relationship between Labeled and Unlabeled Graphs</h3>
   The concepts we use to reason about safety are \(P
   \rightarrow Q\), <i>next</i>, and <i>always</i>, which are defined
   using unlabeled graphs. The concepts used
@@ -309,62 +311,6 @@ For example, if the labeled graph has edges \(v
 \stackrel{a}{\rightarrow} w\) and \(v \stackrel{b}{\rightarrow} w\),
 then the unlabeled graph has a single edge \(v \rightarrow w\).
 </p>
-
-<hr>
-  <!---------------------------------------------------------------------->
-  <a href="LeadsToProperties.html">
-<h4 style="color:green;">
-Next Module: Leads-To and Eventually
-  </h4>
-</a>
-
-  This module introduces the two concepts - <b>leads-to</b> and <b>eventually</b> -
-  that we use to prove that system trajectories progress towards their
-goals.
-</p>
-
-<p>
-<a href="Graph.html"><b>Previous Module: Graphs and Safety</b></a>
-
-</p>
-
-<!---------------------------------------------------------------------->
-<!-- Self Tests are Here-->
-<hr>
-<a href="#"><img class="img-fluid mx-auto d-block" id="icon"  src="../img/pencil.jpg" alt=""></a>
-<h3 class="text-center"> Self-Test </h3>
-
-<div class = "text-center">
-                                
-  <figure>
-  <img src="LabeledGraphSelfTest.jpg" alt="Fig2" style="width:50%">
-  <figcaption>Fig.2 - Labeled Graph: Example.</figcaption>
-  </figure>
-
-  The graph shown in Fig.2 has three labels red, black and blue shown
-  in edges colored red, black and blue. Red and black are fair
-  while blue is unfair. Recall that edges that are self loops are not
-  shown in the figure. For example, the black edge from \(6\) to
-  itself is not shown. Likewise, the blue edge from \(8\) to
-  itself is not shown. Also, note that there can be multiple outgoing
-  edges of the same color from the same vertex. For example, \(8\) has
-  two outgoing red edges.
-  </p>
-
-  <p> For each of the following vertex sets \(X\), does there exist an
-  edge with a fair label from \(X\) to \(\overline{X}\)? Which of
-  these sets, or their complements, are visited infinitely often by
-  all fair paths?
-  <ol>
-    <li> \(\{2, 3, 4\}\) </li>
-    <li> \(\{5, 6, 7\}\) </li>
-    <li> \(\{12, 13\}\) </li>
-    <li> \(\{0\}\) </li>
-    <li> \(\{10, 11\}\) </li>
-    <li> \(\{9, 11\}\) </li>
-    <li> \(\{9, 10, 11, 12, 13, 14\}\) </li>
-  </ol>
-</div>
 
 
   <footer id="myFooter">
