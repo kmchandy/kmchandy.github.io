@@ -125,7 +125,7 @@ labeled \(c\) from vertex \(7\) back to itself.
 
 <!------------------------------------------------------>
 <!------------------------------------------------------>
-  <h3 class="w3-text-teal">Paths in Labeled Graphs</h3>
+  <h2 class="w3-text-teal">Paths in Labeled Graphs</h2>
   A path is defined by a sequence of edges where the terminating
   vertex of an edge is the originating vertex of the next edge in the
   sequence. For example, a path \(p\) is denoted by:
@@ -232,7 +232,7 @@ errors, over which system designers have no control.
 times.
 </p>
 
-<h3 class="w3-text-teal">Leads-To, \(\leadsto\)</h3>
+<h2 class="w3-text-teal">Leads-To, \(\leadsto\)</h2>
   \(\leadsto\), read as "leads to," is a binary relation on vertex sets.
   \(P \leadsto Q\) holds exactly when every fair path that visits a vertex in
   \(P\) later visits a vertex in \(Q\).
@@ -269,20 +269,21 @@ times.
 never visits \(\{1, 2\}\).
 
 
-
-  <h3 class="w3-text-teal">Eventually, \(E\)</h3>
+ <!------------------------------------------------------>
+  <h2 class="w3-text-teal">Eventually, \(E\)</h2>
   We define a function \(E\) from vertex sets to vertex sets as
   follows. A vertex \(v\) is in \(E(Q)\) exactly when all fair paths
 		      from \(v\) visit \(Q\).
 		      </p>
   <p>
   \(
-  v \in E(X) \; \equiv \; v \leadsto X
+  v \in E(Q) \; \equiv \; v \leadsto Q
   \)
 </p>
 <p>
 Read \(E(Q)\) as "<i>eventually</i> Q."
 </p>
+
 
 
   <!------------------------------------------------------>
@@ -294,8 +295,7 @@ Read \(E(Q)\) as "<i>eventually</i> Q."
   because all paths that start at vertices in \(\{1, 2, 8, 9, 10\}\) and
     that traverse labels \(a\) and \(b\) infinitely
     often, visit vertices \(1\) and \(2\).
-
-
+<!------------------------------------------------------>
   <h3 class="w3-text-teal">Relationship between Labeled and Unlabeled Graphs</h3>
   The concepts we use to reason about safety are \(P
   \rightarrow Q\), <i>next</i>, and <i>always</i>, which are defined
@@ -313,6 +313,60 @@ then the unlabeled graph has a single edge \(v \rightarrow w\).
 </p>
 
 
+
+<p style="margin-bottom:1.0cm;">Next is a list of useful
+    results that can be proved directly from definitions.</p>
+
+
+<!------------------------------------------------------>
+<h2 class="w3-text-teal">Observations</h2>
+
+<h4 class="w3-text-teal"><a
+    href="https://en.wikipedia.org/wiki/Monotonic_function">
+    Monotonicity
+    </a>
+  </h4>
+    
+  <p>
+  \(
+  P \subseteq Q \quad \Rightarrow \quad E(P) \subseteq E(Q)
+  \)
+</p>
+
+<h4 class="w3-text-teal">
+  <a
+  href="https://en.wikipedia.org/wiki/Distributive_property"><b>Distributes
+  over Conjunction for stable sets</b></a>
+  </h4>
+If \(stable(P)\) and \(stable(Q)\) then
+    <p>
+    \(
+    E(P \cap Q) \;  = \; E(P) \cap E(Q)
+    \)
+</p>
+
+<h4 class="w3-text-teal">
+ Relations and Functions
+  </h4>
+
+    <p>
+    \(
+    P \leadsto Y \quad \equiv \quad P \subseteq E(Y)
+    \)
+    </p>
+
+
+
+<!------------------------------------------------->
+<h2 class="w3-text-teal">Summary</h2>
+We use \(\rightarrow\) as the central concept to reason about
+safety. We use <i>always</i>, <i>next</i> and <i>stable</i> to specify
+systems. These are all the concepts that we use to prove that
+systems are safe.
+</p>
+
+
+<!------------------------------------------------------>
   <footer id="myFooter">
 
     <div class="w3-container w3-theme-l1">
