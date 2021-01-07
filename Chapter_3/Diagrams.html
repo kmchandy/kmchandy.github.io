@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>Overview</title>
+<title>Composition</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -18,7 +18,6 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 }
 </style>
 <body>
-
 
 <!-- Navbar -->
 <div class="w3-top">
@@ -68,6 +67,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   
 </nav>
 
+
 <!-- Overlay effect when opening sidebar on small screens -->
 <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
@@ -80,49 +80,108 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
+    
+    <!------------------------------------------------------>
+    <h1 class="w3-text-teal">Diagrams and Examples</h1>
 
-    <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Properties of Temporal
-    Operators</h1>
-    <h2 class="w3-text-teal">Chapter Overview</h2>
+    <h3 class="w3-text-teal">Functional Composition</h3>
 
-    This chapter has two main modules:
-    <a href="Properties.html">Properties of \(\rightarrow\) and
-    \(\leadsto\)</a>,
-    and
-    <a href="Composition.html">Composition</a>.
-    These modules contain results that follow directly from the
-    definitions given in the previous chapter,
-    <a href="../Chapter_2/Chapter2_Organization.html">Concepts in
-    Temporal Logic</a>.
-    </p>
+<h3 class="w3-text-teal">Next Always</h3>
+  A vertex \(v\) is in \(N(A(X))\) exactly when all single hops from
+  \(v\) terminate in \(A(X)\).
 
+  <figure>
+  <img src="NAX.jpg" alt="Fig3" style="width:50%">
+  <figcaption>Fig.4 - Next Always</figcaption>
+</figure>
 
-    <h2 class="w3-text-teal">
-    <a href="Properties.html">Properties of \(\rightarrow\) and
-    \(\leadsto\)</a>
-    </h2>
-    This module contains two properties - the transitivity of
-    \(\leadsto\) and the infinitely-often property - that we use in
-    reasoning about almost all the algorithms in this course. The proofs
-    of these properties are straightforward and are based on graphs
-    and sets. This module also contains a list of useful
-    properties with obvious proofs.
-    </p>
+<p>
+In the diagram, vertices represented by the small circles colored blue
+or black. All vertices in the red circle are in \(X\). All black
+vertices are in \(A(X)\). All vertices in the green circle are in
+\(N(A(X))\). Note that there may be vertices in \(N(A(X))\) that are
+not in \(X\).
+</p>
+
+<figure>
+  <img src="NAX_EXAMPLE.jpg" alt="Fig5" style="width:50%">
+  <figcaption>Fig.5 - Next Always Example</figcaption>
+</figure>
 
 
-    <h2 class="w3-text-teal">
-    <a href="Composition.html">Composition</a>
-    </h2>
-    This module has
-    examples of compositions of the functions
-    <i>always</i> and <i>eventually</i>. Composition with the function <i>next</i>
-    are in the supporting module
-    <a href="Diagrams.html">Diagrams & Examples</a>.
-    Functional composition of <i>always</i> and <i>eventually</i>, and
-    produce functions that are frequently used in specifying problems.
+<div class="div2">
+Self test: Prove
+\(
+A(X) \; = \; X \cap N(A(X))
+\)
+</div>
 
 
+<h3 class="w3-text-teal">Next Eventually</h3>
+  A vertex \(v\) is in \(N(E(X))\) exactly when all single hops from
+  \(v\) are to vertices from which all fair paths visit \(X\). So, all
+  fair paths from a vertex in \(N(E(X))\) visit \(X\).
+
+  <figure>
+  <img src="NEX.jpg" alt="Fig3" style="width:50%">
+  <figcaption>Fig.5 - Next Eventually</figcaption>
+  </figure>
+
+<p>
+In the diagram, the black vertex inside the green circle represents a
+vertex that is <i>not</i> in \(N(E(X))\) but is in \(X\) and hence
+also in \(E(X)\). This black vertex is not in \(N(E(X))\) because it
+has an outgoing edge to a vertex outside \(E(X)\).
+</p>
+
+
+<div class="div2">
+Self test: Prove
+\(
+E(X) \; = \; X \cup N(E(X))
+\)
+</div>
+
+<h3 class="w3-text-teal">Composing \(\leadsto\)</h3>
+Next, let's look at a few examples of composing the relation
+\(\leadsto\) with the functions \(A\) and \(E\). 
+<p class="ex1">
+\(
+X \leadsto A(Y)
+\)
+</p>
+<p>
+means that all fair paths from vertices in \(X\) visit and remain
+forever in \(Y\).
+</p>
+
+<p>
+What does \(X \leadsto E(Y)\) mean? It only means \(X \leadsto Y\).
+</p>
+<p class="ex1">
+\(
+X \leadsto E(Y) \quad \equiv \quad X \leadsto Y
+\)
+</p>
+<p>
+The proof follows from \((X \leadsto Z) \; \equiv \; (X \subseteq
+E(Z))\) 
+and idempotence of \(E\).
+</p>
+
+
+
+    
+
+
+
+<!---------------------------------------->
+<h2 class="w3-text-teal">Summary</h2>
+
+</p>
+
+    
+<!---------------------------------------->
   <footer id="myFooter">
 
     <div class="w3-container w3-theme-l1">
@@ -131,9 +190,6 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
       Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
     </div>
   </footer>
-
-
-      
 
 
 <!-- END MAIN -->
