@@ -81,7 +81,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
     
-    <h1 class="w3-text-teal">Properties of \(\rightarrow\) and
+    <h1 class="w3-text-teal">Three Key Properties of
     \(\leadsto\)</h1>
     
     <p>
@@ -90,17 +90,111 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     in the previous chapter
     <a href="../Chapter_2/Chapter2_Organization.html">Concepts in
     Temporal Logic</a>.
-    The module presents results on <i>transitivity</i> and the
-    <i>infinitely-often property</i> which allows us to deduce
-    properties about \(\leadsto\).
+    This module presents three key properties of \(\leadsto\). We will
+    use these properties frequently in this course.
     The module also has a list of observations about  \(\rightarrow\) and
-    \(\leadsto\); these observations will be useful in proving the
-    correctness of algorithms.
+    \(\leadsto\).
+    </p>
+
+    <p>
+Notation: We denote the complement of a set \(P\) by \(P^{c}\).
+</p>
+
+    <!------------------------------------------------------>  
+    <h3 style="color:red;">Example</h3>
+    We use the following example graph from the previous module.
+  <figure>
+  <img src="LabeledGraph.jpg" alt="Fig2" style="width:50%">
+  <figcaption>Fig.1 - Example of a Labeled Graph</figcaption>
+  </figure>
+  <p>
+
+
+<!------------------------------------------------------>
+<h2 class="w3-text-teal">Key Property of \(\leadsto\)</h2>
+
+<p class="w3-text-teal">If for a set \(P\) of vertices, there exists an
+infinitely-often label \(a\) such that all edges labeled \(a\)
+that start at a vertex in \(P\) terminate at a vertex in \(P^{c}\),
+then:
+</p>
+
+<p class="w3-text-teal">
+\(
+P \leadsto P^{c}
+\)
+</p>
+
+<p>
+Proof outline: A fair path cannot
+remain forever in \(P\) because the path traverses the edge labeled
+\(a\) which takes the path out of \(P\).
+
+<p style="color:red;">Example of \(P \leadsto P^{c}\)</p>
+In the graph, because of infinitely-often label \(b\):
+<p>
+\(
+    \{8, 9\} \leadsto \{8, 9\}^{c}
+\)
     </p>
 
 
+<!---------------------------------------------->
+
+<h2 class="w3-text-teal">Key Property of \(\leadsto\)</h2>
+
+<p class="w3-text-teal">
+    \(
+    (P \rightarrow (P \cup Q)) \wedge (P \leadsto P^{c})
+    \quad \Rightarrow \quad (P \leadsto Q)
+    \)
+    </p>
+
+
+  <p>
+  <b>Proof outline</b>:
+  \(P \; \rightarrow \; (P \cup Q) \) implies that every
+  fair path from a vertex in \(P\) either (1) remains in \(P\) forever
+  or (2) visits a vertex in \(Q\). 
+  But, \(P \leadsto P^{c}\) implies that the first case is not
+  possible. 
+</p>
+
+<p style="color:red;">Example</p>
+We showed that
+<p>
+\(
+    \{8, 9\} \leadsto \{8, 9\}^{c}
+\)
+</p>
+
+<p>
+From the graph:
+</p>
+
+<p>
+\(
+    \{8, 9\} \rightarrow \{1, 2,8, 9\}
+\)
+</p>
+
+<p>
+Therefore:
+</p>
+
+<p>
+\(
+    \{8, 9\} \leadsto \{1, 2\}
+\)
+</p>
+
+
+
+
+
     
-<h2 class="w3-text-teal">Transitivity</h2>
+<h2 class="w3-text-teal">Key Property of \(\leadsto\): Transitivity</h2>
+<p class="w3-text-teal">
 \(
 (X \leadsto Y) \wedge (Y \leadsto Z) \; \Rightarrow \; (X \leadsto Z) 
 \)
@@ -119,32 +213,37 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   \)
 </p>
 
-
-<!---------------------------------------------->
-
-<h2 class="w3-text-teal"> Infinitely Often Property</h2>
-<p>
-The
-<a href="https://en.wikipedia.org/wiki/Complement_(set_theory)">complement of a set</a>
-\(X\) is denoted by \(X^{c}\).
+<p style="color:red;">Example</p>
+The reader should show that
 </p>
 
 <p>
-    \(
-    (X \rightarrow (X \cup Y)) \wedge (X \leadsto X^{c})
-    \quad \Rightarrow \quad (X \leadsto Y)
-    \)
-    </p>
+\(
+    \{10\} \leadsto \{8, 9\}
+\)
+</p>
+
+<p>
+We have shown that:
+</p>
+
+<p>
+\(
+    \{8, 9\} \leadsto \{1, 2\}
+\)
+</p>
+
+<p>
+Therefore:
+</p>
+
+<p>
+\(
+    \{10\} \leadsto \{1, 2\}
+\)
+</p>
 
 
-  <p>
-  <b>Proof</b>:
-  \(X \; \rightarrow \; (X \cup Y) \) implies that every
-  fair path from a vertex in \(X\) either (1) remains in \(X\) forever
-  or (2) visits a vertex in \(Y\). 
-  But, \(X \leadsto X^{c}\) implies that the first case is not
-  possible. 
-    </p>
 
     <p style="margin-bottom:1.0cm;">Next is a list of useful
     observations.</p>
