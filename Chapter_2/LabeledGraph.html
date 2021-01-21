@@ -268,7 +268,36 @@ times.
     There is a fair path from \(7\) throug \(6\) that
 never visits \(\{1, 2\}\).
 
+<!------------------------------------------------------>
+<h2 class="w3-text-teal">The Key Property</h2>
+Next, we describe a property that we use frequently in proofs of
+progress. We denote the complement of a set \(P\) by \(P^{c}\).
+</p>
 
+<p>If for a set \(P\) of vertices, there exists an
+infinitely-often label \(a\) such that <i>all</i> edges labeled \(a\)
+that start at a vertex in \(P\) terminate at a vertex in \(P^{c}\),
+then:
+</p>
+
+<p>
+\(
+P \leadsto P^{c}
+\)
+</p>
+
+<p>
+The proof of this result follows from the fact that a fair path cannot
+remain forever in \(P\) because the path traverses the edge labeled
+\(a\) which takes the path out of \(P\).
+
+<p style="color:red;">Example of \(P \leadsto P^{c}\)</p>
+In the graph, because of infinitely-often label \(b\):
+<p>
+\(
+    \{8, 9\} \leadsto \{8, 9\}^{c}
+\)
+</p>
  <!------------------------------------------------------>
   <h2 class="w3-text-teal">Eventually, \(E\)</h2>
   We define a function \(E\) from vertex sets to vertex sets as
