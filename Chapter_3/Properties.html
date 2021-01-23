@@ -43,12 +43,8 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   Algorithms</h3>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Overview.html">Chapter: Properties of Temporal Operators</a>
+  href="Properties.html">Chapter: Properties of Leads-To</a>
   
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="Properties.html">Properties of \(\rightarrow\) and
-  \(\leadsto\)</a>
-
   <a class="w3-bar-item w3-button w3-hover-black"
   href="Composition.html">Composition</a>
 
@@ -59,11 +55,11 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   href="SelfTest.html">Self Test</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="StateTransitionSystems.html">Next Chapter: State Transition Systems</a>
+  href="StateTransitionSystems.html">Next Chapter: Review of Predicates</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_2/Chapter2_Organization.html">Previous Chapter:
-  Temporal Logic Concepts</a>
+  href="../Chapter_2/Progress.html">Previous Chapter:
+  Progress</a>
   
 </nav>
 
@@ -81,24 +77,16 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
     
-    <h1 class="w3-text-teal">Three Key Properties of
-    \(\leadsto\)</h1>
+    <h1 class="w3-text-teal">Three Properties of Leads-To</h1>
     
     <p>
-    This module presents results about \(\rightarrow\) and
-    \(\leadsto\) which are defined
-    in the previous chapter
-    <a href="../Chapter_2/Chapter2_Organization.html">Concepts in
-    Temporal Logic</a>.
-    This module presents three key properties of \(\leadsto\). We will
-    use these properties frequently in this course.
-    The module also has a list of observations about  \(\rightarrow\) and
-    \(\leadsto\).
+    This chapter gives three properties of \(\leadsto\)
+    that we use to prove progress for almost system.
+    The chapter also has a module on the composition of the functions
+    <i>next</i>, <i>always</i>, and <i>eventually</i>, and the
+    relations \(\rightarrow\), \(\stackrel{*}{\rightarrow}\), and
+    \(\leadsto\). 
     </p>
-
-    <p>
-Notation: We denote the complement of a set \(P\) by \(P^{c}\).
-</p>
 
     <!------------------------------------------------------>  
     <h3 style="color:red;">Example</h3>
@@ -110,16 +98,22 @@ Notation: We denote the complement of a set \(P\) by \(P^{c}\).
   <p>
 
 
-<!------------------------------------------------------>
-<h2 class="w3-text-teal">Key Property of \(\leadsto\)</h2>
+    <p>
+Next, we describe the fundamental property that we use to prove
+progress. We denote the complement of a set \(P\) by \(P^{c}\).
+</p>
 
-<p class="w3-text-teal">If for a set \(P\) of vertices, there exists an
+    
+<!------------------------------------------------------>
+<h3 class="w3-text-teal">Atomic Property of \(\leadsto\)</h3>
+
+<p>If for a set \(P\) of vertices, there exists an
 infinitely-often label \(a\) such that all edges labeled \(a\)
 that start at a vertex in \(P\) terminate at a vertex in \(P^{c}\),
 then:
 </p>
 
-<p class="w3-text-teal">
+<p>
 \(
 P \leadsto P^{c}
 \)
@@ -130,7 +124,7 @@ Proof outline: A fair path cannot
 remain forever in \(P\) because the path traverses the edge labeled
 \(a\) which takes the path out of \(P\).
 
-<p style="color:red;">Example of \(P \leadsto P^{c}\)</p>
+<p style="color:red;">Example of the Atomic Property</p>
 In the graph, because of infinitely-often label \(b\):
 <p>
 \(
@@ -138,12 +132,17 @@ In the graph, because of infinitely-often label \(b\):
 \)
     </p>
 
+    <p>
+    We call this property the <i>atomic</i> property because it is
+    based on a <i>single</i> label that is executed infinitely often.
+    </p>
+
 
 <!---------------------------------------------->
 
-<h2 class="w3-text-teal">Key Property of \(\leadsto\)</h2>
+<h3 class="w3-text-teal">Basic Property of \(\leadsto\)</h3>
 
-<p class="w3-text-teal">
+<p>
     \(
     (P \rightarrow (P \cup Q)) \wedge (P \leadsto P^{c})
     \quad \Rightarrow \quad (P \leadsto Q)
@@ -160,7 +159,7 @@ In the graph, because of infinitely-often label \(b\):
   possible. 
 </p>
 
-<p style="color:red;">Example</p>
+<p style="color:red;">Example of the Basic Property</p>
 We showed that
 <p>
 \(
@@ -188,12 +187,13 @@ Therefore:
 \)
 </p>
 
-
-
-
+<p>
+We call this property the <i>basic</i> property because it is the
+property on which most proofs of progress are based.
+</p>
 
     
-<h2 class="w3-text-teal">Key Property of \(\leadsto\): Transitivity</h2>
+<h3 class="w3-text-teal">Transitivity of \(\leadsto\)</h3>
 <p class="w3-text-teal">
 \(
 (X \leadsto Y) \wedge (Y \leadsto Z) \; \Rightarrow \; (X \leadsto Z) 
@@ -202,19 +202,39 @@ Therefore:
 
   <p>
     Proof outline.
-    </p>
+</p>
+
 <p>
-    From the left-hand side, for every path \(p\): 
+    From \(X \leadsto Y\), for every path \(p\): 
   </p>
   <p>
   \(
-  p_{0} \in X \; \Rightarrow \; (\exists i: p_{i} \in Y) \;
-  \Rightarrow \; (\exists j \geq i: p_{j} \in Z)
+  p_{0} \in X \; \Rightarrow \; (\exists i: p_{i} \in Y)
   \)
 </p>
 
-<p style="color:red;">Example</p>
-The reader should show that
+<p>
+    From \(Y \leadsto Z\), for every path \(p\): 
+  </p>
+  <p>
+  \(
+  p_{i} \in Y \; \Rightarrow \; (\exists j \geq i: p_{j} \in Z)
+  \)
+</p>
+
+<p>
+Therefore:
+</p>
+  <p>
+  \(
+  p_{0} \in X \; \Rightarrow \; (\exists j: p_{j} \in Z)
+  \)
+</p>
+
+
+
+<p style="color:red;">Example of the Transitivity of \(\leadsto\)</p>
+From the atomic property and the infinitely-often execution of label \(a\):
 </p>
 
 <p>
@@ -244,181 +264,10 @@ Therefore:
 </p>
 
 
-
-    <p style="margin-bottom:1.0cm;">Next is a list of useful
-    observations.</p>
-
-    
-    <h2 class="w3-text-teal">Observations</h2>
-    The proofs of these observations follow directly from the definitions
-    given in the previous <a
-    href="../Chapter_2/Chapter2_Organization">chapter</a>.
-</p>
-
-<h4 class="w3-text-teal"><a
-    href="https://en.wikipedia.org/wiki/Monotonic_function">
-    Monotonicity
-    </a>
-  </h4>
-    
-  <p>
-  \(
-  P \subseteq Q \quad \Rightarrow \quad N(P) \subseteq N(Q)
-  \)
-  </p>
-  <p>
-  \(
-  P \subseteq Q \quad \Rightarrow \quad A(P) \subseteq A(Q)
-  \)
-</p>
-
-<h4 class="w3-text-teal">
-  <a
-  href="https://en.wikipedia.org/wiki/Distributive_property"><b>Distributes
-  over Conjunction</b></a>
-  </h4>
-
-    <p>
-    \(
-    N(X \cap Y) = N(X) \cap N(Y)
-    \)
-    </p>
-
-    <p>
-    \(
-    A(X \cap Y) = A(X) \cap A(Y)
-    \)
-    </p>
-
-<h4 class="w3-text-teal">
- Relations and Functions
-  </h4>
-
-    <p>
-    \(
-    X \rightarrow Y \quad \equiv \quad X \subseteq N(Y)
-    \)
-    </p>
-
-    <p>
-    \(
-    X \stackrel{*}{\rightarrow} Y \quad \equiv \quad X \subseteq A(Y)
-    \)
-</p>
-
-<h4 class="w3-text-teal">Intersections and Unions of Stable Sets are Stable</h4>
-  <p>
-  \(  \textit{stable}(X) \wedge \textit{stable}(Y) \; \Rightarrow
-  \textit{stable}(X \cap Y) \)
-  </p>
-  <p>
-  \(  
-  \textit{stable}(X) \wedge \textit{stable}(Y) \; \Rightarrow
-  \textit{stable}(X \cup Y)
-  \)
-  </p>
-
-  <p><b>Corollary</b></p>
-  <p>
-  The stable sets that are subsets of \(X\) form a
-  <a href="https://en.wikipedia.org/wiki/Lattice_(order)">lattice</a>
-  with the 
-  empty set at the bottom and \(A(X)\) at the top.
-</p>
-
-
-<h5 class="w3-text-teal">Inclusion</h5>
-    <p>
-\(
-(X \subseteq Y)  \; \Rightarrow \; (X \leadsto Y)
-\)
-  </p>
-    
-    <h5 class="w3-text-teal">Strengthen Left Side</h5>
-    <p>
-\(
-(X \subseteq Y)  \wedge (Y \leadsto Z) \; \Rightarrow \; (X \leadsto Z)
-\)
-  </p>
-    <p>
-\(
-(X \subseteq Y)  \wedge (Y \rightarrow Z) \; \Rightarrow \; (X \rightarrow Z)
-\)
-  </p>
-
-    
-
-    <h5 class="w3-text-teal">Weaken Right Side</h5>
-    <p>
-\(
-(X \leadsto Y)  \wedge (Y \subseteq Z) \; \Rightarrow \; (X \leadsto Z)
-\)
-  </p>
-    <p>
-\(
-(X \rightarrow Y)  \wedge (Y \subseteq Z) \; \Rightarrow \; (X \rightarrow Z)
-\)
-    </p>
-
-
-    
-
-<!---------------------------------------------->
-
-    <h5 class="w3-text-teal"> Union Left Side </h5>
-    <p>
-\(
-(X  \leadsto  Z) \wedge (Y  \leadsto  Z) \quad
-    \equiv \quad (X \cup Y) \leadsto  Z
-\)
-    </p>
-
-    
-    <p>
-\(
-(X  \rightarrow  Z) \wedge (Y  \rightarrow  Z) \quad
-    \equiv \quad (X \cup Y) \rightarrow  Z
-\)
-  </p>
-    
-
-<!---------------------------------------------->
-
-    <h5 class="w3-text-teal"> Intersection Right Side </h5>
-    <p>
-    
-    <p>
-\(
-(X  \rightarrow  Y) \wedge (X  \rightarrow  Z) \quad
-    \equiv \quad X \rightarrow (Y \cap Z)
-\)
-  </p>
-
-<!---------------------------------------------->
-
-    <h5 class="w3-text-teal"> Intersection Right Side of Stable Sets </h5>
-    <p>
-    
-    <p>
-    For stable \(X\) and stable\(Y\):
-    </p>
-    <p>
-\(
-(X  \leadsto  Y) \wedge (X  \leadsto  Z) \quad
-    \equiv \quad X \rightarrow (Y \cap Z)
-\)
-  </p>
-
-
-<!---------------------------------------------->
-
 <!------------------------------------------------->
 <h2 class="w3-text-teal">Summary</h2>
-We use \(\leadsto\) as the central concept to reason about
-safety. We use <i>eventually</i> to specify systems.
-These are the only concepts that we use to prove that
-systems are safe. Transitivity of \(\leadsto\) and the infinitely-often property are
-used to reason about almost every algorithm in this course.
+We use the atomic, basic, and transitivity properties of \(\leadsto\)
+to prove progress for almost all the systems studied in this course.
 </p>
 
     
