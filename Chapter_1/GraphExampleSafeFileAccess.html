@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>Overview</title>
+<title>Chapter Organization</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -18,7 +18,6 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 }
 </style>
 <body>
-
 
 <!-- Navbar -->
 <div class="w3-top">
@@ -38,34 +37,16 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
     <i class="fa fa-remove"></i>
   </a>
-
-  <!-------------------------->
+  
   <h3 class="w3-bar-item"><b>An Introduction to Distributed
   Algorithms</h3>
-  
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Overview.html">Chapter: Properties of Temporal Operators</a>
-  
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="Properties.html">Properties of \(\rightarrow\) and
-  \(\leadsto\)</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="Composition.html">Composition</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="Diagrams.html">Diagrams & Examples</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="SelfTest.html">Self Test</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_4/Overview.html">Next Chapter: State Transition Systems</a>
-  
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_2/Chapter2_Organization.html">Previous Chapter:
-  Temporal Logic Concepts</a>
-  
+  href="Safety.html">Chapter: Safety</a>
+  <a class="w3-bar-item w3-button w3-hover-black" href="GraphRunningExample.html">More Examples</a>
+  <a class="w3-bar-item w3-button w3-hover-black" href="GraphPicturesOfBasicConcepts.html">More Diagrams</a>
+  <a class="w3-bar-item w3-button w3-hover-black" href="GraphExampleSafeFileAccess.html">System Example</a>
+  <a class="w3-bar-item w3-button w3-hover-black" href="GraphSelfTest.html">Self Test</a>
+  <a class="w3-bar-item w3-button w3-hover-black" href="../Chapter_2/Progress.html">Next Chapter: Progress</a>
 </nav>
 
 <!-- Overlay effect when opening sidebar on small screens -->
@@ -80,47 +61,29 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
+    
+    <h1 class="w3-text-teal">Example of a System Represented by a
+    Graph: Sharing Files Safely</h1>
+  We want to develop an algorithm by which agents in a distributed
+  system share access to a set of files. Safety means that each file
+  is modified by at most one agent at a time, and no agent reads a
+  file while it is being modified by another agent.  The state of the
+  system is specified by the states of the agents and the states of
+  message channels. In the graph representation, the system is at one
+  vertex, representing a state, at any point in time. We will show
+  that the paths that the system takes in the graph visit only safe
+  states.
+  </p>
 
-    <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Properties of Temporal
-    Operators</h1>
-    <h2 class="w3-text-teal">Chapter Overview</h2>
+  <p>
+  We will show that a system progresses towards desired or goal states
+  from properties of sets of infinite paths in graphs.
+  </p>
 
-    This chapter has two main modules:
-    <a href="Properties.html">Properties of \(\rightarrow\) and
-    \(\leadsto\)</a>,
-    and
-    <a href="Composition.html">Composition</a>.
-    These modules contain results that follow directly from the
-    definitions given in the previous chapter,
-    <a href="../Chapter_2/Chapter2_Organization.html">Concepts in
-    Temporal Logic</a>.
-    </p>
+  <p>
+    <a href="Graph.html#Graph2">Return to main page.</a>
+  </p>
 
-
-    <h2 class="w3-text-teal">
-    <a href="Properties.html">Properties of \(\rightarrow\) and
-    \(\leadsto\)</a>
-    </h2>
-    This module contains two properties - the transitivity of
-    \(\leadsto\) and the infinitely-often property - that we use in
-    reasoning about almost all the algorithms in this course. The proofs
-    of these properties are straightforward and are based on graphs
-    and sets. This module also contains a list of useful
-    properties with obvious proofs.
-    </p>
-
-
-    <h2 class="w3-text-teal">
-    <a href="Composition.html">Composition</a>
-    </h2>
-    This module has
-    examples of compositions of the functions
-    <i>always</i> and <i>eventually</i>. Composition with the function <i>next</i>
-    are in the supporting module
-    <a href="Diagrams.html">Diagrams & Examples</a>.
-    Functional composition of <i>always</i> and <i>eventually</i>, and
-    produce functions that are frequently used in specifying problems.
 
 
   <footer id="myFooter">
@@ -131,10 +94,6 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
       Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
     </div>
   </footer>
-
-
-      
-
 
 <!-- END MAIN -->
 </div>
@@ -166,3 +125,4 @@ function w3_close() {
 
 </body>
 </html>
+

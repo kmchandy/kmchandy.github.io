@@ -41,15 +41,14 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <h3 class="w3-bar-item"><b>An Introduction to Distributed
   Algorithms</h3>
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Chapter2_Organization.html">Chapter: Concepts in Temporal Logic</a>
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="LabeledGraph.html">Module: Progress</a>
+  href="Progress.html">Chapter: Progress</a>
   <a class="w3-bar-item w3-button w3-hover-black" href="ProgressExample.html">More Examples</a>
   <a class="w3-bar-item w3-button w3-hover-black" href="ProgressSelfTest.html">Self Test</a>
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Safety.html">Previous Module: Safety</a>
+  href="../Chapter_1/Safety.html">Previous Chapter: Safety</a>
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_3/Overview.html">Next Chapter: Properties of Temporal Operators</a>
+  href="../Chapter_3/Properties.html">Next Chapter: Properties of Leads
+  To</a>
   </nav>
 
   
@@ -103,8 +102,8 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <p><b>Restriction</b>:
   We restrict attention to graphs in which for every vertex \(v\) and
   every label \(a\) there exists at least
-  one  outgoing edge from \(v\)  with label \(a\):
-		      Note that an edge can be from a vertex back to itself.
+    one  outgoing edge from \(v\)  with label \(a\).
+    Note that an edge can be from a vertex back to itself.
 		      </p>
 
 
@@ -156,12 +155,9 @@ labeled \(c\) from vertex \(7\) back to itself.
 
 <!------------------------------------------------------>
 <h3 class="w3-text-teal">Paths that Traverse a Label Infinitely Often</h3>
-A path \(p\) traverses label \(L\) infinitely often exactly
-when at every point in \(p\) there is always a later point at
-which \(p\) traverses an edge labeled \(L\). So, the interval between
-successive traversals of an edge labeled \(L\) is finite; the interval
-may not follow any pattern - all we know is that the interval ends in
-a finite number of hops.
+<i>A path \(p\) traverses label \(L\) infinitely often</i> exactly
+when at every point in \(p\) there is a later point at
+which \(p\) traverses an edge labeled \(L\).
 </p>
 
 <p class="ex1">
@@ -189,9 +185,10 @@ traverses edges with label \(b\) infinitely often.
 <!------------------------------------------------------>
 <!------------------------------------------------------>
 <h3 class="w3-text-teal">Infinitely Often Labels</h3>
-Some labels are designated <b>infinitely-often
+Now we consider labeled graphs in which a subset of labels are
+designated as <b>infinitely-often
 labels</b>. We 
-define a <b>fair path</b> as follows:
+define a <b>fair path</b> in such a graph as follows:
 A path \(p\) is a
 <i>fair</i> path exactly when \(p\) traverses every infinitely-often
 label infinitely often.
@@ -218,14 +215,16 @@ errors, over which system designers have no control.
 
   <!------------------------------------------------------>
   <p style="color:red;"><b>An example of a path that is not
-  fair</b></p> is:
+fair</b></p>
   \(
     8 \stackrel{b}{\rightarrow} 8
     \stackrel{a}{\rightarrow} 9 \stackrel{a}{\rightarrow} 8
     \stackrel{a}{\rightarrow} 9 \stackrel{a}{\rightarrow} 8
     \stackrel{a}{\rightarrow} 9 \stackrel{a}{\rightarrow} 8
     \ldots
-  \)
+\)
+</p>
+<p>
   This path traverses an edge labeled \(b\) once and thereafter
   traverses only edges labeled \(a\). This path is not fair because it
   only traverses infinitely-often label \(b\) only a finite number of
@@ -265,41 +264,14 @@ times.
     \neg (\{7\} \leadsto \{1, 2\})
     \)
     <br>
-    There is a fair path from \(7\) throug \(6\) that
-never visits \(\{1, 2\}\).
-
-<!------------------------------------------------------>
-<h2 class="w3-text-teal">The Key Property</h2>
-Next, we describe a property that we use frequently in proofs of
-progress. We denote the complement of a set \(P\) by \(P^{c}\).
+    There is a fair path from \(7\) through \(6\) that
+never visits \(\{1, 2\}\). So, not all fair paths from \(7\)
+visit \(\{1, 2\}\).
 </p>
 
-<p>If for a set \(P\) of vertices, there exists an
-infinitely-often label \(a\) such that <i>all</i> edges labeled \(a\)
-that start at a vertex in \(P\) terminate at a vertex in \(P^{c}\),
-then:
-</p>
 
-<p>
-\(
-P \leadsto P^{c}
-\)
-</p>
-
-<p>
-The proof of this result follows from the fact that a fair path cannot
-remain forever in \(P\) because the path traverses the edge labeled
-\(a\) which takes the path out of \(P\).
-
-<p style="color:red;">Example of \(P \leadsto P^{c}\)</p>
-In the graph, because of infinitely-often label \(b\):
-<p>
-\(
-    \{8, 9\} \leadsto \{8, 9\}^{c}
-\)
-</p>
  <!------------------------------------------------------>
-  <h2 class="w3-text-teal">Eventually, \(E\)</h2>
+  <h3 class="w3-text-teal">Eventually, \(E\)</h3>
   We define a function \(E\) from vertex sets to vertex sets as
   follows. A vertex \(v\) is in \(E(Q)\) exactly when all fair paths
 		      from \(v\) visit \(Q\).
@@ -325,73 +297,23 @@ Read \(E(Q)\) as "<i>eventually</i> Q."
     that traverse labels \(a\) and \(b\) infinitely
     often, visit vertices \(1\) and \(2\).
 <!------------------------------------------------------>
-  <h3 class="w3-text-teal">Relationship between Labeled and Unlabeled Graphs</h3>
-  The concepts we use to reason about safety are \(P
-  \rightarrow Q\), <i>next</i>, and <i>always</i>, which are defined
-  using unlabeled graphs. The concepts used
-  for proving progress are \(P \leadsto Q\), and <i>eventually</i>
-  which are defined using labeled graphs.
+  <p class="w3-text-teal">Relationship between Labeled and Unlabeled
+Graphs</p>
+The concepts we use to reason about safety are defined in terms of
+unlabeled graphs but they apply to labeled graphs as well. For example
+\(v \rightarrow w\) holds exactly when there is an edge from vertex
+\(v\) to vertex \(w\), regardless of the label on the edge.
 </p>
-
-<p>
-We obtain an unlabeled graph from a labeled graph by removing labels
-and keeping at most one edge from a vertex \(v\) to a vertex \(w\).
-For example, if the labeled graph has edges \(v
-\stackrel{a}{\rightarrow} w\) and \(v \stackrel{b}{\rightarrow} w\),
-then the unlabeled graph has a single edge \(v \rightarrow w\).
-</p>
-
-
-
-<p style="margin-bottom:1.0cm;">Next is a list of useful
-    results that can be proved directly from definitions.</p>
-
-
-<!------------------------------------------------------>
-<h2 class="w3-text-teal">Observations</h2>
-
-<h4 class="w3-text-teal"><a
-    href="https://en.wikipedia.org/wiki/Monotonic_function">
-    Monotonicity
-    </a>
-  </h4>
-    
-  <p>
-  \(
-  P \subseteq Q \quad \Rightarrow \quad E(P) \subseteq E(Q)
-  \)
-</p>
-
-<h4 class="w3-text-teal">
-  <a
-  href="https://en.wikipedia.org/wiki/Distributive_property"><b>Distributes
-  over Conjunction for stable sets</b></a>
-  </h4>
-If \(stable(P)\) and \(stable(Q)\) then
-    <p>
-    \(
-    E(P \cap Q) \;  = \; E(P) \cap E(Q)
-    \)
-</p>
-
-<h4 class="w3-text-teal">
- Relations and Functions
-  </h4>
-
-    <p>
-    \(
-    P \leadsto Y \quad \equiv \quad P \subseteq E(Y)
-    \)
-    </p>
-
 
 
 <!------------------------------------------------->
-<h2 class="w3-text-teal">Summary</h2>
-We use \(\rightarrow\) as the central concept to reason about
-safety. We use <i>always</i>, <i>next</i> and <i>stable</i> to specify
-systems. These are all the concepts that we use to prove that
-systems are safe.
+<h3 class="w3-text-teal">Summary</h3>
+We use \(\stackrel{*}{\rightarrow}\) to reason about progress. We use
+\(\stackrel{*}{\rightarrow}\) and <i>eventually</i> to specify
+progress. These are the only concepts that we use in this course to
+prove that systems progress.
+This chapter and the previous chapter
+introduce all the concepts that we use to reason about systems.
 </p>
 
 
