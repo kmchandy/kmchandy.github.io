@@ -22,12 +22,21 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 <!-- Navbar -->
 <div class="w3-top">
   <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
-    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a class="w3-bar-item w3-button w3-right w3-hide-large
+    w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)"
+    onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    
     <a href="index.html" class="w3-bar-item w3-button w3-hide-small
     w3-hover-white">About the Course</a>
+    
     <a href="table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
     w3-hover-white">Table of Contents</a>
-    <a href="cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+    
+    <a href="cross_reference.html" class="w3-bar-item w3-button
+  w3-hide-small w3-hover-white">Index</a> 
+    
+    <a href="Formulae.html" class="w3-bar-item w3-button
+  w3-hide-small w3-hover-white">Formulae</a> 
   </div>
   </div>
  
@@ -40,6 +49,9 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   
   <h3 class="w3-bar-item"><b>An Introduction to Distributed
   Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Chapter_0/Introduction.html">Why Study Distributed Algorithms?</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="Chapter_1/Safety.html">System Safety</a>
@@ -68,157 +80,118 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     
       <h1 class="w3-text-teal">An Introduction to Distributed
     Algorithms</h1>
-    <h3> K. Mani Chandy
+    <h5> K. Mani Chandy
     <br>
     Simon Ramo Professor, Emeritus
     <br>
     California Institute of Technology
-    </h3>
+    </h5>
 
   
   <p>
-  This material is for use in an introductory course on distributed
-  algorithms. The course emphasizes the coupled development of
-  algorithms with proofs of correctness.
-  The course uses temporal logic to develop and prove algorithms;
-  however, the focus of course is algorithms and not logic. 
-		      The course helps students understand the
-  fundamental algorithmic concepts that underly distributed systems,
-  but the course is not, in itself, a distributed systems course.
+  The material in this website is intended for use in an introductory
+  course on distributed algorithms. The course emphasizes the coupled
+  development of algorithms with proofs of correctness.  The course
+  uses temporal logic to develop and prove algorithms; however, the
+  focus of the course is on algorithms and not logic.  The course helps
+  students understand the fundamental algorithmic concepts that
+  underly distributed systems, but the course is not a distributed
+  systems course.
+  </p>
+
+
+  <p>
+    The course is typically taken by upper-class undergraduates and
+    beginning graduate students.
+    The prerequistes for the course are basic
+    <a href="https://en.wikipedia.org/wiki/Graph_theory">
+    graph theory</a>,
+    <a href="https://en.wikipedia.org/wiki/Set_theory">set theory</a>
+    and
+    <a href="https://en.wikipedia.org/wiki/Boolean_algebra">
+    Boolean algebra</a>.
+    Most undergraduates take courses that cover these topics in their first
+    or second year of college or in high school.
+    </p>
+
+    <p>
+    This material is based on courses taught at the University of
+    Texas at Austin by
+    <a href="https://www.cs.utexas.edu/users/misra/">Jayadev Misra</a>
+    and Mani Chandy,
+    and at the California Institute of Technology by
+    <a href="http://www.cds.caltech.edu/~murray/wiki/Main_Page">
+    Richard Murray</a> and Mani Chandy.
+    </p>
+    
+    <p>
+    The central ideas in the course are from <a
+    href="https://en.wikipedia.org/wiki/UNITY_(programming_language)">UNITY<a>
+    which is presented in the book
+    <a
+    href="https://www.amazon.com/Parallel-Program-Design-Mani-Chandy/dp/0201058669"
+    >
+    <i>Parallel Program Design: A Foundation</i></a>.
+    This book serves as the core in the courses taught at UT Austin
+    and Caltech.
+    The course also uses <a
+    href="https://en.wikipedia.org/wiki/Computation_tree_logic">Computation
+    Tree Logic </a> and <a
+    href="https://en.wikipedia.org/wiki/Linear_temporal_logic">Linear
+    Temporal Logic</a>.
+</p>
+
+<p>
+    
+This website adds material to <i>Parallel Program Design</i> to help
+undergraduates who may be unfamiliar with the formalisms and the
+<a
+href="https://www.cs.cornell.edu/fbs/publications/TeachMathMoreEffective.pdf">
+calculational proofs</a> used throughout the book.
+
+This course uses a model of distributed systems in which a system is
+defined as a labeled directed graph in which vertices represent system
+states; system trajectories are represented by paths in the
+graph. We define operators in temporal logic in terms of
+functions and relations on sets of vertices. We expect that students
+learn the material in this course as a continuation of material that
+they learned in their earlier discrete mathematics or algorithms
+courses. 
+</p>
+
+<p>
+This website helps students learn theory with modules containing
+examples and modules with diagrams or videos. While diagrams, videos
+and examples are not a replacement for formalism, they can help. We
+encourage readers of the website to add modules to the site.
+</p>
+
+    
+    <p>
     The course material includes examples of algorithms implemented in
     <a href="https://www.python.org/">Python</a>.
     The programs are annotated thoroughly and so students don't need
-    to know Python to understand the programs.
-  </p>
+to know Python to understand the programs.
+</p>
 
-  <p>
-  The course is typically taken by upper class undergraduates and
-  beginning graduate students. 
-  Students should know the basics of
-		      <a
-		      href="https://en.wikipedia.org/wiki/Graph_theory">
-		      graph theory</a> and
-		      <a
-		      href="https://en.wikipedia.org/wiki/Boolean_algebra">
-		      Boolean algebra</a> before taking this course.
-		      This material is based on courses taught at the University of Texas
-		      at Austin by
-		      <a
-		      href="https://www.cs.utexas.edu/users/misra/">Jayadev Misra</a>
-		      and Mani Chandy, and at the California
-		      Institute of Technology by
-		      <a
-  href="http://www.cds.caltech.edu/~murray/wiki/Main_Page">Richard
-		      Murray</a>
-		      and
-		      Mani Chandy.
-		      
-  The
-  ideas underlying the course are from
-  <a
-  href="https://en.wikipedia.org/wiki/UNITY_(programming_language)">UNITY<a>.
-  The course also uses
-  <a
- href="https://en.wikipedia.org/wiki/Computation_tree_logic">Computation
-  Tree Logic
-  </a>
-  and <a
-  href="https://en.wikipedia.org/wiki/Linear_temporal_logic">Linear
-		      Temporal Logic</a>.
-		      </p>
 
 <p>
 The material is organized into chapters. Each chapter consists of one
 or two main modules with additional supporting modules containing
 videos, diagrams, detailed examples, assignments, and explorations of
 related topics. Students should look at exploratory modules based on
-their interests. A module can be read in under fifteen minutes.  Main
-modules have self tests with solutions.  The modules do not have to be
-read sequentially, though the modules dealing with the fundamentals
+their interests. A module can be understood in under twenty minutes.  Chapters
+have self tests with solutions.  The chapters do not have to be
+read sequentially, though the chapters dealing with the fundamentals
 should be read first.
 </p>
 
-
-<h2 class="w3-text-teal">Chapters</h2>
-
 <p>
-Why study distributed algorithms? Not ready.
+This website is intended for use by students learning on their own or
+in "flipped classrooms" in which students read the website at home and
+come to class to discuss problems, implementations, and research
+directions.
 </p>
-
-<p>
-<a href="Chapter_1/Safety.html">System safety</a>
-</p>
-
-<p>
-<a href="Chapter_2/Progress.html">Progress of Trajectories</a>
-</p>
-
-<p>
-<a href="Chapter_3/Properties.html">Key Properties of Temporal Operators</a>
-</p>
-
-<p>
-State transition systems and predicates on states.
-</p>
-
-<p>
-Proof patterns and examples of coupled development of algorithms with
-proofs. 
-</p>
-
-<p>
-Message passing, channels, and time-line diagrams.
-</p>
-
-<p>
-Diffusing computations.
-</p>
-
-<p>
-Global snapshots and logical time.
-</p>
-
-<p>
-Termination and deadlock detection.
-</p>
-
-<p>
-Global consensus and the Paxos algorithm.
-</p>
-
-<p>
-Self stabilization.
-</p>
-
-<p>
-Overcoming failures. Byzantine algorithms.
-</p>
-
-<p>
-Managing resources shared by multiple agents.
-</p>
-
-<p>
-Distributed ledgers and blockchain.
-</p>
-
-<p>
-Knowledge: What does an agent know? How does it learn?
-</p>
-
-<p>
-Contracts: Rely/guarantee contracts between an agent and its
-environment. 
-</p>
-
-<p>
-Discrete and continuous state spaces. 
-</p>
-
-<p>
-Summary
-</p>
-
 
   <footer id="myFooter">
 
