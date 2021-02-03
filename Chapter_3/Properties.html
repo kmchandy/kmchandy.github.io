@@ -50,6 +50,9 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="Composition.html">Composition</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="MoreProperties.html">More Properties of Leads-To</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
   href="Diagrams.html">Diagrams & Examples</a>
@@ -95,13 +98,13 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <p>
 
 
-    <p>
+<p>
 Next, we describe the fundamental property that we use to prove
 progress. We denote the complement of a set \(P\) by \(P^{c}\).
 </p>
 
     
-<!------------------------------------------------------>
+\(P\)<!------------------------------------------------------>
 <h3 class="w3-text-teal">Atomic Property of \(\leadsto\)</h3>
 
 <p>If for a set \(P\) of vertices, there exists an
@@ -190,44 +193,47 @@ property on which most proofs of progress are based.
 </p>
 
     
+
 <h3 class="w3-text-teal">Transitivity of \(\leadsto\)</h3>
 <p class="w3-text-teal">
 \(
-(X \leadsto Y) \wedge (Y \leadsto Z) \; \Rightarrow \; (X \leadsto Z) 
+(X \leadsto Y) \wedge (Y \leadsto Z) \; \Rightarrow \; (X \leadsto Z)
 \)
-  </p>
-
-  <p>
-    Proof outline.
 </p>
 
 <p>
-    From \(X \leadsto Y\), for every path \(p\): 
-  </p>
-  <p>
-  \(
-  p_{0} \in X \; \Rightarrow \; (\exists i: p_{i} \in Y)
-  \)
+Proof
 </p>
 
 <p>
-    From \(Y \leadsto Z\), for every path \(p\): 
-  </p>
-  <p>
-  \(
-  p_{i} \in Y \; \Rightarrow \; (\exists j \geq i: p_{j} \in Z)
-  \)
+From \(X \leadsto Y\), for all fair paths \(p\):
 </p>
 
 <p>
-Therefore:
-</p>
-  <p>
-  \(
-  p_{0} \in X \; \Rightarrow \; (\exists j: p_{j} \in Z)
-  \)
+\(
+p_{0} \in X \; \Rightarrow \; (\exists i: p_{i} \in Y)
+\)
 </p>
 
+<p>
+From \(Y \leadsto Z\), for all fair paths \(p\):
+</p>
+
+<p>
+\(
+p_{i} \in Y \; \Rightarrow \; (\exists j \geq i: p_{j} \in Z)
+\)
+</p>
+
+<p>
+From the above, for all fair paths \(p\):
+</p>
+
+<p>
+\(
+p_{0} \in X \; \Rightarrow \; (\exists j: p_{j} \in Z)
+\)
+</p>
 
 
 <p style="color:red;">Example of the Transitivity of \(\leadsto\)</p>
@@ -258,6 +264,67 @@ Therefore:
 \(
     \{10\} \leadsto \{1, 2\}
 \)
+</p>
+
+
+<h3 class="w3-text-teal">Conjunction of \(\leadsto\)</h3>
+<p class="w3-text-teal">
+For stable sets \(Q\) and \(R\):
+</p>
+<p class="w3-text-teal">
+\(
+(P \leadsto Q) \wedge (P \leadsto R)
+\; \Rightarrow \;
+P \leadsto (Q \cap R)
+\)
+</p>
+
+<p>
+Proof
+</p>
+
+<p>
+From \(P \leadsto Q\), for every fair path \(p\) where
+\(p_{0} \in P\):
+</p>
+<p>
+\(
+\exists i: p_{i} \in Q
+\)
+</p>
+
+<p>
+Because \(Q\) is stable,  for every fair path \(p\) where
+\(p_{0} \in P\):
+</p>
+<p>
+\(
+\exists i: \forall j \geq i: p_{j} \in Q
+\)
+</p>
+
+<p>
+Similarly, for every fair path \(p\) where
+\(p_{0} \in P\):
+</p>
+<p>
+\(
+\exists i: \forall j \geq i: p_{j} \in R
+\)
+</p>
+
+<p>
+From the above, for every fair path \(p\) where
+\(p_{0} \in P\):
+</p>
+<p>
+\(
+\exists i: \forall j \geq i: p_{j} \in (Q \cap R)
+\)
+</p>
+
+<p>
+And the result follows.
 </p>
 
 

@@ -108,7 +108,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     </h4>
     
     
-    <h3>Proofs of Safety</h3>
+    <h3 class="w3-text-teal">Proofs of Safety</h3>
     A common specification of safety is that all trajectories remain
     in safe states. 
     Let \(safe\) be the predicate that defines safe
@@ -129,13 +129,13 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     </p>
     
 
-    <h4 class="w3-text-teal">Safety Theorem</h4>
-    <p>
+    <h4 class="w3-text-teal">Safety Theorems</h4>
+    <h5  class="w3-text-teal">
     \(
-    stable(R) \wedge [P \Rightarrow R] \wedge [R \Rightarrow Q] \quad
-    \Rightarrow \quad P \stackrel{*}{\rightarrow} Q
+    stable(R) \wedge [P \Rightarrow R] \quad
+    \Rightarrow \quad (P \stackrel{*}{\rightarrow} R)
     \)
-    </p>
+    </h5>
 
     <p>
     Proof:
@@ -146,13 +146,25 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     \)
     </p>
     <p>
-    Strength the left-hand side and weaken the right-hand
-    side of \(R \stackrel{*}{\rightarrow} R\) to get the result.
+    Strengthen the left-hand side to get the result.
     </p>
+
+    <h5  class="w3-text-teal">
+    \(
+    stable(R) \wedge [R \Rightarrow Q] \quad
+    \Rightarrow \quad (R \stackrel{*}{\rightarrow} Q)
+    \)
+</h5>
+<p>
+The proof is similar to that of the previous proof.
+</p>
 
 
 <p class="w3-text-teal">Intuition underlying the Proof</p>
-The intuition of the proof is captured in the figure.
+The intuition of the proof is captured in the figure which depicts the
+case where: \([P \Rightarrow R] \wedge stable(R) \wedge [R \Rightarrow
+Q]\).
+</p>
 <figure>
   <img src="PinAlwaysQ.jpg" alt="Fig1" style="width:60%">
 </figure>
@@ -179,7 +191,9 @@ is to find a stable predicate \(I\) such that:
 </p>
 
 <p>
-Such a predicate \(I\) is called an <i>invariant</i> of the system.
+Such a predicate \(I\) is called an <i>invariant</i> of the
+system. The figure above depicts an invariant where \(Q = safe\),
+\(P = init\) and \(R\) is the invariant.
 </p>
 
 

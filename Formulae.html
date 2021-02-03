@@ -69,10 +69,223 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     California Institute of Technology
     </h5>
 
-    <h2 class="w3-text-teal">Useful Formulae</h2>
+    <h1 class="w3-text-teal">Useful Formulae</h1>
 
-    <h3 class="w3-text-teal">Relationships between \(N\), \(A\), \(E\),
-    \(\rightarrow\), \(\leadsto\)</h3>
+    <!------------------------------------------------------>
+    <h2 class="w3-text-teal">Properties similar to those of
+    Implication</h2>
+    
+    
+    <h3 class="w3-text-teal">Strengthen Left-Hand Side</h3>
+    <ol>
+      <li>
+      \(
+      (R \Rightarrow P) \wedge (P \Rightarrow Q)  \quad \Rightarrow
+    \quad (R \Rightarrow Q)
+      \)
+      </li>
+      <li>
+      \(
+      (R \Rightarrow P) \wedge \{P\}c\{Q\} \quad \Rightarrow
+    \quad \{R\}c\{Q\}
+      \)
+      </li>
+      <li>
+      \(
+      (R \Rightarrow P) \wedge P \rightarrow Q \quad \Rightarrow
+    \quad R \rightarrow Q
+      \)
+      </li>
+      <li>
+      \(
+      (R \Rightarrow P) \wedge P \stackrel{*}{\rightarrow} Q \quad
+    \Rightarrow 
+    \quad R \stackrel{*}{\rightarrow} Q
+      \)
+      </li>
+      <li>
+      \(
+      (R \Rightarrow P) \wedge P \leadsto Q \quad \Rightarrow
+    \quad R \leadsto Q
+      \)
+      </li>
+    </ol>
+
+
+    
+    <h3 class="w3-text-teal">Weaken Right-Hand Side</h3>
+    <ol>
+      <li>
+      \(
+      (Q \Rightarrow R) \wedge (P \Rightarrow Q)  \quad \Rightarrow
+    \quad (P \Rightarrow R)
+      \)
+      </li>
+      <li>
+      \(
+      (Q \Rightarrow R) \wedge \{P\}c\{Q\} \quad \Rightarrow
+    \quad \{P\}c\{R\}
+      \)
+      </li>
+      <li>
+      \(
+      (Q \Rightarrow R) \wedge P \rightarrow Q \quad \Rightarrow
+    \quad P \rightarrow R
+      \)
+      </li>
+      <li>
+      \(
+      (Q \Rightarrow R) \wedge P \stackrel{*}{\rightarrow} Q \quad
+    \Rightarrow 
+    \quad P \stackrel{*}{\rightarrow} R
+      \)
+      </li>
+      <li>
+      \(
+      (Q \Rightarrow R) \wedge P \leadsto Q \quad \Rightarrow
+    \quad P \leadsto R
+      \)
+      </li>
+    </ol>
+
+
+    
+    <h3 class="w3-text-teal">Disjunction Left-Hand Side</h3>
+    <ol>
+      <li>
+      \(
+      (P \Rightarrow R) \wedge (Q \Rightarrow R)  \quad \equiv
+    \quad ((P \vee Q) \Rightarrow R)
+      \)
+      </li>
+      <li>
+      \(
+      \{P\}c\{R\} \wedge \{Q\}c\{R\} \quad \equiv
+    \quad \{P \vee Q\}c\{R\}
+      \)
+      </li>
+      <li>
+      \(
+      (P \rightarrow R) \wedge (Q \rightarrow R) \quad \equiv
+    \quad (P \vee Q) \rightarrow R
+      \)
+      </li>
+      <li>
+      \(
+      (P \stackrel{*}{\rightarrow} R) \wedge (Q
+    \stackrel{*}{\rightarrow} R) \quad \equiv 
+    \quad (P \vee Q) \stackrel{*}{\rightarrow} R
+      \)
+      </li>
+      <li>
+      \(
+      (P \leadsto R) \wedge (Q \leadsto R) \quad \equiv
+    \quad ((P \vee Q) \leadsto R)
+      \)
+      </li>
+    </ol>
+
+
+    
+    <h3 class="w3-text-teal">Conjunction Right-Hand Side</h3>
+    <ol>
+      <li>
+      \(
+      (P \Rightarrow Q) \wedge (P \Rightarrow R)  \quad \equiv
+    \quad P \Rightarrow (Q \wedge R)
+      \)
+      </li>
+      <li>
+      \(
+      \{P\}c\{Q\} \wedge \{P\}c\{R\} \quad \equiv
+    \quad \{P\}c\{Q \wedge R\}
+      \)
+      </li>
+      <li>
+      \(
+      (P \rightarrow Q) \wedge (P \rightarrow R) \quad \equiv
+    \quad P \rightarrow (Q \wedge R)
+      \)
+      </li>
+      <li>
+      \(
+      (P \stackrel{*}{\rightarrow} Q) \wedge (P
+    \stackrel{*}{\rightarrow} R) \quad \equiv 
+    \quad P \stackrel{*}{\rightarrow} (Q \wedge R) 
+      \)
+      </li>
+      <li>
+      \(
+      (P \leadsto A(Q)) \wedge (P \leadsto A(R)) \quad \equiv
+    \quad P \leadsto A(Q \wedge R)
+      \)
+      </li>
+    </ol>
+    
+
+    <h3 class="w3-text-teal">False Implies Everything</h3>
+    Follows from strengthening left side.
+    <ol>
+      <li>
+      \(
+      False  \; \Rightarrow \; P
+      \)
+      </li>
+      <li>
+      \(
+      \{False\}c\{Q\}
+      \)
+      </li>
+      <li>
+      \(
+      False \rightarrow Q
+      \)
+      </li>
+      <li>
+      \(
+      False \stackrel{*}{\rightarrow} Q
+      \)
+      </li>
+      <li>
+      \(
+      False \leadsto Q
+      \)
+      </li>
+    </ol>
+    
+
+    <h3 class="w3-text-teal">Everything Implies True</h3>
+    Follows from strengthening left side.
+    <ol>
+      <li>
+      \(
+      P  \; \Rightarrow \; True
+      \)
+      </li>
+      <li>
+      \(
+      \{P\}c\{True\}
+      \)
+      </li>
+      <li>
+      \(
+      P \rightarrow True
+      \)
+      </li>
+      <li>
+      \(
+      P \stackrel{*}{\rightarrow} True
+      \)
+      </li>
+      <li>
+      \(
+      P \leadsto True
+      \)
+      </li>
+    </ol>
+
+    <h1 class="w3-text-teal">Relationships between \(N\), \(A\), \(E\),
+    \(\rightarrow\), \(\leadsto\)</h1>
 
     <ol>
       <li>
@@ -238,126 +451,6 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     </ol>
 
 
-    <h2 class="w3-text-teal">Properties similar to those of
-    Implication</h2>
-    
-    <h3 class="w3-text-teal">Strengthen Left-Hand Side</h3>
-    <ol>
-      <li>
-      \(
-      (R \Rightarrow P) \wedge (P \Rightarrow Q)  \quad \Rightarrow
-    \quad (R \Rightarrow Q)
-      \)
-      </li>
-      <li>
-      \(
-      (R \Rightarrow P) \wedge \{P\}c\{Q\} \quad \Rightarrow
-    \quad \{R\}c\{Q\}
-      \)
-      </li>
-      <li>
-      \(
-      (R \Rightarrow P) \wedge P \rightarrow Q \quad \Rightarrow
-    \quad R \rightarrow Q
-      \)
-      </li>
-      <li>
-      \(
-      (R \Rightarrow P) \wedge P \leadsto Q \quad \Rightarrow
-    \quad R \leadsto Q
-      \)
-      </li>
-    </ol>
-
-
-    
-    <h3 class="w3-text-teal">Weaken Right-Hand Side</h3>
-    <ol>
-      <li>
-      \(
-      (Q \Rightarrow R) \wedge (P \Rightarrow Q)  \quad \Rightarrow
-    \quad (P \Rightarrow R)
-      \)
-      </li>
-      <li>
-      \(
-      (Q \Rightarrow R) \wedge \{P\}c\{Q\} \quad \Rightarrow
-    \quad \{P\}c\{R\}
-      \)
-      </li>
-      <li>
-      \(
-      (Q \Rightarrow R) \wedge P \rightarrow Q \quad \Rightarrow
-    \quad P \rightarrow R
-      \)
-      </li>
-      <li>
-      \(
-      (Q \Rightarrow R) \wedge P \leadsto Q \quad \Rightarrow
-    \quad P \leadsto R
-      \)
-      </li>
-    </ol>
-
-
-    
-    <h3 class="w3-text-teal">Disjunction Left-Hand Side</h3>
-    <ol>
-      <li>
-      \(
-      (P \Rightarrow R) \wedge (Q \Rightarrow R)  \quad \equiv
-    \quad ((P \vee Q) \Rightarrow R)
-      \)
-      </li>
-      <li>
-      \(
-      \{P\}c\{R\} \wedge \{Q\}c\{R\} \quad \equiv
-    \quad \{P \vee Q\}c\{R\}
-      \)
-      </li>
-      <li>
-      \(
-      (P \rightarrow R) \wedge (Q \rightarrow R) \quad \equiv
-    \quad (P \vee Q) \rightarrow R
-      \)
-      </li>
-      <li>
-      \(
-      (P \leadsto R) \wedge (Q \leadsto R) \quad \equiv
-    \quad ((P \vee Q) \leadsto R)
-      \)
-      </li>
-    </ol>
-
-
-    
-    <h3 class="w3-text-teal">Conjunction Right-Hand Side</h3>
-    <ol>
-      <li>
-      \(
-      (P \Rightarrow Q) \wedge (P \Rightarrow R)  \quad \equiv
-    \quad P \Rightarrow (Q \wedge R)
-      \)
-      </li>
-      <li>
-      \(
-      \{P\}c\{Q\} \wedge \{P\}c\{R\} \quad \equiv
-    \quad \{P\}c\{Q \wedge R\}
-      \)
-      </li>
-      <li>
-      \(
-      (P \rightarrow Q) \wedge (P \rightarrow R) \quad \equiv
-    \quad P \rightarrow (Q \wedge R)
-      \)
-      </li>
-      <li>
-      \(
-      (P \leadsto A(Q)) \wedge (P \leadsto A(R)) \quad \equiv
-    \quad P \leadsto A(Q \wedge R)
-      \)
-      </li>
-    </ol>
 
 
 
