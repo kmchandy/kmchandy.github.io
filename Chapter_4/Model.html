@@ -382,7 +382,26 @@ f_{i}(T_{i}) = f_{j}(T_{j})
 \)
 </p>
 
+<!---------------------------------------->
+<h4 class="w3-text-teal">Practicalities</h4>
+<p>
+The model has at most one action in execution at a time. Multiple
+actions can execute concurrently provided that no action modifies
+variables that are being accessed by another action; this can be
+ensured by locking shared variables.
+</p>
 
+<p>
+The model does not address how to ensure that actions are executed
+infinitely often. We will see later that there are multiple ways to do
+so. One way is to have processes that execute continuously and that
+repeatedly execute lists of actions.
+</p>
+
+<p>
+We will discuss implementations of the model using shared variables,
+message-passing channels, and processes, later in the course.
+</p>
 
 <!---------------------------------------->
   <footer id="myFooter">
