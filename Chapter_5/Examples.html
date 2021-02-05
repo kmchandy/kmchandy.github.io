@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>Example</title>
+<title>Examples</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -53,7 +53,10 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   href="ProofsOfProgress.html">How to Prove Progresss</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Example.html">Example</a>
+  href="ProofPattern.html">ProofPattern</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Examples.html">Examples</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
   href="SelfTest.html">Self Test</a>
@@ -81,7 +84,11 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
 
-
+<h1 class="w3-text-teal">Examples of the Proof Pattern</h1>
+This module has three examples of the proof pattern described in this
+    chapter. Keep in mind that there are different types of patterns
+    of problems and proofs; this module has examples of only one of
+    them. 
 
 <!------------------------------------------->
     <h2 class="w3-text-teal">Example 1: Average of Sensor Readings</h2>
@@ -251,118 +258,145 @@ is stable follows directly from the Hoare logic for all actions
 \(a_{i,j}\). 
 </p>
 
-<h2 class="w3-text-teal">Example 1b: A Variation of the Algorithm</h2>
-In this variation, the 
-action \(a_{i,j}\) is nondeterministic and is specified by the
-following Hoare triple: 
-</p>
 
-<p>
-\(
-\{(t[j] > t[i]) \wedge (t = T) \} a_{i,j} \; \{T[i] \leq t[j] < T[j]\}
-\)
-</p>
 
-<p>
-The action decreases the larger value, \(t_{j}\), to any value up to
-\(T_{i}\). 
-</p>
-
-<p>
-It's easy to check that the proof for the previous algorithm works.
-</p>
 
 
 <!--------------------------------------------------------->
-<h2 class="w3-text-teal">Example 2: Concurrent Sorting</h2>
-Let \(D\) be a constant vector of length \(N\). Let \(M\) be the vector
-obtained by sorting \(D\) in ascending order, i.e., \(M\) is a
-permutation of \(D\), and \(M\) is in ascending order. Let \(t\) be a
-vector of length \(N\) where \(t\) is a variable and where the state
-of the system is given by \(t\).
-</p>
-
-<p>
-The problem specification is:
+<h2 class="w3-text-teal">Example 2: Mobile Agents in Formation</h2>
+\(N+1\) agents indexed \(0 \leq i \leq N\) are located in 3-D space. Agents \(0\) and
+\(N\) remain stationary. Let \(v_{i} = [x_{i}, y_{i}, z_{i}]\) be the location
+of agent \(i\). Each agent \(i\) other than \(0\) and \(N\) can access the
+locations, \(v[i-1]\) and \(v[i+1]\), of its neighboring agents, and
+can move. The goal of the algorithm is for agents to move so that they
+form a straight line, with each agent halfway between its
+neighbors. Let \(D[i,j]\) be the distance between agents \(i\) and
+\(j\).
 </p>
 
 <p>
 \(
-t = D \; \leadsto \; t = M
-\)
-</p>
-<p>
-and
-</p>
-<p>
-\(stable(t = M)\)
+D[i, j] = || v[i] - v[j] ||\).
 </p>
 
+<p>
+The goal is to get to a straight-line formation in which agents
+are placed equidistant from their neighbors.
+The state of the system is given by \(v\), the locations of all agents.
+</p>
+
+<p>
+Consider neighboring
+agents, \(i-1, i, i+1\). A measure of how far agent \(i\) is from the
+midpoint of the line joining agents \(i - 1\) and \(i + 1\) is
+\(e[i]\) where
+</p>
+
+<p>
+\(
+e[i] = (D[i-1, i] - m)^{2} + (D[i+1, i] - m)^{2}
+\)
+</p>
+
+where \(m\) is the distance from the midpoint of \(i - 1\) and \(i +
+1\) to either agent.
+
+<p>
+\(
+m = D[i-1, i+1]/2
+\)
+</p>
+
+
+A measure \(E\) of the error of a given formation is \(E = \sum_{i}
+e[i]\).  Because space is continuous, we weaken the goal from \(E = 0\) to \(E <
+N \times \epsilon\) where \(\epsilon\) is a positive
+constant. 
+</p>
+
+<p>
+\(
+goal = (E < N \times \epsilon)
+\)
+</p>
+
+<p>
+Therefore, the goal is satisfied if
+\(e[i] < \epsilon\), for all \(i\).
+The specification for this algorithm is that the goal is reached
+eventually, regardless of the initial state.
+</p>
+
+<p>
+\(
+True \; \leadsto \; goal
+\)
+</p>
+
+
+
+<!------------------------------------------>
 <h3 class="w3-text-teal">An Algorithm</h3>
-Associated with each action \(a\) is a pair of integers \(l_{a}\) and
-\(h_{a}\) where \(l_{a} < h_{a}\). Action \(a\) sorts \(t[l_{a},
-\ldots , h_{a}]\). So, a Hoare triple is:
+
+<p>
+Let \(a_{i}\) be the action taken by agent \(i\).
+If agent \(i\) is close enough to both its neighbors, i.e., \(|D[i-1, i] -
+D[i, i+1]| < \epsilon\)
+then the agent does not move.
+Otherwise the agent moves to the midpoint of the line joining its two
+neighbors. The action of agent \(i\) can be specified by the program segment:
 </p>
 
 <p>
-\(
-\{t=T\} \; a \; \{t = T'\}
-\)
+<pre>
+<code>
+m = (D[i-1, i+1]/2)
+if (D[i-1, i] - m)**2 + (D[i, i+1] - m)**2 > epsilon):
+    v[i] = (v[i-1] + v[i+1])/2.0
+</code>
+</pre>
 </p>
 
-<p>
-where \(T'\) is a permutation of \(T\) and \(T'[l_{a}, \ldots ,
-h_{a}]\) is in ascending order.
-</p>
 
-
-<p>
-For all \(i\), there exists an action \(a\) that is executed
-infinitely often and whose span covers \([i, i+1]\), i.e.
-</p>
-
-<p>
-\(l_{a} \leq i < h_{a}\)
-</p>
-
-<p>
-<i>Example</i>:  \(t\) has 100 elements, and the system has actions \(a,
-b, c, d\)
-that sort the intervals \([0, \ldots , 60]\), \([20, \ldots , 80]\), \([70,
-\ldots , 99]\), and \([25, \ldots , 75]\) respectively.
-Actions \(a\), \(b\), and \(c\) are executed infinitely often,
-while action \(d\) is executed an arbitrary number of times.
-Note that every adjacent pair of elements in \(t\) is
-spanned by the intervals sorted by \(a\), \(b\), or \(c\). 
-</p>
 
 <h3 class="w3-text-teal">Proof of Correctness</h3>
 <p class="w3-text-teal">Step 1</p>
 
 <p>
-\(safe\) is: \(t\) is a permutation of \(D\).
+\(safe\) is True. Any positions of agents is a safe state.
 </p>
 
 <p>
-The variant function \(f\) is the number of out-of-order pairs
-\((i,j)\) in \(t\) where a pair is out of order when \((i < j) \wedge
-(t[i] > t[j)\).
+The variant function \(f\) is based on the eror \(E\); however, since \(E\) is
+continuous, we cannot carry out induction on its values. So, we
+discretize the error. Let \(f_{i}\) be the floor of \(e_{i}/\epsilon\):
+</p>
+\(
+f_{i} = \left \lfloor e_{i}/\epsilon
+\right \rfloor
+\)
+<p>
+Then if \(f_{i} = n + x\) where \(n\) is a
+nonnegative integer and \(0 \leq x < 1\), then \(f_{i} = n\).
+Define \(f\) as \(f = \sum_{i} f_{i}\). 
+We can carry
+out induction on the values of \(f\) because the values are integer
+and are bounded below by \(0\).
 </p>
 
 <p>
 Using Hoare triples for each action, it is straightforward to prove
-that every state transition is either back to the same state or
-to a safe state closer to the goal.
+that every state transition is either (1) back to the same state or (2) to a
+goal state or (3) to a state that reduces the value of \(f\).
 </p>
 
 <p class="w3-text-teal">Step 2</p>
-Since there exists an action, executed infinitely often, that orders
-\(t[i, i+1]\) in ascending order, it follows that:
+Because action \(a_{i}\) is executed infinitely often: 
 </p>
 
 <p>
 \(
-(t = T) \wedge (t[i] > t[i+1]) \; \leadsto \; (t \neq T)
+(v = V) \wedge (f_{i} > 0) \; \leadsto \; (v \neq V)
 \)
 </p>
 
@@ -373,13 +407,147 @@ the desired result:
 
 <p>
 \(
-(t = T) \wedge (\neg goal) \; \leadsto \; (t \neq T)
+(v = V) \wedge (\neg goal) \; \leadsto \; (v \neq V)
 \)
 </p>
 
 <p>
 The proof of the algorithm now follows by applying steps 3 and 4.
 </p>
+
+
+
+
+<!--------------------------------------------------------->
+<h2 class="w3-text-teal">Example 3: Asynchronous Shortest Path</h2>
+\(W\), \(D\), and \(d\) are \(N \times N\) matrices where:
+<ol>
+  <li>
+  <i>Edge-weight matrix</i> The elements of \(W\) are nonnegative integers,
+and \(W[i, i] = 0\) for all \(i\).  \(W[i,j]\) is the weight of the edge from
+  vertex \(i\) to vertex \(j\).
+  </li>
+  <li>
+  <i>Lengths of shortest-paths matrix</i>
+  \(D[i,j]\) is the length of the shortest path from
+  vertex \(i\) to vertex \(j\).
+  </li>
+  <li>
+  \(x\) is a matrix of variables. The state of the system is given by
+  \(x\). 
+  </li>
+</ol>
+
+<p>
+The specification of the problem is:
+</p>
+
+<p>
+\(
+(x = W) \; \leadsto \; (x = D)
+\)
+</p>
+
+
+<!------------------------------------------>
+<h3 class="w3-text-teal">An Algorithm</h3>
+Using patterns from the previous examples, we suggest the following
+properties.
+<ol>
+  <li>
+  <i>Safety:</i> \(x\) doesn't increase.
+  </p>
+
+  <p>
+  For all constant matrices \(X\)
+  </p>
+
+  <p>
+  \(
+  ((W \leq x \leq D) \wedge (x = X))
+  \; \rightarrow \;
+  (W \leq x \leq X)
+  \) 
+  </li>
+  <li>
+  <i>Progress:</i> \(x\) changes if it doesn't satisfy the goal.
+  </p>
+  <p>
+  \(
+  ((W \leq x < D) \wedge (x = X))
+  \; \leadsto \;
+  (x \neq X)
+  \)
+  </p>
+  </li>
+  <li>
+  <p>
+  <i>Variant function</i> is a matrix of integers bounded below by the zero
+  matrix. 
+  \(
+  f(x) = (x - D)
+  \)
+  </p>
+  </li>
+  
+</ol>
+</p>
+
+<p>
+The proof of an algorithm that satisfies this safety and progress
+property follows directly from steps 1 and 2 of the proof pattern.
+We can now specify collections of algorithms that satisfy these
+properties.
+</p>
+
+<p>Any action that does not increase \(x\) satisfies the safety
+criterion. Let's turn our attention to progress.
+</p>
+
+<p>
+If \(x < D\) then there exists vertices \(i, j, k\) such that:
+</p>
+<p>
+\(
+x[i,k] > x[i,j] + x[j,k]
+\)
+</p>
+<p>
+So, we require that for every \(i, j, k\)
+there exists an action \(a\) that is executed infinitely often, that
+changes \(x[i,k]\) if \(x[i,k] > x[i,j] + x[j,k]\), and therefore
+satisfies the Hoare triple:
+</p>
+
+<p>
+\(
+\{(x[i,k] > x[i,j] + x[j,k]) \wedge (x = X)\} \; a \; \{x \neq X\} 
+\)
+</p>
+
+<p>
+There are many ways that we can construct algorithms that have these properties.
+For example, we
+could have an algorithm with an action for every \(i, j, k\)
+that sets:
+</p>
+
+<p>
+\(
+x[i,k] = min(x[i,j] + x[j,k] 
+\)
+</p>
+
+<p>
+Or we could have an algorithm in which each action
+computes the lengths of shortest paths for a subgraph.
+For each \(i, j, k\), the algorithm must have an action, which is
+executed infinitely often, and whose subgraph spans \(i, j, k\).
+</p>
+
+
+
+
 
 
 

@@ -53,7 +53,10 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   href="ProofsOfProgress.html">How to Prove Progresss</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Example.html">Example</a>
+  href="ProofPattern.html">ProofPattern</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Examples.html">Examples</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
   href="SelfTest.html">Self Test</a>
@@ -288,7 +291,7 @@ directly from the variant function.
 </p>
 
 <!------------------------------------------->
-<h2 class="w3-text-teal">Example 1: Maximum Value across Agents</h2>
+<h2 class="w3-text-teal">Example 1: Minimum Value across Agents</h2>
 <p>
 We carry out the proof of this trivial example in excruciating detail,
 and we carry out all four steps to illustrate the proof pattern. We
@@ -408,8 +411,9 @@ is stable follows directly from the Hoare logic for all actions
 </p>
 
 <h2 class="w3-text-teal">Example 1b: A Variation of the Algorithm</h2>
-This variation has the same proof as the previous algorithm. The
-action \(a_{i,j}\) has the following Hoare triple:
+In this variation, the 
+action \(a_{i,j}\) is nondeterministic and is specified by the
+following Hoare triple: 
 </p>
 
 <p>
@@ -420,7 +424,11 @@ action \(a_{i,j}\) has the following Hoare triple:
 
 <p>
 The action decreases the larger value, \(t_{j}\), to any value up to
-\(T_{i}\). It's easy to check that the previous proof works.
+\(T_{i}\). 
+</p>
+
+<p>
+It's easy to check that the proof for the previous algorithm works.
 </p>
 
 
