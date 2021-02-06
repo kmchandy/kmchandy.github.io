@@ -85,8 +85,13 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <div class="w3-twothird w3-container">
     
     <h1 class="w3-text-teal">
-    Three Key Properties of Leads-To \(\leadsto\)
+    Key Properties of Leads-To \(\leadsto\)
     </h1>
+
+    <p>
+    This module defines key properties of \(\leadsto\) in terms of
+    sets of vertices and fair paths in labeled graphs. We use these
+    properties frequently in designing distributed algorithms.
 
     <!------------------------------------------------------>  
     <h3 style="color:red;">Example</h3>
@@ -264,6 +269,19 @@ Therefore:
 \(
     \{10\} \leadsto \{1, 2\}
 \)
+</p>
+
+<h3 class="w3-text-teal">Disjunction of \(\leadsto\)</h3>
+
+<p class="w3-text-teal">
+\(
+(P \leadsto R) \wedge (Q \leadsto R)
+\; \Rightarrow \;
+(P \cup Q) \leadsto R
+\)
+</p>
+<p>
+The proof is straightforward.
 </p>
 
 
