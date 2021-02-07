@@ -91,7 +91,8 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 
   When we design algorithms we will prove that the system always
 		      remains in safe states. 
-		      In terms of graphs, this means showing that all
+		      In terms of graphs, we prove that a system is
+		      safe by proving that all
 		      paths from vertices representing initial states
 		      only visit vertices representing safe states.
   </p>
@@ -343,14 +344,15 @@ P \stackrel{*}{\rightarrow} Q \; \equiv \; [P \Rightarrow A(Q)]
 <p>
 Whether you use the relations \(\rightarrow\) and
 \(\stackrel{*}{\rightarrow}\) or the functions \(N\) and \(A\) is a
-matter of style. 
+matter of style. In this course we use \(\rightarrow\) and
+\(\stackrel{*}{\rightarrow}\).
 </p>
 
 <!------------------------------------------------->
 <h2 class="w3-text-teal">Summary</h2>
-The only concepts that we use to prove that systems are safe are
-\(\rightarrow\) and \(\stackrel{*}{\rightarrow}\), or equivalently
-<i>next</i> and <i>always</i>.
+We prove that systems are safe by using 
+\(\rightarrow\) and \(\stackrel{*}{\rightarrow}\) (or equivalently
+<i>next</i> and <i>always</i>).
 </p>
 
 
