@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Agents</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Overview.html">Chapter: Common Proof Patterns</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ProofsOfSafety.html">How to Prove Safety</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ProofsOfProgress.html">How to Prove Progresss</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ProofPattern.html">Proof Pattern</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Examples.html">Examples</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="SelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_6/Overview.html">
+  Next Chapter: Diffusing Computations</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_4/Overview.html">Previous Chapter:
+  State Transition Systems</a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Agents and Shared Variables</h1>
+
+    </p>
+    A concurrent system consists of a set of agents and a set
+    of shared variables.
+    
+    The state of the system is given by the states
+    of its agents and the values of its shared variables.
+
+    An action of the system changes values of a subset of shared
+    variables and the state of at most one agent.
+
+    </p>
+
+    <p>
+    An action \(a\) that changes the state of agent \(i\) is specified
+    by Hoare
+    triples of the form: \(\{P_{i}\} \; a \; \{Q_{i}\}\), where \(P_{i}\)
+    and \(Q_{i}\) are predicates on the states of agent \(i\) and
+    shared variables. The action is independent of the states of
+    agents other than agent \(i\); predicates \(P_{i}\) and \(Q_{i}\)
+    do not mention the states of agents other than agent \(i\).
+    </p>
+
+
+    <p style="color:red;">Example</p>
+    The system sorts a vector \(x[0, \ldots, N]\).
+    
+    The system has a single
+    shared variable \(x[M]\) where \(0 < M < N\) and two agents \(L\),
+    for left, 
+    and \(R\), for right. The local
+    variables of agent \(L\) are \(x[0, \ldots, M-1]\), and the local
+    variables of agent \(R\) are \(x[M+1, \ldots, N]\).
+    The figure below depicts agents and shared variables.
+    </p>
+
+    <p>
+    Agent \(L\) has two actions: (1) it sorts its local variables
+    \(x[0, \ldots, M-1]\), and (2) it orders the pair \(x[M-1, M]\).
+    Likewise, agent \(R\) has two actions: (1) it sorts its local variables
+    \(x[M+1, \ldots, N]\), and (2) it orders the pair \(x[M, M+1]\).
+    </p>
+
+    <p>
+    The action of each agent is independent of the state of the other
+    agent. 
+    Each of these actions is executed infinitely often to sort \(x\).
+    (This example is included merely to illustrate agents;
+    it is an inefficient way of sorting.)
+    </p>
+
+
+    <p style="color:red;">Example: Generalization of Sorting</p>
+    A generalization of the previous example is as follows. The system
+    has several agents, each of which has a local variable which is a
+    segment \(x[i, \ldots, j]\) of \(x\), where \(x[i-1]\) and
+    \(x[j+1]\) are shared variables, and where the local and shared
+    variables span \(x\). Each agent has actions that sort the local
+    variables and that put the pairs, \(x[i-1, i]\) and \(x[j, j+1]\),
+in order.
+</p>
+
+<p>
+The action of each agent is independent of the states of other
+agents.
+</p>
+
+
+<!---------------------------------------------------->
+<h2 class="w3-text-teal">Timeline Diagrams</h2>
+<!---------------------------------------------------->
+
+<!---------------------------------------------------->
+<p class="w3-text-teal">Timelines of Objects</p>
+
+<p>
+A <a href="https://en.wikipedia.org/wiki/Timeline">timeline<a> of an
+object shows the sequence of events, in chronological order, that occur
+to that object. Events are instantaneous.
+
+A timeline can be represented as a straight-line labeled graph in
+which a vertex represents an event. 
+
+Each vertex is labeled with the identity of the event that the vertex
+represents.
+</p>
+
+<p>
+The edges of the graph are \((e_{i}, e_{i+1})\) where \(e_{j}\) is the
+vertex representing the \(j\)-th event, for \(0 \leq j\).
+The edge \((e_{i}, e_{i+1})\) is labeled with the state of the object
+between \(e_{i}\) and \(e_{i+1}\).
+</p>
+
+<p>
+We adopt the conventions that timelines are horizontal lines and that
+time progresses from left to right.
+</p>
+
+<!---------------------------------------------------->
+<p class="w3-text-teal">System Trajectories as Timelines</p>
+
+<p>
+A system trajectory is a path through the state-transition graph in
+which a state is represented
+by a vertex, and a state transition is represented by an edge.
+
+By contrast, in a trajectory represented as a timeline,  a state is
+represented by an edge, and a 
+state transition is represented by a vertex. 
+
+The initial event \(e_{0}\) of the timeline starts the timeline and
+the edge \((e_{0}, e_{1})\) represents the initial state of the
+trajectory.
+</p>
+
+
+<p class="w3-text-teal">Interchanging order of adjacent independent events</p>
+<p>
+An action is said to <i>reference</i> a shared variable \(v\) when the
+action reads or modifies \(v\).
+
+Events \(e\) and \(e'\) are said to be <i>dependent</i> exactly when
+(1) both events are at the same agent, or
+(2)
+either
+event modifies a variable that is referenced by the other event. 
+</p>
+
+<p>
+Consider a pair \(e_{i}, e_{i+1}\) of adjacent independent (i.e., not
+dependent) events in \(T\). The variables and agent
+state referenced by each agent is unchanged by the other
+event. Therefore, the
+events can occur in either order.
+</p>
+
+<p>
+Let \(T'\) be a sequence that is
+indentical to \(T\) except that the order in which \(e_{i}\) and
+\(e_{i+1}\) is flipped. Then \(T'\) is also a trajectory and the
+states before \(e_{i}\) and after \(e_{i+1}\) are identical in \(T\)
+and \(T'\).
+</p>
+
+
+
+<!---------------------------------------------------->
+<h4 class="w3-text-teal">From Linear Timeline to Acyclic Graph</h4>
+
+<p>
+Next we associate a graph with a timeline representation of a
+trajectory, where the graph has a separate timeline for each agent.
+</p>
+
+<p class="w3-text-teal">Timeline of an Agent</p>
+
+<p>
+The timeline of an agent, during a system trajectory, is the sequence
+of events that occur at that agent.  An event at an agent is the
+execution of an action by that agent.  An edge in an agent's timeline
+is directed from an event at that agent to the next event at that
+agent. The edge is labeled with the agent's state between successive
+events.
+</p>
+
+<p>
+The next state of an agent after a state transition depends on the
+prior states of the agent and shared variables. Now we show how the
+states of shared variables are represented in the graph.
+</p>
+
+
+<p class="w3-text-teal">From timeline to graph</p>
+
+<p>
+Next we describe the graph \(G\) associated with a timeline
+\(T\). 
+</p>
+
+<p><i>Vertices of \(G\)</i></p>
+<p>
+The vertices of \(G\) are exactly the same as those in \(T\).
+</p>
+
+<p><i>Edges of \(G\)</i></p>
+<p>
+\(G\) has an edge \((e, e')\) for dependent events \(e\) and \(e'\)
+that occur at agents \(a\) and \(a'\) respectively,
+where \(e'\) is the first event that occurs at
+\(a'\) in \(T\) after \(e\).
+</p>
+
+
+<p>
+Therefore, \(G\) has an edge \((e, e')\) for:
+<ol>
+  <li>
+  successive events \(e\) and \(e'\)
+  at the same agent \(a\). These are the edges associated with the timeline
+  of \(a\).
+  </li>
+  <li>
+  dependent events \(e\) and \(e'\) that occur at different agents
+  \(a\) and \(a'\), respectively, and \(e'\) is the first event that
+  occurs at \(a'\) in \(T\) after \(e\).
+  </li>
+</ol>
+</p>
+
+
+
+<h4 class="w3-text-teal">Trajectories consistent with the Partial
+Ordering</h4> 
+<p>
+\(G\) is acylic because every edge is directed from an earlier
+event to a later event. The set of vertices of an acyclic graph represents a
+<a href="https://en.wikipedia.org/wiki/Partially_ordered_set">
+partially ordered set</a> 
+where \(v \leq w\) exactly when \(v
+= w\) or there exists an edge \((v, w)\).
+</p>
+
+<p>
+A total order, consistent with a partial order
+\(\leq\), is any sequence in which:  If
+\(v < w\) then \(v\) appears before \(w\) in the sequence.
+The timeline \(T\) is a total order consistent with
+\(\leq\).
+
+<p><i>Theorem</i></p>
+<p>
+All total orders consistent with \(\leq\)
+are trajectories that start at the initial state of \(T\), and end at
+the final state of \(T\).
+</p>
+
+<p><i>Proof</i></p>
+
+<p>
+Let \(R\) be any total order consistent \(\leq\). We will prove that
+\(R\) is a trajectory.
+
+The proof is similar to that of a bubble sort. We give an iteration
+that generates a sequence of trajectories, starting with \(T\) and
+ending with \(R\).
+</p>
+
+<p>
+For any total order \(Q\), let \(f(Q)\) be the number of out-of-order
+pairs of elements in \(Q\) relative to \(R\). A pair \((v, w)\) is out
+of order in \(Q\) with respect to \(R\) if \(v\) appears before \(w\)
+in \(R\), and \(v\) appears after \(w\) in \(Q\).
+</p>
+
+<p>
+\(f\) is bounded below by \(0\), and \(f(Q) = 0\) exactly when \(Q =
+R\). We will use \(f\) as a variant function or
+<a href="https://en.wikipedia.org/wiki/Loop_variant">loop variant</a>
+to prove that the iteration terminates.
+</p>
+
+<p>
+Let \(Q\) be any trajectory consistent with \(\leq\).
+
+If \(Q\) is different from \(R\), then there exists
+an adjacent out-of-order pair of elements \((e_{i}, e_{i+1})\) in
+\(Q\), i.e., \(e_{i}\) appears immediately before \(e_{i+1}\) in
+\(Q\), whereas \(e_{i}\) appears after \(e_{i+1}\) in \(R\).
+
+As we said earlier, the
+total order, \(Q'\), obtained by flipping the order of \((e_{i},
+e_{i+1})\) in \(Q\) is also a trajectory.
+
+The theorem follows by induction on values of \(f\), since
+\(f(Q') < f(Q)\).
+</p>
+
+
+
+
+
+
+
+<p class="w3-text-teal">When Shared Variables are Queues</p>
+<p>
+In many systems, shared variables are queues where exactly one agent
+ enqueues messages on the queue and exactly one agent dequeues
+ messages from the queue. The receiving agent eventually dequeues
+ every message that the sender enqueues. The edges from one agent's
+ timeline to another can be labeled with the message sent by the
+ sender and eventually received by the receiver.
+</p>
+
+<h3 class="w3-text-teal">Ordering Events</h3>
+The next paragraphs address the question: Given a trajectory
+represented as the graph defined above, what sequences of events.
+
+    <p style="color:red;">Example</p>
+    A system consists of agents \(a_{i}\)  and shared variables
+    \(v_{i}\) for \(i = 0, 1\).
+    Let \(f(i) = (i+1) mod 2\); thus \(f(i)\) is the index of the
+    agent other than agent \(i\).
+    </p>
+
+    <p>
+    The agents send indivisible
+    tokens to each other. The state of agent \(i\) 
+    is a
+    non-negative integer \(n_{i}\), which is the number of tokens that agent \(i\)
+    holds.
+    The shared variable \(v_{i}\) represents a message-passing channel
+    from agent \(i\) to agent \(f(i)\).
+    The channel contains tokens in transit, and \(v_{i}\) is a nonnegative integer,
+    which is the number of tokens in the channel.
+    The state of the system is given by \([n_{0}, n_{1}, v_{0},
+    v_{1}]\).
+    </p>
+
+    <p>
+    Agent \(i\) has two actions:
+    <ol>
+      <li>
+      <p>
+     <i>send</i>, \(s_{i}\): This action takes a token that the agent \(i\) has and adds it to
+    the shared variable \(v_{i}\). This action is specified by the Hoare
+    triple: For all \(N, M\):
+      </p>
+      <p>
+      \(
+      \{(n_{i} > 0) \wedge (n_{i}, v_{i} = N, M)\} \; s_{i} \;
+    \{n_{i}, v_{i} = N-1, M+1\}
+      \)
+      </p>
+      </li>
+      <li>
+      <p>
+     <i>receive</i>,  \(r_{i}\): This action takes a token in
+    the shared variable \(v_{f(i)}\), if it is positive, and adds it to
+    the agent. The action is specified by the Hoare 
+    triple: For all \(N, M\):
+      </p>
+      <p>
+      \(
+      \{(v_{f(i)} > 0) \wedge (n_{i}, v_{f(i)} = N, M)\} \; s_{i} \;
+    \{n_{i}, v_{f(i)} = N+1, M-1\}
+      \)
+      </p>
+      </li>
+    </ol>
+    </p>
+
+    <p style="color:red;">Example</p>
+    Now let's look at the same example but where the shared variables
+    are queues rather than integers.
+    The operations on a queue are (1)
+    <i>enqueue</i> a value and (2) <i>dequeue</i> a nonempty queue.
+    The state of a queue is a sequence of values.
+    If \(seq\) is the sequence of values before
+    the action \(enqueue(m)\)
+      
+
+
+
+
+    
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
