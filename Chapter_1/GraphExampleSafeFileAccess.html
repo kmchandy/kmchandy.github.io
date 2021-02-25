@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>Chapter Organization</title>
+<title>System_Example</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -64,21 +64,53 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     
     <h1 class="w3-text-teal">Example of a System Represented by a
     Graph: Sharing Files Safely</h1>
-  We want to develop an algorithm by which agents in a distributed
-  system share access to a set of files. Safety means that each file
-  is modified by at most one agent at a time, and no agent reads a
-  file while it is being modified by another agent.  The state of the
-  system is specified by the states of the agents and the states of
-  message channels. In the graph representation, the system is at one
-  vertex, representing a state, at any point in time. We will show
-  that the paths that the system takes in the graph visit only safe
-  states.
-  </p>
 
-  <p>
-  We will show that a system progresses towards desired or goal states
-  from properties of sets of infinite paths in graphs.
-  </p>
+    <h3 class="w3-text-teal">The Problem</h3>
+  We want to develop an algorithm by which agents in a distributed
+  system share access to a set of files. The safety specification is that each file
+  is modified by at most one agent at a time, and no agent reads a
+    file while it is being modified by another agent.
+    The progress specification is that an agent waiting for access to
+    a subset of the files gets access eventually.
+    </p>
+
+    <h3 class="w3-text-teal">Vertex: State</h3>
+    <p>
+    The state of the
+  system is specified by the states of the agents and the states of
+    message channels. An agent's state specifies whether the agent is
+    waiting for access to a set of files, the subset of files that the
+    agent has secured, whether it has requests from other agents for
+    access to files, and so on. The state of a channel is the sequence
+    of messages in transit through the channel. Each system state is
+    represented by a single vertex in the graph representation.
+    </p>
+
+    <h3 class="w3-text-teal">Edge: State Transition or Action</h3>
+    <p>
+    An edge in the graph represents an action taken by an agent that
+    causes a transition of the system state. An example of an action
+    is an agent sending a request on a channel. Many actions can be
+    executed in a state because any agent can execute an action.
+    </p>
+
+    <h3 class="w3-text-teal">Safety Proof Obligation</h3>
+    <p>
+    We are required to identify the set of initial vertices (states)
+    and the edges of the graph (i.e., actions), such that all vertices
+    reachable from the initial vertices, including the initial
+    vertices themselves, are safe.
+    </p>
+
+    <h3 class="w3-text-teal">Progress Proof Obligation</h3>
+    <p>
+    We are required to prove that if the system is at a vertex \(s\) in which
+    any agent \(a\) is waiting for a set of files then the system will
+    follow a path from \(s\) to a vertex \(s'\) in which agent
+    \(a\) has access to the files for which it is waiting.
+    </p>
+    
+
 
   <p>
     <a href="Graph.html#Graph2">Return to main page.</a>

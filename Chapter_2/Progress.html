@@ -108,18 +108,20 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 
   <!------------------------------------------------------>
   <!------------------------------------------------------>  
-  <h3 style="color:red;">Example</h3>
+  <h3 style="color:red;">Example 1</h3>
   <figure>
   <img src="LabeledGraph.jpg" alt="Fig2" style="width:50%">
-  <figcaption>Fig.1 - Example of a Labeled Graph</figcaption>
+  <figcaption>Fig.1 - Example 1 of a Labeled Graph</figcaption>
   </figure>
   <p>
-In this example, the edges are labeled \(a\), \(b\), \(c\). An edge from
-vertex back to itself is not shown in the diagram (so as not to crowd
-the picture). For example there are edges labeled \(a\), \(b\) and
-\(c\) from vertex \(2\) back to itself. Similarly, there is an edge
-labeled \(c\) from vertex \(7\) back to itself.
-		      </p>
+    In this example, the edges are labeled \(a\), \(b\), \(c\), and
+    each vertex has exactly one outgoing edge with each label.
+    So as not to crowd the diagram, edges from a vertex to itself are
+  not shown. For example, vertex \(7\) has an edge labeled \(c\) back
+  to itself; vertex \(10\) has edges labeled \(b\) and \(c\) back to
+  itself, and vertex \(2\) has edges labeled \(a\), \(b\) and \(c\)
+  back to itself.
+</p>
 
 <!------------------------------------------------------>
 <!------------------------------------------------------>
@@ -140,7 +142,8 @@ labeled \(c\) from vertex \(7\) back to itself.
   <br>
   where \(p_{i}\) is the \(i\)-th vertex visited on the path, and the
   sequence of edges in the path are \(p_{i}
-  \stackrel{a_{i}}{\rightarrow} p_{i+1}\) for \(i \geq 0\).
+\stackrel{a_{i}}{\rightarrow} p_{i+1}\) for \(i \geq 0\), and
+\(p_{0}\) is the initial vertex of the path.
 </p>
 
 
@@ -159,12 +162,18 @@ when at every point in \(p\) there is a later point at
 which \(p\) traverses an edge labeled \(L\).
 </p>
 
+<p>
+Let \(a_{j}\) be the label of the edge from vertex \(p_{j}\) to vertex
+\(p_{j+1}\). Path \(p\) traverses label \(L\) infinitely often exactly
+when:
+</p>
+
 <p class="ex1">
 \(\forall j: \; \exists k > j: \; a_{k} = L \)
 </p>
 
 <!------------------------------------------------------>
-<p style="color:red;"><b>Example of label traversed infinitely often</b></p>
+<p style="color:red;"><b>Example of a path that traverses a label infinitely often</b></p>
 <p>
 Let \(p\) be the path that repeatedly cycles through vertices \(3\) and \(4\)
 traversing an edge with label \(a\) and then an edge with label \(b\).
@@ -183,28 +192,29 @@ traverses edges with label \(b\) infinitely often.
 
 <!------------------------------------------------------>
 <!------------------------------------------------------>
-<h3 class="w3-text-teal">Infinitely Often Labels</h3>
+<h3 class="w3-text-teal">Fair Labels</h3>
 Now we consider labeled graphs in which a subset of labels are
-designated as <b>infinitely-often
-labels</b>. We 
-define a <b>fair path</b> in such a graph as follows:
+designated as <i>fair
+labels</i>. We 
+define a <i>fair path</i> in such a graph as follows:
 A path \(p\) is a
-<i>fair</i> path exactly when \(p\) traverses every infinitely-often
+<i>fair</i> path exactly when \(p\) traverses every fair
 label infinitely often.
 </p>
   <p>
-  A label that is not infinitely-often may appear an
+  A label that is not fair may appear an
   arbitrary number of times in fair paths: it may
   appear a finite number of
   times or it may appear infinitely often.
-  Labels that are not infinitely often represent events, such as
-errors, over which system designers have no control.
+  Labels that are not fair represent events, such as
+errors, over which designers have no control. An error may never
+occur, or it may occur a few times, or it may occur infinitely often.
   </p>
 
 
   <!------------------------------------------------------>
   <p style="color:red;"><b>Examples of Fair Paths</b></p>
-  Consider the case where the infinitely-often labels are \(a\) and
+  Consider the case where the fair labels are \(a\) and
 \(b\). An examples of a fair path is:
 \(
     3 \stackrel{a}{\rightarrow} 4 \stackrel{b}{\rightarrow} 3
@@ -266,6 +276,49 @@ times.
     There is a fair path from \(7\) through \(6\) that
 never visits \(\{1, 2\}\). So, not all fair paths from \(7\)
 visit \(\{1, 2\}\).
+</p>
+
+
+
+  <!------------------------------------------------------>
+  <!------------------------------------------------------>  
+  <h3 style="color:red;">Example 2</h3>
+  <figure>
+  <img src="LabeledGraph_2.jpg" alt="Fig2" style="width:50%">
+  <figcaption>Fig.2 - Example 2 of a Labeled Graph</figcaption>
+  </figure>
+<p>
+This graph has two labels, red and black, shown by the color of the
+edges. Both labels are fair.
+</p>
+
+<h5 style="color:red;">Is \(1 \leadsto 0\) true?<h5>
+No.
+<p>
+\(1 \leadsto 0\) holds only if <i>all</i> fair paths from vertex
+\(1\) visit vertex \(0\). The following is a fair path starting at
+vertex \(1\) which never visits vertex \(0\):
+</p>
+
+<p>
+\(
+1 \stackrel{R}{\rightarrow} 2 \stackrel{R}{\rightarrow} 3
+\stackrel{B}{\rightarrow}
+1 \stackrel{R}{\rightarrow} 2 \stackrel{R}{\rightarrow} 3
+\stackrel{B}{\rightarrow} 1 \stackrel{R}{\rightarrow} \ldots
+\)
+</p>
+<p>
+where the labels R and B stand for red and black, respectively.
+This path is fair because all fair labels appear infinitely often in
+the path.
+</p>
+
+<h5 style="color:red;">Is \(4 \leadsto 0\) true?<h5>
+Yes.
+<p>
+Every path from vertex \(4\) that traverses a red edge visits vertex
+\(0\). Every fair path must traverse red edges infinitely often.
 </p>
 
 

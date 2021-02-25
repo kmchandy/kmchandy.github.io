@@ -17,6 +17,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   height: inherit;
 }
 </style>
+
 <body>
 
 <!-- Navbar -->
@@ -71,10 +72,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     described in terms of <a
     href="https://en.wikipedia.org/wiki/Directed_graph">
     directed graphs</a>.
-    </p>
-    
-    <p>
-    This chapter consists of this main module and supporting modules
+    This chapter consists of this module and supporting modules
     containing diagrams and self tests.
     </p>
 
@@ -84,18 +82,24 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <a href="https://en.wikipedia.org/wiki/Directed_graph">directed graph</a>
   in which vertices represent states and edges
   represent  transitions. A system trajectory is a path through the
-  graph.
-		      </p>
-
-		      
-
+    graph.
   When we design algorithms we will prove that the system always
-		      remains in safe states. 
-		      In terms of graphs, we prove that a system is
+    remains in safe states.
+    </p>
+
+    <h4 style="color:blue;">
+    
+		      We prove that a system is
 		      safe by proving that all
 		      paths from vertices representing initial states
 		      only visit vertices representing safe states.
-  </p>
+    </h4>
+
+    <p>
+    Of course, we require that initial states are safe.
+    </p>
+
+    
 
 		      <h2 id=Graph2 class="w3-text-teal">Graphs</h2>
 		      Let \(G = (V, \rightarrow) \) be a <a
@@ -138,8 +142,8 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 		      \(\rightarrow\).
 		      So, \(v \stackrel{*}{\rightarrow} w\) holds exactly
 		      when there exists a path from \(v\) to \(w\) in
-the graph. We assume that there is a path, with zero hops, from each
-vertex to itself:
+the graph. We assume that there exists a path, with zero hops, from each
+vertex to itself.
 \(\forall v: \; v \rightarrow v \)
 
 <p style="color:red;"><b>Example of paths</b></p>
@@ -219,6 +223,19 @@ itself, and from vertex \(2\) back to itself. There are paths from
 \(2\) to \(4\) and \(5\), and there are paths from \(1\) to \(6\) and
 \(7\). There are no paths from \(1\) or \(2\) to \(0\) or \(3\).
 
+<h2 class="w3-text-teal">Safety Proof Obligation</h2>
+Let \(init\) be the set of initial vertices and \(safe\) be the set of
+safe vertices.
+</p>
+<h4 style="color:blue;">To prove that a system is safe, we must show
+that:
+<br>
+\(init \stackrel{*}{\rightarrow} safe\)
+<h4>
+
+
+
+
 <h2 class="w3-text-teal">Stable</h2>
 <b>stable</b> is a function from sets of vertices to the Booleans.
 \(stable(P)\) holds exactly when every edge from a vertex in \(P\) is
@@ -233,7 +250,7 @@ stable(P) \; \equiv \; (P \rightarrow P)
 
 <p style="color:red;"><b>Example of Stable</b></p>
 \(
-\textrm{stable}(\{4, 5\})
+\textit{stable}(\{4, 5\})
 \)
 <br>
 Explanation: Every outgoing edge from vertex \(4\) is to vertex \(5\)
@@ -326,32 +343,41 @@ in \(N(\{0, 1, 2, 3\}\).
   from \(v\) to \(v\), and so these vertices are not in \(A(\{0, 1, 3,
   6, 7\})\).
 
+<p>
+The safety proof obligation, in terms of <i>always</i> is:
+</p>
+<p>
+\(init \subseteq A(safe)\)
+</p>
+
 <h3 class="w3-text-teal">Relations or Functions</h3>
 You can use either \(\rightarrow\) or <i>next</i>, because:
 </p>
 <p>
 \(
-P \rightarrow Q \; \equiv \; [P \Rightarrow N(Q)]
+P \rightarrow Q \; \equiv \; [P \subseteq N(Q)]
 \)
 </p>
 Similarly, you can use either \(\stackrel{*}{\rightarrow}\) or <i>always</i>, because:
 </p>
 <p>
 \(
-P \stackrel{*}{\rightarrow} Q \; \equiv \; [P \Rightarrow A(Q)]
+P \stackrel{*}{\rightarrow} Q \; \equiv \; [P \subseteq A(Q)]
 \)
 </p>
 <p>
 Whether you use the relations \(\rightarrow\) and
 \(\stackrel{*}{\rightarrow}\) or the functions \(N\) and \(A\) is a
-matter of style. In this course we use \(\rightarrow\) and
+matter of personal preference. In this course we use \(\rightarrow\) and
 \(\stackrel{*}{\rightarrow}\).
 </p>
 
+
 <!------------------------------------------------->
 <h2 class="w3-text-teal">Summary</h2>
-We prove that systems are safe by using 
-\(\rightarrow\) and \(\stackrel{*}{\rightarrow}\) (or equivalently
+This chapter describes all the concepts that we use to prove that
+systems are safe. These concepts are \(\rightarrow\) and
+\(\stackrel{*}{\rightarrow}\)  (or equivalently
 <i>next</i> and <i>always</i>).
 </p>
 

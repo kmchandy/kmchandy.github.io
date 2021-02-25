@@ -44,16 +44,13 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   Algorithms</h3>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Overview.html">Chapter: Common Proof Patterns</a>
+  href="Overview.html">Chapter: Agents and Shared Variables</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="ProofsOfSafety.html">How to Prove Safety</a>
+  href="Agents.html">Agents, Shared Variables & Timelines</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="ProofsOfProgress.html">How to Prove Progresss</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="ProofPattern.html">Proof Pattern</a>
+  href="MessagePassing.html">Message-Passing Systems</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
   href="Examples.html">Examples</a>
@@ -62,12 +59,13 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   href="SelfTest.html">Self Test</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_6/Overview.html">
+  href="../Chapter_7/Overview.html">
   Next Chapter: Diffusing Computations</a> 
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_4/Overview.html">Previous Chapter:
-  State Transition Systems</a>
+  href="../Chapter_5/Overview.html">Previous Chapter:
+  Common Proof Patterns
+  </a>
   
 </nav>
 
@@ -155,11 +153,11 @@ agents.
 
 
 <!---------------------------------------------------->
-<h2 class="w3-text-teal">Timeline Diagrams</h2>
+<h1 class="w3-text-teal">Timeline Diagrams</h1>
 <!---------------------------------------------------->
 
 <!---------------------------------------------------->
-<p class="w3-text-teal">Timelines of Objects</p>
+<h2 class="w3-text-teal">Timelines of Objects</h2>
 
 <p>
 A <a href="https://en.wikipedia.org/wiki/Timeline">timeline<a> of an
@@ -186,7 +184,7 @@ time progresses from left to right.
 </p>
 
 <!---------------------------------------------------->
-<p class="w3-text-teal">System Trajectories as Timelines</p>
+<h2 class="w3-text-teal">System Trajectories as Timelines</h2>
 
 <p>
 A system trajectory is a path through the state-transition graph in
@@ -203,7 +201,7 @@ trajectory.
 </p>
 
 
-<p class="w3-text-teal">Interchanging order of adjacent independent events</p>
+<h4 class="w3-text-teal">Interchanging order of adjacent independent events</h4>
 <p>
 An action is said to <i>reference</i> a shared variable \(v\) when the
 action reads or modifies \(v\).
@@ -234,14 +232,15 @@ and \(T'\).
 
 
 <!---------------------------------------------------->
-<h4 class="w3-text-teal">From Linear Timeline to Acyclic Graph</h4>
+<h2 class="w3-text-teal">From System Timeline to Parallel Agent
+Timelines</h2>
 
 <p>
 Next we associate a graph with a timeline representation of a
 trajectory, where the graph has a separate timeline for each agent.
 </p>
 
-<p class="w3-text-teal">Timeline of an Agent</p>
+<h3 class="w3-text-teal">Timeline of an Agent</h3>
 
 <p>
 The timeline of an agent, during a system trajectory, is the sequence
@@ -259,7 +258,7 @@ states of shared variables are represented in the graph.
 </p>
 
 
-<p class="w3-text-teal">From timeline to graph</p>
+<h3 class="w3-text-teal">System Timeline to Agent Timelines</h3>
 
 <p>
 Next we describe the graph \(G\) associated with a timeline
@@ -298,8 +297,7 @@ Therefore, \(G\) has an edge \((e, e')\) for:
 
 
 
-<h4 class="w3-text-teal">Trajectories consistent with the Partial
-Ordering</h4> 
+<h4 class="w3-text-teal">System Timelines consistent with Agent Timelines</h4> 
 <p>
 \(G\) is acylic because every edge is directed from an earlier
 event to a later event. The set of vertices of an acyclic graph represents a
@@ -316,7 +314,7 @@ A total order, consistent with a partial order
 The timeline \(T\) is a total order consistent with
 \(\leq\).
 
-<p><i>Theorem</i></p>
+<h3 class="w3-text-teal">Timeline Theorem</h3>
 <p>
 All total orders consistent with \(\leq\)
 are trajectories that start at the initial state of \(T\), and end at
