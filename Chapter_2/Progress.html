@@ -162,6 +162,12 @@ when at every point in \(p\) there is a later point at
 which \(p\) traverses an edge labeled \(L\).
 </p>
 
+
+<figure>
+  <img src="FiniteGapInFairPaths.jpg" alt="Fig0" style="width:50%">
+  <figcaption>Path that traverses label L infinitely often</figcaption>
+</figure>
+
 <p>
 Let \(a_{j}\) be the label of the edge from vertex \(p_{j}\) to vertex
 \(p_{j+1}\). Path \(p\) traverses label \(L\) infinitely often exactly
@@ -214,7 +220,7 @@ occur, or it may occur a few times, or it may occur infinitely often.
 
   <!------------------------------------------------------>
   <p style="color:red;"><b>Examples of Fair Paths</b></p>
-  Consider the case where the fair labels are \(a\) and
+  Consider the case, shown in Figure 1, where the fair labels are \(a\) and
 \(b\). An examples of a fair path is:
 \(
     3 \stackrel{a}{\rightarrow} 4 \stackrel{b}{\rightarrow} 3
@@ -240,6 +246,29 @@ fair</b></p>
 times.
 </p>
 
+
+<!------------------------------------------------------>
+  <!------------------------------------------------------>  
+  <h3 style="color:red;">Example 2</h3>
+  <figure>
+  <img src="FairPaths.jpg" alt="Fig2" style="width:50%">
+  <figcaption>Fig.2 - Example of Fair Paths</figcaption>
+</figure>
+<p>
+This example illustrates that fairness does not imply equality. This
+  graph has fair edges labeled R (red) and B (black). A path with an
+equal number of both labels, such as:
+\(
+0 \stackrel{R}{\rightarrow} 1 \stackrel{B}{\rightarrow} 0
+\stackrel{R}{\rightarrow} 1 \stackrel{B}{\rightarrow} 0 
+\stackrel{R}{\rightarrow} \ldots
+\)
+is fair. But, so are paths in which a label (say B) appears many more
+  times than other labels, provided that every fair label appears
+  infinitely often.
+
+
+
 <h2 class="w3-text-teal">Leads-To, \(\leadsto\)</h2>
   \(\leadsto\), read as "leads to," is a binary relation on vertex sets.
   \(P \leadsto Q\) holds exactly when every fair path that visits a vertex in
@@ -256,7 +285,8 @@ times.
 
   <!------------------------------------------------------>
   <p style="color:red;"><b>An example of \(P \leadsto Q\)</b></p>
-  
+<p>
+In Fig. 1: 
     \(
     \{8, 9\} \leadsto \{1, 2\}
     \)
@@ -268,7 +298,8 @@ times.
   9\}\). Transitions out of \(\{8, 9\}\) are to \(\{1, 2\}\).
   <!------------------------------------------------------>
   <p style="color:red;"><b>An example of \(\neg (P \leadsto
-  Q)\)</b></p>
+Q)\)</b></p>
+In Fig. 1:
     \(
     \neg (\{7\} \leadsto \{1, 2\})
     \)
@@ -282,17 +313,17 @@ visit \(\{1, 2\}\).
 
   <!------------------------------------------------------>
   <!------------------------------------------------------>  
-  <h3 style="color:red;">Example 2</h3>
+  <h3 style="color:red;">Example 3</h3>
   <figure>
-  <img src="LabeledGraph_2.jpg" alt="Fig2" style="width:50%">
-  <figcaption>Fig.2 - Example 2 of a Labeled Graph</figcaption>
+  <img src="LabeledGraph_3.jpg" alt="Fig2" style="width:50%">
+  <figcaption>Fig.3 - Example 3 of a Labeled Graph</figcaption>
   </figure>
 <p>
-This graph has two labels, red and black, shown by the color of the
+This graph, Figure 3, has two labels, red and black, shown by the color of the
 edges. Both labels are fair.
 </p>
 
-<h5 style="color:red;">Is \(1 \leadsto 0\) true?<h5>
+<h5 style="color:red;">Is \(\{1\} \leadsto \{0\}\) true?<h5>
 No.
 <p>
 \(1 \leadsto 0\) holds only if <i>all</i> fair paths from vertex
@@ -314,12 +345,37 @@ This path is fair because all fair labels appear infinitely often in
 the path.
 </p>
 
-<h5 style="color:red;">Is \(4 \leadsto 0\) true?<h5>
+<h5 style="color:red;">Is \(\{4\} \leadsto \{0\}\) true?<h5>
 Yes.
 <p>
 Every path from vertex \(4\) that traverses a red edge visits vertex
 \(0\). Every fair path must traverse red edges infinitely often.
 </p>
+
+<h5 style="color:red;">More examples of \(P \leadsto Q\)<h5>
+<p>
+<ol>
+  <li>
+  \(
+  \{8\} \leadsto \{4, 6\}
+  \)
+  </li>
+  <li>
+  \(
+  \{8\} \leadsto \{0\}
+  \)
+  </li>
+  <li>
+  \(
+  \{4, 5, 6\} \leadsto \{0\}
+  \)
+  </li>
+  <li>
+  \(
+  \neg (\{7\} \leadsto \{0\})
+  \)
+  </li>
+</ol>
 
 
  <!------------------------------------------------------>
