@@ -40,15 +40,29 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   
   <h3 class="w3-bar-item"><b>An Introduction to Distributed
   Algorithms</h3>
+  
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Progress.html">Chapter: Progress</a>
-  <a class="w3-bar-item w3-button w3-hover-black" href="ProgressExample.html">More Examples</a>
-  <a class="w3-bar-item w3-button w3-hover-black" href="ProgressSelfTest.html">Self Test</a>
+  href="Progress.html">Progress</a>
+  
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_1/Safety.html">Previous Chapter: Safety</a>
+  href="ProgressExample.html">Examples</a>
+  
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_3/Overview.html">Next Chapter: Properties and Composition</a>
-  </nav>
+  href="ProgressSelfTest.html">Self Tests</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ProgressExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ProgressExplorations.html">Explorations</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_2_2/ProgressProperties.html">Next: Progress Properties</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_1/Safety.html">Previous: Safety</a>
+
+</nav>
 
   
 <!-- Overlay effect when opening sidebar on small screens -->
@@ -66,16 +80,11 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 
     
     <h1 class="w3-text-teal">Progress</h1>
-    This chapter introduces the concepts that we use
+    This module introduces all the concepts that we use
     to prove that system trajectories progress towards their
     goals. These concepts are described in terms of <a
     href=https://en.wikipedia.org/wiki/Multigraph#Directed_multigraph_(edges_with_own_identity)">
     labeled directed graphs</a>.
-    </p>
-    
-    <p>
-    This chapter consists of this main module and supporting modules
-    containing diagrams and self tests.
     </p>
 
 
@@ -110,7 +119,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <!------------------------------------------------------>  
   <h3 style="color:red;">Example 1</h3>
   <figure>
-  <img src="LabeledGraph.jpg" alt="Fig2" style="width:50%">
+  <img src="LabeledGraph.jpg" alt="Fig2" style="width:75%">
   <figcaption>Fig.1 - Example 1 of a Labeled Graph</figcaption>
   </figure>
   <p>
@@ -159,23 +168,24 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 <h3 class="w3-text-teal">Paths that Traverse a Label Infinitely Often</h3>
 <i>A path \(p\) traverses label \(L\) infinitely often</i> exactly
 when at every point in \(p\) there is a later point at
-which \(p\) traverses an edge labeled \(L\).
+which \(p\) traverses an edge labeled \(L\). So, the gaps between
+successive traversals of \(L\) are finite.
 </p>
 
 
 <figure>
-  <img src="FiniteGapInFairPaths.jpg" alt="Fig0" style="width:50%">
+  <img src="FiniteGapInFairPaths.jpg" alt="Fig0" style="width:75%">
   <figcaption>Path that traverses label L infinitely often</figcaption>
 </figure>
 
 <p>
-Let \(a_{j}\) be the label of the edge from vertex \(p_{j}\) to vertex
+Let \(l_{j}\) be the label of the edge from vertex \(p_{j}\) to vertex
 \(p_{j+1}\). Path \(p\) traverses label \(L\) infinitely often exactly
 when:
 </p>
 
 <p class="ex1">
-\(\forall j: \; \exists k > j: \; a_{k} = L \)
+\(\forall j: \; \exists k > j: \; l_{k} = L \)
 </p>
 
 <!------------------------------------------------------>
@@ -251,21 +261,35 @@ times.
   <!------------------------------------------------------>  
   <h3 style="color:red;">Example 2</h3>
   <figure>
-  <img src="FairPaths.jpg" alt="Fig2" style="width:50%">
+  <img src="FairPaths.jpg" alt="Fig2" style="width:75%">
   <figcaption>Fig.2 - Example of Fair Paths</figcaption>
 </figure>
 <p>
 This example illustrates that fairness does not imply equality. This
-  graph has fair edges labeled R (red) and B (black). A path with an
-equal number of both labels, such as:
+graph has fair edges labeled R (red) and B (black).
+The first path shown in the diagram has
+equal number of both labels:
 \(
 0 \stackrel{R}{\rightarrow} 1 \stackrel{B}{\rightarrow} 0
 \stackrel{R}{\rightarrow} 1 \stackrel{B}{\rightarrow} 0 
 \stackrel{R}{\rightarrow} \ldots
 \)
-is fair. But, so are paths in which a label (say B) appears many more
-  times than other labels, provided that every fair label appears
-  infinitely often.
+</p>
+<p>
+This path is fair because all labels appear infinitely often.
+The second path in the diagram has label \(1\) appearing after \(n\)
+  successive appearances of label \(2\) where \(n\) grows
+  linearly. The ratio of the number of \(1\) labels to the number of
+  \(0\) labels is vanishingly small as the path length
+  increases. Nevertheless, the second path is also fair because labels
+\(0\) and \(1\) appear infinitely often.
+</p>
+
+<p>
+In the third path in the diagram,  label \(1\) appears after \(n\)
+  successive appearances of label \(2\) where \(n\) grows
+exponentially. Nevertheless, this path is also fair.
+</p>
 
 
 
@@ -315,7 +339,7 @@ visit \(\{1, 2\}\).
   <!------------------------------------------------------>  
   <h3 style="color:red;">Example 3</h3>
   <figure>
-  <img src="LabeledGraph_3.jpg" alt="Fig2" style="width:50%">
+  <img src="LabeledGraph_3.jpg" alt="Fig2" style="width:75%">
   <figcaption>Fig.3 - Example 3 of a Labeled Graph</figcaption>
   </figure>
 <p>
@@ -394,9 +418,22 @@ Read \(E(Q)\) as "<i>eventually</i> Q."
 </p>
 
 <p>
-You can use either \(E\) or \(\leadsto\); in this course, we use
-\(\leadsto\). 
+You can use either \(E\) or \(\leadsto\) because:
+</p>
+<p>
+\(
+(P \leadsto Q) \quad \equiv \quad (P \subseteq E(Q))
+\)
+<p>
+<p>
+So, \(E(Q)\) is the weakest set \(P\) such that \(P \leadsto Q\).
+</p>
 
+<p>
+In this course, we use \(\leadsto\) more often than \(E\).
+You should, however, be able to rewrite formulae that use \(\leadsto\) into 
+formulae that use \(E\), and be equally facile with both concepts.
+</p>
 
 
   <!------------------------------------------------------>
@@ -421,9 +458,13 @@ unlabeled graphs but they apply to labeled graphs as well. For example
 <!------------------------------------------------->
 <h3 class="w3-text-teal">Summary</h3>
 In this course, we specify systems and prove that they behave
-correctly by using \(\rightarrow\) to prove safety and \(leadsto\) to
-prove progress.
+correctly by using \(\rightarrow\) to prove safety and \(\leadsto\) to
+prove progress. This module and
+<a href="../Chapter_1/Safety.html">the previous module</a>
+introduce the fundamental concepts that we use to reason about
+systems.
 </p>
+
 
 
 <!------------------------------------------------------>

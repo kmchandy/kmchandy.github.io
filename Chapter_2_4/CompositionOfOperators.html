@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>Composition</title>
+<title>CompositionOfOperators</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -41,32 +41,28 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <!-------------------------->
   <h3 class="w3-bar-item"><b>An Introduction to Distributed
   Algorithms</h3>
-  
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Overview.html">Chapter: Properties and Composition</a>
-  
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="Properties.html">Properties of Leads-To</a>
-  
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="Composition.html">Composition</a>
-  
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="MoreProperties.html">More Properties of Leads-To</a>
+  href="CompositionOfOperators.html">Composition of Operators</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Diagrams.html">Diagrams & Examples</a>
+  href="CompositionOfOperatorsExamples.html">Examples</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="SelfTest.html">Self Test</a>
+  href="CompositionOfOperatorsSelfTest.html">Self Test</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_4/Overview.html">
-  Next Chapter: State Transition Systems</a>
+  href="CompositionOfOperatorsExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="CompositionOfOperatorsExplorations.html">Explorations</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_3_1/Predicates.html">
+  Next: Predicates</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_2/Progress.html">Previous Chapter:
-  Progress</a>
+  href="../Chapter_2_3/PropertiesOfRelations.html">Previous:
+  Properties of Relations</a>
   
 </nav>
 
@@ -85,16 +81,23 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <div class="w3-twothird w3-container">
     
     <!------------------------------------------------------>
-    <h1 class="w3-text-teal">Composition</h1>
+    <h1 class="w3-text-teal">
+    Exercise Module
+    <br>
+    Composition of Operators</h1>
 
     This module has examples of composition of the functions
   \(A\), \(E\), \(N\) and the relation \(\leadsto\). You are already
   familiar with functional and relational composition, and this module
-  adds nothing new to composition; however, the composed functions -
-  such as \(A(E())\) - are interesting in their own right. You can
-  skip this module on a first reading and return to it when you need
-  to use the formulae in it.
-  </p>
+    adds nothing new.
+    </p>
+
+    <p>
+    You can treat this module as an exercise in which you explore
+    different ways of composing the functions and relations defined in
+    earlier modules, and look at what the compositions mean for the
+    example graph below.
+    </p>
 
     <h3 class="w3-text-teal">Functional Composition</h3>
     In the
@@ -238,6 +241,91 @@ then remain forever within \(\{1, 2\}\).
 More examples of functional composition of \(N\), \(A\), \(E\) can be
 seen in the module <a href="Diagrams.html">Diagrams and Examples</a>.
 </p>
+
+
+<h3 class="w3-text-teal">Next Always</h3>
+  A vertex \(v\) is in \(N(A(X))\) exactly when all single hops from
+  \(v\) terminate in \(A(X)\).
+
+  <figure>
+  <img src="NAX.jpg" alt="Fig3" style="width:50%">
+  <figcaption>Fig.4 - Next Always</figcaption>
+</figure>
+
+<p>
+In the diagram, vertices represented by the small circles colored blue
+or black. All vertices in the red circle are in \(X\). All black
+vertices are in \(A(X)\). All vertices in the green circle are in
+\(N(A(X))\). Note that there may be vertices in \(N(A(X))\) that are
+not in \(X\).
+</p>
+
+<figure>
+  <img src="NAX_EXAMPLE.jpg" alt="Fig5" style="width:50%">
+  <figcaption>Fig.5 - Next Always Example</figcaption>
+</figure>
+
+
+<div class="div2">
+Self test: Prove
+\(
+A(X) \; = \; X \cap N(A(X))
+\)
+</div>
+
+
+<h3 class="w3-text-teal">Next Eventually</h3>
+  A vertex \(v\) is in \(N(E(X))\) exactly when all single hops from
+  \(v\) are to vertices from which all fair paths visit \(X\). So, all
+  fair paths from a vertex in \(N(E(X))\) visit \(X\).
+
+  <figure>
+  <img src="NEX.jpg" alt="Fig3" style="width:50%">
+  <figcaption>Fig.5 - Next Eventually</figcaption>
+  </figure>
+
+<p>
+In the diagram, the black vertex inside the green circle represents a
+vertex that is <i>not</i> in \(N(E(X))\) but is in \(X\) and hence
+also in \(E(X)\). This black vertex is not in \(N(E(X))\) because it
+has an outgoing edge to a vertex outside \(E(X)\).
+</p>
+
+
+<div class="div2">
+Self test: Prove
+\(
+E(X) \; = \; X \cup N(E(X))
+\)
+</div>
+
+<h3 class="w3-text-teal">Composing \(\leadsto\)</h3>
+Next, let's look at a few examples of composing the relation
+\(\leadsto\) with the functions \(A\) and \(E\). 
+<p class="ex1">
+\(
+X \leadsto A(Y)
+\)
+</p>
+<p>
+means that all fair paths from vertices in \(X\) visit and remain
+forever in \(Y\).
+</p>
+
+<p>
+What does \(X \leadsto E(Y)\) mean? It only means \(X \leadsto Y\).
+</p>
+<p class="ex1">
+\(
+X \leadsto E(Y) \quad \equiv \quad X \leadsto Y
+\)
+</p>
+<p>
+The proof follows from \((X \leadsto Z) \; \equiv \; (X \subseteq
+E(Z))\) 
+and idempotence of \(E\).
+</p>
+
 
 
 <!---------------------------------------------->

@@ -16,6 +16,11 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   bottom: 0;
   height: inherit;
 }
+/* Thick blue border */
+hr.new4 {
+  border: 5px solid blue;
+}
+
 </style>
 
 <body>
@@ -41,14 +46,24 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   
   <h3 class="w3-bar-item"><b>An Introduction to Distributed
   Algorithms</h3>
+  
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Safety.html">Chapter: Safety</a>
-  <a class="w3-bar-item w3-button w3-hover-black" href="GraphRunningExample.html">More Examples</a>
-  <a class="w3-bar-item w3-button w3-hover-black" href="GraphPicturesOfBasicConcepts.html">More Diagrams</a>
-  <a class="w3-bar-item w3-button w3-hover-black" href="GraphExampleSafeFileAccess.html">System Example</a>
-  <a class="w3-bar-item w3-button w3-hover-black" href="GraphSelfTest.html">Self Test</a>
+  href="Safety.html">Safety</a>
+  
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_2/Progress.html">Next Chapter: Progress</a> 
+  href="GraphRunningExample.html">Examples</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="GraphSelfTest.html">Self Tests</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="GraphExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="GraphExplorations.html">Explorations</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_2/Progress.html">Next: Progress</a>
 </nav>
 
 <!-- Overlay effect when opening sidebar on small screens -->
@@ -67,13 +82,11 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <h1 class="w3-text-teal">Safety</h1>
 
     <p>
-    This chapter introduces all the concepts that we use in this
+    This module introduces all the concepts that we use in this
     course to prove that systems are safe. These concepts are
     described in terms of <a
     href="https://en.wikipedia.org/wiki/Directed_graph">
     directed graphs</a>.
-    This chapter consists of this module and supporting modules
-    containing diagrams and self tests.
     </p>
 
     <!---------------------------------------------------------->
@@ -87,13 +100,15 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     remains in safe states.
     </p>
 
+    <hr class="new4">
     <h4 style="color:blue;">
     
-		      We prove that a system is
-		      safe by proving that all
+		      Prove that a system is
+		      safe by showing that all
 		      paths from vertices representing initial states
 		      only visit vertices representing safe states.
     </h4>
+    <hr class="new4">
 
     <p>
     Of course, we require that initial states are safe.
@@ -117,7 +132,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <h3 class="w3-text-teal">Example</h3>
     
 <figure>
-  <img src="GraphExample.jpg" alt="Fig2" style="width:50%">>
+  <img src="GraphExample.jpg" alt="Fig1" style="width:50%">>
   <figcaption>Fig.1 - An Example of a Graph</figcaption>
 </figure>
 
@@ -163,7 +178,8 @@ implicitly universally qualified.
 </p>
 
 <h3 class="w3-text-teal">Relations between Vertex Sets</h3>
-<p class="w3-text-teal">\(P \rightarrow Q\)</p>
+
+<h4 class="w3-text-teal">\(P \rightarrow Q\)</h4>
 We extend the relation \(\rightarrow\)
 to sets of vertices as follows.
       \(P \rightarrow Q\) holds exactly when every edge from every vertex in
@@ -177,6 +193,15 @@ to sets of vertices as follows.
 </p>
 
 
+<figure>
+  <img src="ArrowRelation.jpg" alt="Fig2" style="width:50%">>
+  <figcaption>Fig.2 - Illustration of \(P \rightarrow Q\)</figcaption>
+</figure>
+<p>
+The diagram illustrates \(P \rightarrow Q\). The diagram shows that
+  there may be vertices in \(Q\), such as vertex \(w\), for which
+  there is no edge from \(P\).
+
 <p style="color:red;"><b>Example of \(P \rightarrow Q\)</b></p>
 \(
 \{2, 3\} \rightarrow \{4, 5, 6\}
@@ -188,7 +213,7 @@ to sets of vertices as follows.
 terminate at vertices in \(\{4, 5, 6\}\).
 </p>
 
-<p class="w3-text-teal">\(P \stackrel{*}{\rightarrow} Q\)</p>
+<h4 class="w3-text-teal">\(P \stackrel{*}{\rightarrow} Q\)</h4>
 <p>
 We extend the relation \(\stackrel{*}{\rightarrow}\)
 to sets of vertices in the same way.
@@ -209,6 +234,35 @@ Therefore
 \(P\) are in \(Q\).
 </p>
 
+<figure>
+  <img src="PathRelation.jpg" alt="Fig3" style="width:50%">>
+  <figcaption>Fig.3 - Illustration of \(P \stackrel{*}{\rightarrow} Q\)</figcaption>
+</figure>
+
+<p>
+In the diagram, all the vertices in the outer circle are in
+  \(Q\). Both vertices in the green area and the yellow area are in
+\(Q\). The vertices in the yellow area are in \(P\).
+</p>
+<p>
+\(P \stackrel{*}{\rightarrow} Q\) holds when all paths from vertices
+in \(P\) are in \(Q\). The graph shows that no path from the yellow
+area can escape the outer circle.
+</p>
+<p>
+\(P\) lies entirely within \(Q\) because there are zero-length paths
+from each vertex in \(P\) back to itself (and so \(P
+\stackrel{*}{\rightarrow} P\)) and these paths must lie
+inside \(Q\).
+</p>
+
+<p>
+There may be a vertex \(w\) in \(Q\)
+which has an edge to a vertex outside \(Q\). Then there can be no
+path to \(w\) from \(P\) because, in that case, there would be a path from \(P\)
+to outside \(Q\).
+</p>
+
 <p style="color:red;"><b>Example of \(P \stackrel{*}{\rightarrow}
 Q\)</b></p>
 <p>
@@ -227,24 +281,52 @@ itself, and from vertex \(2\) back to itself. There are paths from
 Let \(init\) be the set of initial vertices and \(safe\) be the set of
 safe vertices.
 </p>
+
+
+<hr class="new4">
 <h4 style="color:blue;">To prove that a system is safe, we must show
 that:
 <br>
-\(init \stackrel{*}{\rightarrow} safe\)
+Equation 1: \(init \stackrel{*}{\rightarrow} safe\)
 <h4>
+<hr class="new4">
 
 
-
-
+<!----------------------------------------------->
 <h2 class="w3-text-teal">Stable</h2>
 <b>stable</b> is a function from sets of vertices to the Booleans.
 \(stable(P)\) holds exactly when every edge from a vertex in \(P\) is
 to a vertex in \(P\).
 </p>
 
-<p>
+<h4 class="w3-text-teal">
 \(
 stable(P) \; \equiv \; (P \rightarrow P)
+\)
+</h4>
+
+
+
+<figure>
+  <img src="StablePaths.jpg" alt="Fig5" style="width:50%">>
+  <figcaption>Fig.4 - Paths from a stable set remain in the set</figcaption>
+</figure>
+
+<p>
+There are no paths from inside a stable set to outside the set because
+there are no edges from inside to outside the set. One can think of
+paths from a stable set as being trapped inside the set.  There may,
+however, be paths from outside a stable set into the set as shown in
+the diagram.
+</p>
+
+<p>
+From the definition, \(stable(P)\) holds exactly when all paths from vertices
+in \(P\) are in \(P\). 
+</p>
+<p class="w3-text-teal">
+\(
+stable(P) \; \equiv \; (P \stackrel{*}{\rightarrow} P)
 \)
 </p>
 
@@ -259,16 +341,41 @@ outgoing edge from vertex \(5\) is to vertex \(4\)
 which is in set \(\{4, 5\}\).
 </p>
 
-<p>
-From the definition, \(stable(P)\) holds when all paths from vertices
-in \(P\) are in \(P\).
+
+
+<!--------------------------------------------------->
+<hr class="new4">
+<h3 class="w3-text-teal">How to Prove Safety: Invariant</h3>
+We prove safety (equation 1: \(init \stackrel{*}{\rightarrow} safe\))
+by finding a stable vertex set \(I\) such that:
 </p>
 
 <p>
+equation 2:
 \(
-stable(P) \; \equiv \; (P \stackrel{*}{\rightarrow} P)
+init \subseteq I \subseteq safe
 \)
 </p>
+<hr class="new4">
+
+<figure>
+  <img src="Invariant.jpg" alt="Fig6" style="width:50%">>
+  <figcaption>Fig.5 - Illustration of Invariant I</figcaption>
+</figure>
+
+<p>
+Any stable vertex set \(I\) that satisfies equation 2, \(init
+\subseteq I \subseteq safe\), is called an <i>invariant</i> of the
+graph.  Because \(I\) is stable, all paths from \(I\) remain within
+\(I\).  So all paths from \(init\) remain within \(I\).  Therefore,
+all paths from \(init\) remain within \(safe\).
+</p>
+<p>
+ We discharge our safety proof obligation by finding an
+invariant. 
+A system may have many invariants; all we have to do is find any one.
+</p>
+
 
 <!--------------------------------------------------->
 <h3 class="w3-text-teal">Next and Always</h3>
@@ -298,6 +405,28 @@ a vertex in \(Y\).
       \)
 </p>
 
+<h5 class="w3-text-teal">Diagram Illustrating Next</h3>
+
+<figure>
+  <img src="N.jpg" alt="Fig7" style="width:50%">>
+  <figcaption>Fig.7 - Illustration of Next</figcaption>
+</figure>
+
+<p>
+In the diagram, all the vertices in the outer circle are in
+  \(Y\). Both vertices in the green area and the yellow area are in
+  \(Y\). The vertices in the yellow area are in \(N(Y)\). Why is
+vertex \(1\) in \(N(Y)\)? Because all the edges from vertex \(1\) go to
+vertices \(A\) and \(B\) which are in \(Y\). Vertices \(2, 3, 4\) are
+in \(N(Y)\) for the same reason.
+</p>
+<p>
+Vertex \(A\) is in \(Y\) but not in \(N(Y)\). Why? Because there is an
+edge from \(A\) to \(C\) which is outside \(Y\).
+</p>
+<p>
+
+
 <p style="color:red;"><b>Example of Next</b></p>
 \(
   N(\{0, 1, 2, 3\}) = \{0\}
@@ -311,6 +440,24 @@ a vertex in \(Y\).
   and so these vertices are not 
 in \(N(\{0, 1, 2, 3\}\).
 
+<h5 class="w3-text-teal">Diagram Illustrating Always</h3>
+
+<figure>
+  <img src="A.jpg" alt="Fig8" style="width:50%">>
+  <figcaption>Fig.8 - Diagram illustrating Always</figcaption>
+</figure>
+<p>
+In the diagram, all the vertices in the outer circle are in
+  \(Y\). Both vertices in the green area and the yellow area are in
+  \(Y\). The vertices in the yellow area are in \(A(Y)\). All paths
+  from vertices in \(A(Y)\) - the yellow circle - remain inside \(Y\)
+- the outer circle.
+</p>
+
+<p>
+Note that all paths from the yellow circle remain inside the yellow
+circle. Why do you think that is the case?
+</p>
 
 <p style="color:red;"><b>Example of Always</b></p>
 
@@ -350,15 +497,47 @@ The safety proof obligation, in terms of <i>always</i> is:
 \(init \subseteq A(safe)\)
 </p>
 
+<h3 class="w3-text-teal">Successors and Reachable</h3>
+A vertex \(w\) is a <i>successor</i> of a vertex \(v\) exactly when
+the edge \((v, w)\) exists. 
+A vertex \(w\) is  <i>reachable</i> from a vertex \(v\) exactly when
+there exists a path from \(v\) to \(w\).
+We define functions, \(succesor\) and \(reachable\) from vertex sets
+to vertex sets as follows:
+\(successor(P)\) and \(reachable(P)\) are the set of successors
+of vertices in \(P\) and the set of vertices reachable from vertices
+in \(P\), respectively.
+</p>
+<p>
+\(
+w \in successor(P) \quad \equiv \quad
+\exists v \in P: v \rightarrow w
+\)
+</p>
+<p>
+\(
+w \in reachable(P) \quad \equiv \quad
+\exists v \in P: v \stackrel{*}{\rightarrow} w
+\)
+</p>
+
+
+
 <h3 class="w3-text-teal">Relations or Functions</h3>
-You can use either \(\rightarrow\) or <i>next</i>, because:
+You can use either \(\rightarrow\) or <i>next</i> or <i>successor</i>, because:
 </p>
 <p>
 \(
 P \rightarrow Q \; \equiv \; [P \subseteq N(Q)]
 \)
 </p>
-Similarly, you can use either \(\stackrel{*}{\rightarrow}\) or <i>always</i>, because:
+<p>
+\(
+P \rightarrow Q \; \equiv \; [successor(P) \subseteq Q]
+\)
+</p>
+Similarly, you can use either \(\stackrel{*}{\rightarrow}\) or
+<i>always</i> or <i>reachable</i>, because:
 </p>
 <p>
 \(
@@ -366,19 +545,32 @@ P \stackrel{*}{\rightarrow} Q \; \equiv \; [P \subseteq A(Q)]
 \)
 </p>
 <p>
+\(
+P \stackrel{*}{\rightarrow} Q \; \equiv \; [reachable(P) \subseteq Q]
+\)
+</p>
+<p>
+\(N(Q)\) and \(A(Q)\) are the weakest (largest) sets \(P\) such that
+that \(P \rightarrow Q\) and \(P \stackrel{*}{\rightarrow} Q\), respectively,
+hold. Likewise,
+\(successor(P)\) and \(reachable(P)\) are the strongest (smallest) sets \(Q\) such that
+that \(P \rightarrow Q\) and \(P \stackrel{*}{\rightarrow} Q\), respectively,
+hold.
+
+<p>
 Whether you use the relations \(\rightarrow\) and
-\(\stackrel{*}{\rightarrow}\) or the functions \(N\) and \(A\) is a
+\(\stackrel{*}{\rightarrow}\) or the functions \(N\) and \(A\), or the
+functions \(successor\) and \(reachable\), is a
 matter of personal preference. In this course we use \(\rightarrow\) and
 \(\stackrel{*}{\rightarrow}\).
 </p>
-
 
 <!------------------------------------------------->
 <h2 class="w3-text-teal">Summary</h2>
 This chapter describes all the concepts that we use to prove that
 systems are safe. These concepts are \(\rightarrow\) and
 \(\stackrel{*}{\rightarrow}\)  (or equivalently
-<i>next</i> and <i>always</i>).
+<i>next</i> and <i>always</i>), stable and invariant.
 </p>
 
 
