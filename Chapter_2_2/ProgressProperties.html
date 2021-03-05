@@ -60,10 +60,10 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 
   <a class="w3-bar-item w3-button w3-hover-black"
   href="../Chapter_2_3/PropertiesOfRelations.html">
-  Next Chapter: Properties of Relations</a>
+  Next: Properties of Relations</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_2/Progress.html">Previous Chapter:
+  href="../Chapter_2/Progress.html">Previous:
   Progress</a>
 
   
@@ -103,7 +103,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     </p>
 
 <!------------------------------------------------------>
-    <h2 class="w3-text-teal">Transient Vertex Sets</h2>
+    <h2 class="w3-text-teal">Transient and Transitory Vertex Sets</h2>
     A vertex set \(P\) is defined to be <i>transient</i> exactly when
     there exists a fair label \(a\) such that all edges labeled \(a\)
     that start at a vertex in \(P\) terminate at a vertex in
@@ -217,24 +217,43 @@ properties of \(\leadsto\). Next, we give examples of the use of
 induction and transitivity.
 </p>
 
-<h2 class="w3-text-teal">Induction with \(\leadsto\)</h2>
-<p>
-We use induction in the same way that you have used it many times in
-your courses in mathematics and computer science. Here we give some
-examples. You can use induction in additional ways.
-</p>
-
 <p>
 Let \(f\) be a function from vertices to the integers
 where \(f\) is bounded below. Let \(below[m]\) be the set of
-vertices for which \(f\) has value at most \(m\).
+vertices for which \(f\) has value at most \(m\), and let
+\(above[m]\) be the set of
+vertices for which \(f\) has value at least \(m\).
 </p>
 <p>
 \(
 below[m] = \{v | f(v) \leq m\}
 \)
 </p>
+<p>
+\(
+above[m] = \{v | f(v) \geq m\}
+\)
+</p>
 
+<h2 class="w3-text-teal">Induction with \(\leadsto\)</h2>
+<h3 class="w3-text-teal">Theorem</h3>
+<p  class="w3-text-teal">
+\(
+\forall m: transitory(P \cap above[m]) \quad \Rightarrow \quad
+transitory(P)
+\)
+</p>
+
+<p>
+The proof is similar to that of the next theorem and so, we don't give
+it here. The sets \(above[m]\) are
+<a href="https://en.wikipedia.org/wiki/Level_set">level sets</a> that we
+will see often, particularly when we work with continuous state
+spaces.
+</p>
+
+
+<h3 class="w3-text-teal">Theorem</h3>
 <p  class="w3-text-teal">
 If for all \(m\):
 </p>
