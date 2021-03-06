@@ -208,6 +208,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
       \)
       </li>
       <li>
+      <p>
       \(
       (P \stackrel{*}{\rightarrow} Q) \wedge (P
     \stackrel{*}{\rightarrow} R) \quad \equiv 
@@ -215,12 +216,93 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
       \)
       </li>
       <li>
+      <p>
+      For \(stable(Q)\) and \(stable(R)\):
+      </p>
+      <p>
       \(
-      (P \leadsto A(Q)) \wedge (P \leadsto A(R)) \quad \equiv
-    \quad P \leadsto A(Q \wedge R)
+      (P \leadsto Q) \wedge (P \leadsto R)
+      \quad \equiv \quad
+      P \leadsto (Q \wedge R) 
+      \)
+      </p>
+    </ol>
+
+
+    <h3 class="w3-text-teal">Disjunction of Relations</h3>
+    <ol>
+      <li>
+      \(
+      ((P \Rightarrow Q) \wedge (P' \Rightarrow Q'))  \quad \Rightarrow
+    \quad ((P \vee P') \Rightarrow (Q \vee Q'))
+      \)
+      </li>
+      <li>
+      \(
+      (\{P\}c\{Q\} \wedge \{P'\}c\{Q'\})  \quad \Rightarrow
+    \quad (\{P \vee P'\}c\{Q \vee Q'\})
+      \)
+      </li>
+      <li>
+      \(
+      (P \rightarrow Q) \wedge (P' \rightarrow Q') \quad \Rightarrow
+    \quad ((P \vee P') \rightarrow (Q \vee Q'))
+      \)
+      </li>
+      <li>
+      \(
+      (P \stackrel{*}{\rightarrow} P') \wedge (P'
+    \stackrel{*}{\rightarrow} Q') \quad \Rightarrow 
+    \quad ((P \vee P') \stackrel{*}{\rightarrow} (Q \vee Q'))
+      \)
+      </li>
+      <li>
+      \(
+      (P \leadsto Q) \wedge (P' \leadsto Q') \quad \Rightarrow
+    \quad ((P \vee P') \leadsto (Q \vee Q'))
       \)
       </li>
     </ol>
+
+
+    <h3 class="w3-text-teal">Conjunction of Relations</h3>
+    <ol>
+      <li>
+      \(
+      ((P \Rightarrow Q) \wedge (P' \Rightarrow Q'))  \quad \Rightarrow
+    \quad ((P \wedge P') \Rightarrow (Q \wedge Q'))
+      \)
+      </li>
+      <li>
+      \(
+      (\{P\}c\{Q\} \wedge \{P'\}c\{Q'\})  \quad \Rightarrow
+    \quad (\{P \wedge P'\}c\{Q \wedge Q'\})
+      \)
+      </li>
+      <li>
+      \(
+      (P \rightarrow Q) \wedge (P' \rightarrow Q') \quad \Rightarrow
+    \quad ((P \wedge P') \rightarrow (Q \wedge Q'))
+      \)
+      </li>
+      <li>
+      \(
+      (P \stackrel{*}{\rightarrow} P') \wedge (P'
+    \stackrel{*}{\rightarrow} Q') \quad \Rightarrow 
+    \quad ((P \wedge P') \stackrel{*}{\rightarrow} (Q \wedge Q'))
+      \)
+      </li>
+      <li>
+      <p>
+      For \(stable(Q)\) and \(stable(Q')\):
+      </p>
+      \(
+      (P \leadsto Q) \wedge (P' \leadsto Q') \quad \Rightarrow
+    \quad ((P \wedge P') \leadsto (Q \wedge Q'))
+      \)
+      </li>
+    </ol>
+
     
 
     <h3 class="w3-text-teal">False Implies Everything</h3>

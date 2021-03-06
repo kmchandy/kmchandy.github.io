@@ -43,29 +43,29 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   Algorithms</h3>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Overview.html">Chapter: State Transition Systems</a>
+  href="Model.html">Review Module: Hoare Triples</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Predicates.html">Review of Predicates</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="HoareTriples.html">Review of Hoare Triples</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="RunningExample.html">A Running Example</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="Model.html">State Transition Systems</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_5/Overview.html">Next Chapter: Common Proof
-  Patterns</a> 
+  href="ModelExample.html">Examples</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_3/Overview.html">Previous Chapter:
-  Properties and Composition</a>
+  href="ModelSelfTest.html">Self Tests</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ModelExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ModelExplorations.html">Explorations</a>
   
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_4_1/RunningExample.html">Next:Example of System</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_4/Model.html">Previous:
+  Model of State Transition Systems</a>
+
 </nav>
+
 
 
 <!-- Overlay effect when opening sidebar on small screens -->
@@ -86,14 +86,9 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <h1 class="w3-text-teal">State-Transition Systems</h1>
     
     <p>
-  
-		      This module describes the model of concurrent
-		      systems that we use in this course. The model is
-		      a state-transition system which defines the
-		      states and state transitions of the concurrent
-		      system. An example is given at the end of this
-		      module. 
-		      </p>
+    This module describes a state transition system which is
+    the model of concurrent systems that we use in this course.
+    </p>
 
 
 		      A system is defined by:
@@ -107,7 +102,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 			</li>
 			<li>
 			a subset \(F \subseteq A\) of actions called
-			the set of infinitely-often actions.
+			the set of fair actions.
 			</li>
 		      </ol>
 		      </p>
@@ -139,9 +134,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   may include the triples: \(s \stackrel{a}{\rightarrow} t\) and \(s
   \stackrel{a}{\rightarrow} r\) where \(t\) and \(r\) are different
   states. When action \(a\) is executed in state \(s\), the next state
-  could be \(t\) or \(r\). Any one of the possible next states is
-  chosen arbitrarily.
-
+		      could be \(t\) or \(r\).
 		      </p>
 
 		        
@@ -165,7 +158,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     </li>
   </ol>
 
-  A <i>system trajectory</i> is a path in which every infinitely-often
+  A <i>system trajectory</i> is a path in which every fair
   action \(a \in F\) appears infinitely often. 
     
 
@@ -174,7 +167,9 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   A state of the system is represented as a vertex of the graph, and
   action is represented by a labeled directed edge.
   From the definitions: A system trajectory is a fair path in the
-  graph.
+  graph. (Recall that a fair path, defined in the
+  <a href="../Chapter_2/Progress.html">module on progress</a> is one
+  in which every fair label appears infinitely often.)
 
   <h3 class="w3-text-teal">State given by Values of Variables</h3>
   A system has a set of variables, and states of the system are
@@ -193,7 +188,10 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <code> x = x + 1 </code>
   </p>
   <p>
-  Variables that are not mentioned are left unchanged by the action.
+  Variables that are not mentioned in a statement or program are left
+  unchanged by the action. For example, if \(y\) is a variable of the
+  program then the execution of <code> x = x + 1 </code> leavs \(y\)
+  unchanged. 
   </p>
   An action may also be specified by a set of Hoare triples. For
   example, incrementing \(x\) by 1 may be specified as:
@@ -231,11 +229,9 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   \rightarrow Q\) holds exactly when all edges in the graph
   from a vertex in \(P\) terminate in a vertex in \(Q\). 
 
-  For predicates \(P\) and  \(Q\) on states of a system, \(P
-  \rightarrow Q\) holds exactly when all transitions of the system
-  from a state in which \(P\) holds terminate in a state in which
-  \(Q\) holds. Therefore, \(P \rightarrow Q\) holds exactly when all
-  actions of the system  that are initiated in a state in which \(P\)
+For predicates \(P\) and  \(Q\) on states of a system,
+\(P \rightarrow Q\) holds exactly when all
+  actions of the system  that are executed in a state in which \(P\)
 holds terminate in a state in which \(Q\) holds.
 </p>
 

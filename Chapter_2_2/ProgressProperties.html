@@ -16,6 +16,10 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   bottom: 0;
   height: inherit;
 }
+/* Thick blue border */
+hr.new4 {
+  border: 5px solid blue;
+}
 </style>
 <body>
 
@@ -104,6 +108,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 
 <!------------------------------------------------------>
     <h2 class="w3-text-teal">Transient and Transitory Vertex Sets</h2>
+    <hr class="new4">
     A vertex set \(P\) is defined to be <i>transient</i> exactly when
     there exists a fair label \(a\) such that all edges labeled \(a\)
     that start at a vertex in \(P\) terminate at a vertex in
@@ -117,11 +122,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     \)
     </p>
 
-<figure>
-  <img src="AtomicPropertyOfLeadsTo.jpg" alt="Fig1" style="width:100%">
-  <figcaption>Fig.1 - Illustration of Transient Vertex Set</figcaption>
-    </figure>
-
+    
     <p>
     A vertex set \(P\) is defined to be <i>transitory</i> exactly when
     \(P \leadsto P^{c}\).
@@ -132,15 +133,14 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     transitory(P) \quad \equiv \quad P \leadsto P^{c}
     \)
     </p>
+    <hr class="new4">
 
-    \(P\) is transitory means that all fair paths that visit \(P\)
-    leave it. If \(P\) is transient then \(P\) is transitory.
-    The converse, however, is not necessarily true. Transience requires
-    the existence of a <i>single</i> fair label from every vertex in
-    \(P\) to vertices outside \(P\). By contrast, transitoriness
-    merely requires that fair paths leave \(P\), possibly
-    through multiple steps.
-    </p>
+<figure>
+  <img src="AtomicPropertyOfLeadsTo.jpg" alt="Fig1" style="width:100%">
+  <figcaption>Fig.1 - Illustration of Transient Vertex Set</figcaption>
+    </figure>
+
+    
     
     
 <!------------------------------------------------------>
@@ -163,7 +163,18 @@ least one of which takes the path out of \(P\).
     <p>
     We call this property the <i>atomic</i> property because it is
     based on a <i>single</i> label that is executed infinitely often.
-    </p>
+</p>
+
+<p>
+\(P\) is transitory means that all fair paths that visit \(P\)
+then  leave \(P\) after a finite number of hops.
+If \(P\) is transient then \(P\) is transitory.
+    The converse, however, is not necessarily true. Transience requires
+    the existence of a <i>single</i> fair label from every vertex in
+    \(P\) to vertices outside \(P\). By contrast, transitoriness
+    merely requires that fair paths leave \(P\), possibly
+    through multiple steps.
+</p>
 
 
 <!---------------------------------------------->
@@ -217,6 +228,8 @@ properties of \(\leadsto\). Next, we give examples of the use of
 induction and transitivity.
 </p>
 
+<h2 class="w3-text-teal">Induction with \(\leadsto\)</h2>
+
 <p>
 Let \(f\) be a function from vertices to the integers
 where \(f\) is bounded below. Let \(below[m]\) be the set of
@@ -234,8 +247,6 @@ below[m] = \{v | f(v) \leq m\}
 above[m] = \{v | f(v) \geq m\}
 \)
 </p>
-
-<h2 class="w3-text-teal">Induction with \(\leadsto\)</h2>
 <h3 class="w3-text-teal">Theorem</h3>
 <p  class="w3-text-teal">
 \(
