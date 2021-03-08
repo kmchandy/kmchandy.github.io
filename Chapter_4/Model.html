@@ -43,7 +43,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   Algorithms</h3>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Model.html">Review Module: Hoare Triples</a>
+  href="Model.html">State Transition Systems</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="ModelExample.html">Examples</a>
@@ -58,11 +58,12 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   href="ModelExplorations.html">Explorations</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_4_1/RunningExample.html">Next:Example of System</a>
+  href="../Chapter_4_1/RunningExample.html">Next:Example of a State
+  Transition System</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_4/Model.html">Previous:
-  Model of State Transition Systems</a>
+  href="../Chapter_3_2/HoareTriples.html">Previous:
+  Hoare Triples</a>
 
 </nav>
 
@@ -246,145 +247,6 @@ holds terminate in a state in which \(Q\) holds.
   equivalent to one in terms of trajectories (fair paths).
 </p>
 
-<h1 style="color:red;">Example</h1>
-We use the example of the <i>earliest meeting time</i> given in the
-module
-<a href="RunningExample.html">A Running Example</a>.
-</p>
-
-<h4 style="color:red;">States</h4>
-<p>
-The states of the system are given by the values of \(t\) which is any
-vector of 3 nonnegative integers. We will design a system so that
-in every state, in every trajectory, there is no common meeting time
-earlier than \(t_{j}\) for all \(j\).
-</p>
-
-<h4 style="color:red;">Initial Conditions</h4>
-<p>
-The initial condition is the predicate: \(t = [0, 0, 0]\).
-Note, however, that a weaker initial condition that will also
-work is: \(t \leq M\).
-</p>
-
-<h4 style="color:red;">Actions</h4>
-<p>
-We have many options for specifying actions; we can specify them using
-a programming language, Hoare triples, or the primed notation. Also,
-there are different sets of actions that satisfy the
-specifications. Here we give one example of a set of actions. And in
-this example, actions are specified using
-Hoare triples.
-</p>
-
-<h4 style="color:red;">Actions Executed Infinitely Often</h4>
-<p>
-Action \(a_{i,j}\) for all \(i \neq j\) :
-</p>
-
-<p>
-\(
-\{ t=T \} \; a_{i,j} \; \{\; t_{j} = max(T_{i}, T_{j}) \; \}
-\)
-</p>
-
-
-<p>
-Action \(b_{j}\) for all \(j\):
-</p>
-
-<p>
-\(
-\{ t=T \} \; b_{j} \; \{\; t_{j} = f_{j}(T{j}) \; \}
-\)
-</p>
-
-<p>
-Each action \(a_{i,j}\) is executed infinitely often and so is each
-action \(b_{j}\).
-</p>
-
-<p>
-In our example, if \(T = [3, 5, 7]\), then Maya's 
-actions, \(a_{1, 0}\) and \(a_{2, 0}\), in that state are: \(t_{0} =
-max(3, 5) = 5\) and \(t_{0} = max(3, 7) = 7\). Maya's action \(b_{0}\)
-is: \(t_{0} = f_{0}(3) = 4\).
-</p>
-
-<h4 style="color:red;">Other Actions</h4>
-Actions that may not be executed infinitely often represent errors or
-situations outside the designer's control. Here we give an example to
-illustrate such actions though the example does not represent errors.
-</p>
-
-<p>
-Each agent \(j\) has an action \(c_{j}\) that may be executed an
-arbitrary number of times in a trajectory. Action \(c_{j}\) is defined by the Hoare triple:
-<br>
-\(
-\{ t=T \} \; c_{j} \; \{\; T_{j} \leq t_{j} \leq f_{j}(T_{j}) \; \}
-\)
-</p>
-
-<p>
-Action \(c_{2}\) for Eve in state [3, 5, 7] establishes the post condition:
-\(
-7 \leq t_{j} \leq f_{2}(7) = 9
-\).
-So, possible state transitions due to the executions of \(b_{2}\) in
-this state are to the following states \([3, 5, 7], [3, 5, 8], [3, 5, 9]\).
-</p>
-
-<h4 style="color:red;">The Labeled Graph</h4>
-The labeled graph for this system is too large to draw. So, in the figure
-we show a few examples of state transitions. These transitions are due to actions \(a_{1, 0}\),
-\(a_{2, 0}\), \(b_{0}\), and \(c_{2}\) executed in state \([3, 5, 7]\).
-</p>
-
-<figure>
-  <img src="FairTransitions.jpg" alt="Fig2" style="width:50%">>
-  <figcaption>Fig.1 - Fair Transitions for Maya</figcaption>
-</figure>
-
-<figure>
-  <img src="UnFairTransitions.jpg" alt="Fig2" style="width:50%">>
-  <figcaption>Fig.2 - Other Transitions for Eve</figcaption>
-</figure>
-
-<h4 style="color:red;">Example: Stable Predicates</h4>
-For what values of \(T\) is \(t = T\) stable? The \(b\) actions change
-\(t\) unless all the elements of \(T\) are identical, and the \(a\)
-actions change \(t\) unless \(t_{j} = f_{j}(t_{j})\) for all
-\(j\). Therefore:
-</p>
-
-<p>
-\(
-stable(t = T) \; \equiv \; \forall i, j: T_{i} = T_{j} =
-f_{i}(T_{i}) = f_{j}(T_{j})
-\)
-</p>
-
-<!---------------------------------------->
-<h4 class="w3-text-teal">Practicalities</h4>
-<p>
-The model has at most one action in execution at a time. Multiple
-actions can execute concurrently provided that no action modifies
-variables that are being accessed by another action; this can be
-ensured by locking shared variables.
-</p>
-
-<p>
-The model does not address how to ensure that actions are executed
-infinitely often. We will see later that there are multiple ways to do
-so. One way is to have processes that execute continuously and that
-repeatedly execute lists of actions.
-</p>
-
-<p>
-We will discuss implementations of the model using shared variables,
-message-passing channels, and processes, later in the course.
-</p>
 
 <!------------------------------------------------->
 <h2 class="w3-text-teal">Summary</h2>
