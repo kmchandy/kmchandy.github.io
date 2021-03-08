@@ -80,41 +80,27 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <div class="w3-twothird w3-container">
 
     <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">A Running Example</h1>
+    <h1 class="w3-text-teal">Example of a Transition System</h1>
 
-    This module describes an example that we use to illustrate
-    concepts in the following modules. This module also has an example
-    for self tests.
+    This module contains a simple example of a state-transition system.
     </p>
     
     <h2 class="w3-text-teal">Finding the Earliest Meeting Time</h2>
     Three agents - Maya, Liu, and Eve - want to find a day at which
-    all of them can meet. The count of days start at 0, and none of
-    them can meet at day 0. Associated with each agent \(j\) is a
-    function \(f_{j}\) from days to days, where \(f_{j}(d)\) is the
-    earliest day at or after day \(d\) that agent \(j\) can meet. So:
-    </p>
-
-    <p>
-    \(
-    f_{j}(d) \geq d
-    \)
-    </p>
-    <p>
-    and, since agent \(j\) can meet on day \(f_{j}(d)\):
-    </p>
-
-    <p>
-    \(
-    f_{j}(f_{j}(d)) = f_{j}(d)
-    \)
+    all of them can meet. Associated with each agent \(j\) is a
+    function \(f_{j}\) where \(f_{j}(d)\) is the
+    earliest day at or after day \(d\) that agent \(j\) can meet.
     </p>
     
 
     <p>
     For example, assume that Maya, Liu and Eve are agents \(0\), \(1\),
-    and \(2\). Maya, Liu and Eve can only meet on days that are multiples
-    of 2, 3, 5, respectively (but none can meet on day 0). So:
+    and \(2\), respectively. Maya, Liu and Eve can only meet on days that are multiples
+    of 2, 3, 5, respectively (but none can meet on day 0).
+    For example, \(f_{0}(5) = 6\) because the earliest time that Maya can meet on or after day
+    5 is day 6, because she cannot meet on day 5 since 5 is not a
+    multiple of 2, and she can meet on day 6.
+    Here are some examples of values of \(f_{j}(d)\):
     </p>
 
     <p>
@@ -136,25 +122,24 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     common multiple of 2, 3, and 5 which is 30.
     <p>
 
-    <h3 class="w3-text-teal">The Earliest Meeting Time</h3>
-    In general, the function \(f_{j}\) is private to agent \(j\). The
-    designers of the distributed system don't know \(f_{j}\).
-    We will assume, however, that there exists some day at which all
-    agents can meet.
-    Let the earliest such day be \(m\); so:
+    The function \(f_{j}\) is private to agent \(j\). An agent
+    doesn't know the function of other agents.
+    There exists some day, perhaps in the distant future, at which all
+    agents can meet, and that day is \(m\). Therefore:
 
     <ol>
       <li>
+      <p>
       All agents can meet on day \(m\).
       </p>
-      <p>
-    \(
-    \forall j: f_{j}(m) = m
+      \(
+      \forall j: f_{j}(m) = m
       \)
       </p>
       </li>
       <li>
-      For each earlier day \(t\), at least one agent cannot meet at \(t\).
+      For every day \(t\) before \(m\), at least one agent cannot meet
+      at \(t\). 
       </p>
       <p>
     \(
@@ -166,99 +151,152 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     
 
     <p>
-    Associated with agent \(j\) is a variable \(t_{j}\), where in all
-  states in all trajectories we require:
+  Associated with agent \(j\) is a variable \(t_{j}\), which is the
+  time proposed by agent \(j\). Let \(N\) be the number of agents.
+  Let \(t\) be the vector whose elements are \(t_{j}\).
+
+  Let \(M\) and  \(\emptyset\) be vectors of length \(N\) where
+  all elements of \(M\) are \(m\) and all elements of \(\emptyset\)
+  are \(0\).
+  In our example, \(t = [t_{0}, t_{1}, t_{2}]\),
+  \(M = [30, 30, 30]\), and \(\emptyset = [0, 0, 0]\).
+  </p>
   <p>
+  The specification of the system is that each agent's proposed time
+  should eventually become the earliest time at which all agent's can
+  meet.
+  </p>
+    <p>
+    \(
+    (t = \emptyset) \; \leadsto \; (t = M)
+    \)
+  </p>
+  
+
+<h4 class="w3-text-teal">States</h4>
+<p>
+The states of the system are given by the values of \(t\)
+</p>
+
+<h4 class="w3-text-teal">Initial Conditions</h4>
+<p>
+The initial condition is the predicate: \(t = [0, 0, 0]\).
+</p>
+
+<h4 class="w3-text-teal">Actions</h4>
+  <p>
+  There are many ways of solving this problem. Next, we give an
+  example for the specific purpose of illustrating state-transition
+  systems; the actions in this example are not the obvious way of
+  solving the problem.
+  </p>
+
+  <h4 class="w3-text-teal">Fair Actions</h4>
+  <ol>
+    <li>
+  <p>
+  <i>Action \(a_{i,j}\) for all \(i, j\).</i>
+  </p>
+  <p>
+  If \(t_{i}\) exceeds \(t_{j}\) then agent \(j\) updates its proposed
+  time to \(t_{i}\).
+  </p>
+  <p>
+  
   \(
-    \forall j: t_{j} \leq m
-  \)
-  </p>
-
-  <p>
-  The above formula, in vector notation is \(t \leq M\) where \(M\) is
-  a vector all of whose elements are \(m\) and whose length is the
-  number of agents. In our example, \(m\) is 30, and \(M = [30, 30,
-  30]\). 
-  </p>
-    
-  <h4 class="w3-text-teal">Initial Condition</h4>
-  <p>
-  
-    Let \(\emptyset\) be a vector of \(N\) zeroes. The initial
-  condition is:     
-  <p>
-  \(t = \emptyset\)
-  </p>
-  
-
-<h4 class="w3-text-teal">A Safety Property</h4>
-    A safety property is that in all states in all
-    trajectories \(t \leq M\):
-    <p>
-    \(
-    (t = \emptyset) \; \stackrel{*}{\rightarrow} \; (t \leq M)
-    \)
-  </p>
-  
-  <p>
-  This formula is equivalent to:
-  </p>
-    <p>
-    \(
-    (t = \emptyset) \; \Rightarrow \; A(t \leq M)
-    \)
-  </p>
+  \{ (t=T) \} \; a_{i,j} \; \{\; t_{j} = max(T_{i}, T_{j}) \; \}
+\)
+    </p>
+    </li>
 
 
-  <h4 class="w3-text-teal">A Progress Property</h4>
+    <li>
+<p>
+<i>Action \(b_{j}\) for all \(j\):</i>
+  </p>
   <p>
-  A progress property is that each agent \(j\) eventually sets its
-  time \(t_{j}\) to \(m\).
-    <p>
-    \(
-    (t = \emptyset) \; \leadsto \; (t = M)
-    \)
-  </p>
+  Agent \(j\) sets its proposed time to the next time that it can meet
+  at or after \(t_{j}\).
 
-  <p class="w3-text-teal">Another Safety Property</p>
-  After all agents set their times to the earliest meeting time, we
-  want the agents to leave their times unchanged, i.e.
-  </p>
-    <p>
-    \(
-    stable(t = M)
-    \)
-  </p>
+<p>
+\(
+\{ t=T \} \; b_{j} \; \{\; t_{j} = f_{j}(T_{j}) \; \}
+\)
+    </p>
+    </li>
+</ol>
 
-  <p>
-  This is because the system has to detect that all agents have come to a
-  consensus, and this detection is easier if the agents don't change
-  their values after they reach consensus.
-  </p>
+<p>
+In our example, if \(T = [3, 5, 7]\), then Maya's 
+actions, \(a_{1, 0}\) and \(a_{2, 0}\), in that state are: \(t_{0} =
+max(3, 5) = 5\) and \(t_{0} = max(3, 7) = 7\), respectively.
+Maya's action \(b_{0}\) in that state
+is: \(t_{0} = f_{0}(3) = 4\).
+</p>
 
-  <h4 class="w3-text-teal">Summary of the Specification</h4>
-  <p>
-  The variables of the
-  system are \(t_{j}\), all \(j\), and the specifications are:
-  </p>
-  
-    <p> Safety:
-    \(
-    (t = \emptyset) \; \stackrel{*}{\rightarrow} \; (t \leq M)
-    \)
-  </p>
-    <p>Stability:
-    \(
-    (t = M) \; \stackrel{*}{\rightarrow} \; (t = M)
-  \)
-  </p>
-    <p>Progress:
-    \(
-    (t = \emptyset) \; \leadsto \; (t = M)
-    \)
-  </p>
-  
-    
+<h4 class="w3-text-teal">Other Actions</h4>
+Actions that are not fair represent errors or
+situations outside the designer's control. Here we give an example to
+illustrate such actions though the example does not represent errors.
+</p>
+
+<p>
+<i>Action \(c_{j}\) for all \(j\).</i>
+</p>
+Each agent \(j\) has an action \(c_{j}\) that may be executed an
+arbitrary number of times in a trajectory.
+Agent \(j\) sets its proposed value \(t_{j}\) to any value between its
+current value and the next time that agent can meet at or after
+\(t_{j}\).
+</p>
+
+<p>
+Action \(c_{j}\) is defined by the Hoare triple:
+<br>
+\(
+\{ t=T \} \; c_{j} \; \{\; T_{j} \leq t_{j} \leq f_{j}(T_{j}) \; \}
+\)
+</p>
+
+<p>
+Action \(c_{2}\) for Eve in state [3, 5, 7] establishes the post condition:
+\(
+7 \leq t_{j} \leq f_{2}(7) = 9
+\).
+So, possible state transitions due to the executions of \(b_{2}\) in
+this state are to the following states \([3, 5, 7], [3, 5, 8], [3, 5, 9]\).
+</p>
+
+<h4 class="w3-text-teal">The Labeled Graph</h4>
+The labeled graph for this system is too large to draw. So, in the figure
+we show a few examples of state transitions. These transitions are due to actions \(a_{1, 0}\),
+\(a_{2, 0}\), \(b_{0}\), and \(c_{2}\) executed in state \([3, 5, 7]\).
+</p>
+
+<figure>
+  <img src="FairTransitions.jpg" alt="Fig2" style="width:50%">>
+  <figcaption>Fig.1 - Fair Transitions for Maya</figcaption>
+</figure>
+
+<figure>
+  <img src="UnFairTransitions.jpg" alt="Fig2" style="width:50%">>
+  <figcaption>Fig.2 - Other Transitions for Eve</figcaption>
+</figure>
+
+<!---------------------------------------->
+<h4 class="w3-text-teal">Practicalities</h4>
+<p>
+The model executes one action at a time.
+Actions that can be executed in arbitrary order represent actions that
+can be executed concurrently.
+A set of
+actions can execute concurrently provided that no action in the set modifies
+variables that are accessed by other actions in the set.
+We must ensure that an agent does not access a variable that is being
+modified by another agent by using locks or message-passing. We will
+discuss variables shared by agents in the next two sections.
+</p>
+
 
 
   <footer id="myFooter">

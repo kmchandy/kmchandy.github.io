@@ -111,7 +111,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   
 		      An action is a <a
 		      href="https://en.wikipedia.org/wiki/Serial_relation"> 
-		      left-total relation</a> on states. For an action
+		      left-total binary relation</a> on states. For an action
 		      \(a\) we represent this relation by
 		      \(\stackrel{a}{\rightarrow}\) where 
 		      \(
@@ -119,12 +119,13 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 		      \)
 		      indicates that if action \(a\) is executed when
 		      the system is in state \(s\) then the next state
-		      can be \(s'\). 
-		      Since an action is a left-total relation, for
+		      can be \(s'\).
+		      Every action can
+		      be executed in every state:
+		      For
 		      every action \(a\) and state \(s\) there exists
 		      a state \(s'\) such that \(s
-		      \stackrel{a}{\rightarrow} s'\). Every action can
-		      be executed in every state.
+		      \stackrel{a}{\rightarrow} s'\).
 		      </p>
 
 		      <p>
@@ -168,7 +169,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   action is represented by a labeled directed edge.
   From the definitions: A system trajectory is a fair path in the
   graph. (Recall that a fair path, defined in the
-  <a href="../Chapter_2/Progress.html">module on progress</a> is one
+  <a href="../Chapter_2/Progress.html">module on progress</a>, is one
   in which every fair label appears infinitely often.)
 
   <h3 class="w3-text-teal">State given by Values of Variables</h3>
@@ -204,59 +205,45 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   </p>
 
   <p>An action may
-  also be specified, as in TLA, by denoting the values of variables
-  after the action with a prime, and leaving the values before the
-  action unprimed. For example, \(a\) can be specified as:
+  also be specified, as in
+  <a href="https://en.wikipedia.org/wiki/Temporal_logic_of_actions">
+  TLA</a>, by denoting the values of variables
+  after the action with a prime, as in:
   </p>
   \(
   x' = x + 1
   \)
   </p>
 
-  <h2 class="w3-text-teal">Operators specified with Predicates</h2>
-  In the previous chapter
-  <a href="../Chapter_2/Chapter2_Organization.html">Concepts in
-  Temporal Logic</a> we defined <i>next</i>, <i>always</i>, and
-  <i>eventually</i>, as functions from vertex sets to vertex sets. Now
-  we define them as functions from predicates to predicates as
-  described in the module <a
-  href="Predicates.html">Predicates</a>.
+  <h3 class="w3-text-teal">Operators specified with Predicates</h3>
+  In the
+  <a href="Predicates.html">module on predicates</a> we showed how
+  concepts such as \(\rightarrow\), which were initially defined in
+terms of vertex sets, are reinterpreted in terms of predicates. Next,
+we describe the relations in terms of states and actions.
+In the
+  following \(P\) and \(Q\) are predicates on states.
   </p>
 
-  <h4 class="w3-text-teal">\(P \rightarrow Q\)</h4>
   <p>
-  For vertex sets \(P\) and  \(Q\) of a graph, \(P
-  \rightarrow Q\) holds exactly when all edges in the graph
-  from a vertex in \(P\) terminate in a vertex in \(Q\). 
-
-For predicates \(P\) and  \(Q\) on states of a system,
 \(P \rightarrow Q\) holds exactly when all
   actions of the system  that are executed in a state in which \(P\)
 holds terminate in a state in which \(Q\) holds.
 </p>
 
-
-
-<h4 class="w3-text-teal">\(P \stackrel{*}{\rightarrow} Q\)</h4>
-  <p>
-  For vertex sets \(P\) and  \(Q\) of a graph, \(P
-\stackrel{*}{\rightarrow} Q\) holds exactly when all vertices visited
-  in all paths of the graph that start from a vertex in \(P\) are in \(Q\).
-
-  For predicates \(P\) and  \(Q\) on states of a system, \(P
-  \stackrel{*}{\rightarrow} Q\) holds exactly when \(Q\) holds for all states visited
-  in all paths that start in a state in which \(P\) holds.
+<p>
+\(P \leadsto Q\) holds exactly when every
+  trajectory from every state in which \(P\) holds visits a
+  state in which \(Q\) holds.
 </p>
 
 
-<h4 class="w3-text-teal">\(P \leadsto Q\)</h4>
-<p>
-For vertex sets \(P\) and \(Q\) of a graph, \(P \leadsto Q\) holds
-  exactly when all fair paths in the graph that start from a vertex in
-  \(P\) visit a vertex in \(Q\).  For predicates \(P\) and \(Q\) on
-  states of a system, \(P \leadsto Q\) holds exactly when all
-  trajectories that start in a state in which \(P\) holds visit a
-  state in which \(Q\) holds.
+  <p>
+\(P \stackrel{*}{\rightarrow} Q\) holds exactly when \(Q\) holds for
+  every state visited on every trajectory
+  that starts in a state in which \(P\) holds. It is easy
+  to see that the definition, initially given in terms of paths, is
+  equivalent to one in terms of trajectories (fair paths).
 </p>
 
 <h1 style="color:red;">Example</h1>
