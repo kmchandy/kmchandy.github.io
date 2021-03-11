@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>EarliestMeetingTime</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new4 {
+  border: 5px solid blue;
+}
+/* Thin blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+
+</style>
+
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+  
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+
+  <h3 class="w3-bar-item"><b>Section: Examples of Concurrent Systems</h3>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="EarliestMeetingTime.html">Earliest Meeting Time</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="EarliestMeetingTimeExample.html">Examples</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="EarliestMeetingTimeSelfTest.html">Self Tests</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="EarliestMeetingTimeExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="EarliestMeetingTimeExplorations.html">Explorations</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_5_1/AverageOfSensors.html">Next: Example:
+  Average of Sensors</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_4_1/RunningExample.html">Previous:
+  Example of a Transition System</a>
+
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+    
+    <h1 class="w3-text-teal">Example: Earliest Meeting Time</h1>
+
+    <p>
+    This module describes the proof of a simple concurrent system:
+    computing the earliest meeting time of a collection of agents.
+    </p>
+
+    <h2 class="w3-text-teal">Problem Description</h2>
+    This example is a variant of one described in an earlier module:
+    <a href="../Chapter_4_1/RunningExample.html">an example of a
+    state-transition system.</a>
+    </p>
+
+    <p>
+    We are given a graph in which each vertex represents an agent and
+    the edges represent shared variables. Each agent \(j\) modifies a variable
+    \(t_{j}\), and agent \(j\) is the only agent that modifies
+    \(t_{j}\).
+    The graph has an edge \((j,k)\) exactly when agent
+    \(k\) can read \(t_{j}\).
+    The graph is strongly connected: there is a path from every vertex
+    to every other vertex.
+    </p>
+
+    <p>
+    Associated with each agent \(j\) is a
+    function \(f_{j}\) where \(f_{j}(d)\) is the
+    earliest day at or after day \(d\) that agent \(j\) can meet.
+    There exists some day at which all
+    agents can meet; let the earliest such day be \(m\). Therefore:
+
+    <ol>
+      <li>
+      <p>
+      All agents can meet on day \(m\).
+      </p>
+      \(
+      \forall j: f_{j}(m) = m
+      \)
+      </p>
+      </li>
+      <li>
+      For every day \(d\) before \(m\), at least one agent cannot meet
+      at \(d\). 
+      </p>
+      <p>
+    \(
+    \forall d < m: \exists j:  f_{j}(d) > d
+      \)
+      </p>
+      </li>
+    </ol>
+
+    <p class="w3-text-teal">Fair Actions</p>
+    Let \(N\) be the number of agents;
+    \(t\) be the vector whose elements are \(t_{j}\);
+    and \(T\) be any vector of \(N\) integers.
+    The fair actions of the agents are described in the
+    <a href="../Chapter_4_1/RunningExample.html">earlier module.</a>
+    They are repeated here for convenience.
+    The fair actions are as follows:
+  <ol>
+    <li>
+  <p>
+  <i>Action \(a_{i,j}\) for all \(i, j\).</i>
+  </p>
+  <p>
+  If \(t_{i}\) exceeds \(t_{j}\) then agent \(j\) increases \(t_{j}\)
+  to \(t_{i}\).
+  </p>
+  <p>
+  
+  \(
+  \{ (t=T) \} \; a_{i,j} \; \{\; t_{j} = max(T_{i}, T_{j}) \; \}
+\)
+    </p>
+    </li>
+
+
+    <li>
+<p>
+<i>Action \(b_{j}\) for all \(j\):</i>
+  </p>
+  <p>
+  Agent \(j\) sets \(t_{j}\) to the next time that it can meet
+  at or after \(t_{j}\).
+
+<p>
+\(
+\{ t=T \} \; b_{j} \; \{\; t_{j} = f_{j}(T_{j}) \; \}
+\)
+    </p>
+    </li>
+  </ol>
+
+  <p class="w3-text-teal">Unfair Actions</p>
+  Agent \(j\) sets \(t_{j}\) to any value between
+  its current value and the next time that agent can meet at or after
+  \(t_{j}\).
+  </p>
+  <p>
+  For all \(j\):
+  </p>
+  <p>
+  \(
+  \{ t=T \} \; c_{j} \;
+  \{\; T_{j} \leq t_{j} \leq f_{j}(T_{j}) \; \}
+  \)
+  </p>
+
+
+  
+
+  <p class="w3-text-teal">Specification</p>
+  
+  Let \(M\) and  \(\emptyset\) be vectors of length \(N\) where
+  all elements of \(M\) are \(m\) and all elements of \(\emptyset\)
+  are \(0\).
+  
+Each agent \(j\)'s proposed time \(t_{j}\)
+  should eventually become the earliest time at which all agent's can
+  meet.
+<p>
+    \(
+    (t = \emptyset) \; \leadsto \; (t = M)
+    \)
+  </p>
+
+  <p>
+  From the definition, \(M\) is the minimum value of \(t\) such that,
+  all the elements of \(t\) are identical and each agent \(j\)
+  can meet at \(t_{j}\):
+  </p>
+  <p>
+  \(
+  M \; = \; \textrm{min} \{t | \forall i, j: \; (t_{i} = t_{j}) \wedge
+  (f_{j}(t_{j}) = t_{j})\}
+  \)
+  </p>
+
+  <!---------------------------------------------------------->
+  <h2 class="w3-text-teal">Proof of Correctness</h2>
+  <p>
+  Next, we give the structure of the proof. The details are found in
+  the solution to an exercise.
+  </p>
+
+  <hr class="new2">
+  <p class="w3-text-teal">Safety</p>
+  <p>
+  Show that every action either leaves \(t\) unchanged or increases
+  it, but not beyond \(M\):
+  <p>
+  \(
+  (t = T \leq M) \; \rightarrow \; (T \leq t \leq M)
+  \)
+  </p>
+
+  <hr class="new2">
+
+  <p class="w3-text-teal">Progress</p>
+  <p>
+  Show that \(t < M\) is transitory - i.e., \(t\) changes - because
+  execution of a fair action, \(a_{i,j}\) or \(b_{j}\), changes \(t\).
+  </p>
+  <p>
+  From the safety property changes to \(t\) can only increase \(t\).
+  Therefore \(t\) increases while \(t < M\). Since \(t\) is a tuple of
+  integers, it can only increase a finite number of times before it
+  becomes equal to \(M\).
+  </p>
+
+  <hr class="new2">
+
+
+
+
+<!------------------------------------------------->
+<h2 class="w3-text-teal">Summary</h2>
+<p>
+This module gives an example of a concurrent system and its proof of
+correctness. 
+</p>
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>

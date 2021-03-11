@@ -88,11 +88,11 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     </h1>
 
     <p>
-    This module lists properties of relations that we use frequently
-    and are obvious. You can skim this module in a few minutes or
-    you can treat this module as the following exercise: Identify
+    This module lists properties of relations that we use frequently.
+    You can treat this module as the following exercise: Identify
     properties of \(\subseteq\) and determine whether
-    similar properties hold for \(\rightarrow\) and \(\leadsto\).
+    similar properties hold for \(\rightarrow\),
+    \(\stackrel{*}{\rightarrow}\) and \(\leadsto\).
     </p>
 
     <p><i>Terminology</i>:
@@ -103,13 +103,44 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     more about Maya if we know that she is a CS student than if all we
     know is that she is a student.
     </p>
+
+    <p>
+    The properties of \(\rightarrow\), \(\stackrel{*}{\rightarrow}\),
+    and \(\leadsto\) are similar to those of \(\subseteq\) with which
+    you are already familiar. We show the properties of \(\subseteq\)
+    to emphasize this similarity.
     
-    <h4 class="w3-text-teal">Reflexive</h4> 
-    \(P \leadsto P\)
+    <h3 class="w3-text-teal">Reflexive</h3>
+    <ol>
+      <li>
+      \(
+      P \subseteq P
+      \)
+      </li>
+      <li>
+      
+    \(
+    P \leadsto P
+      \)
+      </li>
+   </ol>
+
+
+
 
         
-    <h4 class="w3-text-teal">Strengthen Left-Hand Side</h4>
-
+    <h3 class="w3-text-teal">Strengthen Left-Hand Side</h3>
+   <ol>
+     <li>
+    \(
+    (P \subseteq Q) \wedge
+    (Q \subseteq R)
+    \quad \Rightarrow \quad
+    (P \subseteq R)
+     \)
+     </li>
+     
+      <li>
     <p>
     \(
     (P \subseteq Q) \wedge
@@ -118,6 +149,32 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     (P \rightarrow R)
     \)
     </p>
+    
+    <p>
+    If all successors of \(Q\) are in \(R\) then
+    all successors of subsets of \(Q\) are in \(R\).
+      </p>
+      </li>
+
+      <li>
+    <p>
+    \(
+    (P \subseteq Q) \wedge
+    (Q \stackrel{*}{\rightarrow} R)
+    \quad \Rightarrow \quad
+    (P \stackrel{*}{\rightarrow} R)
+    \)
+      </p>
+
+    
+    <p>
+      If all vertices reachable from \(Q\) are in \(R\) then
+      all vertices reachable from subsets of \(Q\) are in \(R\).
+      </p>
+      </li>
+
+
+      <li>
     <p>
     \(
     (P \subseteq Q) \wedge
@@ -125,10 +182,32 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     \quad \Rightarrow \quad
     (P \leadsto R)
     \)
-    </p>
+      </p>
+
+    
+    <p>
+      If every fair path from every vertex in \(Q\) visits a vertex in
+      \(R\) then every fair path from every vertex in subsets of \(Q\) visits a vertex in
+      \(R\).
+      </p>
+      </li>
+</ol>
 
 
-<h4 class="w3-text-teal">Weaken Right-Hand Side</h4>
+  
+
+
+<h3 class="w3-text-teal">Weaken Right-Hand Side</h3>
+    <ol>
+     <li>
+    \(
+    (P \subseteq Q) \wedge
+    (Q \subseteq R)
+    \quad \Rightarrow \quad
+    (P \subseteq R)
+     \)
+     </li>
+      <li>
     <p>
     \(
     (P \rightarrow Q) \wedge
@@ -137,7 +216,32 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     (P \rightarrow R)
     \)
     </p>
+    
     <p>
+    If all successors of \(P\) are in \(Q\) then
+    they are also in supersets of \(Q\).
+      </p>
+      </li>
+
+
+      <li>
+      <p>
+    \(
+    (P \stackrel{*}{\rightarrow} Q) \wedge
+    (Q \subseteq R)
+    \quad \Rightarrow \quad
+    (P \stackrel{*}{\rightarrow} R)
+    \)
+    </p>
+    
+    <p>
+    If all vertices reachable from \(P\) are in \(Q\) then
+    they are also in supersets of \(Q\).
+      </p>
+      </li>
+
+<li>
+      <p>
     \(
     (P \leadsto Q) \wedge
     (Q \subseteq R)
@@ -146,8 +250,33 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     \)
     </p>
     
+    <p>
+    If every path from \(P\) visits a vertex in \(Q\) then
+    it also visits a vertex in supersets of \(Q\).
+      </p>
+      </li>
+</ol>
+
+
+  
+
+    
         
-    <h4 class="w3-text-teal">Union Left-Hand Side</h4>
+    <h3 class="w3-text-teal">Union Left-Hand Side</h3>
+<ol>
+  
+      <li>
+    <p>
+    \(
+    (P \subseteq R) \wedge
+    (Q \subseteq R)
+    \quad \equiv \quad
+    (P \cup Q) \subseteq R
+    \)
+  </p>
+  </li>
+  
+      <li>
     <p>
     \(
     (P \rightarrow R) \wedge
@@ -156,7 +285,32 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     (P \cup Q) \rightarrow R
     \)
     </p>
+    
     <p>
+    All successors of \(P\) and of \(Q\) are in \(R\) 
+    exactly when all successors of the
+    union of \(P\) and \(Q\) are in \(R\)
+      </p>
+      </li>
+
+      <li>
+    <p>
+    \(
+    (P \stackrel{*}{\rightarrow} R) \wedge
+    (Q \stackrel{*}{\rightarrow} R)
+    \quad \equiv \quad
+    (P \cup Q) \stackrel{*}{\rightarrow} R
+    \)
+    </p>
+    
+    <p>
+    All vertices reachable from \(P\) and from \(Q\) are in \(R\)
+    exactly when all vertices reachable from \(P \cup Q\) are  in \(R\).
+      </p>
+      </li>
+
+      <li>
+      <p>
     \(
     (P \leadsto R) \wedge
     (Q \leadsto R)
@@ -164,12 +318,33 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     (P \cup Q) \leadsto R
     \)
     </p>
+    
+    <p>
+    Every fair path from every vertex in \(P\) and from every vertex in \(Q\)  visits 
+      \(R\).
+      </p>
+</ol>
 
 
     
     
     
-    <h4 class="w3-text-teal">Intersection Right-Hand Side</h4>
+    <h3 class="w3-text-teal">Intersection Right-Hand Side</h3>
+<ol>
+  
+      <li>
+    <p>
+    \(
+    (P \subseteq Q) \wedge
+    (P \subseteq R)
+    \quad \equiv \quad
+    P \subseteq (Q \cap R)
+    \)
+  </p>
+  </li>
+
+  
+      <li>
     <p>
     \(
     (P \rightarrow Q) \wedge
@@ -178,10 +353,36 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     P \rightarrow (Q \cap R)
     \)
     </p>
+    
     <p>
-    For <i>stable</i> \(Q\) and \(R\):
+    All successors of \(P\) are in \(Q\) and also in \(R\)
+    exactly when they are in the
+    intersection of \(Q\) and \(R\).
+      </p>
+      </li>
+
+      <li>
+    <p>
+    \(
+    (P \stackrel{*}{\rightarrow} Q) \wedge
+    (P \stackrel{*}{\rightarrow} R)
+    \quad \equiv \quad
+    P \stackrel{*}{\rightarrow} (Q \cap R)
+    \)
     </p>
+    
     <p>
+    All vertices reachable from \(P\) are in \(Q\) and also in \(R\)
+    exactly when they are in the
+    intersection of \(Q\) and \(R\).
+      </p>
+      </li>
+
+      <li>
+      <p>
+      For <i>stable</i> \(Q\) and \(R\):
+      </p>
+      <p>
     \(
     (P \leadsto Q) \wedge
     (P \leadsto R)
@@ -189,25 +390,61 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     P \leadsto (Q \cap R)
     \)
     </p>
+    
+    <p>
+    Every fair path from every vertex in \(P\) visits and remains forever
+    in \(Q\) and also visits and remains forever in \(R\)
+    exactly when it visits and remains forever in the
+    intersection of \(Q\) and \(R\).
+      </p>
 
       <p>
       If \(Q\) and \(R\) are not stable there can be a fair path from
       a vertex in \(P\) that visits \(Q\) and <i>then</i> visits
       \(R\), but never visits \(Q\) and \(R\) at the <i>same instant</i>.
+      </li>
+</ol>
 
 
 
 
 
-<h4 class="w3-text-teal">Conjunction of Relations</h4>
-<p>
+<h3 class="w3-text-teal">Conjunction of Relations</h3>
+<ol>
+  
+      <li>
+
+    \(
+    (P \subseteq Q) \wedge
+    (P' \subseteq Q')
+    \quad \Rightarrow \quad
+    (P \cap P') \subseteq (Q \cap Q')
+    \)
+
+  </li>
+
+  
+      <li>
+
     \(
     (P \rightarrow Q) \wedge
     (P' \rightarrow Q')
     \quad \Rightarrow \quad
     (P \cap P') \rightarrow (Q \cap Q')
-\)
-</p>
+    \)
+
+      </li>
+
+      <li>
+    \(
+    (P \stackrel{*}{\rightarrow} Q) \wedge
+    (P \stackrel{*}{\rightarrow} Q')
+    \quad \Rightarrow \quad
+    (P \cap P') \stackrel{*}{\rightarrow} (Q \cap Q')
+    \)
+      </li>
+
+      <li>
       <p>
       For <i>stable</i> \(Q\) and \(Q'\):
       </p>
@@ -219,27 +456,56 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     (P \cap P') \leadsto (Q \cap Q')
     \)
     </p>
+      </li>
+    </ol>
 
  
 
 
-<h4 class="w3-text-teal">Disjunction of Relations</h4>
-<p>
+<h3 class="w3-text-teal">Disjunction of Relations</h3>
+    <ol>
+      
+      <li>
+
+    \(
+    (P \subseteq Q) \wedge
+    (P' \subseteq Q')
+    \quad \Rightarrow \quad
+    (P \cup P') \subseteq (Q \cup Q')
+    \)
+
+      </li>
+      
+      <li>
+
     \(
     (P \rightarrow Q) \wedge
     (P' \rightarrow Q')
     \quad \Rightarrow \quad
     (P \cup P') \rightarrow (Q \cup Q')
-\)
-</p>
-<p>
+    \)
+
+      </li>
+
+      <li>
+    \(
+    (P \stackrel{*}{\rightarrow} Q) \wedge
+    (P \stackrel{*}{\rightarrow} Q')
+    \quad \Rightarrow \quad
+    (P \cup P') \stackrel{*}{\rightarrow} (Q \cup Q')
+    \)
+      </li>
+
+      <li>
     \(
     (P \leadsto Q) \wedge
     (P' \leadsto Q')
     \quad \equiv \quad
     (P \cup P') \leadsto (Q \cup Q')
     \)
-</p>
+    </p>
+      </li>
+    </ol>
 
 
 

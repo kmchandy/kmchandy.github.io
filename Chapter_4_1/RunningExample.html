@@ -40,6 +40,8 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <!-------------------------->
   <h3 class="w3-bar-item"><b>An Introduction to Distributed
   Algorithms</h3>
+
+  <h3 class="w3-bar-item"><b>Section: State Transition Systems</h3>
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="RunningExample.html">Example of State-Transition Systems</a>
@@ -57,7 +59,8 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   href="PredicatesExplorations.html">Explorations</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_3_2/HoareTriples.html">Next: Review Module: Hoare Triples</a>
+  href="../Chapter_5/EarliestMeetingTime.html">Next: Example -
+  Earliest Meeting Time</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="../Chapter_4/Model.html">Previous:
@@ -125,7 +128,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     doesn't know the function of other agents.
     There exists some day, perhaps in the distant future, at which all
     agents can meet, and that day is \(m\). Therefore:
-
+    
     <ol>
       <li>
       <p>
@@ -137,12 +140,12 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
       </p>
       </li>
       <li>
-      For every day \(t\) before \(m\), at least one agent cannot meet
+      For every day \(d\) before \(m\), at least one agent cannot meet
       at \(t\). 
       </p>
       <p>
     \(
-    \forall t < m: \exists j:  f_{j}(t) > t
+    \forall d < m: \exists j:  f_{j}(d) > d
       \)
       </p>
       </li>
@@ -150,10 +153,9 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     
 
     <p>
-  Associated with agent \(j\) is a variable \(t_{j}\), which is the
-  time proposed by agent \(j\). Let \(N\) be the number of agents.
-  Let \(t\) be the vector whose elements are \(t_{j}\).
-
+  Associated with agent \(j\) is a variable \(t_{j}\).
+  Let \(N\) be the number of agents, and
+  let \(t\) be the vector whose elements are \(t_{j}\).
   Let \(M\) and  \(\emptyset\) be vectors of length \(N\) where
   all elements of \(M\) are \(m\) and all elements of \(\emptyset\)
   are \(0\).
@@ -174,20 +176,21 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 
 <h4 class="w3-text-teal">States</h4>
 <p>
-The states of the system are given by the values of \(t\)
+The states of the system are given by the values of \(t\).
 </p>
 
 <h4 class="w3-text-teal">Initial Conditions</h4>
 <p>
-The initial condition is the predicate: \(t = [0, 0, 0]\).
+The initial condition is: \(t = \emptyset\).
 </p>
 
 <h4 class="w3-text-teal">Actions</h4>
   <p>
   There are many ways of solving this problem. Next, we give an
   example for the specific purpose of illustrating state-transition
-  systems; the actions in this example are not the obvious way of
-  solving the problem.
+  systems. The actions in this example are not the obvious way of
+  solving the problem and were chosen because the show different
+  types of actions.
   </p>
 
   <h4 class="w3-text-teal">Fair Actions</h4>
@@ -197,8 +200,8 @@ The initial condition is the predicate: \(t = [0, 0, 0]\).
   <i>Action \(a_{i,j}\) for all \(i, j\).</i>
   </p>
   <p>
-  If \(t_{i}\) exceeds \(t_{j}\) then agent \(j\) updates its proposed
-  time to \(t_{i}\).
+  If \(t_{i}\) exceeds \(t_{j}\) then agent \(j\) increases \(t_{j}\)
+  to \(t_{i}\).
   </p>
   <p>
   
@@ -214,7 +217,7 @@ The initial condition is the predicate: \(t = [0, 0, 0]\).
 <i>Action \(b_{j}\) for all \(j\):</i>
   </p>
   <p>
-  Agent \(j\) sets its proposed time to the next time that it can meet
+  Agent \(j\) sets \(t_{j}\) to the next time that it can meet
   at or after \(t_{j}\).
 
 <p>
@@ -238,10 +241,7 @@ Actions that are not fair represent errors or
 situations outside the designer's control. Here we give an example to
 illustrate such actions though the example does not represent errors.
 </p>
-
 <p>
-<i>Action \(c_{j}\) for all \(j\).</i>
-</p>
 Each agent \(j\) has an action \(c_{j}\) that may be executed an
 arbitrary number of times in a trajectory.
 Agent \(j\) sets its proposed value \(t_{j}\) to any value between its
@@ -251,7 +251,8 @@ current value and the next time that agent can meet at or after
 
 <p>
 Action \(c_{j}\) is defined by the Hoare triple:
-<br>
+</p>
+<p>
 \(
 \{ t=T \} \; c_{j} \; \{\; T_{j} \leq t_{j} \leq f_{j}(T_{j}) \; \}
 \)

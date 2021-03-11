@@ -20,6 +20,10 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 hr.new4 {
   border: 5px solid blue;
 }
+/* Thin blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
 </style>
 <body>
 
@@ -45,10 +49,11 @@ hr.new4 {
   <!-------------------------->
   <h3 class="w3-bar-item"><b>An Introduction to Distributed
   Algorithms</h3>
+
+  <h3 class="w3-bar-item"><b>Section: Graphs</h3>
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="ProgressProperties.html">Progress Properties</a>
-  
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="ProgressPropertiesExamples.html">Examples</a>
@@ -108,7 +113,7 @@ hr.new4 {
 
 <!------------------------------------------------------>
     <h2 class="w3-text-teal">Transient and Transitory Vertex Sets</h2>
-    <hr class="new4">
+    <hr class="new2">
     A vertex set \(P\) is defined to be <i>transient</i> exactly when
     there exists a fair label \(a\) such that all edges labeled \(a\)
     that start at a vertex in \(P\) terminate at a vertex in
@@ -133,7 +138,7 @@ hr.new4 {
     transitory(P) \quad \equiv \quad P \leadsto P^{c}
     \)
     </p>
-    <hr class="new4">
+    <hr class="new2">
 
 <figure>
   <img src="AtomicPropertyOfLeadsTo.jpg" alt="Fig1" style="width:100%">
@@ -224,77 +229,7 @@ The proof is straightforward.
 
 <p>
 The atomic, basic and transitivity property are the fundamental
-properties of \(\leadsto\). Next, we give examples of the use of
-induction and transitivity.
-</p>
-
-<h2 class="w3-text-teal">Induction with \(\leadsto\)</h2>
-
-<p>
-Let \(f\) be a function from vertices to the integers
-where \(f\) is bounded below. Let \(below[m]\) be the set of
-vertices for which \(f\) has value at most \(m\), and let
-\(above[m]\) be the set of
-vertices for which \(f\) has value at least \(m\).
-</p>
-<p>
-\(
-below[m] = \{v | f(v) \leq m\}
-\)
-</p>
-<p>
-\(
-above[m] = \{v | f(v) \geq m\}
-\)
-</p>
-<h3 class="w3-text-teal">Theorem</h3>
-<p  class="w3-text-teal">
-\(
-\forall m: transitory(P \cap above[m]) \quad \Rightarrow \quad
-transitory(P)
-\)
-</p>
-
-<p>
-The proof is similar to that of the next theorem and so, we don't give
-it here. The sets \(above[m]\) are
-<a href="https://en.wikipedia.org/wiki/Level_set">level sets</a> that we
-will see often, particularly when we work with continuous state
-spaces.
-</p>
-
-
-<h3 class="w3-text-teal">Theorem</h3>
-<p  class="w3-text-teal">
-If for all \(m\):
-</p>
-<p  class="w3-text-teal">
-\(
-P \cap below[m] \leadsto (P \cap below[m-1]) \cup Q
-\)
-</p>
-<p  class="w3-text-teal">
-then:
-</p>
-<p  class="w3-text-teal">
-\(
-P \leadsto Q
-\)
-</p>
-
-<p>
-The proof is by induction on \(m\).
-</p>
-<p>Base Case is \(m = L\) where \(L\) is the lower bound of \(f\). \(below[L-1]\) is the
-empty set, and the result follows. The induction step is
-straightforward; the proof outline is shown in the figure.
-</p>
-
-
-<figure>
-  <img src="InductionOfLeadsTo.jpg" alt="Fig2" style="width:100%">
-  <figcaption>Fig.3 -Diagram illustrating induction with \(\leadsto\)</figcaption>
-</figure>
+properties of \(\leadsto\).
 
 
     <!------------------------------------------------------>  

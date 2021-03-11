@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>FlightFormation</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new4 {
+  border: 5px solid blue;
+}
+/* Thin blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+
+</style>
+
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+  
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+
+  <h3 class="w3-bar-item"><b>Section: Examples of Concurrent Systems</h3>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="FlightFormation.html">Example: Flight Formation</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="FlightFormationExample.html">Examples</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="EarliestMeetingTimeSelfTest.html">Self Tests</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="FlightFormationExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="FlightFormationExplorations.html">Explorations</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_5_3/Sorting.html">Next: Example: Sorting</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_5_1/AverageOfSensors.html">Previous:
+  Example: Average of Sensors</a>
+
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+    
+    <h1 class="w3-text-teal">Example: Flight Formation</h1>
+
+    <p>
+    This module describes the proof of a simple concurrent system in
+    which a collection of agents in space, move towards a formation,
+    even though each agent can only communicate with its neighbors.
+    </p>
+
+    <h2 class="w3-text-teal">Problem Description</h2>
+    <p>
+    The problem deals with agents moving in 3-D space; however, since
+    the essential ideas of the solution are clear for the case of 2-D
+    we restrict consideration to 2-D space.
+    </p>
+
+    <p>
+    \(N+1\) agents, indexed \(0 \leq j \leq N\), move in a Cartesian
+    plane.  The state of agent \(j\) is given by its location
+    which is specified by its coordinates. We are given a positive
+    constant \(\delta\) 
+    which specifies the accuracy of the desired formation.
+    </p>
+    <p>
+    Agents \(0\) and \(N\) are stationary.
+    The action of agent \(j\) for \(0 < j < N\) is as follows.
+    If the distance from the agent's location to the midpoint
+    of its neighbors is more than or equal to \(\epsilon\) then the
+    agent moves to  the midpoint; otherwise, the agent
+    does nothing. 
+    </p>
+
+    <p>
+    The action is specified by the following program
+    segment. Let \(l\) be the vector of agents' locations where
+    \(l[j]\) is the location of the \(j\)-th agent.
+    </p>
+    <p>
+    <pre>
+    mid = (l[j-1] + l[j+1])/2.0
+    if |l[j] - mid| >= epsilon:
+         l[j] = mid
+    </pre>
+
+ 
+<h4 class="w3-text-teal">Specification</h4>
+<p>
+The desired terminal or goal state is specified by a predicate
+    \(goal\) which specifies that each agent's location should be
+    \(\delta\)-close to the midpoint of the locations of its
+    neighbors. \(goal\) is defined as:
+</p>
+<p>
+\(
+    \forall 0 < j < N :
+\quad
+    |l[j] - (l[j-1]+ l[j+1])/2| < \epsilon
+\)
+    </p>
+    <p>
+    The specification is:
+    </p>
+<p>
+\(
+(t = t^{0}) \leadsto goal(t)
+\)
+</p>
+
+<h2 class="w3-text-teal">Proof of Correctness</h2>
+  <p>
+  Next, we give the structure of the proof. The details are found in
+  the solution to an exercise.
+</p>
+
+<p>
+We define a variant function \(f\) where
+</p>
+
+    <p>
+    Let \(f(l)\) be a variant function defined as the sum of the
+    square of the lengths between neighboring agents.
+    </p>
+    <p>
+    \(
+    f(l) = \sum_{j=1}^{N} ((x_{j} - x_{j-1})^{2} + (y_{j} - y_{j-1})^{2})
+    \)
+</p>
+
+<p>
+A little bit of high-school geometry on triangles shows that any action that
+changes \(l\) also changes \(f(l)\) by at least a positive constant
+\(\epsilon\). We leave it to you to determine \(\delta\). The largest
+value of \(\epsilon\) is immaterial; all you need to do is find a
+positive value.
+</p>
+<p>
+The proof is similar to the proofs of the previous examples.
+</p>
+
+
+
+
+  <hr class="new2">
+<p class="w3-text-teal">Safety</p>
+<p>
+Show that every action, \(a_{i,j}\), leaves \(l\) unchanged or
+decreases \(f(l)\) by at least \(\delta\).
+</p>
+<p>
+\(
+\forall L: \quad (l = L) \rightarrow ((l = L) \vee f(l) \leq f(L) -
+\delta
+\)
+</p>
+  <hr class="new2">
+
+  <p class="w3-text-teal">Progress</p>
+  <p>
+  Show that \(\neg goal(l)\) is transitory - i.e., \(l\) changes - because
+  execution of a fair action, \(a_{j}\), changes \(l\). This is
+straightforward.
+</p>
+<p>
+  From the safety property changes to \(l\) decrease \(f(l)\) by at least \(\delta\).
+  Therefore \(f(l)\) decreases by at least \(\delta\) at each step  while
+\(\neg goal(t)\) holds. But \(f(l)\) is bounded below and 
+the result follows.
+  </p>
+
+  <hr class="new2">
+
+
+
+<!------------------------------------------------->
+<h2 class="w3-text-teal">Summary</h2>
+<p>
+This module gives an example of a concurrent system and its proof of
+correctness. 
+</p>
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>

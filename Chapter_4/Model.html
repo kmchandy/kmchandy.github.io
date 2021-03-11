@@ -16,6 +16,14 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   bottom: 0;
   height: inherit;
 }
+/* Thick blue border */
+hr.new4 {
+  border: 5px solid blue;
+}
+/* Thin blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
 </style>
 <body>
 
@@ -41,6 +49,8 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <!-------------------------->
   <h3 class="w3-bar-item"><b>An Introduction to Distributed
   Algorithms</h3>
+
+  <h3 class="w3-bar-item"><b>Section: State Transition Systems</h3>
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="Model.html">State Transition Systems</a>
@@ -223,21 +233,48 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 terms of vertex sets, are reinterpreted in terms of predicates. Next,
 we describe the relations in terms of states and actions.
 In the
-  following \(P\) and \(Q\) are predicates on states.
-  </p>
+  following \(P\) and \(Q\) are predicates on states. Some equations,
+  which are identical in terms of both vertex sets and predicates, are
+  repeated here for convenience.
+</p>
 
+
+
+<hr class="new2">
+  <p>
+\(P \stackrel{a}{\rightarrow} Q\) holds exactly when execution of
+  action \(a\)
+ in any state in which \(P\) holds terminates in a state in which \(Q\) holds.
+</p>
+</p>
+<p>
+\(
+P \stackrel{a}{\rightarrow} Q \quad \equiv \quad
+\{P\} \; a \; \{Q\}
+\)
+</p>
+
+<hr class="new2">
   <p>
 \(P \rightarrow Q\) holds exactly when all
   actions of the system  that are executed in a state in which \(P\)
 holds terminate in a state in which \(Q\) holds.
 </p>
+<p>
+\(
+P \rightarrow Q \quad \equiv \quad
+\forall \; \textrm{actions} \; a: \; \{P\} \; a \; \{Q\}
+\)
+</p>
+
+<hr class="new2">
 
 <p>
 \(P \leadsto Q\) holds exactly when every
   trajectory from every state in which \(P\) holds visits a
   state in which \(Q\) holds.
 </p>
-
+<hr class="new2">
 
   <p>
 \(P \stackrel{*}{\rightarrow} Q\) holds exactly when \(Q\) holds for
@@ -245,6 +282,92 @@ holds terminate in a state in which \(Q\) holds.
   that starts in a state in which \(P\) holds. It is easy
   to see that the definition, initially given in terms of paths, is
   equivalent to one in terms of trajectories (fair paths).
+</p>
+
+
+<hr class="new2">
+  <p>
+\(transient(P)\) holds exactly when there exists a fair action \(a\)
+such that:
+</p>
+<p>
+\(
+\{P\} \; a \; \{\neg P\}
+\)
+</p>
+
+<hr class="new2">
+  <p>
+\(transitory(P)\) holds exactly when:
+</p>
+<p>
+\(
+P \leadsto \neg P
+\)
+</p>
+
+<hr class="new2">
+<p>
+Atomic property of \(\leadsto\)
+</p>
+<p>
+\(
+transient(P) \Rightarrow transitory(P)
+\)
+</p>
+
+<hr class="new2">
+<p>
+Basic property of \(\leadsto\)
+</p>
+<p>
+\(
+(P \rightarrow (P \vee Q)) \wedge transitory(P)
+\quad \Rightarrow \quad
+(P \leadsto Q)
+\)
+</p>
+
+<hr class="new2">
+<p>
+Transitivity property of \(\leadsto\)
+</p>
+<p>
+\(
+(P \leadsto Q) \wedge (Q \leadsto R)
+\quad \Rightarrow \quad
+(P \leadsto R)
+\)
+</p>
+
+
+<hr class="new2">
+
+<h3 class="w3-text-teal">Induction</h3>
+Next we give an example of induction used with the transitivity of
+\(\leadsto\).
+</p>
+
+<p>
+Let \(f\) be a function from states to the integers, or tuples of
+integers that are bounded below. More generally, let \(f\) be a
+function from states to a
+<a href="https://en.wikipedia.org/wiki/Well-founded_relation">
+well-founded set</a>: a structure on which we
+can carry out induction.
+</p>
+<p class="w3-text-teal">
+\(
+(P \wedge (f=m) \leadsto P \wedge (f < m) \vee Q) 
+\quad \Rightarrow \quad
+(P \leadsto Q)
+\)
+</p>
+<p>
+<i>Proof</i>: The antecedent (left-hand side of the implication) says
+that either \(P\) continues to hold while \(f\) decreases or \(Q\)
+holds; but \(f\) cannot decrease forever because it is bounded
+below. So, eventually \(Q\) holds.
 </p>
 
 
