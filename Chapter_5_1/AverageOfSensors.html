@@ -94,73 +94,68 @@ hr.new2 {
     <h1 class="w3-text-teal">Example: Average of Sensor Values</h1>
 
     <p>
+    
     This module describes the proof of a simple concurrent system in
     which a collection of agents, each with access to two sensor
     readings, computes the average reading across a set of sensors.
-    </p>
+    <p>
 
     <h2 class="w3-text-teal">Problem Description</h2>
     
     <p>
     We are given a connected undirected graph in which each vertex represents a
     sensor and each edge represents an agent. Sensor \(j\) has a
-    value \(t_{j}\) which may initially be a reading of temperature or
-    some other attribute. There is an agent \(a_{i, j}\) associated with edge \(i,
-    j\). (Because the graph is undirected, \(a_{i, j}\) and \(a_{j,
-    i}\) are the same agent.) Agent \(a_{i, j}\) has a single action
-    which sets \(t_{i}\) and \(t_{j}\) to their average.
-    </p>
-
-    <p>Action \(a_{i, j}\)</p>
+    value \(t_{j}\) which is initially \(t_{j}^{0}\) where \(t_{j}^{0}\)
+    is a measurement made by sensor \(j\) of the temperature, or some
+    other attribute.
+    The state of the system is given by the vector \(t\) whose
+    \(j\)-th element is \(t_{j}\).
     <p>
     
-    \(
-    \forall \; \textrm{edges} \; (i, j), \forall \; T_{i}, T_{j}: \quad
-    \{t_{i}, t_{j} = T_{i}, T_{j}\}
-    \; a_{i, j} \;
-    \{t_{i} = t_{j} = (T_{i} + T_{j})/2.0\}
-    \)
+    There is an agent \(a_{i, j}\) associated with edge \(i,
+    j\). Because the graph is undirected, \(a_{i, j}\) and \(a_{j,
+    i}\) are the same agent. Agent \(a_{i, j}\) has the following
+    single action, also called \(a_{i, j}\).
+    
     </p>
+
+    <h3 class="w3-text-teal">Action \(a_{i, j}\)</h3>
+    <p>
+    We are given a positive constant \(\epsilon\) which determines the
+    accuracy of the result.
+    </p>
+    <p>
+    The average of the \(t\) values of the sensors at the ends of the
+    edge \(i, j\) is: \(mid = (t_{i} + t_{j})/2.0)\). If the difference between
+    \(t_{i}\) and \(mid\) is greater than or equal to \(\epsilon\) then the action
+    sets both \(t_{i}\) and \(t_{j}\) to \(mid\); otherwise, the
+    action makes no change. The action is specified by the following
+    program segment. (In the program, \(\epsilon\) is
+    <code>epsilon</code> and \(t_{i}\) is \(t[i]\)).
+    <p>
 
     <p>
-    Because \(t_{j}\), all \(j\) are real values, the computation may
-    not terminate as it gets increasingly closer to the goal but never
-    reaches it. So, we modify the action \(a_{i,j}\) so that it leaves
-    the state unchanged when \(t_{i}\) and \(t_{j}\) are sufficiently close.
+    <pre>
+mid = (t[i] + t[j])/2.0
+if abs(t[i] - mid) >= epsilon:
+   t[i] = t[j] = mid
+    </pre>
     </p>
 
-    <p>
-    The post condition for the modified action is:
-    </p>
-
-    <p>
-    \(
-    \begin{eqnarray}
-    |T_{i} - T_{j}| < \epsilon \quad &\Rightarrow & \quad (t_{i} = T_{i}) \wedge
-    (t_{j} = T_{j}) \\
-    |T_{i} - T_{j}| \geq \epsilon \quad &\Rightarrow & \quad (t_{i} = t_{j} = (T_{i} +
-    T_{j})/2.0)
-    \end{eqnarray}
-    \)
-    </p>
-
-    <h4 class="w3-text-teal">Terminal States</h4>
+    <h3 class="w3-text-teal">Terminal States</h3>
     Let \(t_{j}^{0}\) be the initial value of \(t_{j}\) for all
-    \(j\). We define a predicate \(goal\) which holds for terminal, or
-    goal, states of the computation as follows: \(goal(t)\) holds
+\(j\).
+Let \(avg(X)\) be the average of the elements of \(X\).
+We define a predicate \(goal\) which holds for desired terminal, or
+    goal, states of the computation. \(goal(t)\) holds
 exactly when the following two conditions hold:
 </p>
     <ol>
       <li>
       <p>
       \(
-      \sum_{j} t_{j}^{0} = \sum_{j} t_{j}
+      avg(t^{0}) = avg(t)
       \)
-      </p>
-      <p>
-      We want the sum of the \(t\) values at termination to be equal to the
-    sum of their initial values so that the average of
-      the values at termination is equal to the initial average.
       </p>
       </li>
 
@@ -179,7 +174,7 @@ exactly when the following two conditions hold:
 </ol>
 </p>
 
-<h4 class="w3-text-teal">Specification</h4>
+<h3 class="w3-text-teal">Specification of the System</h3>
 <p>
 Let \(t\) be a tuple whose elements are \(t_{j}\), all \(j\). The
 specification is:
@@ -205,63 +200,50 @@ f(t) = \sum_{j} t_{j}^{2}
 \)
 </p>
 <p>
-\(f(t)\) is bounded below by \(0\) since it is the sum of squares.
+\(f(t)\) is bounded below by \(0\) since it is the sum of squares. A
+little algebra shows that if action \(a_{i,j}\) changes \(t\) then
+\(f(t)\) decreases by \(\epsilon^{2}\). Let \(\delta =
+\epsilon^{2}\). Note that \(\delta\) is strictly positive. 
 </p>
 
-<p>
-The decrease in \(f(t)\) caused by an action in which \(t_{i} =
-T_{i}\) and \(t_{j} = T_{j}\) before the action and
-\(t_{i} = t_{j} = (T_{i} + T_{j})/2.0\) after the action is
-\(|T_{j} - T_{i}|^{2}\).
-</p>
-<p>
-Let \(\delta = \epsilon^{2}\). Then it is easy to see that every
-action that changes \(t\) decreases \(f(t)\) by at least \(\delta\).
-</p>
 
-<p>
-Let \(avg(X)\) be the average of the elements of \(X\).
-</p>
 
   <hr class="new2">
 <p class="w3-text-teal">Safety</p>
 <p>
-<i>Part 1</i>: 
-Show that every action, \(a_{i,j}\), leaves the average unchanged:
+<i>Part 1</i>: Prove that \(avg(t) = avg(t^{0})\) is
+<a href="#Definitions">invariant</a> by
+showing that it holds initially and is
+<a href="#Definitions">stable</a>. Recall that an invariant holds in
+every state of every trajectory.
 </p>
-<p>
-\(
-(t = T) \quad \rightarrow \quad (avg(t) = avg(T))
-\)
-</p>
+
 
 <p>
 <i>Part 2</i>: 
-  Show that every action, \(a_{i,j}\), either leaves \(t\) unchanged or decreases
-  \(f(t)\) by at least  \(\delta\):
+  Show that every change from a state in which \(\neg goal\) 
+holds is to one in which either (1) \(goal\) holds or 
+(2) where the variant function decreases at least by a positive
+constant: 
   <p>
-  \(
-(t = T) \quad \rightarrow \quad ((t = T) \vee (f(t) \leq f(T) - \delta))
+\(
+\forall T: \;
+(t = T) \wedge \neg goal
+\quad \rightarrow \quad
+(t = T) \vee goal \vee (f(t) \leq f(T) - \delta)
   \)
-</p>
-<p>
-The proofs for both parts are straightforward.
 </p>
 
   <hr class="new2">
 
   <p class="w3-text-teal">Progress</p>
   <p>
-  Show that \(\neg goal(t)\) is transitory - i.e., \(t\) changes - because
-  execution of a fair action, \(a_{i,j}\), changes \(t\). This is
-straightforward.
-</p>
-<p>
-  From the safety property changes to \(t\) decrease \(t\) by at least \(\delta\).
-  Therefore \(f(t)\) decreases by at least \(\delta\) at each step  while
-\(\neg goal(t)\) holds. But \(f(t)\) is bounded below and 
-the result follows.
-  </p>
+Show that the left-hand side of the above equation is
+<a href="#Definitions">transitory</a> because
+execution of fair actions, \(a_{i,j}\), change \(t\).
+The result follows from
+<a href="#Definitions">the basic property of \(\leadsto\) and
+  induction.</a>
 
   <hr class="new2">
 
@@ -282,10 +264,51 @@ correctness.
       <br>
       Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
     </div>
-  </footer>
+    </footer>
 
+    
+<!-------- DEFINITIONS ------------------>
+<h4 id="Definitions" class="w3-text-teal">
+Definitions of Concepts used in this Page</h4>
+<p class="w3-text-teal">Stable</p>
+\(
+stable(P) \quad \equiv \quad (P \rightarrow P)
+\)
+</p>
 
-<!-- END MAIN -->
+<p class="w3-text-teal">Invariant</p>
+<p>
+\(P\) is an invariant implies that it holds in all states in all
+trajectories starting from the initial state.
+</p>
+
+<p class="w3-text-teal">Transitory</p\(transitory(P)\) holds exactly when:
+</p>
+<p>
+\(
+transitory(P) \quad \equiv \quad (P \leadsto \neg P)
+\)
+    
+<p class="w3-text-teal">Basic Property of \(\leadsto\)</p>
+<p>
+\(
+(P \rightarrow (P \vee Q)) \wedge transitory(P)
+\quad \Rightarrow \quad
+(P \leadsto Q)
+\)
+</p>
+
+<p class="w3-text-teal">Induction using \(\leadsto\)</p>
+<p>For a variant function \(f\):</p>
+\(
+(P \wedge (f=m) \leadsto P \wedge (f < m) \vee Q) 
+\quad \Rightarrow \quad
+(P \leadsto Q)
+\)
+</p>
+
+    <!-- END MAIN -->
+
 </div>
 
 <script>

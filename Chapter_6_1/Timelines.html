@@ -112,7 +112,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     also independent of variables that the action does not reference.
     </p>
 
-    <h2 class="w3-text-teal">Agent Diagram</h2>
+    <h3 class="w3-text-teal">Agent Diagram</h3>
     The agents and shared variables of a system are represented by an
     agent diagram which is a directed graph in which a vertex
     represents either an agent or a shared variable.
@@ -274,7 +274,7 @@ leaves the states of all other agents and variables unchanged.
     <figcaption>Fig.4: Timeline of Agents and Shared Variables</figcaption>
 </figure>
 
-<h3 class="w3-text-teal">Initial States of Agents and Variables</h3>
+<h3 class="w3-text-teal">Initial States</h3>
 <p>
 Each agent and variable timeline in \(G\) starts with a dummy event.
 The dummy event that starts the timeline, i.e., at the left end of
@@ -285,7 +285,7 @@ this initial event is labeled with the initial value of the variable
 in the system timeline \(ST\).
 
 
-<h3 class="w3-text-teal">Vertices in Timelines of Agents and Variables</h3>
+<h3 class="w3-text-teal">Vertices in Timelines</h3>
 
 <i>Vertices in Agent Timelines</i>:
 An event \(e\) is represented by a vertex in the timeline of the agent
@@ -297,14 +297,14 @@ increasing order of appearance in the system timeline, but events
 aren't labeled.
 </p>
 
-<i>Vertices in Shared Variable Timelines</i>:
+<i>Vertices in Variable Timelines</i>:
 An event \(e\) belonging to agent \(A\) is represented by a vertex in the
 timeline of a shared variable \(v\) only if \(A\) writes \(v\) during
 the event. If \(A\) reads, but does not write \(v\) during the event, then the event
 does not appear in \(v\)'s timeline.
 </p>
 
-<h3 class="w3-text-teal">Edges in Timelines of Agents and Variables</h3>
+<h3 class="w3-text-teal">Edges in Timelines</h3>
 
 <i>Edges within Timelines</i> :
 There exists an edge from an event \(e\) to an event \(e'\) in an
@@ -370,7 +370,7 @@ written for variable \(x\) before \(T\) will be read by agent \(C\)
 after \(T\).
 </p>
 
-<h3 class="w3-text-teal">Equivalence of System and Graph Timelines</h3>
+<p class="w3-text-teal">Equivalence of System and Graph Timelines</p>
 We showed how to determine a graph with a separate timeline for each
 agent and shared variable from the system timeline which is a sequence
 of state transitions. We can obtain the system timeline from the graph
@@ -379,6 +379,338 @@ essence, we move the green vertical line from left to right (the initial point t
 later points) and determine the system state at each point.
 
 
+
+
+
+
+
+
+<h2 class="w3-text-teal">Observation: Timeline Diagrams are Acyclic</h2>
+All edges in the diagram are directed from earlier times to later times
+(i.e. left to right) or are vertical (simultaneous). Vertical edges
+are directed from agent timelines to shared variable
+timelines. Therefore all paths in the graph have no cycles.
+
+
+<h2 class="w3-text-teal">Independent Events</h2>
+Events \(e\) and \(e'\) on a timeline graph are independent exactly
+when there is no path from either event to the other. In the example,
+events \(1\) and \(2\) are independent. By contrast 
+events \(1\) and \(3\) are dependent because there exists a path from 
+\(1\) to \(3\).
+</p>
+
+<p>
+Events \(1\) and \(2\) are independent because they
+are events that belong to different agents \(A\) and \(D\), and agent
+\(A\) in event \(1\) does not
+modify any variable that is referenced (i.e. read or written) by agent \(D\) in event \(2\); and
+likewise, agent \(D\) in event \(2\) does not
+modify any variable that is referenced by agent \(A\) in event \(1\).
+
+<p>
+Events \(1\) and \(3\) are dependent because agent \(A\) modifies
+shared variable \(w\) in event \(1\), and \(w\) is subsequently
+referenced by agent \(B\) in event \(3\).
+</p>
+
+
+
+
+
+
+
+
+
+<h1>OLD STUFF</h1>
+
+
+<p>
+The edges of the graph are \((e_{i}, e_{i+1})\) where \(e_{j}\) is the
+vertex representing the \(j\)-th event, for \(0 \leq j\).
+The edge \((e_{i}, e_{i+1})\) is labeled with the state of the object
+between \(e_{i}\) and \(e_{i+1}\).
+</p>
+
+<p>
+We adopt the conventions that timelines are horizontal lines and that
+time progresses from left to right.
+</p>
+
+<!---------------------------------------------------->
+<h2 class="w3-text-teal">System Trajectories as Timelines</h2>
+
+<p>
+A system trajectory is a path through the state-transition graph in
+which a state is represented
+by a vertex, and a state transition is represented by an edge.
+
+By contrast, in a trajectory represented as a timeline,  a state is
+represented by an edge, and a 
+state transition is represented by a vertex. 
+
+The initial event \(e_{0}\) of the timeline starts the timeline and
+the edge \((e_{0}, e_{1})\) represents the initial state of the
+trajectory.
+</p>
+
+
+<h4 class="w3-text-teal">Interchanging order of adjacent independent events</h4>
+<p>
+An action is said to <i>reference</i> a shared variable \(v\) when the
+action reads or modifies \(v\).
+
+Events \(e\) and \(e'\) are said to be <i>dependent</i> exactly when
+(1) both events are at the same agent, or
+(2)
+either
+event modifies a variable that is referenced by the other event. 
+</p>
+
+<p>
+Consider a pair \(e_{i}, e_{i+1}\) of adjacent independent (i.e., not
+dependent) events in \(T\). The variables and agent
+state referenced by each agent is unchanged by the other
+event. Therefore, the
+events can occur in either order.
+</p>
+
+
+
+
+
+
+
+
+
+
+
+<p>
+Let \(T'\) be a sequence that is
+indentical to \(T\) except that the order in which \(e_{i}\) and
+\(e_{i+1}\) is flipped. Then \(T'\) is also a trajectory and the
+states before \(e_{i}\) and after \(e_{i+1}\) are identical in \(T\)
+and \(T'\).
+</p>
+
+
+
+<!---------------------------------------------------->
+<h2 class="w3-text-teal">From System Timeline to Parallel Agent
+Timelines</h2>
+
+<p>
+Next we associate a graph with a timeline representation of a
+trajectory, where the graph has a separate timeline for each agent.
+</p>
+
+<h3 class="w3-text-teal">Timeline of an Agent</h3>
+
+<p>
+The timeline of an agent, during a system trajectory, is the sequence
+of events that occur at that agent.  An event at an agent is the
+execution of an action by that agent.  An edge in an agent's timeline
+is directed from an event at that agent to the next event at that
+agent. The edge is labeled with the agent's state between successive
+events.
+</p>
+
+<p>
+The next state of an agent after a state transition depends on the
+prior states of the agent and shared variables. Now we show how the
+states of shared variables are represented in the graph.
+</p>
+
+
+<h3 class="w3-text-teal">System Timeline to Agent Timelines</h3>
+
+<p>
+Next we describe the graph \(G\) associated with a timeline
+\(T\). 
+</p>
+
+<p><i>Vertices of \(G\)</i></p>
+<p>
+The vertices of \(G\) are exactly the same as those in \(T\).
+</p>
+
+<p><i>Edges of \(G\)</i></p>
+<p>
+\(G\) has an edge \((e, e')\) for dependent events \(e\) and \(e'\)
+that occur at agents \(a\) and \(a'\) respectively,
+where \(e'\) is the first event that occurs at
+\(a'\) in \(T\) after \(e\).
+</p>
+
+
+<p>
+Therefore, \(G\) has an edge \((e, e')\) for:
+<ol>
+  <li>
+  successive events \(e\) and \(e'\)
+  at the same agent \(a\). These are the edges associated with the timeline
+  of \(a\).
+  </li>
+  <li>
+  dependent events \(e\) and \(e'\) that occur at different agents
+  \(a\) and \(a'\), respectively, and \(e'\) is the first event that
+  occurs at \(a'\) in \(T\) after \(e\).
+  </li>
+</ol>
+</p>
+
+
+
+<h4 class="w3-text-teal">System Timelines consistent with Agent Timelines</h4> 
+<p>
+\(G\) is acylic because every edge is directed from an earlier
+event to a later event. The set of vertices of an acyclic graph represents a
+<a href="https://en.wikipedia.org/wiki/Partially_ordered_set">
+partially ordered set</a> 
+where \(v \leq w\) exactly when \(v
+= w\) or there exists an edge \((v, w)\).
+</p>
+
+<p>
+A total order, consistent with a partial order
+\(\leq\), is any sequence in which:  If
+\(v < w\) then \(v\) appears before \(w\) in the sequence.
+The timeline \(T\) is a total order consistent with
+\(\leq\).
+
+<h3 class="w3-text-teal">Timeline Theorem</h3>
+<p>
+All total orders consistent with \(\leq\)
+are trajectories that start at the initial state of \(T\), and end at
+the final state of \(T\).
+</p>
+
+<p><i>Proof</i></p>
+
+<p>
+Let \(R\) be any total order consistent \(\leq\). We will prove that
+\(R\) is a trajectory.
+
+The proof is similar to that of a bubble sort. We give an iteration
+that generates a sequence of trajectories, starting with \(T\) and
+ending with \(R\).
+</p>
+
+<p>
+For any total order \(Q\), let \(f(Q)\) be the number of out-of-order
+pairs of elements in \(Q\) relative to \(R\). A pair \((v, w)\) is out
+of order in \(Q\) with respect to \(R\) if \(v\) appears before \(w\)
+in \(R\), and \(v\) appears after \(w\) in \(Q\).
+</p>
+
+<p>
+\(f\) is bounded below by \(0\), and \(f(Q) = 0\) exactly when \(Q =
+R\). We will use \(f\) as a variant function or
+<a href="https://en.wikipedia.org/wiki/Loop_variant">loop variant</a>
+to prove that the iteration terminates.
+</p>
+
+<p>
+Let \(Q\) be any trajectory consistent with \(\leq\).
+
+If \(Q\) is different from \(R\), then there exists
+an adjacent out-of-order pair of elements \((e_{i}, e_{i+1})\) in
+\(Q\), i.e., \(e_{i}\) appears immediately before \(e_{i+1}\) in
+\(Q\), whereas \(e_{i}\) appears after \(e_{i+1}\) in \(R\).
+
+As we said earlier, the
+total order, \(Q'\), obtained by flipping the order of \((e_{i},
+e_{i+1})\) in \(Q\) is also a trajectory.
+
+The theorem follows by induction on values of \(f\), since
+\(f(Q') < f(Q)\).
+</p>
+
+
+
+
+
+
+
+<p class="w3-text-teal">When Shared Variables are Queues</p>
+<p>
+In many systems, shared variables are queues where exactly one agent
+ enqueues messages on the queue and exactly one agent dequeues
+ messages from the queue. The receiving agent eventually dequeues
+ every message that the sender enqueues. The edges from one agent's
+ timeline to another can be labeled with the message sent by the
+ sender and eventually received by the receiver.
+</p>
+
+
+    <p style="color:red;">Example</p>
+    A system consists of agents \(a_{i}\)  and shared variables
+    \(v_{i}\) for \(i = 0, 1\).
+    Let \(f(i) = (i+1) mod 2\); thus \(f(i)\) is the index of the
+    agent other than agent \(i\).
+    </p>
+
+    <p>
+    The agents send indivisible
+    tokens to each other. The state of agent \(i\) 
+    is a
+    non-negative integer \(n_{i}\), which is the number of tokens that agent \(i\)
+    holds.
+    The shared variable \(v_{i}\) represents a message-passing channel
+    from agent \(i\) to agent \(f(i)\).
+    The channel contains tokens in transit, and \(v_{i}\) is a nonnegative integer,
+    which is the number of tokens in the channel.
+    The state of the system is given by \([n_{0}, n_{1}, v_{0},
+    v_{1}]\).
+    </p>
+
+    <p>
+    Agent \(i\) has two actions:
+    <ol>
+      <li>
+      <p>
+     <i>send</i>, \(s_{i}\): This action takes a token that the agent \(i\) has and adds it to
+    the shared variable \(v_{i}\). This action is specified by the Hoare
+    triple: For all \(N, M\):
+      </p>
+      <p>
+      \(
+      \{(n_{i} > 0) \wedge (n_{i}, v_{i} = N, M)\} \; s_{i} \;
+    \{n_{i}, v_{i} = N-1, M+1\}
+      \)
+      </p>
+      </li>
+      <li>
+      <p>
+     <i>receive</i>,  \(r_{i}\): This action takes a token in
+    the shared variable \(v_{f(i)}\), if it is positive, and adds it to
+    the agent. The action is specified by the Hoare 
+    triple: For all \(N, M\):
+      </p>
+      <p>
+      \(
+      \{(v_{f(i)} > 0) \wedge (n_{i}, v_{f(i)} = N, M)\} \; s_{i} \;
+    \{n_{i}, v_{f(i)} = N+1, M-1\}
+      \)
+      </p>
+      </li>
+    </ol>
+    </p>
+
+    <p style="color:red;">Example</p>
+    Now let's look at the same example but where the shared variables
+    are queues rather than integers.
+    The operations on a queue are (1)
+    <i>enqueue</i> a value and (2) <i>dequeue</i> a nonempty queue.
+    The state of a queue is a sequence of values.
+    If \(seq\) is the sequence of values before
+    the action \(enqueue(m)\)
+      
+
+
+
+
+    
 
 
   <footer id="myFooter">
@@ -424,4 +756,53 @@ function w3_close() {
 
 </body>
 </html>
+
+
+
+
+<h1>LEFT OVER</h1>
+    <p style="color:red;">Example</p>
+    The system sorts a vector \(x[0, \ldots, N]\).
+    
+    The system has a single
+    shared variable \(x[M]\) where \(0 < M < N\) and two agents \(L\),
+    for left, 
+    and \(R\), for right. The local
+    variables of agent \(L\) are \(x[0, \ldots, M-1]\), and the local
+    variables of agent \(R\) are \(x[M+1, \ldots, N]\).
+    The figure below depicts agents and shared variables.
+</p>
+
+
+
+    <p>
+    Agent \(L\) has two actions: (1) it sorts its local variables
+    \(x[0, \ldots, M-1]\), and (2) it orders the pair \(x[M-1, M]\).
+    Likewise, agent \(R\) has two actions: (1) it sorts its local variables
+    \(x[M+1, \ldots, N]\), and (2) it orders the pair \(x[M, M+1]\).
+    </p>
+
+    <p>
+    The action of each agent is independent of the state of the other
+    agent. 
+    Each of these actions is executed infinitely often to sort \(x\).
+    (This example is included merely to illustrate agents;
+    it is an inefficient way of sorting.)
+    </p>
+
+
+    <p style="color:red;">Example: Generalization of Sorting</p>
+    A generalization of the previous example is as follows. The system
+    has several agents, each of which has a local variable which is a
+    segment \(x[i, \ldots, j]\) of \(x\), where \(x[i-1]\) and
+    \(x[j+1]\) are shared variables, and where the local and shared
+    variables span \(x\). Each agent has actions that sort the local
+    variables and that put the pairs, \(x[i-1, i]\) and \(x[j, j+1]\),
+in order.
+</p>
+
+<p>
+The action of each agent is independent of the states of other
+agents.
+</p>
 

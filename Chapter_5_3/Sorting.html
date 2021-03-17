@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>FlightFormation</title>
+<title>Sorting</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -54,26 +54,26 @@ hr.new2 {
   <h3 class="w3-bar-item"><b>Section: Examples of Concurrent Systems</h3>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="FlightFormation.html">Example: Flight Formation</a>
+  href="Sorting.html">Example: Sorting</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="FlightFormationExample.html">Examples</a>
+  href="SortingExample.html">Examples</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="EarliestMeetingTimeSelfTest.html">Self Tests</a>
+  href="SortingSelfTest.html">Self Tests</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="FlightFormationExercises.html">Exercises</a>
+  href="SortingExercises.html">Exercises</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="FlightFormationExplorations.html">Explorations</a>
+  href="SortingExplorations.html">Explorations</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_5_3/Sorting.html">Next: Example: Sorting</a>
+  href="../Chapter_5_4/ShortestPath.html">Next: Shortest Path</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_5_1/AverageOfSensors.html">Previous:
-  Example: Average of Sensors</a>
+  href="../Chapter_5_2/FlightFormation.html"">Previous:
+  Example: Flight Formation</a>
 
   
 </nav>
@@ -91,137 +91,115 @@ hr.new2 {
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
     
-    <h1 class="w3-text-teal">Example: Flight Formation</h1>
+    <h1 class="w3-text-teal">Example: Sorting</h1>
 
     
     <p>
-    This module describes the proof of a simple concurrent system in
-    which a collection of agents in space, move towards a formation,
-    even though each agent can only communicate with its neighbors.
-    <p>
-    This section has several simple examples of concurrent systems
-    with their proofs.
-    Read some examples in depth and skim through others.
-    All the examples in this section use the same proof structure;
-    later we will look at more complex problems with different proof
-    structures.
-    </p>
+    This module describes the proof of a concurrent system in
+    which a set of agents sort a list in place. We design the proof
+    first and then explore the set of algorithms that fit the proof.
 
     <h2 class="w3-text-teal">Problem Description</h2>
-    <p>
-    The problem deals with agents moving in 3-D space; however, since
-    the essential ideas of the solution are clear for the case of 2-D
-    we restrict consideration to 2-D space.
-    </p>
     
     <p>
-    Agents \(0\) and \(N\) are stationary.
-    The action of agent \(j\) for \(0 < j < N\) is as follows.
-    If the distance from the agent's location to the midpoint
-    of its neighbors is more than or equal to \(\epsilon\) then the
-    agent moves to  the midpoint; otherwise, the agent
-    does nothing. 
+    The function \(sort\) operates on a list and returns the sort of
+    the list in ascending order. Let \(x\) be a list of integers and let:
+    \(y = sort(x)\). Then \(y\) is a permutation of \(x\) and is in
+    ascending order.
     </p>
-
+    <h4 class="w3-text-teal">Specification</h4>
     <p>
-    The action is specified by the following program
-    segment. Let \(l\) be the vector of agents' locations where
-    \(l[j]\) is the location of the \(j\)-th agent.
+    Let \(x^{0}\) be the initial value of \(x\). The specification is:
     </p>
     <p>
-    <pre>
-    mid = (l[j-1] + l[j+1])/2.0
-    if |l[j] - mid| >= epsilon:
-         l[j] = mid
-    </pre>
-
- 
-<h4 class="w3-text-teal">Specification</h4>
-<p>
-The desired terminal or goal state is specified by a predicate
-    \(goal\) which specifies that each agent's location should be
-    \(\delta\)-close to the midpoint of the locations of its
-    neighbors. \(goal\) is defined as:
-</p>
-<p>
-\(
-\forall 0 < j < N :
-\)
-\(
-\quad
-    |l[j] - mid | < \epsilon
-\)
-<p>
-where \(mid = (l[j-1]+ l[j+1])/2 \)
-</p>
-
-
-    <p>
-    The specification is:
-    </p>
-<p>
-\(
-(l = l^{0}) \leadsto goal(l)
-\)
-</p>
-
-<h2 class="w3-text-teal">Proof of Correctness</h2>
-  <p>
-  Next, we give the structure of the proof. The details are found in
-  the solution to an exercise.
-</p>
-
-    <p>
-    Let \(f(l)\) be a variant function defined as the sum of the
-    square of the lengths between neighboring agents.
-    </p>
-    <p>
-\(
-    f(l) = \sum_{j=1}^{N} ((x_{j} - x_{j-1})^{2} + (y_{j} - y_{j-1})^{2})
+    \(
+    x = x^{0} \quad \leadsto \quad x = sort(x^{0})
     \)
-</p>
+    </p>
 
-<p>
-A little bit of high-school geometry on triangles shows that any action that
-changes \(l\) because \(|l[j] - mid| < \epsilon\)
-also changes \(f(l)\) by at least a positive constant
-\(\delta\). We leave it to you to determine \(\delta\). The largest
-value of \(\delta\) is immaterial; all you need to do is find a
-positive value. (Hint: \(\delta\) depends on \(\epsilon\) and the
-initial configuration.)
-</p>
+    <h2 class="w3-text-teal">Proof of Correctness</h2>
+    
+    <p>
+We define a variant function \(f(x)\) as the number of out-of-order
+    pairs in \(x\):
+    </p>
+    <p>
+    \(
+    f(x) = |\{(i, j) | (i < j) \wedge (x[i] > x[j]\} |
+    \)
+    </p>
+    <p>
 
+    Note that \(f(x) = 0\) exactly when \(x\) is in ascending order.
+    </p>
+    
+    Define a partial order \(\leq\) between lists of the same size
+    as follows. \(x = y\) when they are identical, and
+    <p>
+    \(
+    (x < y) \quad \equiv \quad (f(x) < f(y))
+    \)
+    </p>
+    <p>
+  Next, we give the structure of the proof.
+  </p>
 
   <hr class="new2">
 <p class="w3-text-teal">Safety</p>
 <p>
-Show that every state change from one in which \(\neg goal\)
-holds is to a state in which either (1) \(goal\) holds or (2) where the
-variant function decreases at least by a positive constant.
-
-  <p>
-\(
-\forall l: \quad
-(l = L) \wedge \neg goal
+Show that every transition that changes \(x\) makes it more sorted,
+    i.e., lower in the partial ordering, or lower \(f\).
+</p>
+<p>
+\(\forall X: \quad
+X = x 
 \quad \rightarrow \quad
-(l = L) \vee goal \vee (f(l) \leq f(L) - \delta)
-  \)
+X \geq x
+\)
 </p>
   <hr class="new2">
 
   <p class="w3-text-teal">Progress</p>
+  <p>
+  Show that if \(X\) is not sorted
+  then \(X = x\) is transitory . 
+</p>
 <p>
-Show that the left-hand side of \(\rightarrow\) in the above equation
-is <a href="#Definitions">transitory</a> because a fair action changes
-\(l\) while \(\neg goal\) holds.
+\(\forall X > sort(x^{0}): \quad
+transitory(X = x) 
+\)
 </p>
 
-  <hr class="new2">
+<hr class="new2">
   <p>
-  The proof of correctness follows from
-<a href="#Definitions">the basic property of \(\leadsto\) and
-  induction.</a>
+  The proof of correctness follows from <a href="#Definitions">the
+basic property of \(\leadsto\) and induction.</a> The intuition of the
+proof is: from safety, \(x\) stays the same or decreases; from
+progress, \(x\) does not stay the same forever, and therefore
+decreases while it is not sorted.
   </p>
+
+
+<h3  class="w3-text-teal">Actions</h3>
+<p>
+We can now design many algorithms that fit the proof. Here is one
+example. To ensure safety, all actions that change \(x\) must make it more
+sorted. To ensure progress, if \(x\) is not sorted then there must
+exist at least one agent with a fair action that changes \(x\).
+</p>
+
+<p>
+An algorithm that ensure these requirements is as follows. An agent sorts a sublist \(x[j, \ldots,
+k]\), where the action of sorting the sublist is fair. For each adjacent pair \(x[j, j+1]\)
+there exists an agent whose sublist spans the pair.
+
+<p>
+The safety
+requirement is satisfied because an action of sorting a sublist satisfies the
+requirement. The progres requirement is satisfied because if \(x\)
+is not sorted then \(x\) contains an adjacent pair  \(x[j, j+1]\) that is out of
+order; so there exists a fair action that changes the pair and thus changes \(x\).
+</p>
 
 
 
@@ -251,7 +229,18 @@ correctness.
 <p>
 \(
 transitory(P) \quad \equiv \quad (P \leadsto \neg P)
+\) 
+<p class="w3-text-teal">Basic Property of \(\leadsto\)</p>
+<p>
+\(
+(P \rightarrow (P \vee Q)) \wedge transitory(P)
+\quad \Rightarrow \quad
+(P \leadsto Q)
 \)
+    </p>
+
+
+    
 <!-- END MAIN -->
 </div>
 

@@ -95,10 +95,19 @@ hr.new2 {
     <h1 class="w3-text-teal">Example: Earliest Meeting Time</h1>
 
     <p>
-    This module describes the proof of a simple concurrent system:
-    computing the earliest meeting time of a collection of agents.
-    </p>
+    This module describes a simple concurrent system in which a set of
+    agents exchanges information with their neighbors in a graph to
+    compute the earliest time at which all agents can meet.
 
+    <p>
+    This section has several simple examples of concurrent systems
+    with their proofs.
+    Read some examples in depth and skim through others.
+    All the examples in this section use the same proof structure;
+    later we will look problems with more complex proofs.
+    </p>
+    
+    <!----------------------------------------------->
     <h2 class="w3-text-teal">Problem Description</h2>
     This example is a variant of one described in an earlier module:
     <a href="../Chapter_4_1/RunningExample.html">an example of a
@@ -145,6 +154,9 @@ hr.new2 {
       </li>
     </ol>
 
+    <p class="w3-text-teal">State of the System</p>
+    The state of the system is given by \(t_{j}\) for all \(j\).
+    
     <p class="w3-text-teal">Fair Actions</p>
     Let \(N\) be the number of agents;
     \(t\) be the vector whose elements are \(t_{j}\);
@@ -204,7 +216,7 @@ hr.new2 {
 
 
   
-
+  <!----------------------------------------------->
   <p class="w3-text-teal">Specification</p>
   
   Let \(M\) and  \(\emptyset\) be vectors of length \(N\) where
@@ -246,6 +258,7 @@ Each agent \(j\)'s proposed time \(t_{j}\)
   it, but not beyond \(M\):
   <p>
   \(
+  \forall T: \quad
   (t = T \leq M) \; \rightarrow \; (T \leq t \leq M)
   \)
   </p>
@@ -254,14 +267,16 @@ Each agent \(j\)'s proposed time \(t_{j}\)
 
   <p class="w3-text-teal">Progress</p>
   <p>
-  Show that \(t < M\) is transitory - i.e., \(t\) changes - because
-  execution of a fair action, \(a_{i,j}\) or \(b_{j}\), changes \(t\).
+  Show that for all \(T < M\): \(\quad t = T\) is   is
+  <a href="#Definitions">transitory</a> because
+  execution of a fair action - \(a_{i,j}\) or \(b_{j}\) - changes \(t\).
   </p>
   <p>
-  From the safety property changes to \(t\) can only increase \(t\).
-  Therefore \(t\) increases while \(t < M\). Since \(t\) is a tuple of
-  integers, it can only increase a finite number of times before it
-  becomes equal to \(M\).
+  The result follows from <a href="#Definitions">the basic property of
+\(\leadsto\) and induction.</a> The proof idea is that: (1) safety
+says \(t\) stays the same or increases to atmost \(M\) and (2)
+progress says that \(t\) does not stay the same forever while it is
+less than \(M\).  
   </p>
 
   <hr class="new2">
@@ -286,6 +301,34 @@ correctness.
     </div>
   </footer>
 
+
+<h4 id="Definitions" class="w3-text-teal">
+Definitions of Concepts used in this Page</h4>
+    
+<p class="w3-text-teal">Transitory</p\(transitory(P)\) holds exactly when:
+</p>
+<p>
+\(
+transitory(P) \quad \equiv \quad (P \leadsto \neg P)
+\)
+    
+<p class="w3-text-teal">Basic Property of \(\leadsto\)</p>
+<p>
+\(
+(P \rightarrow (P \vee Q)) \wedge transitory(P)
+\quad \Rightarrow \quad
+(P \leadsto Q)
+\)
+</p>
+
+<p class="w3-text-teal">Induction using \(\leadsto\)</p>
+<p>For a variant function \(f\):</p>
+\(
+(P \wedge (f=m) \leadsto P \wedge (f < m) \vee Q) 
+\quad \Rightarrow \quad
+(P \leadsto Q)
+\)
+</p>
 
 <!-- END MAIN -->
 </div>
