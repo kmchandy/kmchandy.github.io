@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>PropertiesOfTimelines</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PropertiesOfTimelines.html">The Timeline Theorem</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PropertiesOfTimelinesExamples.html">Examples</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PropertiesOfTimelinesSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PropertiesOfTimelinesExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PropertiesOfTimelinesExplorations.html">Explorations</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_6_1/PropertiesOfTimelines.html">
+  Next: Properties of Timelines</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_6/Agents.html">Previous:
+  Agents, Shared Variables, Timelines
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Properties of Timelines</h1><p>
+
+<h3 class="w3-text-teal">Timelines are Acyclic</h3>
+Timelines are acyclic because all edges in its graph are
+    directed from earlier times to later times. 
+
+
+    <h3 style="color:red;">Labels and Event Order: Example 1</h3>
+    Consider the timeline for a trajectory,
+    \(
+s_{0} \stackrel{a_{0}}{\rightarrow} s_{1}
+\stackrel{a_{1}}{\rightarrow} s_{2}
+    \)
+    Consider the case where there are no paths from event \(e_{0}\) to
+    event \(e_{1}\), or from \(e_{1}\) to \(e_{0}\), in the graph.
+    An example of such a timeline is shown below.
+    
+    <figure>
+    <img src="SwitchingEventsOneAndZero_0.jpg" alt="Fig1" style="width:120%">
+    <figcaption>Fig.1: Timeline with events 0 and 1 in order</figcaption>
+    </figure>
+    
+    <p>
+    In the example, agent \(A\) modifies variable \(v\) in event
+    \(e_{0}\), and agent \(B\) modifies variable \(w\) in event
+    \(e_{1}\).
+    In the figure, the labels for initial states are shown with a subscript 0 and the
+    states after execution of an event with subscript 1.
+    
+    <p>
+    Let the system state be the tuple
+containing the states of \(A\), \(v\), \(B\), \(w\), in that
+order. Then:
+<p>
+\(
+s_{0} = (A_{0}, v_{0}, B_{0}, w_{0})
+\)
+<br>
+\(
+s_{1} = (A_{1}, v_{1}, B_{0}, w_{0})
+\)
+<br>
+\(
+s_{2} = (A_{1}, v_{1}, B_{1}, w_{1})
+\)
+</p>
+
+    <p>
+    Now consider the timeline for the trajectory
+    \(
+s_{0} \stackrel{a_{1}}{\rightarrow} s'_{1}
+\stackrel{a_{0}}{\rightarrow} s'_{2}
+    \)
+    in which the order of
+    execution of \(a_{0}\) and \(a_{1}\) are switched. Note that this
+    trajectory starts at the same initial state \(s_{0}\). The timeline is
+    shown in the figure below.
+    
+    <figure>
+    <img src="SwitchingEventsOneAndZero_1.jpg" alt="Fig2" style="width:120%">
+    <figcaption>Fig.2: Timeline when order of events 0 and 1 are switched</figcaption>
+    </figure>
+
+    It's easy to verify that the <i>graphs</i> in both timelines are
+identical.
+The timelines are different because vertices of
+the same graph appear in different orders in the timelines: 
+     \(e_{0}\) before \(e_{1}\) in  the first timeline and \(e_{0}\)
+after \(e_{1}\) in the second. Graphs do not specify orderings among
+vertices, but timelines do.
+
+<p>
+The sequence of states in this trajectory are:
+<p>
+\(
+s'_{0} = (A_{0}, v_{0}, B_{0}, w_{0})
+\)
+<br>
+\(
+s'_{1} = (A_{0}, v_{0}, B_{1}, w_{1})
+\)
+<br>
+\(
+s'_{2} = (A_{1}, v_{1}, B_{1}, w_{1})
+\)
+</p>
+
+<p>
+We see that \(s_{2} = s'_{2}\). The system states are the same after
+both events 0 and 1, regardless of which event occurred first.
+
+
+<h3 style="color:red;">Labels and Event Order: Example 2</h3>
+    Consider the timeline for a trajectory,
+    \(
+s_{0} \stackrel{a_{0}}{\rightarrow} s_{1}
+\stackrel{a_{1}}{\rightarrow} s_{2}
+\)
+
+Let \(a_{0}\) be an action by an agent \(A\) which increments a shared
+variable \(v\) by 1 and sets the state of \(A\) to \(v + 2\).
+Let \(a_{1}\) be an action by a different agent \(B\) which sets the
+next value of shared
+variable \(v\) to \(v * 10\) and sets the state of \(B\) to \(v * 100\).
+The system state is a tuple consisting of the states of A, v, B, in that order. The
+initial state is (0, 1, 0).
+
+
+    <p>
+    Now consider the timeline for the trajectory
+    \(
+s_{0} \stackrel{a_{1}}{\rightarrow} s'_{1}
+\stackrel{a_{0}}{\rightarrow} s'_{2}
+    \)
+    in which the order of
+    execution of \(a_{0}\) and \(a_{1}\) are switched. The timelines
+    for both trajectories are
+    shown in the figure below.
+    
+    <figure>
+    <img src="SwitchingEventsOneAndZeroExample2.jpg" alt="Fig3" style="width:120%">
+    <figcaption>Fig.3: Example 2 - Timelines when order of events 0 and 1 are switched</figcaption>
+</figure>
+
+The sequences of system states in both trajectories are shown below.
+
+<p>
+\(
+s_{0} = (0, 1, 0) \quad s'_{0} = (0, 1, 0)
+\)
+<br>
+\(
+s_{1} = (3, 2, 0) \quad s'_{1} = (0, 10, 100)
+\)
+<br>
+\(
+s_{2} = (3, 20, 200) \quad s'_{2} = (12, 11, 100)
+\)
+</p>
+
+<p>
+The graphs are different because the edge labels are different. The
+final states,  \(s_{2}\) and \(s'_{2}\), of the trajectories are also
+different. 
+</p>
+
+<p>
+Why are the graphs for the
+permuted and original sequences of actions the same for example 1 but
+different for example 2? Under what conditions will the timeline
+graphs for a permuted sequences of actions be identical?
+We explore this question next.
+
+
+<h4 class="w3-text-teal">Dependent Actions</h4>
+<p>
+An action is said to <i>reference a variable</i> if it reads or writes the variable.
+<p>
+<i>Two actions of a system are defined to be dependent</i> exactly when (1) both actions
+are executed by the same agent, or (2) either action modifies a
+variable that is referenced by the other.
+
+<p>
+Actions that are not dependent are said to be independent. In 
+example 1, actions corresponding to events 0 and 1 are
+independent whereas in example 2 they are dependent.
+</p>
+
+<h4 class="w3-text-teal">Dependent Actions and Paths between Events</h4>
+<i>Theorem</i>: Let \(G\) be the timeline graph for a trajectory 
+\(
+s_{0} \stackrel{a_{0}}{\rightarrow}, \ldots, 
+\stackrel{a_{m-1}}{\rightarrow} s_{m}
+\)
+and let event \(e_{i}\) be the execution of action \(a_{i}\). Then
+actions \(a_{i}\) and \(a_{j}\), for \(j > i\) are dependent exactly
+when there is path from \(e_{i}\) to \(e_{j}\).
+<p>
+The proof follows directly from the definitions of the edges in a
+timeline graph.
+
+<h2 class="w3-text-teal"> Timeline Theorem</h2>
+<p>
+System trajectories have identical timeline graphs if:
+<ol>
+  <li>
+  they start in the same state, and
+  </li>
+  <li>
+  have sequences of actions that are permutations of
+  each other, and
+  </li>
+  <li>
+  dependent actions appear in the same order. Note: Actions \(a\) and \(b\) appear in the same order in
+a set of permutations exactly when either (1) \(a\) appears
+before \(b\) in all permutations in the set or (2) \(a\) appears
+after \(b\) in all permutations in the set.
+  </li>
+</ol>
+</p>
+<p>
+
+<p class="w3-text-teal">Proof</p>
+Let \(
+s_{0} \stackrel{a_{0}}{\rightarrow}, \ldots, 
+\stackrel{a_{m-1}}{\rightarrow} s_{m}
+\) and
+\(
+s'_{0} \stackrel{a'_{0}}{\rightarrow}, \ldots, 
+\stackrel{a'_{m-1}}{\rightarrow} s'_{m}
+\) be trajectories \(T\) and \(T'\) that
+satisfy the conditions of the theorem.  So
+(1) \(s_{0} = s'_{0}\), and (2) \(a_{0}, \ldots, a_{m-1}\) is a permutation of 
+\(a'_{0}, \ldots, a'_{m-1}\) and (3) dependent actions appear in the
+same order in both trajectories. Let \(G\) and \(G'\) be the timeline graphs of \(T\)
+and \(T'\) respectively. We will prove that \(G\) and \(G'\) are identical.
+
+<p>
+Let \(G_{n}\) be the timeline graph corresponding to the first \(n\)
+events of \(T\). 
+We will prove by induction on \(n\) that \(G_{n}\) is a subgraph of
+\(G'\). The theorem follows by setting \(n = m\).
+
+The base case is \(n = 0\) with the empty graph \(G_{0}\). The induction
+step is as follows.
+
+<p>
+For all dependent events \(a_{i}\) and \(a_{n}\), where \(a_{i}\) appears before
+\(a_{n}\) in \(T'\): \(a_{i}\) appears before
+\(a_{n}\) in \(T\), and so \(i < n\). From the induction hypothesis,
+\(G_{n-1}\) is a subgraph of
+\(G'\). From the definitions of edges in timeline graphs, for \(i <
+n\), there is an edge from \(e_{i}\) to \(e_{n}\)
+in \(G_{n}\) exactly when the same edge is in \(G'\). The result
+follows.
+
+
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+

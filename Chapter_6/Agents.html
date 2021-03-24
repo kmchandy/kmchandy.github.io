@@ -44,27 +44,27 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   Algorithms</h3>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Overview.html">Chapter: Agents and Shared Variables</a>
-  
-  <a class="w3-bar-item w3-button w3-hover-black"
   href="Agents.html">Agents, Shared Variables & Timelines</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="MessagePassing.html">Message-Passing Systems</a>
+  href="AgentsExamples.html">Examples</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Examples.html">Examples</a>
+  href="AgentsSelfTest.html">Self Test</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="SelfTest.html">Self Test</a>
+  href="AgentsExercises.html">Exercises</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_7/Overview.html">
-  Next Chapter: Diffusing Computations</a> 
+  href="AgentsExplorations.html">Explorations</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_6_1/PropertiesOfTimelines.html">
+  Next: Properties of Timelines</a> 
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_5/Overview.html">Previous Chapter:
-  Common Proof Patterns
+  href="../Chapter_5_4/ShortestPath.html">Previous:
+  Example of Shortest Path
   </a>
   
 </nav>
@@ -99,7 +99,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     when \(a\) changes the state of \(A\). Each action belongs to
     exactly one agent.
 
-    Some actions belonging to an agent may be fair and others unfair.
+    Some actions may be fair and others unfair.
 
     </p>
 
@@ -138,248 +138,179 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     </figure>
 
 <!---------------------------------------------------->
-<h1 class="w3-text-teal">Timeline Diagrams</h1>
+<h1 class="w3-text-teal">Timelines</h1>
 <!---------------------------------------------------->
-
-<p>
 A <a href="https://en.wikipedia.org/wiki/Timeline">timeline<a> of an
 object shows the sequence of events, in chronological order, that occur
-to that object.
+to that object, and the states of the object between events.
 
-A timeline can be represented as a straight-line labeled directed graph in
-which a vertex represents an event, and the edge from one event to the
-next is labeled with the state between the events, and
-each vertex is labeled with the identity of the event that the vertex
-represents.
+<p>
+Consider a path through a system's state-transition graph
 </p>
-
-<p>
-A system trajectory is a path through the state-transition graph in
-which a state is represented by a vertex, and a state transition is
-represented by an edge.
-
-By contrast, when a trajectory is represented as a timeline,  a state is
-represented by an edge (which is labeled with the state), and a 
-state transition is represented by a vertex.
-
-<p>
-A state transition is an <i>event</i> in the timeline. Events are
-instantaneous. An event belongs to the agent whose action causes the
-state transition to occur.
-
-An event changes the state of the agent to which the event
-belongs, and does not change the state of any other agent.
-
-An event changes the shared variables that are written during the
-event and does not modify any other shared variable.
-
-
-<p>
-The initial event of the timeline is a "dummy" event that merely
-starts the timeline.
-The very first edge from this dummy event to the first actual event
-represents the initial state of the trajectory.
+\(
+s_{0} \stackrel{a_{0}}{\rightarrow} s_{1}
+\stackrel{a_{1}}{\rightarrow}
+\ldots \stackrel{a_{m-1}}{\rightarrow} s_{m}
+\)
 </p>
+where the initial state is \(s_{0}\), and execution of action
+\(a_{i}\) takes the system from state \(s_{i}\) to \(s_{i+1}\), all
+\(i\). This path represents a system trajectory that starts at state
+\(s_{0}\) and terminates at state \(s_{m}\).
 
-<h1 style="color:red;">Example</h1>
+
+The \(i\)-th <i>event</i>, \(e_{i}\), in this trajectory is defined as:
+\(s_{i} \stackrel{a_{i}}{\rightarrow} s_{i+1}\).
+The trajectory can be specified by the sequence of events \(e_{0},
+\ldots, e_{m-1}\).
+
 <p>
-The figures below show a state transition graph and a trajectory
-through the graph expressed as both a sequence of states and a
-sequence of state transitions. We will visit this problem later when
-we study mutual exclusion. The details of states and transitions are
-not relevant now.
-</p>
-
-
-    <figure>
-    <img src="StateTransitionGraph.jpg" alt="Fig2" style="width:80%">>
-    <figcaption>Fig.2: Example of a State Transition Graph</figcaption>
-</figure>
-
-The system represents a
-client that interacts with a server. Muliple clients exchange messages with the server, where
-clients and the server are agents. The graph only shows states of a
-single client.
-
-<h3 style="color:red;">States in the Example</h3>
-The client has three
-states:
+A <i>timeline</i> representation of a trajectory \(e_{0},
+\ldots, e_{m-1}\)
+consists of:
 <ol>
-  <li> <i>O:</i> Executing <i>o</i>utside a critical section. </li>
-  <li> <i>W:</i> <i>W</i>aiting for a message from the server to enter
-  the critical section. </li>
-  <li> <i>C:</i> In the <i>c</i>ritical section.</li>
+  <li>
+  A labeled directed graph \(G\) in which each event \(e_{i}\) is
+  represented by a vertex (also called) \(e_{i}\), and in which
+  labeled directed edges are specified later.
+  </li>
+
+  <li>
+  A total ordering \(e_{0}, \ldots, e_{m-1}\) of vertices.
+  </li>
 </ol>
-
-<h3 style="color:red;">State Transitions in the Example</h3>
-The client has the following state transitions.
-
-<ol>
-  <li> <i>n</i>: <i>n</i>eed a critical section. </li>
-  <li> <i>e</i>: <i>e</i>ntering the critical section. </li>
-  <li> <i>f</i>:  <i>f</i>inishing critical section.</li>
-  <li> <i>a</i>:  <i>a</i>borting critical section.</li>
-</ol>
-
 <p>
-The next diagram shows a trajectory as a path through the state
-transition graph, represented as a linear sequence of states. The
-diagram also shows the same trajectory as a timeline: a sequence of
-events. The initial dummy event is represented by an asterisk,
-(*).
+In addition to vertices, \(e_{0}, \ldots, e_{m-1}\), \(G\) has a dummy
+  vertex, \(e_{-1}\), which is usually not shown, and which represents
+the start of the trajectory.
 </p>
 
-    <figure>
-    <img src="TrajectoryAsTimeline.jpg" alt="Fig3" style="width:80%">>
-    <figcaption>Fig.3: Trajectory as Timeline</figcaption>
-    </figure>
+<p class="w3-text-teal">Edges of the Timeline Graph</p>
+Edges are directed from earlier to later events.
 
+For each agent, there is an edge between successive events executed by the agent;
+the edge is labeled with the state of the agent between the events.
 
-<h1 class="w3-text-teal">Timelines of Agents and Variables</h1>
-As we see in the above example, the timeline of a system can be
-represented by a linear graph in which vertices are events, and edges
-are labeled with the system states between events. Next, we show the
-how to convert such a system timeline \(ST\) to  an equivalent representation
-as a labeled directed graph \(G\)
-containing a separate timeline for for each agent and for each shared
-variable. The timelines of agents and shared variables are represented
-by straight lines, usually horizontal, with time increasing from left
-to right. 
+Likewise, for each shared variable, there is an edge between successive events in which the
+variable is modified; the edge is labeled with the value of the
+variable between the events.
 
-<h2 style="color:red;">Example
-</h2>
-In the following example, the system consists of agents \(A, B, C, D\)
-and shared variables \(v, w, x\). The system timeline has events \(1,
-2, \ldots, 9, 10\). The diagram shows which agents execute which
-events, which variables are modified and which are read during each
-event. All edges on each horizontal line are directed towards
-increasing order of time, i.e., from left to right; the arrows showing
-edge directions are not shown so as not to crowd the diagram.
 
 <p>
-For example, agent \(A\) executes event \(1\); in this event \(A\) writes and
-possibly reads shared variable \(w\), shown by the edge directed from
-\(A\)'s timeline to the timeline of shared variable \(w\).
-This event changes the states of agent \(A\) and shared variable \(w\), and
-leaves the states of all other agents and variables unchanged.
+If a shared variable \(v\) is read, but not modified, in event
+\(e_{j}\), and the earliest event after \(e_{j}\) that modifies \(v\) is \(e_{post}\), then
+there is an edge from \(e_{j}\) to \(e_{post}\). Likewise, if 
+\(e_{pre}\) is the latest event before \(e_{j}\) that modifies \(v\), then
+there is an edge from \(e_{pre}\) to \(e_{j}\).
+Both these edges are labeled
+with the value of \(v\) in event \(e_{i}\). This is \(v\)'s value
+between \(e_{pre}\) and \(e_{post}\).
+
+
+
+<p class="w3-text-teal">Convention</p>
+By convention later events are shown towards the right.
+The timeline of each agent and each shared variable is shown
+as a horizontal line. A vertex is shown as an ellipse, rather than a
+point, to accommodate multiple incoming and outgoing edges and
+horizontal lines for each agent and each vertex.
 
 <p>
-Here's another example: agent \(B\) executes event \(4\); in this event \(B\) writes and
-possibly reads shared variable \(v\), and also reads shared variable \(w\).
-This event changes the states of agent \(B\) and shared variable \(v\), and
-leaves the states of all other agents and variables unchanged.
+
+
+<h2 style="color:red;">Example</h2>
 
 <figure>
-    <img src="AgentVariableTimeline.jpg" alt="Fig4" style="width:100%">
-    <figcaption>Fig.4: Timeline of Agents and Shared Variables</figcaption>
+    <img src="AgentTimeline.jpg" alt="Fig2" style="width:100%">
+    <figcaption>Fig.2: A Timeline</figcaption>
 </figure>
 
-<h3 class="w3-text-teal">Initial States of Agents and Variables</h3>
-<p>
-Each agent and variable timeline in \(G\) starts with a dummy event.
-The dummy event that starts the timeline, i.e., at the left end of
-each timeline, is not shown in the example.  The edge in an agent's
-timeline from this initial event is labeled with the initial state of
-the agent.  Likewise, the edge in a shared variable's timeline from
-this initial event is labeled with the initial value of the variable
-in the system timeline \(ST\).
 
+<p style="color:red;">Example agent and shared variable timelines</p>
+The figure above shows a timeline for a trajectory of a system
+consisting of agents \(A, B, C\), shared variables \(v, w\).  and
+events \(0, \ldots, 5\).
 
-<h3 class="w3-text-teal">Vertices in Timelines of Agents and Variables</h3>
+Edges dealing with agents are shown in red, and those
+labeled with shared variables in blue.
 
-<i>Vertices in Agent Timelines</i>:
-An event \(e\) is represented by a vertex in the timeline of the agent
-\(A\) to
-which \(e\) belongs;  \(e\) does not appear in the timelines of
-other agents. An event is labeled with the action that caused the
-state transition. In the example diagram, events are numbered in
-increasing order of appearance in the system timeline, but events
-aren't labeled.
+The events in this example are as follows:
+
+<ul>
+  <li>
+  Event 0: \(B\) modifies \(w\).
+  </li>
+  <li>
+  Event 1: \(A\) modifies \(v\).
+  </li>
+  <li>
+  Event 2: \(A\) modifies \(v\).
+  </li>
+  <li>
+  Event 3: \(A\) reads \(w\).
+  </li>
+  <li>
+  Event 4: \(B\) reads \(w\) modifies \(v\).
+  </li>
+  <li>
+  Event 5: \(C\) modifies  \(w\).
+  </li>
+</ul>
 </p>
 
-<i>Vertices in Shared Variable Timelines</i>:
-An event \(e\) belonging to agent \(A\) is represented by a vertex in the
-timeline of a shared variable \(v\) only if \(A\) writes \(v\) during
-the event. If \(A\) reads, but does not write \(v\) during the event, then the event
-does not appear in \(v\)'s timeline.
+
+<!------------------------------------------------------->
+<h4 class="w3-text-teal">An Event is Specified by the Labels of its Incident
+Edges</h4>
+The state after execution of an event \(e\) by an agent \(A\) depends
+only on the states of \(A\) and the variables that \(A\) references in
+the event. This state is independent of agents other than \(A\), and
+is independent of variables that \(A\) does not reference in \(e\).
 </p>
 
-<h3 class="w3-text-teal">Edges in Timelines of Agents and Variables</h3>
-
-<i>Edges within Timelines</i> :
-There exists an edge from an event \(e\) to an event \(e'\) in an
-agent \(A\)'s timeline if and only if \(e'\) is the event that immediately
-follows \(e\) in the sequence of events belonging to \(A\) in the
-system timeline. The edge is labeled with \(A\)'s state after event
-\(e\) and before event \(e'\). These edges are drawn perpendicular to
-the agent and variable timelines to indicate that the events are
-instantaneous. 
-
 <p>
-Similarly, there exists an edge from an event \(e\) to an event \(e'\) in a
-variable \(v\)'s timeline if and only if \(e'\) is the event that
-immediately follows
-\(e\) in the sequence of events that write variable \(v\) in the
-system timeline. The edge is labeled with \(v\)'s value after event
-\(e\) and before event \(e'\).
+The \(i\)-th event is defined as \(s_{i} \stackrel{a_{i}}{\rightarrow}
+s_{i+1}\) where \(s_{i}\) and \(s_{i+1}\) are system states.
+A system state is a tuple of the states of all agents and shared variables.
+If the \(i\)-th event is executed by agent \(A\) then the event
+can be specified by \(s^{A}_{i} \stackrel{a_{i}}{\rightarrow}
+s^{A}_{i+1}\) where \(s^{A}_{i}\) is only that part of system-state
+tuple, \(s_{i}\), that deals
+with the event. This part of the tuple consists only of \(A\)'s state
+and the values of variables referenced in the
+event. \(s^{A}_{i+1}\) is defined in the same way.
 
-<p>
-<i>Edges from Agent Timelines to Variable
-Timelines</i> : 
-There exists an edge from the vertex representing an event \(e\) on an
-agent \(A\)'s timeline to the vertex representing <i>the same event</i> \(e\) on a
-shared variable \(v\)'s timeline. This edge indicates that \(A\)
-writes, and possibly reads, 
-\(v\) during event \(e\). The edge is labeled with the value that
-\(A\) writes into \(v\).
+<figure>
+    <img src="EventSpecifiedByIncidentEdges.jpg" alt="Fig3" style="width:100%">
+    <figcaption>Fig.3: An Event is Specified by its Incident Edges</figcaption>
+</figure>
 
-<p>
-<i>Edges from Variable Timelines to Agent
-Timelines </i> :
-There exists an edge from the vertex representing an event \(e\) on
-shared variable \(v\)'s timeline to the vertex representing a different event
-\(e'\) on agent \(A\)'s timeline if and only if (1) \(A\) reads, but does
-not write, \(v\)
-during event \(e'\), and (2) \(e\) is the most recent event prior to \(e'\) that
-writes \(v\). The edge is labeled with the value of \(v\) that is read
-by \(A\) during the event.
+\(s^{A}_{i}\) is determined by the labels of the input edges of
+the event \(e_{i}\) and \(s^{A}_{i+1}\) is determined by the labels of
+the output edges of the event.
 
-
+<!------------------------------------------------------->
 <h2 class="w3-text-teal">System State at an Instant</h2>
-The system state at an instant in time is represented by a line
-through the timeline diagrams of agents and variables corresponding to
-that instant. An point \(T\) in a timeline is represented by a vertical line
+ A point \(T\) in a timeline is represented by a vertical line
 corresponding to that point.
+The system state at \(T\) is a tuple consisting of the states of agents and
+shared variables at \(T\).
+The state of an agent at \(T\) is the label of the edge, on the
+agent's timeline, that is cut by the vertical line, \(T\).
+Similarly, the value of a shared variable at \(T\) is the label of the edge, on the
+variable's timeline, that is cut by the vertical line, \(T\).
+<p>
+Thus, the state of the system at \(T\) can be obtained from the edges of the
+timelime that are cut by the the vertical line, \(T\).
+</p>
 
 <figure>
-    <img src="TimelineStateAtInstant.jpg" alt="Fig5" style="width:100%">
-    <figcaption>Fig.5: System State at an Instant shown on Timeline</figcaption>
+    <img src="SystemStateAtT.jpg" alt="Fig4" style="width:100%">
+    <figcaption>Fig.4: System State at an Instant shown on Timeline</figcaption>
 </figure>
 
-<p>
-In the figure, the green line represents a point \(T\) in the system
-timeline. The state of each agent and each shared variable is the
-state of the corresponding edge that is cut by the green line. For
-example, the state of agent \(C\) at \(T\) is the label of the edge
-after event \(5\) and before event \(7\) on \(C\)'s timeline.
-</p>
-
-<p>
-The edge \(5, 7\) that is cut by the green line tells us that a value
-written for variable \(x\) before \(T\) will be read by agent \(C\)
-after \(T\).
-</p>
-
-<h3 class="w3-text-teal">Equivalence of System and Graph Timelines</h3>
-We showed how to determine a graph with a separate timeline for each
-agent and shared variable from the system timeline which is a sequence
-of state transitions. We can obtain the system timeline from the graph
-by determining the system (or "global") state at each point. In
-essence, we move the green vertical line from left to right (the initial point to
-later points) and determine the system state at each point.
-
-
-
+We can obtain the sequence of system states in a trajectory from the
+timeline diagram by determining the states for different values of \(T\).
 
   <footer id="myFooter">
 
