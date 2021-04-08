@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>AverageOfSensors</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new4 {
+  border: 5px solid blue;
+}
+/* Thin blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+
+</style>
+
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+  
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+
+  <h3 class="w3-bar-item"><b>Section: Examples of Concurrent Systems</h3>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="AverageOfSensors.html">Example: Average of Sensor Readings</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="AverageOfSensorsExample.html">Examples</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="AverageOfSensorsSelfTest.html">Self Tests</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="AverageOfSensorsExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="AverageOfSensorsExplorations.html">Explorations</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_5_2/FLightFormation.html">Next: Flight Formation</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Module_006/RunningExample.html">Previous:
+  Example: Earliest Meeting Time</a>
+
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+    
+    <h1 class="w3-text-teal">Example: Average of Sensor Values</h1>
+
+    <p>
+    
+    This module describes a concurrent system in
+    which a collection of agents, each with access to two sensor
+    readings, computes the average sensor reading.
+    <p>
+
+    <h2 class="w3-text-teal">Problem Description</h2>
+    
+    <p>
+    We are given a connected undirected graph in which each vertex represents a
+    sensor and each edge represents an agent. Sensor \(j\) has a
+    value \(t_{j}\). Initially the value of \(t_{j}\) is \(t_{j}^{0}\) where \(t_{j}^{0}\)
+    is a measurement made by sensor \(j\). The specification of the
+    algorithm is that the computation must terminate, and at termination
+    each sensor value must approximately equal the average of all the
+    sensor reading.
+
+    <p class="w3-text-teal">Specification</p>
+    
+    We are given a positive constant \(\epsilon\) which determines the
+    accuracy of the result.
+    Let \(avg(X)\) be the average of the elements of \(X\). The
+    specification is that at termination, the following predicates
+    must hold.
+</p>
+    <ol>
+      <li>
+      <p>
+      \(
+      avg(t) = avg(t^{0})
+      \)
+      </p>
+      </li>
+
+      <li>
+      <p>
+      \(t_{i}\) and \(t_{j}\) are sufficiently close for all edges
+      \(i,j\):
+      </p>
+      <p>
+      \(
+      \forall \; \textrm{edges} \; (i, j): \; |t_{i} - t_{j}| <
+      \epsilon
+      \)
+      </p>
+      </li>
+</ol>
+</p>
+
+<h3 class="w3-text-teal">Agent Steps</h3>
+The shared variables of the system are the sensor readings. The agent
+corresponding to an edge \((i, j)\), executes the following guarded
+command.
+<p>
+\(
+\textbf{if} \; |t_{i} - t_{j}| \geq \epsilon \; \textbf{then} \;
+t_{i} = t_{j} = (t_{i} + t_{j})/2.0
+\)
+</p>
+
+<p>
+In this example, agents have no local variables; agents have no
+state.
+The state of the system is given by the values of the shared
+variables.
+Let \(t\) be the vector whose \(j\)-th element is \(t_{j}\). Then the
+system state is \(t\).
+The timeline diagram consists of lines for each shared
+variable.
+
+<h3 class="w3-text-teal">Proof of Correctness</h3>
+The proof of correctness of a loop hinges on finding an invariant and
+a variant function.
+We use a <a href="../Module_004/LoopTermination.html">variant
+function</a> to prove that execution of a loop terminates.
+At termination, we use an
+<a href="../Module_003/Safety.html">invariant</a> coupled with all
+guards being false to prove the desired property.
+
+You can find several examples of invariants and
+variant functions. Here is one example.
+
+<p>
+The proof of the following invariant is
+straightforward.
+
+<p class="w3-text-teal">Invariant</p>
+
+      <p>
+      \(
+      avg(t) = avg(t^{0})
+      \)
+</p>
+
+
+
+<p class="w3-text-teal">Variant Function</p>
+<p>
+A variant function \(f\) is:
+
+<p>
+\(f \; = \; \sum_{j} t_{j}^{2} /2 \)
+</p>
+
+<p>You can easily
+prove that the execution of a command with a true guard reduces \(f\)
+by at least \(\epsilon^{2}/2\) which is a positive constant. Induction on the values of \(f\)
+terminates because each step reduces \(f\) by a positive constant, and
+\(f\) is bounded below.
+
+ 
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+    </footer>
+
+    <!-- END MAIN -->
+
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
