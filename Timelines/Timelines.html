@@ -44,7 +44,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   Algorithms</h3>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="PropertiesOfTimelines.html">The Timeline Theorem</a>
+  href="PropertiesOfTimelines.html">Properties of Timelines</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
   href="PropertiesOfTimelinesExamples.html">Examples</a>
@@ -103,7 +103,7 @@ s_{0} \stackrel{a_{0}}{\rightarrow} s_{1}
     An example of such a timeline is shown below.
     
     <figure>
-    <img src="SwitchingEventsOneAndZero_0.jpg" alt="Fig1" style="width:120%">
+    <img src="SwitchingEventsOneAndZero_0.jpg" alt="Fig1" style="width:80%">
     <figcaption>Fig.1: Timeline with events 0 and 1 in order</figcaption>
     </figure>
     
@@ -144,7 +144,7 @@ s_{0} \stackrel{a_{1}}{\rightarrow} s'_{1}
     shown in the figure below.
     
     <figure>
-    <img src="SwitchingEventsOneAndZero_1.jpg" alt="Fig2" style="width:120%">
+    <img src="SwitchingEventsOneAndZero_1.jpg" alt="Fig2" style="width:80%">
     <figcaption>Fig.2: Timeline when order of events 0 and 1 are switched</figcaption>
     </figure>
 
@@ -205,7 +205,7 @@ s_{0} \stackrel{a_{1}}{\rightarrow} s'_{1}
     shown in the figure below.
     
     <figure>
-    <img src="SwitchingEventsOneAndZeroExample2.jpg" alt="Fig3" style="width:120%">
+    <img src="SwitchingEventsOneAndZeroExample2.jpg" alt="Fig3" style="width:80%">
     <figcaption>Fig.3: Example 2 - Timelines when order of events 0 and 1 are switched</figcaption>
 </figure>
 
@@ -328,7 +328,6 @@ All permutations of the events in \(T\), where \(e_{i}\) appears before
 trajectories from \(s\) to \(s'\).
 
 
-
 <h2 style="color:red;">Example</h2>
 The figure below shows a timeline graph, \(G\).
 Sequences \([e_{0}, e_{1}, e_{2 }, e_{3}, e_{4}, e_{5}]\) and 
@@ -342,7 +341,7 @@ trajectories have the same timeline graph.
 
 
 <figure>
-    <img src="SwitchingOrdersExample3_1.jpg" alt="Fig3" style="width:120%">
+    <img src="SwitchingOrdersExample3_1.jpg" alt="Fig3" style="width:80%">
     <figcaption>Fig.3: Example 3 - Graphs with Permutations of Actions</figcaption>
 </figure>
 
@@ -350,9 +349,72 @@ The following figure shows the same graph with events appearing from
 left to right in the order of the sequence
 \([e_{1}, e_{0}, e_{2 }, e_{4}, e_{3}, e_{5}]\).
 <figure>
-    <img src="SwitchingOrdersExample3_2.jpg" alt="Fig3" style="width:120%">
+    <img src="SwitchingOrdersExample3_2.jpg" alt="Fig3" style="width:80%">
     <figcaption>Fig.3: Example 3 - Graphs with Different Ordering of Vertices</figcaption>
 </figure>
+
+
+<h2 class="w3-text-teal">Valid Cuts in Timelines</h2>
+Let \(G\) be the timeline graph corresponding to a system trajectory
+\(T\). Let the sequence of events of \(T\) be \([e_{0}, \ldots ,
+e_{m-1}]\). A subset of the events is called a <i>valid cut</i>
+of the timeline graph exactly when every edge to an event in the
+subset is from an event in the subset.
+
+<p>
+The figure below shows a valid cut in a timeline graph. The events in
+the subset that forms the valid cut are colored in black while events
+outside are white. As you can see all edges directed towards black
+events are from black events. There may, however, also be edges directed
+from black events to white events. 
+
+<figure>
+    <img src="ValidCut.jpg" alt="Fig5" style="width:80%">
+    <figcaption>Fig.5: A Valid Cut in a Timeline Graph</figcaption>
+</figure>
+
+
+<p class="w3-text-teal">The boundary of a valid cut</p>
+A valid cut is also defined by its boundary which are points on
+each agent and each shared-variable timeline such that all events in
+the cut are before the boundary and all events outside the cut are
+after the boundary.
+
+
+<figure>
+    <img src="BoundaryOfValidCut.jpg" alt="Fig6" style="width:80%">
+    <figcaption>Fig.6: The Boundary of a Valid Cut</figcaption>
+</figure>
+
+<p>
+In the figure, above, the points of the boundary are shown as yellow
+circles. You can see that events in the cut - black events - are
+before (i.e. to the left of) the boundary and events outside the cut
+are after the boundary.
+
+<p class="w3-text-teal">The system state associated with a valid
+cut</p>
+<p>
+Recall that a system or global state is a tuple
+with an element for each agent state and an element for the value of
+each shared variable. Associated with a valid cut is a system state
+defined by the state of each agent at the boundary and the value of
+each shared variable at the boundary. Thus, the state is given by the
+labels of the edges along the boundary.
+
+<h2 class="w3-text-teal">The Valid-Cut Theorem</h2>
+Let \(G\) be the timeline graph of a trajectory \(T\). Let \(s\) be the state
+associated with a valid cut of \(G\). Then there exists a trajectory
+that (1) starts in the state that \(T\) starts in, (2) then visits state
+\(s\), and (3) ends in the state that \(T\) ends in.
+
+
+<p class="w3-text-teal">Proof</p>
+The proof follows directly from the <i>corollary: Permuting events in
+a trajectory</i>. The corollary says that there exists a trajectory,
+which is a  permutation of the events in \(T\) where all events in the
+valid cut appear before events outside the cut.
+
 
   <footer id="myFooter">
 
@@ -362,10 +424,7 @@ left to right in the order of the sequence
       Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
     </div>
   </footer>
-
-
       
-
 
 <!-- END MAIN -->
 </div>
