@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>PropertiesOfGlobalSnapshots</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PropertiesOfGlobalSnapshots.html">Properties of Global Snapshots</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PropertiesOfGlobalSnapshotsExample.html">Examples</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PropertiesOfGlobalSnapshotsSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PropertiesOfGlobalSnapshotsExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PropertiesOfGlobalSnapshots.html">Explorations</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../TerminationDetection/TerminationDetection.html">
+  Next: Termination Detection</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../GlobalSnapshots/GlobalSnapshots.html">Previous:
+  Global Snapshots
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Properties of Global Snapshots</h1><p>
+
+    This module describes a valuable property of the global snapshot
+    recorded by the global snapshot algorithm.
+
+    From the
+    <a href="../Timelines/Timelines.html"><i>Valid Cut
+    Theorem</i> </a>
+    and the
+    <a href="../GlobalSnapshots/GlobalSnapshots.html"><i>Global
+    Snapshot Algorithm</i> </a>,
+    we have the following result.
+
+    <p>
+    Let \(s_{init}\) and \(s_{fini}\) be the states of the system when
+    the global snapshot algorithm starts and finishes,
+    respectively. Let \(s_{snap}\) be the global snapshot recorded by
+    the algorithm. Then there exists a system trajectory that starts
+    in \(s_{init}\), then visits \(s_{snap}\), and then visits
+    \(s_{fini}\).
+
+    <p>
+    This result is depicted in the following diagram. The global state
+    \(s_{init}\) is the state at a vertical timeline at the instant at
+    which the snapshot algorithm starts. Likewise, 
+    The global state
+    \(s_{fini}\) is the state at a vertical timeline at the instant at
+    which the snapshot algorithm finishes.
+    And, the snapshot state \(s_{snap}\) is the state at the boundary
+    of the valid cut.
+    The diagram shows a trajectory from \(s_{init}\) to \(s_{fini}\)
+    through \(s_{snap}\).
+
+    
+    <figure>
+    <img src="PropertiesOfGlobalSnapshots_1.jpg" alt="Fig1" style="width:80%">
+    <figcaption>Fig.1: Trajectory from start to finish through snapshot</figcaption>
+</figure>
+
+    <h3 class="w3-text-teal">Theorem: Stable States and Snapshots</h3>
+    Let \(P\) be a
+    <a href = "../Safety/Safety.html">stable predicate of a system,
+    i.e. \(P \rightarrow P\).</a>
+
+    <p>
+    If \(P\) holds in \(s_{init}\) --- the state in
+    which the snapshot algorithm starts --- then \(P\) also holds in the
+    snapshot state, \(s_{snap}\).
+    <p>
+    <p>
+    If \(\neg P\) holds in \(s_{fini}\) --- the state in
+    which the snapshot algorithm ends --- then \(\neg P\) also holds in the
+snapshot state, \(s_{snap}\).
+
+<p class="w3-text-teal">Proof</p>
+If \(P\) holds in \(s_{init}\) then it holds in all states reachable
+from \(s_{init}\) including \(s_{snap}\). Therefore, the first part of
+the theorem follows.
+<p>
+If \(\neg P\) holds in \(s_{fini}\) then \(\neg P\) holds in all
+states that can reach
+\(s_{fini}\) including \(s_{snap}\). Therefore, the second part of
+the theorem follows.
+
+<h4 class="w3-text-teal">
+Stability and the beginning and end of the snapshot algorithm</h4>
+Note that the two parts of the theorem deal with different points in
+the snapshot algorithm. If the algorithm <i>starts</i> with \(P\) holding
+then the snapshot determines that \(P\) holds.
+If the algorithm <i>ends</i> with \(P\) not holding
+then the snapshot determines that \(P\) does not hold.
+<p>
+Equivalently: If \(P\) holds in the
+snapshot state then \(P\) holds in \(s_{fini}\). 
+If \(\neg P\) holds in the
+snapshot state then \(\neg P\) holds in \(s_{init}\).
+
+<p>
+What happens if \(P\) starts to hold while the snapshot algorithm is
+in progress? In this case \(\neg P\) holds when the algorithm starts
+but \(P\) holds when the algorithm finishes. We don't know whether
+\(P\) holds, or does not hold, in the snapshot state.
+
+<h3 class="w3-text-teal">Termination Detection</h3>
+Termination of a computation is stable: once a computation has
+terminated it remains terminated. So, one way of detecting termination
+of computation in a distributed system is to take snapshots repeatedly
+until a snapshot state shows that computation has terminated in that
+state.
+
+<h3  style="color:red;">Example</h3>
+The
+<a href="EarliestMeetingTime/EarliestMeetingTime.html">earliest meeting time system consists of a network of agents</a>. We
+can detect that the system has ceased computation by repeatedly taking
+global snapshots of the system. If a snapshot shows that the guards of
+all guarded commands are False then the computation has terminated.
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+

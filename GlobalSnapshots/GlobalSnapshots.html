@@ -59,8 +59,8 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   href="GlobalSnapshots.html">Explorations</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../TerminationDetection/TerminationDetection.html">
-  Next: Termination Detection</a> 
+  href="../PropertiesOfGlobalSnapshots/PropertiesOfGlobalSnapshots.html">
+  Next: Properties of Global Snapshots</a> 
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="../Timelines/Timelines.html">Previous:
@@ -113,11 +113,17 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 
     <p>
     Let's look at a simpler problem: <i>Develop an algorithm by which
-    agents  determine the state corresponding to a valid cut.</i>
-
+    agents determine the global state corresponding to a valid cut.</i>
+    
     
 
-    <h3 class="w3-text-teal">An Algorithm</h3>
+    <h3 class="w3-text-teal">A Global Snapshot Algorithm</h3>
+    <p class="w3-text-teal">Algorithm specification</p>
+    The algorithm must terminate. At termination the recorded
+    states of agents and shared variables must be a global snapshot
+    corresponding to a valid cut of the timeline graph.
+
+    <p>
     Associated with each agent \(a\) is a Boolean variable, \(a_{r}\),
     which is False before the agent records its state and is True
     afterwards. Likewise, we associate 
@@ -218,6 +224,26 @@ of a valid cut. Thus the recorded states of agents and shared
 variables correspond to the global state along a valid cut.
 
 
+<h3 class="w3-text-teal">Proof of Correctness</h3>
+Next we prove that the algorithm is correct. We need to prove that the
+set of agent and shared-variable recorded states --- i.e., the set of
+black dots --- forms a boundary of a valid cut. Equivalently, we need
+to prove that there is no edge from outside the cut to inside the
+cut.
+
+<p>
+From case 2 of the algorithm, after an agent records its state it records the
+values of variables that it references before it modifies these
+values.
+Therefore, there is no edge from a point after an agent records its
+state to a point before a variable's state is recorded.
+
+<p>
+From case 1 of the algorithm, an agent that references a
+recorded variable, records the agent's own state before it modifies
+the variable.
+Therefore, there is no edge from a point after a variable is
+recorded to a point before an agent is recorded.
 
 
   <footer id="myFooter">

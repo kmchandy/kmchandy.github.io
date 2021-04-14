@@ -355,17 +355,17 @@ left to right in the order of the sequence
 
 
 <h2 class="w3-text-teal">Valid Cuts in Timelines</h2>
-Let \(G\) be the timeline graph corresponding to a system trajectory
-\(T\). Let the sequence of events of \(T\) be \([e_{0}, \ldots ,
-e_{m-1}]\). A subset of the events is called a <i>valid cut</i>
-of the timeline graph exactly when every edge to an event in the
-subset is from an event in the subset.
+A subset of the events is called a <i>valid cut</i>
+of the timeline graph exactly when all paths to events in the
+subset are from events in the subset. Equivalently, a valid cut is a
+subset of events such that there is no edge from an event outside the
+cut to an event inside the cut.
 
 <p>
 The figure below shows a valid cut in a timeline graph. The events in
 the subset that forms the valid cut are colored in black while events
-outside are white. As you can see all edges directed towards black
-events are from black events. There may, however, also be edges directed
+outside are white. As you can see all paths to black
+events are from black events. There may, however, also be paths 
 from black events to white events. 
 
 <figure>
@@ -373,6 +373,16 @@ from black events to white events.
     <figcaption>Fig.5: A Valid Cut in a Timeline Graph</figcaption>
 </figure>
 
+<p>
+The next figure below shows a set of events that is not a valid
+cut. The events in the subset are shown in black and events
+outside in white. The subset is not a valid cut because there is an
+edge from an event outside the subset to an event inside the subset.
+
+<figure>
+    <img src="NotValidCut.jpg" alt="Fig6" style="width:80%">
+    <figcaption>Fig.6: NOT a Valid Cut in a Timeline Graph</figcaption>
+</figure>
 
 <p class="w3-text-teal">The boundary of a valid cut</p>
 A valid cut is also defined by its boundary which are points on
@@ -382,8 +392,8 @@ after the boundary.
 
 
 <figure>
-    <img src="BoundaryOfValidCut.jpg" alt="Fig6" style="width:80%">
-    <figcaption>Fig.6: The Boundary of a Valid Cut</figcaption>
+    <img src="BoundaryOfValidCut.jpg" alt="Fig7" style="width:80%">
+    <figcaption>Fig.7: The Boundary of a Valid Cut</figcaption>
 </figure>
 
 <p>
