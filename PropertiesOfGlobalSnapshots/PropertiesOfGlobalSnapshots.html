@@ -178,7 +178,20 @@ The
 <a href="EarliestMeetingTime/EarliestMeetingTime.html">earliest meeting time system consists of a network of agents</a>. We
 can detect that the system has ceased computation by repeatedly taking
 global snapshots of the system. If a snapshot shows that the guards of
-all guarded commands are False then the computation has terminated.
+all guarded commands are False then the computation has
+terminated. For example, one of the guarded commands is:
+\(
+\textbf{if} \; r_{i, j} \neq t_{i} \; \textbf{then} \; r_{i, j} =
+t_{i}
+\) 
+Each agent \(j\) records \(t_{j}\) and \(r_{i,j}\), all \(i\) in agent
+\(j\)'s local snapshot. All the local snapshots are gathered together
+(by an algorithm which is described later) to form a global
+snapshot. Then the value of each of the guards in the global snapshot
+is checked; if all guards are False then the computation has
+terminated. If, however, at least one of the guards is True then the
+computation may not have terminated; in this case, a new global
+snapshot is taken.
 
 
   <footer id="myFooter">
