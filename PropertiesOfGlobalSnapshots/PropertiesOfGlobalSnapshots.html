@@ -59,8 +59,8 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   href="PropertiesOfGlobalSnapshots.html">Explorations</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../TerminationDetection/TerminationDetection.html">
-  Next: Termination Detection</a> 
+  href="../LogicalClocks/LogicalClocks.html">
+  Next: Logical Clocks</a> 
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="../GlobalSnapshots/GlobalSnapshots.html">Previous:
@@ -124,24 +124,21 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 
     <h3 class="w3-text-teal">Theorem: Stable States and Snapshots</h3>
     Let \(P\) be a
-    <a href = "../Safety/Safety.html">stable predicate of a system,
-    i.e. \(P \rightarrow P\).</a>
+    <a href = "../Safety/Safety.html">stable predicate of a system</a>,
+    i.e. \(P \rightarrow P\). Let \(s_{init}\) and \(s_{fini}\) be the
+    states in which the global snapshot algorithm starts and finishes,
+    and let \(s_{snap}\) be the global snapshot obtained by the
+    algorithm. 
 
     <p>
-    If \(P\) holds in \(s_{init}\) --- the state in
-    which the snapshot algorithm starts --- then \(P\) also holds in the
-    snapshot state, \(s_{snap}\).
-    <p>
-    <p>
-    If \(\neg P\) holds in \(s_{fini}\) --- the state in
-    which the snapshot algorithm ends --- then \(\neg P\) also holds in the
-snapshot state, \(s_{snap}\).
+    If \(P\) holds in \(s_{init}\) then \(P\) holds in  \(s_{snap}\).
+    If \(\neg P\) holds in \(s_{fini}\) then \(\neg P\) holds in \(s_{snap}\).
 
 <p class="w3-text-teal">Proof</p>
 If \(P\) holds in \(s_{init}\) then it holds in all states reachable
 from \(s_{init}\) including \(s_{snap}\). Therefore, the first part of
 the theorem follows.
-<p>
+
 If \(\neg P\) holds in \(s_{fini}\) then \(\neg P\) holds in all
 states that can reach
 \(s_{fini}\) including \(s_{snap}\). Therefore, the second part of
@@ -163,8 +160,8 @@ snapshot state then \(\neg P\) holds in \(s_{init}\).
 <p>
 What happens if \(P\) starts to hold while the snapshot algorithm is
 in progress? In this case \(\neg P\) holds when the algorithm starts
-but \(P\) holds when the algorithm finishes. We don't know whether
-\(P\) holds, or does not hold, in the snapshot state.
+but \(P\) holds when the algorithm finishes. In this case we don't know whether
+\(P\) holds or \(\neg P\) holds in the snapshot state.
 
 <h3 class="w3-text-teal">Termination Detection</h3>
 Termination of a computation is stable: once a computation has
@@ -180,18 +177,32 @@ can detect that the system has ceased computation by repeatedly taking
 global snapshots of the system. If a snapshot shows that the guards of
 all guarded commands are False then the computation has
 terminated. For example, one of the guarded commands is:
+<p>
 \(
 \textbf{if} \; r_{i, j} \neq t_{i} \; \textbf{then} \; r_{i, j} =
 t_{i}
-\) 
-Each agent \(j\) records \(t_{j}\) and \(r_{i,j}\), all \(i\) in agent
+\)
+<p>
+This command copies a shared variable \(t_{i}\) into a local variable
+\(r_{i, j}\) of agent \(j\). The termination detection algorithm
+proceeds as follows.
+<p>
+Each agent \(j\) records \(t_{j}\) and \(r_{i,j}\), all \(i\), in agent
 \(j\)'s local snapshot. All the local snapshots are gathered together
 (by an algorithm which is described later) to form a global
-snapshot. Then the value of each of the guards in the global snapshot
-is checked; if all guards are False then the computation has
+snapshot. The value of each of the guards in the global snapshot
+is checked. If all guards are False then the computation has
 terminated. If, however, at least one of the guards is True then the
 computation may not have terminated; in this case, a new global
-snapshot is taken.
+snapshot is taken later.
+
+
+<h3 class="w3-text-teal">Checkpoints, Rollback and Recovery</h3>
+Global snapshot algorithms are used to checkpoint computations, i.e.,
+to save global states while computations are in progress. Later, if an
+error is detected, the computation is rolled back to the most recent
+checkpoint and restarted from there.
+
 
 
   <footer id="myFooter">
