@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Channels</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Channels.html">Global Snapshots with Channels</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ChannelsExample.html">Examples</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ChannelsSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ChannelsExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Channels.html">Explorations</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Channels/Channels.html">
+  Next: Termination Detection</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../PropertiesOfGlobalSnapshots/PropertiesOfGlobalSnapshots.html">Previous:
+  Properties of Global Snapshots
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Global Snapshots with Channels</h1>
+
+    <h3 class="w3-text-teal">Message-Passing Channels</h3>
+    Message-passing channels are a special kind of shared variable
+    that is often used in distributed systems. We use the abbreviation
+    <i>channels</i> for message-passing channels. The state of a
+    channel is a queue of messages. This queue represents the sequence
+    of messages in transit along the channel.
+
+    <p>
+    The only actions an agent can execute on a channel are to send or
+    receive a message on the channel. Sending a message \(m\) on a
+    channel \(c\) appends \(m\) to the tail of the queue which is the
+    sequence of messages in flight along \(c\). The action can also
+    change the agent's own state.
+
+    <p>
+    The action of receiving a message along a channel is as
+    follows. If the channel is empty then the agent waits for the
+    channel to become nonempty. The agent then receives the message at
+    the head of the channel i.e., it deletes the message at the head
+    of the queue of messages. The agent may also change its state and the
+    next state may depend on the message that it receives.
+
+    <p>
+    We restrict attention to systems where for each channel, exactly
+    one agent sends messages along the channel, and exactly one agent
+    receives messages along the channel.
+
+    <h4 class="w3-text-teal">Agent Diagram with Channels</h4>
+    The agent diagram for a system with channels is a
+    labeled directed graph in which each vertex represents an agent
+    and an edge labeled z from A to C represents a channel called z
+    from agent A to agent Z. Agent A sends messages along channel z
+    and agent C receives messages along the channel.
+
+    <figure>
+    <img src="Channels_2.jpg" alt="Fig1" style="width:80%">
+    <figcaption>Fig.1: Agent Diagram with Message-Passing Channels</figcaption>
+    </figure>
+
+    
+    <h3 class="w3-text-teal">Timeline Diagrams with Channels</h3>
+    Timeline diagrams are simpler when the only shared variables are
+    channels. The diagram has a timeline for each agent, but not for
+    each channel.
+
+    <p>
+    The action of sending a message \(m\) sent along a channel \(c\) by an
+    agent \(A\) at time \(t\) is represented by an event on \(A\)'s
+    timeline at \(t\).
+    Likewise, the action of receiving message \(m\) along channel \(c\) by an
+    agent \(B\) at time \(t'\) is represented by an event on \(B\)'s
+    timeline at \(t'\). Because messages must be sent before they are
+received, \(t < t'\).
+
+<p>Message \(m\) in transit along channel \(c\)
+    from agent \(A\) to agent \(B\) is represented by an edge from the
+    sending event on \(A\)'s timeline to the receiving event on
+\(B\)'s timeline.
+
+<p>
+The figure below shows a timeline diagram with two agents \(A\) and
+\(B\) and 4 messages in transit along a channel \(c\) from \(A\) to
+\(B\). The points at which messages are sent are events (vertices) on
+\(A\)'s timeline. Likewise,   
+the points at which messages are received are events on
+\(B\)'s timeline.
+
+<p>
+Each message is represented by a labeled directed
+edge. For example, message \(m_{0}\) is represented by an edge
+directed from the event that sends the message to the event that
+receives the message, and the edge is labeled with the message and the
+channel. We don't show the label for channel \(c\) in the diagram so
+as not to crowd the diagram.
+<figure>
+    <img src="Channels_1.jpg" alt="Fig2" style="width:80%">
+    <figcaption>Fig.2: A Channel Timeline Diagram</figcaption>
+    </figure>
+
+<p>
+Time \(T\) is represented by a vertical line that crosses the agent
+timelines at \(T\). The messages sent before \(T\) are shown as send events on agent
+\(A\)'s timeline before \(T\), i.e. to the left of line \(T\). These
+messages are \(m_{0}, m_{1}, m_{2}\). The message received
+before \(T\) are shown on agent
+\(B\)'s timeline to the left of line \(T\).
+
+<p>
+The messages in transit
+along the channel at \(T\) are those sent before \(T\) but not
+received before \(T\). The sequence of messages in transit along the
+channel at \(T\) is \([m_{1}, m_{2}]\), and this is the sequence of
+message lines (shown in red) that are cut by the vertical \(T\)-line.
+
+<h3 class="w3-text-teal">The timeline of a channel</h3>
+The timeline of a channel is the sequence of states of a channel in a
+trajectory. Each state is a sequence of messages. The states of a
+channel can be obtained, from the diagram, from the message lines that
+are cut by vertical lines corresponding to different points in the trajectory.
+
+
+<figure>
+    <img src="Channels_3.jpg" alt="Fig3" style="width:80%">
+    <figcaption>Fig.3: Timeline for a channel</figcaption>
+</figure>
+
+In the figure above, initially the channel is empty; this corresponds
+to a line (not shown) at the extreme left of the diagram that crosses no message
+lines. Then the state of the channel becomes \([m_{0}]\), the only
+message in the channel. Then the channel becomes empty again as
+message \(m_{0}\) is received. The next channel state transitions are to
+\([m_{1}]\), \([m_{1}, m_{2}]\), \([m_{2}]\), \([m_{2}, m_{3}]\)and so on.
+
+<h3 class="w3-text-teal">Theorem: Permuting Events in a
+Trajectory</h3>
+This theorem is given in 
+<a href="../Timelines/Timelines.html">the module on timelines</a>, for
+the general case.
+It is repeated here for the special case when shared variables are channels.
+
+<p>
+Let \(G\) be the timeline graph of a trajectory \(T\) which starts in a
+state \(s\) and ends in a state \(s'\) and which has an event sequence
+\([e_{0}, \ldots, e_{m-1}]\).
+Let \(E\) be any permutation of \([e_{0}, \ldots, e_{m-1}]\) that
+satisfies the following condition:
+<p>
+<i>
+\(e_{i}\) appears before  \(e_{j}\) in the permutation if edge
+\((e_{i}, e_{j})\) exists in \(G\).
+</i>
+<p>
+Then, there exists a trajectory with event sequence \(E\), that starts
+in state \(s\) and ends in state \(s'\).
+
+<p class="w3-text-teal">Proof</p>
+The proof is the same as that given in
+<a href="../Timelines/Timelines.html">the module on timelines</a>, for
+the general case.
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+

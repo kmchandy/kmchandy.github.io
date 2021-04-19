@@ -285,7 +285,12 @@ variable \(t_{j}\) is its value.
 
 <h4 class="w3-text-teal">The Timeline</h4>
 An example of a partial timeline, only for agents 0 and 1, is shown in
-the figure below. The timelines for agents are in blue and timelines
+the figure below. The entire timeline --- up to the point at which the
+algorithm terminates --- is not shown. So some edges, which would
+appear in a complete timeline, are not shown here. 
+
+<p>
+The timelines for agents are in blue and timelines
 for shared variables in red. An internal event is the execution of a
 command that only references local variables of an agent, and that
 does not reference shared variables.
@@ -318,7 +323,7 @@ variable \(t_{j}\), and local variables \(r_{i,j}\) and \(w_{j}\), for
 all \(i, j\). Let \(M\) be a tuple, of the same size as \(S\), where
 all the elements of \(M\) are the earliest meeting time \(m\). Let
 \(\emptyset\) be a tuple, of the same size as \(S\), where
-all the elements of \(emptyset\) are \(0\).
+all the elements of \(\emptyset\) are \(0\).
 We compare tuples lexicographically.
 
 <p class="w3-text-teal">Invariant</p>
@@ -333,25 +338,13 @@ The invariant says that no local or shared variable overshoots the
 earliest meeting time \(m\), and they remain nonnegative.
 
 <p class="w3-text-teal">Variant Function</p>
-Recall from the
-<a href="../Module_004/LoopTermination.html"><i>module on proving loop
-termination</i></a>, we can use a variant function \(f\) and an
-invariant \(I\) in the following way. We prove that execution of a
-loop terminates by proving:
-</p>
-<p>
-\(
-\forall K: \quad
-(f=K) \wedge I \wedge (\exists j: g_{j})
-\quad \rightarrow \quad f < K
-\)
 
 <p>
-An example of a variant function is \(M-S\). Its values are tuples of integers, and
-the invariant implies that it is bounded below by \(\emptyset\).
-We leave it to you to prove the above formula with \(f = M - S\).
-It is easy to see that the execution of any command with a true guard increases
-\(S\), and therefore decreases \(M-S\).
+An example of a variant function is \(M-S\). Its values are tuples of
+integers.
+From the invariant, this function is bounded below by
+\(\emptyset\). It is easy to see that the execution of any command
+reduces the value of this function.
 
 
 

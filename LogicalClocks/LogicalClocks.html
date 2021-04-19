@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>LogicalClocks</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="LogicalClocks.html">Logical Clocks</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="LogicalClocksExample.html">Examples</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="LogicalClocksSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="LogicalClocksExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="LogicalClocks.html">Explorations</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Channels/Channels.html">
+  Next: Message-Passing Channels</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../PropertiesOfGlobalSnapshots/PropertiesOfGlobalSnapshots.html">Previous:
+  Properties of Global Snapshots
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Logical Clocks</h1><p>
+
+    Each computer in a distributed system usually has its own clock.
+    The clocks in different computers may drift apart. Nevertheless,
+    clocks are useful. We will use clocks --- without making
+    assumptions about how far apart the clocks may be --- to develop
+    distributed algorithms.  Later, we will discuss algorithms that
+    use NTP (the Network Time Protocol) to prevent clocks of different
+    computers from drifting too far apart.
+
+    <h3 class="w3-text-teal">Global State at t</h3>
+    If all clocks were perfectly synchronized then as we saw in the
+    <a href="Timelines/Timelines.html">module on timelines</a> a global state at
+    time \(t\) is a tuple consisting of each agent's and each shared
+    variable's state at \(t\). In terms of the timeline diagram, with
+    each agent and shared-variable timeline drawn as a horizontal
+    line, the state at \(t\) corresponds to the labels of the timeline
+    edges that are cut by the vertical line corresponding to time \(t\).
+
+    <figure>
+    <img src="LogicalClocks_1.jpg" alt="Fig1" style="width:80%">
+    <figcaption>Fig.1: Global states at instants in time</figcaption>
+    </figure>
+    <p>
+    In the above diagram there are horizontal timelines corresponding
+    to agents \(A\) and \(B\) and shared variables \(v\) and
+    \(w\). There are three vertical lines corresponding to times
+    \(t_{0}\), \(t_{1}\), and \(t_{2}\). The global state at time
+    \(t_{1}\) is given by the labels of the edges cut by the line
+    corresponding to time \(t_{1}\).
+
+    <h3 class="w3-text-teal">Timestamps</h3>
+    We will study classes of algorithms by which agents assign
+    timestamps to each instant on each agent's timeline and each
+    shared variable's timeline.
+    At any time \(t\) the timestamp associated with an agent \(A\)'s timeline
+    at \(t\) may be different from \(t\). Also different agents may
+have different timestamps at the same instant.
+A line through the points on the timelines timestamped \(t\) 
+may be a wavy line. If the timestamps were perfect the line would be
+    straight and vertical.
+
+    <figure>
+    <img src="LogicalClocks_2.jpg" alt="Fig2" style="width:80%">
+    <figcaption>Fig.2: Global state when local clocks are at t</figcaption>
+</figure>
+
+<p>
+In the diagram above, the points at which the timestamps are
+\(t_{1}\) are marked. The points on the timelines for agent \(A\) and
+variable \(v\) at which the timestamp is \(t_{1}\) occur before the 
+points on the timelines for agent \(B\) and
+variable \(w\) at which the timestamp is \(t_{1}\).
+So, we get a curvy line connecting points at which the local
+timestamps are \(t_{1}\) rather than a straight vertical line.
+
+
+<h3 class="w3-text-teal">The Specification of Timestamp Algorithms</h3>
+The timestamps must have the following two properties:
+<ol>
+  <li>
+For all \(t\): The  set of events which occur
+  on timelines before points with timestamp \(t\) is a valid
+  cut. Let the global state corresponding to this cut be \(s_{t}\). 
+  </li>
+  <li>
+  For all \(t\) and \(u\) where \(t \leq u\): there exists a
+  trajectory from \(s_{t}\) to \(s_{u}\). (Note that the trajectory
+  could be empty and \(s_{t}\) could be the same as \(s_{u}\).
+  </li>
+</ol>
+  
+  
+<p>
+    In terms of the diagram, the first requirement is that the wavy
+    line corresponding to a timestamp \(t\) must
+     form the boundary of a valid cut of the timeline diagram. The
+    second requirement is that given two wavy lines corresponding to
+\(t_{1}\) and \(t_{2}\) where \(t_{1} \leq t_{2}\), there must exist a
+trajectory from \(S_{1}\) to \(S_{2}\) where \(S_{j}\) is
+global state corresponding to time \(t_{j}\).
+
+    <figure>
+    <img src="LogicalClocks_3.jpg" alt="Fig3" style="width:80%">
+    <figcaption>Fig.3: Trajectory between global states</figcaption>
+</figure>
+
+
+<h3 class="w3-text-teal">Rules for a Timestamp Algorithm</h3>
+We will prove that the following rules ensure that local clocks
+satisfy the basic requirement. This set of rules is not the only set
+that ensures the basic requirement. We assume that timestamps are
+nonnegative integers.
+
+<p class="w3-text-teal">Rule 1: Timestamps along a timeline do not
+decrease as time increases</p>
+Let \(p\) and \(p'\) be two points on the timeline of the same agent
+or the same shared variable. 
+ Let \(t\) and \(t'\)
+be the timestamps for points \(p\) and \(p'\) respectively. The rule
+is that if \(p'\) occurs later on the timeline than \(p\) does then
+\(
+t \leq t'
+\) 
+<p>
+The figure below illustrates the rule.
+    <figure>
+    <img src="LogicalClocks_4.jpg" alt="Fig4" style="width:80%">
+    <figcaption>Fig.4: Examples of Rule 1</figcaption>
+</figure>
+<p>
+Case 1 in the figure shows an edge of a timeline for an agent or
+shared variable where the timestamp for every point on the timeline is
+the same: 5.
+<p>
+Case 2 shows an edge where the timestamp at the start of the edge is 5
+and the timestamp at the end is 7. The points in between have
+timestamps between 5 and 7.
+The algorithm picks any arbitrary point on the edge to set the
+timestamp to 6. 
+<p>
+Case 3 shows a situation that violates the rule because a later
+timestamp is smaller than an earlier one.
+
+
+<p class="w3-text-teal">Rule 2: Timestamps of timelines to an
+event are synchronized at the event.</p>
+
+<p> Timestamps on the timelines for the agent executing an event
+and for all shared-variables referenced in the event are set to the
+same value immediately before the event.
+
+<p>
+The figure below gives an example of the application of rule 2. This
+figure shows steps taken by an agent \(A\) prior to executing an event
+in which \(A\) references shared variable \(v\). The most recent
+timestamp on the timeline for \(A\) is 5 and for \(v\) is 8. Agent
+\(A\) sets the timestamp immediately before executing the event for
+the timelines for itself and \(v\) to the same value. In this diagram,
+this value is 20. The value could be any number greater than or equal
+to 8. The number can't be less than 8 because that would violate rule
+1. 
+
+<figure>
+    <img src="LogicalClocks_5.jpg" alt="Fig5" style="width:80%">
+    <figcaption>Fig.5: Example of Rule 2</figcaption>
+</figure>
+
+
+
+<p class="w3-text-teal">Rule 3: Timestamps of timelines through an
+event are incremented after the event.</p>
+
+If the timestamps of the agent executing an event and the shared
+variables referenced in an event are \(T\) immediately before the
+event then the timestamps of the agent and shared variables
+immediately after the event are set to \(T + 1\). And, we will assign
+timestamp \(T + 1\) to the event.
+
+<figure>
+    <img src="LogicalClocks_6.jpg" alt="Fig6" style="width:80%">
+    <figcaption>Fig.6: Example of Rule 3</figcaption>
+</figure>
+
+
+
+<h3 class="w3-text-teal">Algorithms that obey the rules
+satisfy the specification</h3>
+We will prove that all paths from an event with timestamp
+\(t\) are to events with timestamp greater than \(t\).
+
+<p>
+From rule 3,
+the edges leaving an event with timestamp \(t\) have timestamps of \(t\). From rule 1,
+the timestamps later on the same edge have timestamps of \(t\) or
+greater. From rules 2 and 3, an event that references a variable with
+timestamp of \(t\) has a timestamp greater than \(t\).
+
+
+<h3>A distributed algorithm to get sequences of global snapshots</h3>
+Use the timestamp algorithm to assign timestampts to every point on
+the agent and shared-variable timelines. The tuple of local agent and
+shared variable states when their timestamps are at \(t\) is a global
+state. There exists a trajectory that visits (in order) the sequence of global
+states recorded when timestamps are \(t_{i}\) for \(t_{i} \leq
+t_{i+1}\).
+
+<p>
+A rollback and recovery algorithm records agent and shared variable
+states periodically where the period is defined in terms of
+timestamps. A state recorded with timestamp \(t\) is discarded when
+all agents and shared variable states have been recorded from a
+timestamp greater than \(t\). If an error is detected then the
+algorithm is restarted from the most recent global snapshot.
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+

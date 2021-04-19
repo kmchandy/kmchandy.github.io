@@ -89,15 +89,20 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 Timelines are acyclic because all edges in its graph are
     directed from earlier times to later times. 
 
+<h3 class="w3-text-teal">Permuting events in a trajectory</h3>
 
-    <h2 style="color:red;">Examples</h2>
+    <p style="color:red;">Example</p>
     
-    <h4 style="color:red;">Labels and Event Order: Example 1</h4>
     Consider the timeline for a trajectory,
     \(
 s_{0} \stackrel{a_{0}}{\rightarrow} s_{1}
 \stackrel{a_{1}}{\rightarrow} s_{2}
     \)
+    <p>
+    The timeline is specified by the sequence of events \([e_{0},
+    e_{1}]\) where \(e_{0}\) is the event \(s_{0}
+    \stackrel{a_{0}}{\rightarrow} s_{1}\) and \(e_{1}\) is the event \(s_{1}
+    \stackrel{a_{1}}{\rightarrow} s_{2}\).
     Consider the case where there are no paths from event \(e_{0}\) to
     event \(e_{1}\), or from \(e_{1}\) to \(e_{0}\), in the graph.
     An example of such a timeline is shown below.
@@ -174,160 +179,54 @@ s'_{2} = (A_{1}, v_{1}, B_{1}, w_{1})
 
 <p>
 We see that \(s_{2} = s'_{2}\). The system states are the same after
-both events 0 and 1, regardless of which event occurred first.
+both events 0 and 1, regardless of which event occurred first. Next,
+we give a theorem that tells us what permutations of events in a
+trajectory are also trajectories.
 
 
-<h3 style="color:red;">Labels and Event Order: Example 2</h3>
-    Consider the timeline for a trajectory,
-    \(
-s_{0} \stackrel{a_{0}}{\rightarrow} s_{1}
-\stackrel{a_{1}}{\rightarrow} s_{2}
-\)
-
-Let \(a_{0}\) be an action by an agent \(A\) which increments a shared
-variable \(v\) by 1 and sets the state of \(A\) to \(v + 2\).
-Let \(a_{1}\) be an action by a different agent \(B\) which sets the
-next value of shared
-variable \(v\) to \(v * 10\) and sets the state of \(B\) to \(v * 100\).
-The system state is a tuple consisting of the states of A, v, B, in that order. The
-initial state is (0, 1, 0).
 
 
-    <p>
-    Now consider the timeline for the trajectory
-    \(
-s_{0} \stackrel{a_{1}}{\rightarrow} s'_{1}
-\stackrel{a_{0}}{\rightarrow} s'_{2}
-    \)
-    in which the order of
-    execution of \(a_{0}\) and \(a_{1}\) are switched. The timelines
-    for both trajectories are
-    shown in the figure below.
-    
-    <figure>
-    <img src="SwitchingEventsOneAndZeroExample2.jpg" alt="Fig3" style="width:80%">
-    <figcaption>Fig.3: Example 2 - Timelines when order of events 0 and 1 are switched</figcaption>
-</figure>
-
-The sequences of system states in both trajectories are shown below.
-
+<h3 class="w3-text-teal">Theorem: Permuting Events in a Trajectory</h3>
+Let \(G\) be the timeline graph of a trajectory \(T\) which starts in a
+state \(s\) and ends in a state \(s'\) and which has an event sequence
+\([e_{0}, \ldots, e_{m-1}]\).
+Let \(E\) be any permutation of \([e_{0}, \ldots, e_{m-1}]\) that
+satisfies the following condition:
 <p>
-\(
-s_{0} = (0, 1, 0) \quad s'_{0} = (0, 1, 0)
-\)
-<br>
-\(
-s_{1} = (3, 2, 0) \quad s'_{1} = (0, 10, 100)
-\)
-<br>
-\(
-s_{2} = (3, 20, 200) \quad s'_{2} = (12, 11, 100)
-\)
-</p>
-
+<i>
+\(e_{i}\) appears before  \(e_{j}\) in the permutation if edge
+\((e_{i}, e_{j})\) exists in \(G\).
+</i>
 <p>
-The graphs are different because the edge labels are different. The
-final states,  \(s_{2}\) and \(s'_{2}\), of the trajectories are also
-different. 
-</p>
-
-<p>
-Why are the graphs for the
-permuted and original sequences of actions the same for example 1 but
-different for example 2? Under what conditions will the timeline
-graphs for a permuted sequences of actions be identical?
-We explore this question next.
-
-
-<h4 class="w3-text-teal">Dependent Actions</h4>
-<p>
-An action is said to <i>reference a variable</i> if it reads or writes the variable.
-<p>
-<i>Two actions of a system are defined to be dependent</i> exactly when (1) both actions
-are executed by the same agent, or (2) either action modifies a
-variable that is referenced by the other. In 
-example 1, actions corresponding to events 0 and 1 are
-not dependent whereas in example 2 they are dependent.
-</p>
-
-
-<h1 class="w3-text-teal">The Timeline Theorem</h1>
-<p>
-System trajectories have identical timeline graphs if:
-<ol>
-  <li>
-  they start in the same state, and
-  </li>
-  <li>
-  have sequences of actions that are permutations of
-  each other, and
-  </li>
-  <li>
-  dependent actions appear in the same order. 
-  </li>
-</ol>
-</p>
-<p>
+Then, there exists a trajectory with event sequence \(E\), that starts
+in state \(s\) and ends in state \(s'\).
 
 <p class="w3-text-teal">Proof</p>
-Let \(
-s_{0} \stackrel{a_{0}}{\rightarrow}, \ldots, 
-\stackrel{a_{m-1}}{\rightarrow} s_{m}
-\) and
-\(
-s'_{0} \stackrel{a'_{0}}{\rightarrow}, \ldots, 
-\stackrel{a'_{m-1}}{\rightarrow} s'_{m}
-\) be trajectories \(T\) and \(T'\) that
-satisfy the conditions of the theorem.  So
-(1) \(s_{0} = s'_{0}\), and (2) \(a_{0}, \ldots, a_{m-1}\) is a permutation of 
-\(a'_{0}, \ldots, a'_{m-1}\) and (3) dependent actions appear in the
-same order in both trajectories. Let \(G\) and \(G'\) be the timeline graphs of \(T\)
-and \(T'\) respectively. We will prove that \(G\) and \(G'\) are identical.
+Let \(G'\) be the timeline graph of a trajectory \(T'\) which starts in a
+state \(s\) and which has an event sequence
+\([e'_{0}, \ldots, e'_{m-1}]\) that is a permutation of the event
+sequence for \(T\) and that satisfies the specified condition. We will
+show by induction on \(j\) that the subgraph of \(G'\) consisting of
+events \([e'_{0}, \ldots, e'_{j}]\), and vertices between them, is
+also a subgraph of \(G\).
 
 <p>
-Let \(G_{n}\) be the timeline graph corresponding to the first \(n\)
-events of \(T\). 
-We will prove by induction on \(n\) that \(G_{n}\) is a subgraph of
-\(G'\). The theorem follows by setting \(n = m\).
-
-The base case is \(n = 0\) with the empty graph \(G_{0}\). The induction
-step is as follows.
+The base case is the empty sequence represented by the initial
+state \(s_{0}\) and event \(e_{-1}\) which is common to both \(G\) and
+\(G'\).
 
 <p>
-For all dependent events \(a_{i}\) and \(a_{n}\), where \(a_{i}\) appears before
-\(a_{n}\) in \(T'\): \(a_{i}\) appears before
-\(a_{n}\) in \(T\), and so \(i < n\). From the induction hypothesis,
-\(G_{n-1}\) is a subgraph of
-\(G'\). From the definitions of edges in timeline graphs, for \(i <
-n\), there is an edge from \(e_{i}\) to \(e_{n}\)
-in \(G_{n}\) exactly when the same edge is in \(G'\). The result
-follows.
+Assume that the theorem holds for some \(j\). From the specified
+condition, all paths to \(e'_{j+1}\) are in the subgraph of \(G'\)
+covering vertices \([e'_{0}, \ldots, e'_{j}]\). From the result in
+<a href="../Agents/Agents.html">the module on agents</a> the output of 
+\(e'_{i}\), for any \(i\), is a function of \(s_{0}\) and the events with paths to 
+\(e'_{i}\). By the induction assumption, these paths are the same in the
+subgraphs for \(G\) and \(G'\) that span vertices in \([e'_{0}, \ldots,
+e'_{j}]\). Therefore the inputs to \(e'_{j+1}\) are the same in both 
+\(G\) and \(G'\). And the result follows.
 
-
-
-<h4 class="w3-text-teal">Dependent Actions and Edges between Events</h4>
-<i>Theorem</i>: Let \(G\) be the timeline graph for a trajectory 
-\(
-s_{0} \stackrel{a_{0}}{\rightarrow}, \ldots, 
-\stackrel{a_{m-1}}{\rightarrow} s_{m}
-\)
-and let event \(e_{i}\) be the execution of action \(a_{i}\). If
-actions \(a_{i}\) and \(a_{j}\), for \(j > i\) are dependent then
-there exists a path from \(e_{i}\) to  \(e_{j}\) in \(G\).
 <p>
-The proof follows directly from the definitions of the edges in a
-timeline graph.
-
-
-<h4 class="w3-text-teal">Corollary: Permuting Events in a Trajectory</h4>
-Let \(G\) be the timeline graph of a trajectory \(T\) which starts in a
-state \(s\) and ends in a state \(s'\).
-
-All permutations of the events in \(T\), where \(e_{i}\) appears before 
-\(e_{j}\) if edge \((e_{i}, e_{j})\) exists in \(G\), are also
-trajectories from \(s\) to \(s'\).
-
-
 <h2 style="color:red;">Example</h2>
 The figure below shows a timeline graph, \(G\).
 Sequences \([e_{0}, e_{1}, e_{2 }, e_{3}, e_{4}, e_{5}]\) and 
@@ -420,10 +319,8 @@ that (1) starts in the state that \(T\) starts in, (2) then visits state
 
 
 <p class="w3-text-teal">Proof</p>
-The proof follows directly from the <i>corollary: Permuting events in
-a trajectory</i>. The corollary says that there exists a trajectory,
-which is a  permutation of the events in \(T\) where all events in the
-valid cut appear before events outside the cut.
+The proof follows directly from the <i>Theorem: Permuting events in
+a trajectory</i>. 
 
 
   <footer id="myFooter">
