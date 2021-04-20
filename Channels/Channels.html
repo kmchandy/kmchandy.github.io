@@ -83,7 +83,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <div class="w3-twothird w3-container">
 
     <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Global Snapshots with Channels</h1>
+    <h1 class="w3-text-teal">Timelines with Channels</h1>
 
     <h3 class="w3-text-teal">Message-Passing Channels</h3>
     Message-passing channels are a special kind of shared variable
@@ -203,7 +203,7 @@ Trajectory</h3>
 This theorem is given in 
 <a href="../Timelines/Timelines.html">the module on timelines</a>, for
 the general case.
-It is repeated here for the special case when shared variables are channels.
+It is repeated here for convenience.
 
 <p>
 Let \(G\) be the timeline graph of a trajectory \(T\) which starts in a
@@ -224,6 +224,37 @@ in state \(s\) and ends in state \(s'\).
 The proof is the same as that given in
 <a href="../Timelines/Timelines.html">the module on timelines</a>, for
 the general case.
+
+<h2 style="color:red;">Example</h2>
+The figure below shows a timeline with agents A, B, C, and a channel
+from A to B and another channel from C to B.
+
+<figure>
+    <img src="Channels_4.jpg" alt="Fig4" style="width:80%">
+    <figcaption>Fig.4: Example timeline with channels</figcaption>
+</figure>
+
+The next figure shows a permutation of the sequence of events that
+satisfies the condition of the theorem. For example, event 0 in the
+first timeline is event 1 in this figure. Likewise, event 6 in the
+first figure is is event 3 in this one. The new numbering of events
+shows a permutation where every edge is from a lower-numbered event to
+a higher-numbered event.
+
+<figure>
+    <img src="Channels_5.jpg" alt="Fig5" style="width:80%">
+    <figcaption>Fig.5: Example permutation of events</figcaption>
+</figure>
+
+The next figure shows the timeline of a trajectory. This timeline consists of
+the permuted events appearing in order of their numbering. The theorem
+tells us that this trajectory starts and ends at the same states as
+the trajectory in fig.4.
+
+<figure>
+    <img src="Channels_6.jpg" alt="Fig6" style="width:80%">
+    <figcaption>Fig.6: Example timeline with permuted events</figcaption>
+</figure>
 
 
   <footer id="myFooter">
