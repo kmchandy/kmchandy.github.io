@@ -312,10 +312,11 @@ each shared variable at the boundary. Thus, the state is given by the
 labels of the edges along the boundary.
 
 <h2 class="w3-text-teal">The Valid-Cut Theorem</h2>
-Let \(G\) be the timeline graph of a trajectory \(T\). Let \(s\) be the state
+Let \(G\) be the timeline graph of a trajectory \(T\) that starts in
+state \(s\) and ends in state \(s'\). Let \(c\) be the state
 associated with a valid cut of \(G\). Then there exists a trajectory
-that (1) starts in the state that \(T\) starts in, (2) then visits state
-\(s\), and (3) ends in the state that \(T\) ends in.
+that (1) starts in \(s\), (2) then visits state
+\(c\), and (3) ends in the state \(s'\).
 
 
 <p class="w3-text-teal">Proof</p>

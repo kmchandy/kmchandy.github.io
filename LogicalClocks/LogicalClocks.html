@@ -170,12 +170,18 @@ global state corresponding to time \(t_{j}\).
     <figcaption>Fig.3: Trajectory between global states</figcaption>
 </figure>
 
+The timestamp assigned to a point in a timeline can be viewed as the
+<i>logical time</i> at that point. We will see later how logical time
+is used in algorithms.
 
 <h3 class="w3-text-teal">Rules for a Timestamp Algorithm</h3>
 We will prove that the following rules ensure that local clocks
 satisfy the basic requirement. This set of rules is not the only set
-that ensures the basic requirement. We assume that timestamps are
-nonnegative integers.
+that ensures the basic requirement.
+
+<p>
+We assume that timestamps are nonnegative integers. Later we will look
+at timestamps that have the same type as those of NTP readings.
 
 <p class="w3-text-teal">Rule 1: Timestamps along a timeline do not
 decrease as time increases</p>
@@ -261,22 +267,94 @@ the timestamps later on the same edge have timestamps of \(t\) or
 greater. From rules 2 and 3, an event that references a variable with
 timestamp of \(t\) has a timestamp greater than \(t\).
 
-
-<h3>A distributed algorithm to get sequences of global snapshots</h3>
-Use the timestamp algorithm to assign timestampts to every point on
-the agent and shared-variable timelines. The tuple of local agent and
-shared variable states when their timestamps are at \(t\) is a global
-state. There exists a trajectory that visits (in order) the sequence of global
-states recorded when timestamps are \(t_{i}\) for \(t_{i} \leq
-t_{i+1}\).
+<h3 class="w3-text-teal">A Timestamp Algorithm</h3>
+A timestamp algorithm that obeys the rules consists of the following steps.
+<ol>
+  <li>Prior to executing an action, the agent \(A\) executing the action
+  determines the maximum of the timestamps on \(A\)'s
+  own timeline and on timelines of shared variables referenced
+  in the action. Let this maximum be \(M\).
+  </li>
+  <li>
+  Immediately before executing the action, agent \(A\) sets the
+  timestamps on \(A\)'s 
+  own timeline, and on timelines of shared variables referenced
+  in the action, to \(M\).
+  </li>
+  <li>
+  Immediately after executing the action, agent \(A\) sets the
+  timestamps on \(A\)'s 
+  own timeline, and on timelines of shared variables referenced
+  in the action, to \(M+1\).
+  </li>
+</ol>
 
 <p>
-A rollback and recovery algorithm records agent and shared variable
-states periodically where the period is defined in terms of
-timestamps. A state recorded with timestamp \(t\) is discarded when
-all agents and shared variable states have been recorded from a
-timestamp greater than \(t\). If an error is detected then the
-algorithm is restarted from the most recent global snapshot.
+The figure below shows an example of the steps of the algorithm. The
+diagram shows agent \(A\) executing an action in which it modifies shared
+variable \(v\) and reads \(w\). The steps are as follows.
+<ol>
+  <li>The timestamps at this point for \(A\), \(v\) and \(w\) are 1,
+  4, and 8, respectively. The maximum of these timestamps is determined.
+  </li>
+  <li>
+  Agent \(A\) sets the timestamps on the timelines for \(A\), \(v\)
+  and \(w\) to the maximum, 8, immediately prior to executing the
+  action. 
+  </li>
+  
+  <li>
+  Agent \(A\) sets the timestamps on the timelines for \(A\), \(v\)
+  and \(w\), immediately after executing the action, to 9 
+  </li>
+</ol>
+  
+
+<figure>
+    <img src="LogicalClocks_7.jpg" alt="Fig7" style="width:80%">
+    <figcaption>Fig.7: A Timestamp Algorithm</figcaption>
+</figure>
+
+The lower part of the figure shows how to have points on each timeline
+for each increment to the timestamp on the line. If timestamps are
+logical clocks then there should be a timestamp for every integer. We
+see in the top part of the figure that agent \(A\) increases its
+timestamp from 1 to 8. What is the interval in \(A\)'s timeline at
+which the timestamp is 2? Or 3?
+
+<p>
+These intervals don't matter because \(A\)'s state remains unchanged
+along its timeline between points at which its timestamps are 1 and
+8. For convenience, however, we partition that interval into regions
+corresponding to every integer value. The partitioning is
+arbitrary. This partitioning allows us to pick an interval on each
+timeline for each possible value of timestamps. Having made this
+arbitrary (but convenient) partition, we have regions along \(A\)'s
+timeline where the timestamp is 2, and 3, and...
+
+
+<h3 class="w3-text-teal">A distributed algorithm to compute sequences of
+global snapshots</h3> 
+Use the timestamp algorithm to assign timestamps to every point on the
+timelines of agents and shared-variables. Each agent records its own
+state at the point that its timestamp is \(t\), for all \(t\). Agents
+collaborate to record the states of shared variables for each \(t\).
+Obtain global states \(s_{t}\), for all \(t\) by collating the 
+states of agents and shared variables at
+timestamps \(t\).
+
+<p>
+The theorem tells us that there exists a trajectory that visits, in
+order, the sequence of global 
+states \([s_{0}, s_{1}, s_{2}, \ldots ]\).
+
+<p class="w3-text-teal">Application: A rollback and recovery
+algorithm</p>
+An application of the timestamp algorithm is rollback and recovery.
+The timestamp algorithm records a sequence of global states \(s_{t}\).
+If an error is detected during a computation then the
+computation is restarted from the most recent recorded global
+snapshot. 
 
   <footer id="myFooter">
 

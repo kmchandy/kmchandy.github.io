@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>Channels</title>
+<title>ChannelSnapshots</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -44,27 +44,27 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   Algorithms</h3>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Channels.html">Channels and Timelines</a>
+  href="ChannelSnapshots.html">Global Snapshots with Channels</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="ChannelsExample.html">Examples</a>
+  href="ChannelSnapshotsExample.html">Examples</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="ChannelsSelfTest.html">Self Test</a>
+  href="ChannelSnapshotsSelfTest.html">Self Test</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="ChannelsExercises.html">Exercises</a>
+  href="ChannelSnapshotsExercises.html">Exercises</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Channels.html">Explorations</a>
+  href="ChannelSnapshots.html">Explorations</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../GlobalSnapshots/GlobalSnapshots.html">
-  Next: Global Snapshots with Channel</a> 
+  href="../Channels/Channels.html">
+  Next: Termination Detection</a> 
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../LogicalClocks/LogicalClocks.html">Previous:
-  Timestamps and Logical Clocks
+  href="../PropertiesOfGlobalSnapshots/PropertiesOfGlobalSnapshots.html">Previous:
+  Message-Passing Channels
   </a>
   
 </nav>
@@ -83,41 +83,34 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <div class="w3-twothird w3-container">
 
     <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Timelines with Channels</h1>
+    <h1 class="w3-text-teal">Global Snapshots and Logical Clocks with Channels</h1>
 
-    <h3 class="w3-text-teal">Message-Passing Channels</h3>
-    Message-passing channels are a special kind of shared variable
-    that is often used in distributed systems. We use the abbreviation
-    <i>channels</i> for message-passing channels. The state of a
-    channel is a queue of messages. This queue represents the sequence
-    of messages in transit along the channel.
+    This module adapts the algorithm given in 
+    <a href="../GlobalSnapshots/GlobalSnapshots.html"> the module on
+    global snapshots</a> to the case where all shared variables are
+    channels. The adapted algorithm is simpler.
 
     <p>
-    The only actions an agent can execute on a channel are to send or
-    receive a message on the channel. Sending a message \(m\) on a
-    channel \(c\) appends \(m\) to the tail of the queue which is the
-    sequence of messages in flight along \(c\). The action can also
-    change the agent's own state.
+    We also review 
+    <a href="../LogicalClocks/LogicalClocks.html"> timestamps and
+    logical clocks</a> for the case of channels.
+
+    
+    <h4 class="w3-text-teal">Global Snapshot</h4>
+    If a global snapshot algorithm is initiated in a state
+    \(s\) and ends in state \(s'\), and the global snapshot obtained
+    is \(c\), then there must exist a trajectory that starts in \(s\), (2) then visits state
+    \(c\), and (3) ends in the state \(s'\). Let's design an algorithm
+    that determines the state at a valid cut.
 
     <p>
-    The action of receiving a message along a channel is as
-    follows. If the channel is empty then the agent waits for the
-    channel to become nonempty. The agent then receives the message at
-    the head of the channel i.e., it deletes the message at the head
-    of the queue of messages. The agent may also change its state and the
-    next state may depend on the message that it receives.
+    First let's look at the situation that causes a cut to be
+    invalid. Here's the example from the previous module.
 
-    <p>
-    We restrict attention to systems where for each channel, exactly
-    one agent sends messages along the channel, and exactly one agent
-    receives messages along the channel.
-
-    <h4 class="w3-text-teal">Agent Diagram with Channels</h4>
-    The agent diagram for a system with channels is a
-    labeled directed graph in which each vertex represents an agent
-    and an edge labeled z from A to C represents a channel called z
-    from agent A to agent Z. Agent A sends messages along channel z
-    and agent C receives messages along the channel.
+    <figure>
+    <img src="Channels_8.jpg" alt="Fig1" style="width:80%">
+    <figcaption>Fig.1: An invalid cut of a timeline</figcaption>
+    </figure>
 
     <figure>
     <img src="Channels_2.jpg" alt="Fig1" style="width:80%">
