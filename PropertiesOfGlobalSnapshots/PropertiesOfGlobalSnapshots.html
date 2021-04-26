@@ -120,7 +120,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <figure>
     <img src="PropertiesOfGlobalSnapshots_1.jpg" alt="Fig1" style="width:80%">
     <figcaption>Fig.1: Trajectory from start to finish through snapshot</figcaption>
-</figure>
+</figure>  
 
     <h3 class="w3-text-teal">Theorem: Stable States and Snapshots</h3>
     Let \(P\) be a
@@ -160,8 +160,18 @@ snapshot state then \(\neg P\) holds in \(s_{init}\).
 <p>
 What happens if \(P\) starts to hold while the snapshot algorithm is
 in progress? In this case \(\neg P\) holds when the algorithm starts
-but \(P\) holds when the algorithm finishes. In this case we don't know whether
+but \(P\) holds when the algorithm finishes. In this case we don't
+know whether 
 \(P\) holds or \(\neg P\) holds in the snapshot state.
+
+<h3 class="w3-text-teal">Theorem: Stable States and Sequences of
+Cuts</h3>
+Let \(c_{0}, c_{1}, \ldots, c_{N}\) be a sequence of valid cuts of the
+timeline graph of a trajectory \(T\) where \(c_{0}\) and \(c_{N}\) are
+the initial and final states of \(T\) and
+\(c_{i}\) is before \(c_{i+1}\), all \(i < N\).
+If a stable property \(P\) holds for any \(c_{j}\) then \(P\) also
+holds for all \(c_{k}\) where \(k \geq j\).
 
 <h3 class="w3-text-teal">Termination Detection</h3>
 Termination of a computation is stable: once a computation has

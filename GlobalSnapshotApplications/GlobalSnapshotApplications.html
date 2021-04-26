@@ -114,6 +114,26 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     Our task is to develop an algorithm that detects that a system has
     entered a terminated state.
 
+    For each channel \(C\), let  \(C_{s}\) and \(C_{r}\), be the numbers of
+    messages sent and received along \(C\), respectively.
+
+    Initially \(C_{s} = C_{r} = 0\)
+
+    The number of messages in transit along \(C\) is \(C_{s} -
+    C_{r}\).
+    
+    <p class="w3-text-teal"> The global termination condition</p>
+    The system is in a terminated state exactly when the following
+    <i>global termination condition</i> holds:
+    <ol>
+      <li>
+      All agents are idle, and
+      </li>
+      <li>
+      for each channel \(C\): \(C_{s} = C_{r}\)
+      </li>
+    </ol>
+    
     
     <h3 class="w3-text-teal">An Algorithm</h3>
     An agent that sends messages along a channel \(C\) maintains
@@ -151,7 +171,7 @@ messages \(m_{2}, m_{3}\) are in transit along the channel.
 
 
 
-    <p>
+    <p class="w3-text-teal">The Detector</p>
     The algorithm uses an agent, which is not part of the system, to
     carry out the detection. We call this agent <i>the
     detector</i>. 
@@ -163,12 +183,35 @@ messages \(m_{2}, m_{3}\) are in transit along the channel.
     incoming channel of the agent. 
 
 <p>
-The detector has its own local variables \(C_{s}\) and \(C_{r}\) for every
+The detector has its own local variables \(C'_{s}\) and \(C'_{r}\) for every
 channel \(C\) in the system.
 Initially the values of these local variables are 0.
 When a detector gets a message from an
-agent it sets the values of its local variables \(C_{s}\) and \(C_{r}\) to the
+agent it sets the values of its local variables \(C'_{s}\) and \(C'_{r}\) to the
 values of \(C_{s}\) and \(C_{r}\) in the message.
+
+<p class="w3-text-teal">The local termination condition</p>
+The local termination condition is defined in terms of the local
+variables of the detector. The local termination condition is:
+<ol>
+  <li>
+the detector has received at least one message from each agent, and
+  </li>
+  <li>for all channels \(C\) of the
+system, the <i>local variables of the detector</i> satisfy 
+\(
+C'_{s} = C'_{r}
+\)
+  </li>
+</ol>
+The local termination condition is different from the global
+termination condition because the local condition depends only on
+local variables of the detector whereas the global condition depends
+on variables of all agents. The detector can determine, based on its
+own local variables, whether the local termination condition holds. By
+contrast, no agent can determine whether the global termination
+condition holds based on the agent's own local variables.
+
 
 <h2 style="color:red;">Example</h2>
 
@@ -194,8 +237,8 @@ detector containing \(C_{r} = 1, D_{s} = 2\).
 This message is in transit from \(B\) to the detector.
 
 <p>
-The local variables, \(C_{r}, C_{s}, D_{r}, D_{s}\), of the detector
-are still their initial values because the detector hasn't received
+The local variables, \(C'_{r}, C'_{s}, D'_{r}, D'_{s}\), of the detector
+are still their initial values (i.e. 0) because the detector hasn't received
 messages.
 
 
@@ -213,8 +256,8 @@ in transit from \(A\) to the detector.
 
 The message that \(B\) sent to the detector with values \(C_{r} = 1,
 D_{s} = 2\) was received by the detector. Upon receiving this message
-the detector updated values of its own local variables to \(C_{r} = 1,
-D_{s} = 2\).
+the detector updated values of its own local variables to \(C'_{r} = 1,
+D'_{s} = 2\).
 
 <p>
 Agent \(B\) receives a message that \(A\) sent, and becomes active
@@ -232,26 +275,67 @@ message was received by the detector which updated its own local
 variables. The detector also received the message that \(A\) sent to
 it. At this point all agents are idle, all channels are empty, and the
 values of the detector's local variables  satisfy the condition
-\(C_{s} = C_{r}, D_{s} = D_{r}\).
+\(C'_{s} = C'_{r}, D'_{s} = D'_{r}\). Since the detector has received
+a message from each agent at this point, the local termination
+condition holds.
 
 
 <h3 class="w3-text-teal">Theorem</h3>
-The computation has terminated if for all channels \(C\) of the
-system, the local variables of the detector satisfy the condition:
-<p>
-\(
-C_{s} = C_{r}
-\)
-</p>
+The global termination condition holds if the local termination
+condition holds.
 
 <p class="w3-text-teal">Proof</p>
-The proof using the concept of valid cuts is straightforward.
+A state is a <i>terminated</i> state exactly when
+the global termination condition holds.
+
+The <a href="PropertiesOfGlobalSnapshots "> theorem on stable states
+and sequences of valid cuts</a> says:
+<BLOCKQUOTE>
+if a stable property holds for a state corresponding to a
+valid cut of a trajectory
+then the property continues to hold for all
+subsequent valid cuts.
+</BLOCKQUOTE>
+Therefore, if the global termination condition holds for the state at
+a valid cut then it continues to hold for subsequent valid cuts.
+
+
+Next, we show that if the local termination condition holds at a point \(T\)
+in a trajectory then the global termination condition holds at an
+earlier valid cut.
+
 
 <p>
+Let \(C^{*}_{s}, C^{*}_{r}\) be the values of  \(C'_{s}, C'_{r}\),
+respectively, that satisfy the local termination condition.
 
+If the local termination condition holds at a point \(T\) in the
+trajectory then the detector received values \(C^{*}_{s}, C^{*}_{r}\)
+at or before \(T\).
 
+Therefore, at or before \(T\):
+each agent \(A\) sent a message to the detector containing
+\(C^{*}_{s}\) and \(C^{*}_{r}\) for all its incident channels, \(C\).
+Let \(T_{A}\) be any point on agent \(A\)'s timeline at which that
+message was sent. 
 
+<p>
+Let \(Z\) be a cut whose boundary is specified by \(T_{A}\),
+all \(A\). Next, we will show that: (1) \(Z\) is a valid cut, and (2)
+the global termination condition holds for state corresponding to \(Z\).
+<p>
 
+<p>
+Let \(C\) be a channel from agent \(A\) to \(B\). The number of
+messages that \(A\) sent along \(C\) before \(T_{A}\) is \(C^{*}_{s}\).
+The number of
+messages that \(B\) received along \(C\) before \(T_{B}\) is
+\(C^{*}_{r}\).
+Because \(C^{*}_{s} = C^{*}_{r}\), every message that \(A\) sent along
+\(C\) before \(T_{A}\) is received by \(B\) before \(T_{B}\).
+Therefore \(Z\) is a valid cut. Moreover, all agents are
+idle and all channels are empty along cut \(Z\) and therefore the
+global termination condition holds for \(Z\). 
 
 
 

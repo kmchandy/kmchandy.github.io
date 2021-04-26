@@ -311,17 +311,33 @@ defined by the state of each agent at the boundary and the value of
 each shared variable at the boundary. Thus, the state is given by the
 labels of the edges along the boundary.
 
+<h4 class="w3-text-teal">Sequences of Valid Cuts</h4>
+A valid cut \(C\) is said to be before a valid cut \(C'\) exactly when
+\(C \subseq C'\). In terms of the timeline diagram, with time
+increasing from left to right, a valid cut \(C) is before a valid cut
+\(C'\) exactly when the boundary of \(C\) is at, or to the left of,
+the boundary of \(C'\).
+
 <h2 class="w3-text-teal">The Valid-Cut Theorem</h2>
-Let \(G\) be the timeline graph of a trajectory \(T\) that starts in
-state \(s\) and ends in state \(s'\). Let \(c\) be the state
-associated with a valid cut of \(G\). Then there exists a trajectory
-that (1) starts in \(s\), (2) then visits state
-\(c\), and (3) ends in the state \(s'\).
+Let \(c_{0}, c_{1}, \ldots, c_{N}\) be a sequence of valid cuts of the
+timeline graph of a trajectory \(T\) where \(c_{0}\) and \(c_{N}\) are
+the initial and final states of \(T\) and
+\(c_{i}\) is before \(c_{i+1}\), all \(i < N\). Then there exists a
+trajectory that visits the global states corresponding to cuts
+\(c_{0}, c_{1}, \ldots, c_{N}\), in sequence.
 
 
 <p class="w3-text-teal">Proof</p>
 The proof follows directly from the <i>Theorem: Permuting events in
-a trajectory</i>. 
+a trajectory</i>.
+
+
+<p class="w3-text-teal">Corollary</p>
+We will use this corollary often.
+ Let \(c\) be the state
+associated with a valid cut of \(G\). Then there exists a trajectory
+that (1) starts in \(s\), (2) then visits state
+\(c\), and (3) ends in the state \(s'\).
 
 
   <footer id="myFooter">
