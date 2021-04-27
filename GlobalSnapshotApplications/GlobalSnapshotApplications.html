@@ -280,6 +280,106 @@ a message from each agent at this point, the local termination
 condition holds.
 
 
+<figure>
+    <img src="GlobalSnapshotApplications_6.jpg" alt="Fig6" style="width:100%">
+    <figcaption>Fig.6: Timelines for termination detection</figcaption>
+</figure>
+
+The above figure shows a timeline diagram for the scenario described
+in the earlier figures. The system has timelines for agents \(A\) and
+\(B\), and a timeline for the detector. Message lines between agents
+are colored red, and message lines from agents to the detector are
+colored green.
+Idle periods in timelines are colored green, and active periods
+are colored blue.
+
+<p>
+Agent \(A\)'s sequence of events is as follows:
+<ol>
+  <li>Send message.</li>
+  <li>Receive message.</li>
+  <li>
+  Transition from active to idle. Send a message to
+  the detector with \(C_{s} = 1, D_{r} = 1\). At this point, \(C_{r} =
+  1, D_{s} = 2\). There is a message in transit from \(B\) to
+  \(A\), and \(B\) is active. So the trajectory has not terminated.
+  </li>
+  <li>
+  Receive a message and transition from idle to active.
+  </li>
+  <li>
+  Send message.
+  </li>
+  <li>
+  Send message.
+  </li>
+  <li>
+  Transition from active to idle.
+  Send a message to the detector with \(C_{s} = 3, D_{r} = 2\).
+  At this point, \(C_{r} = 3, D_{s} = 2\), and both channels are
+  empty.
+  But agent \(B\) is still active, and so the trajectory hasn't
+  terminated. 
+  </li>
+</ol>
+
+<p>
+Agent \(B\)'s sequence of events is as follows:
+<ol>
+  <li>Send message.</li>
+  <li>Receive message.</li>
+  <li>Send message.</li>
+  <li>
+  Transition from active to idle. Send a message to
+  the detector with \(C_{r} = 1, D_{s} = 2\). At this point, \(C_{s} =
+  3, D_{r} = 2\). There are 2 messages in transit from \(A\) to
+  \(B\), and \(A\) is active. So the trajectory has not terminated.
+  </li>
+  <li>Receive message.</li>
+  <li>Receive message.</li>
+  <li>
+  Transition from active to idle.
+  Send a message to the detector with \(C_{r} = 3, D_{s} = 2\).
+  At this point, \(C_{s} = 3, D_{r} = 2\). Both channels are
+  empty and both agents are idle.
+  So the trajectory has terminated. 
+  </li>
+</ol>
+
+The sequence of values of the local variables of the detector is as
+follows:
+<ol>
+  <li>
+  \([C'_{s} = 0, C'_{r} = 0,  D'_{s} = 0, D'_{r} = 0]\), and messages
+  haven't been received from any agent. Local termination condition
+  doesn't hold because messages haven't been received from both agents.
+  </li>
+  <li>
+  \([C'_{s} = 1, C'_{r} = 0,  D'_{s} = 0, D'_{r} = 1]\), and messages
+  haven't been received from agent \(B\). Local termination condition
+  doesn't hold because messages haven't been received from both agents.
+  </li>
+  <li>
+  \([C'_{s} = 1, C'_{r} = 1,  D'_{s} = 2, D'_{r} = 1]\), and messages
+  have been received from both agents. Local termination condition
+  doesn't hold because \(D'_{s} \neq D'_{r}\).
+  </li>
+  <li>
+  \([C'_{s} = 3, C'_{r} = 1,  D'_{s} = 2, D'_{r} = 2]\), and messages
+  have been received from both agents. Local termination condition
+  doesn't hold because \(C'_{s} \neq C'_{r}\).
+  </li>
+  <li>
+  \([C'_{s} = 3, C'_{r} = 3,  D'_{s} = 2, D'_{r} = 2]\), and messages
+  have been received from both agents. Local termination condition
+  holds.
+  </li>
+</ol>
+  
+
+
+
+
 <h3 class="w3-text-teal">Theorem</h3>
 The global termination condition holds if the local termination
 condition holds.
