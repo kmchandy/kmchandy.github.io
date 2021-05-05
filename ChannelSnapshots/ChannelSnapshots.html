@@ -229,23 +229,61 @@ clocks for the general case.</a> The key idea is repeated here for
 convenience.
 
 <p>
-The algorithm allocates a time to each point in each
-agent's timeline. So, the algorithm also allocates a time at which
-each agent sends and receives each message.
+The algorithm assigns an integer timestamp to each message and to every point
+and event in every agent's timeline.
+The timestamp for the initial event which starts the trajectory is
+0.
+If
+there is an event with timestamp \(N\) on an agent's timeline then
+there are points on that agent's timeline with timestamp \(t\) for all
+\(0 \leq t \leq N\). Timestamps on an agent's timeline increase by 1.
+We call points at which timestamps increase <i>ticks</i>.
 
 <p>
-Agents may have internal
-events in which it doesn't send or receive a message. Internal events
-are arbitrary.
-An example of an
-internal event is one in which a local physical clock ticks forward.
+We define a cut of the timeline diagram at \(t\) as the set of events
+with timestamps at most \(t\). The goal of the timestamp algorithm is
+to ensure that cuts at \(t\) are valid cuts.
 
-<p class="w3-text-teal">The algorithm</p>
+<p>
+Let \(t_{e}\) be the timstamp
+assigned to event \(e\). The specification of the
+algorithm is that the timestamps must satisfy the following two rules.
+<ol>
+  <li>
+  For every edge in a timeline diagram from an event \(e\) to an event
+  \(e'\): \(t_{e} < t_{e'}\).
+  </li>
+  <li>
+  Let \(e\) and \(e'\) be events on an agent's timeline. Let \(M =
+  \(t_{e'} - t_{e}\). The algorithm picks \(M-1\) arbitrary points on
+  the agent's timeline between \(e\) and \(e'\), and assigns
+  timestamps \(t_{e} + 1, t_{e} + 2, \ldots, t_{e} + M -1\) to these 
+  points, so that later points have larger timestamps.
+  </li>
+</ol>
+
+  
+  The interval on agent's timeline between an event \(e\) and the next
+  event \(e'\) on the agent's timeline is partitioned arbitrarily into  
+  
+
+
+An event is a send, a receive, or an internal event. An agent
+doesn't send or receive messages during an internal event but it may
+change its own state.
+
+<h3 class="w3-text-teal">The algorithm</h3>
+
+<p class="w3-text-teal">Send event</p>
 When an agent with a local timestamp of \(t\) is about to send a
-message it appends the timestamp \(t+1\) to the message. When an agent
-with timestamp \(t\) 
-receives a message with timestamp \(t'\), the agent sets its timestamp
-to the larger of \(t\) and \(t'\).
+message it appends the timestamp \(t+1\) to the message and to the
+send event.
+
+<p class="w3-text-teal">Receive event</p>
+<p>When an agent \(u\) with timestamp \(t\) 
+receives a message with timestamp \(t'\),  agent \(u\) sets the timestamp
+on \(u\)'s timeline immediately before receiving the message to \(max(t, t')\).
+
 
 
 <h3 style="color:red;">Example</h3>

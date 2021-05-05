@@ -311,45 +311,6 @@ The events in this example are as follows:
 
 
 <!------------------------------------------------------->
-<p class="w3-text-teal">Relation between event outputs and inputs</p>
-From the definitions given earlier, the outputs of an event are a
-function of the inputs to the event and the event itself. This is shown
-diagrammatically in the figure below.
-
-
-<figure>
-    <img src="EventSpecifiedByIncidentEdges.jpg" alt="Fig3" style="width:100%">
-    <figcaption>Fig.3: The output labels of an event are a function of
-    its input labels</figcaption>
-</figure>
-
-<p class="w3-text-teal">Lemma: Relation between event outputs and
-initial state</p>
-An ancestor of a vertex \(w\) in an acyclic graph is any vertex \(v\)
-such that there is a path from \(v\) to \(w\). There is a path, with
-zero hops, from each vertex to itself; so, \(v\) is an ancestor of
-\(v\).
-
-The output of an event \(e_{j}\) is a function of the initial state \(s_{0}\)
-and the set of ancestors of \(e_{j}\).
-
-<p>Proof</p>
-Follows from the fact that the output of \(e_{j}\) is a function of
-\(e_{j}\) and its inputs.
-
-
-<p style="color:red;">Example of the lemma</p>
-In the timeline shown above, the ancestors of event 4 are events 0, 1,
-2, 4. There is no path from events 3 and 5 to event 4; so events 3 and 5 are
-not ancestors of event 4. The output of event 4 is a function of the
-initial state \(s_{0}\) and events 0, 1, 2, 4.
-<figure>
-    <img src="AgentTimeline_13.jpg" alt="Fig4" style="width:100%">
-    <figcaption>Fig.4: The output an event is a function of the
-initial state and its ancestors.</figcaption>
-</figure>
-
-<!------------------------------------------------------->
 <h2 class="w3-text-teal">System State at an Instant</h2>
  A point \(T\) in a timeline is represented by a vertical line
 corresponding to that point.

@@ -59,8 +59,8 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   href="PropertiesOfGlobalSnapshots.html">Explorations</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../LogicalClocks/LogicalClocks.html">
-  Next: Logical Clocks</a> 
+  href="../Channels/Channels.html">
+  Next: Channels</a> 
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="../GlobalSnapshots/GlobalSnapshots.html">Previous:
@@ -89,7 +89,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     recorded by the global snapshot algorithm.
 
     From the
-    <a href="../Timelines/Timelines.html"><i>Valid Cut
+    <a href="../Timelines/Timelines.html"><i>Consistent Cut
     Theorem</i> </a>
     and the
     <a href="../GlobalSnapshots/GlobalSnapshots.html"><i>Global
@@ -112,7 +112,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     \(s_{fini}\) is the state at a vertical timeline at the instant at
     which the snapshot algorithm finishes.
     And, the snapshot state \(s_{snap}\) is the state at the boundary
-    of the valid cut.
+    of the consistent cut.
     The diagram shows a trajectory from \(s_{init}\) to \(s_{fini}\)
     through \(s_{snap}\).
 
@@ -120,7 +120,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <figure>
     <img src="PropertiesOfGlobalSnapshots_1.jpg" alt="Fig1" style="width:80%">
     <figcaption>Fig.1: Trajectory from start to finish through snapshot</figcaption>
-</figure>  
+    </figure>  
 
     <h3 class="w3-text-teal">Theorem: Stable States and Snapshots</h3>
     Let \(P\) be a
@@ -166,7 +166,7 @@ know whether
 
 <h3 class="w3-text-teal">Theorem: Stable States and Sequences of
 Cuts</h3>
-Let \(c_{0}, c_{1}, \ldots, c_{N}\) be a sequence of valid cuts of the
+Let \(c_{0}, c_{1}, \ldots, c_{N}\) be a sequence of consistent cuts of the
 timeline graph of a trajectory \(T\) where \(c_{0}\) and \(c_{N}\) are
 the initial and final states of \(T\) and
 \(c_{i}\) is before \(c_{i+1}\), all \(i < N\).

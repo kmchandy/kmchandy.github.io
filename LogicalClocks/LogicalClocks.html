@@ -59,12 +59,12 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   href="LogicalClocks.html">Explorations</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Channels/Channels.html">
-  Next: Message-Passing Channels</a> 
+  href="../GlobalSnapshots/GlobalSnapshots.html">
+  Next: Global Snapshots</a> 
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../PropertiesOfGlobalSnapshots/PropertiesOfGlobalSnapshots.html">Previous:
-  Properties of Global Snapshots
+  href="../Timelines/Timelines.html">Previous:
+  Timelines
   </a>
   
 </nav>
@@ -83,275 +83,82 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <div class="w3-twothird w3-container">
 
     <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Logical Clocks</h1><p>
+    <h1 class="w3-text-teal">Timestamps and Logical Clocks</h1><p>
+    In this module we develop algorithms that assign a number, called
+    a timestamp, to each event. The timestamps are said to be
+    <i>consistent</i> exactly when the successors of an event, in the
+    timeline graph, have greater timestamps than the event does.
 
-    Each computer in a distributed system usually has its own clock.
-    The clocks in different computers may drift apart. Nevertheless,
-    clocks are useful. We will use clocks --- without making
-    assumptions about how far apart the clocks may be --- to develop
-    distributed algorithms.  Later, we will discuss algorithms that
-    use NTP (the Network Time Protocol) to prevent clocks of different
-    computers from drifting too far apart.
+    <p>
+    Let \(t_{e}\) to each event \(e\) in a timeline diagram.
+    The timestamps are <i>consistent</i> for a graph \(G\) exactly when
+    <p>
+    \(
+    \forall (v, w) \in G: t_{v} < t_{w}
+    \)
+    </p>
 
-    <h3 class="w3-text-teal">Global State at t</h3>
-    If all clocks were perfectly synchronized then as we saw in the
-    <a href="Timelines/Timelines.html">module on timelines</a> a global state at
-    time \(t\) is a tuple consisting of each agent's and each shared
-    variable's state at \(t\). In terms of the timeline diagram, with
-    each agent and shared-variable timeline drawn as a horizontal
-    line, the state at \(t\) corresponds to the labels of the timeline
-    edges that are cut by the vertical line corresponding to time \(t\).
+    <p>
+    The cut corresponding to a timestamp \(T\) is defined as a cut that
+    intersects the timeline of an agent or shared variable at an edge
+    \((e, e')\) where \(t_{e} \leq T < t_{e'}\).
+
+
+    
+    <h3 class="w3-text-teal">Theorem: Consistent Timelines and Cuts</h3>
+    For all consistent timestamps, for all \(T\), the cut
+    corresponding to \(T\) is a consistent cut. 
+
+    <p class="w3-text-teal">Proof</p>
+    An event \(w\) is in the past with respect to a cut corresponding to
+    \(T\) exactly when \(t_{w} \leq T\).
+    From the consistency of the timestamps, for all edges \((v, w)\),
+    \(t_{v} \leq T\). Therefore, all edges to events in the past are
+    from the past.
+
+    <h3 class="w3-text-teal">Algorithm for Consistent Timestamps</h3>
+    Prior to executing an event \(e\) an agent \(a\) takes the following
+    steps. Let \(V\) be the set of variables referenced in the event.
+    For each \(v\) in \(V\), let
+    \(r(v)\) be the most recent event in which \(v\) is referenced.
+    Let \(r(a)\) be the most recent event executed by \(a\).
+    Assign event \(e\) any timestamp \(t_{e}\) where:
+    <p>
+    \(
+    t_{e} > \textrm{max}(r(a), \; \textrm{max}_{v} \: r(v))
+    \)
+    </p>
+    <p>
+    For example, the algorithm could set \(t_{e}\) to \(1 +
+    \textrm{max}(r(a), \; \textrm{max}_{v} \: r(v))\). 
+
+    <p>
+Why would we want to increase \(t_{e}\) by more than 1? Later, we will
+use algorithms in which the timestamp of an event is approximately the
+same as the real time at which the event occurred. In this case,
+timestamps are increased by amounts dependent on the real
+times that have elapsed.
+
+<p>
+The timestamp given by an agent to a point on the agent's timeline is
+called the value of the agent's logical clock at the point. Later we
+will see how real clocks can influence logical clocks.
 
     <figure>
     <img src="LogicalClocks_1.jpg" alt="Fig1" style="width:80%">
     <figcaption>Fig.1: Global states at instants in time</figcaption>
     </figure>
-    <p>
-    In the above diagram there are horizontal timelines corresponding
-    to agents \(A\) and \(B\) and shared variables \(v\) and
-    \(w\). There are three vertical lines corresponding to times
-    \(t_{0}\), \(t_{1}\), and \(t_{2}\). The global state at time
-    \(t_{1}\) is given by the labels of the edges cut by the line
-    corresponding to time \(t_{1}\).
 
-    <h3 class="w3-text-teal">Timestamps</h3>
-    We will study classes of algorithms by which agents assign
-    timestamps to each instant on each agent's timeline and each
-    shared variable's timeline.
-    At any time \(t\) the timestamp associated with an agent \(A\)'s timeline
-    at \(t\) may be different from \(t\). Also different agents may
-have different timestamps at the same instant.
-A line through the points on the timelines timestamped \(t\) 
-may be a wavy line. If the timestamps were perfect the line would be
-    straight and vertical.
-
-    <figure>
-    <img src="LogicalClocks_2.jpg" alt="Fig2" style="width:80%">
-    <figcaption>Fig.2: Global state when local clocks are at t</figcaption>
-</figure>
-
-<p>
-In the diagram above, the points at which the timestamps are
-\(t_{1}\) are marked. The points on the timelines for agent \(A\) and
-variable \(v\) at which the timestamp is \(t_{1}\) occur before the 
-points on the timelines for agent \(B\) and
-variable \(w\) at which the timestamp is \(t_{1}\).
-So, we get a curvy line connecting points at which the local
-timestamps are \(t_{1}\) rather than a straight vertical line.
-
-
-<h3 class="w3-text-teal">The Specification of Timestamp Algorithms</h3>
-The timestamps must have the following two properties:
-<ol>
-  <li>
-For all \(t\): The  set of events which occur
-  on timelines before points with timestamp \(t\) is a valid
-  cut. Let the global state corresponding to this cut be \(s_{t}\). 
-  </li>
-  <li>
-  For all \(t\) and \(u\) where \(t \leq u\): there exists a
-  trajectory from \(s_{t}\) to \(s_{u}\). (Note that the trajectory
-  could be empty and \(s_{t}\) could be the same as \(s_{u}\).
-  </li>
-</ol>
-  
-  
-<p>
-    In terms of the diagram, the first requirement is that the wavy
-    line corresponding to a timestamp \(t\) must
-     form the boundary of a valid cut of the timeline diagram. The
-    second requirement is that given two wavy lines corresponding to
-\(t_{1}\) and \(t_{2}\) where \(t_{1} \leq t_{2}\), there must exist a
-trajectory from \(S_{1}\) to \(S_{2}\) where \(S_{j}\) is
-global state corresponding to time \(t_{j}\).
-
-    <figure>
-    <img src="LogicalClocks_3.jpg" alt="Fig3" style="width:80%">
-    <figcaption>Fig.3: Trajectory between global states</figcaption>
-</figure>
-
-The timestamp assigned to a point in a timeline can be viewed as the
-<i>logical time</i> at that point. We will see later how logical time
-is used in algorithms.
-
-<h3 class="w3-text-teal">Rules for a Timestamp Algorithm</h3>
-We will prove that the following rules ensure that local clocks
-satisfy the basic requirement. This set of rules is not the only set
-that ensures the basic requirement.
-
-<p>
-We assume that timestamps are nonnegative integers. Later we will look
-at timestamps that have the same type as those of NTP readings.
-
-<p class="w3-text-teal">Rule 1: Timestamps along a timeline do not
-decrease as time increases</p>
-Let \(p\) and \(p'\) be two points on the timeline of the same agent
-or the same shared variable. 
- Let \(t\) and \(t'\)
-be the timestamps for points \(p\) and \(p'\) respectively. The rule
-is that if \(p'\) occurs later on the timeline than \(p\) does then
-\(
-t \leq t'
-\) 
-<p>
-The figure below illustrates the rule.
-    <figure>
-    <img src="LogicalClocks_4.jpg" alt="Fig4" style="width:80%">
-    <figcaption>Fig.4: Examples of Rule 1</figcaption>
-</figure>
-<p>
-Case 1 in the figure shows an edge of a timeline for an agent or
-shared variable where the timestamp for every point on the timeline is
-the same: 5.
-<p>
-Case 2 shows an edge where the timestamp at the start of the edge is 5
-and the timestamp at the end is 7. The points in between have
-timestamps between 5 and 7.
-The algorithm picks any arbitrary point on the edge to set the
-timestamp to 6. 
-<p>
-Case 3 shows a situation that violates the rule because a later
-timestamp is smaller than an earlier one.
-
-
-<p class="w3-text-teal">Rule 2: Timestamps of timelines to an
-event are synchronized at the event.</p>
-
-<p> Timestamps on the timelines for the agent executing an event
-and for all shared-variables referenced in the event are set to the
-same value immediately before the event.
-
-<p>
-The figure below gives an example of the application of rule 2. This
-figure shows steps taken by an agent \(A\) prior to executing an event
-in which \(A\) references shared variable \(v\). The most recent
-timestamp on the timeline for \(A\) is 5 and for \(v\) is 8. Agent
-\(A\) sets the timestamp immediately before executing the event for
-the timelines for itself and \(v\) to the same value. In this diagram,
-this value is 20. The value could be any number greater than or equal
-to 8. The number can't be less than 8 because that would violate rule
-1. 
-
-<figure>
-    <img src="LogicalClocks_5.jpg" alt="Fig5" style="width:80%">
-    <figcaption>Fig.5: Example of Rule 2</figcaption>
-</figure>
-
-
-
-<p class="w3-text-teal">Rule 3: Timestamps of timelines through an
-event are incremented after the event.</p>
-
-If the timestamps of the agent executing an event and the shared
-variables referenced in an event are \(T\) immediately before the
-event then the timestamps of the agent and shared variables
-immediately after the event are set to \(T + 1\). And, we will assign
-timestamp \(T + 1\) to the event.
-
-<figure>
-    <img src="LogicalClocks_6.jpg" alt="Fig6" style="width:80%">
-    <figcaption>Fig.6: Example of Rule 3</figcaption>
-</figure>
-
-
-
-<h3 class="w3-text-teal">Algorithms that obey the rules
-satisfy the specification</h3>
-We will prove that all paths from an event with timestamp
-\(t\) are to events with timestamp greater than \(t\).
-
-<p>
-From rule 3,
-the edges leaving an event with timestamp \(t\) have timestamps of \(t\). From rule 1,
-the timestamps later on the same edge have timestamps of \(t\) or
-greater. From rules 2 and 3, an event that references a variable with
-timestamp of \(t\) has a timestamp greater than \(t\).
-
-<h3 class="w3-text-teal">A Timestamp Algorithm</h3>
-A timestamp algorithm that obeys the rules consists of the following steps.
-<ol>
-  <li>Prior to executing an action, the agent \(A\) executing the action
-  determines the maximum of the timestamps on \(A\)'s
-  own timeline and on timelines of shared variables referenced
-  in the action. Let this maximum be \(M\).
-  </li>
-  <li>
-  Immediately before executing the action, agent \(A\) sets the
-  timestamps on \(A\)'s 
-  own timeline, and on timelines of shared variables referenced
-  in the action, to \(M\).
-  </li>
-  <li>
-  Immediately after executing the action, agent \(A\) sets the
-  timestamps on \(A\)'s 
-  own timeline, and on timelines of shared variables referenced
-  in the action, to \(M+1\).
-  </li>
-</ol>
-
-<p>
-The figure below shows an example of the steps of the algorithm. The
-diagram shows agent \(A\) executing an action in which it modifies shared
-variable \(v\) and reads \(w\). The steps are as follows.
-<ol>
-  <li>The timestamps at this point for \(A\), \(v\) and \(w\) are 1,
-  4, and 8, respectively. The maximum of these timestamps is determined.
-  </li>
-  <li>
-  Agent \(A\) sets the timestamps on the timelines for \(A\), \(v\)
-  and \(w\) to the maximum, 8, immediately prior to executing the
-  action. 
-  </li>
-  
-  <li>
-  Agent \(A\) sets the timestamps on the timelines for \(A\), \(v\)
-  and \(w\), immediately after executing the action, to 9 
-  </li>
-</ol>
-  
-
-<figure>
-    <img src="LogicalClocks_7.jpg" alt="Fig7" style="width:80%">
-    <figcaption>Fig.7: A Timestamp Algorithm</figcaption>
-</figure>
-
-The lower part of the figure shows how to have points on each timeline
-for each increment to the timestamp on the line. If timestamps are
-logical clocks then there should be a timestamp for every integer. We
-see in the top part of the figure that agent \(A\) increases its
-timestamp from 1 to 8. What is the interval in \(A\)'s timeline at
-which the timestamp is 2? Or 3?
-
-<p>
-These intervals don't matter because \(A\)'s state remains unchanged
-along its timeline between points at which its timestamps are 1 and
-8. For convenience, however, we partition that interval into regions
-corresponding to every integer value. The partitioning is
-arbitrary. This partitioning allows us to pick an interval on each
-timeline for each possible value of timestamps. Having made this
-arbitrary (but convenient) partition, we have regions along \(A\)'s
-timeline where the timestamp is 2, and 3, and...
-
-
-<h3 class="w3-text-teal">A distributed algorithm to compute sequences of
-global snapshots</h3> 
-Use the timestamp algorithm to assign timestamps to every point on the
-timelines of agents and shared-variables. Each agent records its own
-state at the point that its timestamp is \(t\), for all \(t\). Agents
-collaborate to record the states of shared variables for each \(t\).
-Obtain global states \(s_{t}\), for all \(t\) by collating the 
-states of agents and shared variables at
-timestamps \(t\).
-
-<p>
-The theorem tells us that there exists a trajectory that visits, in
-order, the sequence of global 
-states \([s_{0}, s_{1}, s_{2}, \ldots ]\).
+<p class="w3-text-teal">A distributed algorithm to compute a
+global snapshot</p>
+Use an algorithm to assign consistent timestamps to events.
+The state at a cut corresponding to any \(T\) is a global state.
 
 <p class="w3-text-teal">Application: A rollback and recovery
 algorithm</p>
 An application of the timestamp algorithm is rollback and recovery.
-The timestamp algorithm records a sequence of global states \(s_{t}\).
+The timestamp algorithm records a sequence of global states \(s_{t}\)
+for different timestamps \(t\).
 If an error is detected during a computation then the
 computation is restarted from the most recent recorded global
 snapshot. 

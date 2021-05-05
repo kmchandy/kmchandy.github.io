@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>DeadlockDetectionAnd</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DeadlockDetectionAnd.html">Applications of Global Snapshots</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DeadlockDetectionAndExample.html">Examples</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DeadlockDetectionAndSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DeadlockDetectionAndExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DeadlockDetectionAnd.html">Explorations</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Channels/Channels.html">
+  Next: Diffusing Computations</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../ChannelSnapshots/ChannelSnapshots.html">Previous:
+  Snapshots with Channels
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Detecting And-type Deadlocks</h1>
+    This module shows how valid cuts help to
+    develop programs that detect deadlock.
+    We look at two types of deadlock in
+    distributed systems:
+    "and" deadlocks which are also called database deadlocks,
+    and "or" deadlocks, also called communication deadlocks. In this module
+    we develop algorithms to detect "and" deadlocks; we
+    discuss "or" deadlocks in a later module.
+
+    <h3 class="w3-text-teal">Agents and Resources</h3>
+    The problem of deadlock detection is similar to that of
+    <a
+    href="../GlobalSnapshotApplications/GlobalSnapshotApplications.html">
+    termination detection discussed in an earlier module</a>.
+    A system consists of a set of agents and a set of message-passing
+    channels. All the shared variables are channels. The system and its
+    agent diagram are described in
+    <a href="../Channels/Channels.html">the module on message-passing
+    channels.</a>
+
+    <p>
+    Agents in the system share a set of resources. An
+    example of a resource is exclusive access to a file.
+    A resource is held by at most one agent at
+    a time. Resources can be sent from agent to agent. Resources are
+    not duplicated or destroyed. Think of each resource as an
+    indivisible colored token, with each resource having its own
+    unique color.
+
+    <p>
+    An agent is either <i>waiting</i> to acquire resources or is not
+    waiting. An agent that is not waiting for resources is called
+    <i>active</i>. An active agent may start waiting for resources at any
+    point. 
+
+    <p class="w3-text-teal">The resources that an agent waits for</p>
+    When an agent \(u\) transitions from active to waiting it 
+    waits to acquire an arbitary set \(u.R\) of resources. \(u.R\)
+    may be different on different transitions by \(u\) from active to
+    waiting. A waiting agent \(u\) becomes active when it acquires all
+the resources in \(u.R\). The set, \(u.R\), remains unchanged while
+\(u\) is waiting. A waiting agent \(u\) that holds a resource in
+    \(u.R\) continues to hold the resource until \(u\) becomes active.
+
+    <p class="w3-text-teal">The agents that an agent waits for</p>
+    Associated with each waiting agent \(u\) is a nonempty set, \(u.waits\), of
+    agents. An agent \(w\) is in \(u.waits\) exactly when \(u\) is
+    waiting for a resource from \(w\).  
+
+When an agent \(u\) transitions from active to waiting it sends a message to
+every agent \(w\) in \(u.waits\) requesting the resources in \(u.R\) that \(w\)
+has. (We postpone discussion of how \(u\)
+determines which agents hold which resources.)
+After an agent transitions to waiting it sends no messages while it remains
+waiting. 
+
+<p class="w3-text-teal">The agents that are blocked by another agent</p>
+Associated with each agent \(w\) is a set \(w.blocks\) of agents. An
+agent \(u\) is in \(w.blocks\) exactly when \(w\) is waiting and \(w\) has received a
+request from \(u\) for a resource that \(w\) is holding.
+
+<h3  style="color:red;">Example</h3>
+The figure belows shows a sequence of states in which agent \(u\)
+requests and gets resources that it needs and that are held by
+\(w\). Each state is numbered in the top left with the number shown in
+a yellow box.
+
+<p>
+In state 1, \(u\) is active. It transitions to waiting in state
+2. During the transition it sent a request to \(w\) for a
+resource. That request is in the channel from \(u\) to \(w\). Agent
+\(u\) puts \(w\) in \(u.waits\). Agent \(w\) has not put \(u\) in
+\(w.blocks\) because the request has not reached \(w\). The request
+reaches \(w\) in state 3, and so \(w\) inserts \(u\) in \(w.blocks\). 
+ 
+
+
+    
+    <figure>
+    <img src="DeadlockDetection_And_1.jpg" alt="Fig1" style="width:80%">
+    <figcaption>Fig.1: Requesting and getting a resource</figcaption>
+    </figure>  
+    
+<p>
+In this sequence of states \(w\) becomes active in state
+4 and \(w\) sends the resources that \(u\) requested to \(u\), and
+deletes \(u\) from \(w.blocks\). In this state \(w\) is still in
+\(u.waits\). The resource is received by \(u\) in state 5 at which
+point \(u\) deletes \(w\) from \(u.waits\). If \(u\) receives all the
+resources that it is waiting for then \(u\) transitions to active, and
+the state is back to state 1.
+
+The diagram shows that \(w\) is in \(u.waits\) before, during, and
+after, \(u\) is in \(w.blocks\).
+
+<p class="w3-text-teal">Lemma: An Always property</p>
+The system has the following property:
+<p>
+<i>always</i>: 
+if \(u \in w.blocks\) then:
+<ol>
+  <li>
+  \(w \in u.waits\)
+  </li>
+  <li>
+  The channel from \(u \) to \(w\) is empty.
+  </li>
+  <li>
+  The channel from \(w \) to \(u\) does not contain the resources for
+  which \(u\) is waiting.
+  </li>
+</ol>
+
+The proof is straightforward and is not given here.
+
+<p class="w3-text-teal">Lemma: A blocked agent remains blocked in
+the next state.</p>
+
+For agents \(u, w, x\): 
+If \(u\) is in \(w.blocks\) and 
+\(w\) is in \(x.blocks\) in a state then \(u\) remains in \(w.blocks\)
+in the next state, . 
+
+<p class="w3-text-teal">
+eqn 1
+</p>
+<p>
+\(
+(u \in w.blocks) \wedge (w \in x.blocks) \quad \rightarrow
+\quad (u \in w.blocks)
+\)
+</p>
+<p>Proof</p>
+\(w.blocks\) remains unchanged while \(w\) is waiting. From the
+<i>always</i> property, because \(w \in x.blocks\) there are no
+resources in transit from \(x\) to \(w\). If \(w\) is waiting for
+resources from \(x\), and 
+there are no resources in transit from \(x\) to \(w\), then in the
+next state \(w\) continues to wait for
+resources from \(x\).
+<p>
+
+
+<h4 class="w3-text-teal">Theorem: Blocked cycles are stable.</h4>
+Let \(L\) be a cycle, \([u_{0}, u_{1}, \ldots, u_{N-1},
+u_{0}]\), of agents, where \(N > 1\). If each agent in \(L\) blocks its
+predecessor, then the \(L\) is stable: The blocking cycle lasts
+forever. 
+<p>
+\(
+(\forall i: u_{i} \in u_{i+1}.blocks) \quad \rightarrow
+\quad (\forall i: u_{i} \in u_{i+1}.blocks)
+\)
+
+<p class="w3-text-teal">Proof</p>
+<p>
+The proof follows from eqn 1.
+
+<h4 class="w3-text-teal">Graph of blocked agents</h4>
+We define a blocking graph as follows. The vertices of the graph are
+waiting agents, and the graph has an edge directed from \(u\) to \(w\)
+exactly when \(u \in w.blocks\). The theorem says that agents in a
+cycle in the graph wait 
+forever.
+
+<p>
+The blocking graph is dynamic. Vertices and edges are added and
+deleted as a trajectory progresses; however, after a cycle is formed
+the cycle remains unchanged.
+
+<p>
+If an agent \(w\) waits forever and it blocks an agent \(x\), then
+\(x\) waits forever as well. So, if \(x\) can reach a cycle, i.e. if
+there is a path from \(x\) to a vertex in a cycle,  then \(x\) waits
+forever.
+
+
+    
+    <figure>
+    <img src="DeadlockDetection_And_2.jpg" alt="Fig2" style="width:80%">
+    <figcaption>Fig.2: Paths to cycles</figcaption>
+</figure>
+
+In the diagram above, agents \(u, v, w, x, y\) can reach the cycle
+\(u\) to \(v\) to \(w\) to \(u\), and so they all wait forever.
+
+<p>
+In practice, when a deadlocked cycle is detected, the system
+breaks the deadlock by aborting and restarting an agent in the
+cycle. So, strictly speaking, a deadlocked cycle is not
+stable. We partition the problem into two sequential steps: (1)
+detect deadlock, and then (2) break deadlock. A deadlocked cycle is
+stable for the duration of the first step.
+
+<p>
+In the example, above, the deadlock is broken by aborting any of the
+agents in the cycle \((u,v, w)\). Aborting \(x\) or \(y\) does not
+break the deadlock. So, the goal of our detection algorithm is to
+detect cycles in the graph.
+ 
+
+<h4 class="w3-text-teal">The problem: Detect cycles in the blocking graph.</h4>
+The problem is to develop a distributed algorithm that identifies
+cycles in the blocking graph. Our challenge is to detect cycles in a
+graph while the graph is changing.
+
+<p>
+We overcome this challenge using valid cuts. We determine a global
+snapshot -- the global state corresponding to a valid cut. The
+snapshot is static even though the state is dynamic. Agents can
+determine cycles in static graphs using
+conventional graph algorithms.
+
+<h3 class="w3-text-teal">Algorithms</h3>
+The general approach to detecting a stable property is:
+Take global snapshots repeatedly until a snapshot is obtained that has
+the property.
+
+<p>
+We can apply the general approach to detect deadlocked agents.Take
+global snapshots repeatedly, and analyze the blocking graph for each snapshot to detect
+cycles. An example of such an algorithm is: Each 
+agent \(u\) sends \(u.blocks\) at intervals of T logical time
+units to a detector agent which creates and analyzes the static
+blocking graphs.
+
+<p>
+Next, let's look at a few optimizations.
+
+<h4 class="w3-text-teal">Optimizations</h4>
+
+In the snapshot algorithm, if an agent gets a marker, the agent send a
+marker on each its outgoing channels. If \(u.waits\) is empty then
+there is no edge from \(u\) and so \(u\) is not part of a cycle.  In
+this case there is no reason for \(u\) to propagate markers.  Our first
+optimization is that \(u\) propagates markers <i>only</i> to agents in
+\(u.waits\).
+
+<p>
+We can either use (1) a centralized solution in which a single
+detector agent is responsible for constructing the blocking graph or
+(2) a distributed algorithm in which each agent sends blocking
+information to its neighbors and each agent determines the part of the
+blocking graph that is relevant to it. The centralized solution is
+straightforward. Let's look at a couple of distributed algorithms.
+
+<p>
+An algorithm that operates in two phases is as follows. Phase 1:
+Exchange markers as part of the snapshot algorithm. Phase 2: Exchange
+blocking information. An optimization combines the two phases by
+sending blocking information with markers.
+
+
+<h3 class="w3-text-teal">Algorithm 1</h3>
+The set \(u.blocks\) specifies a subgraph of the blocking graph.  The
+subgraph has edge \((v, u)\) for \(v \in u.blocks\).
+The vertices in this subgraph are the vertices in \(u.blocks\) and \(u\)
+itself.
+Agents send subgraphs of the blocking graph instead
+of sending markers.
+
+<p>
+An agent \(u\) that is blocking other agents maintains a subgraph
+\(u.graph\) of the blocking graph. When \(u\) receives a subgraph
+\(H\) in a message, it adds \(H\) to \(u.graph\), i.e. it adds edges
+and vertices in \(H\) to \(u.graph\). So, \(u.graph\) either stays the
+same or grows. If, at any point, \(u\) is in a cycle in \(u.graph\)
+then \(u\) is deadlocked. 
+
+<p>
+Initially \(u.graph\) is empty for all agents \(u\). An agent hasn't
+recorded its state exactly when \(u.graph\) is empty. The act of
+recording sets \(u.graph\) to a nonempty value.
+
+<p class="w3-text-teal">Initiation</p>
+
+<p>
+An agent, which is blocking other agents, initiates the detection
+algorithm at an arbitrary point. For example, an agent initiates the
+algorithm if it has been waiting too long.
+
+<p>
+An agent \(u\) initiates the algorithm by recording its current value
+of  \(u.blocks\). It
+sets \(u.graph\) to the subgraph corresponding to \(u.blocks\). Then
+it sends \(u.graph\) to each agent in \(u.waits\). 
+
+<p class="w3-text-teal">On receiving a subgraph</p>
+The \(u.update()\) step that an agent \(u\) executes when it gets new
+information in the form of a subgraph \(H\) is the following sequence
+of steps:
+<ol>
+<li>
+  Add \(H\) to \(u.graph\). 
+  </li>
+  <li>
+  If \(u\) is in a cycle in \(u.graph\) then \(u\) is deadlocked.
+  The system takes steps to break the deadlock.
+  </li>
+  <li>
+  Send \(u.graph\) to each agent in \(u.waits\).
+  </li>
+</ol>
+
+An agent \(u\) does the following when it receives a subgraph \(H\):
+
+<p>
+If \(u.graph\) is empty then:
+<ol>
+  <li>
+  set \(u.graph\) to the subgraph corresponding to \(u.blocks\);
+  </li>
+  <li>
+  \(u.update()\)
+  </li>
+</ol>
+
+<p>
+If \(u.graph\) is not empty and \(H\) is not a subgraph of \(u.graph\)
+then \(u.update()\).
+
+<h3  style="color:red;">Example</h3>
+Figure 2 is shown again for convenience.
+<figure>
+    <img src="DeadlockDetection_And_2.jpg" alt="Fig2" style="width:60%">
+    <figcaption>Fig.2: Paths to cycles</figcaption>
+</figure>
+
+A possible sequence of messages for the blocking graph shown in figure
+2 is as follows.
+<ol>
+  <li>
+  The algorithm is initiated by agent \(x\) sending the edge \((y,
+  x)\) to agent \(w\) because \(w \in x.waits\) and \(y \in x.blocks\).
+  </li>
+  <li>
+  On receiving the message from \(x\), agent \(w\) records
+  \(w.blocks = \{x, v\}\) and sets the edges in
+  \(w.graph\) to \(\{(y, x), (x, w), (v, w)\}\), and sends \(w.graph\) to \(u\).
+  </li>
+  <li>
+  \(u\) sets  \(u.graph\) to \(\{(y, x), (x, w), (v, w), (w, u)\}\)
+  and sends \(u.graph\) to \(v\).
+  </li>
+  <li>
+  \(v\) sets \(v.graph\) to  \(\{(y, x), (x, w), (v, w), (w, u), (u,
+  v)\}\),
+  and \(v\) detects that \(u, v, w\) are in a cycle. \(v\) sends \(v.graph\) to
+  \(w\). This graph is propagated by \(w\) to \(u\), and then from
+  \(u\) to \(v\), at which point the algorithm stops.
+  </li>
+</ol>
+
+<p class="w3-text-teal">Proof of correctness</p>
+The points on each agent's timeline at which each agent \(u\) records
+\(u.blocks\) form part of a valid cut. The proof that the cut is valid
+is the same as the proof for the snapshot algorithm.
+
+<p>
+The cut only passes through timelines of waiting agents. So, the cut may not
+span all agents. For example, the cut does not span an active agent
+\(v\) if no agent is waiting for \(v\). It is straightforward to show
+that there exists a valid cut spanning all agents that includes the
+partial cut through waiting agents.
+
+<h3 class="w3-text-teal">Algorithm 2</h3>
+This algorithm is simpler than the previous one. In this algorithm an
+agent \(u\) carries out a computation to determine whether it is part
+of a cycle. Since the algorithm is specific to \(u\) the algorithm
+does not need to send subgraphs.
+
+<ol>
+  <li>
+<p><i>Initiation</i>: 
+  The initiating agent \(u\) records its state and sends a marker to
+  each agent in \(u.waits\). 
+  </li>
+  <li>
+  <i>Upon receiving a marker</i>: When an agent \(w\) gets a
+  marker from an agent \(v\), agent \(w\) 
+does the following:
+If \(v \in w.blocks\) and \(w\) hasn't sent markers then \(w\)
+  sends a marker to each agent in \(w.waits\).
+  </li>
+  <li>
+  <i>Termination detection</i>:
+If \(u\) receives a message from an agent \(v\) where \(v \in u.blocks\)
+  then \(u\) is in a cycle.
+  </li>
+</ol>
+
+<h4  style="color:red;">Example</h4>
+A sequence of steps for the blocking graph in figure 2 is as follows:
+<ol>
+  <li>
+  \(u\) initiates the algorithm by sending a marker to \(v\) because
+  \(v\) is the only agent in \(u.waits\), and recording \(u.blocks =
+  \{w\}\). 
+  </li>
+  <li>
+  \(v\) receives a marker from \(u\). Because \(u\) is in
+  \(v.blocks\) and \(v\) hasn't sent markers, \(v\) sends a marker to \(w\), 
+  the only agent in \(v.waits\).
+  </li>
+  <li>
+  \(w\) receives a marker from \(v\). Because \(v\) is in
+  \(w.blocks\) and \(w\) hasn't sent markers, \(w\) sends a marker to \(u\), 
+  the only agent in \(v.waits\).
+  </li>
+  <li>
+  \(u\) receives a marker from \(w\). Because \(w\) is in
+  \(u.blocks\), \(u\) is in a cycle
+  </li>
+</ol>
+
+<p class="w3-text-teal">Proof of correctness</p>
+The algorithm is the same as the global snapshot algorithm except for
+the optimization that agents don't record their states.
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+
