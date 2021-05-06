@@ -98,7 +98,16 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     \)
     </p>
 
-    <p>
+    <h4 style="color:red;">Example</h4>
+    The figure below shows consistent timestamps. Every edge in the
+    graph is from a lower timestamp to a higher timestamp.
+
+    <figure>
+    <img src="LogicalClocksFigures_01.jpg" alt="Fig1" style="width:80%">
+    <figcaption>Fig.1: Consistent timestamps</figcaption>
+    </figure>
+
+    <h4 class="w3-text-teal">Cut corresponding to a Timestamp</h4>
     The cut corresponding to a timestamp \(T\) is defined as a cut that
     intersects the timeline of an agent or shared variable at an edge
     \((e, e')\) where \(t_{e} \leq T < t_{e'}\).
@@ -115,6 +124,25 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     From the consistency of the timestamps, for all edges \((v, w)\),
     \(t_{v} \leq T\). Therefore, all edges to events in the past are
     from the past.
+
+    <h4 style="color:red;">Example</h4>
+    A cut corresponding to the timestamp 10 is curvilinear in the
+    diagram shown on top of the figure. This is because the points
+    corresponding to timestamp 10 occur at different times in this
+    trajectory. Similarly, cuts corresponding to timestamps 15 and 25
+    are curvilinear in this example trajectory.
+
+<p>
+The cuts shown in the trajectory on top are consistent; so, there
+exists a trajectory --- shown in the lower diagram --- in which
+the corresponding cuts are vertical.
+
+    <figure>
+    <img src="LogicalClocksFigures_02.jpg" alt="Fig2" style="width:80%">
+    <figcaption>Fig.2:Curvilinear cut at t in a timeline is vertical
+    in another </figcaption>
+</figure>
+
 
     <h3 class="w3-text-teal">Algorithm for Consistent Timestamps</h3>
     Prior to executing an event \(e\) an agent \(a\) takes the following
@@ -144,15 +172,10 @@ The timestamp given by an agent to a point on the agent's timeline is
 called the value of the agent's logical clock at the point. Later we
 will see how real clocks can influence logical clocks.
 
-    <figure>
-    <img src="LogicalClocks_1.jpg" alt="Fig1" style="width:80%">
-    <figcaption>Fig.1: Global states at instants in time</figcaption>
-    </figure>
-
 <p class="w3-text-teal">A distributed algorithm to compute a
 global snapshot</p>
-Use an algorithm to assign consistent timestamps to events.
-The state at a cut corresponding to any \(T\) is a global state.
+Assign consistent timestamps to events.
+The state at a cut corresponding to any timestamp \(T\) is a global state.
 
 <p class="w3-text-teal">Application: A rollback and recovery
 algorithm</p>
