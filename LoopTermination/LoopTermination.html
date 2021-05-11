@@ -120,8 +120,8 @@ hr.new2 {
 
     <p>
     <hr class="new2">
-     We prove
-    that while there exists a True guard, every iteration
+     We prove that execution of any command with a True guard reduces
+    \(f\). So, the execution of every iteration
     reduces 
     \(f\). Since \(f\) is bounded below, it cannot decrease for ever.
     Therefore, at some point in the
@@ -132,23 +132,44 @@ hr.new2 {
 
 
     <p>
-    Let \(I\) be an
-    invariant of the loop. Let the \(N > 0\) guarded commands of the loop be
-    <p>
-    \(\textbf{if} \; g_{j} \; \textbf{then} \; c_{j}\)
-    for \(0 \leq j < N\).
-    <p>
-    To show that execution of the loop terminates we will prove that
-\(f\) decreases while there exists a True guard \(g_{j}\).
-We also use the fact that the invariant holds before each iteration.
+    Let \(I\) be an invariant
+     of the loop. Let the \(j\)-th guarded command have guard
+    \(g_{j}\) and command \(c_{j}\). Let \(f\) be a variant function
+    of the loop. We will prove that the execution of any command with
+    a True guard reduces the variant function. We do so by proving the
+    following Hoare triple for all \(j\): 
 <p>
-    
+\(\forall K: \quad
+\{(f = K) \wedge I \wedge g_{j}\} \; c_{j} \; \{f < k\}
+\)
+
+<p>
+Therefore each iteration reduces \(f\). If we view each iteration as a
+step in a state-transition system, then from the Hoare triples we
+conclude that every step reduces \(f\).
+<p>
 \(
 \forall K: \quad
     (f=K) \wedge I \wedge (\exists j: g_{j}) \quad \rightarrow \quad f < K
 \)
 
+<p>
+Because \(f\) is a variant function, its value cannot decrease over an
+unbounded number of steps.
 
+<p class="w3-text-teal">How to prove termination of a loop</p>
+To summarize, we prove termination of a <i>do-od</i> loop in the
+following way.
+<p>
+<hr class="new2">
+(1) Identify a variant function and invariant
+that satisfies the above equation
+<br>
+(2) Show
+that the execution of any command with a True guard reduces the value of
+the variant function.
+
+    <hr class="new2">
 
     <h2 class="w3-text-teal">Variant Functions and State-Transition
     Graphs</h2>

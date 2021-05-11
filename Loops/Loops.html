@@ -84,12 +84,16 @@ hr.new2 {
   <div class="w3-twothird w3-container">
     
     <h1 class="w3-text-teal">Review of Loops</h1>
+    <p>
+    This is a review of <i>do-od</i> loops. A <i>do-od</i> loop is
+    different from <i>while</i> loops in languages such as Python
+    because execution of a <i>do-od</i> loop is non-deterministic. 
 
     <p>
     A <i>do-od</i> loop consists of a set of guarded commands. A guarded
-    command is an if-statement
+    command consists of a guard and a command, and we use the syntax:
     <pre>
-if guard then command
+guard -> command
     </pre>
     The execution of the loop is as follows: Execute any guarded command
     of the loop for which the guard evaluates to True. The loop
@@ -109,14 +113,15 @@ if guard then command
     start at 0.)
     <pre>
 for all i where 0 < i < N:
-   if X[i-1] > X[i] then X[i-1], X[i] = X[i], X[i-1]
+   X[i-1] > X[i]   ->    X[i-1], X[i] = X[i], X[i-1]
     </pre>
+    
     The loop has \(N-1\) guarded commands. Execution of the loop
     proceeds by executing any of the \(N-1\) guarded commands for
     which the guard is true. So, execution of the loop proceeds by
     flipping any adjacent pair of elements that is out of
-    order. Execution of the loop terminates when all adjacent pairs
-    are in order. 
+    order. Execution of the loop terminates when all guards are False,
+    and therefore all adjacent pairs are in order. 
 
 
     

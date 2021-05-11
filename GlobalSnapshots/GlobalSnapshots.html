@@ -60,7 +60,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 
   <a class="w3-bar-item w3-button w3-hover-black"
   href="../PropertiesOfGlobalSnapshots/PropertiesOfGlobalSnapshots.html">
-  Next: Properties of Global Snapshots</a> 
+  Next: Detecting Stable Properties</a> 
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="../LogicalClocks/LogicalClocks.html">Previous:
@@ -83,108 +83,31 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <div class="w3-twothird w3-container">
 
     <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Global Snapshots</h1><p>
-
-    The <i>global state</i> or system state is a tuple which contains
-    an element for the state of each agent and the value of each
-    shared variable of the system. We use the term, <i>global</i>, to
-    emphasize that this state is for the entire system.
-
-    <p>
-    A previous module showed the pictorial representation of a global
-    state at an instant in the trajectory.
-    When agent and variable timelines are horizontal,
-    an instant corresponds to a vertical line cutting through the
-    horizontal timelines.
-    The global state at an instant
-    is the tuple of labels of edges on agent and
-    shared-variable timelines that are cut by the line corresponding
-    to that instant. The figure below shows a vertical line
-    representing an instant T and shows the global state at T. 
-
-    <figure>
-    <img src="SystemStateAtT_Slide4.jpg" alt="Fig1" style="width:50%">
-    <figcaption>Fig.1: Global state at an instant T</figcaption>
-    </figure>
-    
-    <p>
-    Agents don't have perfectly synchronized clocks.  If each agent recorded its
-    local state when its local clocks was at a value \(T\), then the
-    tuple of recordings may not represent a state that occurs in any
-    trajectory. This is because the instant at which one
-    local clock has value \(T\) may be different from the instant at
-    which another clock has that value.  In terms of the timeline
-    graph, there's no algorithm by which agents can cut horizontal
-    timelines with a perfectly vertical line.
+    <h1 class="w3-text-teal">Global Snapshot Algorithm</h1><p>
+    In this module, we develop an algorithm to determine a global
+    snapshot: the state corresponding to a consistent cut. The
+    algorithm is similar to the algorithm that assigns consistent
+    timestamps to events. The key is identifying a consistent cut.
 
     <p>
-    Instead of determining the global state at an instant T, let's
-    look at an algorithm that solves a simpler problem: <i>Develop an algorithm by which
-    agents determine the global state corresponding to a consistent cut.</i>
-    
-    
-
-    <h3 class="w3-text-teal">A Global Snapshot Algorithm</h3>
-    <p class="w3-text-teal">Algorithm specification</p>
-    The algorithm must terminate. At termination the recorded
-    states of agents and shared variables must be a global snapshot
-    corresponding to a consistent cut of the timeline graph.
-
-
-<p class="w3-text-teal">The idea</p>
-The idea is that an agent \(a\) takes the following steps before it
-takes an action.
-<ol>
-  <li>
-  If agent \(a\) hasn't taken its local snapshot and it
-  references a snapped variable then \(a\) takes snapshots of itself
-  and all unsnapped variables that it references in the action.
-  </li>
-  <li>
-  If \(a\) has taken its local snapshot then \(a\) takes snapshots of
-  all unsnapped variables that it references in the action.
-  </li>
-</ol>
-
-
-
-    <p class="w3-text-teal">Variables in the algorithm</p>
-Let \(a.snap\) and \(v.snap\) be the values recorded by the algorithm
-    for the states of agent \(a\) and shared variable \(v\),
-respectively; these values are undefined initially.
-
-
-    <p class="w3-text-teal">Initiation</p>
-    The algorithm starts when an agent records its
-state. An agent \(a\) records its state by 
-setting \(a.snap\) to \(a\)'s state.
-
-Any set of agents can initiate the algorithm.
-Later, we will discuss what makes an agent initiate the algorithm.
-
-<p class="w3-text-teal">An agent's actions</p>
-Modify the action of an agent \(a\) in the following ways. Let
-<i>references</i> be the set of variables 
-referenced in the action. 
-  
-
-<pre>
-if a.snap is undefined:
-   if exists v in references such that v.snap is defined:
-       copy a's state into a.snap;
-   for all v in references for which v.snap is undefined:
-       copy v's value into v.snap
-else:
-   for all v in references for which v.snap is undefined:
-       copy v's value into v.snap
-</pre>
-
-
-<p class="w3-text-teal">Termination</p>
-The global snapshot algorithm terminates if local snapshots have been taken of all
-agents and shared variables. So, if all agents execute actions, and
-all shared variables are referenced, during
-a trajectory, then the algorithm terminates. 
+    Before an agent \(a\) executes an event \(e\), the agent takes the
+    following steps.
+    <ol>
+      <li>
+      If \(a\) hasn't recorded its own state then it does so and also
+      records the state of all unrecorded variables that are
+      referenced in the event.
+      </li>
+      <li>
+      If \(a\) has recorded its state then it records the state of all
+      unrecorded variables that are referenced in the event.
+      </li>
+    </ol>
+    Agents send the states that they record to a special agent that
+    puts all the recorded values into the tuple that forms the global
+    state. The algorithm terminates when the recorded states of all
+    agents and shared variables have been received by the central
+    agent. 
 
 
 <h2 style="color:red;">Example</h2>

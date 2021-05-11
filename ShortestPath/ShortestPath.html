@@ -1,6 +1,5 @@
-<!DOCTYPE html>
 <html lang="en">
-<title>ShortestPath</title>
+<title>LoopTermination</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -20,7 +19,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 hr.new4 {
   border: 5px solid blue;
 }
-/* Thin blue border */
+/* Thick blue border */
 hr.new2 {
   border: 2px solid blue;
 }
@@ -51,31 +50,27 @@ hr.new2 {
   <h3 class="w3-bar-item"><b>An Introduction to Distributed
   Algorithms</h3>
 
-  <h3 class="w3-bar-item"><b>Section: Examples of Concurrent Systems</h3>
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="LoopTermination.html">Review of Loop Termination</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="LoopTerminationExample.html">Examples</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="LoopTerminationSelfTest.html">Self Tests</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="ShortestPath.html">Example: Shortest Path</a>
-  
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="ShortestPathExample.html">Examples</a>
-  
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="ShortestPathSelfTest.html">Self Tests</a>
+  href="LoopTerminationExercises.html">Exercises</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="ShortestPathExercises.html">Exercises</a>
+  href="LoopTerminationExplorations.html">Explorations</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="ShortestPathExplorations.html">Explorations</a>
+  href="../Agents/Agents.html">Next: Agents</a> 
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_6/Agents.html">Next: Agents, Shared Variables, Timelines</a>
-  
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_5_3/Sorting.html">Previous:
-  Example: Sorting</a>
+  href="../Safety/Safety.html">Previous: Safety</a>
 
-  
 </nav>
 
 <!-- Overlay effect when opening sidebar on small screens -->
@@ -91,253 +86,142 @@ hr.new2 {
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
     
-    <h1 class="w3-text-teal">Example: Concurrent Shortest Paths</h1>
-
-    
-    <p>
-    This module describes the proof of a simple concurrent system in
-    which a collection of agents compute the shortest paths between
-    all points in a directed graph. This module gives an example of a
-    design strategy that we will use for much of the course: design
-    the proof and the algorithm hand-in-hand.
-
-    <h2 class="w3-text-teal">Problem Description</h2>
-    <p>
-    An edge-weight matrix \(W\) represents a graph \(G\) in which the weight
-    of edge \(i, j\) is \(W[i,j]\). The weight is infinity or a
-    suitably large value to indicate the absence of an edge. In a
-    shortest-path matrix \(L\) of the graph, \(L[i,j]\) is the length
-    of the shortest path from vertex \(i\) to vertex \(j\). We assume
-    that the graph has no cycles of negative length. We also assume
-    that weights are integer; however, we give an exercice in which
-    this assumption can be eliminated.
-    </p>
-    
-    <p>
-    Let \(sp\) (for <i>s</i>hortest <i>p</i>ath) be a function that
-    take an edge-weight matrix of a weighted directed graph as input
-    and returns its shortest-path matrix.
-    </p>
-    <p>
-    \(
-    L = sp(W)
-    \)
-    </p>
+    <h1 class="w3-text-teal">Examples: Correctness of
+    Loops</h1>
+    Our proof obligation is to show that the loop terminates and a
+    specified property holds at termination.
 
     <p>
-    A set of agents operates on a shared data structure \(D\) which is
-    a matrix of the same dimension as \(W\). The specification of the
-    algorithm is:
-    </p>
-    
-    <p>
-    \(
-    W=D \quad \leadsto \quad W = sp(D)
-    \)
-    
-    </p>
-    Let's design the proof first. We use
-    <a href="https://en.wikipedia.org/wiki/Lexicographic_order">
-    lexicographic ordering </a> to
-    define a partial order \(\leq\) on matrices of the same
-    size. Then:
-    <p>
-    \(
-    X \leq Y \quad \equiv \quad \forall i, j: X[i,j] \leq Y[i,j]
-    \)
-    </p>
-    and
-    <p>
-    \(
-    X < Y \quad \equiv \quad (X \leq Y) \wedge (X \neq Y)
-    \)
-    </p>
-    <p>
-    If the elements of the matrices are integer, and are bounded
-below, then we can carry out induction on them.
-</p>
-
-
-    <h2  class="w3-text-teal">Proof of Correctness</h2>
-    <hr class="new2">
-    <p class="w3-text-teal">Safety</p>
-    <p>
-    Prove that (1) every action either leaves \(D\) unchanged or decreases
-    it, and (2) \(D\) remains between \(W\) and \(sp(W)\).
-<p>
-  \(
-  \forall X: \quad
-(W \leq X = D \leq sp(W))
-\quad \rightarrow \quad
-(W \leq X \leq D \leq sp(W))
-  \)
-  </p>
-
-  <hr class="new2">
-
-  <p class="w3-text-teal">Progress</p>
-  <p>
-Prove that \(D = X\) is
-<a href="#Definitions">transitory</a> for all \(D\) where there exists
-a triangle \(i, j, k\) that does not satisfy
-<p>\(D[i, k] \leq D[i,j] +D[j,k]\),</p>
-<a href="https://en.wikipedia.org/wiki/Triangle_inequality">
-the triangle inequality</a>.
-  </p>
-
-  <hr class="new2">
-
-
-<h3  class="w3-text-teal">Actions</h3>
-<p>
-We can now design many algorithms that fit the proof. Here is one
-example. The algorithm has a set of agents. To ensure progress, for
-each \(i,j,k\) there exists at least one agent that executes a fair
-action that causes the triangle inequality to hold. An example of such
-an action is:
-</p>
-<p>
-\(
-D[i,k] = min(D[i,k], D[i,j] + D[j,k])
-\)
-</p>
-<p>
-To ensure safety, actions do not increase \(D\), and have the
-postcondition that for all \(i, j\), \(D[i,j]\) is the length of some
-path from \(i\) to \(j\). An example of such an action is as
-follows. For some sequence \(j_{0}, j_{1}, \ldots, j_{M}\) for any \(M
-> 0\), set:
-</p>
-\(
-D[j_{0}, j_{M}] = min(D[j_{0}, j_{M}], \sum_{i=1}^{i=M} D[j_{i-1},
-j_{i}])
-\)
-</p>
-
-
-    <p>
-    Associated with each agent \(a\) is a subgraph \(G_{a}\) of
-    \(G\). The set of vertices \(V_{a}\) of \(G_{a}\) is a subset of
-    the set of vertices of \(G\). The set of edges of \(G_{a}\) is a
-    subset of the set of edges of \(G\) between vertices in
-    \(V_{a}\). Agent \(a\) has  local variables \(W_{a}[i,j]\) and
-    \(L_{a}[i,j]\) for each edge \((i, j)\) in \(G_{a}\).
-    </p>
-
-    <p>
-    Initially \(W_{a}[i,j] = W[i,j] \). Agent \(a\)
-    has three sets of actions:
+    This module has examples of the method that we use to prove that
+    <i>do-od</i> loops are correct. The method consists of the
+    following steps:
     <ol>
       <li>
-      <p>
-      <i>Read</i>
-      </p>
-      <p>
-      Agent \(a\) has a separate action
-      for each edge \((i, j)\) in \(G_{a}\). The action is to read
-      data from \(D\) into \(W_{a}\).
-      </p>
-      <p>
-      \(
-      W_{a}[i, j] = D[i,j]
-      \)
-      </p>
-      <p>
-      The weight of edge \((i, j)\) in \(G_{a}\) is set to \(W_{a}[i,
-    j]\). 
+      Identify an invariant.
       </li>
-
-      
+      <li>Identify a variant function.</li>
+      <li>Show that each iteration reduces the variant function.</li>
       <li>
-      <p>
-      <i>Compute lengths of shortest paths</i>
-      </p>
-      <p>
-      For each path \(i\) to \(j\) in graph \(G_{a}\), set
-      \(L_{a}[i,j]\) to the length of the shortest path in graph
-      \(G_{a}\) from \(i\) to \(j\). 
-      </p>
+      Show that the specified property holds if the invariant holds and all
+      guards are False.
       </li>
+    </ol>
 
+    <h2 class="w3-text-teal">Shortest Paths in a Graph</h2>
+    An edge-weight matrix \(W\) represents a graph \(G\) in which the weight
+    of edge \(i, j\) is \(W[i,j]\).  The graph has no cycles of
+    negative length. Let \(sp(W)\) be a matrix of the same dimensions
+    as \(W\) and whose \((i, j)\)-th element is the length of the
+    shortest path from vertex \(i\) to vertex \(j\).
 
-      <li>
-      <p>
-      <i>Write</i>
-      </p>
-      <p>
-      Agent \(a\) has a separate action
-      for each edge \((i, j)\) in \(G_{a}\). The action is to write
-      data into \(D\) from \(W_{a}\).
-      </p>
-      <p>
-      \(
-      D[i,j] = min (D[i,j], W_{a}[i, j])
-      \)
-      </p>
-   </ol>
-      
-    For every
-    \((i,j,k)\) there is at least one agent whose subgraph includes
-    the vertices, \(i\), \(j\), and \(k\), and whose edges include
-    \((i, j)\), \((j, k)\), and \((i, k)\). 
     <p>
+    Let us prove that the following loop terminates and that at
+    termination \(D = sp(W)\).
+
+
     <pre>
-    mid = (l[j-1] + l[j+1])/2.0
-    if |l[j] - mid| >= epsilon:
-         l[j] = mid
+D = W
+for all i, j, k:
+  if d[i,j] + d[j, k] < d[i,k]:
+        d[i,k] = d[i,j] + d[j, k]
     </pre>
 
+    <h4 class="w3-text-teal">Invariant</h4>
+    An invariant of the program is:
+    <p>
+    \(D \leq W\)
+    and for all \(i, j\): \(D[i,j]\) is the length of some path from
+    \(i\) to \(j\).
+    
+    <p>
+    The proof of the invariant is straightforward. It follows the structure given in <a
+    href="../Safety/Safety.html">the module on safety and
+    invariants.</a>
 
-<h2 class="w3-text-teal">Proof of Correctness</h2>
-  <p>
-  Next, we give the structure of the proof. The details are found in
-  the solution to an exercise.
-</p>
+    <h4 class="w3-text-teal">Termination</h4>
+To prove termination we: (1) identify a variant function and (2) show
+that the execution of any command with a True guard reduces the value of
+    the variant function.
 
-   <p>
-   Let \(S\) be a tuple consisting of \(D\), a
+    <p class="w3-text-teal">A variant function</p>
+    The state of the program is given by \(D\).
+    Next, we show that \(D\) is itself a variant function.
 
+    <p>
+    For each \(i, j\), there
+    exist only a bounded number of values for \(D[i,j]\) that satisfy
+    the invariant. This is because there are only a bounded number of
+    cycle-free paths from \(i\) to \(j\). (The bound depends on the
+    size of the graph.)
 
+    So, the number of values of \(D\) that satisfy the invariant is
+    bounded. So \(D\) cannot decrease an unbounded number of times.
 
+    <p class="w3-text-teal">Execution of an iteration reduces the variant function</p>
+    The second part of our proof of termination is to prove that
+    execution of any command with a True guard reduces \(D\). The 
+    proof is obvious.
 
+    <p class="w3-text-teal">Desired property holds at termination</p>
 
-  <hr class="new2">
-<p class="w3-text-teal">Safety</p>
+    <p>
+    Finally, we have to prove that if the invariant holds and all the
+    guards are false then \(D\) is the matrix of lengths of shortest
+paths.
+
 <p>
-Show that every action, \(a_{i,j}\), leaves \(l\) unchanged or
-decreases \(f(l)\) by at least \(\delta\).
-</p>
+We can
+prove the result by induction on \(m\), the number of hops in shortest
+paths between vertices.
+The result holds for shortest paths consisting of a single hop.
+If the result holds for \(m\) then it holds for \(m+1\) because all
+the guards are False. 
+
+    <h2 class="w3-text-teal">Sorting</h2>
+Let \(X\) be an array of \(N\) numbers. Let us prove that the
+    following loop sorts 
+    the array in ascending order.  (We assume that indices
+    start at 0.)
+    <pre>
+for all i where 0 < i < N:
+   X[i-1] > X[i]   ->    X[i-1], X[i] = X[i], X[i-1]
+</pre>
+
+<h4 class="w3-text-teal">Invariant</h4>
+    An invariant of the program is: \(X\) is a permutation of
+\(X^{0}\), the initial value of \(X\).
+
+<h4 class="w3-text-teal">A variant function</h4>
+The state of the program is given by \(X\).
+A pair of elements \((i, j)\) in \(X\) are out of order exactly when
 <p>
-\(
-\forall L: \quad (l = L) \rightarrow ((l = L) \vee f(l) \leq f(L) -
-\delta
-\)
-</p>
-  <hr class="new2">
-
-  <p class="w3-text-teal">Progress</p>
-  <p>
-  Show that \(\neg goal(l)\) is transitory - i.e., \(l\) changes - because
-  execution of a fair action, \(a_{j}\), changes \(l\). This is
-straightforward.
-</p>
+\((i < j) \wedge (x[i] > x[j])\).
 <p>
-  From the safety property changes to \(l\) decrease \(f(l)\) by at least \(\delta\).
-  Therefore \(f(l)\) decreases by at least \(\delta\) at each step  while
-\(\neg goal(t)\) holds. But \(f(l)\) is bounded below and 
-the result follows.
-  </p>
-
-  <hr class="new2">
-
-
-
-<!------------------------------------------------->
-<h2 class="w3-text-teal">Summary</h2>
-<p>
-This module gives an example of a concurrent system and its proof of
-correctness. 
+Let \(f\) be the number of out-of-order pairs in \(X\).
+    <p>
+    \(
+    f(x) = |\{(i, j) | (i < j) \wedge (x[i] > x[j]\} |
+    \)
 </p>
+\(f\) takes on integer values and is bounded below. So \(f\) is
+a well-founded set.
+
+
+
+    <p class="w3-text-teal">Execution of an iteration reduces the variant function</p>
+The proof that every iteration reduces \(f\) is straightforward.
+
+
+
+    <p class="w3-text-teal">Desired property holds at termination</p>
+    Finally, we have to prove that if the invariant holds and all the
+    guards are false then \(X\) is in ascending order and is a
+    permutation of \(X^{0}\). This proof is obvious.
+
+
+
+   
+     
 
 
   <footer id="myFooter">

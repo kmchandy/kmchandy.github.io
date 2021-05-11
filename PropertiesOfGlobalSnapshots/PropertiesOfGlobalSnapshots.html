@@ -83,7 +83,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <div class="w3-twothird w3-container">
 
     <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Properties of Global Snapshots</h1><p>
+    <h1 class="w3-text-teal">Stable Properties and Global Snapshots</h1><p>
 
     This module describes a valuable property of the global snapshot
     recorded by the global snapshot algorithm.
@@ -122,7 +122,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <figcaption>Fig.1: Trajectory from start to finish through snapshot</figcaption>
     </figure>  
 
-    <h3 class="w3-text-teal">Theorem: Stable States and Snapshots</h3>
+    <h3 class="w3-text-teal">Theorem: Stable Properties and Snapshots</h3>
     Let \(P\) be a
     <a href = "../Safety/Safety.html">stable predicate of a system</a>,
     i.e. \(P \rightarrow P\). Let \(s_{init}\) and \(s_{fini}\) be the
@@ -164,25 +164,26 @@ but \(P\) holds when the algorithm finishes. In this case we don't
 know whether 
 \(P\) holds or \(\neg P\) holds in the snapshot state.
 
-<h3 class="w3-text-teal">Theorem: Stable States and Sequences of
-Cuts</h3>
-Let \(c_{0}, c_{1}, \ldots, c_{N}\) be a sequence of consistent cuts of the
-timeline graph of a trajectory \(T\) where \(c_{0}\) and \(c_{N}\) are
-the initial and final states of \(T\) and
-\(c_{i}\) is before \(c_{i+1}\), all \(i < N\).
-If a stable property \(P\) holds for any \(c_{j}\) then \(P\) also
-holds for all \(c_{k}\) where \(k \geq j\).
-
-<h3 class="w3-text-teal">Termination Detection</h3>
+<h3 class="w3-text-teal">Example: Termination Detection</h3>
 Termination of a computation is stable: once a computation has
 terminated it remains terminated. So, one way of detecting termination
 of computation in a distributed system is to take snapshots repeatedly
 until a snapshot state shows that computation has terminated in that
 state.
 
-<h3  style="color:red;">Example</h3>
+
+
+<h3 class="w3-text-teal">Example: Checkpoints, Rollback and Recovery</h3>
+Global snapshot algorithms are used to checkpoint computations, i.e.,
+to save global states while computations are in progress. Later, if an
+error is detected, the computation is rolled back to the most recent
+checkpoint and restarted from there.
+
+
+<h3  style="color:red;">Example: Earliest Meeting Time</h3>
 The
-<a href="EarliestMeetingTime/EarliestMeetingTime.html">earliest meeting time system consists of a network of agents</a>. We
+<a href="EarliestMeetingTime/EarliestMeetingTime.html">earliest
+meeting time system consists of a network of agents</a>.  We
 can detect that the system has ceased computation by repeatedly taking
 global snapshots of the system. If a snapshot shows that the guards of
 all guarded commands are False then the computation has
@@ -205,13 +206,6 @@ is checked. If all guards are False then the computation has
 terminated. If, however, at least one of the guards is True then the
 computation may not have terminated; in this case, a new global
 snapshot is taken later.
-
-
-<h3 class="w3-text-teal">Checkpoints, Rollback and Recovery</h3>
-Global snapshot algorithms are used to checkpoint computations, i.e.,
-to save global states while computations are in progress. Later, if an
-error is detected, the computation is rolled back to the most recent
-checkpoint and restarted from there.
 
 
 
