@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>Channels</title>
+<title>Knowledge</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -15,6 +15,14 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   top: 43px;
   bottom: 0;
   height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* Thick blue border */
+hr.new1 {
+  border: 1px solid blue;
 }
 </style>
 <body>
@@ -44,19 +52,19 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   Algorithms</h3>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Channels.html">Channels and Timelines</a>
+  href="Knowledge.html">Knowledge</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="ChannelsExample.html">Examples</a>
+  href="KnowledgeExample.html">Examples</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="ChannelsSelfTest.html">Self Test</a>
+  href="KnowledgeSelfTest.html">Self Test</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="ChannelsExercises.html">Exercises</a>
+  href="KnowledgeExercises.html">Exercises</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Channels.html">Explorations</a>
+  href="Knowledge.html">Explorations</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
   href="../ChannelSnapshots/ChannelSnapshots.html">
@@ -83,236 +91,253 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <div class="w3-twothird w3-container">
 
     <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Timelines with Channels</h1>
+    <h1 class="w3-text-teal">What Agents Know</h1>
+    We sometimes invest software
+    agents with human characteristics. For example, a programmer may
+    say "an agent <i>knows</i> that another agent is idle." Endowing software with
+    human capabilities can be dangerous when terms are ambiguous.
+    In this module we give a definition to the phrase "an agent
+    knows \(P\)." We will use this definition to prove theorems that
+    we will use to design algorithms. The definitions and proofs are based on
+    <a href="../ChannelSnapshots/ChannelSnapshots.html">consistent
+    cuts.</a>
 
-    <h3 class="w3-text-teal">Message-Passing Channels</h3>
-    Message-passing channels are a special kind of shared variable
-    that is often used in distributed systems. We use the abbreviation
-    <i>channels</i> for message-passing channels. The state of a
-    channel is a queue of messages. This queue represents the sequence
-    of messages in transit along the channel.
-
-    <p>
-    The only actions an agent can execute on a channel are to send and
-    receive messages on the channel. Sending a message \(m\) on a
-    channel \(c\) appends \(m\) to the tail of the queue which is the
-    sequence of messages in flight along \(c\). The action of sending
-    a message may change the agent's state.
-
-    <p>
-    The action of receiving a message along a channel is as
-    follows. If the channel is empty then the agent waits for the
-    channel to become nonempty. The agent then receives the message at
-    the head of the channel i.e., it deletes the message at the head
-    of the queue of messages. An agent may change its state when it
-    receives a message, and the agent's next state may depend on the
-    message that it receives. 
-
-    <p>
-    We restrict attention to systems where for each channel, exactly
-    one agent sends messages along the channel, and exactly one agent
-    receives messages along the channel.
-
-    <h4 class="w3-text-teal">Agent Diagram with Channels</h4>
-    The agent diagram for a system with channels is a
-    labeled directed graph in which each vertex represents an agent
-    and an edge labeled z from A to B represents a channel called z
-    from agent A to agent B. Agent A sends messages along channel z
-    and agent B receives messages along the channel.
-
-    <p>
-    The figure below is an agent diagram with agents A, B, C, and
-    channels r, u, v, x, y, z.
-
-    <figure>
-    <img src="Channels_2.jpg" alt="Fig1" style="width:80%">
-    <figcaption>Fig.1: Agent Diagram with Message-Passing Channels</figcaption>
-    </figure>
-
+    <h3 class="w3-text-teal">What an agent knows</h3>
+    For an agent \(x\), a state \(r\) of \(x\), and a predicate \(P\),
+    we use the phrase "<i style="color:blue;">agent \(x\) in state
+    \(r\) knows \(P\)</i>" 
+    to mean \([(s_{x} = r) \; \Rightarrow \; P]\) is an invariant of
+    the system.
+    Therefore, at every point of every trajectory of the
+    system, if the local state of agent \(x\) is \(r\) then the global
+    state satisfies \(P\).
+    We define a boolean function \(knows\) with arguments \(x, r,
+    P\) where
+    \(knows(x, r, P)\) means: "agent \(x\) in state
+    \(r\) knows \(P\)":
     
-    <h3 class="w3-text-teal">Timeline Diagrams with Channels</h3>
-    Timeline diagrams are simpler when the only shared variables are
-    channels. The diagram has a timeline for each agent, but not for
-    each channel.
+    <p>
+    <hr class="new2">
+    <p>
+    \(
+    knows(x, r, P) \quad = \quad
+    invariant \; [(s_{x} = r) \; \Rightarrow \; P]
+    \)
+    <hr class="new2">
+    
 
     <p>
-    The action of sending a message \(m\) sent along a channel \(c\) by an
-    agent \(A\) at time \(t\) is represented by an event on \(A\)'s
-    timeline at \(t\).
-    Likewise, the action of receiving message \(m\) along channel \(c\) by an
-    agent \(B\) at time \(t'\) is represented by an event on \(B\)'s
-    timeline at \(t'\). Because messages must be sent before they are
-received, \(t < t'\).
+    If <i>\(x\) in state \(r\) knows \(P\)</i> where
+    \(P\) is a predicate on the state of an agent \(y\) other
+    than \(x\), then the state of one agent gives us information about
+    the state of another agent. The phrase "\(x\)
+    knows" captures the idea that the our knowledge of the state of
+    \(y\) is based solely on the state of \(x\).
+
+    <p>
+    The next theorem tells us that if at some point in a trajectory,
+    \(x\) is in a  state \(r\) such that \(knows(x, r, P)\), where
+    \(P\) is a predicate on the state of another  agent \(y\), then
+    \(y\) cannot transit to a state in which \(\neg P\) without
+    receiving communication from \(x\). This communication from \(x\)
+    could be via intermediate agents. Speaking informally, it's as though
+    \(y\) needs permission from \(x\) to get out of states in which
+    \(P\) holds. 
+
+
+<!------------------------------------------------------------>
+<h4 class="w3-text-teal">Theorem: Knowledge and Communication</h4>
+Let \(x\) and  \(y\) be different agents in a system, and let \(P\) be a
+predicate on the states of \(y\).
 
 <p>
-A message \(m\) in transit along channel \(c\)
-    from an agent \(A\) to an agent \(B\) is represented by an edge from the
-    sending event on \(A\)'s timeline to the receiving event on
-\(B\)'s timeline.
-
-<p>
-The figure below shows a timeline diagram with two agents \(A\) and
-\(B\) and 4 messages in transit along a channel \(c\) from \(A\) to
-\(B\). The points at which messages are sent are events (vertices) on
-\(A\)'s timeline. Likewise,   
-the points at which messages are received are events on
-\(B\)'s timeline.
-
-<p>
-Each message is represented by a labeled directed
-edge where the label is a pair: the channel on which the message is
-sent, and the message itself. For example, message \(m_{0}\) is represented by an edge
-directed from the event that sends the message to the event that
-receives the message, and the edge is labeled with the message and the
-channel. We don't show the label for the channel \(c\) in the diagram so
-as not to crowd the diagram.
-<figure>
-    <img src="Channels_1.jpg" alt="Fig2" style="width:80%">
-    <figcaption>Fig.2: A Channel Timeline Diagram</figcaption>
-    </figure>
-
-<p>
-Time \(T\) is represented by a vertical line that crosses the agent
-timelines at \(T\). The messages sent before \(T\) are shown as send events on agent
-\(A\)'s timeline before \(T\), i.e. to the left of line \(T\). These
-messages are \(m_{0}, m_{1}, m_{2}\). Message \(m_{3}\) is sent after \(T\).
-
-The messages received before \(T\) are shown on agent \(B\)'s timeline
-to the left of line \(T\). Message \(m_{0}\) is received before \(T\),
-and messages \(m_{1}, m_{2}, m_{3}\) are received after \(T\).
-
-<p>
-The messages in transit
-along the channel at \(T\) are those sent before \(T\) but not
-received before \(T\). The sequence of messages in transit along the
-channel at \(T\) is \([m_{1}, m_{2}]\), and this is the sequence of
-message lines (shown in red) that are cut by the vertical \(T\)-line.
-
-<h3 class="w3-text-teal">The timeline of a channel</h3>
-The timeline of a channel is the sequence of states of a channel in a
-trajectory. Each state is a sequence of messages. The states of a
-channel can be obtained, from the diagram, from the message lines that
-are cut by vertical lines corresponding to different points in the trajectory.
-
-
-<figure>
-    <img src="Channels_3.jpg" alt="Fig3" style="width:80%">
-    <figcaption>Fig.3: Timeline for a channel</figcaption>
-</figure>
-
-In the figure above, initially the channel is empty; this corresponds
-to a line (not shown) at the extreme left of the diagram that crosses no message
-lines. Then the state of the channel becomes \([m_{0}]\), the only
-message in the channel.
-This is shown by the first vertical line on the left; message
-\([m_{0}]\) has been sent (left of the line) and has not yet been
-received.
-<p>
-Then message \(m_{0}\) is received which makes the channel empty
-again. The next vertical line shows this situation; there are no
-messages in transit along the channel. After this point, message
-\([m_{1}]\) is sent, and the next vertical line shows the state in
-which \([m_{1}]\) has been sent and not yet received.
-
-
-<h3 class="w3-text-teal">Theorem: Permuting Events in a
-Trajectory</h3>
-This theorem was given earlier in 
-<a href="../Timelines/Timelines.html">the module on timelines</a>, for
-the general case of arbitrary shared variables.
-It is repeated here for convenience for the special case of channels.
-
-<p>
-Let \(G\) be the timeline graph of a trajectory \(T\) which starts in a
-state \(s\) and ends in a state \(s'\) and which has an event sequence
-\([e_{0}, \ldots, e_{m-1}]\).
-Let \(E\) be any permutation of \([e_{0}, \ldots, e_{m-1}]\) that
-satisfies the following condition:
-<p>
-<i>
-\(e_{i}\) appears before  \(e_{j}\) in the permutation if edge
-\((e_{i}, e_{j})\) exists in \(G\).
-</i>
-<p>
-Then, there exists a trajectory with event sequence \(E\), that starts
-in state \(s\) and ends in state \(s'\).
+\(P\) holds at every point in a trajectory if:
+<ol>
+  <li>
+  The initial state of of \(x\) is \(r\) such
+  that \(knows(x, r, P)\), and
+  </li>
+  <li>
+  the timeline diagram of the trajectory has no path from an event in
+  the timeline of \(x\) to an event in the timeline of \(y\).
+  </li>
+</ol>
 
 <p class="w3-text-teal">Proof</p>
-The proof is the same as that given in
-<a href="../Timelines/Timelines.html">the module on timelines</a>, for
-the general case.
-
-<h2 style="color:red;">Example</h2>
-The figure below shows a timeline with agents A, B, C, and a channel
-from A to B and another channel from C to B. Events are numbered in
-the order in which they occur.
-
-<figure>
-    <img src="Channels_4.jpg" alt="Fig4" style="width:80%">
-    <figcaption>Fig.4: Example timeline with channels</figcaption>
-</figure>
-
-The next figure shows a permutation of the sequence of events that
-satisfies the condition of the theorem. For example, event 0 in the
-first timeline is event 1 in this figure. Likewise, event 6 in the
-first figure is is event 3 in this one. The new numbering of events
-shows a permutation where every edge is from a lower-numbered event to
-a higher-numbered event.
-
-<figure>
-    <img src="Channels_5.jpg" alt="Fig5" style="width:80%">
-    <figcaption>Fig.5: Example permutation of events</figcaption>
-</figure>
-
-The next figure shows the timeline of a trajectory. This timeline consists of
-the permuted events appearing in order of their numbering. The theorem
-tells us that this trajectory starts and ends at the same states as
-the trajectory in fig.4.
-
-<figure>
-    <img src="Channels_6.jpg" alt="Fig6" style="width:80%">
-    <figcaption>Fig.6: Example timeline with permuted events</figcaption>
-</figure>
-
-
-<h3 class="w3-text-teal">Consistent cuts of timelines</h3>
-We defined consistent cuts in <a href="../Timelines/Timelines.html">the
-module on timelines</a>. Examples of the concept are given next.
-
-<figure>
-    <img src="Channels_7.jpg" alt="Fig7" style="width:80%">
-    <figcaption>Fig.7: A consistent cut of a timeline</figcaption>
-</figure>
-
-In figure 7, the past with respect to the cut consists of events 0, 1,
-2, 4, 5, 6, 8. The future consists of the remaining events.
-Every edge that crosses the cut is directed from the past to the future.
-For example, the
-edge from event 6 to event 7 crosses the cut, and the edge is
-directed from event 6, which is inside the past, to event 7, which is
-in the future.
+Let \(t\) be the initial point of the trajectory, i.e., the point
+before any agent executes any event.
+Let \(t'\) be any arbitrary point on the trajectory.
 
 <p>
-The next diagram shows an inconsistent cut. The cut is inconsistent because
-there is an edge directed from event 10 in the future to event 11
-in the past.
-
-<figure>
-    <img src="Channels_8.jpg" alt="Fig8" style="width:80%">
-    <figcaption>Fig.8: An inconsistent cut of a timeline</figcaption>
-</figure>
-
-
-<h2 class="w3-text-teal">The Consistent-Cut Theorem</h2>
-Let \(G\) be the timeline graph of a trajectory \(T\) that starts in
-state \(s\) and ends in state \(s'\). Let \(c\) be the state
-associated with a consistent cut of \(G\). Then there exists a trajectory
-that (1) starts in \(s\), (2) then visits state
-\(c\), and (3) ends in the state \(s'\).
+We will show that there is a consistent cut that intersects the
+timeline of \(x\) at point \(t\) and intersects the timeline of \(y\)
+at point \(t'\).
 
 <p>
-This theorem was given earlier in  <a href="../Timelines/Timelines.html">the
-module on timelines</a>. It is repeated here for convenience.
+Define the <i>future</i> as the set of events that are reachable from
+events in the timeline for \(x\). Define the <i>past</i> as the
+remaining events. All edges directed from the future are to the
+future. Therefore the cut is consistent. And so the state, \(s\),
+corresponding to the cut is a reachable global state. 
+
+<p>
+The local state of \(x\) is \(r\) when the global state is
+\(s\). Because \(x\) in state \(r\) knows \(P\), it follows
+that \(P\) holds in state \(s\).
+
+
+
+<h4 class="w3-text-teal">Corollary: Permission to Falsify</h4>
+If
+at some point \(t\) in the trajectory, \(x\) is in a state \(r\)
+such that \(knows(x, r, P)\), where  \(P\) is a predicate on the
+  states of a different agent \(y\), and
+  at a later point \(t'\) in the trajectory, \(\neg P\) holds,
+
+then there is a chain of messages, starting from \(x\) after \(t\) and
+ending with \(y\) before \(t'\). This message chain may go through
+intermediate vertices.
+
+<p class="w3-text-teal">Discussion</p>
+ This message chain is the communication
+from \(x\) that permits \(y\) to change its state from one in which
+ \(P\) holds to one in which \(\neg P\) holds.
+
+<h4 class="w3-text-teal">Corollary: Persistence of knowledge in silent
+agents</h4>
+If at some point \(t\) in the trajectory, \(x\) is in a state \(r\)
+such that \(knows(x, r, P)\), where  \(P\) is a predicate on the
+states of a different agent, and \(x\) sends no messages from point
+\(t\) to a later point \(t'\), then \(P\) holds at every point between 
+\(t\) and \(t'\).
+
+<p class="w3-text-teal">Discussion</p>
+From the <i>permission to falsify</i> corollary, \(y\) cannot falsify
+\(P\) because \(y\) needs permission from \(x\) to do so, and \(x\)
+remains silent.
+
+
+<!------------------------------------------------------------>
+<h4 class="w3-text-teal">Theorem: Learning from Communication</h4>
+Let \(x\) and  \(y\) be different agents in a system, and let \(P\) be a
+predicate on the states of \(y\). Let \(s_{x}\) be the local state of
+agent \(x\) when the global state is \(s\).
+
+
+<p>
+In a trajectory, if
+<ol>
+  <li>
+  \(\neg P\) holds in the initial state, and
+  </li>
+  <li>
+  there is no path from an event in
+  the timeline of \(y\) to an event in the timeline of \(x\).
+  </li>
+</ol>
+then \( \neg knows(x, s_{x}, P)\) holds at every state.
+
+<p class="w3-text-teal">Proof</p>
+
+Let \(t\) be the initial point of the trajectory, i.e., the point
+before any agent executes any event.
+Let \(t'\) be any arbitrary point on the trajectory.
+
+<p>
+We will show that there is a consistent cut that intersects the
+timeline of \(y\) at point \(t\) and intersects the timeline of \(x\)
+at point \(t'\).
+
+<p>
+Define the <i>future</i> as the set of events that are reachable from
+events in the timeline for \(y\). Define the <i>past</i> as the
+remaining events. All edges directed from the future are to the
+future. Therefore the cut is consistent. And so the state, \(s\),
+corresponding to the cut is a reachable global state. 
+
+<p>
+In state \(s\), \(\neg P\) holds and the local state of agent \(x\) is
+\(s_{x}\). So, \([s_{x} \Rightarrow P]\) is not an
+invariant. Therefore, \( \neg knows(x, s_{x}, P)\).
+
+
+<p class="w3-text-teal">Discussion</p>
+If \(\neg P\) holds initially, and agent \(x\) receives no
+communication from agent \(y\), then \(x\) does not know whether \(P\)
+holds.
+
+
+
+<h4 class="w3-text-teal">Corollary: Learn by Listening</h4>
+Let \(x\) and \(y\) be different agents in a system, and let \(P\) be
+a predicate on the states of \(y\).  If at some point \(t\) in the
+trajectory, \(\neg P\) holds, and at a later point \(t'\) in the
+trajectory, \(knows(x, r, P)\) holds, then there is a chain of
+messages that starts from \(y\) after \(t\) and \(P\) holds, and
+that ends with \(y\) before \(t'\).
+
+<p class="w3-text-teal">Discussion</p>
+ This message chain is the communication
+from \(y\) that informs \(x\) that \(P\) holds.
+
+<h4 class="w3-text-teal">Corollary: Persistence of ignorance among
+agents that don't listen</h4>
+If at some point \(t\) in the trajectory, \(\neg P \) holds, where  \(P\) is a predicate on the
+state of an agent \(y\), and a different agent \(x\) receives no messages from point
+\(t\) to a later point \(t'\), then \( \neg knows(x, s_{x}, P)\) holds at
+at every point between \(t\) and \(t'\).
+
+<p class="w3-text-teal">Discussion</p>
+If agent \(x\) receives no messages from any agent then it cannot
+learn that a different agent has changed state.
+
+
+<h2 class="w3-text-teal">Extensions</h2>
+
+<h4 class="w3-text-teal">Chains of Knowledge</h4>
+Let \(s_{x}\) be the local state of an agent \(x\) when the global
+state is \(s\).
+We define a function \(K\) from agents-predicates to
+predicates as follows.
+For an agent \(x\) and a predicate \(P\):
+\(K(x, P)\) is a predicate which holds for a global state
+\(s\) exactly when \(knows(x, s_{x}, P)\).
+
+<p>
+We can define predicates with arbitrarily long applications of \(K\),
+for example \(K(x, K(y, K(z, P)))\). The theorems and corollaries
+given above can be applied to such chains. The following result is one
+example.
+
+<p class="w3-text-teal">Chains of Permission</p>
+If \(K(x, K(y, K(z, P)))\) holds at a point \(t\) in a
+trajectory, and \(\neg P\) holds at a later point \(t'\)
+then there must be a
+chain of communications that starts after \(t\) and ends before \(t'\),
+where the chain is first from \(x\) to \(y\), and then from
+\(y\) to \(z\). 
+
+
+<h4 class="w3-text-teal">Knowledge about Subsystems</h4>
+A subsystem of a system consists of a subset of the agents and the
+channels between them. The theorems about knowledge of the state of an
+agent apply to knowledge of subsystems.
+
+<p>
+For example, let \(P\) be a predicate on the states of a subsystem,
+and \(x\) be an agent that is not in the subsystem.  If\(x\) knows
+\(P\) at a point \(t\) in a trajectory, and \(\neg P\) holds at a
+later point \(t'\) then there is a chain of messages from \(x\) to
+some agent in the subsystem.
+
+<h4 class="w3-text-teal">Shared Variables other than Channels</h4>
+Systems with shared variables other than channels are described in <a
+href="../Agents/Agents.html">the module on agents</a>. The theorems
+and proofs given in this module apply to such systems because the
+concept of consistent cuts is identical for systems with shared
+variables and systems with message-passing channels.
+
+
 
 
   <footer id="myFooter">
