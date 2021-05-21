@@ -173,6 +173,16 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     Consistent cuts, consistent timestmaps, and the global snapshot
     algorithm for the case where shared variables are message-passing channels.
     </li>
+  </ol>
+
+  
+  <!----------------------------------------------------------------->
+  <h3 class="w3-text-teal">Detection Algorithms</h3>
+  Algorithms by which an agent detects that the system is in a stable
+  state. Examples of such algorithms are termination detection and
+  deadlock detection. These algorithms are based on the concept of
+  consistent cuts. 
+  <ol>
     <li>
     <a
     href="GlobalSnapshotApplications/GlobalSnapshotApplications.html">Termination
@@ -184,305 +194,108 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <a
     href="DeadlockDetection_And/DeadlockDetection_And.html">Deadlock
     Detection I</a>
-    Another application of consistent cuts: detecting deadlock in database systems, also
-    called detecting "And" Deadlock.
+    Algorithm to detect deadlock in systems in which an idle agent is
+    made active when it receives a message from <i>all</i> agents for
+    which it is waiting. This algorithm is based on consistent
+    cuts. The algorithm can be used to detect deadlock in database
+    systems. 
+    </li>
+    <li>
+    <a
+    href="DiffusingComputations/DiffusingComputations.html">Diffusing Computations
+    </a>
+    Algorithms in which an agent starts a computation across a network
+    of agents; detects that the computation has terminated; and
+    collects information from participating agents.
+    </li>
+    <li>
+    <a
+    href="DeadlockDetection_Or/DeadlockDetection_Or.html">Deadlock
+    Detection I</a>
+    Algorithm to detect deadlock in systems in which an idle agent is
+    made active when it receives a message from <i>any</i> agent for
+    which it is waiting. This algorithm is based on diffusing
+    computations and consistent cuts.
     </li>
     
-    </ol>
-      
+  </ol>
+
+
+  <h3 class="w3-text-teal">Resilient Algorithms</h3>
+  Algorithms that are resilient to errors. Algorithms that use varying
+  amounts of resources. Algorithms that use incentives for agents to
+  participate. 
+  <ol>
+    <li>
+    <a
+    href="Paxos/Paxos.html">The Paxos Algorithm</a>
+    Achieving consensus among agents in the presence of error.
+    </li>
+    <li>
+    <a
+    href="SelfStabilization/SelfStabilization.html">Self Stabilization Algorithms</a>
+    Self-stabilizing algorithms automatically correct themselves in response to transient faults. 
+    </li>
+    <li>
+    <a
+    href="ByzantineFaults/ByzantineFaults.html">Byzantine Algorithms</a>
+    Algorithms that reach consensus among a set of faulty agents.
+    </li>
+    <li>
+    Distributed ledgers: Block chain.
+    </li>
+    <li>
+    Distributed algorithms in the cloud. Map-Reduce.
+    </li>
+  </ol>
+
+  <h3 class="w3-text-teal">Algorithms for Clock Synchronization</h3>
+  Algorithms to reduce drift between clocks used by different agents.
+  <ol>
+    <li>
+    NTP
+    </li>
+    <li>
+    Clocks with bounded drift and channels with bounded message delay.
+    </li>
+    <li>
+    Adaptive synchronization algorithms when the drift is a Wiener
+    process.
+    </li>
+    <li>
+    Using clocks for managing resources shared by multiple agents.
+    </li>
+  </ol>
+
+  <h3 class="w3-text-teal">Cooperating Agents</h3>
+  <ol>
+    <li>
+    Temporal logic concepts: <i>Eventually</i>, <i>leads-to</i>, and
+    <i>transience</i>.
+    </li>
+    <li>
+    Proving progress properties. Using induction and variant functions
+    again with <i>leads-to</i>
+    </li>
+    <li>
+    Compositiono of specifications: Rely/guarantee
+    </li>
+    <li>
+    The distributed dining philosophers problems.
+    </li>
+    <li>
+    Mutual exclusion algorithms.
+    </li>
+    <li>
+    Fair sharing of resources among agents: the drinking philosophers
+  problem. 
+    </li>
+    <li>
+    Coordinating actions across multiple agents: The committee
+  coordination problem.
+    </li>
+  </ol>
 
-    <h1>OLD</h1>
-    <p>
-    This section describes concepts in terms of labeled directed
-    graphs. This section has three main modules with supporting
-    modules containing self tests, exercises and explorations: These
-    modules are <i>safety</i>, <i>progress</i>, and <i>properties of
-    temporal operators</i>. In
-    addition, the section has two <i>exercise modules</i> which you
-    can view as exercises that you can skim through. Live
-    discussions on this section spend little time on exercise module.
-    </p>
-    
-    <p class="w3-text-teal">
-    <a href="Chapter_1/Safety.html">Safety</a>
-    </p>
-    <p>
-    This module introduces all the concepts that we use in this
-    course to prove that systems are safe.
-    These concepts are described in terms of directed graphs.
-    </p>
-
-    <p class="w3-text-teal">
-    <a href="Chapter_2/Progress.html">Progress</a>
-    </p>
-    <p>
-    This module introduces all the concepts that we use in this
-    course to prove that systems progress towards their goals.
-    These concepts are described in terms of labeled graphs.
-    </p>
-
-<p class="w3-text-teal">
-<a href="Chapter_2_2/ProgressProperties.html">Properties of Temporal Operators</a>
-    </p>
-
-    <p>
-    This module defines key properties of the relation, leads-to (or
-    \(\leadsto\)). 
-    We use these properties to prove progress of every system that we study in
-    this course. These properties are defined in terms of paths and
-    sets of vertices in labeled graphs.
-    </p>
-
-<p style="color:blue;">
-<a href="Chapter_2_3/PropertiesOfRelations.html">Exercise Module: Properties of Relations</a>
-    </p>
-
-    <p>
-    This module is an <i>exercise module</i>. It gives properties of
-    relations that are similar to properties of \(\subseteq\). You can
-    treat this module as an exercise in which you find properties of
-    relations that we use in this course.
-</p>
-
-
-<p style="color:blue;">
-<a href="Chapter_2_4/CompositionOfOperators.html">Exercise Module:
-Composition of Operators</a> 
-    </p>
-
-    <p>
-    This module is an <i>exercise module</i>. It gives examples of
-    composition of functions and relations that are defined in the
-    earlier modules. You can view this module as an exercise in which
-    you identify the properties of different compositions.
-</p>
-
-<h1 class="w3-text-teal">Section: State Transition Systems</h1>
-
-<p style="color:blue;">
-<a href="Chapter_3_1/Predicates.html">Review module: Predicates</a>
-    </p>
-    <p>
-    This module reviews predicates. Skip it if you are familiar with
-predicates, or skim through it to refresh your memory.
-    </p>
-
-<p style="color:blue;">
-<a href="Chapter_3_2/HoareTriples.html">Review Model: Hoare Triples</a>
-    </p>
-    <p>
-    Skip this module if you are familiar with Hoare Triples.
-</p>
-
-<p class="w3-text-teal">
-<a href="Chapter_4/Model.html">Model of State Transition Systems</a>
-</p>
-
-<p>
-This chapter presents a model of state transition systems.
-</p>
-
-<p class="w3-text-teal">
-<a href="Chapter_4_1/RunningExample.html">An Example of a System</a>
-</p>
-
-<p>
-This module gives an example of a state-transition system.
-</p>
-
-
-<!---------------------------------------------------->
-<h1 class="w3-text-teal">Section: Examples of Concurrent Systems</h1>
-
-
-<p>
-<a href="Chapter_5/EarliestMeetingTime.html">Example of Copy Variable:
-Earliest Meeting Time</a>
-   </p>
-<p>
-Earliest meeting time
-</p>
-
-<p class="w3-text-teal">
-<a href="Chapter_5_3/ShortestPaths.html">Example of Copy Variable:
-Shortest Paths</a>
-</p>
-
-<p>
-Shortest paths.
-</p>
-
-
-<p class="w3-text-teal">
-<a href="Chapter_5_4/SensorAverage.html">Shared Variables Example:
-Sensor Average</a>
-</p>
-
-<p>
-Average of Sensor Readings.
-</p>
-
-<p class="w3-text-teal">
-<a href="Chapter_5_5/Sorting.html">Shared Variables Example:
-Sorting</a>
-</p>
-
-<p>
-Sorting.
-</p>
-
-<p class="w3-text-teal">
-<a href="Chapter_5_6/FlightFormation.html">Shared Variables Example:
-Flight Formation</a>
-</p>
-
-<p>
-Drones in Flight Formation.
-</p>
-
-<p class="w3-text-teal">
-<a href="Chapter_5_7/DiscreteEventSimulation.html">Message Channels Example:
-Discrete Event Simulation</a>
-</p>
-
-<p>
-Discrete Event Simulation.
-</p>
-
-
-<!---------------------------------------------------->
-<h1 class="w3-text-teal">Section: Diffusing Computations</h1>
-
-
-<p>
-Diffusing computations.
-</p>
-
-<p>
-Message passing and time-line diagrams.
-</p>
-
-<p>
-Global snapshots.
-</p>
-
-<p>
-Logical clocks.
-</p>
-
-<p>
-Termination and deadlock detection.
-</p>
-
-<p>
-Global consensus and the Paxos algorithm.
-</p>
-
-<p>
-Self stabilization.
-</p>
-
-<p>
-Overcoming failures. Byzantine algorithms.
-</p>
-
-<p>
-Managing resources shared by multiple agents.
-</p>
-
-<p>
-Distributed ledgers and blockchain.
-</p>
-
-<p>
-Knowledge: What does an agent know? How does it learn?
-</p>
-
-<p>
-Contracts: Rely/guarantee contracts between an agent and its
-environment. 
-</p>
-
-<p>
-Discrete and continuous state spaces. 
-</p>
-
-<p>
-Summary
-</p>
-
-
-<!------------------------------------------>
-<!------------------------------------------>
-<h1> New Table of Contents </h1>
-<!------------------------------------------>
-<!------------------------------------------>
-
-<p>
-Review: Do-Od Loops
-
-<p> Review: Predicates
-
-<p> Review: Hoare Triples
-
-<p>
-Review: State-Transition Systems: safety, stable, invariant.
-
-<p>
-Agents: Introduction to Timelines
-
-<p>Example: earliest meeting time
-
-<p>Example: average of sensor readings
-
-<p>Example: drones in flight formation
-
-<p>Example: sorting
-
-<p>Example: Shortest path
-
-<p>Timeline theorem
-
-<p>Detecting global snapshots
-
-<p>Logical clocks
-
-<p>Example: Detecting termination with shared variables
-
-<p> Timelines with channels; logical clocks with channels
-
-<p> Example: Termination using channels
-
-<p>Global consensus and the Paxos algorithm.
-
-<p>Overcoming failures. Byzantine algorithms.
-
-<p>Knowledge
-
-<p>Temporal Logic: Progress
-
-<p>Progress Properties, exercise: Properties of relations, exercise:
-Composition of progress; A, E, N
-
-<p>Diffusing Computation
-
-<p>Deadlock detection
-
-<p>Resource management: distributed dining philosophers
-
-<p>General resource management
-
-<p>Self stabilization
-
-<p>Composition and rely/guarantee contracts
-
-<p>Block chain. Non fungible token
-
-<p>Cloud computing algorithms
-
-<p>Continuous state spaces
-
-<p>Summary
     
 
   <footer id="myFooter">
