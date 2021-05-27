@@ -291,6 +291,35 @@ at every point between \(t\) and \(t'\).
 If agent \(x\) receives no messages from any agent then it cannot
 learn that a different agent has changed state.
 
+<h4 class="w3-text-teal">Knowledge about Channels</h4>
+Next, let's look at systems in which messages are acknowledged.
+For a pair of agents \(x, y\), let \(ms\) and \(mr\)
+be the number of messages that \(x\) has sent to \(y\), and  the number 
+of messages that \(y\) has received from \(x\), respectively.
+Let \(as\) and \(ar\) be
+the number of acknowledgements that \(y\) has sent to \(x\), and
+the number of acknowledgements that \(x\) has received from \(y\),
+respectively.
+
+The following is an invariant:
+<p>
+\(ms \geq mr \geq as \geq ar \)
+
+<p>
+The number of messages in the channel from \(x\) to \(y\) is \(ms -
+mr\).
+Because \(ms\) and \(ar\) are variables of agent \(x\):
+<p>
+
+<hr class="new2">
+Agent \(x\) <i>knows</i> an upper bound,\(ms - ar\), on the number of
+messages in channel \((x, y)\).
+<hr class="new2">
+
+<p class="w3-text-teal">What an agent cannot know</p>
+An agent cannot know that there are
+exactly, or at least, \(n\) messages in a channel, for \(n > 0\).
+You can prove this result using the concept of consistent cuts.
 
 <h2 class="w3-text-teal">Extensions</h2>
 

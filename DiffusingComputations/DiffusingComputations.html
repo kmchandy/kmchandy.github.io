@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>DiffusingComputations</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* Thick blue border */
+hr.new1 {
+  border: 1px solid blue;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DiffusingComputations.html">DiffusingComputations</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DiffusingComputationsExample.html">Examples</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DiffusingComputationsSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DiffusingComputationsExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DiffusingComputations.html">Explorations</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../DeadlockDetection_Or/DeadlockDetection_Or.html">
+  Next: Deadlock Detection II</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Knowledge/Knowledge.html">Previous:
+  What Agents Know
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Diffusing Computations</h1>
+    In this module we deal with systems in which an agent is either
+    <i>idle</i> or <i>active</i>. An idle agent remains idle until it
+    receives a message at which point it becomes active. An idle agent
+    does not send messages. An active agent may send messages. An
+    active agent may become idle at any time.
+
+    <p>
+    Initially, the system has a single active agent. This agent is
+    called <i>the initiator</i>. Initially all channels are empty.
+
+    <p>
+    The computation has terminated exactly when all agents
+    are idle and all channels are empty.
+    <p>
+    \(
+    terminated \; \equiv \; (\forall \; \textrm{agents} \; z: \;
+    z.quiet)
+    \)
+    <p>
+    In the above quantification, \(z\) includes the initiator.
+
+    <p>
+    The computation may never
+    terminate. We want to design an algorithm that enables the initiator to know
+    that the computation has terminated if it does terminate.
+
+    <p>
+    In this system, for every channel from an agent \(x\) to an agent
+    \(y\), there is a channel from \(y\) to \(x\). For any pair \(x,
+    y\) of agents there exists at most one channel from \(x\) to
+    \(y\), and at most one channel from \(y\) to \(x\).
+
+    <p>
+    We will design an algorithm based on the the concepts described in
+    the module
+    <a href="../Knowledge/Knowledge.html">what agents know</a>.
+    
+    <p>
+    The module tells us how an agent can know that its outgoing
+channels are empty; to do so, agents acknowledge messages.
+An agent sends an <i>ack</i> (acknowledgment) after it receives a
+    message. For the purposes of this module, an ack is not a
+    message. Messages are part of the underlying computation whereas
+    acks are used only for termination detection.
+
+
+    <!------------------------------------------------------>
+    <h3 class="w3-text-teal">Notation</h3>
+    <p>
+We use the letters, m, a, s, and r, for message, ack, send and
+receive, respectively.
+For any pair of agents \(y,z\):  \(ms(y,z)\)
+and \(mr(y,z)\) are the numbers of messages sent and received,
+respectively, on channel \((y, z)\). 
+Similarly, \(as(y,z)\)
+and \(ar(y,z)\) be the numbers of acks sent and received, respectively, on channel \((y, z)\). 
+
+
+<p>
+Channel \((y, z)\) contains no messages exactly when all messages sent
+on the channel have been received: \(ms(y,z) = mr(y,z)\). 
+
+<p>
+Agent \(y\) <i>knows</i> that channel \((y, z)\) contains no messages if it
+has received acks for all the messages that it has sent: \(ms(y,z) = ar(z,y)\),
+
+
+<!---------------------------------------->
+<h3 class="w3-text-teal">Quiet agents</h3>
+For an agent \(x\), we define a predicate \(x.quiet\) which holds
+exactly when \(x\) is idle and all its outgoing channels contain no
+messages. 
+<p>
+\(
+x.quiet \; \equiv \; x.idle \wedge (\forall z: ms(x, y) = mr(x, y))
+\)
+
+<p>
+The computation has terminated exactly when all agents are quiet.
+
+<p>
+While an agent \(x\) is idle, another agent \(y\) may receive messages
+from \(x\) if the channel from \(x\) to \(y\) contains messages
+that \(x\) sent before it became idle. By contrast, an agent cannot
+receive messages from a quiet agent.
+
+
+<h3 class="w3-text-teal">How an agent knows that it is quiet</h4>
+Agent \(x\) knows that it is quiet when it is idle and has
+received acks for all the messages that it has sent. We
+define \(x.knows\_quiet\) as:
+<p>
+\(
+x.knows\_quiet \; \equiv \; x.idle \wedge \forall y: ( ms(x,y) = ar(y, x))
+\)
+<p>
+<a href="../Knowledge/Knowledge.html">From the definition</a>:
+<p>
+\(
+[x.knows\_quiet \; \Rightarrow \; x.quiet]
+\)
+<p>
+So, if all agents know that they are quiet, the computation has terminated.
+Next we describe an algorithm where:
+<hr class="new2">
+When the initiator knows that it
+is quiet it also knows that all the other agents are
+quiet too. 
+<hr class="new2">
+
+<!------------------------------------------------------>
+<h3 class="w3-text-teal">A Distributed Rooted Tree</h3>
+The theorems on knowledge tell us that for an agent to become active there
+ must be a chain of messages from the initiator to the
+agent. Likewise, for the initiator
+to learn that an active agent has become idle, there must be a chain
+of messages from the agent back to the initiator. A data structure
+that has paths from the initiator to agents, and back from the agents
+to the initiator, is a tree rooted at the initiator.
+
+
+<p>
+ For each
+agent \(x\) let \(x.parent\) be either \(null\) or the agent that is
+\(x\)'s parent in the tree. Agent \(x\) is not on tree exactly when
+\(x.parent = null\).
+
+
+
+
+<h2 class="w3-text-teal">Program for an agent</h2>
+Next we propose a program for an agent \(x\)
+other than the initiator.
+
+Each of the four statements of the program are numbered.
+We prove the correctness of the program later.
+
+<p>
+The central ideas of the program deal with transitions from when agent
+\(x\) knows that it is quiet to when it doesn't. Agent \(x\)
+transits to not knowing that it is quiet when it gets a message from
+some agent \(y\), at
+which point \(x\) becomes active. When \(x\) does so, it makes \(y\)
+its parent and \(x\) has one
+acknowledged message to its parent. When \(x\) transits to knowing
+that it is quiet, it sends the acknowledgment to its parent, and then
+sets its parent to \(null\).
+
+<pre>
+0: initially x.knows_quiet and x.parent = null
+
+1: if x.knows_quiet and x receives a message from y:
+       x.parent = y
+
+2: if (not x.knows_quiet) and x receives a message:
+       send ack
+
+3: if (not x.knows_quiet) and
+      (x receives an ack or x becomes idle):
+          if x.knows_quiet:
+              send ack to x.parent
+              x.parent = null
+
+</pre>
+
+
+<!------------------------------------------------------>
+<h3 class="w3-text-teal">Invariants</h3>
+Next we give the invariants that we use to prove the correctness of
+the program. 
+
+
+<p class="w3-text-teal">Invariant 1: Agents that know they are quiet
+are not on the tree</p> 
+For all agents \(x\) other than the initiator:
+
+<p>
+\(
+x.parent = null \quad \equiv \quad x.knows\_quiet
+\)
+<p>
+This invariant is equivalent to if \(x\) has a parent then \(x\) does
+not know if it is quiet.
+<p>
+\(
+(\exists \; \textrm{agent} \ y: x.parent = y) \quad \equiv \quad \neg x.knows\_quiet
+\)
+
+<p class="w3-text-teal">Invariant 2: Agents that know they are quiet have sent
+acknowledgments for all messages</p>
+For all agents \(x\):
+<p>
+\(
+x.knows\_quiet \quad \equiv \quad
+\forall y: (as(x,y) = mr(y,x))
+\)
+
+<p class="w3-text-teal">Invariant 3: An agent that doesn't know it is
+quiet has acknowledged all messages except one to its parent.</p>
+For all agents \(x\) other than the initiator:
+<p>
+\(
+\begin{align}
+&\neg x.knows\_quiet \quad \equiv \\
+& \quad (as(x, x.parent) = mr(x.parent, x) - 1) \; \wedge \\
+& \quad \forall y \neq x.parent: (as(x,y) = mr(y,x))
+\end{align}
+\)
+
+<p>
+Proofs of the above three invariants are straightforward.
+
+<p class="w3-text-teal">Invariant 4: Parents who know they are quiet
+are childless.</p>
+<p>
+\(
+y.knows\_quiet \; \Rightarrow \; (\forall x: x.parent \neq y)
+\)
+<p>
+This is equivalent to:
+<p>
+\(
+(x.parent = y) \; \Rightarrow \; \neg y.knows\_quiet
+\)
+
+<p>
+This invariant follows from the first three.
+
+<p class="w3-text-teal">Proof</p>
+<p> From invariant 1:
+<p>
+\(
+x.parent = y \; \Rightarrow \; \neg x.knows\_quiet
+\)
+
+<p>
+From invariant 3:
+<p>
+\(
+\neg x.knows\_quiet \; \Rightarrow \; (as(x, y) = mr(y, x) - 1)
+\)
+
+<p>
+Because channels are first-in-first-out, and acknowledgments are sent
+ after messages are received:
+<p>
+\(
+ar(x, y) \leq as(x, y) \leq mr(y, x) \leq ms(y, x)
+\)
+<p>
+From the above three equations:
+<p>
+\(
+(x.parent = y) \quad \Rightarrow \quad (ar(x, y) < ms(y, x))
+\)
+<p>
+The result follows from the above equation and invariant 1.
+
+<h4 class="w3-text-teal">Invariant 5: \(parent\) specifies a tree rooted at
+the initiator</h4>
+For all agents \(x\) for which \(x.parent\) is not null, the chain of
+parents, \(x.parent.parent.parent....\), ends at the initiator.
+
+<p class="w3-text-teal">Proof</p>
+The initiator is always on the tree. Initially, the initiator is the
+only agent on the tree. Therefore the invariant holds initially.
+
+<p>
+The only ways in which \(x.parent\) changes for any \(x\) are (1)  in
+statement 1  where \(x.parent\) changes from \(null\) to \(y\) and
+(2) in statement 3 where \(x.parent\) becomes \(null\) when
+\(x.knows\_quiet\) starts to hold.
+
+<p>
+In the former case, \(x\) is added to tree as a leaf because \(x\) has
+acknowledgments for all the messages that it sent (see invariant
+2). Adding a leaf to a tree retains the tree structure.
+
+<p>
+In the latter case, \(x\) is removed from the tree as a leaf (see
+invariant 4). Removing a leaf from a tree retains its tree structure.
+
+<h3 class="w3-text-teal">Safety</h3>
+If the initiator knows that it is quiet,
+then the computation has terminated. 
+<p>
+\(
+initiator.knows\_quiet \; \Rightarrow \; terminated
+\)
+<p class="w3-text-teal">Proof</p>
+From invariant 4, when the initiator knows it is quiet, it has no
+children; in this case, from invariant 5, there are no agents on the tree.
+From invariant 1, agents that are not on the tree know that they are
+quiet. So, when the initiator knows it is quiet, all agents are quiet.
+
+<h3 class="w3-text-teal">Progress</h3>
+Next we show that if the computation terminates then the initiator
+detects that the computation has terminated.
+<a href="../LoopTermination/LoopTermination.html">
+We use variant functions defined in the module on loop
+termination.</a> We will show that any action with a true guard
+reduces the variant function.
+
+<p>
+A variant function for this program is the
+number of agents on the tree plus the number of acknowledgments in
+channels. The value of the function is a non-negative 
+integer. So, the function is bounded below. We will show that
+execution of any action with a true guard
+reduces the variant function, and so the computation terminates.
+
+<p>
+Channels do not contain messages after the computation terminates. So,
+the guards of statements 1 and 2 of the program are False. Only
+statement 3 can have a True guard. In addition, the operation of channels delivering
+acknowledgments can be represented as a guarded command where "channel contains
+acknowledgment" is the guard and "channel delivers acknowledgment" is
+the action.
+
+<p>
+The proof that the delivery of an acknowledgment reduces the
+variant function is self evident. The action of statement 3 reduces
+the number of agents on the tree, which reduces the variant function.
+
+
+
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+
