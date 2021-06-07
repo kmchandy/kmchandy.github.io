@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Paxos</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Paxos.html">Global Snapshots</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PaxosExample.html">Examples</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PaxosSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PropertiesOfTimelinesExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Paxos.html">Explorations</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../SelfStabilizing/SelfStabilizing.html">
+  Next: Self Stabilizing Algorithms</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../ApplicationsDiffusingComputations/ApplicationsDiffusingComputations.html">
+  Previous: Applications of Diffusing Computations
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">The Paxos Algorithm</h1>
+    <p class="w3-text-teal">Consensus among distributed agents is
+    important</p> 
+    The Paxos algorithm is used to determine a consensus among a
+    collection of distributed agents. Consensus is important in a
+    variety of applications.
+
+    <p>
+    In a control system with multiple sensors
+    and actuators, the actuators have to come to a consensus about the
+    state of the environment so that they can operate in concert. A
+    vehicle would crash
+    if some actuators caused the vehicle to accelerate while other
+    actuators applied brakes.
+
+    Some applications of multi agent systems require the agents to
+    elect a single leader. Clearly, all agents have to come
+    to a consensus on the same leader. Multiple business agents have
+    to come to a consensus on whether a transaction was completed when
+    they collectively manage a distributed ledger.
+
+    <p>
+    Are there algorithms for consensus in systems in which agents
+    operate at arbitrary speeds, and where messages may be lost and
+    duplicated but not corrupted?
+
+    <h3 class="w3-text-teal">Consensus is impossible with a single
+    faulty agent</h3>
+    Consensus is impossible with even a single faulty agent. The
+    theorem saying so was published by Fischer, Lynch and Patterson.
+
+    <p>
+    You can get the idea of what goes wrong with an arbitrarily slow
+    agent by looking at the following scenario. A collection of 2N + 1
+    agents want to come to a consensus about a color. N of the agents
+    pick blue and N+1 pick red, but one of the red agents is
+    arbitrarily slow. The 2N non-slow agents exchange messages among
+    each other, and each of these 2N agents gets N votes for red and N
+    votes for blue. Agents decide to take a majority vote, and in the
+    event of a tie pick blue.
+
+    <p>
+    How long should they wait for the slow agent?
+
+    <p>
+    Consider an algorithm in which agent waits until its local clock
+    shows an elapsed time of T and then makes a decision based on the
+    votes that it has.  An agent Y gets N red and N blue votes when
+    its clock shows an elapsed time of T, and agent Y decides that the
+    consensus is blue. Another agent Z has a slower clock and gets a
+    red vote from the slow agent for a total of N+1 red votes, before
+    Z's clock shows an elapsed time of T. So Z determines that the
+    consensus is red.
+
+<p>
+No algorithm is guaranteed to come to a consensus
+in finite time.
+    Systems with synchronized clocks don't have this particular
+problem. We'll look at consensus in such systems later.
+
+<p>
+<figure>
+    <img src="Paxos_03.jpg" alt="Fig1" style="width:80%">
+    <figcaption>Fig.1: Problem with a slow agent</figcaption>
+</figure>
+
+<h2 class="w3-text-teal">Best Effort Consensus</h3>
+The theorem says that there is no algorithm that guarentees that
+consensus can be reached in all scenarios; 
+however, consensus can be reached in most practical situations. An idea
+to overcome the counterexample given above is:
+Agents keep trying repeatedly until they reach consensus. The theorem tells us
+that the agents may have to keep trying for ever. We expect, however,
+that in most practical situations their attempts will succeed at some point.
+
+<p>
+The key question is: What does keep trying mean? When does one trial
+end and the next one begin? If agents use timeouts to end a trial,
+then --- because clocks aren't synchronized --- the timeouts may complete
+at different times.
+<p>
+We'll see that we can use the idea of time, even though clocks aren't
+synchronized. We've done that before with logical clocks.
+
+<p>
+Let's study an
+algorithm that doesn't guarantee progress but does guarantee that all
+non-faulty agents either have no value or have the same value. The
+description of the algorithm has a type of agent called
+<i>proposers</i> and a type called <i>learners</i>. (In an
+implementation an agent may play the role of both proposer and
+learner.) Proposers propose values. Learners come to a consensus among
+the proposed values. Assume that all agents can communicate with each
+other across message-passing channels. Messages may be lost. Agents
+may stop and restart later, and may be arbitrarily slow.
+
+<p>
+<figure>
+    <img src="Paxos_04.jpg" alt="Fig2" style="width:80%">
+    <figcaption>Fig.2: Proposers and Learners</figcaption>
+</figure>
+
+<h3 class="w3-text-teal">Specification</h3>
+Associated with each learner \(L\) is a local variable \(L.value\)
+which is initially \(null\). Similarly, each proposer \(P\) has a
+local variable \(P.value\) which is initially the value that the
+proposer is proposing.
+<p>
+The specification has three parts.
+<ol>
+  <li>
+  <i>Learners learn only proposed values.</i>
+  <p> For every learner \(L\):
+  <p>
+  \(
+  (L.value \neq null) \quad \Rightarrow \quad
+  (\exists \; \textrm{proposer} P : L.value = P.value)
+  \)
+  </li>
+  <li>
+  <i>Learners learn the same value.</i>
+  <p>
+  For all learners \(L\) and \(L'\):
+  <p>
+  \(
+  (L.value \neq null) \wedge (L'.value \neq null) \quad \Rightarrow \quad
+  ( L.value = L'.value)
+  \)
+  </li>
+  <li>
+  <i>After a learner learns a value it doesn't later learn a different
+  value.</i>
+  <p>
+  For all learners \(L\), and for all non-null values \(V\):
+  <p>
+  \(
+  stable (L.value = V)
+  \)
+  </li>
+</ol>
+
+<h2 class="w3-text-teal">The Paxos Algorithm</h2>
+The Paxos Algorithm, proposed by Leslie Lamport, has an additional
+layer of agents called <i>acceptors</i>. The communication structure
+between agents is shown in the figure below.
+
+<p>
+<figure>
+    <img src="Paxos_06.jpg" alt="Fig3" style="width:80%">
+    <figcaption>Fig.3: Proposers, Acceptors and Learners</figcaption>
+</figure>
+
+<h4 class="w3-text-teal">Messages</h4>
+The algorithm has four types of messages. The parameter \(t\) in all
+cases is a timestamp.
+<ol>
+  <li>
+  <i>prepare(t)</i> sent from proposers to acceptors.
+  </li>
+  <li>
+  <i>promise(t)</i> sent from acceptors to proposers.
+  </li>
+  <li>
+  <i>request(t)</i> sent from proposers to acceptors.
+  </li>
+  <li>
+  <i>accepted(t)</i> sent from acceptors to proposers.
+  </li>
+</ol>
+The messages are sent in the above order.
+
+<p>
+<figure>
+    <img src="Paxos_07.jpg" alt="Fig4" style="width:80%">
+    <figcaption>Fig.4: Messages</figcaption>
+</figure>
+
+<p>
+We will describe the algorithm in three parts.  The first two parts
+deal only with proposers and acceptors; the third part deals with
+acceptors and learners. The first part deals exclusively with
+timestamps, the second part also deals with values.
+
+<h3 class="w3-text-teal">Proposers, Acceptors and Timestamps</h3>
+This part of the description of the algorithm deals only with
+timestamps, and only with proposers and acceptors. The algorithm, as
+described below, does not terminate; we will discuss termination
+later. 
+
+<h4 class="w3-text-teal">Timestamp Algorithm for Proposers</h3>
+Associated with each proposer \(P\) is a local variable \(P.t\) which
+is a number. We refer to \(t\) as a timestamp. 
+
+<pre>
+initially P.t = 0
+
+while true:
+   1. start timer; restart loop body if timeout
+
+   2. increment P.t by a positive amount
+
+   3. send prepare(P.t) to all acceptors
+
+   4. if P receives promise messages where
+      promise.t == P.t from a majority of acceptors:
+           send request(P.t) to all acceptors
+      // else execution of the loop body times out
+
+   5. if P receives accepts messages where
+           accepts.t == P.t
+           from a majority of acceptors:
+               break
+</pre>
+
+<h4 class="w3-text-teal">Timestamp Algorithm for Acceptors</h3>
+Associated with each acceptor \(A\) is a local variable \(A.t\) which
+is a number. We refer to \(t\) as a timestamp. 
+
+<pre>
+initially A.t = 0
+
+while true:
+
+   1. upon receiving a prepare message from a proposer P:
+          if prepare.t >= A.t:
+               A.t = prepare.t
+               send promise(A.t) to P
+
+   2. upon receiving a request message from a proposer P:
+          if request.t >= A.t
+               A.t = request.t
+               send accepts(A.t) to P
+</pre>
+
+We shall say that an acceptor "<i>accepts t</i>" when it sends an accepts(t)
+message to any proposer.
+
+<h3 class="w3-text-teal">Observations</h3>
+
+<h4 class="w3-text-teal">Meaning of A.t</h4>
+For an acceptor A, A.t is the maximum value of prepare.t and request.t 
+over all the prepare and request messages that A has received.
+
+<h4 class="w3-text-teal">Meaning of promise.t</h4>
+After an acceptor sends a promise(t) message, that acceptor will not
+reply to prepare(t') or request(t') messages where t' < t.
+
+<h4 class="w3-text-teal">Theorem 1</h4>
+If any majority of acceptors accepts \(T\) after any acceptor accepts \(t\) then
+\(T \geq t\).
+
+<p class="w3-text-teal">Proof</p>
+An acceptor accepts t only after receiving a request(t)
+message from a proposer. See line 2 of the acceptor's algorithm.
+<p>
+A proposer sends a request(t) message only after receiving promise(t)
+messages from a majority of acceptors. See line 4 of the proposer's
+algorithm.
+<p>
+After an acceptor accepts t there exists a majority of proposers that
+do not reply to prepare(t') or request(t') messages where t' <
+t. Let's call the set of proposers in this majority \(m\).
+<p>
+Let \(m\) be the set of proposers in the majority that accepts \(T\)
+after the acceptor accepts t. The sets \(m\) and \(m'\) have an
+element in common because any two majorities have at least one common
+element. Let \(A\) be a common element of both majorities.
+<p>
+\(A\) does not reply to prepare(t') or request(t') messages where t' <
+t, and so if accepts \(T\) then \(T \geq t\).
+
+<p>
+<figure>
+    <img src="Paxos_24.jpg" alt="Fig5" style="width:80%">
+    <figcaption>Fig.5: After an acceptor sends accept(t)</figcaption>
+</figure>
+The figure illustrates the ideas behind the proof.
+
+<p>
+We will find the following verion of theorem 1 to be useful.
+<h4 class="w3-text-teal">Corollary</h4>
+If a majority of acceptors has accepted \(T\) at some point, then no
+acceptor has accepted \(t\) at that point where \(t > T\).
+
+
+<h3 class="w3-text-teal">Proposers, Acceptors and Values</h3>
+Now we give the complete algorithms for proposers and acceptors.
+
+<h4 class="w3-text-teal">Messages</h4>
+The messages have fields in addition to timestamps.
+<ol>
+  <li>
+  <i>promise(t, accepted_t, value)</i> sent from acceptors to proposers.
+  </li>
+  <li>
+  <i>request(t, value)</i> sent from proposers to acceptors.
+  </li>
+  <li>
+  <i>accepts(t, value)</i> sent from acceptors to proposers.
+  </li>
+</ol>
+
+<h4 class="w3-text-teal">Algorithm for Proposers</h3>
+Associated with each proposer P is a local variable P.value
+which is initially the value proposed by P, and which may change.
+
+<pre>
+initially P.t = 0, P.value = value proposed by P
+
+while true:
+   1. start timer; restart loop body if timeout
+
+   2. increment P.t by a positive amount
+
+   3. send prepare(P.t) to all acceptors
+
+   4. if P receives promise messages where
+      promise.t == P.t from a majority of acceptors:
+           let M be the set of these messages
+           where promise.value is not null
+           if M is not the empty set:
+                 let msg be the element of M with
+                 the largest accept_t
+                 set P.value to msg.value
+            send request(P.t, P.value) to all acceptors
+
+
+   5. if P receives accepts messages where
+         accepts.t == P.t
+         from a majority of acceptors:
+             break
+</pre>
+
+<h4 class="w3-text-teal">Algorithm for Acceptors</h3>
+Associated with each acceptor \(A\) are local variables A.accepted_t
+and A.value which are both null initially. A.accepted_t and A.value
+are timestamp and the value (respectively) of the most
+recent proposal to which A replied with an accepts message.
+
+<pre>
+initially A.t = 0, A.accepted_t = null, A.value = null
+
+while true:
+
+   1. upon receiving a prepare message from a proposer P:
+          if prepare.t >= A.t:
+               A.t = prepare.t
+               send promise(A.t, A.accepted_t, A.value) to P
+
+   2. upon receiving a request message from a proposer P:
+          if request.t >= A.t
+               A.accepted_t, A.value = request.t, request.value
+               send accepts(request.t, request.value) to P
+</pre>
+<p>
+We shall say that an acceptor "<i>accepts (t, V)</i>" when it sends an
+          accepts(t, V) message to any proposer.
+
+<h3 class="w3-text-teal">Theorem: Stability of Majority
+Acceptance</h3>
+If any acceptor accepts (t', V') after a majority of acceptors accepts
+(t, V) then V = V'
+
+<p  class="w3-text-teal">Proof</p>
+
+
+<p>
+Let \(A\) be the first acceptor to accept any (t', V') where t' > t,
+after the majority accepts (t, V).
+
+From line 2 of the acceptor's program,
+\(A\) received request(t', V') from a proposer P before \(A\)
+accepted (t', V').
+<p>
+From line 4 of the proposer's program,
+proposer P received promise messages with  promise.t = t'
+from a majority of acceptors before P
+sent request(t', V'). Let this majority be M'.
+<p>
+Two majorities have at least one element in common.
+Let A' be any acceptor in both M and M'. Then since A' accepted (t, V),
+it follows from line 1 of the acceptor's program that A' sends
+promise(t', t, V) to proposer P. 
+<p>
+Let C be an acceptor in M' and not in M. From theorem 1, C.accepted_t
+< t or C.value = V. So, C sends a promise message with
+promise.accepted_t < t or promise.value.
+<p>
+Proposer P chooses the promise message with the largest accepted_t
+field. The message with the largest accepted_t is promise(t', t,
+V). So, proposer P sends request(t', V) to acceptor A. Therefore
+acceptor A accepts (t', V).
+
+<h3 class="w3-text-teal">Learning Consensus</h3>
+We now have a simple solution to learn a consensus. Acceptors send
+accept messages to all learners. When a learner receives
+accept messages with the same accept.t and accept.V values then the
+learner learns the value V.
+From the above theorem, after a majority
+of acceptors accept (t, V), all subsequent acceptances will accept the
+same V.
+
+<p>
+Recall that the specification has three parts: (1)
+learners learn values that have been proposed, (2) all learners learn
+the same value, and (3) and after learning a value a learner doesn't
+lear a new value.
+The proof that the algorithm satisfies the specification is
+straightforward.
+
+<p>
+The algorithm can be optimized. The optimizations don't change the
+basic structure of the proof.
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+
