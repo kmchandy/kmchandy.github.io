@@ -115,14 +115,15 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     theorem saying so was published by Fischer, Lynch and Patterson.
 
     <p>
-    You can get the idea of what goes wrong with an arbitrarily slow
-    agent by looking at the following scenario. A collection of 2N + 1
-    agents want to come to a consensus about a color. N of the agents
-    pick blue and N+1 pick red, but one of the red agents is
-    arbitrarily slow. The 2N non-slow agents exchange messages among
-    each other, and each of these 2N agents gets N votes for red and N
-    votes for blue. Agents decide to take a majority vote, and in the
-    event of a tie pick blue.
+    You can get the idea of the problem with arriving at a consensus
+    when message delays are finite, but arbitrarily long, by looking
+    at the following scenario. A collection of 2N + 1 agents want to
+    come to a consensus about a color. N of the agents pick blue and
+    N+1 pick red, but one of the red agents is arbitrarily slow. The
+    2N non-slow agents exchange messages among each other, and each of
+    these 2N agents gets N votes for red and N votes for blue. Agents
+    decide to take a majority vote, and in the event of a tie pick
+    blue.
 
     <p>
     How long should they wait for the slow agent?
@@ -135,17 +136,18 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     consensus is blue. Another agent Z has a slower clock and gets a
     red vote from the slow agent for a total of N+1 red votes, before
     Z's clock shows an elapsed time of T. So Z determines that the
-    consensus is red.
+    consensus is red. The algorithm fails because Y and Z have not
+    come to a consensus. 
 
 <p>
-No algorithm is guaranteed to come to a consensus
-in finite time.
-    Systems with synchronized clocks don't have this particular
+No algorithm is guaranteed to come to a consensus in finite time if
+messages can be arbitrarily slow or if agents can be arbitrarily slow.
+Systems with synchronized clocks don't have this particular
 problem. We'll look at consensus in such systems later.
 
 <p>
 <figure>
-    <img src="Paxos_03.jpg" alt="Fig1" style="width:80%">
+    <img src="Paxos_01.jpg" alt="Fig1" style="width:80%">
     <figcaption>Fig.1: Problem with a slow agent</figcaption>
 </figure>
 
@@ -181,7 +183,7 @@ may stop and restart later, and may be arbitrarily slow.
 
 <p>
 <figure>
-    <img src="Paxos_04.jpg" alt="Fig2" style="width:80%">
+    <img src="Paxos_02.jpg" alt="Fig2" style="width:80%">
     <figcaption>Fig.2: Proposers and Learners</figcaption>
 </figure>
 
@@ -231,7 +233,7 @@ between agents is shown in the figure below.
 
 <p>
 <figure>
-    <img src="Paxos_06.jpg" alt="Fig3" style="width:80%">
+    <img src="Paxos_03.jpg" alt="Fig3" style="width:80%">
     <figcaption>Fig.3: Proposers, Acceptors and Learners</figcaption>
 </figure>
 
@@ -256,7 +258,7 @@ The messages are sent in the above order.
 
 <p>
 <figure>
-    <img src="Paxos_07.jpg" alt="Fig4" style="width:80%">
+    <img src="Paxos_04.jpg" alt="Fig4" style="width:80%">
     <figcaption>Fig.4: Messages</figcaption>
 </figure>
 
@@ -326,9 +328,20 @@ message to any proposer.
 For an acceptor A, A.t is the maximum value of prepare.t and request.t 
 over all the prepare and request messages that A has received.
 
+<figure>
+    <img src="Paxos_05.jpg" alt="Fig5" style="width:80%">
+    <figcaption>Fig.5: Acceptor's t value</figcaption>
+</figure>
+
+
 <h4 class="w3-text-teal">Meaning of promise.t</h4>
 After an acceptor sends a promise(t) message, that acceptor will not
 reply to prepare(t') or request(t') messages where t' < t.
+
+<figure>
+    <img src="Paxos_06.jpg" alt="Fig6" style="width:80%">
+    <figcaption>Fig.6: promise.t</figcaption>
+</figure>
 
 <h4 class="w3-text-teal">Theorem 1</h4>
 If any majority of acceptors accepts \(T\) after any acceptor accepts \(t\) then
@@ -356,10 +369,13 @@ t, and so if accepts \(T\) then \(T \geq t\).
 
 <p>
 <figure>
-    <img src="Paxos_24.jpg" alt="Fig5" style="width:80%">
-    <figcaption>Fig.5: After an acceptor sends accept(t)</figcaption>
+    <img src="Paxos_07.jpg" alt="Fig7" style="width:80%">
+    <figcaption>Fig.7: Idea of the proof: 1</figcaption>
+</figure><figure>
+    <img src="Paxos_08.jpg" alt="Fig8" style="width:80%">
+    <figcaption>Fig.8: Idea of the proof: 2</figcaption>
 </figure>
-The figure illustrates the ideas behind the proof.
+The two figures, above, illustrate the ideas behind the proof.
 
 <p>
 We will find the following verion of theorem 1 to be useful.
@@ -475,6 +491,39 @@ Proposer P chooses the promise message with the largest accepted_t
 field. The message with the largest accepted_t is promise(t', t,
 V). So, proposer P sends request(t', V) to acceptor A. Therefore
 acceptor A accepts (t', V).
+
+<p>
+The sequence of figures illustrates the steps of the proof. In these
+figures t = 9 and t' = 12.
+
+
+</figure><figure>
+    <img src="Slide09.jpg" alt="Fig9" style="width:50%">
+    <figcaption>Fig.9: Idea of the proof: 1</figcaption>
+</figure>
+<figure>
+    <img src="Slide10.jpg" alt="Fig10" style="width:50%">
+    <figcaption>Fig.10: Idea of the proof: 2</figcaption>
+</figure>
+<figure>
+    <img src="Slide11.jpg" alt="Fig11" style="width:50%">
+    <figcaption>Fig.11: Idea of the proof: 3</figcaption>
+</figure>
+<figure>
+    <img src="Slide12.jpg" alt="Fig12" style="width:50%">
+    <figcaption>Fig.12: Idea of the proof: 4</figcaption>
+</figure>
+<figure>
+    <img src="Slide13.jpg" alt="Fig13" style="width:50%">
+    <figcaption>Fig.13: Idea of the proof: 5</figcaption>
+</figure>
+<figure>
+    <img src="Slide14.jpg" alt="Fig14" style="width:50%">
+    <figcaption>Fig.14: Idea of the proof: 6</figcaption>
+</figure>
+
+
+
 
 <h3 class="w3-text-teal">Learning Consensus</h3>
 We now have a simple solution to learn a consensus. Acceptors send
