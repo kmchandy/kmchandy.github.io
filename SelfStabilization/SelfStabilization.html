@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>SelfStabilization</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="SelfStabilization.html">Global Snapshots</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="SelfStabilizationExample.html">Examples</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="SelfStabilizationSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PropertiesOfTimelinesExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="SelfStabilization.html">Explorations</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Byzantine/Byzantine.html">
+  Next: Byzantine Consensus</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Paxos/Paxos.html">
+  Previous: Consensus - Paxos Algorithm
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Self Stabilization</h1>
+    A <i>self stabilizing</i> system
+    recovers automatically from transient errors.
+    If a self-stabilizing system enters an unsafe state then the
+    system will correct itself and eventually enter a safe state.
+
+    <p>
+    The literature on self stabilization is extensive. Let's look at
+    one example of a self-stabilizing system to get an idea of its
+    design.
+
+    <h3 class="w3-text-teal">Self Stabilizing Token Passing</h3>
+    A ring of agents passes a single token around the ring. An
+    agent that holds the token knows that no other agent has the token
+    at that point. So, the system can be used to implement mutual
+    exclusion.
+
+    <p>
+    Examples of errors are the disappearance of the single token and
+    the creation of additional tokens. A self stabilizing algorithm
+    ensures that eventually the system gets back to a safe state,
+    i.e., one in which it has exactly one token.
+
+    <p>
+    Let's begin with a model in which each agent in the ring can read
+    the state of its predecessor in the ring. Later, we will modify the
+    algorithm to work with message-passing.
+
+
+    <p>
+    \(N\) agents, indexed \(j\), are organized in a ring where agent
+    \((j+1) \: \textrm{mod} \: N\) can read the state of agent
+    \(j\). Hereafter, we will not write "\(\textrm{mod} \; N\);" it is
+    to be understood.
+
+    <p>
+    An agent is either <i>idle</i> or <i>active</i>. The system is
+    required to have exactly one active process. The active process
+    can be thought of as having the single token in the system.  The
+    token is passed from agent \(j\) to agent \(j+1\) when agent \(j\)
+    becomes idle and agent \(j+1\) becomes active.
+
+    <p>
+    For convenience in visualizing diagrams, let's assume that the
+    state of an agent is a color. Next we describe the basic algorithm
+    that assumes that errors do not occur; later we will modify the
+    algorithm to obtain a self-stabilizing algorithm that recover from
+    errors.
+
+
+<p class="w3-text-teal">The Algorithm</p>
+    The algorithm for agent \(0\) is different from that of
+    the other agents. Agent \(0\) has the token exactly when its color
+    is <i>the same</i> as that of its predecessor. Any other agent holds
+    the token exactly when its color is <i>different</i> from that of its
+predecessor.
+
+<p>
+An agent \(j\) passes the token to
+agent \(j+1\) when agent \(j\) changes its color.
+Agent \(0\) has the token when all the agents
+in the ring have the same color.
+
+<p>
+The diagram below illustrates an example with 4 agents where an
+agent's color is either red or blue.
+The diagram shows how the token is passed from
+each agent to its sucessor.
+<p>
+
+<p>
+In the figure on the top left, all the agents are red; so agent 0 has
+the token. When agent 0 changes its color we get the diagram at the
+top center. In this diagram, agent 0 is blue and all the other agents
+are red. Agent 0 no longer has the token because its color is
+different from that of its predecessor; however agent 1 does have the token
+because its color is different from that of its predecessor. The
+sequence of diagrams shows what happens when the agent holding the
+token --- which is the only active agent --- changes its color.
+
+<figure>
+    <img src="Slide01.jpg" alt="Fig1" style="width:100%">
+    <figcaption>Fig.1: The token is passed by an agent changing color</figcaption>
+</figure>
+
+<h4 class="w3-text-teal">Faults</h4>
+Let's look at the state of a system after a fault occurs.  The next
+set of diagrams shows how errors --- once they occur --- can propagate
+for ever.  These diagrams show a system with three tokens whereas an
+error-free system should have exactly one.  The three agents holding
+tokens are shown with large yellow numbers and the agent that does not
+hold a token is shown with a smaller black number.
+
+<figure>
+    <img src="Slide02.jpg" alt="Fig2" style="width:100%">
+    <figcaption>Fig.2: Errors can propagate forever</figcaption>
+</figure>
+
+<p>
+The figure on the top left of the above diagram shows agents 1, 2 and
+3 with tokens because their colors are different from those of their
+predecessors. The next diagram, top right, shows agents 1 and 3 with
+tokens because their colors are different from those of their
+predecessors, and agent 0 with a token because its color is the same
+as that of its predecessor. The transition to the diagram on the top
+right from the one on the top left occurs when agent 3 changes its
+color. 
+
+<p>
+The sequence of state transitions gets the system to the figure on the
+bottom left which is the same as that on the top left with the colors
+reversed. This cycle of state transitions can repeat forever, with the
+same system always having three tokens. So, this system is not self
+stabilizing.
+
+<h2 class="w3-text-teal">A Self-Stabilizing Algorithm</h2>
+<i>The solution: add more colors!</i>
+
+<p>
+We will modify the design to have as many colors as there are
+agents. In our example, we will have 4 colors because it has 4
+agents. The algorithms for all agents, other than agent 0, remains
+unchanged. As before agent 0 has the
+token when its color is the same as that of its predecessor and agent 0
+sends the token by changing agent 0's color. The difference in the
+self-stabilizing algorithm is the color to which agent 0 transits.
+
+
+<p>
+Assume that the 4 colors are numbered 0, 1, 2, 3. If agent 0's color
+is \(k\) it makes a transition by changing its color to \(k \:
+\textrm{mod} \: N\).
+
+<p>
+The diagram below gives an example of how agent 0's color changes. Its
+sequence of colors, 0, 1, 2, 3 are red, blue, green, yellow,
+respectively. The diagram on the top left shows a configuration in
+which agent 0 holds a token because its color (green --- number 2) is
+the same as that of its predecessor. Agent 0 passes the token by
+changing its color to 3 (yellow), as show on the diagram on the top
+right.
+
+<p>
+The diagram in the middle left shows agent 0 with a token. It passes
+the token by changing its color from 1 (blue) to 2 (green), as shown
+in the diagram in the middle right.
+
+
+
+<figure>
+    <img src="Slide03.jpg" alt="Fig3" style="width:100%">
+    <figcaption>Fig.3: Changes in color of agent 0</figcaption>
+</figure>
+
+<h3 class="w3-text-teal">Proof</h3>
+The proof has the following three ideas that we first describe
+informally.
+<ol>
+  <li>
+  In all states at least one agent holds a token.
+  </li>
+  <li>
+  All trajectories from all states lead to a state in which agent 0
+  holds a token.
+  </li>
+  <li>
+  A trajectory from a system state in which agent 0's color is
+  different from that of the other agents leads to a state in which
+  all agents have the same color (in 
+  which case the system is in a safe state). 
+  </li>
+</ol>
+
+<p class="w3-text-teal">Part 1</p>
+If all agents have the same color then agent 0 holds a token.
+If there is more than one color in the ring then there is at least one
+agent, other than agent 0, whose color is different from that of its
+predecessor's; so, that agent holds a token.
+
+<p class="w3-text-teal">Part 2</p>
+Agent 0 and agent \(n-1\) will
+get the same color at some point because 
+agent 0's color will propagate all the way around the ring unless it
+gets to agent \(n-1\) sooner.
+
+
+<p class="w3-text-teal">Part 3</p>
+If agent 0's color is different from the colors of agents \(1, \ldots,
+n-1\) then the only
+trajectory that leads to agents 0 and agent \(n-1\) having the same
+color is for agent 0's color to propagate all the way around the ring.
+
+<p class="w3-text-teal">The system always reaches a safe state</p>
+Let \(S\) be any state. Let the \(C\) be the set of agent colors in state
+\(S\). If \(C\) has all \(N\) colors, then the color of agent \(0\) is
+different from the colors of the other agents, and so the result
+follows from part 3.
+
+<p>
+If \(C\) has fewer than \(N\) colors then the color of each agent
+remains a color in \(C\) until agent 0 gets a color that is not in
+\(C\). At this point agent 0's color is different from that of the
+other agents and the result follows.
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+
