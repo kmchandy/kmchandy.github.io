@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Byzantine</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Byzantine.html">Consensus with Byzantine Faults</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ByzantineExample.html">Examples</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ByzantineSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PropertiesOfTimelinesExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Byzantine.html">Explorations</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Byzantine/Byzantine.html">
+  Next: Byzantine Consensus</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../SelfStabilization/SelfStabilization.html">
+  Previous: Self Stabilizing Systems
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Consensus with Byzantine Faults</h1>
+    In this module we study algorithms by which a collection of agents
+    reach a consensus among alternative values.
+    <a href="../Paxos/Paxos.html">The Paxos algorithm</a> is
+    an example of how agents reach consensus.
+    <a
+    href="https://en.wikipedia.org/wiki/Consensus_(computer_science)">
+    Agents cannot reach consensus if message delays or agent
+    operations are arbitrarily slow.</a>
+    Next, we study a
+    consensus algorithm in which agents are guaranteed to come to a
+    consensus. The algorithm requires message delays and agent
+    operations to complete in bounded time.
+
+    <p>
+    The
+    algorithm operates in a sequence of steps called <i>rounds</i>.
+    All messages sent in a round are delivered in the same round, and
+    all agents execute actions in each round after receiving
+    messages sent in that round. So, the Byzantine algorithm that we
+    describe next is synchronous.
+
+    <p>
+    The Byzantine generals problem is an important problem with
+    applications in various domains including that of maintaining a
+    distributed ledger.
+    
+
+    We describe the problem by means of an apocryphal story of the
+    fall of the Byzantine empire which is attributed, in part, to
+    disloyal leaders. The choice of the name "Byzantine Generals"
+    for a problem in computer science is
+    curious and interesting, but not relevant to the algorithm.
+
+    <p>
+    A general has \(N\) army units each of which
+    is led by a lieutenant general, herafter referred to merely as
+    lieutenant. We refer to the general and the lieutenants,
+    collectively, as agents. An agent may be either loyal or
+    disloyal. 
+
+    <h4 class="w3-text-teal">Byzantine Generals Problem: Specification</h4>
+    The general gives a command which is either
+    attack or retreat.
+    <ol>
+      <li>Loyal lieutenants must obey a loyal general. If a loyal general
+    gives the command to attack then all loyal lieutenants must
+    attack. Likewise, if a loyal general
+    gives the command to retreat then all loyal lieutenants must
+    retreat.</li>
+      <li>Loyal lieutenants come to a consensus: either all of them
+    attack or all of them retreat.</li>
+    </ol>
+    The specification does not require that traitors be discovered.
+
+    <p>
+    The algorithm proceeds as follows. A loyal general gives the same
+    command to all lieutenants. A disloyal general may give
+    different commands to different lieutenants and may give no
+    commands to some. Then the lieutenants communicate among
+    themselves and reach a consensus after a specified number of
+    rounds.
+
+    <figure>
+    <img src="Slide01.jpg" alt="Fig1" style="width:100%">
+    <figcaption>Fig.1: Loyal and disloyal general behavior</figcaption>
+    </figure>
+
+    <p>
+    A loyal lieutenant sends the same message to all
+    lieutenants in a round. A traitor may send different messages to
+    different lieutenants and may send no messages to some.
+    A lieutenant who receives a message knows which lieutenant sent
+    it.
+
+    
+    <h4 class="w3-text-teal">Oral and Written Messages</h4>
+    We begin by looking at two versions of the problem. In the first
+    version a lieutenant sends copies of messages to other
+    lieutenants but cannot modify the copies. Also, a lieutenant
+    cannot forge signatures. If a lieutenant \(B\) gets a copy of a message
+    \(M\) signed by \(Y\), where the message is forwarded to \(B\) by
+    \(X\), then \(B\) knows 
+    that \(M\) was sent by \(Y\), even if \(X\) is a traitor.
+
+    <p>
+    In the
+    second version, messages can be modified and signatures can be
+    forged.
+    If a lieutenant \(B\) gets a copy of a message
+    \(M\) signed by \(Y\), where the message is forwarded to \(B\) by
+    \(X\), then \(B\) does not know 
+    that \(M\) was sent by \(Y\), because a traitor \(X\) may have
+    modified the message and forged \(Y\)'s signature.
+
+    <p>
+    In the literature, the two versions are referred to as the 
+    with <i>written</i> and <i>oral message</i> versions, respectively. This is
+    because when lieutenants speak to each other, a lieutenant \(X\)
+    can tell a lieutenant \(B\) that 
+    another lieutenant \(C\)  told \(B\) that \(C\) is going to attack when
+    \(C\) said no such thing. When they send written messages, the
+    receiver of a message can detect modified messages and forged
+    signatures. 
+
+    <h2 class="w3-text-teal">Algorithm with Written Messages</h2>
+    Next, let's look at an algorithm for the case where messages
+cannot be modified and signatures cannot be forged. 
+
+<p  class="w3-text-teal">Initially</p>
+Initially no messages have been sent and all lieutenants are
+uncomitted: they have not committed to attack or to retreat.
+
+<p class="w3-text-teal">Round \(N + 1 \geq j \geq 0\)</p>
+If a lieutenant \(B\) who has not committed to attack on previous
+rounds receives an
+attack message signed by the general and \(j\) attack messages signed
+by \(j\) distinct lieutenants other than \(B\) , then:
+<ol>
+  <li>\(B\) commits to attack at the end of the round regardless
+  of messages that it may receive on subsequent rounds, and
+  </li>
+  <li>
+  \(B\) broadcasts a copy of the attack message signed by the general and
+  copies of
+  the attack messages signed by \(j\) distinct lieutenants.
+  In addition \(B\) broadcasts a copy of an attack message
+  signed by \(B\) itself. Thus \(B\) broadcasts an attack message
+  signed by the general and \(j+1\) attack messages signed by \(j+1\) distinct
+  lieutenants.
+  </li>
+</ol>
+The algorithm terminates at the end of round \(N+1\).
+
+    <figure>
+    <img src="Slide02.jpg" alt="Fig2" style="width:100%">
+    <figcaption>Fig.2: Example of a lieutenant committing to attack</figcaption>
+</figure>
+
+The figure illustrates a situation in which lieutenant C commits to
+attack on round 2, if it hasn't already committed to attack. If C
+gets attack messages signed by the general and lieutenants A and B, then C
+commits to attack and broadcasts messages signed by the general and
+messages signed by A, B and C. So, on round 3, all lieutenants get
+messages signed by the general and 3 distinct lieutenants.
+
+<h3  class="w3-text-teal">Proof of Correctness</h3>
+<h4  class="w3-text-teal">Proof: loyal lieutenants obey a loyal
+general.</h4> 
+
+<p>
+If the general broadcasts attack
+messages on round 0 then all loyal lieutenants commit to attack at the
+end of round 0.
+If the general never sends attack messages then lieutenants never
+receive copies of attack messages signed by the general. Therefore,
+loyal lieutenants never commit to attack.
+
+
+<h4  class="w3-text-teal">Proof: loyal lieutenants come to a consensus.</h4> 
+
+<p  class="w3-text-teal">When the consensus is to attack</p>
+If any loyal lieutenant commits to attack on round \(j\) then it broadcasts an attack
+message signed by the general and \(j + 1\) distinct lieutenants in
+that round; so,
+all loyal lieutenants commit to attack on round \(j + 1\). Therefore, if any
+loyal lieutenant commits to attack on any round  \(j \leq N\) then all loyal
+lieutenants commit to attack by the end of round \(N + 1\), and so
+consensus is reached.
+
+<p  class="w3-text-teal">When the consensus is to retreat</p>
+If no loyal lieutenant commits to attack on round \(j \leq N\) then
+no loyal lieutenant commits to attack on round \(N + 1\).
+This is because a loyal lieutenant commits to attack on
+round \(N + 1\) only if it receives \(N + 1\) attack messages signed
+by \(N + 1\) distinct lieutenants. On round \(N+1\), a loyal
+lieutenant can receive at most \(N\) attack messages signed by
+distinct lieutenants --- these are the traitors --- because loyal
+lieutenants send no such messages. 
+
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+
