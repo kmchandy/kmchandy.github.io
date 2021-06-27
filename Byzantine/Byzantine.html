@@ -192,11 +192,18 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     Next, let's look at an algorithm for the case where messages
 cannot be modified and signatures cannot be forged. 
 
+<p>
+Let the number of disloyal agents be \(t\). The problem is trivial if
+there are no loyal agents. Likewise the solution is obvious if
+there is only one loyal agent because the requirement of consensus is
+vaccuous; there is no other loyal agent with which to reach consensus.
+So we now assume \(N \geq t + 2\).
+
 <p  class="w3-text-teal">Initially</p>
 Initially no messages have been sent and all lieutenants are
 uncomitted: they have not committed to attack or to retreat.
 
-<p class="w3-text-teal">Round \(N + 1 \geq j \geq 0\)</p>
+<p class="w3-text-teal">Round \(t + 1 \geq j \geq 0\)</p>
 If a lieutenant \(B\) who has not committed to attack on previous
 rounds receives an
 attack message signed by the general and \(j\) attack messages signed
@@ -215,19 +222,47 @@ by \(j\) distinct lieutenants other than \(B\) , then:
   lieutenants.
   </li>
 </ol>
-The algorithm terminates at the end of round \(N+1\).
+The algorithm terminates at the end of round \(t+1\) where \(t\) is
+the maximum number of disloyal agents.
 
     <figure>
     <img src="Slide02.jpg" alt="Fig2" style="width:100%">
     <figcaption>Fig.2: Example of a lieutenant committing to attack</figcaption>
 </figure>
 
-The figure illustrates a situation in which lieutenant C commits to
-attack on round 2, if it hasn't already committed to attack. If C
-gets attack messages signed by the general and lieutenants A and B, then C
-commits to attack and broadcasts messages signed by the general and
-messages signed by A, B and C. So, on round 3, all lieutenants get
-messages signed by the general and 3 distinct lieutenants.
+The figure illustrates a situation in which a loyal lieutenant C commits to
+attack on round 2, if it hasn't already committed to attack by then.
+The figure shows C
+getting attack messages (red boxes) signed by the general and lieutenants A and B on
+round 2. The general and lieutenants A and B may be disloyal or
+loyal. 
+
+<p>
+ Because C is loyal it follows the algorithm, and C
+commits to attack at the end of round 2 because C receives a signed attack
+ message from the general and signed attack messages from two
+ different lieutenants.
+So, at the end of round 2, C broadcasts attack messages
+signed by the general and (copies of) attack
+messages signed by A and B and attack messages signed by C. All loyal
+lieutenants commit to attack by the end round 3 because they receive
+messages signed by the general and 3 different lieutenants (A, B, C).
+
+<p>
+The algorithm works because messages cannot be forged. Loyal
+lieutenant C doesn't know whether the general and lieutenants A and B
+are loyal. But C has proof that they send attack messages to C because
+C got signed messages from them, and these messages couldn't have come
+from anybody else. And C passes on that proof to other lieutenants
+by copying and forwarding the messages that it received.
+
+<p>
+A loyal
+lieutenant D receives messages from the general and A, B, and C on
+round 3. Again, lieutenant D doesn't know whether the senders of the
+messages that it received are loyal; but, it doesn't matter because D
+has proof that they sent those messages. So, D commits to attack on
+round 3.
 
 <h3  class="w3-text-teal">Proof of Correctness</h3>
 <h4  class="w3-text-teal">Proof: loyal lieutenants obey a loyal
@@ -238,30 +273,663 @@ If the general broadcasts attack
 messages on round 0 then all loyal lieutenants commit to attack at the
 end of round 0.
 If the general never sends attack messages then lieutenants never
-receive copies of attack messages signed by the general. Therefore,
+receive copies of attack messages signed by the general; so,
 loyal lieutenants never commit to attack.
+Therefore, when the general is loyal, consensus among loyal
+lieutenants is reached by the end of round 0.
 
 
-<h4  class="w3-text-teal">Proof: loyal lieutenants come to a consensus.</h4> 
+<h4  class="w3-text-teal">Proof: loyal lieutenants come to a consensus
+even if the general is disloyal.</h4>
+We will prove that:
+<ol>
+  <li>
+  <i>Case 1</i>: if any loyal lieutenant commits to attack on any round \(j \leq t\)
+  then all loyal lieutenants commit to attack by the end of round \(t +
+  1\).
+  </li>
+  <li>
+  <i>Case 2</i> if no loyal lieutenant commits to attack on
+  any round \(j \leq t\) then no loyal lieutenant commits to
+  attack by the end of round \(t + 1\).
+  </li>
+</ol>
+Therefore, either (case 1) all loyal lieutenants commit to attack by
+the end of round \(t + 1\) or (case 2) no loyal lieutenant 
+commits to attack by the end of round \(t + 1\).  So, consensus is
+reached by the end of round \(t + 1\).
 
-<p  class="w3-text-teal">When the consensus is to attack</p>
+<p  class="w3-text-teal">Case 1: When the consensus is to attack</p>
 If any loyal lieutenant commits to attack on round \(j\) then it broadcasts an attack
-message signed by the general and \(j + 1\) distinct lieutenants in
-that round; so,
-all loyal lieutenants commit to attack on round \(j + 1\). Therefore, if any
-loyal lieutenant commits to attack on any round  \(j \leq N\) then all loyal
-lieutenants commit to attack by the end of round \(N + 1\), and so
-consensus is reached.
+message signed by the general and also broadcasts \(j + 1\) messages
+signed by \(j + 1\) different lieutenants in
+that round. So on round \(j + 1\) all loyal lieutenants, who have not
+yet committed to attack, receive an
+attack message signed by the general and \(j + 1\) messages
+signed by \(j + 1\) different lieutenants; and so they too
+commit to attack by round \(j + 1\). So
+if any loyal lieutenant commits to attack on any round \(j\) then
+all loyal lieutenants commit to attack by the end of round \(j +
+1\). Therefore, if 
+if any loyal lieutenant commits to attack on any round \(j \leq t\) then
+all loyal lieutenants commit to attack by the end of round \(t +
+1\). 
 
-<p  class="w3-text-teal">When the consensus is to retreat</p>
-If no loyal lieutenant commits to attack on round \(j \leq N\) then
-no loyal lieutenant commits to attack on round \(N + 1\).
-This is because a loyal lieutenant commits to attack on
-round \(N + 1\) only if it receives \(N + 1\) attack messages signed
-by \(N + 1\) distinct lieutenants. On round \(N+1\), a loyal
-lieutenant can receive at most \(N\) attack messages signed by
-distinct lieutenants --- these are the traitors --- because loyal
-lieutenants send no such messages. 
+<p  class="w3-text-teal">Case 2: When the consensus is to retreat</p>
+If no loyal lieutenant commits to attack on any round \(j \leq t\)
+then no loyal lieutenant commits to attack on round \(t + 1\).  This
+is because a loyal lieutenant commits to attack on round \(t + 1\)
+only if it receives \(t + 1\) attack messages signed by \(t + 1\)
+different lieutenants. On round \(t + 1\), a loyal lieutenant can
+receive at most \(t\) attack messages signed by \(t\) different
+lieutenants --- these are the \(t\) traitors --- because, by
+assumption, loyal lieutenants sent no attack messages on the first
+\(t\) rounds. Therefore, if no loyal lieutenant commits to attack on
+any round \(j \leq t\) then a consensus to retreat is reached by the
+end of round \(t + 1\).
+
+
+<h1 class="w3-text-teal">Algorithm with Oral Messages</h1>
+Next, let's look at an algorithm for the case where messages can be
+modified and signatures can be forged. Later we will show that there
+is no solution for the case where the number of loyal agents is at
+most twice the number of disloyal agents. So we restrict attention to
+systems with at least \(2.t + 1\) loyal agents. By contrast, in the
+case where signatures and messages cannot be forged, the algorithm
+works with any number of loyal agents.
+
+<p>
+We first give an overview of an algorithm, \(Byz(t)\) which solves the
+Byzantine Generals problem when there are at most \(t\) disloyal agents and at
+least \(3.t + 1\) total agents.  \(Byz(t)\) also solves the problem
+where there are more than \(t\) disloyal agents provided that the
+general is loyal. We illustrate the algorithm
+with an example and then prove that the algorithm is correct.
+
+<p>
+Messages in the algorithm are either <i>attack</i> or <i>retreat</i>
+messages. The absence of a 
+message in a round is treated the same as way as receiving a
+<i>retreat</i> message. We will ignore rounds, synchronization, and
+message loss for
+the remainder of this section and restrict attention to messages which
+are received on every round where a message is attack or retreat.
+
+ 
+<p>
+Let's call the lieutenants \(v_{j}\) for \(0 < j <
+N\), and let's call the general \(v_{0}\).
+
+
+<p class="w3-text-teal">\(Byz(0)\): Algorithm when all agents are loyal.</p>
+All agents obey the general.
+
+<p>The proof that the algorithm is correct, when all agents are loyal,
+is obvious. 
+
+
+<h3 class="w3-text-teal">\(Byz(k)\) when \(k > 0\)</h3>
+At the termination of a \(Byz(k)\) algorithm each lieutenant \(v_{i}\)
+will have computed a consensus value \(c_{i}\). We will prove that
+these values satisfy the specification.
+<ol>
+  <li>
+  <i>Validity</i>: If the general is loyal then for all loyal lieutenants \(v_{i}\):
+  <p>
+  \(
+  c_{i} = m_{0}
+  \)
+  where \(m_{0}\) is the message broadcast by the general.
+  </li>
+  <li>
+  <i>Consensus</i>: For all loyal lieutenants \(v_{i}, v_{j}\):
+  <p>
+  \(
+  c_{i} = c_{j}
+  \)
+</ol>
+  
+  
+
+<h4 class="w3-text-teal">Step 1. Initialize: General sends messages</h4>
+The general sends a message to each of the \(N-1\)
+lieutenants. Thereafter the general remains idle.
+
+Let \(m_{0, j}\) be the message that the general, \(v_{0}\), sends to \(v_{j}\). A
+loyal general broadcasts the same message \(m_{0}\) to all 
+lieutenants, and so \(m_{0, j} = m_{0}\) for all loyal lieutenants
+\(j\).
+Therefore, if the general is loyal then \(m_{0, j} = m_{0, k}\) for
+all loyal lieutenants \(j, k\).
+A disloyal general may send different messages to different 
+lieutenants.
+
+
+<h4 class="w3-text-teal">Step 2. Recursion: Run \(N-1\) separate
+\(Byz(k-1)\) algorithms</h4>
+
+For each \(j\) where \(0 < j < N\) run a separate \(Byz(k-1)\)
+algorithm, with lieutenant \(v_{j}\) playing the role of the general and each
+of the other \(N-2\) lieutenants, \(v_{i}\), playing the role of
+lieutenant where \(0 < i < N\) and \(i \neq j\).
+When \(v_{j}\) plays the role of the general, \(v_{j}\) sends message
+\(m_{0, j, k}\) to each of the other \(N-2\) lieutenants \(v_{k}\).
+\(m_{0, j, k}\) is the message that \(v_{j}\) tells \(v_{k}\) that
+\(v_{j}\) claims to have received from \(v_{0}\). If \(v_{j}\) is
+loyal then \(m_{0, j, k} = m_{0, j}\).
+If  \(v_{j}\) is disloyal then \(m_{0, j, k}\) can be any value.
+
+
+<p>
+Let \(c_{i, j}\) be the consensus value 
+obtained by \(v_{j}\) when \(v_{i}\) plays the role of general and
+\(v_{j}\) plays the role of lieutenant.
+Each \(v_{j}\) plays the role of general once and plays the role of
+lieutenant \(N-2\) times in these \(Byz(k-1)\) algorithms.
+So, for each \(v_{j}\) there are \(N-2\) values \(c_{i, j}\), with \(i
+\neq j\).
+
+<p>
+Define \(c_{0, j}\) as \(c_{0, j} = m_{0, j}\), i.e., the message that
+\(v_{j}\) got from the general. With the inclusion of \(c_{0, j}\)
+there are \(N-1\) values \(c_{i, j}\), with \(i
+\neq j\).
+
+<h4 class="w3-text-teal">Step 3. Aggregate results of \(N-1\) separate
+consensus values</h4> 
+Each \(v_{j}\), for \(0 < j < N\) sets its output, \(c_{j}\),  for the algorithm,
+\(Byz(k)\) to be the
+majority of the \(N-1\) values \(c_{i, j}\) where \(i \neq j\) and \(0 \leq i <
+N\).
+<p>
+In the case of a tie, a default value is used. Let's assume that the
+default is <i>retreat</i>.
+
+<p>
+\(
+c_{j} = \; \textrm{majority} \; \{c_{i, j} | (i \neq j) \wedge (0 \leq
+i < N)\}
+\)
+
+<h2  style="color:red;">Example: 2 disloyal and 5 loyal agents</h2>
+We show what each loyal agent does for the case of 2 disloyal agents
+and 5 loyal agents, \(t = 2, \: N = 7\). After that we will 
+give examples of two specific cases: (1) the general, \(v_{0}\), and agent \(v_{1}\) are
+disloyal, and (2) agents \(v_{5}\) and \(v_{6}\) are disloyal.
+
+<p>
+The algorithm, \(Byz(2)\) for the case where \(t = 2\) begins with the
+general, \(v_{0}\),  sending message \(m_{0, j}\) to lieutenant \(v_{j}\) where \(1
+\leq j \leq 6\).  A loyal general broadcasts the same message
+\(m_{0}\) to all lieutenants in which case \(m_{0, j} = m_{0}\).  A
+disloyal general may send any message to any lieutenant, and in this
+case \(m_{0, j}\) is arbitrary. After sending
+a message to each lieutenant, \(v_{0}\) takes no further action.
+
+<h5 style="color:red;">Six separate \(Byz(1)\) algorithms: Broadcast step</h5>
+Six separate \(Byz(1)\) algorithms are run. In each algorithm one of the six
+lieutenants, \(v_{1}, \ldots, v_{6}\) plays the role of general and the other five act as
+lieutenants. In the figure, the role of general is shown by a red
+vertex and the role of lieutenant by blue. The figure shows the first
+two steps of the algorithm: 
+initialization and recursion.
+
+<p>
+Though we run a \(Byz(1)\) algorithm on the set \(v_{1}, \ldots,
+v_{6}\) there may be more than 1 disloyal agent in the set. This
+happens, for example, when
+\(v_{0}\) is loyal and there are 2 disloyal agents, say \(v_{5}\) and
+\(v_{6}\). 
+
+<figure>
+    <img src="Slide03.jpg" alt="Fig3" style="width:110%">
+    <figcaption>Fig.3: Run six separate \(Byz(1)\) Algorithms</figcaption>
+</figure>
+
+ 
+Next, lets look at the \(Byz(1)\) algorithm where \(v_{1}\) plays the role of
+general and \(v_{2}, \ldots , v_{6}\) act as lieutenants.
+Agent \(v_{1}\) --- playing the role of general --- sends
+message \(m_{0,1,j}\) to each \(v_{j}\) for \(j\) in \(2, \ldots , 6\).
+Message \(m_{0,1,j}\) is the message that \(v_{1}\) tells \(v_{j}\)
+that \(v_{1}\) claims to have
+received from \(v_{0}\). If \(v_{1}\) is loyal then it broadcasts
+the message \(m_{0,1}\) that it received from \(v_{0}\), and so \(m_{0,1,j} =
+m_{0,1}\) for all \(j\). If \(v_{1}\) is disloyal then \(m_{0,1,j}\)
+can be any value.
+
+<p>
+Similarly, in the \(Byz(1)\) algorithm where lieutenant \(v_{k}\) plays the role of
+general, \(v_{k}\) sends \(m_{0,k,j}\) to \(v_{j}\) where \(j \neq
+k\).
+
+<figure>
+    <img src="Slide04.jpg" alt="Fig4" style="width:100%">
+    <figcaption>Fig.4: Run six separate \(Byz(1)\) Algorithms</figcaption>
+</figure>
+
+
+<h5 style="color:red;">Thirty separate \(Byz(0)\)
+algorithms. Broadcast step</h5>
+There are six separate \(Byz(1)\) algorithms with \(v_{k}\) as general
+for \(k\) in \(1, \ldots, 6\). For each \(Byz(1)\) algorithm with
+\(v_{k}\) as general there are 5 separate \(Byz(0)\) algorithms with
+\(v_{j}\) as general where \(j \neq k\). This gives a total of 30
+\(Byz(0)\) algorithms.
+
+<p>
+Let's look in detail at the \(Byz(1)\) algorithm with
+\(v_{1}\) as general which calls the \(Byz(0)\) algorithm with
+\(v_{2}\) as general and \(v_{3}, \ldots, v_{6}\) as lieutenants.
+In this \(Byz(0)\) algorithm, \(v_{2}\) sends \(m_{0,1,2,j}\) to
+\(v_{j}\); this is the message that \(v_{2}\) tells \(v_{j}\) is the
+message that \(v_{2}\) claims to have received
+from \(v_{1}\). If \(v_{0}, v_{1}, v_{2}\) are all loyal then all of
+them tell the truth and so:
+\(m_{0,1,2,j} = m_{0,1,2} = m_{0,1} = m_{0}\).
+
+<p>
+Similarly, when the  the \(Byz(1)\) algorithm with
+\(v_{i}\) as general calls the \(Byz(0)\) algorithm with \(v_{k}\) as
+general, where \(i \neq k\), agent \(v_{k}\) sends \(m_{0,i,k,j}\) to
+\(v_{j}\) where \(j \neq i\) and \(j \neq k\).
+The figure below shows the five separate \(Byz(0)\) algorithms with
+\(v_{k}\), \(2 \leq k \leq 6\), as general where the general is shown
+as a red vertex.
+
+<figure>
+    <img src="Slide05.jpg" alt="Fig5" style="width:100%">
+    <figcaption>Fig.5: Run five separate \(Byz(0)\) Algorithms</figcaption>
+</figure>
+
+
+<h5 style="color:red;">Thirty separate \(Byz(0)\)
+algorithms. Consensus step</h5>
+Let's look at the \(Byz(1)\) algorithm in which \(v_{1}\) is the
+general which calls the \(Byz(0)\) algorithm in which \(v_{2}\) is the
+general.
+In this \(Byz(0)\) algorithm, the consensus \(c_{0,1,2,3}\) determined by 
+lieutenant \(v_{3}\), if \(v_{3}\) is loyal, is \(m_{0,1,2,3}\).
+This is because
+in a \(Byz(0)\) algorithm the consensus determined by a loyal
+lieutenant, \(v_{3}\), 
+is the message \(m_{0,1,2,3}\) that lieutenant \(v_{3}\) received from
+the general, \(v_{2}\).
+<p>
+We define \(c_{0,1,3,3}\) as \(m_{0,1,3}\). So we have 5 values of
+\(c_{0,1,k,3}\) for \(k = 2, 3, 4, 5, 6\). 
+<p>
+Similarly, for distinct \(0, i, j, k\) and a loyal lieutenant
+\(v_{k}\):
+<p>
+\(c_{0,i,j,k} = m_{0,i,j,k}\)
+and
+<p>
+\(c_{0,i,k,k} = m_{0,i,k}\).
+
+
+<h5 style="color:red;">Six separate \(Byz(1)\)
+algorithms. Consensus step</h5>
+In the \(Byz(1)\) algorithm where  \(v_{1}\) is the general and \(v_{2}, \ldots, v_{6}\) are
+lieutenants, each of the five lieutenants \(v_{j}\) computes a consensus value
+\(c_{0,1,j}\). 
+
+Let's look at \(c_{0, 1, 2}\) when \(v_{2}\) is loyal
+
+<p>
+\(c_{0,1,2} = \textrm{majority} \: \{c_{0,1,2,2}, c_{0,1,3,2}, c_{0,1,4,2},
+c_{0,1,5,2}, c_{0,1,6,2}\} \)
+
+<p>
+Loyal lieutenant \(v_{2}\) determines that the consensus for what \(v_{0}\)
+told \(v_{1}\) is the majority of:
+<ol>
+  <li>
+  What \(v_{1}\) told \(v_{2}\) that \(v_{0}\) told \(v_{1}\).
+  </li>
+  <li>
+  What \(v_{3}\) told \(v_{2}\) that \(v_{1}\) told \(v_{3}\) that
+  \(v_{0}\) told \(v_{1}\). 
+  </li>
+  <li>
+  What \(v_{4}\) told \(v_{2}\) that \(v_{1}\) told \(v_{4}\) that
+  \(v_{0}\) told \(v_{1}\). 
+  </li>
+  <li>
+  What \(v_{5}\) told \(v_{2}\) that \(v_{1}\) told \(v_{5}\) that
+  \(v_{0}\) told \(v_{1}\). 
+  </li>
+  <li>
+  What \(v_{6}\) told \(v_{2}\) that \(v_{1}\) told \(v_{6}\) that
+  \(v_{0}\) told \(v_{1}\). 
+  </li>
+</ol>
+<p>
+We can think of \(c_{0, 1, 2}\) as the consensus that a loyal \(v_{2}\)
+computes for what \(v_{1}\) claims that \(v_{0}\) told \(v_{1}\). If
+\(v_{2}\) is disloyal then \(c_{0, 1, 2}\) can be any value.
+
+<p>
+Similarly, for distinct \(i, j\), and loyal \(j\).
+<p>
+\(c_{0,i,j} = \textrm{majority} \: \{c_{0,i,k,j} | (k \notin \{0, i\} \} \)
+<p>
+We define \(c_{0,j,j}\) as \(m_{0,j}\).
+
+<h5 style="color:red;">Six separate \(Byz(1)\)
+algorithms. Consensus step</h5>
+In the \(Byz(2)\) algorithm where  \(v_{0}\) is the general and \(v_{1}, \ldots, v_{6}\) are
+lieutenants, each of the six lieutenants \(v_{i}\) computes a consensus value
+\(c_{0,i}\). For loyal \(v_{i}\):
+<p>
+\(c_{0,i} = \textrm{majority} \: \{c_{0,j,i} | j \neq 0 \} \)
+
+<p>
+For example, \(c_{0,1}\) is the majority of \(c_{0,1,1}, \ldots,
+c_{0,6,1}\) where \(c_{0,j,1}\) is the value that 
+\(v_{1}\) determines is what \(v_{j}\) says \(v_{0}\) told
+\(v_{j}\).
+
+<p>
+Next we will look at two examples that will give us the intuition that
+will help us construct a proof of correctness.
+
+<h3  style="color:red;">Example: Loyal generals and Two Disloyal
+Lieutenants</h3>
+Let's look at a case where \(v_{0}, \ldots, v_{4} \) are loyal while
+\(v_{5}, v_{6}\) are disloyal. This example is chosen because it helps
+us see that loyal lieutenants obey a loyal general.
+<p>
+A loyal agent \(v_{j}\), for \(1 \leq j \leq 4\), broadcasts the
+message \(m_{0,j}\) that it receives from the general, \(v_{0}\). We
+will show that the consensus value \(c_{0,j,k}\) determined by a loyal
+agent \(v_{k}\) when \(v_{j}\) broadcasts \(m_{0,j}\) is \(m_{0,j}\).
+Then we will see that the consensus value \(c_{0,j}\) determined by a loyal
+agent \(v_{j}\) when \(v_{0}\) broadcasts \(m_{0}\) is \(m_{0}\).
+The description that follows is detailed so that the steps of the
+algorithm are clear.
+<p>
+The \(Byz(2)\) algorithm starts with
+the general, \(v_{0}\), broadcasting \(m_{0}\) to \(v_{1}, \ldots,
+v_{6} \). Next consider the \(Byz(1)\) algorithm where \(v_{1}\), broadcasts
+\(m_{0,1}\) to \(v_{2}, \ldots, v_{6} \). And now consider the the
+\(Byz(0)\) algorithm where \(v_{2}\), broadcasts 
+\(m_{0,1,2}\) to \(v_{3}, \ldots, v_{6} \).
+
+<p>
+Loyal lieutenants \(v_{3}, v_{4}\) determine that the consensus for
+this \(Byz(0)\) algorithm is \(m_{0,1,2,3}\) and \(m_{0,1,2,4}\)
+respectively.This is because loyal lieutenants obey the general in a
+\(Byz(0)\) algorithm.
+<p>
+\(
+c_{0,1,2,3} = m_{0,1,2,3}\)
+and 
+\(
+c_{0,1,2,4} = m_{0,1,2,4}
+\)
+and 
+\(
+c_{0,1,2,2} = m_{0,1,2}
+\)
+<p>
+Because \(v_{2}\) is loyal it broadcasts the same message to all
+lieutenants. Therefore
+<p>
+\(
+m_{0,1,2,3} = m_{0,1,2,4} = m_{0,1,2}
+\)
+<p>
+So we see that the consensus value \(c_{0,1,2,j}\), for loyal
+\(v_{j}\) is the message \(m_{0,1,2}\) that the general \(v_{2}\)
+broadcast in this \(Byz(0)\) algorithm. 
+<p>
+\(
+c_{0,1,2,3} = c_{0,1,2,4} = c_{0,1,2,2} = m_{0,1,2}
+\)
+<p>
+By the same argument, for loyal \(v_{j}, v_{k}\):
+\(
+c_{0,1,j,k} = m_{0,1,j}
+\)
+
+<p  style="color:red;">Aggregation Step</p>
+Because \(v_{2}\) is loyal:
+<p>
+\(
+c_{0,1,2} = \textrm{majority} \: \{c_{0,1,2,2}, c_{0,1,3,2},
+c_{0,1,4,2}, c_{0,1,5,2}, c_{0,1,6,2}\} \)
+<p>
+\(
+c_{0,1,2} = \textrm{majority} \: \{m_{0,1,2}, m_{0,1,3},
+m_{0,1,4}, c_{0,1,5,2}, c_{0,1,6,2}\}\)
+<p>
+Because \(v_{1}\) is loyal, it broadcasts \(m_{0,1}\), and so:
+<p>
+\(
+m_{0,1,2} = m_{0,1,3} = m_{0,1,4} = m_{0,1} \)
+<p>
+Therefore, 
+<p>
+\(
+c_{0,1,2} = \textrm{majority} \: \{m_{0,1}, m_{0,1},
+m_{0,1}, c_{0,1,5,2}, c_{0,1,6,2}\} = m_{0,1}\)
+<p>
+<p>
+By the same argument, and because \(c_{0,1,1} = m_{0,1}\), we get:
+<p>
+\(
+c_{0,1,1} = c_{0,1,2} = c_{0,1,3} = c_{0,1,4} = m_{0,1}
+\)
+
+<p>
+So we see, once again, that the consensus value computed by each loyal
+lieutenant is the message sent by the loyal general.
+
+
+<p>
+By the same argument, for \(1 \leq j,k \leq 4\):
+\(c_{0,j,k} = m_{0,j} \) 
+<p>
+Next let's compute \(c_{0,1}\), the consensus value computed by
+lieutenant \(v_{1}\) when \(v_{0}\) broadcasts \(m_{0}\).
+<p>
+\(
+c_{0,1} = \textrm{majority} \: \{c_{0,1,1}, c_{0,2,1},
+c_{0,3,1}, c_{0,4,1}, c_{0,5,1}, c_{0,6,1}\}
+\)
+<p>
+Because \(c_{0,j,k} = m_{0,j} \) for \(1 \leq j,k \leq 4\):
+<p>
+\(
+c_{0,1} = \textrm{majority} \: \{m_{0,1}, m_{0,2},
+m_{0,3}, m_{0,4}, c_{0,5,1}, c_{0,6,1}\}
+\)
+<p>
+Because \(v_{0}\) is loyal, \(m_{0,j} = m_{0}\) for \(1 \leq j,k \leq 4\):
+<p>
+and therefore 
+\(
+c_{0,1} = \textrm{majority} \: \{m_{0}, m_{0},
+m_{0}, m_{0}, c_{0,5,1}, c_{0,6,1}\} = m_{0}
+\)
+<p>By the the same argument
+<p>
+\(
+c_{0,1} =  c_{0,2} = c_{0,3} = c_{0,4} = m_{0}
+\)
+<p>
+So we see, once again, that the consensus value computed by each loyal
+lieutenant is the message sent by the loyal general.
+
+
+
+<h3  style="color:red;">Example: Disloyal generals </h3>
+Let's look at a case where \(v_{0}\) and \(v_{1}\) are disloyal while
+\(v_{2}, \ldots, v_{6}\) are loyal.
+This example is chosen because it helps us understand how loyal
+lieutenants come to a consensus even when the general is disloyal.
+
+<p>
+The general, \(v_{0}\), sends message \(m_{0,1}\) to \(v_{1}\). Then
+\(v_{1}\)  sends message \(m_{0,1,j}\) to \(v_{j}\), and because \(v_{1}\)
+is disloyal, the message can have any value.
+\(c_{0,1,i}\) is the consensus value that \(v_{i}\) determines in this
+case. We will show that for loyal agents \(v_{i}, v_{j}\): \(c_{0,1,i}
+= c_{0,1,j}\) even if \(m_{0,1,i}\) is different from \(m_{0,1,j}\).
+
+<p>The \(Byz(2)\) algorithm starts with
+the general, \(v_{0}\), sending message \(m_{0,j}\) to \(v_{j}\) for
+\(j = 1, \ldots, 6\). Let's assume that \(v_{0}\) sends attack
+messages to \(v_{2}\) and \(v_{3}\), and retreat 
+messages to \(v_{4}\), \(v_{5}\) and \(v_{6}\). We will use 1 to
+represent attack and 0 to represent retreat. In the diagram an attack
+message is shown as a red edge while a retreat message is shown as a
+green edge.
+<p>
+\(
+m_{0,2} = m_{0,3} = 1
+\)
+<p>
+\(
+m_{0,4} = m_{0,5} = m_{0,6} = 0
+\)
+
+<p>
+Let's look at the case in which disloyal agent \(v_{1}\) sends retreat
+(0) to \(v_{2}\) and \(v_{3}\), 
+while it sends attack (1) to \(v_{4}, v_{5}\) and \(v_{6}\). This is
+shown in the top left diagram where edges from
+\(v_{1}\) to \(v_{2}\) and \(v_{3}\) are green, while edges from
+\(v_{1}\) to \(v_{4}, v_{5}\) and \(v_{6}\) are red.
+
+<figure>
+    <img src="Slide06.jpg" alt="Fig6" style="width:100%">
+    <figcaption>Fig.6: Run six separate \(Byz(1)\) algorithms</figcaption>
+</figure><p>
+
+\(
+m_{0,1,2} = m_{0,1,3} = 0
+\)
+<p>
+\(
+m_{0,1,4} = m_{0,1,5} = m_{0,1,6} = 1
+\)
+<p>
+For the \(Byz(0)\) algorithms, because \(v_{2}, \ldots, v_{6}\) are
+loyal, we get for \(2 \leq j,k \leq 6\) and \(j \neq k\):
+<p>
+\(
+c_{0,2,j,k} = m_{0,2,j,k}  \quad j,k \neq 2
+\)
+<p>Because \(v_{j}\) is loyal: \(m_{0,2,j,k} = m_{0,2,j}\).
+Because \(v_{2}\) is loyal: \(m_{0,2,j} = m_{0,2}\). Therefore:
+<p>
+\(
+c_{0,2,j,k} = m_{0,2} = 1, \quad j,k \neq 2
+\)
+<p>
+Similarly,
+\(
+c_{0,3,j,k} = m_{0,3,j,k} = 1, \quad j,k \neq 3
+\)
+<p>
+Similarly, because \(v_{2}\) sends retreat messages to \(v_{4}, v_{5}, v_{6}\)
+<p>
+\(
+c_{0,i,j,k} = m_{0,i,j,k} = m_{0,i,j} = m_{0,i} = 0, \quad j,k \neq
+i, \; j,k = 4,5,6
+\)
+<p>
+Agent \(v_{1}\) is disloyal; let's look at the messages that it
+sends. Because \(v_{1}\) sends retreat messages to \(v_{2}\) and
+\(v_{3}\), for \(j = 2, 3\):
+<p>
+\(
+c_{0,1,j,k} = m_{0,1,j,k} = m_{0,1,j} = 0, \quad k \notin \{0,1,j\}
+\)
+<p>
+Because \(v_{1}\) sends attack messages to \(v_{4}, v_{5}\) and
+\(v_{6}\), for \(j = 4, 5, 6\):
+<p>
+\(
+c_{0,1,j,k} = m_{0,1,j,k} = m_{0,1,j} = 1, \quad k \notin \{0,1,j\}
+\)
+
+
+<p  style="color:red;">Aggregation Step</p>
+Because \(v_{2}\) is loyal:
+<p>
+\(
+c_{0,1,2} = \textrm{majority} \: \{c_{0,1,2,2}, c_{0,1,3,2},
+c_{0,1,4,2}, c_{0,1,5,2}, c_{0,1,6,2}\} \) 
+<p>
+and so:
+<p>
+\(
+c_{0,1,2} = \textrm{majority} \: \{0, 0, 1, 1, 1\} = 1\) 
+<p>
+By the same argument,
+\(c_{0,1,3} = 1 \)
+<p>Because \(v_{4}\) is loyal:
+<p>
+\(
+c_{0,1,4} = \textrm{majority} \: \{c_{0,1,2,4}, c_{0,1,3,4},
+c_{0,1,4,4}, c_{0,1,5,4}, c_{0,1,6,4}\} \) 
+<p>
+and so:
+<p>
+\(
+c_{0,1,4} = \textrm{majority} \: \{0, 0, 1, 1, 1\} = 1\) 
+<p>
+By the same argument,
+\(c_{0,1,5} = c_{0,1,6} =  1 \)
+<p>
+<i>Therefore, all loyal agents, \(v_{2}, \ldots, v_{6}\) compute the
+same consensus value: attack (1) for this \(Byz(1)\) algorithm.</i>
+
+<p>
+Similarly:
+<p>
+\(
+c_{0,2,3} = \textrm{majority} \: \{c_{0,2,1,3}, c_{0,2,3,3},
+c_{0,2,4,3}, c_{0,2,5,3}, c_{0,2,6,3}\} \) 
+<p>
+\(
+c_{0,2,3} = \textrm{majority} \: \{c_{0,2,1,3}, 0,
+0, 0, 0\} = 0 \) 
+<p>
+<i>By the same argument, for all loyal agents, \(j,k\) in \(v_{2}, \ldots,
+v_{6}\):
+\(
+c_{0,j,k} = m_{0, j}
+\)
+.</i>
+
+<p  style="color:red;">Aggregation Step</p>
+<p>
+\(
+c_{0,2} = \textrm{majority} \: \{c_{0,1,2}, c_{0,2,2},
+c_{0,3,2}, c_{0,4,2}, c_{0,5,2}, c_{0,6,2}\} \) 
+<p>
+\(
+c_{0,2} = \textrm{majority} \: \{1, 0, 0, 1, 1, 1\} = 1 \)
+<p>
+By the same argument, \(c_{0,3} = 1\)
+<p>
+\(
+c_{0,4} = \textrm{majority} \: \{c_{0,1,4}, c_{0,2,4},
+c_{0,3,4}, c_{0,4,4}, c_{0,5,4}, c_{0,6,4}\} \) 
+<p>
+\(
+c_{0,4} = \textrm{majority} \: \{1, 0, 0, 1, 1, 1\} = 1 \)
+<p>
+By the same argument, \(c_{0,5} = c_{0,6} = 1\)
+<p>
+<i>Therefore, all loyal agents, \(v_{2}, \ldots, v_{6}\) compute the
+same consensus value: attack (1) for this \(Byz(2)\) algorithm.</i>
+
+
 
 
 
