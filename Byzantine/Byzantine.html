@@ -349,22 +349,66 @@ case where signatures and messages cannot be forged, the algorithm
 works with any number of loyal agents.
 
 <p>
-We describe an algorithm, \(Byz(t)\) which solves the
-Byzantine Generals problem when there are at most \(t\) disloyal agents and at
-least \(3.t + 1\) total agents.  \(Byz(t)\) also solves the problem
+We describe an algorithm which solves the Byzantine
+Generals problem when there are at most \(t\) disloyal agents and at
+least \(3.t + 1\) total agents.  The algorithm also solves the problem
 where there are more than \(t\) disloyal agents provided that the
-general is loyal. We illustrate the algorithm
-with examples and then prove that the algorithm is correct.
+general is loyal. We illustrate the algorithm with examples and then
+prove that the algorithm is correct.
 
 <p>
 Messages in the algorithm are either <i>attack</i> or <i>retreat</i>
-messages. The absence of a 
-message in a round is treated the same as way as receiving a
-<i>retreat</i> message. We will ignore rounds, synchronization, and
-message loss for
-the remainder of this section and restrict attention to messages which
-are received on every round where a message is either attack or retreat.
+messages. The absence of a message in a round is treated the same as
+way as receiving a <i>retreat</i> message.
 
+<p>
+Let the general be
+agent \(g\), and let \(L\) be the set of lieutenants. The general is
+not a lieutenant: \(g \notin L\). The general sends a
+message \(m_{g,l}\) to each lieutenant \(l\). Then, the
+lieutenants communicate among themselves so that each lieutenant
+determines a consensus value.
+
+
+<p>
+A Byzantine problem is defined by the
+4-tuple \((g, L, M, t)\), where:
+  \(g\) is the index of the general,
+
+  \(L\) is the set of lieutenants, and
+
+  \(M\) is the set \((m_{g,l}, l)\) where \(m_{g,l}\) is the message
+that the general \(g\) sends to lieutenant \(l\), for all \(l\), and
+
+\(t\) is an upper bound on the number of disloyal agents.
+
+<p>
+Let
+\(c_{l}(g, L, M, t)\) be the consensus value computed by lieutenant
+\(l\) for problem (g, L, M, t). We describe an algorithm by which the
+consensus values satisfy the specification:
+
+<ol>
+  <li>
+  <i>Validity</i>: If the general is loyal, i.e., if \(m_{g,j} =
+  m_{g,k}\) for all lieutenants, \(j, k\), then all loyal lieutenants
+  \(l\) obey the general. In this case, the consensus value \(c_{l}\)
+  of a loyal 
+  lieutenant \(l\) is the message \(m_{g,l}\) that the general sent
+  \(l\). 
+  <p>
+  \(
+  c_{l}(g, L, M, t) = m_{g,l}
+  \)
+  </li>
+  <li>
+  <i>Consensus</i>: All loyal lieutenants \(j, k\) have the same
+  consensus value:
+  <p>
+  \(
+  c_{j}(g, L, M, t) = c_{k}(g, L, M, t)
+  \)
+</ol>
  
 <p>
 Let's call the lieutenants \(v_{j}\) for \(0 < j <
