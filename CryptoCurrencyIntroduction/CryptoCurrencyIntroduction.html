@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>CryptoCurrencyIntroduction</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new4 {
+  border: 5px solid blue;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+
+</style>
+
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+  
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="CryptoCurrencyIntroduction.html">Introduction to Crypto Currency</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="SafetyExample.html">Examples</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="SafetySelfTest.html">Self Tests</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="SafetyExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="SafetyExplorations.html">Explorations</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../LoopTermination/LoopTermination.html">Next: Loop Termination</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../HoareTriples/HoareTriples.html">Previous: Hoare Triples</a> 
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+    
+    <h2 class="w3-text-teal">Introduction to Cryptography for
+    Cryptocurrency</h3>
+
+    <h3 class="w3-text-teal">Review: Cryptographic Hash Function</h3>
+    A  hash function, \(H\), maps input strings of
+    arbitrary size to outputs of 
+    fixed size, does so efficiently. Let \(n\) be the number of output
+    bits of \(H\).
+
+    <h4 class="w3-text-teal">Collision Resistance</h4>
+    Input values \(x, y\) are said to <i>collide</i> when \(H(x) = H(y)\).
+
+    <p>
+    Let's look at the following problem: Given \(H\), find any
+    colliding pair \(x, y\).
+    
+    Let's look at a brute-force algorithm to solve this
+    problem. Suppose \(n\) is \(3\). We could compute hash values for
+    all \(8\) input strings of length \(3\) and one input string of
+    length \(4\). From the pigeon-hole principle, if \(9\) inputs are
+    mapped to \(8\) possible outputs then at least two of the inputs
+    must have the same output. So, we can solve the problem in at most
+    \(9\) steps.
+
+    <p>
+    We can find collisions, using this brute-force algorithm, for any
+    \(n\); however, the computation time is of the order of
+    \(2^{n}\). Are there fast ways of finding collisions where the
+    computation time is polynomial rather than exponential in \(n\)?
+    That depends on the hash function.
+
+    <p>
+    A hash functions is said to be <i>collision resistant</i> if 
+    the only known ways of
+    finding collisions in the hash functions are about as slow as
+    the brute force algorithm. 
+    
+
+    <h4 class="w3-text-teal">Hiding</h4>
+    Your soccer friend predicts the winner, \(W\), of the 2022 World
+    Cup. She tells you the hash function, \(H\), and gives you the
+    hash, \(y\), where \(y = H(W)\).
+     After the World Cup is over, she
+    reveals her prediction, \(W\), by showing that \(H(W)\) is indeed
+    \(y\). That's one way of making a commitment and revealing it
+    later. 
+
+    <p>
+    Can you discover her prediction before she reveals it?
+
+    <p>
+It's easy. There are only 32 teams playing. Compute \(H(x)\) where
+    \(x\) runs over each of the 32 teams. One of those teams has to be
+    \(W\). You can discover her prediction in at most 32 steps.
+
+    <p>
+    If you believe that she will pick Brazil with high
+    probability, then your expected time to discover her prediction
+    will be even faster if you begin by checking: \(H(Brazil) \stackrel{?}{=} y\). 
+
+<p>
+Let's modify the problem.  She selects a secret value \(r\). Instead
+of giving you \(H(W)\), she gives you \(y\) where \(y = H(r + W)\) and
+where \(_\) indicates concatenation of strings. But, she doesn't give you \(r\). Can
+you discover \(W\) from \(H\) and \(H(r + W)\)?
+
+<p>
+Let's modify the problem further.Suppose that you are certain that she predicted the
+winner to be Brazil. All you have to do to prove that she predicted
+Brazil is to find an \(r\) such that \(H(r + Brazil) = y\).
+How easy is finding such an \(r\)?
+
+<p>
+That depends on the distribution from which \(r\) is picked. If \(r\)
+is the string "password" with probability 0.999 then you are likely to
+find \(r\) with high probability.
+If, however, the distribution from which \(r\) is picked is
+spread out, then \(r\) is unpredictable, and finding \(r\) is
+infeasible. 
+
+<p>
+A hash function, \(H\) is said to be <i>hiding</i> exactly when all
+algorithms to compute \(x\), given only \(H(r+x)\) and \(H\), take so
+much time that solving the problem is practically impossible ---
+provided that \(r\) is picked from a spread-out distribution.
+    
+
+    <h4 class="w3-text-teal">Puzzle Friendly</h4>
+Let \(r\) be a value picked from a spread-out distribution. Let \(Y\)
+    be a set of \(n\)-bit values. Consider the following problem:
+    Given \(H\), and \(Y\), compute any \(x\) such that \(H(r+x) \in
+Y\).
+
+<p>
+The hash function, \(H\), is said to be <i>puzzle friendly</i>
+    exactly when any algorithm to solve this problem is not much
+    better than the brute force algorithm that tries every possible
+    value of \(x\). In other words, the number of steps taken by any
+algorithm that solves this problem is not significantly lower than \(2^{n}\).
+
+<p>
+If  we are testing random values of
+\(x\) to find out if \(H(x) \in Y\) then if
+set \(Y\) has two elements, we
+we expect that solving the problem
+will take about half as much time as for the case where \(Y\) has only
+element. So, the cardinality of \(Y\) gives us an easy way of controlling
+the expected time to solve the problem.
+
+<p>
+<i>A cryptographic hash function is one that is collision resistant,
+hiding and puzzle-friendly.
+</i>
+
+<h3 class="w3-text-teal">Hashing Inputs of Arbitrary Length</h3>
+Let \(f\) be a function that operates on input strings
+of fixed length and produces output strings of fixed length. Let the
+input and output strings of \(f\) have lengths \(M + N\) and \(M\),
+respectively. We look at functions where \(N > 0\), and since the
+output is smaller than the input, \(f\) is called a <i>compression
+function.</i>
+
+<p>
+Let \(g\) be a function that operates on input strings of arbitrary
+lengths. Example code is given below where <code>InitialValue</code>
+is a given constant string.
+
+<pre>
+def g(y):
+    output = InitialValue
+
+    // pad y so that it's length is a multiple of N
+    if len(y)%N > 0:  y = y + "0"*(N - len(y)%N)
+
+    // partition y into blocks of size N
+    blocks = [y[i: i+N] for i in range(0, len(y), N)]
+
+    for block in blocks: output = f(output+block)
+    return output
+</pre>
+
+<h3 class="w3-text-teal">Hash Pointers</h3>
+A hash pointer is a pair \(ptr, y\) where \(ptr\) is a pointer that
+points to an item of data, and \(y\) is a cryptographic hash of that
+item of data. Any data structure with pointers can be converted into a
+data structure with hash pointers replacing pointers.
+
+<h3 class="w3-text-teal">Tamper-Evident Linear Lists</h3>
+Let's look at the familiar linear linked list.
+Each element of the linear linked list contains two parts: data and
+a pointer to the next element of the linked list. Consider a linked
+list to which elements can be appended but not deleted. Let's call the
+very first element in the list the <i>genesis</i> element, or the \(0\)-th
+element, when the list is not empty.
+Let's call the element whose pointer points to the \(i\)-th element, 
+the \(i+1\)-th element.
+When we replace the pointer part of the familiar list by a hashed
+pointer we get a <i>tamper-evident linear list.</i>
+
+<p>
+The \(i+1\)-th element consists of (1) data, \(D[i+1]\), (2) a pointer
+\(ptr[i+1]\) to the location of the \(i\)-th element and (3) a hash
+\(H[i+1]\) of the \(i\)-th element.  The pointer of the \(0\)-th
+element is <code>None</code> or some symbol that indicates empty.
+
+<p>
+If \(D[i]\), \(ptr[i]\) or
+\(H[i]\) are changed then the changed values will not match
+\(H[i+1]\). This is because collisions are
+ unlikely, and so the hashes of the original and modified
+values are unlikely to be identical.
+
+<p>
+We can detect changes
+to \(D[i]\), \(ptr[i]\) or \(H[i]\) unless \(H[i+1]\) is also modified
+to match the changes. By induction on \(i\), we can detect
+changes to any \(D[i]\), \(ptr[i]\) or \(H[i]\), unless \(H[j]\)
+<i>for all \(j > i\)</i> are also modified to match the changes.
+So we can detect any change to
+the list provided that \(H[n]\) --- the pointer
+to the last element --- cannot be changed. 
+
+
+<h3 class="w3-text-teal">Tamper-Evident Acyclic Graphs and Merkle
+Trees</h3>
+The idea described in the previous paragraph to convert linear linked
+lists can be used to convert directed acyclic graphs, in which nodes are
+connected by pointers, into tamper-evident graphs. A specific case of
+a directed acyclic graph is a rooted tree.
+
+<p>
+A <i>Merkle tree</i> is a special case of a binary balanced tree in
+data items are stored only in the leaves, while the other nodes of the
+tree contain only hash pointers to nodes in the next level down. The
+length of a path from the root to a leaf is \(log_{2}(n)\) where \(n\)
+is the number of leaves. So, to
+prove that an element at the leaf is a member of the tree we need only
+\(log_{2}(n)\) elements on the path from the root to that leaf. 
+
+<h3 class="w3-text-teal">Keys and Signed Messages</h3>
+You can create a random public-key, private-key pair 
+<a href="https://en.wikipedia.org/wiki/Ssh-keygen">
+by calling a function on your computer.</a>
+With high probability, nobody else has this
+specific pair of keys. Each individual's private key is a secret held
+by that individual. Public keys are accessible by everybody.
+
+<p class="w3-text-teal">Sending messages securely</p>
+Keys are used to send messages securely.
+Kamala sends a secure message to Joe by encrypting the message with
+Joe's public key; Joe decrypts the message using Joe's private key.
+An agent cannot decrypt the encrypted message without Joe's private key.
+
+<p class="w3-text-teal">Signing messages</p>
+Suppose Kamala needs to send a signed message to Joe while
+ensuring that nobody can forge her signature. She encrypts the message
+<i>M</i> with her private key to get an encrypted message <i>M'</i>,
+and sends the pair <i>(M, M')</i> securely to Joe. When Joe receives
+<i>(M, M')</i>, Joe decrypts
+<i>M'</i> using Kamala's public key to get the decrypted message
+<i>M''</i>. If <i>M'' = M</i> then Joe knows that Kamala sent
+<i>M</i> because only an agent with Kamala's private signature could
+have sent that message.
+
+
+<h1>OLD</h1>
+    This module reviews the representation of a state transition
+    system in terms of <a
+    href="https://en.wikipedia.org/wiki/Directed_graph">
+    directed graphs</a>, and reviews the use of
+    <a href="https://en.wikipedia.org/wiki/Loop_invariant">loop
+    invariants</a>.
+
+    This module reviews the relations of <i>hop</i>, \(\rightarrow\),
+    and <i>path</i>, \(\stackrel{*}{\rightarrow}\), from graph
+    theory. 
+    <hr class="new4">
+    <h4 style="color:blue;">
+    
+		      Prove that a system is
+		      safe by showing that all
+		      paths from vertices representing initial states
+		      only visit vertices representing safe states.
+    </h4>
+    <hr class="new4">
+
+    <p>
+    
+<figure>
+  <img src="GraphExample.jpg" alt="Fig1" style="width:80%">>
+  <figcaption>Fig.1 - An Example of a Graph</figcaption>
+</figure>
+
+		      <p style="color:red;"><b>Examples of vertices</b></p>
+\( V = \{0, 1, 2, 3, 4, 5, 6, 7 \} \)
+
+
+
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
