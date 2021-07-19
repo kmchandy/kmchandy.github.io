@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>CryptoCurrencyIntroduction</title>
+<title>BitCoin: Introduction</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -52,7 +52,7 @@ hr.new2 {
   Algorithms</h3>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="CryptoCurrencyIntroduction.html">Introduction to Crypto Currency</a>
+  href="BitCoinIntroduction.html">Introduction to Crypto Currency</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="SafetyExample.html">Examples</a>
@@ -87,430 +87,59 @@ hr.new2 {
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
     
-    <h2 class="w3-text-teal">Introduction to Cryptography for
-    Cryptocurrency</h3>
-
-    <h3 class="w3-text-teal">Review: Cryptographic Hash Function</h3>
-    A  hash function, \(H\), maps input strings of
-    arbitrary size to outputs of 
-    fixed size, does so efficiently. Let \(n\) be the number of output
-    bits of \(H\).
-
-    <h4 class="w3-text-teal">Collision Resistance</h4>
-    Input values \(x, y\) are said to <i>collide</i> when \(H(x) = H(y)\).
-
-    <p>
-    Let's look at the following problem: Given \(H\), find any
-    colliding pair \(x, y\).
+    <h2 class="w3-text-teal">Introduction to BitCoin</h3>
+    BitCoin is based on cryptography and distributed consensus. We
+    discussed the aspects of cryptography required for BitCoin in the
+    previous module. This module focuses on distributed consensus.
     
-    Let's look at a brute-force algorithm to solve this
-    problem. Suppose \(n\) is \(3\). We could compute hash values for
-    all \(8\) input strings of length \(3\) and one input string of
-    length \(4\). From the pigeon-hole principle, if \(9\) inputs are
-    mapped to \(8\) possible outputs then at least two of the inputs
-    must have the same output. So, we can solve the problem in at most
-    \(9\) steps.
-
-    <p>
-    We can find collisions, using this brute-force algorithm, for any
-    \(n\); however, the computation time is of the order of
-    \(2^{n}\). Are there fast ways of finding collisions where the
-    computation time is polynomial rather than exponential in \(n\)?
-    That depends on the hash function.
-
-    <p>
-    A hash functions is said to be <i>collision resistant</i> if 
-    the only known ways of
-    finding collisions in the hash functions are about as slow as
-    the brute force algorithm. 
+    <a href="https://www.lopp.net/pdf/princeton_bitcoin_book.pdf">
+    is a superb (and longer) description of the distributed consensus
+    algorithm used in Bitcoin.</a>
     
-
-    <h4 class="w3-text-teal">Hiding</h4>
-    Your soccer friend predicts the winner, \(W\), of the 2022 World
-    Cup. She tells you the hash function, \(H\), and gives you the
-    hash, \(y\), where \(y = H(W)\).
-     After the World Cup is over, she
-    reveals her prediction, \(W\), by showing that \(H(W)\) is indeed
-    \(y\). That's one way of making a commitment and revealing it
-    later. 
-
     <p>
-    Can you discover her prediction before she reveals it?
+    We discussed distributed consensus in the modules on Paxos and
+    Byzantine Generals. The specification of consensus is weaker in
+    BitCoin. Also, the BitCoin algorithms to achieve consensus are very different
+    from the Paxos and Byzantine Generals algorithms.
 
-    <p>
-It's easy. There are only 32 teams playing. Compute \(H(x)\) where
-    \(x\) runs over each of the 32 teams. One of those teams has to be
-    \(W\). You can discover her prediction in at most 32 steps.
+    <p class="w3-text-teal">No trusted agents</p>
+    The previous module described a crypto currency system that
+    required a trusted agent. Bitcoin manages without a trusted agent
+    by transferring the trusted agent's responsibilities to the
+    community of all agents who collectively make decisions.
+    Specifically, the community determines how the ledger is modified,
+    how transactions are verified, and how coins are generated.
 
-    <p>
-    If you believe that she will pick Brazil with high
-    probability, then your expected time to discover her prediction
-    will be even faster if you begin by checking: \(H(Brazil) \stackrel{?}{=} y\). 
+    <p class="w3-text-teal">No assumptions about numbers of agents</p>
+    The Byzantine Generals algorithm uses an upper bound on the number
+    of faulty agents and a lower bound on the number of non-faulty
+    ones. Paxos assumes that the total number of agents is known. 
+    Bitcoin makes no assumptions about numbers of faulty and
+    non-faulty agents. There are unlikely situations where the Bitcoin
+    algorithm may not work, but we will ignore them. An example of
+    such a situation is one in which all agents but one 
+    collude to prevent that one agent from executing transactions.
 
-<p>
-Let's modify the problem.  She selects a secret value \(r\). Instead
-of giving you \(H(W)\), she gives you \(y\) where \(y = H(r + W)\) and
-where \(+\) indicates concatenation of strings. But, she doesn't give you \(r\). Can
-you discover \(W\) from \(H\) and \(H(r + W)\)?
-
-<p>
-Let's modify the problem further.Suppose that you are certain that she predicted the
-winner to be Brazil. All you have to do to prove that she predicted
-Brazil is to find an \(r\) such that \(H(r + Brazil) = y\).
-How easy is finding such an \(r\)?
-
-<p>
-That depends on the distribution from which \(r\) is picked. If \(r\)
-is the string "password" with probability 0.999 then you are likely to
-find \(r\) with high probability.
-If, however, the distribution from which \(r\) is picked is
-spread out, then \(r\) is unpredictable, and finding \(r\) is
-infeasible. 
-
-<p>
-A hash function, \(H\) is said to be <i>hiding</i> exactly when all
-algorithms to compute \(x\), given only \(H(r+x)\) and \(H\), take so
-much time that solving the problem is practically impossible ---
-provided that \(r\) is picked from a spread-out distribution.
-    
-
-    <h4 class="w3-text-teal">Puzzle Friendly</h4>
-Let \(r\) be a value picked from a spread-out distribution. Let \(Y\)
-    be a set of \(n\)-bit values. Consider the following problem:
-    Given \(H\), and \(Y\), compute any \(x\) such that \(H(r+x) \in
-Y\).
+    <p class="w3-text-teal">Ledgers may not match</p>
+    A ledger is a record of a sequence of transactions.
+    An advantage of having a single agent append values to the
+    ledger is that all agents have a consistent copy of the
+    ledger. Two agents may have different copies because one agent has
+    a more recent one. The two copies can differ in only one way: <i>the
+    older version is a prefix of the more recent one</i>, i.e., the more
+    recent version consists of the older version plus additional
+elements. The older version will eventually catch up to the newer one.
 
 <p>
-The hash function, \(H\), is said to be <i>puzzle friendly</i>
-    exactly when any algorithm to solve this problem is not much
-    better than the brute force algorithm that tries every possible
-    value of \(x\). In other words, the number of steps taken by any
-algorithm that solves this problem is not significantly lower than \(2^{n}\).
-
-<p>
-If  we are testing random values of
-\(x\) to find out if \(H(x) \in Y\) then if
-set \(Y\) has two elements, we
-we expect that solving the problem
-will take about half as much time as for the case where \(Y\) has only
-element. So, the cardinality of \(Y\) gives us an easy way of controlling
-the expected time to solve the problem.
-
-<p>
-<i>A cryptographic hash function is one that is collision resistant,
-hiding and puzzle-friendly.
-</i>
-
-<h3 class="w3-text-teal">Hashing Inputs of Arbitrary Length</h3>
-Let \(f\) be a function that operates on input strings
-of fixed length and produces output strings of fixed length. Let the
-input and output strings of \(f\) have lengths \(M + N\) and \(M\),
-respectively. We look at functions where \(N > 0\), and since the
-output is smaller than the input, \(f\) is called a <i>compression
-function.</i>
-
-<p>
-Let \(g\) be a function that operates on input strings of arbitrary
-lengths. Example code is given below where <code>InitialValue</code>
-is a given constant string.
-
-<pre>
-def g(y):
-    output = InitialValue
-
-    // pad y so that it's length is a multiple of N
-    if len(y)%N > 0:  y = y + "0"*(N - len(y)%N)
-
-    // partition y into blocks of size N
-    blocks = [y[i: i+N] for i in range(0, len(y), N)]
-
-    for block in blocks: output = f(output+block)
-    return output
-</pre>
-
-<h3 class="w3-text-teal">Hash Pointers</h3>
-A hash pointer is a pair \(ptr, y\) where \(ptr\) is a pointer that
-points to an item of data, and \(y\) is a cryptographic hash of that
-item of data. Any data structure with pointers can be converted into a
-data structure with hash pointers replacing pointers.
-
-<h3 class="w3-text-teal">Tamper-Evident Data Structures</h3>
-Let's look at the familiar linear linked list.
-Each element of the linear linked list contains two parts: data and
-a pointer to the next element of the linked list. Consider a linked
-list to which elements can be appended but not deleted. Let's call the
-very first element in the list the <i>genesis</i> element, or the \(0\)-th
-element, when the list is not empty.
-Let's call the element whose pointer points to the \(i\)-th element, 
-the \(i+1\)-th element.
-When we replace the pointer part of the familiar list by a hashed
-pointer we get a <i>tamper-evident linear list.</i>
-
-<p>
-The \(i+1\)-th element consists of (1) data, \(D[i+1]\), (2) a pointer
-\(ptr[i+1]\) to the location of the \(i\)-th element and (3) a hash
-\(H[i+1]\) of the \(i\)-th element.  The pointer of the \(0\)-th
-element is <code>None</code> or some symbol that indicates empty.
-
-<p>
-If \(D[i]\), \(ptr[i]\) or
-\(H[i]\) are changed then the changed values will not match
-\(H[i+1]\). This is because collisions are
- unlikely, and so the hashes of the original and modified
-values are unlikely to be identical.
-
-<p>
-We can detect changes
-to \(D[i]\), \(ptr[i]\) or \(H[i]\) unless \(H[i+1]\) is also modified
-to match the changes. By induction on \(i\), we can detect
-changes to any \(D[i]\), \(ptr[i]\) or \(H[i]\), unless \(H[j]\)
-<i>for all \(j > i\)</i> are also modified to match the changes.
-So we can detect any change to
-the list provided that \(H[n]\) --- the pointer
-to the last element --- cannot be changed. 
-
-
-<h5 class="w3-text-teal">Tamper-Evident Acyclic Graphs and Merkle
-Trees</h5>
-The idea described in the previous paragraph to convert linear linked
-lists can be used to convert directed acyclic graphs, in which nodes are
-connected by pointers, into tamper-evident graphs. A specific case of
-a directed acyclic graph is a rooted tree.
-
-<p>
-A <i>Merkle tree</i> is a special case of a binary balanced tree in
-data items are stored only in the leaves, while the other nodes of the
-tree contain only hash pointers to nodes in the next level down.
-To prove that an element at the leaf is a member of the tree we need only the
-\(log_{2}(n)\) hash pointers on the path from the root to that
-leaf. By contrast, to prove that an element is a member of a linear
-list we need to inspect \(O(n)\) elements, on average.
-
-<h3 class="w3-text-teal">Keys and Signed Messages</h3>
-You can create a random public-key, private-key pair 
-<a href="https://en.wikipedia.org/wiki/Ssh-keygen">
-by calling a function on your computer.</a>
-With high probability, nobody else has this
-specific pair of keys. Each individual's private key is a secret held
-by that individual. Public keys are accessible by everybody.
-
-<p class="w3-text-teal">Sending messages securely</p>
-Keys are used to send messages securely.
-Kamala sends a secure message to Joe by encrypting the message with
-Joe's public key; Joe decrypts the message using Joe's private key.
-An agent cannot decrypt the encrypted message without Joe's private key.
-
-<p class="w3-text-teal">Signing messages</p>
-Suppose Kamala needs to send a signed message to Joe while
-ensuring that nobody can forge her signature. She encrypts the message
-<i>M</i> with her private key to get an encrypted message <i>M'</i>,
-and sends the pair <i>(M, M')</i> securely to Joe. When Joe receives
-<i>(M, M')</i>, Joe decrypts
-<i>M'</i> using Kamala's public key to get the decrypted message
-<i>M''</i>. If <i>M'' = M</i> then Joe knows that Kamala sent
-<i>M</i> because only an agent with Kamala's private signature could
-have sent that message.
-
-<h3 class="w3-text-teal">Cryptocurrency managed by a trusted
-agent</h3>
-Let's start with a currency managed by a trusted agent that we will
-call a bank. Later, we will
-look at a consensus algorithm, very different from Paxos and Byzantine
-Generals, which will allow us to do without the trusted agent.
-
-<p>
-The bank maintains a tamper-evident linear list
-<code>L</code> of transactions.
-Any agent can get a copy of <code>L</code> at any point, and there may
-be mechanisms for broadcasting updates of <code>L</code> to 
-agents.
-
-<p>
-A transaction is one of
-two types: <i>create</i> or <i>pay</i>.
-In a pay transaction, payers --- i.e. agents, other than the bank
---- give coins that they possess to payees. An agent can be both a
-payer and payee of the same transaction.
-In a create transaction the bank creates coins that it gives to
-agents --- the payees of the transaction; the bank acts as the payer.
-We won't discuss the permissions that a bank needs to create coins.
-
-<p>
-A pay transaction is signed by all payers of the transaction.
-A create transaction is signed by the bank.
-
-<p>
-Each element of <code>L</code> has (1) a unique id; (2) the type of
-the transaction, either create or pay;
-(3) <i>payers</i>: only for pay transactions --- 
-a list indicating the agents who pay coins into the transaction and
-the amounts that they put in.
-(4) <i>payees</i>: for both create and pay transactions --- an
-array indicating agents who receive coins in the transaction and the
-amounts that they receive.
-
-<p>
-The payees in a transaction are specified by an array of 2-tuples:
-<pre>
-(value, payee public key).
-</pre>
-Each element of the array indicates that a coin
-of the specified value is given to the agent
-with the specified public key.
-
-<p>
-Later, we will describe how payers are specified.
-
-<h4 style="color:red;">Example of a create transaction</h4>
- An example of the specification of a create transaction is:
-<pre>
-(10, create,  [(2.1, 7xxxx...), (3.2, 8xxx)]).
-</pre>
-The id of this transaction is 10, the type of the transaction is
- create, and the payees of the transaction are specified by the array
-of 2-tuples:
-<pre>
-[(2.1, 7xxxx...), (3.2, 8xxx)]
-</pre>
-
-In this transaction the bank creates a coin of value 2.1 and gives it
-to the agent with public key 7xxxx..., and the bank also
-creates a coin of value 3.2 and gives it
-to the agent with public key 8xxxx...
-
-<p>
-The pair: (transaction id, payee array index) identifies 
-the payee public key and the amount that the payee receives in the
-transaction. 
-For example (10, 0) --- 
-transaction id 10, and array index 0 --- identifies the 2-tuple
-(2.1, 7xxxx...).
-
-<h3 class="w3-text-teal">Pay transaction</h3>
-The payers in a pay transaction are specified by a list of 2-tuples, 
-(transaction id, payee array index). For example, (10, 0), specifies
-that the agent with public key 7xxxx was given a coin worth 2.1 in the
-transaction with id 10; this agent is now a payer in the current
-transaction and this agent pays a coin worth 2.1 into the current
-transaction.
-
-<p>
-The bank checks that the agent hasn't already spent the coin after
-receiving it in transaction with id 10 and before the current
-transaction. To do so, it inspects the transactions in <code>L</code>
-between the transaction at which the agent receives a coin and the
-transaction in which the agent spends the coin.
-
-<p>
-Consider a transaction in which an agent with public key 7xxxx, who
-received a coin worth 2.1 in an earlier transaction, gives a coin
-of value 1.4 to an agent with public key 8xxxx and keeps a coin worth
-0.7 for itself. The payee array for this transaction includes the
-elements (1.4, 8xxxx), (0.7, 7xxxx).
-
-<h4 style="color:red;">Example of a pay transaction</h4>
- An example of the specification of a pay transaction is:
-<pre>
-(12, pay,
-  [(10, 0), (10, 1)],
-  [(0.7, 7xxxx...), (4.6, 9xxxx...)]
-).
-</pre>
-The id of this transaction is 12; the type of the transaction is
-pay; the payers into the transaction are identified by the pairs of
-transaction id and payee array index: (10, 0), and (10, 1); and the
-payee array is [(0.7, 7xxxx...), (4.6, 9xxxx...)].
-
-<p>
-Who are the payers into this transaction? The transaction id 10, and
-payee array index 0, identifies the pair (2.1, 7xxxx...): the agent
-wth public key 7xxxx... who received a coin worth 2.1 in the
-transaction with id 10. Likewise,
-transaction id 10, and
-payee array index 1, identifies the pair (3.2, 8xxxx...): the agent
-wth public key 8xxxx... who received a coin worth 3.2 in the
-transaction with id 10.
-So, the payers into this transaction are the agents with id
-7xxxx... and 8xxxx..., and the total value of coins paid into the
-transaction is 2.1+3.2 = 5.3. The payers sign this transaction.
-
-<p>
-The payees in this transaction are the agents with public keys
-7xxxx... and 9xxxx... who receive coins worth 0.7 and 4.6,
-respectively.
-
-<h3 class="w3-text-teal">Transaction validity</h3>
-The bank appends a transaction to <code>L</code> if and only if the
-transaction is valid. The bank checks for validity by carrying out the
-following steps:
-<ol>
-  <li>
-  The bank verifies that the payers into the transaction signed the
-  transaction.
-  </li>
-  <li>
-  The bank checks that the total value of coins paid out from the
-  transaction does not
-  exceed the total value paid in to the transaction. (If the value paid
-  in exceeds the value paid out then the bank takes the difference as
-  a transaction fee. More about fees later.)
-  </li>
-  <li>
-  The bank verifies that the payers' claims to have received coins in
-  previous transactions is genuine. For example,
-  if the agent with
-  public key 7xxxx... claims to have received coins worth 2.1 in the
-  transaction with id 10, and payee array index 0, then the bank
-  verifies this claim by that transaction.
-  </li>
-  <li>
-  The bank ensures that coins paid into the transaction haven't
-  already been spent.
-  </li>
-</ol>
-Any agent can get a copy of <code>L</code> and verify that all
-transactions in <code>L</code> are valid.
-
-<p>
-Next we'll look at BitCoin's algorithms for implementing a
-cryptocurrency without trusted agents.
-
-
-
-
-
-
-<h1>OLD</h1>
-    This module reviews the representation of a state transition
-    system in terms of <a
-    href="https://en.wikipedia.org/wiki/Directed_graph">
-    directed graphs</a>, and reviews the use of
-    <a href="https://en.wikipedia.org/wiki/Loop_invariant">loop
-    invariants</a>.
-
-    This module reviews the relations of <i>hop</i>, \(\rightarrow\),
-    and <i>path</i>, \(\stackrel{*}{\rightarrow}\), from graph
-    theory. 
-    <hr class="new4">
-    <h4 style="color:blue;">
-    
-		      Prove that a system is
-		      safe by showing that all
-		      paths from vertices representing initial states
-		      only visit vertices representing safe states.
-    </h4>
-    <hr class="new4">
-
-    <p>
-    
-<figure>
-  <img src="GraphExample.jpg" alt="Fig1" style="width:80%">>
-  <figcaption>Fig.1 - An Example of a Graph</figcaption>
-</figure>
-
-		      <p style="color:red;"><b>Examples of vertices</b></p>
-\( V = \{0, 1, 2, 3, 4, 5, 6, 7 \} \)
-
+In Bitcoin there is no single agent which is given the sole
+responsibility of appending values to the ledger.
+When multiple agents append values to a ledger concurrently, the
+ledger of one agent may not be a prefix of the ledger of another.
+So we can't rely on one ledger
+"catching up eventually" to another by appending more recent
+values. Bitcoin has a clever, and random, way of enabling ledgers to
+catch up to each other and become consistent eventually. Next we'll look at
+this concept of eventual consistency.
 
 
 

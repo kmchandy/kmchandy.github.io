@@ -90,6 +90,12 @@ hr.new2 {
     <h2 class="w3-text-teal">Introduction to Cryptography for
     Cryptocurrency</h3>
 
+    <a href="https://www.lopp.net/pdf/princeton_bitcoin_book.pdf"
+    is a superb description of Bitcoin.</a> The book is longer than
+    this module. If you have the time, read the book and skip this
+    module. 
+
+    <p>
     This module contains a review of elementary cryptographic
     operations that you may know already. It also introduces a simple
     cryptocurrency managed by a trusted agent. The next module
@@ -476,12 +482,40 @@ following steps:
   already been spent.
   </li>
 </ol>
+
+<h4 class="w3-text-teal">Optimizations: Blocks</h4>
+Verifying large numbers of small transactions, with a concommitant long
+ledger <code>L</code> is more expensive than verify small numbers of
+large transactions with a shorter ledger. Some payers in a large transaction
+may pay to some payees, while other payers pay to other payees,
+and we can make a transaction as big as we want. The disadvantage of
+requiring large transactions is that the system may have to wait for
+enough small transactions to arrive. In the next module we will show
+how transactions are put into blocks and we refer to the ledger as a
+block chain.
+
+
+<h4 class="w3-text-teal">Advantages of this cryptocurrency</h4>
 Any agent can get a copy of <code>L</code> and verify that all
-transactions in <code>L</code> are valid.
+transactions in <code>L</code> are valid. Any agent can verify that
+the only way in which <code>L</code> is modified is that elements are
+append to its tail; all that the agent needs to do is to check that
+the pointer to the tail is modified only by appending
+elements. Because <code>L</code> is tamper-evident, an agent knows
+that <code>L</code> doesn't change while the hash pointer to the end
+of <code>L</code> doesn't change.
 
 <p>
-Next we'll look at BitCoin's algorithms for implementing a
-cryptocurrency without trusted agents.
+The bank can't forge a transaction because all payers sign the
+transaction. Agents can remain anonymous because an agent's only
+public information is the agent's public key, and an agent can create
+multiple public keys. Every agent can verify the correctness of every
+transaction.
+
+<p>
+The problem with this cryptocurrency arises if the
+bank is not trusted.Next we'll look at BitCoin's algorithms for
+implementing a cryptocurrency without trusted agents.
 
 
   <footer id="myFooter">
