@@ -90,14 +90,6 @@ hr.new2 {
     <h2 class="w3-text-teal">Introduction to Cryptography for
     Cryptocurrency</h3>
 
-    This module contains a review of elementary cryptographic
-    operations that you may know already. It also introduces a simple
-    cryptocurrency managed by a trusted agent. The next module
-    discusses the algorithm underlying BitCoin; this algorithm doesn't
-    require agents to be trusted.
-
-
-    
     <h3 class="w3-text-teal">Review: Cryptographic Hash Function</h3>
     A  hash function, \(H\), maps input strings of
     arbitrary size to outputs of 
@@ -482,6 +474,45 @@ transactions in <code>L</code> are valid.
 <p>
 Next we'll look at BitCoin's algorithms for implementing a
 cryptocurrency without trusted agents.
+
+
+
+
+
+
+<h1>OLD</h1>
+    This module reviews the representation of a state transition
+    system in terms of <a
+    href="https://en.wikipedia.org/wiki/Directed_graph">
+    directed graphs</a>, and reviews the use of
+    <a href="https://en.wikipedia.org/wiki/Loop_invariant">loop
+    invariants</a>.
+
+    This module reviews the relations of <i>hop</i>, \(\rightarrow\),
+    and <i>path</i>, \(\stackrel{*}{\rightarrow}\), from graph
+    theory. 
+    <hr class="new4">
+    <h4 style="color:blue;">
+    
+		      Prove that a system is
+		      safe by showing that all
+		      paths from vertices representing initial states
+		      only visit vertices representing safe states.
+    </h4>
+    <hr class="new4">
+
+    <p>
+    
+<figure>
+  <img src="GraphExample.jpg" alt="Fig1" style="width:80%">>
+  <figcaption>Fig.1 - An Example of a Graph</figcaption>
+</figure>
+
+		      <p style="color:red;"><b>Examples of vertices</b></p>
+\( V = \{0, 1, 2, 3, 4, 5, 6, 7 \} \)
+
+
+
 
 
   <footer id="myFooter">
