@@ -150,7 +150,7 @@ It's easy. There are only 32 teams playing. Compute \(H(x)\) where
 <p>
 Let's modify the problem.  She selects a secret value \(r\). Instead
 of giving you \(H(W)\), she gives you \(y\) where \(y = H(r + W)\) and
-where \(_\) indicates concatenation of strings. But, she doesn't give you \(r\). Can
+where \(+\) indicates concatenation of strings. But, she doesn't give you \(r\). Can
 you discover \(W\) from \(H\) and \(H(r + W)\)?
 
 <p>
@@ -234,7 +234,7 @@ points to an item of data, and \(y\) is a cryptographic hash of that
 item of data. Any data structure with pointers can be converted into a
 data structure with hash pointers replacing pointers.
 
-<h3 class="w3-text-teal">Tamper-Evident Linear Lists</h3>
+<h3 class="w3-text-teal">Tamper-Evident Data Structures</h3>
 Let's look at the familiar linear linked list.
 Each element of the linear linked list contains two parts: data and
 a pointer to the next element of the linked list. Consider a linked
@@ -270,8 +270,8 @@ the list provided that \(H[n]\) --- the pointer
 to the last element --- cannot be changed. 
 
 
-<h3 class="w3-text-teal">Tamper-Evident Acyclic Graphs and Merkle
-Trees</h3>
+<h5 class="w3-text-teal">Tamper-Evident Acyclic Graphs and Merkle
+Trees</h5>
 The idea described in the previous paragraph to convert linear linked
 lists can be used to convert directed acyclic graphs, in which nodes are
 connected by pointers, into tamper-evident graphs. A specific case of
@@ -280,11 +280,11 @@ a directed acyclic graph is a rooted tree.
 <p>
 A <i>Merkle tree</i> is a special case of a binary balanced tree in
 data items are stored only in the leaves, while the other nodes of the
-tree contain only hash pointers to nodes in the next level down. The
-length of a path from the root to a leaf is \(log_{2}(n)\) where \(n\)
-is the number of leaves. So, to
-prove that an element at the leaf is a member of the tree we need only
-\(log_{2}(n)\) elements on the path from the root to that leaf. 
+tree contain only hash pointers to nodes in the next level down.
+To prove that an element at the leaf is a member of the tree we need only the
+\(log_{2}(n)\) hash pointers on the path from the root to that
+leaf. By contrast, to prove that an element is a member of a linear
+list we need to inspect \(O(n)\) elements, on average.
 
 <h3 class="w3-text-teal">Keys and Signed Messages</h3>
 You can create a random public-key, private-key pair 
@@ -310,6 +310,174 @@ and sends the pair <i>(M, M')</i> securely to Joe. When Joe receives
 <i>M''</i>. If <i>M'' = M</i> then Joe knows that Kamala sent
 <i>M</i> because only an agent with Kamala's private signature could
 have sent that message.
+
+<h3 class="w3-text-teal">Cryptocurrency managed by a trusted
+agent</h3>
+Let's start with a currency managed by a trusted agent that we will
+call a bank. Later, we will
+look at a consensus algorithm, very different from Paxos and Byzantine
+Generals, which will allow us to do without the trusted agent.
+
+<p>
+The bank maintains a tamper-evident linear list
+<code>L</code> of transactions.
+Any agent can get a copy of <code>L</code> at any point, and there may
+be mechanisms for broadcasting updates of <code>L</code> to 
+agents.
+
+<p>
+A transaction is one of
+two types: <i>create</i> or <i>pay</i>.
+In a pay transaction, payers --- i.e. agents, other than the bank
+--- give coins that they possess to payees. An agent can be both a
+payer and payee of the same transaction.
+In a create transaction the bank creates coins that it gives to
+agents --- the payees of the transaction; the bank acts as the payer.
+We won't discuss the permissions that a bank needs to create coins.
+
+<p>
+A pay transaction is signed by all payers of the transaction.
+A create transaction is signed by the bank.
+
+<p>
+Each element of <code>L</code> has (1) a unique id; (2) the type of
+the transaction, either create or pay;
+(3) <i>payers</i>: only for pay transactions --- 
+a list indicating the agents who pay coins into the transaction and
+the amounts that they put in.
+(4) <i>payees</i>: for both create and pay transactions --- an
+array indicating agents who receive coins in the transaction and the
+amounts that they receive.
+
+<p>
+The payees in a transaction are specified by an array of 2-tuples:
+<pre>
+(value, payee public key).
+</pre>
+Each element of the array indicates that a coin
+of the specified value is given to the agent
+with the specified public key.
+
+<p>
+Later, we will describe how payers are specified.
+
+<h4 style="color:red;">Example of a create transaction</h4>
+ An example of the specification of a create transaction is:
+<pre>
+(10, create,  [(2.1, 7xxxx...), (3.2, 8xxx)]).
+</pre>
+The id of this transaction is 10, the type of the transaction is
+ create, and the payees of the transaction are specified by the array
+of 2-tuples:
+<pre>
+[(2.1, 7xxxx...), (3.2, 8xxx)]
+</pre>
+
+In this transaction the bank creates a coin of value 2.1 and gives it
+to the agent with public key 7xxxx..., and the bank also
+creates a coin of value 3.2 and gives it
+to the agent with public key 8xxxx...
+
+<p>
+The pair: (transaction id, payee array index) identifies 
+the payee public key and the amount that the payee receives in the
+transaction. 
+For example (10, 0) --- 
+transaction id 10, and array index 0 --- identifies the 2-tuple
+(2.1, 7xxxx...).
+
+<h3 class="w3-text-teal">Pay transaction</h3>
+The payers in a pay transaction are specified by a list of 2-tuples, 
+(transaction id, payee array index). For example, (10, 0), specifies
+that the agent with public key 7xxxx was given a coin worth 2.1 in the
+transaction with id 10; this agent is now a payer in the current
+transaction and this agent pays a coin worth 2.1 into the current
+transaction.
+
+<p>
+The bank checks that the agent hasn't already spent the coin after
+receiving it in transaction with id 10 and before the current
+transaction. To do so, it inspects the transactions in <code>L</code>
+between the transaction at which the agent receives a coin and the
+transaction in which the agent spends the coin.
+
+<p>
+Consider a transaction in which an agent with public key 7xxxx, who
+received a coin worth 2.1 in an earlier transaction, gives a coin
+of value 1.4 to an agent with public key 8xxxx and keeps a coin worth
+0.7 for itself. The payee array for this transaction includes the
+elements (1.4, 8xxxx), (0.7, 7xxxx).
+
+<h4 style="color:red;">Example of a pay transaction</h4>
+ An example of the specification of a pay transaction is:
+<pre>
+(12, pay,
+  [(10, 0), (10, 1)],
+  [(0.7, 7xxxx...), (4.6, 9xxxx...)]
+).
+</pre>
+The id of this transaction is 12; the type of the transaction is
+pay; the payers into the transaction are identified by the pairs of
+transaction id and payee array index: (10, 0), and (10, 1); and the
+payee array is [(0.7, 7xxxx...), (4.6, 9xxxx...)].
+
+<p>
+Who are the payers into this transaction? The transaction id 10, and
+payee array index 0, identifies the pair (2.1, 7xxxx...): the agent
+wth public key 7xxxx... who received a coin worth 2.1 in the
+transaction with id 10. Likewise,
+transaction id 10, and
+payee array index 1, identifies the pair (3.2, 8xxxx...): the agent
+wth public key 8xxxx... who received a coin worth 3.2 in the
+transaction with id 10.
+So, the payers into this transaction are the agents with id
+7xxxx... and 8xxxx..., and the total value of coins paid into the
+transaction is 2.1+3.2 = 5.3. The payers sign this transaction.
+
+<p>
+The payees in this transaction are the agents with public keys
+7xxxx... and 9xxxx... who receive coins worth 0.7 and 4.6,
+respectively.
+
+<h3 class="w3-text-teal">Transaction validity</h3>
+The bank appends a transaction to <code>L</code> if and only if the
+transaction is valid. The bank checks for validity by carrying out the
+following steps:
+<ol>
+  <li>
+  The bank verifies that the payers into the transaction signed the
+  transaction.
+  </li>
+  <li>
+  The bank checks that the total value of coins paid out from the
+  transaction does not
+  exceed the total value paid in to the transaction. (If the value paid
+  in exceeds the value paid out then the bank takes the difference as
+  a transaction fee. More about fees later.)
+  </li>
+  <li>
+  The bank verifies that the payers' claims to have received coins in
+  previous transactions is genuine. For example,
+  if the agent with
+  public key 7xxxx... claims to have received coins worth 2.1 in the
+  transaction with id 10, and payee array index 0, then the bank
+  verifies this claim by that transaction.
+  </li>
+  <li>
+  The bank ensures that coins paid into the transaction haven't
+  already been spent.
+  </li>
+</ol>
+Any agent can get a copy of <code>L</code> and verify that all
+transactions in <code>L</code> are valid.
+
+<p>
+Next we'll look at BitCoin's algorithms for implementing a
+cryptocurrency without trusted agents.
+
+
+
+
 
 
 <h1>OLD</h1>
