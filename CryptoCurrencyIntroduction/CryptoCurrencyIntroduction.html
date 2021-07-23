@@ -89,9 +89,10 @@ hr.new2 {
     
     <h2 class="w3-text-teal">Introduction to Cryptography for
     Cryptocurrency</h3>
-
-    <a href="https://www.lopp.net/pdf/princeton_bitcoin_book.pdf"
-    is a superb description of Bitcoin.</a> The book is longer than
+    
+    <a href="https://www.lopp.net/pdf/princeton_bitcoin_book.pdf">
+    This Princeton University book is a superb description of
+    Bitcoin.</a> The book is longer than 
     this module. If you have the time, read the book and skip this
     module. 
 
@@ -202,15 +203,27 @@ The hash function, \(H\), is said to be <i>puzzle friendly</i>
 algorithm that solves this problem is not significantly lower than \(2^{n}\).
 
 <p>
-If  we are testing random values of
-\(x\) to find out if \(H(x) \in Y\) then if
-set \(Y\) has two elements, we
-we expect that solving the problem
-will take about half as much time as for the case where \(Y\) has only
-element. So, the cardinality of \(Y\) gives us an easy way of controlling
-the expected time to solve the problem.
+The number of tests of a random number \(x\) before finding a value
+that satisfies \(H(r+x) \in Y\) is a random variable.
 
 <p>
+Consider three
+puzzles: In the first puzzle \(Y\) consists of a single value,
+\(K_{1}\); in the first puzzle \(Y\) consists of a different single value,
+\(K_{2}\); and in the third puzzle \(Y\) consists of a both
+\(K_{1}\) and \(K_{2}\). Let the times to solve these three puzzles be
+\(t_{1}, t_{2}, t_{3}\) respectively. These times are random
+variables, and
+<p>
+\(
+t_{3} = \textrm{min} \: (t_{1}, t_{2})
+\)
+<p>
+because puzzle 3 is solved when the first of puzzle 1 or
+puzzle 2 is solved. So, we can control the expected time to solve a
+puzzle by changing the cardinality of \(Y\)
+
+<h5 class="w3-text-teal">A cryptographic hash function</h5>
 <i>A cryptographic hash function is one that is collision resistant,
 hiding and puzzle-friendly.
 </i>
@@ -274,14 +287,16 @@ If \(D[i]\), \(ptr[i]\) or
 values are unlikely to be identical.
 
 <p>
-We can detect changes
-to \(D[i]\), \(ptr[i]\) or \(H[i]\) unless \(H[i+1]\) is also modified
-to match the changes. By induction on \(i\), we can detect
+Suppose a malicious agent modifies \(D[i]\), \(ptr[i]\) or
+\(H[i]\). Then another agent can detect this tampering because the
+hash pointer \(H[i+1]\) will no longer match the \(i\)-th data.
+
+<p>By induction on \(i\), any agent can detect
 changes to any \(D[i]\), \(ptr[i]\) or \(H[i]\), unless \(H[j]\)
 <i>for all \(j > i\)</i> are also modified to match the changes.
-So we can detect any change to
+So any agent with the hash function \(H\) can detect any change to
 the list provided that \(H[n]\) --- the pointer
-to the last element --- cannot be changed. 
+to the last element --- cannot be changed.
 
 
 <h5 class="w3-text-teal">Tamper-Evident Acyclic Graphs and Merkle
@@ -325,8 +340,8 @@ and sends the pair <i>(M, M')</i> securely to Joe. When Joe receives
 <i>M</i> because only an agent with Kamala's private signature could
 have sent that message.
 
-<h3 class="w3-text-teal">Cryptocurrency managed by a trusted
-agent</h3>
+<h2 class="w3-text-teal">Cryptocurrency managed by a trusted
+agent</h2>
 Let's start with a currency managed by a trusted agent that we will
 call a bank. Later, we will
 look at a consensus algorithm, very different from Paxos and Byzantine
@@ -492,7 +507,7 @@ and we can make a transaction as big as we want. The disadvantage of
 requiring large transactions is that the system may have to wait for
 enough small transactions to arrive. In the next module we will show
 how transactions are put into blocks and we refer to the ledger as a
-block chain.
+<i>block chain</i>.
 
 
 <h4 class="w3-text-teal">Advantages of this cryptocurrency</h4>

@@ -93,24 +93,16 @@ hr.new2 {
     previous module. This module focuses on distributed consensus.
     
     <a href="https://www.lopp.net/pdf/princeton_bitcoin_book.pdf">
-    is a superb (and longer) description of the distributed consensus
-    algorithm used in Bitcoin.</a>
+    This Princeton University book
+    has a superb (and longer) description of consensus in Bitcoin.</a>
     
     <p>
     We discussed distributed consensus in the modules on Paxos and
     Byzantine Generals. The specification of consensus is weaker in
-    BitCoin. Also, the BitCoin algorithms to achieve consensus are very different
+    BitCoin. Also, the BitCoin algorithm to achieve consensus is different
     from the Paxos and Byzantine Generals algorithms.
 
-    <p class="w3-text-teal">No trusted agents</p>
-    The previous module described a crypto currency system that
-    required a trusted agent. Bitcoin manages without a trusted agent
-    by transferring the trusted agent's responsibilities to the
-    community of all agents who collectively make decisions.
-    Specifically, the community determines how the ledger is modified,
-    how transactions are verified, and how coins are generated.
-
-    <p class="w3-text-teal">No assumptions about numbers of agents</p>
+    <h4 class="w3-text-teal">No assumptions about numbers of agents</h4>
     The Byzantine Generals algorithm uses an upper bound on the number
     of faulty agents and a lower bound on the number of non-faulty
     ones. Paxos assumes that the total number of agents is known. 
@@ -120,26 +112,342 @@ hr.new2 {
     such a situation is one in which all agents but one 
     collude to prevent that one agent from executing transactions.
 
-    <p class="w3-text-teal">Ledgers may not match</p>
-    A ledger is a record of a sequence of transactions.
-    An advantage of having a single agent append values to the
-    ledger is that all agents have a consistent copy of the
-    ledger. Two agents may have different copies because one agent has
-    a more recent one. The two copies can differ in only one way: <i>the
-    older version is a prefix of the more recent one</i>, i.e., the more
-    recent version consists of the older version plus additional
-elements. The older version will eventually catch up to the newer one.
+<h4 class="w3-text-teal">Incentives and transaction fees</h4>
+When a currency is managed by a single trusted agent, such as a
+bank, we assume that the bank gets some reward for its
+service. Bitcoin pays agents with Bitcoins for checking validity of
+transactions; this payment either consists of new coins found by "mining" or
+voluntary transaction fees paid by payers and payees.
+
+
+    <h4 class="w3-text-teal">No trusted agent that manages the block
+    chain</h4>
+
+    We saw in the previous module that aggregating small transactions
+    into a larger transaction reduces the amounts of resources
+    required to manage the tamper-proof ledger. We call this ledger a
+<i>block chain</i>.
 
 <p>
-In Bitcoin there is no single agent which is given the sole
-responsibility of appending values to the ledger.
-When multiple agents append values to a ledger concurrently, the
-ledger of one agent may not be a prefix of the ledger of another.
-So we can't rely on one ledger
-"catching up eventually" to another by appending more recent
-values. Bitcoin has a clever, and random, way of enabling ledgers to
-catch up to each other and become consistent eventually. Next we'll look at
-this concept of eventual consistency.
+    The previous module also described a crypto currency system that
+    uses a trusted agent to maintain a master copy of the block chain.
+    Agents send transactions to the trusted agent which
+validates transactions, collects some of the transactions into a block,
+    updates the master copy by appending the block, and then broadcasts
+    the updated master copy of the block chain. Other agents 
+update their copies to the most recent version of the master copy that
+    they receive.
+
+    <p>
+    Two agents may have different copies of the block chain because one agent has
+    a more recent one. The two copies can differ in only one way: <i>the
+    more recent one is the older version with newer blocks
+appended to the end.</i>.
+So, older versions are prefixes of the master copy.
+
+<h2 class="w3-text-teal">A first proposal for an algorithm</h2>
+What algorithm can we use when we don't have a single
+trusted manager?
+Let's look at a small modification:
+Select random agents to play the role of the trusted manager.
+
+<p>
+A step of the algorithm is as follows:
+A single agent is
+chosen randomly to play the role of the trusted manager. This agent
+receives and validates transactions, gathers some of the transactions
+into a block, appends the block to the block chain, and
+broadcasts the updated block chain. The
+other agents update their copies of the block chain when they receive this
+value. The system waits for all agents to update their copies and then
+executes the next step.
+
+<h4 class="w3-text-teal">Challenges of the proposed algorithm</h4>
+This algorithm has several challenges.
+<ol>
+  <li>
+  How can the collection of agents select a <i>single</i> agent to play the
+  role of trusted manager? The selection of a single agent requires
+  all agents to reach a consensus about which agent to 
+  select. So, the solution to one consensus problem requires the
+  solution to another.
+  </li>
+  <li>
+  How can the collection of agents wait long enough to ensure that all
+  agents have updated their copies of the ledger to the most recent version before
+  starting the next step?
+  If the next step starts before all agents have updated their values
+  from the previous step
+  then it's possible that one agent's copy is <code>[x, y]</code>
+  while another agent's copy is <code>[x, z]</code>. In this case one
+  copy is not a prefix of the other, and one copy cannot "catch up" to
+  the other merely by appending more values.
+  </li>
+  <li>
+  Why should a block chosen to play the role of trusted agent play
+  that role?
+  </li>
+  <li>
+  The randomly-chosen trusted manager may not be trustworthy.
+  </li>
+</ol>
+Next, let's look at how the Bitcoin algorithm addresses challenges 1
+and 2. We'll look at challenges 3 and 4 later.
+
+<h4 class="w3-text-teal">Random agent to update and broadcast the
+block chain</h4>
+
+This step uses the <i>puzzle-friendly property</i> of cryptographic hash
+functions discussed in the previous module.
+
+<p>
+An agent proposes to a block consisting of a set of transactions in
+the following way. Let
+\(Z\) be the concatenation of the hash pointer to the current head of the
+block chain and the list of proposed transactions.
+The puzzle is to solve the following problem:
+Find a number, called \(nonce\), such that:
+<p>
+\(H(nonce + Z) < target \)
+<p>
+where \(+\) is the operator that concatenates lists, and <i>target</i> is a
+given value. We'll discuss <i>target</i> later; for the time being
+assume that it is a constant.
+The smaller the value of <i>target</i> the
+greater the expected time to solve the puzzle.
+
+<p>
+The value of <i>target</i> is set so that the time to solve a puzzle
+is usually much greater than the time required for a message broadcast
+by one agent to reach most agents.
+So, usually most agents will
+receive an update to the block chain before the next update to the
+block chain.
+
+<p>
+The algorithm overcomes challenge 1 most of the time. This is because
+the time taken to solve a puzzle is a random variable. Each proposer
+of a block is solving a different puzzle, and so it is unlikely that
+multiple proposers will solve their puzzles in a few seconds of each
+other. 
+
+<p>
+The algorithm also overcomes challenge 2 most of the time. This is
+because, most of the time, an agent updates its copy of a block chain
+before the next update arrives.
+
+<p>
+But "most of the time" isn't enough. 
+
+<h4 class="w3-text-teal">Managing concurrent updates</h4>
+Two, or more, proposers of blocks may solve their puzzles at about the
+same time, and propose to append different blocks to the block
+chain. Suppose the block 
+chain is \(L\), and one agent proposes appending block \(B\) and broadcasts
+\(L + B\), exactly when another agent proposes appending block \(C\), and broadcasts
+\(L + C\). Think of this situation as a time-collision between blocks
+\(B\) and \(C\).
+
+<p>
+When an agent receives a message containing a block chain
+it sets its local copy of the block chain to the value it receives if the length of its
+local copy is smaller than that of the value received. What happens if
+an agent \(X\) first receives \(L + B\) and then \(L + C\), while an
+agent \(Y\) first receives \(L + C\) and then \(L + B\)?
+
+<p>
+When \(X\) receives \(L + B\) it sets its local copy of the block
+chain to \(L + B\) because the length of \(L + B\) is greater than
+that of \(L\). Then, when \(X\) receives \(L + C\), it leaves its
+local copy unchanged because the message received is not longer than
+its local copy. Similarly, \(Y\) sets its copy to \(L + C\) and
+doesn't change it when \(Y\) receives \(L + B\).
+
+<p>
+Now, the local copies of \(X\) and \(Y\) are not identical, and moreover,
+one copy is not a prefix of the 
+other. So one copy won't catch up to the other merely by appending more blocks.
+How does the algorithm
+<a href="../SelfStabilization/SelfStabilization.html">self
+stabilize?</a> How does it ensure that 
+increasingly longer prefixes of local copies of block chains become
+identical?
+
+<p>
+Let's see what happens next in our scenario.
+Sometime later an agent \(Z\) proposes a block \(D\) by
+broadcasting \(D\) appended to \(Z\)'s local copy. If 
+\(Z\)'s local copy is \(L + B\) then \(Z\) broadcasts \(L + B +
+D\), and if \(Z\)'s local copy is \(L + C\) then \(Z\) broadcasts \(L
++ C + D\). Let's assume that
+\(Z\) broadcasts \(L + B + D\).
+
+<p>
+What does an agent whose local copy is \(L + C\) do when it receives a
+message containing the block chain \(L + B + D\)?
+The agent sets its local
+copy of the block chain to \(L + B + D\) because this is
+longer than its current local copy.
+Block \(C\) becomes an "orphan": it ceases to be part of agents' copies of
+the block chain.
+
+<p>
+It is possible that another time collision will occur.
+Just when \(Z\) broadcasts \(L + B + D\) another
+agent broadcasts \(L + C + E\), and so the competition between block
+chains of equal lengths persists. But it is unlikely that
+sequences of time collisions will get long. For practical purposes,
+agents assume that if there are more 
+than some \(K\) blocks appended to the block chain after \(L +
+B\), then \(L + B\) is a prefix of most agents' block
+chains.
+For example, \(K = 6\); 
+<a href="https://www.lopp.net/pdf/princeton_bitcoin_book.pdf
+">see the Princeton Bitcoin book.</a>
+
+
+
+<p class="w3-text-teal">Transactions in the orphan block</p>
+Agents gather transactions that have not
+appeared in the agent's block chain into blocks and propose to append these
+blocks to the chain. A transaction in an orphan block will appear
+eventually in the block chain
+because some agent will include it in a block which gets into the
+chain.
+
+<h2 class="w3-text-teal">Incentives</h2>
+Next, looks look at challenge number 3. Why should an agent create
+blocks of validated transactions? Because the agent gets paid! Payment
+is from either a <i>block reward</i> or transaction fees.
+
+<p class="w3-text-teal">Block rewards</p>
+An agent that creates a block gets a specified number of Bitcoins for
+itself as a reward called a <i>block reward</i>.
+The Bitcoins in a block reward are created by making the
+block; these Bitcoins don't exist until the block is created. The process of making
+blocks and acquiring block rewards is called "mining."
+<i>Mining is the only way of creating new Bitcoins.</i>
+
+<p>
+When Bitcoin started the reward for creating a block was 50 Bitcoins.
+The reward
+halves after the creation of a certain number (210,000) of blocks. The
+reward was reduced to 25 in 2013 and to 12.5 in 2018.
+Block rewards will vanish at some point in the future.
+The
+total number of Bitcoins that can ever be created has an upper bound:
+about 21 million.
+
+<p>
+(Bitcoins can be lost. An agent may lose the hash pointer to the
+transaction that gave the agent ownership of the coin.)
+
+<p>
+When block rewards vanish, miners will get paid by transaction fees. A
+transaction fee is a payment by payers and payees to
+miners. Transaction fees may be voluntary. Also, a high-fee for a
+transaction is an incentive to miners to put this transaction into a
+block quickly.
+
+<h2 class="w3-text-teal">Attacks</h2>
+Next, looks look at challenge number 4.
+
+<p class="w3-text-teal">Stealing coins</p>
+Can an agent steal a coin from an agent \(X\) by appending a block to
+the chain where the block contains a transaction in which \(X\) gives
+coins to \(Y\)?
+
+<p>
+No, this can't happen thanks to cryptography. A transaction into which
+\(X\) puts coins is valid only if \(X\) signs the transaction.  \(Y\)
+cannot forge \(X\)'s signature, and so \(Y\) cannot create blocks that
+contain such fraudulent transactions.
+
+<p class="w3-text-teal">Double spend</p>
+Can an agent spend the same coin twice, effectively duplicating the
+coin?
+
+<p>
+Consider a simple transaction: A buyer gives the seller a Bitcoin
+\(\alpha\) to pay for a good.
+The
+good is kept in escrow until the seller is sure that the seller has
+received \(\alpha\).
+
+<p>
+The buyer 
+broadcasts a transaction in which the buyer gives the seller
+\(\alpha\).
+Some agent puts
+the transaction into a block, appends the block to its copy of the
+block chain and broadcasts the block. Let's call this block \(B\), and
+let the block chain before the block is appended be \(L\), and so the
+new proposed block chain is \(L + B\).
+When the buyer gets a copy of block \(B\), the buyer
+concludes that it possesses \(\alpha\) because the transaction has been recorded in a block
+chain. So it releases the good to the seller. 
+
+<p>
+After receiving the good from the seller, the buyer cheats. The buyer
+creates a block, \(C\), that includes a transaction in which the buyer
+transfers \(\alpha\) to itself.  The buyer appends \(C\) to \(L\) to
+create a chain \(L + C\). The chain \(L + C\) is valid, and so other
+agents may append blocks to it.  Eventually, the longest chain may
+contain \(C\) but not \(B\).  In this case the seller doesn't get
+paid.
+
+<p>
+How should sellers protect themselves?
+
+<p>
+A seller should not give the good to the buyer until the transaction
+in which the seller is paid is in a block, and several more blocks are
+appended to the block chain after that. In the example, the seller waits until it
+sees a block chain \(L + B + L'\) where \(L'\) consists of some \(m\)
+blocks; if \(m\) is large enough, it is extremely likely that \(B\)
+will be in the block chain as it gets longer and longer.
+
+<p>
+The seller gets greater confidence the larger the value of \(m\), but
+the buyer has to wait longer to get the good after paying for
+it. There are various ways of reducing the impact of the wait. 
+Even \(m = 6\) gives adequate confidence in most cases.
+
+
+<p class="w3-text-teal">Fraudulent miners</p>
+A miner gets paid for every block the miner creates; so, why shouldn't
+the miner create fraudulent blocks and get paid for them?
+
+<p>
+The same reason as for the double-spending attack. A miner may have
+created a block and appended it to the chain; however, a suspicious
+agent (and we hope that all agents are suspicious!) will not accept
+the block until many blocks have been appended to the chain after
+it. Other miners won't append their blocks to an invalid one.
+
+<p class="w3-text-teal">Denial of service</p>
+Can agents collude so that an agent \(X\)'s transactions never get
+into blocks and so never get processed?
+
+<p>
+An agent's identity does not appear in a transaction, only a public
+key does. An agent can create new public keys at will. So let's ask
+another question: can agents collude so that transactions with a
+specific public key do not get into blocks?
+
+<p>
+Only an agent that can solve puzzles in reasonable time can make
+blocks. These agents have significant computational power. One can
+concoct a situation where many agents with significant computation
+power collude to avoid transactions from a specific public key. This
+could have the effect of slowing processing of certain
+transactions. However, such a situation isn't likely to arise because
+agents have an incentive to create blocks and so they compete ---
+rather than collude --- with each other.
+
+<h2>Further Reading</h2>
+There are many issues that we have not covered. This material only
+covers the basics from the point of view of distributed algorithms. 
 
 
 
