@@ -83,197 +83,56 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <div class="w3-twothird w3-container">
 
     <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Agents and Shared Variables</h1>
+    <h1 class="w3-text-teal">Agents & Global Snapshots</h1>
+
+    <p>
+    In this module we continue the discussion of the previous
+    module. Here we introduce <i>agents</i>, and discuss timeline
+    diagrams, valid cuts, and global snapshots in systems defined in
+    terms of agents.
 
     </p>
+    <h3 class="w3-text-teal">System</h3>
     A concurrent system consists of a set of agents and a set
-    of shared variables.
+    of variables.
     
-    The state of the system is a tuple with an element of the tuple
-    for the state of each agent and an element for the state
-    (i.e. value) of each shared variable.
+    The state of the system is a tuple with an element 
+    for the state of each agent and each shared variable.
 
     <p>
-    An action of the system references a subset of shared
-    variables and the state of <i>at most one</i> agent.
+    An action of the system is executed by exactly one agent. An
+    action may write some variables and only read (but not write)
+    others. 
+    An
+    action executed by an agent may change the state of that agent,
+    but leaves the states of all other agents unchanged. An action may
+    change the state (value) of variables written by the action, and
+    leaves the states of all other variables unchanged.
 
-    We say that an action \(a\) <i>is executed by</i> agent \(A\) exactly
-    when \(a\) references the state of \(A\). Each action is executed by
-    exactly one agent.
-
-    <p>
-    An action may read, but not modify some shared, variables and may
-    modify other shared variables. A shared variable <i>referenced</i> by an
-    action is one which is read or modified by the action.
-
-    </p>
-
-    <p>
-    An action \(a\) executed by agent \(A\) is specified by Hoare
-    triples of the form: \(\{P_{A}\} \; a \; \{Q_{A}\}\), where
-    \(P_{A}\) and \(Q_{A}\) are predicates on the states of agent
-    \(A\) and shared variables that the action references. The action
-    is independent of the states of agents other than \(A\) and is
-    also independent of variables that the action does not reference.
-    </p>
-
-    <h2 class="w3-text-teal">Agent Diagram</h2>
-    The components of a system are its agents and its shared
-    variables.
-    
-    The components are represented by an
-    agent diagram which is a directed graph in which a vertex
-    represents a component.
-    An agent is represented by a circle and a shared variable by a
-    rectangle. 
-    The edges are directed
-    either from an agent to a shared variable, or from a shared
-    variable to an agent.
-
-    There are no edges from an agent to an agent, or from a shared
-    variable to a shared variable.
-    
-    <p>
-    An edge from an agent \(A\) to a shared
-    variable \(X\) indicates that \(A\) writes \(X\) in at least one
-    action executed by \(A\). Likewise, an edge from a shared variable \(X\) to
-    an agent \(B\) indicates that \(B\) reads \(X\) in at least one
-    action executed by \(B\). Therefore, edges in both directions between an
-    agent \(C\) and a shared variable \(Y\) indicates that there exists at
-    least one action in which \(C\) reads \(Y\) and there exists at
-    least one action in which \(C\) writes \(Y\).
-    </p>
-
-    <figure>
-    <img src="AgentDiagram.jpg" alt="Fig1" style="width:80%">>
-    <figcaption>Fig.1: An Agent Diagram</figcaption>
-    </figure>
 
 <!---------------------------------------------------->
-<h1 class="w3-text-teal">Timelines</h1>
-<!---------------------------------------------------->
-A <a href="https://en.wikipedia.org/wiki/Timeline">timeline</a> of an
-object shows (1) the sequence of events, in chronological order, that occur
-to that object, and (2) the states of the object between events.
+<h2 class="w3-text-teal">Timeline Diagrams with Agents</h2>
+    <!---------------------------------------------------->
+    Timeline diagrams with agents are exactly the same as for any
+    action system with the state of an agent treated exactly like any
+    other variable.
+ The sequence of events caused by the same
+agent is called an agent timeline, and the sequence of events in which
+the same variable is modified is called a variable timeline.
 
 <p>
-Consider a path through a system's state-transition graph
-</p>
-\(
-s_{0} \stackrel{a_{0}}{\rightarrow} s_{1}
-\stackrel{a_{1}}{\rightarrow}
-\ldots \stackrel{a_{m-1}}{\rightarrow} s_{m}
-\)
-</p>
-where the initial state is \(s_{0}\), and execution of action
-\(a_{i}\) takes the system from state \(s_{i}\) to \(s_{i+1}\), all
-\(i\). This path represents a system trajectory that starts at state
-\(s_{0}\), traverses states \([s_{1}, s_{2}, \ldots]\) in order, and
-terminates at state \(s_{m}\). 
-
-<p>
-Each state \(s_{i}\) in the trajectory is a system state: it is
-a tuple with an element for the state of each agent and each shared
-variable. Let \(pre_{i}\) and \(post_{i}\) be the parts of the tuples,
-\(s_{i}\) and \(s_{i+1}\), respectively, that only
-contain the states of the components referenced in action
-\(a_{i}\). 
-
-<p>
-For example, consider a system with agents \(A\) and \(B\)
-and shared variables \(x\) and \(y\). The state of the system is a
-tuple \((s_{A}, s_{B}, s_{x}, s_{y})\) consisting of the states of 
-\(A\), \(B\), \(x\) and \(y\). respectively. If action \(a_{i}\) is
-executed by agent \(A\) and references only variable \(x\), then
-\(pre_{i}\) and  \(post_{i}\) are the
-values of tuple \([s_{A}, s_{x}]\) immediately before and after the
-execution of action \(a_{i}\).
-
-<p>
-The \(i\)-th event in the trajectory is defined as the triple
-\((pre_{i}, a_{i}, post_{i})\). The trajectory
-can be specified by its initial state, \(s_{0}\) and the sequence of
-events \(e_{0}, \ldots, e_{m-1}\). 
-
-State \(s_{i+1}\) is a function of state \(s_{i}\) and event
-\(e_{i}\). In \(s_{i+1}\), the states of components that are referenced in action
-\(a_{i}\) are given in \(post_{i}\), and the states of the remaining
-components are the same as in \(s_{i}\).
-
-
-<p>
-A <i>timeline</i> representation of a trajectory with initial state
-\(s_{0}\) and event sequence \(e_{0},
-\ldots, e_{m-1}\)
-consists of:
-<ol>
-  <li>
-  A labeled directed graph \(G\) in which each event \(e_{i}\) is
-  represented by a vertex \(e_{i}\), and in which
-  labeled directed edges are specified later.
-  </li>
-
-  <li>
-  A total ordering \(e_{0}, \ldots, e_{m-1}\) of vertices.
-  </li>
-</ol>
-<p>
-In addition to vertices, \(e_{0}, \ldots, e_{m-1}\), \(G\) has a dummy
-  vertex, \(e_{-1}\), which is usually not shown, and which represents
-the start of the trajectory in the initial state \(s_{0}\).
-</p>
-
-<p class="w3-text-teal">Edges of the Timeline Graph</p>
-The edges of the timeline graph capture the dependence between
-events. All edges are directed from earlier to later events.
-<ol>
-  <li>
-  <i>Agent Timelines</i>:
-  Let \(e_{j}\) and \(e_{k}\) be events executed by an agent \(A\),
-  where \(e_{k}\) is the earliest event after \(e_{j}\)
-  executed by \(A\).
-  There is an edge from \(e_{j}\) to \(e_{k}\). The edge is labeled
-  with the \(A\)'s state after \(e_{j}\) and before \(e_{k}\).
-  </li>
-  <li>
-  <i>Shared Variable Timelines</i>:
-  Let \(e_{j}\) and \(e_{k}\) be events in which a shared variable
-  \(v\) is modified
-  where \(e_{k}\) is the earliest event after \(e_{j}\)
-  that modifies \(v\).
-  There is an edge from \(e_{j}\) to \(e_{k}\). The edge is labeled
-  with the \(v\)'s state (i.e. its value) after \(e_{j}\) and before
-  \(e_{k}\).
-  </li>
-  <li>
-  <i>Event that Reads a Shared Variable</i>:
-  Let \(e_{j}\) be an event that reads, but does not modify, a shared
-  variable \(v\). Let \(e_{i}\) be the latest event before \(e_{j}\)
-  that modifes \(v\).
-  Let \(e_{k}\) be the earliest event after \(e_{j}\)
-  that modifes \(v\).
-  There are edges from \(e_{i}\) to \(e_{j}\) and from \(e_{j}\) to
-  \(e_{k}\). These edges are labeled with the value of \(v\) that is
-  read in event \(e_{j}\).
-  </li>
-</ol>
-
-
-<p class="w3-text-teal">Convention in drawing timelines</p>
-We adopt the convention that later events are shown towards the
-right. 
-The timeline of each agent and each shared variable is shown
-as a horizontal line. A vertex is shown as an ellipse, rather than a
+A vertex is shown as an ellipse, rather than a
 point, to accommodate multiple incoming and outgoing edges.
+Agent timelines are blue and variable timelines are red.
+Edges to and from events in which a variable is read and left
+unmodified are green.
 
-<p>
 
-
-<h2 style="color:red;">Example</h2>
+<h2 style="color:red;">Example of a Timeline Diagram</h2>
 
 <figure>
     <img src="AgentTimeline.jpg" alt="Fig2" style="width:100%">
-    <figcaption>Fig.2: A Timeline</figcaption>
+    <figcaption>Fig.1: A Timeline Diagram with Agents</figcaption>
 </figure>
 
 
@@ -281,9 +140,6 @@ point, to accommodate multiple incoming and outgoing edges.
 The figure above shows a timeline for a trajectory of a system
 consisting of agents \(A, B, C\), shared variables \(v, w\).  and
 events \(0, \ldots, 5\).
-
-Edges dealing with agents are shown in blue, and those
-labeled with shared variables in red.
 
 The events in this example are as follows:
 
@@ -309,29 +165,99 @@ The events in this example are as follows:
 </ul>
 </p>
 
+<!------------------------------------------------->
+<h2 class="w3-text-teal">Global Snapshots</h2>
+<!------------------------------------------------->
 
-<!------------------------------------------------------->
-<h2 class="w3-text-teal">System State at an Instant</h2>
- A point \(T\) in a timeline is represented by a vertical line
-corresponding to that point.
-The system state at \(T\) is a tuple consisting of the states of agents and
-shared variables at \(T\).
-The state of an agent at \(T\) is the label of the edge, on the
-agent's timeline, that is cut by the vertical line, \(T\).
-Similarly, the value of a shared variable at \(T\) is the label of the edge, on the
-variable's timeline, that is cut by the vertical line, \(T\).
-<p>
-Thus, the state of the system at \(T\) can be obtained from the edges of the
-timelime that are cut by the the vertical line, \(T\).
-</p>
+<p class="w3-text-teal">Variables</p>
+Let's look at an algorithm by which agents cooperate to determine a
+global state at a valid cut of a timeline diagram. Each agent \(A\) records
+its state in a local variable \(A_{snap}\). The value of this variable
+is \(null\) before \(A\) records its state, and the value remains
+unchanged after \(A\) records its state. Similarly, associated with
+each variable \(v\), is a variable \(v_{snap}\) which is used only for
+recording the global state. The value of \(v_{snap}\)
+is \(null\) before \(v\)'s state is recorded, and remains
+unchanged afterwards.
+
+<p class="w3-text-teal">Initialization</p>
+One or more agents starts the algorithm by recording their states. How
+the algorithm starts is irrelevant.
+
+<p class="w3-text-teal">Algorithm</p>
+Before an agent \(A\) executes an event \(e\), the agent takes the following
+steps:
+<ol>
+  <li>
+  <i>Case 1: \(A\) hasn't recorded its own state</i>.
+  <br>
+  If the state of at least one of the
+  variables referenced in \(e\) has been recorded then \(A\)
+  records its state and the states of all unrecorded variables
+  referenced in \(e\).
+  </li>
+  
+  <li>
+  <i>Case 2: \(A\) has recorded its own state</i>.
+  <br>
+  \(A\) records the states of all unrecorded variables
+  referenced in \(e\).
+  </li>
+</ol>
+
+<!------------------------------------------------->
+<h4 style="color:red;">Illustration of the Algorithm</h4>
+<!------------------------------------------------->
+The next sequence of diagrams illustrates the algorithm.
 
 <figure>
-    <img src="SystemStateAtT.jpg" alt="Fig5" style="width:100%">
-    <figcaption>Fig.5: System State at an Instant shown on Timeline</figcaption>
+    <img src="TimelineDiagrams_Slide8.jpg" alt="Fig2" style="width:75%">
+    <figcaption>Fig.2: Global Snapshot: Frame 1</figcaption>
 </figure>
 
-We can obtain the sequence of system states in a trajectory from the
-timeline diagram by determining the states for different values of \(T\).
+<figure>
+    <img src="TimelineDiagrams_Slide9.jpg" alt="Fig3" style="width:75%">
+    <figcaption>Fig.3: Global Snapshot: Frame 2</figcaption>
+</figure>
+
+<figure>
+    <img src="TimelineDiagrams_Slide10.jpg" alt="Fig4" style="width:75%">
+    <figcaption>Fig. 4: Global Snapshot: Frame 3</figcaption>
+</figure>
+
+<figure>
+    <img src="TimelineDiagrams_Slide11.jpg" alt="Fig5" style="width:75%">
+    <figcaption>Fig.5: Global Snapshot: Frame 4</figcaption>
+</figure>
+
+
+
+<!------------------------------------------------->
+<h2 class="w3-text-teal">Proof of Correctness</h2>
+<!------------------------------------------------->
+Next we prove that the tuple of states of agents and variables
+recorded by the algorithm is the state at a valid cut of the timeline
+diagram. An event is in the cut exactly when the agent executing the event
+and all variables referenced in the event are unrecorded before
+executing the event. So, an event
+is outside the cut if the state of the agent executing the event, or one of the variables referenced in the
+event, has been recorded before the event.
+<p>
+Consider an event \(e\) outside the cut and any edge \(e, e'\).
+We will prove that the cut is valid by showing that \(e'\) is outside
+the cut.
+<p>
+If the state of the agent
+executing \(e\) was recorded before \(e\) and \(e'\) is also executed
+by the same agent then, by definition, \(e'\) is outside the cut.
+If \(e'\) references a variable \(v\) which is also referenced in
+\(e\), then \(v\) is recorded before \(e\) and hence is also recorded
+before \(e'\), and so \(e'\) is outside
+the cut.
+
+<p>
+A similar proof holds if a variable referenced in \(e\) is recorded
+before \(e\).
 
   <footer id="myFooter">
 
@@ -376,4 +302,3 @@ function w3_close() {
 
 </body>
 </html>
-

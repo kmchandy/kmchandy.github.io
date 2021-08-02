@@ -17,7 +17,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   height: inherit;
 }
 /* Thick blue border */
-hr.new4 {
+hr.new2 {
   border: 5px solid blue;
 }
 /* Thick blue border */
@@ -52,7 +52,7 @@ hr.new2 {
   Algorithms</h3>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Safety.html">Review of Safety in Loops</a>
+  href="Safety.html">Safety and Graphs</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="SafetyExample.html">Examples</a>
@@ -87,23 +87,25 @@ hr.new2 {
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
     
-    <h1 class="w3-text-teal">System Safety and Graphs</h1>
+    <h1 class="w3-text-teal">Safety and Directed Graphs</h1>
 
     <p>
-    This module reviews the representation of a state transition
+    This module defines the concepts that we use
+    in this course to prove that systems are safe. The concepts are
+    from a form of temporal logic called CTL --- Computation Tree Logic.
+    
+    <p>
+    In this module we review the representation of a state transition
     system in terms of <a
     href="https://en.wikipedia.org/wiki/Directed_graph">
     directed graphs</a>, and reviews the use of
     <a href="https://en.wikipedia.org/wiki/Loop_invariant">loop
     invariants</a>.
 
-    This module reviews the relations of <i>hop</i>, \(\rightarrow\),
-    and <i>path</i>, \(\stackrel{*}{\rightarrow}\), from graph
-    theory. These relations are used to introduce the concepts of
-    <i>stable</i> and <i>invariant</i>, and also to introduce the
-    functions, <i>always</i> and <i>next</i>, that we will use to
-    specify systems. This module defines all the concepts that we use
-    in this course to prove that systems are safe.
+    <p>
+    We define the concepts of
+    <i>stable</i>, <i>invariant</i>, <i>next</i>, and <i>always</i> in
+    terms of directed graphs.
 
     <!---------------------------------------------------------->
     <h2 class="w3-text-teal">Representing a System by a Graph</h2>
@@ -116,15 +118,13 @@ hr.new2 {
     remains in safe states.
     </p>
 
-    <hr class="new4">
+    <hr class="new2">
     <h4 style="color:blue;">
-    
-		      Prove that a system is
-		      safe by showing that all
-		      paths from vertices representing initial states
-		      only visit vertices representing safe states.
+    We prove that a system is safe by showing that all paths from
+    vertices representing initial states only visit vertices
+    representing safe states. 
     </h4>
-    <hr class="new4">
+    <hr class="new2">
 
     <p>
     Of course, we require that initial states are safe.
@@ -299,13 +299,13 @@ safe vertices.
 </p>
 
 
-<hr class="new4">
+<hr class="new2">
 <h4 style="color:blue;">To prove that a system is safe, we must show
 that:
-<br>
-Equation 1: \(init \stackrel{*}{\rightarrow} safe\)
+<p>
+\(init \stackrel{*}{\rightarrow} safe \quad \) eqn 1
 <h4>
-<hr class="new4">
+<hr class="new2">
 
 
 <!----------------------------------------------->
@@ -360,19 +360,19 @@ which is in set \(\{4, 5\}\).
 
 
 <!--------------------------------------------------->
-<hr class="new4">
 <h3 class="w3-text-teal">How to Prove Safety: Invariant</h3>
-We prove safety (equation 1: \(init \stackrel{*}{\rightarrow} safe\))
+<hr class="new2">
+<h4 style="color:blue;">
+We prove safety
 by finding a stable vertex set \(I\) such that:
 </p>
 
 <p>
-equation 2:
 \(
-init \subseteq I \subseteq safe
-\)
-</p>
-<hr class="new4">
+init \subseteq I \subseteq safe \quad
+\) eqn 2
+</h4>
+<hr class="new2">
 
 <figure>
   <img src="Invariant_Slide1.jpg" alt="Fig6" style="width:80%">>
@@ -394,55 +394,14 @@ A system may have many invariants; all we have to do is find any one.
 
 
 <!------------------------------------------------->
-<h2 class="w3-text-teal">Safety Proofs using Predicates</h2>
-We can carry out proofs using sets of vertices or predicates on states
-where a state is represented by a vertex. A proof using predicates on
-states can be converted to a proof using sets of vertices by treating
-each predicate as its extension.
-
-We prove properties of a loop as follows.
-
-<h4 class="w3-text-teal">
-\(
-P \rightarrow Q \quad \equiv \quad
-\forall \; a: \; \{P\} \; a \; \{Q\}
-\)
-</h4>
-where the quantification is taken over all guarded commands, \(a\), of the loop.
-So, to prove that \(I\) is an invariant of the loop we show 
-<p class="w3-text-teal">
-\(
-[init \Rightarrow I]
-\)
-and
-\(
-[I \rightarrow I]
-\)
-</p>
-
-<h3 style="color:red;">Example: Sorting</h3>
-Let \(I\) be the predicate:
-\(X\) is a permutation of \(X^{(0)}\)
-where \(X^{(0)}\) is the initial value of \(X\).
-<p>
-Let us prove that \(I\) is an invariant of the loop.
-It is easy to see
-that \(I\) holds initially. The proof that \(I\) is stable follows
-from the fact that every change to \(X\) permutes \(X\); so, if \(I\)
-holds before a change to \(X\) then it holds after the change as well.
-
-
-<!------------------------------------------------->
 <h2 class="w3-text-teal">Always</h2>
 <i>always</i> is a function from sets of states to
-sets of states. Equivalently, <i>always</i> is a
-function from predicates to predicates.
+sets of states. 
 
-<p>
 Let \(Y\) be a set of states. \(A(Y)\) is read as "<i>always</i>\(\; Y\)."
 \(A(Y)\) is the set of states defined as follows:
 
-<hr class="new4">
+<hr class="new2">
 \(v\) is in \(A(Y)\) exactly when all paths from \(v\) terminate at
 vertices in \(Y\).
 <p>
@@ -451,7 +410,7 @@ v \in A(Y) \quad \equiv \quad
 \forall w : (v \stackrel{*}{\rightarrow} w) \; \Rightarrow \; (w \in Y)
 \)
 
-<hr class="new4">
+<hr class="new2">
 
 <figure>
   <img src="Always_Slide1.jpg" alt="Fig6" style="width:80%">>
@@ -477,36 +436,41 @@ of vertices such that \(X \stackrel{*}{\rightarrow} Y\), i.e.
 \)
 
 <!--------------------------------------------------->
-<p class="w3-text-teal">How to Prove Safety using Always</p>
+<h4 class="w3-text-teal">How to Prove Safety using Always</h4>
 We prove safety by proving (equation 1: \(init \stackrel{*}{\rightarrow} safe\))
 where \(init\) and \(safe\) are the initial and safe sets of vertices,
-respectively. When \(init\) and \(safe\) are predicates, this is
+respectively. This is
 equivalent to proving:
 </p>
 <p>
 \(
-init \; \Rightarrow \; A(safe)
+init \; \subseteq \; A(safe)
 \)
 </p>
 
+<!--------------------------------------------------->
+<h4 class="w3-text-teal">Lemma</h4>
+\(A(Y)\) is the largest set \(X\) such that:
+\(X \subseteq Y\) and \(stable(X)\).
+
+<p>
+The proof follows directly from the definition.
+
+
 <!------------------------------------------------->
 <h2 class="w3-text-teal">Next</h2>
-The definitions of <i>next</i> are identical to those of <i>always</i>
-except that <i>always</i> is defined using the relation
-\(\stackrel{*}{\rightarrow}\) whereas <i>next</i> is defined using the relation
-\(\rightarrow\).
 
 <p>
-<i>next</i> is a function from sets of states to
-sets of states. Equivalently, <i>next</i> is a
-function from predicates to predicates.
+\(N\) is a function from sets of states to
+sets of states.
+\(N(Y)\) is read as "<i>next</i>\(\; Y\)."
 
 <p>
-Let \(Y\) be a set of states. \(N(Y)\) is read as "<i>next</i>\(\; Y\)."
+Let \(Y\) be a set of states. 
 \(N(Y)\) is the set of states defined as follows:
 
-<hr class="new4">
-\(v\) is in \(N(Y)\) exactly when all hops from \(v\) terminate at
+<hr class="new2">
+\(v\) is in \(N(Y)\) exactly when all edges from \(v\) terminate at
 vertices in \(Y\).
 <p>
 \(
@@ -514,10 +478,12 @@ v \in N(Y) \quad \equiv \quad
 \forall w : (v \rightarrow w) \; \Rightarrow \; (w \in Y)
 \)
 
-<hr class="new4">
-<p>
-From the definition, it follows that \(N(Y)\) is the largest set \(X\)
-of vertices such that \(X \rightarrow Y\), i.e.
+<hr class="new2">
+
+<!----------------------------------->
+<h4  class="w3-text-teal">Lemma</h4>
+\(N(Y)\) is the largest set \(X\)
+of vertices such that \(X \rightarrow Y\)
 <p>
 \(
 (X \rightarrow Y) \quad \equiv \quad (X \;
@@ -525,10 +491,15 @@ of vertices such that \(X \rightarrow Y\), i.e.
 \)
 
 <p>
-We use <i>always</i> and <i>next</i> to specify system safety, and we
-will discuss these concepts again when we show how
+Proof follows from the definition of \(N\).
+
+<!----------------------------------->
+<h4  class="w3-text-teal">Summary</h4>
+We use <i>always</i> and <i>next</i> to specify system safety.
+We will define these concepts and \(/rightarrow\) in terms of predicates on states of a
+system. Later, we will show how these concepts are part of a
 <a href="https://en.wikipedia.org/wiki/Computation_tree_logic">
-temporal logic is used to prove that systems progress </a> towards their goals.
+temporal logic used to prove that systems progress </a> towards their goals.
 
 
 

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>LoopTermination</title>
+<title>SafetyPredicates</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -52,26 +52,26 @@ hr.new2 {
   Algorithms</h3>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="LoopTermination.html">Review of Loop Termination</a>
+  href="Safety.html">Safety in terms of Predicates</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="LoopTerminationExample.html">Examples</a>
+  href="SafetyExample.html">Examples</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="LoopTerminationSelfTest.html">Self Tests</a>
+  href="SafetySelfTest.html">Self Tests</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="LoopTerminationExercises.html">Exercises</a>
+  href="SafetyExercises.html">Exercises</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="LoopTerminationExplorations.html">Explorations</a>
+  href="SafetyExplorations.html">Explorations</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../ShortestPath/ShortestPath.html">Next: Examples of Loops</a> 
+  href="../LoopTermination/LoopTermination.html">Next: Loop Termination</a> 
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Safety/Safety.html">Previous: Safety</a>
-
+  href="../Safety/Safety.html">Previous: Safety and Graphs</a> 
+  
 </nav>
 
 <!-- Overlay effect when opening sidebar on small screens -->
@@ -87,88 +87,119 @@ hr.new2 {
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
     
-    <h1 class="w3-text-teal">Review of Loop Termination</h1>
+    <h1 class="w3-text-teal">Safety in terms of Predicates</h1>
 
     <p>
-    This module reviews how
-    <a href="https://en.wikipedia.org/wiki/Loop_variant"><i>loop
-    variants</i></a> also called <i>variant functions</i> are used to
-    prove that 
-    execution of a loop terminates. This concept is related to 
-    <a href="https://en.wikipedia.org/wiki/Directed_graph">
-    directed graph</a> models of state-transition systems.
-    </p>
+    In the previous module we defined <i>Next</i>, <i>Always</i>,
+    <i>Stable</i>, and <i>Invariant</i> in terms of
+    sets of vertices in a directed graph. Now, we extend
+    the definition to predicates where
+    <a href="../Predicates/Predicates.html">a set of vertices in the graph
+    corresponds to an extension of the predicate.</a>
+    The statements in this section follow directly from those in the
+    previous section.
 
-    <!---------------------------------------------------------->
-    <h2 class="w3-text-teal">Variant Functions</h2>
-    We use the term variant function, rather than loop variant,
-    because we will use the concept to prove properties of systems
-    that are not loops in programs. A variant function is a function
-    from states of a system to a well-founded set which is a set on which
-    we can carry out proofs by induction. An example of a variant function is
-    one from states to a set of integers which is bounded below; here,
-    the base case of the induction is the lower bound of the set.
-    
-    <p>
-    Let \(f\) be a variant function. Then \(f = k\), for a constant
-    \(k\) is a predicate. The extension of this predicate is the set
-    of states \(s\) where \(f(s) = k\).
+
+<!------------------------------------------------->
+
+    <h3 class="w3-text-teal">\(\rightarrow\)</h3>
+    \(\rightarrow\) is a binary relation on predicates.
+
+    <hr class="new2">
+    \(P \rightarrow Q\) holds for a system exactly when all
+    transitions from states in which \(P\) holds end in states in
+    which \(Q\) holds.
+    <hr class="new2">
 
     <h5 style="color:blue;">
-    We prove that execution of a loop terminates by proving that the
-    execution of any command whose guard evaluates to True reduces 
-    \(f\). 
+    We prove that \(P \rightarrow Q\)
+    holds for a <i>do-od</i> loop by proving the Hoare triple \(\{P\}
+    \: a \: \{Q\}\), for all
+    commands, \(a\), of the loop.
     </h5>
-    <p>
-
-     If the execution of any command with a True guard reduces
-    \(f\) then every iteration
-    reduces 
-    \(f\). Since \(f\) is bounded below, it cannot decrease for ever.
-    Therefore, at some point in the
-    computation all guards are False.
-    And, at that that point
-    execution of the loop terminates.
-
-
-
-    <p>
-    Let \(I\) be an invariant
-     of the loop, let the \(j\)-th guarded command have guard
-    \(g_{j}\) and command \(c_{j}\), and let \(f\) be a variant function
-    of the loop. We prove that the execution of any command with
-    a True guard reduces the variant function by proving the
-    following Hoare triple for all \(j\): 
-<p>
-\(\forall K: \quad
-\{(f = K) \wedge I \wedge g_{j}\} \; c_{j} \; \{f < k\}
+<h5 style="color:blue;">
+    \(
+    (\forall \; a: \; \{P\} \; a \; \{Q\})
+    \quad \Rightarrow \quad
+    (P \rightarrow Q)
 \)
+</h5>
+
+    
+
+ <!------------------------------------------------->
+<h3 class="w3-text-teal">Next</h3>
+    \(N(Y)\) is a function from predicates to predicates.
+    
+    <hr class="new2">
+    \(N(Y)\) holds for a state \(v\) exactly when all transitions from
+    \(v\) terminate in a state in which \(Y\) holds.
+    <hr class="new2">
+    <p>
+
 
 <p>
-Therefore each iteration reduces \(f\). 
-    <h2 class="w3-text-teal">Variant Functions and State-Transition
-    Graphs</h2>
-    A termination state of the loop is one without outgoing edges; it
-    is a trapping state. The state-transition graph has no cycles
-    because every edge of the graph is from a state with a higher
-    value of \(f\) to a state with a lower value. The graph shows a
-    partial order where states with higher \(f\)-values are higher in
-    the partial order. The termination states are the bottom of the
-order.
-
+From the definition, it follows that \(N(Q)\) is the weakest predicate \(P\)
+such that \(P \rightarrow Q\).
 <p>
-Every edge from every path in the graph goes from higher to lower
-\(f\) values. Since \(f\) cannnot decrease forever and \(f\) maps
-states to a well-founded set, a path reaches a terminal state in a
-finite number of steps.
+\(
+(P \rightarrow Q) \quad \equiv \quad [P \;
+    \Rightarrow N(Q)]
+    \)
+</p>
+        
+
+
+<!------------------------------------------------->
+<h3 class="w3-text-teal">Always</h3>
+\(A\) is a
+function from predicates to predicates.
+<hr class="new2">
+\(A(Q)\) holds for a state \(v\) exactly when \(Q\) holds for all states in all
+trajectories starting in \(v\).
+<hr class="new2">
+<p>
+From the definition it follows that \(A(Q)\) is the weakest stable predicate
+\(P\) such that \(P \Rightarrow Q\).
+
+<!----------------------------------------------->
+    <h3 class="w3-text-teal">Stable</h3>
+    \(stable(P)\) holds for a system exactly when
+every transition from a state in which \(P\) holds is to a state in
+which \(P\) holds.
+</p>
+<p>
+From the definitions, it follows that:
+<p>
+\(
+stable(P) \; \equiv \; [P = A(P)]
+\)
+</p>
 
 
 
 
-<figure>
-  <img src="VariantFunction.jpg" alt="Fig1" style="width:80%">>
-  <figcaption>Fig.1 - Variant Function decreases along every Edge</figcaption>
-</figure>
+<!--------------------------------------------------->
+
+<h2 class="w3-text-teal">How to Prove Safety: Invariant</h2>
+
+
+An invariant \(I\) is a stable predicate such that
+<p>
+\(
+[init \Rightarrow I]
+\)
+</p>
+<h5 style="color:blue;">
+We prove that a system is safe
+by finding an invariant \(I\) such that:
+<p>
+\([I \Rightarrow safe]\)
+</h5>
+
+
+
+
 
 
   <footer id="myFooter">

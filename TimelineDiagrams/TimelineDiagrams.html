@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>TimelineDiagrams</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="TimelineDiagrams.html">Timeline Diagrams</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="AgentsExamples.html">Examples</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="AgentsSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="AgentsExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="AgentsExplorations.html">Explorations</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../EarliestMeetingTime/EarliestMeetingTime.html">
+  Next: Example - Earliest Meeting Time</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../ShortestPath/ShortestPath.html">Previous:
+  Examples of Loops
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+
+<!---------------------------------------------------->
+<h1 class="w3-text-teal">Timelines</h1>
+<!---------------------------------------------------->
+
+This module describes <i>timeline diagrams</i> of systems. We start with a
+    simple action system with variables that are read and written by
+    actions.
+    Then we show how the concepts and theorems for simple action
+    systems apply to distributed systems in which the
+    shared variables are message-passing channels.
+
+    <p>
+    The concept of a timeline is simple but helpful. We define <i>cuts</i> of
+    timelines, <i>valid cuts</i>, <i>logical clocks</i>,
+    <i>timestamps</i>, <i>global snapshots</i>, and
+    algorithms to compute assign timestamps and global snapshots.
+
+<!---------------------------------------------------->
+<h4 class="w3-text-teal">System</h4>
+<!---------------------------------------------------->
+
+    <p>
+    We begin by considering simple systems; later, we introduce agents
+    and message channels.
+    A system consists of a set of variables and a set of actions. An
+    action <i>references</i> a subset of variables. The subset
+    referenced by an action is partitioned into
+    <ol>
+      <li><i>read variables</i>: the variables that are read, but not
+      modified, by the action, and
+      </li>
+      <li>
+      <i>write variables</i>:
+      the variables that are written by the action. (We assume that a
+      variable written in an action is also read in that action. This
+      assumption simplifies exposition.)
+      </li>
+    </ol>
+
+    
+<p>
+Consider a computation
+</p>
+\(
+s_{0} \stackrel{a_{0}}{\rightarrow} s_{1}
+\stackrel{a_{1}}{\rightarrow}
+\ldots \stackrel{a_{m-1}}{\rightarrow} s_{m}
+\)
+</p>
+where the initial state is \(s_{0}\), and execution of action
+\(a_{i}\) causes a transition from state \(s_{i}\) to \(s_{i+1}\), all
+\(i\). We call a state transition an <i>event</i>.
+Let \(e_{i}\) be the event
+\(s_{i} \stackrel{a_{i}}{\rightarrow} s_{i+1}\).
+
+    The computation is defined by the sequence of events \(e_{0},
+    e_{1}, \ldots\).
+
+
+<!---------------------------------------------------->
+<h2 class="w3-text-teal">Timeline Diagram</h2>
+<!---------------------------------------------------->
+
+    A <i>timeline diagram</i> is a representation of a
+    computation as (1) a labeled directed graph in which each vertex
+    represents an event and edges specify dependence between
+    events and (2) a timeline that shows the value of each variable at
+    each point in time.
+
+    <p>
+    We adopt the convention that time progresses from left to
+    right. The timeline for each variable is a horizontal line which
+    shows the value of the variable at each point in time.
+    Events appear in the timeline diagram in
+    the order in which they occur in the computation.
+
+    <p>
+    The edges in the graph are as follows. There is an edge from an
+    event \(e_{i}\) in which a variable \(v\) is modified to the next
+    event in which \(v\) is modified. And, for an event \(e_{i}\) in
+    which a variable \(v\) is read but 
+      not modified, there is an edge to \(e_{i}\) from the most recent 
+    event prior to \(e_{i}\) that modifies \(v\), and
+    an edge from \(e_{i}\) to the next event that
+    modifies \(v\).
+
+    <p>
+    The label of an edge from an event \(e_{i}\) specifies the
+    values of variables referenced in the event between\(e_{i}\) and
+    the next event.
+
+<h4 style="color:red;">Example of a Timeline Diagram</h4>
+
+<figure>
+    <img src="TimelineDiagrams_Slide1.jpg" alt="Fig1" style="width:75%">
+    <figcaption>Fig.1: A Timeline</figcaption>
+</figure>
+
+The figure above shows a timeline diagram for the following
+computation, \(e_{0}, e_{1}, e_{2}, e_{3}\) where
+initially \(W, X, Y, Z = 0, 0, 0, 0\)
+
+<ol start="0">
+  <li>\(W = W + 1\)
+  </li>
+  <li>
+  \(X = W + 1\)
+  </li>
+  <li>
+  \(Y = W + 2\)
+  </li>
+  </li>
+  <li>
+  \(Z = X + Y\)
+  </li>
+</ol>
+</p>
+
+
+<!------------------------------------------------------------>
+<h3 class="w3-text-teal">Permuting Adjacent Events in a Computation</h3>
+<!------------------------------------------------------------>
+Let \(TD\) be the timeline diagram for a computation \(C = e_{0}, e_{1}, \ldots,
+e_{N}\), and let \(TD'\) be the timeline diagram for a computation
+\(C'\) which is
+identical to \(C\) except that the order in which \(e_{i}\) and
+\(e_{i+1}\) appear is interchanged. Both computations start in the
+same state.
+<p>
+If there is no edge between \(e_{i}\) and
+\(e_{i+1}\) in \(TD\) then the graphs, including labels, for \(TD\)
+and \(TD'\) are identical. Therefore, the final states after the
+execution of \(C\) and \(C'\) are identical.
+
+<p>
+The proof is straightforward.
+
+<figure>
+    <img src="TimelineDiagrams_Slide2.jpg" alt="Fig2" style="width:75%">
+    <figcaption>Fig.2: Timeline Diagram Changing order of Events 1 and 2 </figcaption>
+</figure>
+
+<p>
+Figure 2 shows the timeline diagram obtained by switching the order in
+which events 1 and 2 occur, from left to right, in figure 1. The state
+after both events occur is the same in both figures: \(W, X, Y, Z = 1,
+2, 3, 0\).
+
+<!------------------------------------------------------------>
+<h2 class="w3-text-teal">Permuting Events in a Computation</h2>
+Theorem: 
+Let \(TD\) be the timeline diagram representation of a
+computation \(C = e_{0}, e_{1}, \ldots, e_{N}\). Let \(TD'\) be a timeline
+diagram of a computation \(C'\) which is a permutation of \(C\) where
+\(e_{i}\) appears before \(e_{j}\) in \(C'\) when there is an edge from
+\(e_{i}\) to \(e_{j}\) in \(TD\). The graphs, including edge labels,
+are identical for the graphs of \(TD\) and \(TD'\). Therefore, the
+final states after the execution of \(C\) and \(C'\) are identical.
+<p>
+Proof: The result follows by repeatedly flipping the order of adjacent
+indenpendent elements of \(TD\) until \(TD'\) is obtained.
+
+<p style="color:red;">Examples of Event Permutations</p>
+The next two diagrams show timeline diagrams with events permuted
+while satisfying the condition of the theorem. The events are the same
+as in the previous diagrams, with event 4, \(A = 2*X\) and event 5, (B
+= 2* Y\).
+
+<p>
+The theorem tells us the graph and edge labels don't change if
+move events 
+left or right provided no edge goes backwards, i.e. from right to left.
+<figure>
+    <img src="TimelineDiagrams_Slide3.jpg" alt="Fig3" style="width:75%">
+    <figcaption>Fig.3: Timeline Diagram Before Permuting Events </figcaption>
+</figure>
+<figure>
+    <img src="TimelineDiagrams_Slide4.jpg" alt="Fig4" style="width:75%">
+    <figcaption>Fig.4: Timeline Diagram After Permuting Events </figcaption>
+</figure>
+
+<p class="w3-text-teal">Dependent events</p>
+A pair of events are <i>dependent</i> exactly when a variable modified
+by one event is referenced in the other.
+
+<h4 class="w3-text-teal">Corollary</h4>
+Let \(C = e_{0}, e{1}, \ldots\) be a computation. Let \(C'\) be a
+permutation of \(C\) that starts in the same state as \(C\), and where
+\(e_{i}\) appears before \(e_{j}\) in
+\(C'\) when \(e_{i}\) and \(e_{j}\) are dependent, and \(e_{i}\)
+appears before \(e_{j}\) in \(C\).
+Then \(C\) and \(C'\) end in the same state.
+
+<!------------------------------------------------------->
+<h2 class="w3-text-teal">Valid Cuts of Timelines</h2>
+A time \(T\) is represented by a vertical line that cuts through the
+timelines of all variables.
+The system state at \(T\) is given by the variable values where
+variable timelines are intercepted by \(T\).
+
+<figure>
+    <img src="TimelineDiagrams_Slide5.jpg" alt="Fig5" style="width:75%">
+    <figcaption>Fig.5: The State at an Instant in a Timeline </figcaption>
+</figure>
+
+<p>
+The events in the past at \(T\) are represented by the vertices to the
+left of the line \(T\), while the events in the future are to the
+right. In figure 5, the events prior to \(T\) are \(0, 2, 5\) and
+events after \(T\) are \(1, 3, 4\).
+
+<p>
+The state at \(T\) in one timeline diagram is represented by a
+curvilinear line in a different timeline diagram with the same events
+and graph.
+<figure>
+    <img src="TimelineDiagrams_Slide6.jpg" alt="Fig6" style="width:75%">
+    <figcaption>Fig.6: Time in a Timeline Represented in a Different
+Timeline </figcaption> 
+</figure>
+
+<p>
+The events before \(T\) in the first timeline diagram are \(0, 2, 5\),
+and these events appear on one side of the curvilinear line while the
+other events, \(1, 3, 4\), appear on the other.
+
+<p>
+A <i>cut</i> of a timeline is a set of events. The curvilinear line in
+figure 6 is specified by the cut: \(0, 2, 5\).
+<!------------------------------------------------------->
+<h3 class="w3-text-teal">A Valid Cut</h3>
+A valid cut is one in which every edge to a vertex in the cut is from
+a vertex in the cut.
+Therefore, a cut is valid
+exactly when every edge from a vertex outside the cut is to a vertex
+outside the cut.
+
+<p style="color:red;">Examples of Valid and Invalid Cuts</p>
+The cut \(0, 2, 5\) in figure 6 is a valid cut. We can prove the
+validity of this cut by showing 
+that every edge from \(1, 3, 4\) is to \(1, 3, 4\).
+An example of an <i>invalid</i> cut is \(0, 1, 5\) because the edge
+\((2, 5)\) is from a vertex, \(2\) outside the cut to a vertex, \(5\),
+inside the cut.
+
+<h3 class="w3-text-teal">System State at a Valid cut</h3>
+The system state at a valid cut is specified by the values of
+variables after events in the cut and before events that are not in
+the cut. It is given by the values of variable timelines intersected by
+the cut.
+<p>
+Let's get the state at the valid cut shown in figure 6. Going along
+the cut from bottom to top, the values at the points at which the cut
+intersects the variable timelines are: \(B = 6, Y = 3, Z = 0, W = 1, X
+= 0, A = 4\).
+
+<h4 class="w3-text-teal">Valid cuts and Instants in Time</h4>
+We will show that each valid cut in a timeline diagram of a computation
+corresponds to a point in time in the timeline diagram of a
+computation. Pictorially, we pull the curvlinear valid cut taut to
+make it vertical. Doing so pushes events outside the cut to the right
+of the vertical line, and pushes events in the cut to the left of the
+line while <i>retaining the property that all edges
+are directed from the past to the future,</i> i.e. from left to
+right. When the cut is a vertical line it represents an instant in
+time but in a different timeline diagram.
+
+<p style="color:red;">Example of Straightening a Curvilinear Valid
+Cut</p>
+The figure below shows a curvilinear valid cut. Think of the cut as a
+string and tauten it to make it vertical. Doing so pushes events \(2\)
+and \(5\) to the left, and events \(1\)
+and \(4\) to the right, while ensuring that all edges are directed
+from left to right. When the cut is vertical we get the diagram shown
+in figure 5.
+
+<figure>
+    <img src="TimelineDiagrams_Slide7.jpg" alt="Fig7" style="width:75%">
+    <figcaption>Fig.7: Straightening a Curvilinear Valid Cut</figcaption> 
+</figure>
+
+
+<h2 class="w3-text-teal">Theorem: Snapshot Visited in Computation</h2>
+Let \(TD\) be the timeline diagram of a computation that starts in
+state \(S_{init}\) and ends in state \(S_{fini}\). Let \(S_{cut}\) be
+the state of a valid cut of \(TD\). There exists a
+computation which starts in \(S_{init}\), visits \(S_{cut}\), and then
+visits \(S_{fini}\).
+
+<p>
+Proof: The proof follows from the theorem, above, on permuting events in a
+computation. The intuition underlying the theorem is given by figure 7.
+
+<p>
+Let \(TD\) be the timeline diagram of a computation \(C = e_{0},
+e_{1}, \ldots\). Let \(C'\) be the permutation of \(C\) where the
+order of events in \(C'\) is the same as in \(C\) except that events
+in the cut appear before events outside the cut. From the theorem on
+permuting events, when \(C'\) starts in \(S_{init}\) it terminates in
+\(S_{fini}\). In computation \(C'\), the state of the system after events in the cut and
+before events that are not in the cut is \(S_{cut}\). Therefore
+computation \(C'\) visits state \(S_{cut}\).
+
+
+<h2 class="w3-text-teal">Theorem: Stable Properties and Snapshots</h2>
+    Let \(P\) be a
+    <a href = "../Safety/Safety.html">stable predicate of a system</a>,
+    i.e. if \(P\) holds at any point in a computation it continues to
+    hold forever thereafter in that computation. Let \(s_{init}\) and \(s_{fini}\) be the
+    states in which a global snapshot algorithm starts and finishes,
+    and let \(s_{snap}\) be the global snapshot obtained by the
+algorithm.  Then:
+<ol>
+  <li>
+  If \(P\) holds in \(s_{init}\) then \(P\) holds in  \(s_{snap}\).
+  </li>
+  <li>
+  If \(\neg P\) holds in \(s_{fini}\) then \(\neg P\) holds in
+  \(s_{snap}\).
+  </li>
+</ol>
+
+<p class="w3-text-teal">Proof</p>
+If \(P\) holds in \(s_{init}\) then it holds in all states reachable
+from \(s_{init}\) including \(s_{snap}\).
+
+If \(\neg P\) holds in \(s_{fini}\) then \(\neg P\) holds in all
+states that can reach \(s_{fini}\) including \(s_{snap}\).
+
+
+<h2 class="w3-text-teal">Timestamps and Logical Clocks</h2>
+A <i>logical clock</i> is an algorithm that gives timestamps to events
+where the timestamps satisfy the following rule. Let \(T(e)\) be the
+timestamp assigned to event \(e\). For every edge
+\((e_{i}, e_{j})\) in the timeline diagram, \(T(e_{j}) > T(e_{i})\).
+
+<h4 style="color:red;">Examples of Event Timestamps</h4>
+The following diagram shows a timeline diagram with timestamps for
+events where the timestamps satisfy the above rule.
+
+<figure>
+    <img src="TimelineDiagrams_Slide12.jpg" alt="Fig8" style="width:75%">
+    <figcaption>Fig.8: Timestamps of Events</figcaption> 
+</figure>
+
+<p  class="w3-text-teal">The Cut at a Timestamp \(t\)</p>
+The cut at a timestamp \(t\) is the set of events consisting of all
+events with timestamps less than or equal to \(t\)
+The following figure shows the cut at timestamp \(t = 9\).
+
+<figure>
+    <img src="TimelineDiagrams_Slide13.jpg" alt="Fig9" style="width:75%">
+    <figcaption>Fig.9: Cut at Timestamps \(9\)</figcaption> 
+</figure>
+
+<!-------------------------------------------------------------->
+<h3 class="w3-text-teal">Theorem: Cut at Timestamp \(T\) is a Valid Cut</h3>
+The cut at \(t\), for any \(t\), is a valid cut.
+<p class="w3-text-teal">Proof</p>
+<p>
+All edges from vertices with timestamps greater than \(t\) are to
+vertices with timestamps greater than \(t\).
+
+
+<h2 class="w3-text-teal">Logical Clock: Assign
+Timestamps to Events</h2> 
+Associate a timestamp with each variable at each point in the
+computation. The logical clock algorithm uses the following rules:
+<ol>
+  <li>
+The timestamp assigned to an event is any value greater
+than the maximum of the timestamps of the variables referenced in the
+  event immediately before the event
+  </li>
+  <li>
+  The timestamp assigned to a variable referenced in an event immediately
+  after the event is the timestamp of the event.
+  </li>
+</ol>
+The proof that these timestamps satisfy the logical clock rule ---
+for every edge
+\((e_{i}, e_{j})\) in the timeline diagram, \(T(e_{j}) > T(e_{i})\)
+--- is straightforward.
+
+<h4 style="color:red;">Examples of a Logical Clock Algorithm</h4>
+The figure below shows an example of the algorithm. Assume that the
+timestamps of all variables are \(0\) initially. The first event from left
+to right has an input variable \(W\) with timestamp \(0\); so, the
+event sets its timestamp to any value greater than \(0\) --- in this
+example it sets its value to \(5\), and that is the new timestamp
+associated with \(W\). The next event has inputs \(W\) with timestamp
+\(5\) and \(X\) with timestamp \(0\). This event sets its timestamp to
+any value greater than \(0\) and \(5\). It sets its value to \(10\)
+which is the new timestamp of this event's outputs.
+
+<figure>
+    <img src="TimelineDiagrams_Slide14.jpg" alt="Fig10" style="width:75%">
+    <figcaption>Fig.10: Example of the Logical Clock Algorithm</figcaption> 
+</figure>
+
+
+<h2 class="w3-text-teal">A Global Snapshot Algorithm</h2>
+The algorithm takes a "snapshot" of each variable, i.e., makes a
+record of the
+value of each variable. The record of the variable is called a
+snapshot of the variable. A global snapshot is a tuple of snapshots of
+each variable. 
+<h4  class="w3-text-teal">Global Snapshots Using Logical Clocks</h4>
+A variable's snapshot is its value when its timestamp is \(t\) for
+some fixed \(t\).
+Because the cut at points at which the logical time is \(t\) is a
+valid cut, the corresponding state is a global snapshot.
+
+<h4  class="w3-text-teal">A Simple Global Snapshot Algorithm</h4>
+Next let's look at an algorithm that does not use timestamps.
+The algorithm begins by taking snapshots of one or more variables. The
+mechanism to start snapshots is irrelevant. The algorithm executes the
+following rule: 
+<p>
+<i>Before execution of an event, if a snapshot of any variable referenced in the event
+has already been recorded, then take snapshots all unrecorded variables referenced in the event.</i>
+
+<p>
+The algorithm terminates if and when all variables have snapshots.
+
+<p class="w3-text-teal">Proof</p>
+From the algorithm, either all the variables referenced in an event are
+recorded before execution of the event, or all are unrecorded before
+execution of the event.
+Consider a cut consisting of the set of events that reference
+variables that are unrecorded before the event. This cut is a valid
+cut because all edges from events outside the cut (i.e. events in
+which variables are recorded) are to
+events outside the cut. Because this cut is valid, the
+state that is recorded is a snapshot.
+
+
+
+
+
+
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>

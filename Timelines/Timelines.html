@@ -86,10 +86,55 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <h1 class="w3-text-teal">Properties of Timelines</h1><p>
 
 <h3 class="w3-text-teal">Timelines are Acyclic</h3>
-Timelines are acyclic because all edges in its graph are
-    directed from earlier times to later times. 
+Graphs in timeline diagrams are acyclic because all edges in the
+    timeline diagram are
+    directed from earlier times to later times.
+    Pictorially, timeline diagrams are acyclic because all edges are directed
+    from left to right.
 
+    <p>
+    The vertices in an acyclic graph are a partially ordered set with
+    edge directions representing the partial order. We say that a total order of
+    vertices is
+    consistent with an acyclic graph
+    exactly when \(v\) appears
+    before \(w\) in the total order if there is an edge from \(v\) to \(w\) in the
+    graph.
+
+    <p>
+    A timeline diagram consists of an acyclic graph \(G\) and a
+    total order \(e_{0}, e_{1}, \ldots\). This order is consistent with
+    the graph because all edges in the graph are from events earlier
+    in the ordering to events later in the ordering. Pictorially, the
+    total order of vertices is consistent with \(G\) exactly when all
+    edges are directed from left to right.
+
+
+    <!------------------------------------------------------------>
     <h2 class="w3-text-teal">Permuting events in a trajectory</h2>
+    
+Let \(e_{i}\) be the event
+\(s_{i} \stackrel{a_{i}}{\rightarrow} s_{i+1}\) in a
+ system trajectory
+\(
+s_{0} \stackrel{a_{0}}{\rightarrow} s_{1}
+\stackrel{a_{1}}{\rightarrow}
+\ldots \stackrel{a_{m-1}}{\rightarrow} s_{m}
+    \).
+    Let \(TD\) be the timeline diagram of this trajectory, and \(G\)
+    be the graph of this timeline. 
+    <p>
+    Consider any total order of vertices consistent with \(G\) and let \(TD'\) be the timeline
+    diagram with this order. The graphs of both timeline
+    diagrams \(TD\) and \(TD'\) are identical; the only difference is the order in which
+    vertices appear as we go from left to right. All edges in both
+    \(TD\) and \(TD'\)
+    are directed from left to right because the order in which
+    vertices appear is consistent with the graph \(G\). 
+
+
+
+    
     We begin with a simple example that illustrates all the ideas that
     are used in taking global snapshots, termination detection, deadlock
     detection, and many other algorithms.

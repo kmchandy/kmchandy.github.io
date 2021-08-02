@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Progress</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new4 {
+  border: 5px solid blue;
+}
+</style>
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+  
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+
+  <h3 class="w3-bar-item"><b>Section: Graphs</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Progress.html">Progress</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ProgressExample.html">Examples</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ProgressSelfTest.html">Self Tests</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ProgressExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ProgressExplorations.html">Explorations</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_2_2/ProgressProperties.html">Next: Progress Properties</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_1/Safety.html">Previous: Safety</a>
+
+</nav>
+
+  
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    
+    <h1 class="w3-text-teal">Progress</h1>
+    This module introduces the concepts that we use
+    to prove that system trajectories progress towards their
+    goals. We begin by describing these concepts in terms of sets of
+    vertices in
+    <a
+    href=https://en.wikipedia.org/wiki/
+    Multigraph#Directed_multigraph_(edges_with_own_identity)">
+    labeled directed graphs</a>. Then we interpret these concepts in
+    terms of predicates where a predicate corresponds to a vertex set
+    in the graph.
+    </p>
+
+
+  <h2 class="w3-text-teal">Labeled Graphs</h2>
+  <p>
+  A labeled graph is defined by: (1) a set of vertices, (2) a set of labels and
+  (3) a set of edges. An edge is defined by its originating vertex,
+  its label and its terminating vertex. We use the notation \( v
+  \stackrel{a}{\rightarrow} w \) to represent an edge from \(v\) to
+  \(w\) with label \(a\).
+
+    <p>
+    We restrict attention to graphs in which for every vertex \(v\) and
+  every label \(a\) there exists at least
+    one  outgoing edge from \(v\)  with label \(a\).
+    An edge can be from a vertex back to itself.
+  There can be multiple outgoing edges with the same label from a
+    vertex. For example, a graph may have edges
+    \(v \stackrel{a}{\rightarrow} w \) and \(v
+  \stackrel{a}{\rightarrow} u \) where \(w\) and \(u\)
+  are different.
+  </p>
+
+
+  <!------------------------------------------------------>
+  <!------------------------------------------------------>  
+  <h3 style="color:red;">Example 1</h3>
+  <figure>
+  <img src="LabeledGraph.jpg" alt="Fig2" style="width:75%">
+  <figcaption>Fig.1 - Example 1 of a Labeled Graph</figcaption>
+  </figure>
+  <p>
+    In this example, the edges are labeled \(a\), \(b\), \(c\), and
+    each vertex has exactly one outgoing edge with each label.
+    So as not to crowd the diagram, edges from a vertex to itself are
+  not shown. For example, vertex \(7\) has an edge labeled \(c\) back
+  to itself; vertex \(10\) has edges labeled \(b\) and \(c\) back to
+  itself, and vertex \(2\) has edges labeled \(a\), \(b\) and \(c\)
+  back to itself.
+    </p>
+
+    <p>
+    Edges labeled \(a\), \(b\), \(c\) are colored red, black, and blue
+    respectively. 
+
+<!------------------------------------------------------>
+<!------------------------------------------------------>
+  <h2 class="w3-text-teal">Paths in Labeled Graphs</h2>
+  A path is defined by a sequence of edges where the terminating
+  vertex of an edge is the originating vertex of the next edge in the
+  sequence. For example, a path \(p\) is denoted by:
+  <br>
+  \(
+  p_{0} \stackrel{a_{0}}{\rightarrow} p_{1}
+\stackrel{a_{1}}{\rightarrow} p_{2}
+\stackrel{a_{2}}{\rightarrow}
+\ldots p_{i}
+\stackrel{a_{i}}{\rightarrow} p_{i+1}
+\stackrel{a_{i+1}}{\rightarrow}
+\ldots
+  \)
+  <br>
+  where \(p_{i}\) is the \(i\)-th vertex visited on the path, and the
+  sequence of edges in the path are \(p_{i}
+\stackrel{a_{i}}{\rightarrow} p_{i+1}\) for \(i \geq 0\).
+</p>
+
+
+<!------------------------------------------------------>
+<p style="color:red;"><b>Example of a Path</b>: 
+\(
+  7 \stackrel{a}{\rightarrow} 8 \stackrel{b}{\rightarrow} 2
+  \stackrel{c}{\rightarrow} 2 \stackrel{a}{\rightarrow} 2
+\stackrel{b}{\rightarrow} 2 \stackrel{c }{\rightarrow} 2\ldots
+\)
+
+<!------------------------------------------------------>
+<h3 class="w3-text-teal">Paths that Traverse a Label Infinitely Often</h3>
+<i>A path \(p\) traverses label \(L\) infinitely often</i> exactly
+when at every point in \(p\) there is a later point at
+which \(p\) traverses an edge labeled \(L\). So, the gaps between
+successive traversals of \(L\) are finite.
+</p>
+
+
+<figure>
+  <img src="FiniteGapInFairPaths.jpg" alt="Fig0" style="width:100%">
+  <figcaption>Path that traverses label L infinitely often</figcaption>
+</figure>
+
+<p>
+Let \(l_{j}\) be the label of the edge from vertex \(p_{j}\) to vertex
+\(p_{j+1}\). Path \(p\) traverses label \(L\) infinitely often exactly
+when:
+</p>
+
+<p class="ex1">
+\(\forall j: \; \exists k > j: \; l_{k} = L \)
+</p>
+
+<!------------------------------------------------------>
+<p style="color:red;"><b>Example of a path that traverses a label infinitely often</b></p>
+<p>
+Let \(p\) be the path that repeatedly cycles through vertices \(3\) and \(4\)
+traversing an edge with label \(a\) and then an edge with label \(b\).
+</p>
+<p>
+\(
+    3 \stackrel{a}{\rightarrow} 4 \stackrel{b}{\rightarrow} 3
+  \stackrel{a}{\rightarrow} 4 \stackrel{b}{\rightarrow} 3
+  \stackrel{a}{\rightarrow} 4 \stackrel{b}{\rightarrow} 3 \ldots
+\)
+</p>
+<p>
+\(p\) traverses edges with label \(a\) infinitely often, and it also
+traverses edges with label \(b\) infinitely often.
+
+
+<!------------------------------------------------------>
+<!------------------------------------------------------>
+<h3 class="w3-text-teal">Fair Labels</h3>
+Now we consider labeled graphs in which a subset of labels are
+designated as <i>fair
+labels</i>. We 
+define a <i>fair path</i> in such a graph as follows:
+A path \(p\) is a
+<i>fair</i> path exactly when \(p\) traverses every fair
+label infinitely often.
+</p>
+  <p>
+  A label that is not fair may appear an arbitrary number of times in
+fair paths: it may never appear, it may appear a finite number of
+times or it may appear infinitely often.  Labels that are not fair
+represent events, such as errors, over which designers have no
+control.
+  </p>
+
+
+  <!------------------------------------------------------>
+  <p style="color:red;"><b>Examples of Fair Paths</b></p>
+  Consider the case, shown in Figure 1, where the fair labels are \(a\) and
+\(b\). An examples of a fair path is:
+\(
+    3 \stackrel{a}{\rightarrow} 4 \stackrel{b}{\rightarrow} 3
+  \stackrel{a}{\rightarrow} 4 \stackrel{b}{\rightarrow} 3
+  \stackrel{a}{\rightarrow} 4 \stackrel{b}{\rightarrow} 3 \ldots
+\)
+
+  <!------------------------------------------------------>
+  <p style="color:red;"><b>An example of a path that is not
+fair</b></p>
+  \(
+    8 \stackrel{b}{\rightarrow} 8
+    \stackrel{a}{\rightarrow} 9 \stackrel{a}{\rightarrow} 8
+    \stackrel{a}{\rightarrow} 9 \stackrel{a}{\rightarrow} 8
+    \stackrel{a}{\rightarrow} 9 \stackrel{a}{\rightarrow} 8
+    \ldots
+\)
+</p>
+<p>
+  This path traverses an edge labeled \(b\) once and thereafter
+  traverses only edges labeled \(a\). This path is not fair because it
+  traverses infinitely-often label \(b\) only a finite number of
+times.
+</p>
+
+
+<!------------------------------------------------------>
+  <!------------------------------------------------------>  
+  <h3 style="color:red;">Example 2</h3>
+  <figure>
+  <img src="FairPaths.jpg" alt="Fig2" style="width:75%">
+  <figcaption>Fig.2 - Example of Fair Paths</figcaption>
+</figure>
+<p>
+This example illustrates that fairness does not imply that every fair
+  label must appear equally often. This example
+graph has fair edges labeled R (red) and B (black).
+In the first path, red and black edges appear equally often;
+in the second path, the number of black edges between red ones
+  increases linearly; and, in the third path, the number of black edges between red ones
+  increases exponentially. All three paths are fair because black and
+  red edges appear infinitely often.
+
+
+<hr class="new4">
+<h2 class="w3-text-teal">Leads-To, \(\leadsto\)</h2>
+
+  \(\leadsto\), read as "leads to," is a binary relation on vertex sets.
+  \(P \leadsto Q\) holds exactly when every fair path that visits a vertex in
+  \(P\) later visits a vertex in \(Q\).
+  </p>
+  <p>
+  \(
+  P \leadsto Q \; \equiv \;
+  \forall \; \textrm{fair} \; p: \; p_{i} \in P \;
+  \Rightarrow \; \exists j > i: p_{j} \in Q
+  \)
+</p>
+<hr class="new4">
+
+
+  <!------------------------------------------------------>
+  <p style="color:red;"><b>An example of \(P \leadsto Q\)</b></p>
+<p>
+In Fig. 1: 
+    \(
+    \{8, 9\} \leadsto \{1, 2\}
+    \)
+    <br>
+    A fair path that enters any vertex in \(\{8, 9\}\) cannot remain
+  in \(\{8, 9\}\) for ever because the 
+  path will traverse
+  infinitely-often label \(b\) which takes the path out of \(\{8,
+  9\}\). Transitions out of \(\{8, 9\}\) are to \(\{1, 2\}\).
+  <!------------------------------------------------------>
+  <p style="color:red;"><b>An example of \(\neg (P \leadsto
+Q)\)</b></p>
+In Fig. 1:
+    \(
+    \neg (\{7\} \leadsto \{1, 2\})
+    \)
+    <br>
+    There is a fair path from \(7\) through \(6\) that
+never visits \(\{1, 2\}\). So, not all fair paths from \(7\)
+visit \(\{1, 2\}\).
+</p>
+
+
+
+  <!------------------------------------------------------>
+  <!------------------------------------------------------>  
+  <h3 style="color:red;">Example 3</h3>
+  <figure>
+  <img src="LabeledGraph_3.jpg" alt="Fig2" style="width:75%">
+  <figcaption>Fig.3 - Example 3 of a Labeled Graph</figcaption>
+  </figure>
+<p>
+This graph, Figure 3, has two labels, red and black, shown by the color of the
+edges. Both labels are fair.
+</p>
+
+<h5 style="color:red;">Is \(\{1\} \leadsto \{0\}\) true?<h5>
+No.
+<p>
+\(1 \leadsto 0\) holds only if <i>all</i> fair paths from vertex
+\(1\) visit vertex \(0\). The following is a fair path starting at
+vertex \(1\) which never visits vertex \(0\):
+</p>
+
+<p>
+\(
+1 \stackrel{R}{\rightarrow} 2 \stackrel{R}{\rightarrow} 3
+\stackrel{B}{\rightarrow}
+1 \stackrel{R}{\rightarrow} 2 \stackrel{R}{\rightarrow} 3
+\stackrel{B}{\rightarrow} 1 \stackrel{R}{\rightarrow} \ldots
+\)
+</p>
+<p>
+where the labels R and B stand for red and black, respectively.
+This path is fair because all fair labels appear infinitely often in
+the path.
+</p>
+
+<h5 style="color:red;">Is \(\{4\} \leadsto \{0\}\) true?<h5>
+Yes.
+<p>
+Every path from vertex \(4\) that traverses a red edge visits vertex
+\(0\). Every fair path must traverse a red edge eventually.
+</p>
+
+<h5 style="color:red;">More examples of \(P \leadsto Q\)<h5>
+<p>
+<ol>
+  <li>
+  \(
+  \{8\} \leadsto \{4, 6\}
+  \)
+  </li>
+  <li>
+  \(
+  \{8\} \leadsto \{0\}
+  \)
+  </li>
+  <li>
+  \(
+  \{4, 5, 6\} \leadsto \{0\}
+  \)
+  </li>
+  <li>
+  \(
+  \neg (\{7\} \leadsto \{0\})
+  \)
+  </li>
+</ol>
+
+
+ <!------------------------------------------------------>
+  <h3 class="w3-text-teal">Eventually, \(E\)</h3>
+  We define a function \(E\) from vertex sets to vertex sets as
+  follows. For any vertex set \(Q\), a vertex \(v\) is in \(E(Q)\)
+exactly when all fair paths from \(v\) visit \(Q\).
+</p>
+
+<p>
+  \(
+  v \in E(Q) \; \equiv \; \{v\} \leadsto Q
+  \)
+</p>
+<p>
+Read \(E(Q)\) as "<i>eventually</i> Q."
+</p>
+
+<p>
+You can use either \(E\) or \(\leadsto\) because:
+</p>
+<p>
+\(
+(P \leadsto Q) \quad \equiv \quad (P \subseteq E(Q))
+\)
+<p>
+<p>
+So, \(E(Q)\) is the weakest (i.e. largest) set \(P\) such that \(P
+\leadsto Q\). 
+</p>
+
+<p>
+In this course, we use \(\leadsto\) more often than \(E\).
+You should, however, be able to rewrite formulae that use \(\leadsto\) into 
+formulae that use \(E\), and be equally facile with both concepts.
+</p>
+
+
+  <!------------------------------------------------------>
+  <p style="color:red;"><b>An example of Eventually: E(P)</b></p>
+  
+    \(
+    E({1, 2}) = \{1, 2, 8, 9, 10\}
+  \)
+  because all paths that start at vertices in \(\{1, 2, 8, 9, 10\}\) and
+    that traverse labels \(a\) and \(b\) infinitely
+    often, visit vertices \(1\) and \(2\).
+<!------------------------------------------------------>
+  <p class="w3-text-teal">Relationship between Labeled and Unlabeled
+Graphs</p>
+The concepts we use to reason about safety are defined in terms of
+unlabeled graphs but they apply to labeled graphs as well. For example
+\(v \rightarrow w\) holds exactly when there is an edge from vertex
+\(v\) to vertex \(w\), regardless of the label on the edge.
+</p>
+
+
+<!------------------------------------------------->
+<h2 class="w3-text-teal">Definitions in Terms of Predicates</h2>
+The labeled directed graph represents a state-transition system. The
+vertices represent states and the edges represent state transitions. A
+predicate on states corresponds to a set of vertices.
+
+<p>
+\(P \leadsto Q\) holds for a state-transition system
+exactly when: 
+if \(P\) holds at any point in a trajectory of the system, then \(Q\)
+holds at that point or a later point in the trajectory. 
+
+
+
+
+<!------------------------------------------------->
+<h3 class="w3-text-teal">Summary</h3>
+The temporal logic formulae we use in this course are based on
+the concepts \(\rightarrow\) and
+\(\leadsto\). This module and
+<a href="../Safety/Safety.html">the previous module on safety</a>
+define these concepts.
+</p>
+
+<!------------------------------------------------------>
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
