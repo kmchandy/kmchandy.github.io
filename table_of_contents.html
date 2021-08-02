@@ -77,10 +77,10 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     This chapter is not ready.
 
     
-    <h3 class="w3-text-teal">
-    Review
-    </h3>
-    This chapter is a review of material that you may have learned in
+    <h2 class="w3-text-teal">
+    Review: Nondeterminism, Predicates, Safety
+    </h2>
+    This section contains material that you may have learned in
     earlier courses.
     <ol start="2">
       <li>
@@ -119,55 +119,20 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 </h3>
       
 
-    <h3 class="w3-text-teal">Agents and Timelines</h3>
-    This chapter introduces agents and timeline graphs.
+    <h2 class="w3-text-teal">Timelines, Global Snapshots, Logical
+    Clocks</h2>
+    This section introduces the concept of timelines and timeline
+    diagrams. The section defines cuts  of
+    timelines. The concept of  a valid cut of a timeline is used to define global snapshots
+    and timestamps assigned by logical clocks. This section describes
+    algorithms for logical clocks and snapshots for simple action systems and
+    for distributed systems.
     <ol>
       <li>
-      <a href="Agents/Agents.html">Introduction to Agents</a>
-      Systems consisting of agents and shared variables.
+      <a href="TimelineDiagrams/TimelineDiagrams.html">Timeline Diagrams</a>
+      The concept of a timeline defined for an action system
+    consisting of a set of actions where an action reads and writes variables.
       </li>
-      <li>
-      <a href="EarliestMeetingTime/EarliestMeetingTime.html">Example
-    of Network of Agents. Earliest meeting time</a> An example of an application
-    with multiple agents.
-      </li>
-      <i>More Examples</i>
-      <ol>
-      <li>
-      <a href="AverageOfSensors/AverageOfSensors.html">Example
-    of Network of Agents - Average of Sensors</a>. A network of agents computes
-    the average of sensor readings.
-      </li>
-      <li>
-      <a href="FlightFormation/FlightFormation.html">Example
-    of Network of Agents -  Flight Formation</a>. A network of mobile agents
-    makes a formation.
-      </li>
-    </ol>
-    <li>
-    <a href="Timelines/Timelines.html">Properties of Timelines</a>
-    Timeline diagrams. Permutations of sequences of events and their
-    representation in timeline diagrams. Consistent cuts.
-    </li>
-    <li>
-    <a
-    href="LogicalClocks/LogicalClocks.html">Timestamps and Logical Clocks</a>
-    An application of consistent cuts. Concept of consistent timestamps.
-    Algorithms to timestamp events. How to use timestamps to determine consistent cuts and
-    global states. 
-    </li>
-    <li>
-    <a href="GlobalSnapshots/GlobalSnapshots.html">Global Snapshots</a>
-    An application of consistent cuts:
-    Algorithms to detect global states of a distributed system.
-    </li>
-    <li>
-    <a
-    href="PropertiesOfGlobalSnapshots/PropertiesOfGlobalSnapshots.html">Properties
-    of Global Snapshots</a>
-    Properties of global snapshots that help in detecting when stable
-    properties hold. Introduction to termination detection.
-    </li>
     <li>
     <a
     href="Channels/Channels.html">Message-Passing Channels</a>
@@ -184,11 +149,11 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 
   
   <!----------------------------------------------------------------->
-  <h3 class="w3-text-teal">Detection Algorithms</h3>
+  <h2 class="w3-text-teal">Detection Algorithms</h2>
   Algorithms by which an agent detects that the system is in a stable
   state. Examples of such algorithms are termination detection and
   deadlock detection. These algorithms are based on the concept of
-  consistent cuts. 
+  consistent cuts of timelines. 
   <ol>
     <li>
     <a
@@ -209,6 +174,25 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     </li>
     <li>
     <a
+    href="DeadlockDetection_Or/DeadlockDetection_Or.html">Deadlock
+    Detection II</a>
+    Algorithm to detect deadlock in systems in which an idle agent is
+    made active when it receives a message from <i>any</i> agents for
+    which it is waiting.
+    </li>
+    
+  </ol>
+
+<!----------------------------------------------------------------->
+  <h2 class="w3-text-teal">What an Agent Knows, Diffusing Computations</h2>
+  <ol>
+    <li>
+    <a
+    href="Knowledge/Knowledge.html">Concept of knowledge: What an
+    agent knows</a>
+    </li>
+    <li>
+    <a
     href="DiffusingComputations/DiffusingComputations.html">Diffusing Computations
     </a>
     Algorithms in which an agent starts a computation across a network
@@ -222,20 +206,16 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     Learning structures of networks in which an agent is
   embedded. Termination detection. Communication deadlock detection.
     </li>
-    
-  </ol>
+</ol>
 
 
-  <h3 class="w3-text-teal">Resilient Algorithms</h3>
+
+  
+  <h2 class="w3-text-teal">Resilient Algorithms</h2>
   Algorithms that are resilient to errors. Algorithms that use varying
   amounts of resources. Algorithms that use incentives for agents to
   participate. 
   <ol>
-    <li>
-    <a
-    href="Paxos/Paxos.html">The Paxos Algorithm</a>
-    Achieving consensus among agents in the presence of error.
-    </li>
     <li>
     <a
     href="SelfStabilization/SelfStabilization.html">Self Stabilization Algorithms</a>
@@ -243,9 +223,20 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     </li>
     <li>
     <a
-    href="Byzantine/Byzantine.html">Byzantine Algorithms</a>
+    href="Paxos/Paxos.html">The Paxos Algorithm</a>
+    Achieving consensus among agents in the presence of error.
+    </li>
+    <li>
+    <a
+    href="Byzantine/Byzantine.html">Byzantine Algorithms: Written Messages</a>
     Algorithms that reach consensus among a set of faulty agents who
-  may corrupt messages.
+  may corrupt messages. This algorithm assumes that messages are encrypted.
+    </li>
+    <li>
+    <a
+    href="Byzantine_Oral/Byzantine.html">Byzantine Algorithms: Oral Messages</a>
+    Algorithms that reach consensus among a set of faulty agents who
+  may corrupt messages. This algorithm deals with messages that may be forged.
     </li>
   </ol>
 
