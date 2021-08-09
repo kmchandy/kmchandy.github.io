@@ -88,7 +88,91 @@ hr.new4 {
     <h1 class="w3-text-teal">Progress</h1>
     This module introduces the concepts that we use
     to prove that system trajectories progress towards their
-    goals. We begin by describing these concepts in terms of sets of
+    goals.
+
+    <p class="w3-text-teal">How we proved progress so far</p>
+    We have proved progress properties for the algorithms that we have
+    studied so far. For example, we proved that algorithms
+    terminate. The model of computation that we have used so far is
+    that of a do-od loop consisting of a set of guarded
+    commands: \(guard \rightarrow action\).
+    Computation progresses by nondeterministically picking
+    any guarded command whose guard evaluates to True and executing
+    the corresponding action. Computation terminates when all guards
+    evaluate to False. We proved progress using variant functions: We
+    showed that every state transition reduced the value of the
+    variant function. Since variant functions are bounded below, state
+    transitions terminate.
+
+    <p  style="color:red;">Why we need another model of
+    computation: Example</p>
+    Consider a distributed system with three agents \(X, Y, Z\). The
+    system has a blue token and a red token. Initially \(X\) holds the
+    blue token and \(Z\) holds the red token.
+    Agents \(X\) and \(Y\)
+    send the blue token back and forth between them while they don't hold the red
+    token. They stop when they hold the red token. The guarded command
+    for \(X\) is: "If \(X\) holds blue token but not red token then
+    send blue token to \(Y\)". 
+
+    <p>
+    The guarded command for \(Z\) is "If \(Z\) holds a token then send
+    the token to \(X\)."
+    The guarded
+    command for a message channel is: if the channel has a message
+    then deliver the message.
+    <p>
+    There is an infinite
+    computation of the do-od loop in which \(X\) and \(Y\) exchange
+    the blue token for 
+    ever. There is a guarded command in which the guard for \(X\) or
+    \(Y\) or a channel between \(X\) and \(Y\) is true; so the loop
+could pick these guarded commands for ever.
+
+<p>
+We would like \(Z\) to have a fair chance at executing its actions
+too. So, we modify the computation model as follows.
+
+
+<!---------------------------------------------------------->
+<h2 class="w3-text-teal">Model of Computation</h2>
+
+A system (or
+program) is defined by a set of guarded commands as in the do-od
+loop. The set of guarded commands is partitioned into sets of
+<i>fair</i> and <i>unfair</i> commands. Computation proceeds by
+picking any guarded command nondeterministically, regardless of
+whether the guard evaluates to True or False. The execution of a
+guarded command is the same as an \(if - then\) command: If the guard evaluates
+to True then the corresponding action is executed, and if the guard
+evaluates to False then the action is a skip or no-op, i.e. the state
+is not changed.
+
+<p class="w3-text-teal">Fairness</p>
+The computation is infinite. It executes for ever, picking any guarded
+command
+nondeterministically subject to the following fairness condition:
+<i>each fair guarded command is selected infinitely often.</i>
+
+<p>
+Therefore, for each guarded command \(g \rightarrow a\), at each point
+in the computation, 
+there is a later point in the computation at which \(g \rightarrow a\)
+is executed.
+
+<p>
+We don't know how often an unfair command is executed in an infinite
+computation. An unfair command may never be executed, or it may be
+executed a finite number of times, or it may be executed infinitely
+often.
+
+<p>
+Next we define computations in terms of state-transition systems.
+
+    
+
+
+    We begin by describing these concepts in terms of sets of
     vertices in
     <a
     href=https://en.wikipedia.org/wiki/
@@ -105,7 +189,14 @@ hr.new4 {
   (3) a set of edges. An edge is defined by its originating vertex,
   its label and its terminating vertex. We use the notation \( v
   \stackrel{a}{\rightarrow} w \) to represent an edge from \(v\) to
-  \(w\) with label \(a\).
+\(w\) with label \(a\).
+
+<h4 class="w3-text-teal">Labeled Graphs and State-Transition
+Systems</h4>
+A labeled graph represents a state transition system in which vertices
+represent states. An edge \( v \stackrel{a}{\rightarrow} w \)
+represents a state transition from \(v\) to \(w\) due to the execution
+of the guarded command \(a\).
 
     <p>
     We restrict attention to graphs in which for every vertex \(v\) and
@@ -116,7 +207,8 @@ hr.new4 {
     vertex. For example, a graph may have edges
     \(v \stackrel{a}{\rightarrow} w \) and \(v
   \stackrel{a}{\rightarrow} u \) where \(w\) and \(u\)
-  are different.
+  are different. This is because a guarded command may be
+    nondeterministic.
   </p>
 
 
@@ -219,8 +311,10 @@ traverses edges with label \(b\) infinitely often.
 <h3 class="w3-text-teal">Fair Labels</h3>
 Now we consider labeled graphs in which a subset of labels are
 designated as <i>fair
-labels</i>. We 
-define a <i>fair path</i> in such a graph as follows:
+labels</i>. A fair label represents a fair command.
+
+<p>
+We define a <i>fair path</i> as follows:
 A path \(p\) is a
 <i>fair</i> path exactly when \(p\) traverses every fair
 label infinitely often.
@@ -285,7 +379,7 @@ in the second path, the number of black edges between red ones
 <h2 class="w3-text-teal">Leads-To, \(\leadsto\)</h2>
 
   \(\leadsto\), read as "leads to," is a binary relation on vertex sets.
-  \(P \leadsto Q\) holds exactly when every fair path that visits a vertex in
+  \(P \leadsto Q\) holds for a system exactly when every fair path that visits a vertex in
   \(P\) later visits a vertex in \(Q\).
   </p>
   <p>

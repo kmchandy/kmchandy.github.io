@@ -92,7 +92,8 @@ hr.new2 {
     <p>
     This module defines the concepts that we use
     in this course to prove that systems are safe. The concepts are
-    from a form of temporal logic called CTL --- Computation Tree Logic.
+    from a fragment of temporal logic.
+
     
     <p>
     In this module we review the representation of a state transition
@@ -435,6 +436,7 @@ of vertices such that \(X \stackrel{*}{\rightarrow} Y\), i.e.
 \subseteq A(Y))
 \)
 
+
 <!--------------------------------------------------->
 <h4 class="w3-text-teal">How to Prove Safety using Always</h4>
 We prove safety by proving (equation 1: \(init \stackrel{*}{\rightarrow} safe\))
@@ -444,7 +446,7 @@ equivalent to proving:
 </p>
 <p>
 \(
-init \; \subseteq \; A(safe)
+[init \; \subseteq \; A(safe)]
 \)
 </p>
 
@@ -480,6 +482,8 @@ v \in N(Y) \quad \equiv \quad
 
 <hr class="new2">
 
+(Note: \(N(Y)\) is equivalent to in "all paths from the current state
+the next state is in \(Y\)", or \(AX(Y)) in CTL.)
 <!----------------------------------->
 <h4  class="w3-text-teal">Lemma</h4>
 \(N(Y)\) is the largest set \(X\)
