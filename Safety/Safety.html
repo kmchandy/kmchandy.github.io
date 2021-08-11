@@ -87,27 +87,33 @@ hr.new2 {
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
     
-    <h1 class="w3-text-teal">Safety and Directed Graphs</h1>
+    <h1 class="w3-text-teal">Safety in State-Transition Systems</h1>
+    
+    <h2 class="w3-text-teal">Key Ideas</h2>
+    This module shows how state-transition systems are represented as
+    <a
+    href="https://en.wikipedia.org/wiki/Directed_graph">
+    directed graphs.
+    </a>
+    A system is safe if all paths from initial states
+    of the system remain in safe states. <i>This module defines all the
+    concepts that we use in this course to prove that a system is safe.</i>
 
     <p>
-    This module defines the concepts that we use
-    in this course to prove that systems are safe. The concepts are
-    from a fragment of temporal logic.
+    We prove that a system is
+    safe by using the concepts of <i>stable</i>, and
+    <a href="https://en.wikipedia.org/wiki/Loop_invariant">
+    <i>invariant</i></a>,
+    which are introduced here. We specify systems using <i>always</i>
+    and <i>next</i> which are defined in this module in terms of
+    graphs and also 
+    <a
+    href="https://en.wikipedia.org/wiki/Computation_tree_logicComputation
+    Tree Logic">
+    Computation Tree Logic (CTL).</a>
+
 
     
-    <p>
-    In this module we review the representation of a state transition
-    system in terms of <a
-    href="https://en.wikipedia.org/wiki/Directed_graph">
-    directed graphs</a>, and reviews the use of
-    <a href="https://en.wikipedia.org/wiki/Loop_invariant">loop
-    invariants</a>.
-
-    <p>
-    We define the concepts of
-    <i>stable</i>, <i>invariant</i>, <i>next</i>, and <i>always</i> in
-    terms of directed graphs.
-
     <!---------------------------------------------------------->
     <h2 class="w3-text-teal">Representing a System by a Graph</h2>
   We represent the states and state transitions of a system by a
@@ -176,7 +182,8 @@ hr.new2 {
 		      when there exists a path from \(v\) to \(w\) in
 the graph. We assume that there exists a path, with zero hops, from each
 vertex to itself.
-\(\forall v: \; v \rightarrow v \)
+\(\forall v: \; v \rightarrow v \).
+
 
 <p style="color:red;"><b>Example of paths</b></p>
 \(
@@ -236,19 +243,15 @@ We extend the relation \(\stackrel{*}{\rightarrow}\)
 to sets of vertices in the same way.
 
 \(P \stackrel{*}{\rightarrow} Q\) holds exactly when every path
-from every vertex in \(P\) ends at a vertex in \(Q\). 
+from every vertex in \(P\) ends at a vertex in \(Q\).
+Therefore
+\(P \stackrel{*}{\rightarrow} Q\) holds exactly when all vertices
+reachable from vertices in \(P\) are in \(Q\).
 </p>
 <p>
 \(
 \forall v \in P: (v \stackrel{*}{\rightarrow} w) \; \Rightarrow \; (w \in Q)
 \)
-</p>
-
-<p>
-Therefore
-\(P \stackrel{*}{\rightarrow} Q\) holds exactly when all paths from
-\(P\) lie entirely in \(Q\), i.e., all vertices on all paths from
-\(P\) are in \(Q\).
 </p>
 
 <figure>
@@ -391,6 +394,8 @@ all paths from \(init\) remain within \(safe\).
  We discharge our safety proof obligation by finding an
 invariant. 
 A system may have many invariants; all we have to do is find any one.
+We write \(invariant(I)\) to denote that \(I\) is an invariant of the
+given graph.
 </p>
 
 
@@ -399,15 +404,15 @@ A system may have many invariants; all we have to do is find any one.
 <i>always</i> is a function from sets of states to
 sets of states. 
 
-Let \(Y\) be a set of states. \(A(Y)\) is read as "<i>always</i>\(\; Y\)."
-\(A(Y)\) is the set of states defined as follows:
+Let \(Y\) be a set of states. "<i>always</i>\(\; Y\)."
+is the set of states defined as follows:
 
 <hr class="new2">
-\(v\) is in \(A(Y)\) exactly when all paths from \(v\) terminate at
-vertices in \(Y\).
+\(v\) is in \(always(Y)\) exactly when all vertices in all paths from
+\(v\) are in in \(Y\).
 <p>
 \(
-v \in A(Y) \quad \equiv \quad
+v \in always(Y) \quad \equiv \quad
 \forall w : (v \stackrel{*}{\rightarrow} w) \; \Rightarrow \; (w \in Y)
 \)
 
@@ -415,30 +420,30 @@ v \in A(Y) \quad \equiv \quad
 
 <figure>
   <img src="Always_Slide1.jpg" alt="Fig6" style="width:80%">>
-  <figcaption>Fig.6 - Illustration of Always</figcaption>
+  <figcaption>Fig.6 - Illustration of always</figcaption>
 </figure>
 
 <p>
 The vertices in the outer circle are in \(Y\).
-The vertices in the yellow circle are the vertices in \(A(Y)\). All
+The vertices in the yellow circle are the vertices in \(always(Y)\). All
 paths from vertices in the yellow circle end inside the outer
-circle. For example, vertex A is not in \(A(Y)\) because there is a
+circle. For example, vertex A is not in \(always(Y)\) because there is a
 path from vertex A to vertex B which is outside \(Y\). Likewise,
-vertex C is not in \(A(Y)\) because of the path from C to D.
+vertex C is not in \(always(Y)\) because of the path from C to D.
 
 
 <p>
-From the definition, it follows that \(A(Y)\) is the largest set \(X\)
+From the definition, it follows that \(always(Y)\) is the largest set \(X\)
 of vertices such that \(X \stackrel{*}{\rightarrow} Y\), i.e.
 <p>
 \(
 (X \stackrel{*}{\rightarrow} Y) \quad \equiv \quad (X \;
-\subseteq A(Y))
+\subseteq always(Y))
 \)
 
 
 <!--------------------------------------------------->
-<h4 class="w3-text-teal">How to Prove Safety using Always</h4>
+<h4 class="w3-text-teal">How to Prove Safety using always</h4>
 We prove safety by proving (equation 1: \(init \stackrel{*}{\rightarrow} safe\))
 where \(init\) and \(safe\) are the initial and safe sets of vertices,
 respectively. This is
@@ -446,13 +451,13 @@ equivalent to proving:
 </p>
 <p>
 \(
-[init \; \subseteq \; A(safe)]
+[init \; \subseteq \; always(safe)]
 \)
 </p>
 
 <!--------------------------------------------------->
 <h4 class="w3-text-teal">Lemma</h4>
-\(A(Y)\) is the largest set \(X\) such that:
+\(always(Y)\) is the largest set \(X\) such that:
 \(X \subseteq Y\) and \(stable(X)\).
 
 <p>
@@ -460,50 +465,62 @@ The proof follows directly from the definition.
 
 
 <!------------------------------------------------->
-<h2 class="w3-text-teal">Next</h2>
+<h2 class="w3-text-teal">next</h2>
 
 <p>
-\(N\) is a function from sets of states to
+\(next\) is a function from sets of states to
 sets of states.
-\(N(Y)\) is read as "<i>next</i>\(\; Y\)."
 
-<p>
 Let \(Y\) be a set of states. 
-\(N(Y)\) is the set of states defined as follows:
+\(next(Y)\) is the set of states defined as follows:
 
 <hr class="new2">
-\(v\) is in \(N(Y)\) exactly when all edges from \(v\) terminate at
+\(v\) is in \(next(Y)\) exactly when all edges from \(v\) terminate at
 vertices in \(Y\).
 <p>
 \(
-v \in N(Y) \quad \equiv \quad
+v \in next(Y) \quad \equiv \quad
 \forall w : (v \rightarrow w) \; \Rightarrow \; (w \in Y)
 \)
 
 <hr class="new2">
 
-(Note: \(N(Y)\) is equivalent to in "all paths from the current state
-the next state is in \(Y\)", or \(AX(Y)) in CTL.)
+<p class="w3-text-teal">Definitions in terms of CTL</p>
+A vertex \(v\) is in \(always(X)\) exactly when all paths from \(v\)
+are globally in \(X\), which can be denoted as \(AG(X)\) where \(A\)
+stands for along <i>a</i>ll paths, and \(G\) stands for
+<i>g</i>lobally in CTL Likewise, 
+\(next(Y)\) is equivalent to in "all paths from the current state
+the next state is in \(Y\)", or \(AX(Y)\) where \(X\) stands for "in
+the ne<i>x</i>t state" in CTL.
+<p>
+You will find excellent examples illustrating how model checking is
+carried out on CTL specifications. See, for instance,
+<a
+href="http://www.artist-embedded.org/docs/Events/2007/PhD-Course_Automated_Formal_Meth/Slides/Lecture2.pdf">Martin Fr&auml;nzle</a>.
+
 <!----------------------------------->
 <h4  class="w3-text-teal">Lemma</h4>
-\(N(Y)\) is the largest set \(X\)
-of vertices such that \(X \rightarrow Y\)
+\(next(Y)\) is the largest set \(X\)
+of vertices such that \(X \rightarrow Y\), i.e.
 <p>
 \(
 (X \rightarrow Y) \quad \equiv \quad (X \;
-\subseteq N(Y))
+\subseteq next(Y))
 \)
 
 <p>
-Proof follows from the definition of \(N\).
+Proof follows from the definition of \(next\).
 
 <!----------------------------------->
-<h4  class="w3-text-teal">Summary</h4>
-We use <i>always</i> and <i>next</i> to specify system safety.
-We will define these concepts and \(/rightarrow\) in terms of predicates on states of a
-system. Later, we will show how these concepts are part of a
-<a href="https://en.wikipedia.org/wiki/Computation_tree_logic">
-temporal logic used to prove that systems progress </a> towards their goals.
+<h3  class="w3-text-teal">Summary</h3>
+We discussed all the concepts used to prove safety in this course.
+<p>
+We showed how state-transition systems are represented as directed
+graphs. We showed how safety can be defined in terms of edges and
+reachability in graphs. We defined the concepts --- <i>stable</i> and
+<i>invariant</i> --- which we use to prove safety, and 
+<i>always</i> and <i>next</i> which we use to specify systems.
 
 
 
