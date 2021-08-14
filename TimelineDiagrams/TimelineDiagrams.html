@@ -87,103 +87,73 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 <h1 class="w3-text-teal">Timelines</h1>
 <!---------------------------------------------------->
 
-This module describes <i>timeline diagrams</i> of systems. We start with a
-    simple action system with variables that are read and written by
-    actions.
-    Then we show how the concepts and theorems for simple action
-    systems apply to distributed systems in which the
-    shared variables are message-passing channels.
-
+    <h2 class="w3-text-teal">Key Ideas</h2>
+    
+    This module describes <i>timelines</i> of systems. A system <i>trajectory</i>
+    is represented by a path in a
+    state-transition system. A timeline is a representation of the
+    trajectory as a sequence of state transitions.
+    A <i>timeline diagram</i> is a timeline with a graph showing the
+    relationship between state transitions.
     <p>
-    The concept of a timeline is simple but helpful. We define <i>cuts</i> of
-    timelines, <i>valid cuts</i>, <i>logical clocks</i>,
-    <i>timestamps</i>, <i>global snapshots</i>, and
-    algorithms to compute assign timestamps and global snapshots.
+    We define the following concepts in
+    this module: <i>valid cuts</i> of
+    timeline diagrams, <i>timestamps</i> of state transitions, <i>logical
+    clocks</i> and <i>global snapshots</i>. We study
+    algorithms to assign timestamps to state transitions and to
+    determine global snapshots of systems.
 
 <!---------------------------------------------------->
-<h4 class="w3-text-teal">System</h4>
-<!---------------------------------------------------->
+<h3 class="w3-text-teal">Timeline Diagrams</h3>
+    <!---------------------------------------------------->
+    The state of a system is given by the values of a set of
+    variables. A state transition modifies some variables and reads,
+    but does not modify, other variables. We assume that a transition
+    that modifies a variable also reads that variable.
+    <p>
+    A trajectory is a sequence of states
+    \(s_{0}, s_{1}, \ldots\) where the system has a transition from
+    \(s_{i}\) to \(s_{i+1}\), all \(i\).
+
+    We call state transitions <i>events</i>. A path is specified by
+    the event sequence \(e_{0}, e_{1}, \ldots\) where
+    \(e_{i} = (s_{i}, s_{i+1})\) is the \(i\)-th state transition in
+    the path.
 
     <p>
-    We begin by considering simple systems; later, we introduce agents
-    and message channels.
-    A system consists of a set of variables and a set of actions. An
-    action <i>references</i> a subset of variables. The subset
-    referenced by an action is partitioned into
+     A timeline diagram is a labeled directed graph where the vertices
+    represent events and  edges represent dependence between events.
+
+    The edges in a timeline diagram are as follows:
     <ol>
-      <li><i>read variables</i>: the variables that are read, but not
-      modified, by the action, and
+      <li>There is an edge from an event that modifies a variable
+      \(v\) to the next event that modifies \(v\).
       </li>
-      <li>
-      <i>write variables</i>:
-      the variables that are written by the action. (We assume that a
-      variable written in an action is also read in that action. This
-      assumption simplifies exposition.)
+      <li> For an event \(e_{i}\) in which a variable \(v\) is read, but 
+      not modified:
+      <ol>
+	<li> there is an edge to \(e_{i}\) from the most recent 
+	event prior to \(e_{i}\) that modifies \(v\), and
+	</li>
+	<li> there is an edge from \(e_{i}\) to the next event that
+	modifies \(v\).
+	</li>
+      </ol>
       </li>
     </ol>
-
-    
-<p>
-Consider a computation
-</p>
-\(
-s_{0} \stackrel{a_{0}}{\rightarrow} s_{1}
-\stackrel{a_{1}}{\rightarrow}
-\ldots \stackrel{a_{m-1}}{\rightarrow} s_{m}
-\)
-</p>
-where the initial state is \(s_{0}\), and execution of action
-\(a_{i}\) causes a transition from state \(s_{i}\) to \(s_{i+1}\), all
-\(i\). We call a state transition an <i>event</i>.
-Let \(e_{i}\) be the event
-\(s_{i} \stackrel{a_{i}}{\rightarrow} s_{i+1}\).
-
-    The computation is defined by the sequence of events \(e_{0},
-    e_{1}, \ldots\).
-
-
-<!---------------------------------------------------->
-<h2 class="w3-text-teal">Timeline Diagram</h2>
-<!---------------------------------------------------->
-
-    A <i>timeline diagram</i> is a representation of a
-    computation as (1) a labeled directed graph in which each vertex
-    represents an event and edges specify dependence between
-    events and (2) a timeline that shows the value of each variable at
-    each point in time.
-
     <p>
-    We adopt the convention that time progresses from left to
-    right. The timeline for each variable is a horizontal line which
-    shows the value of the variable at each point in time.
-    Events appear in the timeline diagram in
-    the order in which they occur in the computation.
-
+    The label of an edge from an event specifies the
+    values of variables referenced in the event immediately after the event.
     <p>
-    The edges in the graph are as follows. There is an edge from an
-    event \(e_{i}\) in which a variable \(v\) is modified to the next
-    event in which \(v\) is modified. And, for an event \(e_{i}\) in
-    which a variable \(v\) is read but 
-      not modified, there is an edge to \(e_{i}\) from the most recent 
-    event prior to \(e_{i}\) that modifies \(v\), and
-    an edge from \(e_{i}\) to the next event that
-    modifies \(v\).
+    We adopt
+    the convention that time goes from left to right, and timelines
+    of variables are horizontal lines.
 
+    <h4 style="color:red;">Example of a Timeline Diagram</h4>
+    The system in this example has variables \(W, X, Y, Z\).
     <p>
-    The label of an edge from an event \(e_{i}\) specifies the
-    values of variables referenced in the event between\(e_{i}\) and
-    the next event.
-
-<h4 style="color:red;">Example of a Timeline Diagram</h4>
-
-<figure>
-    <img src="TimelineDiagrams_Slide1.jpg" alt="Fig1" style="width:75%">
-    <figcaption>Fig.1: A Timeline</figcaption>
-</figure>
-
-The figure above shows a timeline diagram for the following
-computation, \(e_{0}, e_{1}, e_{2}, e_{3}\) where
-initially \(W, X, Y, Z = 0, 0, 0, 0\)
+Initially \(W, X, Y, Z = 0, 0, 0, 0\). A trajectory is caused
+    by the following actions:
 
 <ol start="0">
   <li>\(W = W + 1\)
@@ -202,24 +172,38 @@ initially \(W, X, Y, Z = 0, 0, 0, 0\)
 </p>
 
 
+<figure>
+    <img src="TimelineDiagrams_Slide1.jpg" alt="Fig1" style="width:75%">
+    <figcaption>Fig.1: A Timeline</figcaption>
+</figure>
+
+<p>
+The timeline for each variable is shown as a horizontal red line. The
+diagram has four vertices, indexed \(0, 1, 2, 3\), corresponding to
+the four events. The diagram has an edge from event \(0\) to event
+\(2\) because variable \(W\) is modified in event \(0\) and read in
+event \(2\); this edge is labeled \(W = 1\), the value of variable
+\(W\) immediately after the event.
+
 <!------------------------------------------------------------>
-<h3 class="w3-text-teal">Permuting Adjacent Events in a Computation</h3>
+<h3 class="w3-text-teal">Permuting Adjacent Events in a Trajectory</h3>
 <!------------------------------------------------------------>
-Let \(TD\) be the timeline diagram for a computation \(C = e_{0}, e_{1}, \ldots,
-e_{N}\), and let \(TD'\) be the timeline diagram for a computation
+<p class="w3-text-teal">Theorem</p>
+Let \(TD\) be the timeline diagram for a trajectory specified by the
+sequence of events \(C = e_{0}, e_{1}, \ldots,
+e_{N}\), and let \(TD'\) be the timeline diagram for a trajectory
 \(C'\) which is
 identical to \(C\) except that the order in which \(e_{i}\) and
-\(e_{i+1}\) appear is interchanged. Both computations start in the
-same state.
+\(e_{i+1}\) appear is interchanged. 
 <p>
 If there is no edge between \(e_{i}\) and
 \(e_{i+1}\) in \(TD\) then the graphs, including labels, for \(TD\)
-and \(TD'\) are identical. Therefore, the final states after the
-execution of \(C\) and \(C'\) are identical.
+and \(TD'\) are identical.
 
-<p>
+<p  class="w3-text-teal">Proof</p>
 The proof is straightforward.
 
+<h4 style="color:red;">Example</h4>
 <figure>
     <img src="TimelineDiagrams_Slide2.jpg" alt="Fig2" style="width:75%">
     <figcaption>Fig.2: Timeline Diagram Changing order of Events 1 and 2 </figcaption>
@@ -232,29 +216,30 @@ after both events occur is the same in both figures: \(W, X, Y, Z = 1,
 2, 3, 0\).
 
 <!------------------------------------------------------------>
-<h2 class="w3-text-teal">Permuting Events in a Computation</h2>
-Theorem: 
-Let \(TD\) be the timeline diagram representation of a
-computation \(C = e_{0}, e_{1}, \ldots, e_{N}\). Let \(TD'\) be a timeline
-diagram of a computation \(C'\) which is a permutation of \(C\) where
+<h2 class="w3-text-teal">Permuting Events in a Trajectory</h2>
+<p class="w3-text-teal">Theorem</p>
+Let \(TD\) be the timeline diagram representing a path specified by a
+sequence of events 
+trajectory \(C = e_{0}, e_{1}, \ldots, e_{N}\). Let \(TD'\) be a timeline
+diagram of a path \(C'\) which is a permutation of \(C\) where
 \(e_{i}\) appears before \(e_{j}\) in \(C'\) when there is an edge from
-\(e_{i}\) to \(e_{j}\) in \(TD\). The graphs, including edge labels,
-are identical for the graphs of \(TD\) and \(TD'\). Therefore, the
-final states after the execution of \(C\) and \(C'\) are identical.
+\(e_{i}\) to \(e_{j}\) in \(TD\).
 <p>
-Proof: The result follows by repeatedly flipping the order of adjacent
+The graphs, including edge labels,
+are identical for the graphs of \(TD\) and \(TD'\). 
+<p class="w3-text-teal">Proof</p>
+Proof follows by repeatedly flipping the order of adjacent
 indenpendent elements of \(TD\) until \(TD'\) is obtained.
 
-<p style="color:red;">Examples of Event Permutations</p>
+<h4 style="color:red;">Examples of Event Permutations</h4>
 The next two diagrams show timeline diagrams with events permuted
 while satisfying the condition of the theorem. The events are the same
-as in the previous diagrams, with event 4, \(A = 2*X\) and event 5, (B
+as in the previous diagrams, with event 4, \(A = 2*X\) and event 5, \(B
 = 2* Y\).
 
 <p>
-The theorem tells us the graph and edge labels don't change if
-move events 
-left or right provided no edge goes backwards, i.e. from right to left.
+The theorem tells us the graph and edge labels don't change if we
+change the time of events provided no edge goes backwards in time.
 <figure>
     <img src="TimelineDiagrams_Slide3.jpg" alt="Fig3" style="width:75%">
     <figcaption>Fig.3: Timeline Diagram Before Permuting Events </figcaption>
@@ -269,7 +254,7 @@ A pair of events are <i>dependent</i> exactly when a variable modified
 by one event is referenced in the other.
 
 <h4 class="w3-text-teal">Corollary</h4>
-Let \(C = e_{0}, e{1}, \ldots\) be a computation. Let \(C'\) be a
+Let \(C = e_{0}, e{1}, \ldots\) be a trajectory. Let \(C'\) be any
 permutation of \(C\) that starts in the same state as \(C\), and where
 \(e_{i}\) appears before \(e_{j}\) in
 \(C'\) when \(e_{i}\) and \(e_{j}\) are dependent, and \(e_{i}\)
@@ -298,6 +283,9 @@ events after \(T\) are \(1, 3, 4\).
 The state at \(T\) in one timeline diagram is represented by a
 curvilinear line in a different timeline diagram with the same events
 and graph.
+For example, the vertical line representing the state at \(T\) in the
+timeline diagram of figure 5 appears as a curved line in the
+timeline diagram of figure 6.
 <figure>
     <img src="TimelineDiagrams_Slide6.jpg" alt="Fig6" style="width:75%">
     <figcaption>Fig.6: Time in a Timeline Represented in a Different
@@ -316,7 +304,8 @@ figure 6 is specified by the cut: \(0, 2, 5\).
 <h3 class="w3-text-teal">A Valid Cut</h3>
 A valid cut is one in which every edge to a vertex in the cut is from
 a vertex in the cut.
-Therefore, a cut is valid
+<p>
+Equivalently, a cut is valid
 exactly when every edge from a vertex outside the cut is to a vertex
 outside the cut.
 
@@ -340,9 +329,11 @@ intersects the variable timelines are: \(B = 6, Y = 3, Z = 0, W = 1, X
 = 0, A = 4\).
 
 <h4 class="w3-text-teal">Valid cuts and Instants in Time</h4>
-We will show that each valid cut in a timeline diagram of a computation
-corresponds to a point in time in the timeline diagram of a
-computation. Pictorially, we pull the curvlinear valid cut taut to
+We will show that each curvilinear valid cut in a timeline diagram of a trajectory
+corresponds to a point in time --- a vertical straight-line cut --- in
+the timeline diagram of another trajectory.
+
+<p>Pictorially, we pull the curvlinear valid cut taut to
 make it vertical. Doing so pushes events outside the cut to the right
 of the vertical line, and pushes events in the cut to the left of the
 line while <i>retaining the property that all edges
@@ -365,33 +356,34 @@ in figure 5.
 </figure>
 
 
-<h2 class="w3-text-teal">Theorem: Snapshot Visited in Computation</h2>
-Let \(TD\) be the timeline diagram of a computation that starts in
+<h2 class="w3-text-teal">Theorem: Snapshot Visited in Trajectory</h2>
+
+Let \(TD\) be the timeline diagram of a trajectory that starts in
 state \(S_{init}\) and ends in state \(S_{fini}\). Let \(S_{cut}\) be
 the state of a valid cut of \(TD\). There exists a
-computation which starts in \(S_{init}\), visits \(S_{cut}\), and then
+trajectory which starts in \(S_{init}\), visits \(S_{cut}\), and then
 visits \(S_{fini}\).
 
-<p>
-Proof: The proof follows from the theorem, above, on permuting events in a
-computation. The intuition underlying the theorem is given by figure 7.
+<p class="w3-text-teal">Proof</p>
+The proof follows from the theorem on permuting events in a
+trajectory. The intuition underlying the theorem is given by figure 7.
 
 <p>
-Let \(TD\) be the timeline diagram of a computation \(C = e_{0},
+Let \(TD\) be the timeline diagram of a trajectory \(C = e_{0},
 e_{1}, \ldots\). Let \(C'\) be the permutation of \(C\) where the
 order of events in \(C'\) is the same as in \(C\) except that events
 in the cut appear before events outside the cut. From the theorem on
 permuting events, when \(C'\) starts in \(S_{init}\) it terminates in
-\(S_{fini}\). In computation \(C'\), the state of the system after events in the cut and
+\(S_{fini}\). In trajectory \(C'\), the state of the system after events in the cut and
 before events that are not in the cut is \(S_{cut}\). Therefore
-computation \(C'\) visits state \(S_{cut}\).
+trajectory \(C'\) visits state \(S_{cut}\).
 
 
 <h2 class="w3-text-teal">Theorem: Stable Properties and Snapshots</h2>
     Let \(P\) be a
     <a href = "../Safety/Safety.html">stable predicate of a system</a>,
-    i.e. if \(P\) holds at any point in a computation it continues to
-    hold forever thereafter in that computation. Let \(s_{init}\) and \(s_{fini}\) be the
+    i.e. if \(P\) holds at any point in a trajectory it continues to
+    hold forever thereafter in that trajectory. Let \(s_{init}\) and \(s_{fini}\) be the
     states in which a global snapshot algorithm starts and finishes,
     and let \(s_{snap}\) be the global snapshot obtained by the
 algorithm.  Then:
@@ -412,6 +404,43 @@ from \(s_{init}\) including \(s_{snap}\).
 If \(\neg P\) holds in \(s_{fini}\) then \(\neg P\) holds in all
 states that can reach \(s_{fini}\) including \(s_{snap}\).
 
+<h4 style="color:red;">Illustration of the Theorem</h4>
+
+<figure>
+    <img src="TimelineDiagrams_Slide15.jpg" alt="Fig8" style="width:75%">
+    <figcaption>Fig.8: Detecting Stable Properties</figcaption> 
+</figure>
+
+<p>
+The diagram on the top left of the above figure illustrates states in
+a snapshot. \(s_{start}\) is the state in which the snapshot algorithm
+starts. 
+\(s_{fini}\) is the state in which the snapshot algorithm
+ends.
+The times at which the algorithms start and end are shown as vertical
+lines.
+\(s_{snap}\) is the state at a valid cut; it is the snapshot state.
+
+<p>
+The diagram on the top right illustrates that there exists a path from
+\(s_{start}\) to \(s_{snap}\) and then to \(s_{fini}\).
+
+<p>
+The diagram on the bottom left shows that if a stable property \(P\)
+holds in \(s_{start}\) --- illustrated by the orange color of the
+state --- then it holds in all states reachable from
+\(s_{start}\). And so, \(P\) holds in \(s_{snap}\) and \(s_{fini}\). So,
+these states are colored orange too.
+
+<p>
+The diagram on the bottom right shows that for a stable property
+\(P\), if \(\neg P\)
+holds in \(s_{fini}\) --- illustrated by the green color of the
+state --- then \(\neg P\) holds in all states that can reach 
+\(s_{fini}\). And so, \(\neg P\) holds in \(s_{snap}\) and \(s_{init}\). So,
+these states are colored green too.
+
+
 
 <h2 class="w3-text-teal">Timestamps and Logical Clocks</h2>
 A <i>logical clock</i> is an algorithm that gives timestamps to events
@@ -425,7 +454,7 @@ events where the timestamps satisfy the above rule.
 
 <figure>
     <img src="TimelineDiagrams_Slide12.jpg" alt="Fig8" style="width:75%">
-    <figcaption>Fig.8: Timestamps of Events</figcaption> 
+    <figcaption>Fig.9: Timestamps of Events</figcaption> 
 </figure>
 
 <p  class="w3-text-teal">The Cut at a Timestamp \(t\)</p>
@@ -435,7 +464,7 @@ The following figure shows the cut at timestamp \(t = 9\).
 
 <figure>
     <img src="TimelineDiagrams_Slide13.jpg" alt="Fig9" style="width:75%">
-    <figcaption>Fig.9: Cut at Timestamps \(9\)</figcaption> 
+    <figcaption>Fig.10: Cut at Timestamps \(9\)</figcaption> 
 </figure>
 
 <!-------------------------------------------------------------->
@@ -450,7 +479,7 @@ vertices with timestamps greater than \(t\).
 <h2 class="w3-text-teal">Logical Clock: Assign
 Timestamps to Events</h2> 
 Associate a timestamp with each variable at each point in the
-computation. The logical clock algorithm uses the following rules:
+trajectory. The logical clock algorithm uses the following rules:
 <ol>
   <li>
 The timestamp assigned to an event is any value greater
@@ -480,7 +509,7 @@ which is the new timestamp of this event's outputs.
 
 <figure>
     <img src="TimelineDiagrams_Slide14.jpg" alt="Fig10" style="width:75%">
-    <figcaption>Fig.10: Example of the Logical Clock Algorithm</figcaption> 
+    <figcaption>Fig.11: Example of the Logical Clock Algorithm</figcaption> 
 </figure>
 
 
@@ -520,8 +549,11 @@ events outside the cut. Because this cut is valid, the
 state that is recorded is a snapshot.
 
 
-
-
+<h4  class="w3-text-teal">Summary</h4>
+This module described timeline diagrams, valid cuts, logical clocks
+and timestamps of events, and algorithms for determining global
+snapshots. The concepts described here will be used to develop many
+distributed algorithms.
 
 
 

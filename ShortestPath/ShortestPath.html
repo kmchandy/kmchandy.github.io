@@ -66,10 +66,10 @@ hr.new2 {
   href="LoopTerminationExplorations.html">Explorations</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Agents/Agents.html">Next: Agents</a> 
+  href="../TimelineDiagrams/TimelineDiagrams.html">Next: Timelines</a> 
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Safety/Safety.html">Previous: Safety</a>
+  href="../LoopTermination/LoopTermination.html">Previous: Termination</a>
 
 </nav>
 
@@ -86,25 +86,20 @@ hr.new2 {
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
     
-    <h1 class="w3-text-teal">Examples: Correctness of
-    Loops</h1>
-    Our proof obligation is to show that the loop terminates and a
-    specified property holds at termination.
-
-    <p>
-    This module has examples of the method that we use to prove that
-    <i>do-od</i> loops are correct. The method consists of the
+    <h1 class="w3-text-teal">Examples: Correctness Proofs</h1>
+    <h2 class="w3-text-teal">Key Ideas</h2>
+    This module has examples of a method to prove that
+    systems, defined as nondeterministic iterations, terminate in a
+    desired state. The method consists of the 
     following steps:
     <ol>
       <li>
       Identify an invariant.
+      Show that the desired termination condition holds if the
+    invariant holds and the guards of all guarded commands are False.
       </li>
-      <li>Identify a variant function.</li>
-      <li>Show that each iteration reduces the variant function.</li>
-      <li>
-      Show that the specified property holds if the invariant holds and all
-      guards are False.
-      </li>
+      <li>Identify a variant function and show that each iteration
+    reduces the variant function.</li> 
     </ol>
 
     <h2 class="w3-text-teal">Shortest Paths in a Graph</h2>

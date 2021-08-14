@@ -52,7 +52,7 @@ hr.new2 {
   Algorithms</h3>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="LoopTermination.html">Review of Loop Termination</a>
+  href="LoopTermination.html">Review: Termination & Progress</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="LoopTerminationExample.html">Examples</a>
@@ -67,7 +67,8 @@ hr.new2 {
   href="LoopTerminationExplorations.html">Explorations</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../ShortestPath/ShortestPath.html">Next: Examples of Loops</a> 
+  href="../ShortestPath/ShortestPath.html">Next: Examples of Correctness
+  Proofs</a> 
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="../Safety/Safety.html">Previous: Safety</a>
@@ -87,38 +88,72 @@ hr.new2 {
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
     
-    <h1 class="w3-text-teal">Review of Loop Termination</h1>
+    <h1 class="w3-text-teal">Termination & Progress</h1>
+    
+
+    <!---------------------------------------------------------->
+    <h2 class="w3-text-teal">Key Ideas</h2>
+    This module describes <i>variant functions</i>, which are used
+    throughout this course to prove that systems progress towards
+    their goals. 
 
     <p>
     This module reviews how
     <a href="https://en.wikipedia.org/wiki/Loop_variant"><i>loop
     variants</i></a> also called <i>variant functions</i> are used to
     prove that 
-    execution of a loop terminates. This concept is related to 
+    execution of a loop terminates. We describe variant functions in
+    terms of
     <a href="https://en.wikipedia.org/wiki/Directed_graph">
     directed graph</a> models of state-transition systems.
+
+    <h3 class="w3-text-teal">System Model</h3>
+    We begin by using the
+    <a href="../Loops/Loops.html">do-od loop</a>
+    as a model of systems. A system is a set of guarded commands where
+    computation progresses by executing any command whose guard
+    evaluates to True. The system halts when all guards evaluate to
+    False.
+    Later in the course we will use a model in
+    which commands are executed regardless of whether guards evaluate
+    to True or False; where execution of a guarded command with a
+    False command is a skip or no-op; and where systems do not halt
+    execution. 
     </p>
 
     <!---------------------------------------------------------->
     <h2 class="w3-text-teal">Variant Functions</h2>
     We use the term variant function, rather than loop variant,
     because we will use the concept to prove properties of systems
-    that are not loops in programs. A variant function is a function
-    from states of a system to a well-founded set which is a set on which
-    we can carry out proofs by induction. An example of a variant function is
-    one from states to a set of integers which is bounded below; here,
-    the base case of the induction is the lower bound of the set.
+    that are not loops in programs. <i>A variant function is a function
+    from states of a system to a well-founded set.</i>
+    A
+    <a href="https://en.wikipedia.org/wiki/Well-founded_relation">
+    well-founded set</a>
+    is a set on which we can carry out proofs by
+    induction. We prove progress of most algorithms by finding a
+    variant function from states to a set of integers which is bounded
+    below, and showing that state transitions decrease the value of
+the function.
+
+<p>
+For a few problems we use a variant functions from states to tuples of
+integers that are bounded below. We compare tuples
+<a href="https://en.wikipedia.org/wiki/Lexicographic_order">
+lexicographically</a>. For example \((0, 1) < (1, 0)\).
     
     <p>
     Let \(f\) be a variant function. Then \(f = k\), for a constant
     \(k\) is a predicate. The extension of this predicate is the set
     of states \(s\) where \(f(s) = k\).
 
-    <h5 style="color:blue;">
+<hr class="new2">
+    <h4 style="color:blue;">
     We prove that execution of a loop terminates by proving that the
-    execution of any command whose guard evaluates to True reduces 
-    \(f\). 
-    </h5>
+    execution of any command whose guard evaluates to True reduces the
+    value of a variant function \(f\). 
+</h4>
+<hr class="new2">
     <p>
 
      If the execution of any command with a True guard reduces
@@ -132,7 +167,7 @@ hr.new2 {
 
 
 
-    <p>
+    <h4 class="w3-text-teal">Variant Functions and Hoare Triples</h4>
     Let \(I\) be an invariant
      of the loop, let the \(j\)-th guarded command have guard
     \(g_{j}\) and command \(c_{j}\), and let \(f\) be a variant function
@@ -143,23 +178,26 @@ hr.new2 {
 \(\forall K: \quad
 \{(f = K) \wedge I \wedge g_{j}\} \; c_{j} \; \{f < k\}
 \)
-
 <p>
-Therefore each iteration reduces \(f\). 
-    <h2 class="w3-text-teal">Variant Functions and State-Transition
-    Graphs</h2>
-    A termination state of the loop is one without outgoing edges; it
-    is a trapping state. The state-transition graph has no cycles
+Because \(I\) is an invariant it holds before every command is
+    executed. Since \(c_{j}\) is executed only if \(g_{j}\) holds, we
+    know that \(I \wedge g_{j}\) holds before \(c_{j}\) is
+    executed. We use this knowledge to show that execution of any
+command reduces the variant function.
+
+<!-------------------------------------------------------------------->
+    <h3 class="w3-text-teal">Variant Functions and Graphs</h3>
+If there is a variant function \(f\) then
+the state-transition graph has no cycles
     because every edge of the graph is from a state with a higher
-    value of \(f\) to a state with a lower value. The graph shows a
-    partial order where states with higher \(f\)-values are higher in
-    the partial order. The termination states are the bottom of the
-order.
+value of \(f\) to a state with a lower value.
+The diagram below shows an acyclic graph with edges directed from
+higher to lower \(f\) values.
 
 <p>
-Every edge from every path in the graph goes from higher to lower
-\(f\) values. Since \(f\) cannnot decrease forever and \(f\) maps
-states to a well-founded set, a path reaches a terminal state in a
+A termination state (vertex) is one without outgoing edges.
+The variant function tells us that the graph does not have paths with
+an infinite number of hops; every path reaches a terminal state in a
 finite number of steps.
 
 

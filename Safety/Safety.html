@@ -67,7 +67,7 @@ hr.new2 {
   href="SafetyExplorations.html">Explorations</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../LoopTermination/LoopTermination.html">Next: Loop Termination</a> 
+  href="../LoopTermination/LoopTermination.html">Next: Termination</a> 
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="../HoareTriples/HoareTriples.html">Previous: Hoare Triples</a> 
@@ -87,7 +87,7 @@ hr.new2 {
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
     
-    <h1 class="w3-text-teal">Safety in State-Transition Systems</h1>
+    <h1 class="w3-text-teal">Safety in Transition Systems</h1>
     
     <h2 class="w3-text-teal">Key Ideas</h2>
     This module shows how state-transition systems are represented as
@@ -97,22 +97,17 @@ hr.new2 {
     </a>
     A system is safe if all paths from initial states
     of the system remain in safe states. <i>This module defines all the
-    concepts that we use in this course to prove that a system is safe.</i>
-
-    <p>
-    We prove that a system is
-    safe by using the concepts of <i>stable</i>, and
+    concepts that we use in this course to prove that a system is
+    safe.</i>
+    These concepts are <i>stable</i>,
     <a href="https://en.wikipedia.org/wiki/Loop_invariant">
-    <i>invariant</i></a>,
-    which are introduced here. We specify systems using <i>always</i>
-    and <i>next</i> which are defined in this module in terms of
-    graphs and also 
+    <i>invariant</i></a>, <i>always</i>
+    and <i>next</i>. We define these concepts in terms of graphs.
+    and also in terms of 
     <a
     href="https://en.wikipedia.org/wiki/Computation_tree_logicComputation
     Tree Logic">
     Computation Tree Logic (CTL).</a>
-
-
     
     <!---------------------------------------------------------->
     <h2 class="w3-text-teal">Representing a System by a Graph</h2>
@@ -501,7 +496,7 @@ Proof follows from the definition of \(next\).
 
 <p class="w3-text-teal">Definitions in terms of CTL</p>
 A vertex \(v\) is in \(always(X)\) exactly when all paths from \(v\)
-are globally in \(X\), which can be denoted as \(AG(X)\) where \(A\)
+are globally in \(X\), which is denoted as \(AG(X)\) where \(A\)
 stands for along <i>a</i>ll paths, and \(G\) stands for
 <i>g</i>lobally in CTL Likewise, 
 \(next(Y)\) is equivalent to in "all paths from the current state
@@ -512,6 +507,62 @@ You will find excellent examples illustrating how model checking is
 carried out on CTL specifications. See, for instance,
 <a
 href="http://www.artist-embedded.org/docs/Events/2007/PhD-Course_Automated_Formal_Meth/Slides/Lecture2.pdf">Martin Fr&auml;nzle</a>.
+
+<!----------------------------------->
+<h2  class="w3-text-teal">Definition in Terms of Predicates</h2>
+The concepts defined in terms of graphs extend to definitions in terms
+of
+<a href="../Predicates/Predicates.html">predicates</a> on states in
+the obvious way:
+A predicate corresponds to the set of vertices which is the extension
+of the predicate.
+
+<p>
+Next, we summarize the definitions in terms of predicates.
+<p>
+    \(P \rightarrow Q\) holds for a system exactly when all
+    transitions from states in which \(P\) holds end in states in
+    which \(Q\) holds.
+    We prove \(P \rightarrow Q\) by proving 
+\(
+\{P\} \: a \: \{Q\})
+\)
+for all guarded commands \(a\) of the system.
+
+<p class="w3-text-teal">stable</p>
+\(stable(P)\), where \(P\) is a predicate, is a property of a system.
+\(stable(P)\) holds for a system exactly when \(P\) holds in the next state
+in all paths from all states in which \(P\) holds.
+<p>
+\(
+stable(P) \; \equiv \; (P \rightarrow P)
+\)
+<p>
+Therefore, \(stable(P)\) holds for a system exactly when \(P\) holds
+in all states in all paths from all states in which \(P\) holds. 
+<p>
+\(
+stable(P) \; \equiv \; (P \stackrel{*}{\rightarrow} P)
+\)
+
+<p class="w3-text-teal">next and always</p>
+\(next\) and \(always\) are functions from predicates to predicates.
+<p>
+\(next(Q)\) holds for a state \(s\) exactly when \(Q\) holds in the
+next state for all paths from \(s\). So,
+\(next(Q)\) is the weakest predicate \(P\)
+such that \([P \rightarrow Q]\).
+<p>
+\(
+(P \rightarrow Q) \quad \equiv \quad [P \;
+    \Rightarrow next(Q)]
+    \)
+</p>
+<p>
+\(always(Q)\) holds for a state \(s\) exactly when \(Q\) holds in all states
+in all paths from \(s\). So, 
+\(always(Q)\) is the weakest stable predicate
+\(P\) such that \(P \Rightarrow Q\).
 
 <!----------------------------------->
 <h3  class="w3-text-teal">Summary</h3>
