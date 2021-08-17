@@ -87,23 +87,30 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 
     <h1 class="w3-text-teal">Key Ideas</h1>
     This is another that module shows how the concepts of timelines
-    and consistent cut help to develop algorithm that detect stable properties.
-    We look at two types of deadlock in
-    distributed systems:
+    and consistent cuts help to develop algorithm that detect stable
+    properties.
+
+    <p>
+    An example of a stable property is a deadlock in which a set of
+    agents continues to wait for messages for ever. Distributed
+    operating systems detect and then break deadlocks. Strictly
+    speaking, since deadlocks are broken they aren't stable; however,
+    we can treat the system after the deadlock is broken as a new system.
+
+    <p>
+    We study two types of deadlock:
     "and" deadlocks which are also called database deadlocks,
     and "or" deadlocks, also called communication deadlocks. In this module
     we develop algorithms to detect "and" deadlocks; we
     discuss "or" deadlocks in a later module.
 
-    <h3 class="w3-text-teal">Agents and Resources</h3>
+    <h2 class="w3-text-teal">The Problem</h3>
     The problem of deadlock detection is similar to that of
     <a
     href="../GlobalSnapshotApplications/GlobalSnapshotApplications.html">
     termination detection discussed in an earlier module</a>.
-    A system consists of a set of agents and a set of message-passing
-    channels. All the shared variables are channels. The system and its
-    agent diagram are described in
-    <a href="../Channels/Channels.html">the module on message-passing
+    A system consists of
+    <a href="../Channels/Channels.html">a set of agents and a set of message-passing
     channels.</a>
 
     <p>
@@ -181,10 +188,9 @@ the state is back to state 1.
 The diagram shows that \(w\) is in \(u.waits\) before, during, and
 after, \(u\) is in \(w.blocks\).
 
-<p class="w3-text-teal">Lemma: An Always property</p>
-The system has the following property:
+<p class="w3-text-teal">Lemma: A Property of Reachable States</p>
+All states reachable from initial states satisfy the following predicate.
 <p>
-<i>always</i>: 
 if \(u \in w.blocks\) then:
 <ol>
   <li>
@@ -300,9 +306,11 @@ determine cycles in static graphs using
 conventional graph algorithms.
 
 <h3 class="w3-text-teal">Algorithms</h3>
-The general approach to detecting a stable property is:
-Take global snapshots repeatedly until a snapshot is obtained that has
-the property.
+The general approach to detecting whether a stable predicate \(P\)
+holds is:
+Take global snapshots repeatedly until a snapshot is obtained for
+which \(P\) holds.
+(Note: \(P\) may never hold.)
 
 <p>
 We can apply the general approach to detect deadlocked agents.Take

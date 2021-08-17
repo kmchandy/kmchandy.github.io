@@ -134,17 +134,27 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 receives messages along the channel. An agent may send and receive
     messages along an arbitrary number of channels.
 
-<p class="w3-text-teal">Nondeterministi Iteration Model</p>
-For the time being, we continue to use the nondeterministic
-iteration model of a system. A system is defined by a set of guarded
-commands. A trajectory of the system is determined by executing <i>any</i>
-command whose guard evaluates to True. The system halts when all
-guards evaluate to False.
+<h3 class="w3-text-teal">Model of Computation</h3>
+    An agent changes state when it receives a message or it makes an
+    internal transition. 
+    An agent's algorithm is written as a set of atomic actions where an
+    action is either:
+    <pre>
+if message m is received then f
+if condition then f
+    </pre>
+    where \(f\) may change the state of the agent and send messages,
+    but does not receive messages.
+    (Note: An agent may process a message by saving the
+message in a queue and then handle it later.)
 
-<p>
-Later, we will look at models in which commands are selected
-nondeterministically, but fairly. We will use a temporal logic to
-reason about such systems.
+<h5 class="w3-text-teal">Model of Computation: Progress</h5>
+
+    We make two assumptions: (1) a message does not remain in transit along a
+    channel forever, and (2) an agent does not remain forever without
+    making a state transition if the agent can make a transition. A
+    later module defines these assumptions using temporal logic, and
+    the module uses even weaker assumptions.
 
     <h3 class="w3-text-teal">Agent Diagram with Channels</h3>
     The agent diagram for a system with channels is a
