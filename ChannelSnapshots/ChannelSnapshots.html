@@ -85,18 +85,18 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <!--------------------------------------------------------->
     <h1 class="w3-text-teal">Snapshots with Channels</h1>
 
-    This module we adapt the algorithm given earlier in 
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Key Ideas</h1>
+    
+    In this module we adapt the algorithm given earlier in 
     <a href="../GlobalSnapshots/GlobalSnapshots.html"> the module on
-    global snapshots</a> to the case where all shared variables are
-    channels. 
-
-    In this module, we also review 
+    global snapshots</a> to the case where shared variables are
+    channels. We apply the concepts of 
     <a href="../LogicalClocks/LogicalClocks.html"> timestamps and
-    logical clocks</a>, which were discussed for the case of arbitrary
-    shared variables, for the case of channels.
+    logical clocks</a> to distributed systems.
 
     
-    <p class="w3-text-teal">The Idea underlying the Algorithm</p>
+    <h3 class="w3-text-teal">Snapshot Algorithm: The Idea</h3>
     The snapshot algorithm determines the state at a consistent cut.
     A cut is inconsistent when it has an edge from its future to its
     past.The algorithm uses a special message,
@@ -104,12 +104,15 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     future is to the future.
 
     <p>
-    We use the phrase "an agent B takes a local snapshot" for "an
-    agent B records B's state." The phrase captures the idea that a
-    global snapshot is a collection of local snapshots.
+    We use the phrase "an agent B takes its local snapshot" for "an
+    agent B records B's state." The global snapshot is a collection of
+    local snapshots. Key questions are <i>when</i> does an agent take
+    its own snapshot, and how do agents collaborate to take snapshots
+    of channels?
+    
 
     
-    <h4 style="color:red;">Example</h4>
+    <h3 style="color:red;">Example of an Inconsistent Cut</h3>
     Figure 1 shows an inconsistent cut.
     The point at which agents record their states are the points at
     which the curvy purple line (the cut)
@@ -146,6 +149,9 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   marker.
   </li>
 </ol>
+We assume that the agent communication graph is strongly connected:
+    there is a path of directed channels from each agent to every
+    other agent. 
 
 <h3 style="color:red;">Example</h3>
 Figure 2 illustrates the algorithm. When B takes its
@@ -155,8 +161,8 @@ Agent C records its state when it receives the marker
 which ensures that it records its state before event 11.
 This makes event 11 in the future in figure 2 whereas it is in the
 past in figure 1.
-The problem shown in figure 1,
-of an edge from the future to the past, does not appear in figure 2.
+The problem shown in figure 1 ---
+of an edge from the future to the past  --- does not appear in figure 2.
 
 
 
@@ -198,7 +204,7 @@ So, the state of \(x\) at the cut is the sequence of messages that
 \(B\) receives along \(x\) after \(B\) records its state and before
 \(B\) receives a marker along \(x\)
 
-<h3 style="color:red;">Example</h3>
+<h3 style="color:red;">Example: Channel Snapshot</h3>
 A diagram that illustrates the process by which an agent gets a
 snapshot of an incoming channel is shown below. The diagram shows the
 timelines for two agents, \(A\) and \(B\).
@@ -245,9 +251,12 @@ snapshot and before it receives the marker.
 
 
 <h2 class="w3-text-teal">Logical clocks with channels</h2>
-Consistent timestamps are described in
-<a href="../LogicalClocks/LogicalClocks.html">.</a> The algorithm,
-adapted for channels, is described next. Each event is assigned a
+Next, we extend the idea of 
+<a href="../TimelineDiagrams/TimelineDiagrams.html">logical clocks</a>
+to distributed systems.
+
+<p>
+Each event is assigned a
 timestamp such that for every edge \((e, e')\) in the timeline graph,
 the timestamp for \(e'\) is strictly greater than the timestamp for
 \(e\). Figure 4 gives two examples of timestamps that satisfy this
@@ -275,7 +284,7 @@ of 32 and 60 for the lower timeline diagram of figure 4.
 </figure>
 
 
-<h3 class="w3-text-teal">An algorithm</h3>
+<h3 class="w3-text-teal">An Algorithm for Logical Clocks</h3>
 An algorithm that obeys the following rules assigns consistent
 timestamps.
 
@@ -296,9 +305,13 @@ timestamps.
   </li>
 </ol>
 
+<P class="w3-text-teal">Proof</p>
 The proof of correctness --- i.e. the algorithm assigns consistent
 timestamps --- is straightforward.
 
+<h2 class="w3-text-teal">Summary</h2>
+This module extends the concepts of global snapshots and logical
+clocks to distributed systems.
 
 
   <footer id="myFooter">

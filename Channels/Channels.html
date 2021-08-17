@@ -60,11 +60,11 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 
   <a class="w3-bar-item w3-button w3-hover-black"
   href="../ChannelSnapshots/ChannelSnapshots.html">
-  Next: Global Snapshots with Channel</a> 
+  Next: Global Snapshots with Channels</a> 
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../PropertiesOfGlobalSnapshots/PropertiesOfGlobalSnapshots.html">Previous:
-  Detecting Stable Properties
+  href="../TimelineDiagrams/TimelineDiagrams.html">Previous:
+  Timelines Introduction
   </a>
   
 </nav>
@@ -83,20 +83,30 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <div class="w3-twothird w3-container">
 
     <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Timelines with Channels</h1>
+    <h1 class="w3-text-teal">Timelines with Message Channels</h1>
+    <!----------------------------------------------------------------->
+    <h2 class="w3-text-teal">Key Ideas</h2>
+    This module introduces message channels and extends the concept of
+    timelines to distributed systems in which agents communicate using
+    messages. The module extends the definition of consistent cuts
+    (also called valid cuts) of timelines to message-passing systems.
 
-    <h3 class="w3-text-teal">Message-Passing Channels</h3>
-    Message-passing channels are a special kind of shared variable
-    that is often used in distributed systems. We use the abbreviation
-    <i>channels</i> for message-passing channels. The state of a
-    channel is a queue of messages. This queue represents the sequence
+    <!----------------------------------------------------------------->
+    <h3 class="w3-text-teal">Message Channels</h3>
+    
+    <p class="w3-text-teal">State of a Channel</p>
+    
+    Message channels are a special shared variable
+    used in distributed systems. We use the abbreviation
+    <i>channels</i> for message channels. The state of a
+    channel is a queue of messages that represents the sequence
     of messages in transit along the channel.
 
-    <p>
+    <p class="w3-text-teal">Actions on a Channel</p>
     The only actions an agent can execute on a channel are to send and
-    receive messages on the channel. Sending a message \(m\) on a
-    channel \(c\) appends \(m\) to the tail of the queue which is the
-    sequence of messages in flight along \(c\). The action of sending
+    receive messages on the channel. Sending a message on a
+    channel appends the message to the tail of the queue which is the
+    sequence of messages in flight along the channel. The action of sending
     a message may change the agent's state.
 
     <p>
@@ -104,16 +114,39 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     follows. If the channel is empty then the agent waits for the
     channel to become nonempty. The agent then receives the message at
     the head of the channel i.e., it deletes the message at the head
-    of the queue of messages. An agent may change its state when it
-    receives a message, and the agent's next state may depend on the
-    message that it receives. 
+    of the queue of messages.
 
-    <p>
-    We restrict attention to systems where for each channel, exactly
+    
+    An agent may change its state when the agent sends or receives a
+    message. The next state may depend on the message that is sent or
+    received.
+
+    <p class="w3-text-teal">Channel State is not Visible to Agents</p>
+    The state of a channel is not visible to agents. For instance, an
+    agent receiving messages on a channel cannot wait until there are
+    exactly 10 messages in the channel. Likewise, the receiver along a
+    channel does not know that the sender sent a message at the
+    instant that the message was sent.
+
+    <p class="w3-text-teal">Channel Connectivity</p>
+    For the time being, we restrict attention to systems where for each channel, exactly
     one agent sends messages along the channel, and exactly one agent
-    receives messages along the channel.
+receives messages along the channel. An agent may send and receive
+    messages along an arbitrary number of channels.
 
-    <h4 class="w3-text-teal">Agent Diagram with Channels</h4>
+<p class="w3-text-teal">Nondeterministi Iteration Model</p>
+For the time being, we continue to use the nondeterministic
+iteration model of a system. A system is defined by a set of guarded
+commands. A trajectory of the system is determined by executing <i>any</i>
+command whose guard evaluates to True. The system halts when all
+guards evaluate to False.
+
+<p>
+Later, we will look at models in which commands are selected
+nondeterministically, but fairly. We will use a temporal logic to
+reason about such systems.
+
+    <h3 class="w3-text-teal">Agent Diagram with Channels</h3>
     The agent diagram for a system with channels is a
     labeled directed graph in which each vertex represents an agent
     and an edge labeled z from A to B represents a channel called z
@@ -218,7 +251,7 @@ which \([m_{1}]\) has been sent and not yet received.
 <h3 class="w3-text-teal">Theorem: Permuting Events in a
 Trajectory</h3>
 This theorem was given earlier in 
-<a href="../Timelines/Timelines.html">the module on timelines</a>, for
+<a href="../TimelineDiagrams/TimelineDiagrams.html">the module on timelines</a>, for
 the general case of arbitrary shared variables.
 It is repeated here for convenience for the special case of channels.
 
@@ -239,8 +272,7 @@ in state \(s\) and ends in state \(s'\).
 
 <p class="w3-text-teal">Proof</p>
 The proof is the same as that given in
-<a href="../Timelines/Timelines.html">the module on timelines</a>, for
-the general case.
+<a href="../Timelines/Timelines.html">the module on timelines</a>.
 
 <h2 style="color:red;">Example</h2>
 The figure below shows a timeline with agents A, B, C, and a channel
@@ -311,9 +343,14 @@ that (1) starts in \(s\), (2) then visits state
 \(c\), and (3) ends in the state \(s'\).
 
 <p>
-This theorem was given earlier in  <a href="../Timelines/Timelines.html">the
-module on timelines</a>. It is repeated here for convenience.
+This theorem and proof were given earlier in
+<a href="../TimelineDiagrams/TimelineDiagrams.html">the
+module on timelines</a>.
 
+<h2 class="w3-text-teal">Summary</h2>
+This module describes distributed systems with message channels,
+timeline diagrams for distributed systems, and extends the concept of
+valid cuts of timelines to distributed systems.
 
   <footer id="myFooter">
 

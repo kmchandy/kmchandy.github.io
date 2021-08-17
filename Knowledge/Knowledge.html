@@ -92,17 +92,20 @@ hr.new1 {
 
     <!--------------------------------------------------------->
     <h1 class="w3-text-teal">What Agents Know</h1>
+
+    <h1 class="w3-text-teal">Key Ideas</h1>
     We sometimes invest software
     agents with human characteristics. For example, a programmer may
     say "an agent <i>knows</i> that another agent is idle." Endowing software with
     human capabilities can be dangerous when terms are ambiguous.
     In this module we give a definition to the phrase "an agent
-    knows \(P\)." We will use this definition to prove theorems that
-    we will use to design algorithms. The definitions and proofs are based on
+    knows \(P\)" where \(P\) is a predicate on states of a system.
+    We use this definition to develop algorithms. The definitions and
+    proofs are based on the concepts of timelines and 
     <a href="../ChannelSnapshots/ChannelSnapshots.html">consistent
     cuts.</a>
 
-    <h3 class="w3-text-teal">What an agent knows</h3>
+    <h3 class="w3-text-teal">What an Agent Knows</h3>
     For an agent \(x\), a state \(r\) of \(x\), and a predicate \(P\),
     we use the phrase "<i style="color:blue;">agent \(x\) in state
     \(r\) knows \(P\)</i>" 
@@ -146,7 +149,7 @@ hr.new1 {
 
 
 <!------------------------------------------------------------>
-<h4 class="w3-text-teal">Theorem: Knowledge and Communication</h4>
+<h3 class="w3-text-teal">Theorem: Knowledge and Communication</h3>
 Let \(x\) and  \(y\) be different agents in a system, and let \(P\) be a
 predicate on the states of \(y\).
 
@@ -187,7 +190,7 @@ that \(P\) holds in state \(s\).
 
 
 
-<h4 class="w3-text-teal">Corollary: Permission to Falsify</h4>
+<h3 class="w3-text-teal">Corollary: Permission to Falsify</h3>
 If
 at some point \(t\) in the trajectory, \(x\) is in a state \(r\)
 such that \(knows(x, r, P)\), where  \(P\) is a predicate on the
@@ -203,8 +206,8 @@ intermediate vertices.
 from \(x\) that permits \(y\) to change its state from one in which
  \(P\) holds to one in which \(\neg P\) holds.
 
-<h4 class="w3-text-teal">Corollary: Persistence of knowledge in silent
-agents</h4>
+<h3 class="w3-text-teal">Corollary: Persistence of knowledge in silent
+agents</h3>
 If at some point \(t\) in the trajectory, \(x\) is in a state \(r\)
 such that \(knows(x, r, P)\), where  \(P\) is a predicate on the
 states of a different agent, and \(x\) sends no messages from point
@@ -218,7 +221,7 @@ remains silent.
 
 
 <!------------------------------------------------------------>
-<h4 class="w3-text-teal">Theorem: Learning from Communication</h4>
+<h3 class="w3-text-teal">Theorem: Learning from Communication</h3>
 Let \(x\) and  \(y\) be different agents in a system, and let \(P\) be a
 predicate on the states of \(y\). Let \(s_{x}\) be the local state of
 agent \(x\) when the global state is \(s\).
@@ -268,7 +271,7 @@ holds.
 
 
 
-<h4 class="w3-text-teal">Corollary: Learn by Listening</h4>
+<h3 class="w3-text-teal">Corollary: Learn by Listening</h3>
 Let \(x\) and \(y\) be different agents in a system, and let \(P\) be
 a predicate on the states of \(y\).  If at some point \(t\) in the
 trajectory, \(\neg P\) holds, and at a later point \(t'\) in the
@@ -291,7 +294,7 @@ at every point between \(t\) and \(t'\).
 If agent \(x\) receives no messages from any agent then it cannot
 learn that a different agent has changed state.
 
-<h4 class="w3-text-teal">Knowledge about Channels</h4>
+<h3 class="w3-text-teal">Knowledge about Channels</h3>
 Next, let's look at systems in which messages are acknowledged.
 For a pair of agents \(x, y\), let \(ms\) and \(mr\)
 be the number of messages that \(x\) has sent to \(y\), and  the number 
@@ -312,7 +315,7 @@ Because \(ms\) and \(ar\) are variables of agent \(x\):
 <p>
 
 <hr class="new2">
-Agent \(x\) <i>knows</i> an upper bound,\(ms - ar\), on the number of
+Agent \(x\) <i>knows</i> an upper bound,\(\; ms - ar\), on the number of
 messages in channel \((x, y)\).
 <hr class="new2">
 
@@ -323,7 +326,7 @@ You can prove this result using the concept of consistent cuts.
 
 <h2 class="w3-text-teal">Extensions</h2>
 
-<h4 class="w3-text-teal">Chains of Knowledge</h4>
+<h3 class="w3-text-teal">Chains of Knowledge</h3>
 Let \(s_{x}\) be the local state of an agent \(x\) when the global
 state is \(s\).
 We define a function \(K\) from agents-predicates to
@@ -338,7 +341,7 @@ for example \(K(x, K(y, K(z, P)))\). The theorems and corollaries
 given above can be applied to such chains. The following result is one
 example.
 
-<p class="w3-text-teal">Chains of Permission</p>
+<h4 class="w3-text-teal">Chains of Permission</h4>
 If \(K(x, K(y, K(z, P)))\) holds at a point \(t\) in a
 trajectory, and \(\neg P\) holds at a later point \(t'\)
 then there must be a
@@ -347,7 +350,7 @@ where the chain is first from \(x\) to \(y\), and then from
 \(y\) to \(z\). 
 
 
-<h4 class="w3-text-teal">Knowledge about Subsystems</h4>
+<h3 class="w3-text-teal">Knowledge about Subsystems</h3>
 A subsystem of a system consists of a subset of the agents and the
 channels between them. The theorems about knowledge of the state of an
 agent apply to knowledge of subsystems.
@@ -359,15 +362,19 @@ and \(x\) be an agent that is not in the subsystem.  If\(x\) knows
 later point \(t'\) then there is a chain of messages from \(x\) to
 some agent in the subsystem.
 
-<h4 class="w3-text-teal">Shared Variables other than Channels</h4>
+<h3 class="w3-text-teal">Shared Variables other than Channels</h3>
 Systems with shared variables other than channels are described in <a
 href="../Agents/Agents.html">the module on agents</a>. The theorems
 and proofs given in this module apply to such systems because the
 concept of consistent cuts is identical for systems with shared
 variables and systems with message-passing channels.
 
-
-
+<h3 class="w3-text-teal">Summary</h3>
+Many people working on distributed systems use the phrase "an agent
+knows." This module gives a definition of the concept that is
+consistent with intuitive definitions of knowledge. The definition
+allows us to obtain theorems on how agents learn --- acquire knowledge
+--- and forget --- lose knowledge.
 
   <footer id="myFooter">
 

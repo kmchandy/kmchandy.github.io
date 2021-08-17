@@ -92,6 +92,35 @@ hr.new1 {
 
     <!--------------------------------------------------------->
     <h1 class="w3-text-teal">Diffusing Computations</h1>
+
+    <!--------------------------------------------------------->
+    <h2 class="w3-text-teal">Key Ideas</h2>
+    <p  class="w3-text-teal">Diffusing Computations</p>
+    This module describes diffusing computations.
+    An agent can use diffusing computations to learn about the
+    structure of the  network
+    in which the agent operates. For example, an agent can use
+    diffusing computations to determine the number of agents in the
+    network or to determine if the system is deadlocked.
+    
+    <p  class="w3-text-teal">Data Structures Modified by Multiple
+    Agents Concurrently</p>
+    The module shows how data structures --- in this case a tree ---
+    play critical roles in distributed algorithms just as they do in
+    sequential algorithms.
+    The algorithm maintains the invariants that
+    define the data structure even though the structure is modified
+    concurrently by multiple agents.
+
+    <p  class="w3-text-teal">An Application of Agent Knowledge</p>
+    We use the concept of
+    <a href="../Knowledge/Knowledge.html"><i>what an
+    agent knows</i></a> to ensure that an agent modifies the data
+    structure only when
+    it know that it can do so while maintaining the invariants that
+    define the structure.
+
+    <h3 class="w3-text-teal">The Problem</h3>
     In this module we deal with systems in which an agent is either
     <i>idle</i> or <i>active</i>. An idle agent remains idle until it
     receives a message at which point it becomes active. An idle agent
@@ -102,14 +131,16 @@ hr.new1 {
     Initially, the system has a single active agent. This agent is
     called <i>the initiator</i>. Initially all channels are empty.
 
-    <p>
-    The computation has terminated exactly when all agents
+    The computation terminates exactly when all agents
     are idle and all channels are empty.
 
     <p>
     The computation may never
-    terminate. Our task is to design an algorithm that enables the initiator to know
-    that the computation has terminated if it terminates.
+    terminate. Our first problem is to design an algorithm that
+    enables the initiator to know 
+    that the computation has terminated if it terminates. Later, we
+    will extend this algorithm to enable the initiator to learn about
+    the network.
 
     <p>
     In this system, for every channel from an agent \(x\) to an agent
@@ -118,122 +149,75 @@ hr.new1 {
     \(y\), and at most one channel from \(y\) to \(x\).
                                                                                                       
     <p>
-    We will design an algorithm based on the the concepts described in
-    the module
-    <a href="../Knowledge/Knowledge.html">what agents know</a>.
-    
-    The module tells us how an agent can know that its outgoing
-channels are empty; to do so, agents acknowledge messages.
-An agent sends an <i>ack</i> (acknowledgment) after it receives a
-    message.
-    An agent knows that its outgoing channels are empty if it has
-    received acks for all the messages that it has sent.
-    For the purposes of this module, an ack is not a
-    message.
-    Messages are part of the underlying computation whereas
-    acks are used only for termination detection.
-
-
-    <!------------------------------------------------------>
-    <h3 class="w3-text-teal">Notation</h3>
-    <p>
-We use the letters, m, a, s, and r, for message, ack, send and
-receive, respectively.
-For any pair of agents \(y,z\):  \(ms(y,z)\)
-and \(mr(y,z)\) are the numbers of messages sent and received,
-respectively, on channel \((y, z)\). 
-Similarly, \(as(y,z)\)
-and \(ar(y,z)\) be the numbers of acks sent and received, respectively, on channel \((y, z)\). 
-
-
+    An agent \(y\) sends an <i>ack</i> (acknowledgment) along channel
+\((y, x)\) after receiving a message along channel \((x, y)\).
+An ack is different from a message; so acks aren't acked.
 <p>
-Channel \((y, z)\) contains no messages exactly when all messages sent
-on the channel have been received: \(ms(y,z) = mr(y,z)\). 
-
-<p>
-Agent \(y\) <i>knows</i> that channel \((y, z)\) contains no messages if it
-has received acks for all the messages that it has sent: \(ms(y,z) = ar(z,y)\),
-
-
-<!---------------------------------------->
-<h3 class="w3-text-teal">Quiet agents</h3>
-For an agent \(x\), we define a predicate \(x.quiet\) which holds
-exactly when \(x\) is idle and all its outgoing channels contain no
-messages. 
-<p>
-\(
-x.quiet \; \equiv \; x.idle \wedge (\forall z: ms(x, y) = mr(x, y))
-\)
-
-<p>
-The computation has terminated exactly when all agents are quiet.
-
-<p>
-The key difference between idle and quiet agents is that
-an agent may receive messages from an idle agent but not from a quiet
-agent. 
-While an agent \(x\) is idle, another agent \(y\) may receive messages
-from \(x\) if the channel from \(x\) to \(y\) contains messages
-that \(x\) sent before it became idle.
-By contrast, \(y\) does not receive messages from \(x\) while 
-\(x\) is quiet because the channel from \(x\) to \(y\) is empty.
-
-
-<h3 class="w3-text-teal">How an agent knows that it is quiet</h4>
-Agent \(x\) knows that it is quiet when it is idle and has
-received acks for all the messages that it has sent. We
-define \(x.knows\_quiet\) as:
-<p>
-\(
-x.knows\_quiet \; \equiv \; x.idle \wedge \forall y: ( ms(x,y) = ar(y, x))
-\)
-<p>
-<a href="../Knowledge/Knowledge.html">From the definition</a>:
-<p>
-\(
-[x.knows\_quiet \; \Rightarrow \; x.quiet]
-\)
-<p>
-So, if all agents know that they are quiet, the computation has terminated.
-    <p>
-    \(
-    terminated \; \equiv \; (\forall \; \textrm{agents} \; z: \;
-    z.quiet)
-    \)
-    <p>
-
-Next we describe an algorithm where
-when the initiator knows that it
-is quiet it also knows that all the other agents are
-quiet too, and so computation has terminated.
-
-<p>
-\(
-initiator.knows\_quiet \; \Rightarrow \; terminated
-\)
+Initially all channels are empty: there are no messages or acks in
+transit along channels.
+Let
+    \(x.num\_unacked\) be the number of \(x\)'s unacknowledge
+    messages, i.e, the number of messages that \(x\) has sent
+    minus the number of acks that \(x\) has received. 
+<a href="../Knowledge/Knowledge.html">Agent \(x\) knows</a>
+that there are no messages in any of its outgoing channels when
+\(x.num\_unacked = 0\).
 
 <!------------------------------------------------------>
-<h3 class="w3-text-teal">A Distributed Rooted Tree</h3>
+<h3 class="w3-text-teal">A Rooted Tree</h3>
 The theorems on knowledge tell us that for an agent to become active there
  must be a chain of messages from the initiator to the
-agent. Likewise, for the initiator
-to learn that an active agent has become idle, there must be a chain
-of messages from the agent back to the initiator. A data structure
-that has paths from the initiator to agents, and back from the agents
-to the initiator, is a tree rooted at the initiator.
-
-
-<p>
- For each agent \(x\) let \(x.parent\) be either \(null\) or 
+agent.
+A data structure
+with paths between the initiator and active agents is a tree,
+rooted at the initiator, and which spans active agents.
+ For each agent \(x\) let \(x.parent\) be either \(null\) or an agent
+which is
 \(x\)'s parent in the tree. Agent \(x\) is not on the tree exactly
 when \(x.parent = null\).
 
 <p>
-An agent \(y\) is an <i>ancestor</i> of an agent \(x\) if \(x.parent =
-y\) or \(y\) is an ancestor of \(x.parent\). We will prove an
-invariant that the
-initiator is an ancestor of every agent \(x\) for which \(x.parent
-\neq null\).
+We will prove the following invariants.
+
+<h3 class="w3-text-teal">Invariants</h3>
+<ol>
+  <li>
+  The tree is rooted at the initiator, i.e.
+  if \(x.parent \neq null\) then the initiator is an
+  <a
+  href="https://en.wikipedia.org/wiki/Lowest_common_ancestor">ancestor</a>
+  of \(x\).
+  </li>
+  <li>
+  An agent is off the tree exactly when the agent is idle and the
+  agent has no unacknowledged messages:
+  <p>
+  \(
+  (x.parent = null) \quad \equiv \quad x.idle \wedge
+  (x.num\_unacked = 0)
+  \)
+  </li>
+  <li>
+  If \(x\)'s parent is not \(null\) then \(x\)'s parent has at least
+  one unacknowledged message.
+  <p>
+  \(
+  x.parent \neq null \quad \Rightarrow \quad x.parent.num\_unacked > 0
+  \)
+</ol>
+From invariant 3, it follows that an agent has no children if it has
+no unacknowledged messages. So, from invariant 1, if the initiator has
+no unacknowledged messages then all agents, apart from the initiator,
+are idle and have no messages in outgoing channels. Therefore
+computation has terminated when
+<p>
+\(
+initiator.idle \wedge (initiator.num\_unacked = 0)
+\)
+<p>
+So, the initiator knows that the computation has terminated when the
+initiator is idle and no unacknowledged messages.
+Next we give an algorithm that maintains the above invariants.
 
 
 
@@ -242,185 +226,89 @@ initiator is an ancestor of every agent \(x\) for which \(x.parent
 Next we propose a program for an agent \(x\)
 other than the initiator.
 
-Each of the four statements of the program are numbered.
-We prove the correctness of the program later.
-
-<p>
-The program is based on the definition of \(x.knows\_quiet\) and the
-following invariant:
-
-<h4 class="w3-text-teal">Invariant 1: The tree consists of quiet agents</h4> 
-For all agents \(x\) other than the initiator:
-
-<p>
-\(
-x.parent = null \quad \equiv \quad x.knows\_quiet
-\)
-
 
 <h4 class="w3-text-teal">Program</h4>
 <pre>
-0: initially x.parent = null
+0: initially:
+      x.parent = null
+      x.idle = True
+      x.num_unacked = 0
 
-1: if (x.parent = null) and x receives a message from y:
-       x.parent = y
+1. When x sends a message:
+      x.num_unacked = x.num_unacked + 1
 
-2: if (x.parent != null) and x receives a message from y:
-       send ack to y
+2. When x receives a message from y:
+      x.idle = False
+      if x.parent = null:
+         x.parent = y
+      else
+         send ack to y
 
-3: if (x.parent != null) and
-      (x receives an ack or x becomes idle):
-          if x_knows_quiet:
+3. When x receives an ack:
+      x.num_unacked = x.num_unacked - 1
+      if (x.num_unacked == 0) and x.idle:
               send ack to x.parent
               x.parent = null
 
+4. When x becomes idle:
+       x.idle = True
+       if x.num_unacked == 0:
+              send ack to x.parent
+              x.parent = null
 </pre>
+
+<p class="w3-text-teal">The Initiator</p>
+The program for the initiator is the same except that initially the
+initiator is active. Also, to keep the exposition uniform for the
+initiator and the other agents, we assume that the initiator has a
+parent which is not one of the agents of the network. We call the initiator's parent
+\(external\). This agent plays no role other than to keep the proofs
+identical for the invariant and other agents. 
+<pre>
+initiator.parent = external
+initiator.idle = False
+initiator.num_unacked = 0
+external.num_unacked = 1
+</pre>
+
 
 <!------------------------------------------------------>
 <h2 class="w3-text-teal">Proof of Correctness</h2>
 
-<!------------------------------------------------------>
-<h3 class="w3-text-teal">Invariants</h3>
-Next we give additional invariants that we use to prove the correctness of
-the program. The proofs of the next two invariants are straightforward.
+<p class="w3-text-teal">Safety</p>
+The proof that the invariants are satisfied is carried out by showing
+that they hold initially and then verifying that
+each of the four commands maintains the invariants. The verification
+step is straightforward if a bit laborious.
 
-<p class="w3-text-teal">Invariant 2: Agents that know they are quiet have sent
-acknowledgments for all messages</p>
-For all agents \(x\):
-<p>
-\(
-x.knows\_quiet \quad \equiv \quad
-\forall y: (as(x,y) = mr(y,x))
-\)
-
-<p class="w3-text-teal">Invariant 3: An agent that doesn't know it is
-quiet has acknowledged all messages except one to its parent.</p>
-For all agents \(x\) other than the initiator:
-<p>
-\(
-\begin{align}
-&\neg x.knows\_quiet \quad \equiv \\
-& \quad (as(x, x.parent) = mr(x.parent, x) - 1) \; \wedge \\
-& \quad \forall y \neq x.parent: (as(x,y) = mr(y,x))
-\end{align}
-\)
-<p>
-The next invariant can be derived from the previous three.
-
-<p class="w3-text-teal">Invariant 4: Parents who know they are quiet
-are childless.</p>
-<p>
-\(
-y.knows\_quiet \; \Rightarrow \; (\forall x: x.parent \neq y)
-\)
-<p>
-This is equivalent to:
-<p>
-\(
-(x.parent = y) \; \Rightarrow \; \neg y.knows\_quiet
-\)
+<p class="w3-text-teal">Progress</p>
 
 <p>
-This invariant follows from the first three.
+If all agents are idle and there are no messages in channels then
+the underlying computation has terminated.
+We will prove that if the underlying computation does terminate then
+the detection algorithm terminates as well, i.e. the tree
+vanishes, and at that point the initiator knows that the computation has
+terminated.
+After the underlying computation terminates, the only action that
+executes is action 3: receiving an ack. 
 
-<p class="w3-text-teal">Proof</p>
-<p> From invariant 1:
-<p>
-\(
-x.parent = y \; \Rightarrow \; \neg x.knows\_quiet
-\)
-
-<p>
-From invariant 3:
-<p>
-\(
-\neg x.knows\_quiet \; \Rightarrow \; (as(x, y) = mr(y, x) - 1)
-\)
-
-<p>
-Because channels are first-in-first-out, and acknowledgments are sent
- after messages are received:
-<p>
-\(
-ar(x, y) \leq as(x, y) \leq mr(y, x) \leq ms(y, x)
-\)
-<p>
-From the above three equations:
-<p>
-\(
-(x.parent = y) \quad \Rightarrow \quad (ar(x, y) < ms(y, x))
-\)
-<p>
-The result follows from the above equation and invariant 1.
-
-<h4 class="w3-text-teal">Invariant 5: \(parent\) specifies a tree rooted at
-the initiator</h4>
-For all agents \(x\) for which \(x.parent \neq null\), the initiator
-is an ancestor of \(x\). 
-
-<p class="w3-text-teal">Proof</p>
-The initiator is always on the tree. Initially, the initiator is the
-only agent on the tree. Therefore the invariant holds initially.
+<p>A variant function is
+the following graph. A
+vertex \(x\) is in the graph exactly when \(x.parent\) is not null or
+there is an ack in transit along the channel from \(x\) to its parent.
+Define a partial order \(<\) between graphs as \(G \leq G'\)
+when \(G\) is a subgraph of \(G'\). This graph is a tree because the
+only pending acks are from a vertex to its parent (rule 3).
 
 <p>
-The only ways in which \(x.parent\) changes for any \(x\) are (1)  in
-statement 1  where \(x.parent\) changes from \(null\) to \(y\) and
-(2) in statement 3 where \(x.parent\) becomes \(null\) when
-\(x.knows\_quiet\) starts to hold.
-
-<p>
-In the former case, \(x\) is added to tree as a leaf because \(x\) has
-acknowledgments for all the messages that it sent (see invariant
-2). Adding a leaf to a tree retains the tree structure.
-
-<p>
-In the latter case, \(x\) is removed from the tree as a leaf (see
-invariant 4). Removing a leaf from a tree retains its tree structure.
-
-<h2 class="w3-text-teal">Safety</h2>
-If the initiator knows that it is quiet,
-then the computation has terminated. 
-<p>
-\(
-initiator.knows\_quiet \; \Rightarrow \; terminated
-\)
-<p class="w3-text-teal">Proof</p>
-From invariant 4, when the initiator knows it is quiet, it has no
-children; in this case, from invariant 5, there are no agents on the tree.
-From invariant 1, agents that are not on the tree know that they are
-quiet. So, when the initiator knows it is quiet, all agents are quiet.
-
-<h2 class="w3-text-teal">Progress</h2>
-Next we show that if the computation terminates then the initiator
-detects that the computation has terminated.
-<a href="../LoopTermination/LoopTermination.html">
-We use variant functions defined in the module on loop
-termination.</a> We will show that any action with a true guard
-reduces the variant function.
-
-<p>
-A variant function for this program is the
-number of agents on the tree plus the number of acknowledgments in
-channels. The value of the function is a non-negative 
-integer. So, the function is bounded below. We will show that
-execution of any action with a true guard
-reduces the variant function, and so the computation terminates.
-
-<p>
-Channels do not contain messages after the computation terminates. So,
-the guards of statements 1 and 2 of the program are False. Only
-statement 3 can have a True guard. In addition, the operation of channels delivering
-acknowledgments can be represented as a guarded command where "channel contains
-acknowledgment" is the guard and "channel delivers acknowledgment" is
-the action.
-
-<p>
-The proof that the delivery of an acknowledgment reduces the
-variant function is self evident. The action of statement 3 reduces
-the number of agents on the tree, which reduces the variant function.
-
-
-
+Next we prove that every execution of an action while the variant
+function is not the empty graph reduces the variant function.
+When all acks are delivered to \(y\), it sends an ack to its parent.
+So while the tree is not empty there is an ack in some channel.
+When \(y\) receives an ack from \(x\), the edge \((x, y)\) is
+deleted from the tree. Therefore every
+execution of action 3 reduces the variant function.
 
 
   <footer id="myFooter">
