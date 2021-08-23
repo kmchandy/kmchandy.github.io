@@ -133,9 +133,8 @@ has the form \(\{P\} c \{Q\}\) where \(P\) and \(Q\)
     \wedge (y = k)\}
   \)
 
-    <h4 style="color:red;">Examples</h4>
-    This example answers the inverse question: What state transitions
-    satisfy <i>all</i> the following Hoare triples?
+    <h3 style="color:red;">Examples</h3>
+    Consider the following Hoare triples.
 
     <ol>
       <li>
@@ -156,48 +155,38 @@ has the form \(\{P\} c \{Q\}\) where \(P\) and \(Q\)
 </ol>
 
 
+
 <p style="color:red;">Example</p>
-    <p>
-    Let's look at transitions from example states. What transitions
+What transitions
 are possible from a state in which \(x = -1\) by a command \(c\) that
     satisfies the above three Hoare triples?
 </p>
 
-<p>The transition must
-    satisfy all three Hoare triples. Since the state satisfies the
+<p>Since the state satisfies the
     first precondition, \(x < 0\), the state after the transition must
     satisfy the postcondition, \((x = 1) \vee (x = 2)\). The
     remaining Hoare triples don't address the precondition \(x =
 -1\). Therefore, the only transitions from \(x = -1\) are to either
-    state \(x = 1\) or to state \(x = 2\).
+state \(x = 1\) or to state \(x = 2\).
 
-<p>
-Variables that are not mentioned in the Hoare triple are assumed to
-remain unchanged. For example, if the system has variables \(x\) and
-\(y\), then the first transition, above, specifies a set of
-transitions initiated in states all possible values of \(y\).
-</p>
-
-<p>
-\(
-\forall k: \quad \{(x = -1) \wedge (y = k)\} \; c \; \{(x = 1)
-\wedge (y = k)\}
-\)
-</br>
 <p style="color:red;">Example</p>
-<p>
     What transitions
-are possible from a state in which \(x = 2\)?
+are possible from a state in which \(x = 2\) that satisfy all of the
+    above Hoare triples?
 </p>
 
 <p>
 The first Hoare triple doesn't address the precondition \(x = 2\).
+<p>
 The precondition \(x > 0\) of the second triple holds when \(x = 2\)
 and therefore its postcondition, \((x = 0) \vee (x = -1)\), must hold in the
 next state.
+<p>
 The precondition \(x > 1\) of the third triple holds when \(x = 2\)
 and therefore its postcondition, \(x < 0\), must hold in the
-next state. Both postconditions, \((x = 0) \vee (x = -1)\) and \(x <
+next state.
+<p>
+Both postconditions, \((x = 0) \vee (x = -1)\) and \(x <
 0\) must hold in the next state. So the only transition from \(x = 2\)
 is to state \(x = -1\).
 

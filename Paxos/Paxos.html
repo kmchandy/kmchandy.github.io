@@ -84,110 +84,49 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 
     <!--------------------------------------------------------->
     <h1 class="w3-text-teal">The Paxos Algorithm</h1>
-    <p class="w3-text-teal">Consensus among distributed agents is
-    important</p> 
-    The Paxos algorithm is used to determine a consensus among a
-    collection of distributed agents. Consensus is important in a
-    variety of applications.
-
-    <p>
-    In a control system with multiple sensors
+    
+    <h2 class="w3-text-teal">Key Ideas</h1>
+    There are many problems in which a collection of agents have to
+    come to a <i>consensus</i> about something.
+    In a control system with multiple
     and actuators, the actuators have to come to a consensus about the
     state of the environment so that they can operate in concert. A
     vehicle would crash
     if some actuators caused the vehicle to accelerate while other
     actuators applied brakes.
+    In some applications, multiple agents have to elect a single
+    leader.
+    This module describes, <i>Paxos</i> an important algorithm by which agents in
+    distributed systems come to a consensus.
 
-    Some applications of multi agent systems require the agents to
-    elect a single leader. Clearly, all agents have to come
-    to a consensus on the same leader. Multiple business agents have
-    to come to a consensus on whether a transaction was completed when
-    they collectively manage a distributed ledger.
-
-    <p>
-    Are there algorithms for consensus in systems in which agents
-    operate at arbitrary speeds, and where messages may be lost and
-    duplicated but not corrupted?
-
-    <h3 class="w3-text-teal">Consensus is impossible with a single
-    faulty agent</h3>
-    Consensus is impossible with even a single faulty agent. The
-    theorem saying so was published by Fischer, Lynch and Patterson.
-
-    <p>
-    You can get the idea of the problem with arriving at a consensus
-    when message delays are finite, but arbitrarily long, by looking
-    at the following scenario. A collection of 2N + 1 agents want to
-    come to a consensus about a color. N of the agents pick blue and
-    N+1 pick red, but one of the red agents is arbitrarily slow. The
-    2N non-slow agents exchange messages among each other, and each of
-    these 2N agents gets N votes for red and N votes for blue. Agents
-    decide to take a majority vote, and in the event of a tie pick
-    blue.
-
-    <p>
-    How long should they wait for the slow agent?
-
-    <p>
-    Consider an algorithm in which agent waits until its local clock
-    shows an elapsed time of T and then makes a decision based on the
-    votes that it has.  An agent Y gets N red and N blue votes when
-    its clock shows an elapsed time of T, and agent Y decides that the
-    consensus is blue. Another agent Z has a slower clock and gets a
-    red vote from the slow agent for a total of N+1 red votes, before
-    Z's clock shows an elapsed time of T. So Z determines that the
-    consensus is red. The algorithm fails because Y and Z have not
-    come to a consensus. 
-
-<p>
-No algorithm is guaranteed to come to a consensus in finite time if
-messages can be arbitrarily slow or if agents can be arbitrarily slow.
-Systems with synchronized clocks don't have this particular
-problem. We'll look at consensus in such systems later.
-
-<p>
-<figure>
-    <img src="Paxos_01.jpg" alt="Fig1" style="width:80%">
-    <figcaption>Fig.1: Problem with a slow agent</figcaption>
-</figure>
-
+    
 <h2 class="w3-text-teal">Best Effort Consensus</h3>
-The theorem says that there is no algorithm that guarentees that
-consensus can be reached in all scenarios; 
-however, consensus can be reached in most practical situations. An idea
-to overcome the counterexample given above is:
-Agents keep trying repeatedly until they reach consensus. The theorem tells us
-that the agents may have to keep trying for ever. We expect, however,
-that in most practical situations their attempts will succeed at some point.
+The theorem says that there is no algorithm that guarantees that
+    consensus will be reached;
+    however, consensus can be reached in most practical situations.
 
-<p>
-The key question is: What does keep trying mean? When does one trial
-end and the next one begin? If agents use timeouts to end a trial,
-then --- because clocks aren't synchronized --- the timeouts may complete
-at different times.
-<p>
-We'll see that we can use the idea of time, even though clocks aren't
-synchronized. We've done that before with logical clocks.
 
-<p>
-Let's study an
-algorithm that doesn't guarantee progress but does guarantee that all
-non-faulty agents either have no value or have the same value. The
-description of the algorithm has a type of agent called
-<i>proposers</i> and a type called <i>learners</i>. (In an
-implementation an agent may play the role of both proposer and
-learner.) Proposers propose values. Learners come to a consensus among
-the proposed values. Assume that all agents can communicate with each
-other across message-passing channels. Messages may be lost. Agents
-may stop and restart later, and may be arbitrarily slow.
+    <p>
+    The Paxos algorithms makes few assumptions.  Agents communicate by
+    sending and receiving messages. Messages may be lost and may
+    overtake each other. Agents may stop
+    and restart later, and agents may be arbitrarily slow.
 
-<p>
-<figure>
-    <img src="Paxos_02.jpg" alt="Fig2" style="width:80%">
-    <figcaption>Fig.2: Proposers and Learners</figcaption>
-</figure>
+    <p>
+    Messages are not modified in transit, and agents are not
+    <a href="../Byzantine/Byzantine.html">Byzantine.</a> When an agent
+    receives a message, the receiver knows the identity of the agent
+    that sent the message.
 
 <h3 class="w3-text-teal">Specification</h3>
+<p>
+The algorithm has agents called
+<i>proposers</i> others called <i>learners</i>. (In an
+implementation an agent may play the role of both proposer and
+learner.) Proposers propose values. Learners come to a consensus among
+    the proposed values.
+
+    <p>
 Associated with each learner \(L\) is a local variable \(L.value\)
 which is initially \(null\). Similarly, each proposer \(P\) has a
 local variable \(P.value\) which is initially the value that the
@@ -196,16 +135,16 @@ proposer is proposing.
 The specification has three parts.
 <ol>
   <li>
-  <i>Learners learn only proposed values.</i>
+  Learners learn only proposed values.
   <p> For every learner \(L\):
   <p>
   \(
   (L.value \neq null) \quad \Rightarrow \quad
-  (\exists \; \textrm{proposer} P : L.value = P.value)
+  (\exists \; \textrm{proposer} \: P : L.value = P.value)
   \)
   </li>
   <li>
-  <i>Learners learn the same value.</i>
+  <i>All learners learn the same value.</i>
   <p>
   For all learners \(L\) and \(L'\):
   <p>
@@ -233,318 +172,302 @@ between agents is shown in the figure below.
 
 <p>
 <figure>
-    <img src="Paxos_03.jpg" alt="Fig3" style="width:80%">
-    <figcaption>Fig.3: Proposers, Acceptors and Learners</figcaption>
+    <img src="PaxosFigures/Slide03.jpg" alt="Fig3" style="width:80%">
+    <figcaption>Fig.1: Proposers, Acceptors and Learners</figcaption>
 </figure>
 
-<h4 class="w3-text-teal">Messages</h4>
-The algorithm has four types of messages. The parameter \(t\) in all
-cases is a timestamp.
-<ol>
-  <li>
-  <i>prepare(t)</i> sent from proposers to acceptors.
-  </li>
-  <li>
-  <i>promise(t)</i> sent from acceptors to proposers.
-  </li>
-  <li>
-  <i>request(t)</i> sent from proposers to acceptors.
-  </li>
-  <li>
-  <i>accepted(t)</i> sent from acceptors to proposers.
-  </li>
-</ol>
-The messages are sent in the above order.
+<h4 class="w3-text-teal">Messages and Local Variables</h4>
+In the description of the algorithm, <code>t</code> and
+<code>acceptT</code> are numbers and <code>v</code> is either
+<code>null</code> or 
+<code>P.value</code> of some proposer <code>P</code>.
+
+<p class="w3-text-teal">Message Types</p>
+Proposers to acceptors: <code>prepare(t)</code>
+<br>
+Acceptors reply to proposer:
+<code>promise(t, v, acceptT)</code>.
+<br>
+Proposers  to acceptors:
+<code>propose(t, v)</code>.
+<br>
+Acceptors to learners: 
+<code>accept(t, v)</code>. 
+
+<p class="w3-text-teal">Local Variables</p>
+The local variables are as follows.
+<br>
+Proposer <code>P</code>: <code>(P.t, P.v)</code>.
+<br>
+Acceptor <code>A</code>: <code>(A.t, A.v, A.acceptT)</code>.
+
+<p>
+The algorithm is given as an interleaving of actions of proposers and
+acceptors. The algorithm for learners is simple:
+A learner determines that the consensus value is <code>V</code> if the
+learner receives <code>accept(T, V)</code> messages from a majority of
+acceptors with identical <code>(T, V)</code>.
+
+<pre>
+Initially:
+  For proposer P: P.v = P.value
+  For acceptor A: A.v, A.acceptT = null, null,
+  // P.t, A.t are arbitrary
+
+// Proposer P. Step P.1
+increment P.t by a positive amount
+send prepare(P.t) to all acceptors
+
+// Acceptor A. Step A.1
+upon receiving prepare(t) from P:
+   if t > A.t:
+      A.t = t
+      send promise(A.t, A.v, A.acceptT) to P
+
+// Proposer P. Step P.2
+upon receiving promise(t, v, acceptT) messages from a
+     majority of acceptors where t == P.t:
+     if v is not null for any of these messages:
+         P.v =  the v field of the promise message
+                with the largest acceptT field
+     send propose(P.t, P.v) to all acceptors
+      
+// Acceptor A. Step A.2
+upon receiving propose(t, v) from P:
+    if t == A.t:
+       A.v = v
+       A.acceptT = t
+       send accept(A.t, A.v) to all learners
+</pre>
+
+<h4 class="w3-text-teal">Algorithm Steps</h4>
+The proposer repeatedly executes a
+loop consisting of steps P.1 and P.2 until any learner learns a
+consensus value.
+<p>
+For step P.2, a proposer waits for a bounded time
+to receive promise messages from a majority of acceptors. If these
+messages don't arrive within this time then the proposer aborts this
+iteration and starts the next iteration i.e. back to step P.1.
+<p>
+In step 2 of the proposer, the proposer determines the promise message
+with the largest <code>acceptT</code> field. How are ties broken? We
+assume that the <code>t</code> values of a proposer have an extra
+component: the id of the proposer. Ties are
+broken lexicographically, using the proposer's id. (The proposer's id
+is not shown in the algorithm.)
+
+<!-------------------------------------------------------->
+<h2 class="w3-text-teal">Timeline Diagram for Paxos</h2>
+
+<p class="w3-text-teal">Position of an Event in a Timeline</p>
+We will use a variation of timeline diagrams to help us understand and
+prove the Paxos algorithm. Assume that all agents start with
+<code>t</code> values of \(0\). This is merely for convenience in drawing
+timelines. Timelines are horizontal and time progresses from left to
+right. The position of an event on the timeline be the
+<code>t</code> value of the agent that executes the event.
+
+<p class="w3-text-teal">Messages in a Timeline</p>
+Messages are shown only for those messages that are accepted by the
+receiver. Let's look at this example. A proposer sends a message with
+<code>t=T</code> and an acceptor <code>A</code> that receives this
+message ignores it because <code>A.t</code> \(\geq\)
+<code>t=T</code>. This message is not shown in the timeline because
+the receiver ignored the message, and so message does not change the
+state of the system.
+
+<p>
+For the purposes of the timeline, a message takes an infinitely small
+positive amount to travel from sender to receiver. The diagram below
+shows an example of a timeline.
 
 <p>
 <figure>
-    <img src="Paxos_04.jpg" alt="Fig4" style="width:80%">
-    <figcaption>Fig.4: Messages</figcaption>
+    <img src="PaxosFigures/Slide14.jpg" alt="Fig3" style="width:100%">
+    <figcaption>Fig.3: Timelines</figcaption>
 </figure>
 
 <p>
-We will describe the algorithm in three parts.  The first two parts
-deal only with proposers and acceptors; the third part deals with
-acceptors and learners. The first part deals exclusively with
-timestamps, the second part also deals with values.
+The diagram shows the timeline for a proposer <code>Z</code>, acceptor
+<code>A</code> and learner <code>L</code>. The diagram doesn't show
+multiple proposers, acceptors and learners to prevent the diagram from
+getting too crowded.
 
-<h3 class="w3-text-teal">Proposers, Acceptors and Timestamps</h3>
-This part of the description of the algorithm deals only with
-timestamps, and only with proposers and acceptors. The algorithm, as
-described below, does not terminate; we will discuss termination
-later. 
+<p>
+The first event in the timeline is a prepare message sent by proposer
+<code>Z</code> when <code>Z.t = 10</code>. The position of this event
+is 10 units to the right of time 0. The message,
+<code>prepare(10)</code> is received by acceptor <code>A</code>;
+assume that the message is received a little after 10, and this time
+is indicated by 10+.
 
-<h4 class="w3-text-teal">Timestamp Algorithm for Proposers</h3>
-Associated with each proposer \(P\) is a local variable \(P.t\) which
-is a number. We refer to \(t\) as a timestamp. 
+<p>
+When acceptor <code>A</code> gets the prepare message it replies with
+<code>promise(10, A.v, A.acceptT)</code>. The timeline shows that
+proposer <code>Z</code> gets this message a little after it is sent,
+and this time is shown as 10++.
 
-<pre>
-initially P.t = 0
+<p>
+Assume that proposer <code>Z</code> gets promise messages from a set
+of acceptors in step P.2 where this set has more than half the number
+of acceptors. Assume that in step P.2, proposer <code>Z</code> sets
+<code>Z.v</code> to 'red' and so <code>Z</code> sends
+<code>propose(10, 'red')</code> to all acceptors. Acceptor
+<code>A</code> gets this message at 10+++ which is a little after it
+was sent. Acceptor <code>A</code> then sends <code>accept(10,
+'red')</code> to all learners which receive the message a little
+later.
 
-while true:
-   1. start timer; restart loop body if timeout
+<p>
+Then proposer <code>Z</code> starts a new round by sending
+<code>prepare(11)</code>. The important point shown in the diagram is
+that in the timeline <i>all the events due to the
+<code>prepare(11)</code> message come after all
+the events due to the <code>prepare(10)</code>
+message</i>. And this property is because the diagram doesn't show
+messages that are ignored by recipients.
 
-   2. increment P.t by a positive amount
+<p>
+This timeline diagram can be partitioned into a sequence of epochs
+with each epoch stemming from a prepare(t) message.
 
-   3. send prepare(P.t) to all acceptors
+<!-------------------------------------------------------->
+<h5 class="w3-text-teal">Correctness Proof: Part 1</h5>
+The proof of part 1 --
+learners only learn values of proposers --- follows from
+the following invariant which has a straightforward proof.
+<p>
+Invariant: For every agent and message,
+the <code>v</code> field is either <code>null</code> or
+<code>P.value</code> for some 
+<code>P</code>.
 
-   4. if P receives promise messages where
-      promise.t == P.t from a majority of acceptors:
-           send request(P.t) to all acceptors
-      // else execution of the loop body times out
+<h3 class="w3-text-teal">Correctness Proof: Parts 2, 3</h3>
 
-   5. if P receives accepts messages where
-           accepts.t == P.t
-           from a majority of acceptors:
-               break
-</pre>
-
-<h4 class="w3-text-teal">Timestamp Algorithm for Acceptors</h3>
-Associated with each acceptor \(A\) is a local variable \(A.t\) which
-is a number. We refer to \(t\) as a timestamp. 
-
-<pre>
-initially A.t = 0
-
-while true:
-
-   1. upon receiving a prepare message from a proposer P:
-          if prepare.t >= A.t:
-               A.t = prepare.t
-               send promise(A.t) to P
-
-   2. upon receiving a request message from a proposer P:
-          if request.t >= A.t
-               A.t = request.t
-               send accepts(A.t) to P
-</pre>
-
-We shall say that an acceptor "<i>accepts t</i>" when it sends an accepts(t)
-message to any proposer.
-
-<h3 class="w3-text-teal">Observations</h3>
-
-<h4 class="w3-text-teal">Meaning of A.t</h4>
-For an acceptor A, A.t is the maximum value of prepare.t and request.t 
-over all the prepare and request messages that A has received.
-
-<figure>
-    <img src="Paxos_05.jpg" alt="Fig5" style="width:80%">
-    <figcaption>Fig.5: Acceptor's t value</figcaption>
-</figure>
-
-
-<h4 class="w3-text-teal">Meaning of promise.t</h4>
-After an acceptor sends a promise(t) message, that acceptor will not
-reply to prepare(t') or request(t') messages where t' < t.
-
-<figure>
-    <img src="Paxos_06.jpg" alt="Fig6" style="width:80%">
-    <figcaption>Fig.6: promise.t</figcaption>
-</figure>
-
-<h4 class="w3-text-teal">Theorem 1</h4>
-If any majority of acceptors accepts \(T\) after any acceptor accepts \(t\) then
-\(T \geq t\).
+<p class="w3-text-teal">Lemma</p>
+If a majority of acceptors have sent <code>accept(T,
+V)</code> messages, where <code>(T, V)</code> are arbitrary constants
+other than null,
+then all <code>accept(t, v)</code> messages with <code>t</code> \(\geq\)
+<code>T</code> have <code>v</code> = <code>V</code>.
 
 <p class="w3-text-teal">Proof</p>
-An acceptor accepts t only after receiving a request(t)
-message from a proposer. See line 2 of the acceptor's algorithm.
+Assume that every acceptor in a set \(M\) of acceptors has sent
+<code>accept(T, V)</code> messages, where \(M\) includes at least a
+majority of acceptors. In the Paxos timeline, these messages are sent
+in the epoch that is started by a proposer sending
+<code>prepare(T)</code>.
+
 <p>
-A proposer sends a request(t) message only after receiving promise(t)
-messages from a majority of acceptors. See line 4 of the proposer's
-algorithm.
+Consider the next epoch in the timeline in
+which an accept message is sent. Let this accept message be
+<code>accept(t', v')</code> where <code>t'</code> \(>\)
+<code>T</code>. This accept message is sent in the epoch that is
+started by a proposer sending <code>prepare(t')</code>. In this epoch
+every acceptor \(A\) in 
+a majority \(M'\) of acceptors sends <code>promise(t', A.v,
+A.acceptT)</code> messages. 
+
 <p>
-After an acceptor accepts t there exists a majority of proposers that
-do not reply to prepare(t') or request(t') messages where t' <
-t. Let's call the set of proposers in this majority \(m\).
+Sets \(M\) and \(M'\) have at least one
+element in common. Every acceptor that is in both \(M\) and \(M'\)
+sends <code>promise(t', V, T)</code>. Every acceptor \(A\) that is in \(M'\)
+and not in \(M\) sends <code>promise(t', A.v, A.acceptT)</code> where
+<code>A.acceptT</code> \(<\) <code>T</code> because
+<code>A.acceptT</code> was last modified in an earlier epoch. In
+step P.2, proposers in this epoch send <code>propose(t', V)</code>,
+and so acceptances in this epoch are <code>accept(t', V)</code>.
+
 <p>
-Let \(m\) be the set of proposers in the majority that accepts \(T\)
-after the acceptor accepts t. The sets \(m\) and \(m'\) have an
-element in common because any two majorities have at least one common
-element. Let \(A\) be a common element of both majorities.
-<p>
-\(A\) does not reply to prepare(t') or request(t') messages where t' <
-t, and so if accepts \(T\) then \(T \geq t\).
+A learner determines that the consensus is <code>V</code> only when it
+receives <code>accept(T, V)</code> from a majority of acceptors. From
+the lemma it follows that after any learner learns <code>V</code>, the
+values learned by all learners is <code>V</code>.
+
+<h3 style="color:red;">Example</h3>
+
+<p style="color:red;">Diagram Structure</p>
+The next diagram illustrates the idea behind the proof. The diagram
+shows the Paxos timelines for a system with 3 acceptors A, B, C, and two
+proposers Y and Z. Proposers Y and Z propose letters of the alphabet
+and the learners come to a consensus about a proposed letter. Assume
+that Y and Z propose "y" and "z" respectively. The diagram also shows
+some events as yellow numbered circles; we will describe these events
+while we explain the operation of the algorithm.
 
 <p>
 <figure>
-    <img src="Paxos_07.jpg" alt="Fig7" style="width:80%">
-    <figcaption>Fig.7: Idea of the proof: 1</figcaption>
-</figure><figure>
-    <img src="Paxos_08.jpg" alt="Fig8" style="width:80%">
-    <figcaption>Fig.8: Idea of the proof: 2</figcaption>
-</figure>
-The two figures, above, illustrate the ideas behind the proof.
-
-<p>
-We will find the following verion of theorem 1 to be useful.
-<h4 class="w3-text-teal">Corollary</h4>
-If a majority of acceptors has accepted \(T\) at some point, then no
-acceptor has accepted \(t\) at that point where \(t > T\).
-
-
-<h3 class="w3-text-teal">Proposers, Acceptors and Values</h3>
-Now we give the complete algorithms for proposers and acceptors.
-
-<h4 class="w3-text-teal">Messages</h4>
-The messages have fields in addition to timestamps.
-<ol>
-  <li>
-  <i>promise(t, accepted_t, value)</i> sent from acceptors to proposers.
-  </li>
-  <li>
-  <i>request(t, value)</i> sent from proposers to acceptors.
-  </li>
-  <li>
-  <i>accepts(t, value)</i> sent from acceptors to proposers.
-  </li>
-</ol>
-
-<h4 class="w3-text-teal">Algorithm for Proposers</h3>
-Associated with each proposer P is a local variable P.value
-which is initially the value proposed by P, and which may change.
-
-<pre>
-initially P.t = 0, P.value = value proposed by P
-
-while true:
-   1. start timer; restart loop body if timeout
-
-   2. increment P.t by a positive amount
-
-   3. send prepare(P.t) to all acceptors
-
-   4. if P receives promise messages where
-      promise.t == P.t from a majority of acceptors:
-           let M be the set of these messages
-           where promise.value is not null
-           if M is not the empty set:
-                 let msg be the element of M with
-                 the largest accept_t
-                 set P.value to msg.value
-            send request(P.t, P.value) to all acceptors
-
-
-   5. if P receives accepts messages where
-         accepts.t == P.t
-         from a majority of acceptors:
-             break
-</pre>
-
-<h4 class="w3-text-teal">Algorithm for Acceptors</h3>
-Associated with each acceptor \(A\) are local variables A.accepted_t
-and A.value which are both null initially. A.accepted_t and A.value
-are timestamp and the value (respectively) of the most
-recent proposal to which A replied with an accepts message.
-
-<pre>
-initially A.t = 0, A.accepted_t = null, A.value = null
-
-while true:
-
-   1. upon receiving a prepare message from a proposer P:
-          if prepare.t >= A.t:
-               A.t = prepare.t
-               send promise(A.t, A.accepted_t, A.value) to P
-
-   2. upon receiving a request message from a proposer P:
-          if request.t >= A.t
-               A.accepted_t, A.value = request.t, request.value
-               send accepts(request.t, request.value) to P
-</pre>
-<p>
-We shall say that an acceptor "<i>accepts (t, V)</i>" when it sends an
-          accepts(t, V) message to any proposer.
-
-<h3 class="w3-text-teal">Theorem: Stability of Majority
-Acceptance</h3>
-If any acceptor accepts (t', V') after a majority of acceptors accepts
-(t, V) then V = V'
-
-<p  class="w3-text-teal">Proof</p>
-
-
-<p>
-Let \(A\) be the first acceptor to accept any (t', V') where t' > t,
-after the majority accepts (t, V).
-
-From line 2 of the acceptor's program,
-\(A\) received request(t', V') from a proposer P before \(A\)
-accepted (t', V').
-<p>
-From line 4 of the proposer's program,
-proposer P received promise messages with  promise.t = t'
-from a majority of acceptors before P
-sent request(t', V'). Let this majority be M'.
-<p>
-Two majorities have at least one element in common.
-Let A' be any acceptor in both M and M'. Then since A' accepted (t, V),
-it follows from line 1 of the acceptor's program that A' sends
-promise(t', t, V) to proposer P. 
-<p>
-Let C be an acceptor in M' and not in M. From theorem 1, C.accepted_t
-< t or C.value = V. So, C sends a promise message with
-promise.accepted_t < t or promise.value.
-<p>
-Proposer P chooses the promise message with the largest accepted_t
-field. The message with the largest accepted_t is promise(t', t,
-V). So, proposer P sends request(t', V) to acceptor A. Therefore
-acceptor A accepts (t', V).
-
-<p>
-The sequence of figures illustrates the steps of the proof. In these
-figures t = 9 and t' = 12.
-
-
-</figure><figure>
-    <img src="Slide09.jpg" alt="Fig9" style="width:50%">
-    <figcaption>Fig.9: Idea of the proof: 1</figcaption>
-</figure>
-<figure>
-    <img src="Slide10.jpg" alt="Fig10" style="width:50%">
-    <figcaption>Fig.10: Idea of the proof: 2</figcaption>
-</figure>
-<figure>
-    <img src="Slide11.jpg" alt="Fig11" style="width:50%">
-    <figcaption>Fig.11: Idea of the proof: 3</figcaption>
-</figure>
-<figure>
-    <img src="Slide12.jpg" alt="Fig12" style="width:50%">
-    <figcaption>Fig.12: Idea of the proof: 4</figcaption>
-</figure>
-<figure>
-    <img src="Slide13.jpg" alt="Fig13" style="width:50%">
-    <figcaption>Fig.13: Idea of the proof: 5</figcaption>
-</figure>
-<figure>
-    <img src="Slide14.jpg" alt="Fig14" style="width:50%">
-    <figcaption>Fig.14: Idea of the proof: 6</figcaption>
+    <img src="PaxosFigures/Slide15.jpg" alt="Fig3" style="width:100%">
+    <figcaption>Fig.3: Example of Timelines Illustrating Proof Idea</figcaption>
 </figure>
 
-
-
-
-<h3 class="w3-text-teal">Learning Consensus</h3>
-We now have a simple solution to learn a consensus. Acceptors send
-accept messages to all learners. When a learner receives
-accept messages with the same accept.t and accept.V values then the
-learner learns the value V.
-From the above theorem, after a majority
-of acceptors accept (t, V), all subsequent acceptances will accept the
-same V.
+<p style="color:red;">Epoch 10</p>
+The timeline shows three successive epochs with timestamps 10, 11,
+12. In epoch 10, proposer Z sends <code>prepare(10)</code> to all
+acceptors. Acceptors A and B receive the message, but C does
+not. Acceptors A and B respond with <code>promise(10, null,
+null)</code> because we assume that they haven't accepted a value
+earlier. They set <code>A.t = 10</code> and <code>B.t = 10</code>.
 
 <p>
-Recall that the specification has three parts: (1)
-learners learn values that have been proposed, (2) all learners learn
-the same value, and (3) and after learning a value a learner doesn't
-lear a new value.
-The proof that the algorithm satisfies the specification is
-straightforward.
+When proposer Z receives these messages, it sends
+<code>propose(10, "z")</code> on step P.2 to all acceptors. Only
+acceptor A receives this message, and this event is shown as a yellow
+circle with number 1. When A receives the message
+it sets <code>A.v = "z"</code> and <code>A.acceptT = 10</code>, and
+these values are shown in the yellow box, and A sends
+<code>accept("z", 10)</code> to all learners.
+<p>
+The <code>v</code> and
+<code>acceptT</code> values of acceptors <code>B</code> and
+<code>C</code> have not changed, and the values are shown as (null,
+null) in yellow boxes on timelines.
+
+<p style="color:red;">Epoch 11</p>
+In epoch 11, proposer Y sends <code>prepare(11)</code> to all
+acceptors. Acceptors B and C receive the message, but A does
+not. Acceptors B and C respond with <code>promise(11, null,
+null)</code> because we assume that they haven't accepted a value
+earlier. They set <code>B.t = 11</code> and <code>C.t = 11</code> and
+reply to the prepare message with <code>promise(11, null,
+null)</code>. 
 
 <p>
-The algorithm can be optimized. The optimizations don't change the
-basic structure of the proof.
+When proposer Y receives these messages, it sends
+<code>propose(11, "y")</code> on step P.2 to all acceptors.
+Acceptors B and C receive this message, shown as yellow circles with
+numbers 2 and 3.
+Acceptor A does not receive the message.
+
+<p>
+When acceptors B and C receive the message
+they sets <code>B.v, B.acceptT = "y", 11</code> and
+<code>C.v, C.acceptT = "y", 11</code> (shown in yellow boxes) and each
+of them sends <code>accept(11, "y")</code> to all learners.
+<p>
+The <code>v</code> and
+<code>acceptT</code> values of acceptor <code>A</code> has not
+changed; it remains <code>("z", 10)</code>.
+
+<p>
+After epoch 11, a majority of acceptors have sent <code>accept(11,
+"y")</code>.
+
+<p style="color:red;">Epoch 12</p>
+In epoch 12, proposer Z sends <code>prepare(12)</code> to all
+acceptors. Only A and B receive the message, and A responds with  
+<code>promise(12, "z", 10)</code>, while A responds with  
+<code>promise(12, "y", 11)</code>.
+
+<p>
+Proposer Z gets these promise messages on step P.2 (shown as event
+number 6) and changes
+<code>Z.v</code> from "z" to "y" and sends <code>propose(12,
+"y")</code> to all acceptors. Acceptors A and B receive the message
+and send <code>accept(12, "y")</code> to all learners.
+
+
 
 
   <footer id="myFooter">

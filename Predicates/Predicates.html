@@ -113,14 +113,20 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <h3 class="w3-text-teal">Extension of a Predicate</h3>
     A predicate \(R\) defines a set \(\{v | R(v) \}\) called its
     <a
-    href="https://en.wikipedia.org/wiki/Extension_(predicate_logic)">extension</a>.
+    href="https://en.wikipedia.org/wiki/Extension_(predicate_logic)">extension</a>. An
+    extension of a predicate is the set of elements for which the
+    predicate holds.
   In the example, the extension of the predicate \(age > 19\) is the
     set \(\{ (Liu, 20, Physics), (Eve, 21, CS) \}\).
     </p>
 
     <p>
-  Predicates can be composed using Boolean operators. For a predicate
-  \(X\), let \(e(X)\) denote its extension. Here are examples of
+    Predicates can be composed using Boolean operators.
+    Set union corresponds to predicate disjunction (<i>or</i>), and
+    set intersection to predicate conjunction (<i>and</i>).
+    For a predicate
+    \(X\), let \(e(X)\) denote its extension.
+    Here are examples of
     extensions.
     </p>
 
@@ -183,20 +189,10 @@ True</i>. \(P\) is universally True means that the the extension of
     <p>
 \([(major = CS) \; \Rightarrow \; (age < 22)] \)
 </p>
-is a boolean - note the square brackets. It's value is the boolean constant, True,
-exactly when the formula holds universally. In our example,
+In our example,
  the predicate \((major = CS) \; \Rightarrow \; (age < 22)\)
-holds for all elements - Maya, Liu, and Eve. So, the boolean,
-    \([(major = CS) \; \Rightarrow \; (age < 22)] \)  is
-True.
+holds for all elements - Maya, Liu, and Eve - it is universally True.
 </p>
-
-<p style="color:red;">Example</p>
-    <p>
-\([(major = CS) \; \Rightarrow \; (age < 20)] \)
-</p>
-is the boolean False because the formula is not True for Eve, and
-hence is not universally True.
 
 <h3 class="w3-text-teal">Equivalence</h3>
 \(P \equiv Q\) is a predicate which holds exactly when both \(P\) and 
@@ -210,8 +206,8 @@ hence is not universally True.
 </p>
 
 <p>
-We usually use equivalence in formula that are universally True,
-denoted by \([P \equiv Q]\).
+We almost always use equivalence in formula that are universally True,
+denoted by \([P \equiv Q]\). This means that \(P\) and \(Q\) are identical.
 </p>
 
 <p style="color:red;">Example</p>
