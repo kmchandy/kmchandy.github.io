@@ -46,16 +46,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   href="Predicates.html">Review of Predicates</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="LoopsExample.html">Examples</a>
-  
-  <a class="w3-bar-item w3-button w3-hover-black"
   href="PredicatesSelfTest.html">Self Tests</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="PredicatesExercises.html">Exercises</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="LoopsExplorations.html">Explorations</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
   href="../HoareTriples/HoareTriples.html">Next: Hoare Triples</a> 
@@ -167,7 +158,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     \vee Q\).
     </p>
 
-    <p style="color:red;">Example</p>
+    <h4 style="color:red;">Example</h4>
     <p>
     \((major = CS) \; \Rightarrow \; (age < 20) \) is a predicate
     which when applied to Maya is True; when applied to Liu is also
@@ -185,13 +176,22 @@ True</i>. \(P\) is universally True means that the the extension of
 \(P\) is the universal set, \(V\).
 </p>
 
-<p style="color:red;">Example</p>
+<h4 style="color:red;">Example</h4>
     <p>
-\([(major = CS) \; \Rightarrow \; (age < 22)] \)
+\([(major = physics) \vee (age = 19) \vee (age = 21)] \)
 </p>
-In our example,
- the predicate \((major = CS) \; \Rightarrow \; (age < 22)\)
-holds for all elements - Maya, Liu, and Eve - it is universally True.
+In our example this predicate holds for Maya, Liu, and Eve - it is
+universally True. Without the square brackets,
+<p>
+\((major = physics) \vee (age = 19) \vee (age = 21) \)
+<p>
+is a predicate that we can apply to each element --- Maya, Liu,
+Eve. Applying it to each element returns True.
+<p>
+With the square brackets we get a Boolean which is not a
+    function from elements to the Booleans. It is a property of the
+    universal set.
+
 </p>
 
 <h3 class="w3-text-teal">Equivalence</h3>
@@ -210,7 +210,7 @@ We almost always use equivalence in formula that are universally True,
 denoted by \([P \equiv Q]\). This means that \(P\) and \(Q\) are identical.
 </p>
 
-<p style="color:red;">Example</p>
+<h4 style="color:red;">Example</h4>
 Let \(odd\) be a function on integers that returns True exactly when
 the integer is an odd number.
 </p>

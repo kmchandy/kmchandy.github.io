@@ -74,69 +74,44 @@ hr.new2 {
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
     
-    
-    <!------------------------------------------------------------>
-    <h1 class="w3-text-teal">Review: Nondeterministic Iteration</h1>
-    <!------------------------------------------------------------>
+    <h1 class="w3-text-teal">Examples: Nondeterministic Iteration</h1>
 
-    <h2 class="w3-text-teal">Key Ideas</h1>
+    <h2 class="w3-text-teal">Shortest Path from a Source</h1>
+    
+    We are given a matrix \(W\) of numbers which represents a directed
+    graph where \(W[i,j]\) is the weight of the edge
+    \((i,j)\). If edge \((i, j)\) does not exist then \(W[i,j]\) is a
+    suitably large value \(inf\). Edge weights may be negative. There are no
+    cycles of negative length in 
+    the graph. The problem is to find the shortest path from vertex
+    \(0\) to all the other vertices.
+
+    Let \(d\) be an array where \(d[i]\) becomes the weight of the
+    shortest-weight path to \(i\).
+    
+
+    <h4 class="w3-text-teal">Nondeterministic Iteration</h4>
+    Initially:
     <p>
-    The key idea is <i>nondeterministic</i> execution of commands.
-    
-    <h3 class="w3-text-teal">Nondetermistic Iteration</h3>
-    
-    This module is a review of nondeterministic iteration implemented
-    as
-    <a href="https://en.wikipedia.org/wiki/Guarded_Command_Language">
-    <i>do-od</i> loops.</a> The syntax of these loops is irrelevant for
-    this course; our only concern is nondeterminstic selection of
-    commands to be executed.
-    </a>
-    
+    \(
+    d[0] = 0
+    \)
+    <br>
+    For \(i \neq 0\): \(d[i] = inf\)
+
+    <p class="w3-text-teal">Iteration</p>
+    For all \(i, j\):
     <p>
-    A <i>do-od</i> loop is
-    different from <i>while</i> loops in languages such as Python
-    because execution of a <i>do-od</i> loop is non-deterministic. 
-
-
-    A <i>do-od</i> loop consists of a set of guarded commands. A guarded
-    command consists of a guard and a command, and we use the syntax:
-    <pre>
-guard -> command
-    </pre>
-    The execution of the loop is as follows: Execute any guarded command
-    of the loop for which the guard evaluates to True. The loop
-    terminates when all guards evaluate to False.
-    </p>
-
-
-    <p>
-    A do-od loop is an example of a nondeterministic program:
-    Multiple guards may be true and the guard that is executed is
-    chosen nondeterministically.
-    
-
-    <h3 style="color:red;">Example: Sorting</h3>
-    Let \(X\) be an array of \(N\) numbers. The following loop sorts
-    the array in ascending order.  (We assume that indices
-    start at 0.)
-    <pre>
-for all i where 0 < i < N:
-   X[i-1] > X[i]   ->    X[i-1], X[i] = X[i], X[i-1]
-    </pre>
-    
-    The loop has \(N-1\) guarded commands. Execution of the loop
-    proceeds by executing any of the \(N-1\) guarded commands for
-    which the guard is true. So, execution of the loop proceeds by
-    flipping any adjacent pair of elements that is out of
-    order. Execution of the loop terminates when all guards are False,
-    and therefore all adjacent pairs are in order. 
-
+    \(
+    d[j] > d[i] + W[i,j] \quad \rightarrow \quad d[j] = d[i] + W[i,j]
+    \)
 
     
     
-  <footer id="myFooter">
-
+    
+    
+    
+    <footer id="myFooter">
     <div class="w3-container w3-theme-l1">
       <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
       <br>
@@ -175,3 +150,4 @@ function w3_close() {
 
 </body>
 </html>
+

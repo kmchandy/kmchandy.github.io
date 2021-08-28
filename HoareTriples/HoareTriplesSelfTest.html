@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>ReviewOfHoareTriples</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="HoareTriples.html">Review of Hoare Triples</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="HoareTriplesSelfTest.html">Self Tests</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Safety/Safety.html">Next: Safety</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Predicates/Predicates.html"> Previous: Predicates</a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    
+    <!------------------------------------------------------->
+    <h1 class="w3-text-teal">Hoare Triples: Self Test</h1>
+
+    Which of the following are True?
+    <ol>
+      <li>
+      \(
+      (\{P\} \;  c \; \{Q\}) \wedge (\{P'\} \;  c \; \{Q\}) \quad
+      \Rightarrow \quad \{P \vee P'\} \;  c \; \{Q\}
+      \)
+      </li>
+      <li>
+      \(
+      (\{P\} \;  c \; \{Q\}) \wedge ([P \Rightarrow P']) \quad
+      \Rightarrow \quad \{P'\} \;  c \; \{Q\}
+      \)
+      </li>
+      <li>
+      \(
+      (\{P\} \;  c \; \{Q\}) \wedge ([P' \Rightarrow P]) \quad
+      \Rightarrow \quad \{P'\} \;  c \; \{Q\}
+      \)
+      </li>
+      <li>
+      <pre>
+      {x > 10}
+      if x > 0 then x = -3*x else x = 2*x
+      {x < 30}
+      </pre>
+      </li>
+      <li>
+      <pre>
+      {x < 10}
+      if x > 0 then x = -3*x else x = 2*x
+      {x < 30}
+      </pre>
+      </li>
+      <li>
+      <pre>
+      {x > 0}
+      x = x + 10
+      x = 2*x
+      {x > 20}
+      </pre>
+      </li>
+    </ol>
+    
+    <h2>Answers</h2>
+    <ol>
+      <li>
+      \(
+      (\{P\} \;  c \; \{Q\}) \wedge (\{P'\} \;  c \; \{Q\}) \quad
+      \Rightarrow \quad \{P \vee P'\} \;  c \; \{Q\}
+      \)
+      <p>
+      True.
+      <p>
+      Execution of command \(c\) in a state in which \(P\) holds takes the
+      system to a state in which \(Q\) holds. Likewise,
+      Execution of command \(c\) in a state in which \(P'\) holds takes the
+      system to a state in which \(Q\) holds.
+      Therefore execution of \(c\) in a state in which \(P\) or \(P'\)
+      hold takes the system to a state in which \(Q\) holds.
+      </li>
+      <li>
+      \(
+      (\{P\} \;  c \; \{Q\}) \wedge ([P \Rightarrow P']) \quad
+      \Rightarrow \quad \{P'\} \;  c \; \{Q\}
+      \)
+      <p>
+      False. Here's an example:
+      <p>
+      \(
+      (\{x = 0\} \;  x = 2*x \; \{x = 0\}) \wedge ([x = 0 \Rightarrow
+    x \geq 0]) \quad
+      \Rightarrow \quad \{x \geq 0\} \;  c \; \{x = 0\}
+      \)
+      <p>
+      is False. Both terms in the antecedent (the left-hand side of
+    the implication) are True but the consequent is False.
+      
+      </li>
+      <li>
+      \(
+      (\{P\} \;  c \; \{Q\}) \wedge ([P' \Rightarrow P]) \quad
+      \Rightarrow \quad \{P'\} \;  c \; \{Q\}
+      \)
+      <p>
+      True
+      <p>
+      If \(c\) is executed in a state in which \(P'\) holds then ---
+      because \([P' \Rightarrow P]\) --- \(P\) also holds in that
+      state and so \(Q\) holds when \(c\) terminates.
+      </li>
+      <li>
+      <pre>
+      {x > 10}
+      if x > 0 then x = -3*x else x = 2*x
+      {x < 30}
+      </pre>
+      <p>
+      True.
+      <p>
+      Because the precondition \(x > 10\) implies the if-clause (\(x >
+      0\)), the above Hoare triple holds if the following triple holds
+      <pre>
+      {x > 10}
+      x = -3*x
+      {x < 30}
+      </pre>
+      We can check that this triple holds by substituting the right-hand
+      side of the assignment statement to \(x\) for \(x\) in the
+      postcondition: So we replace \(x < 30\) by:
+      <p>
+      \(
+      -3*x < 30
+      \)
+      <p>
+      Which is equivalent to \(x < 10\), which is satisfied by the precondition.
+      
+      </li>
+      <li>
+      <pre>
+      {x < 10}
+      if x > 0 then x = -3*x else x = 2*x
+      {x < 30}
+      </pre>
+      <p>
+      False.
+      <p>
+      When \(x = - 11\), the precondition is satisfied but the
+      postcondition is not.
+      </li>
+      <li>
+      <pre>
+      {x > 0}
+      x = x + 10
+      x = 2*x
+      {x > 20}
+      </pre>
+      <p>
+      True
+      <p>
+      Again we can verify this by working backwards from the
+      postcondition. Substitute the right-hand side of the assignment
+      to \(x\) for \(x\) in the postcondition; i.e. substitute \(
+      2*x\) for \(x\) in \( x > 20\) to get  \(2*x > 20\). This is
+      equivalent to \(x > 10\).
+      <p>
+      Now do the same step for the previous statement:
+      \(x + 10 > 10\). This is equivalent to \(x > 0\) which is
+      satisfied by the precondition.
+      <p>
+      We can annotate the program with assertions to make it clearer.
+      <pre>
+      {x > 0}
+      x = x + 10
+      {x > 10}
+      x = 2*x
+      {x > 20}
+      </pre>
+      </li>
+    </ol>
+    
+
+
+    
+  
+ 
+    
+<!---------------------------------------->
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>

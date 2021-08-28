@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>PredicatesSelfTests</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Predicates.html">Review of Predicates</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PredicatesSelfTest.html">Self Tests</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../HoareTriples/HoareTriples.html">Next: Hoare Triples</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Loops/Loops.html"> Previous: Nondeterministic Iteration</a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+    
+    <h1 class="w3-text-teal">Predicates: Self Tests</h1>
+    This exercise deals with predicates on students at a
+    university. Let \(CS, Sp, IQ\) be predicates that hold for
+    students in CS, who play a sport, and who are smart,
+    respectively. Draw Venn diagrams that 
+    illustrate the  
+    following predicates, where the sets in the diagrams are
+    extensions of the predicates. 
+    <ol>
+      <li>
+      \(CS \wedge IQ\)
+      </li>
+      <li>
+      \(CS \vee IQ\)
+      </li>
+      <li>
+      \((\neg CS) \wedge (\neg IQ)\)
+      </li>
+      <li>
+      Note square brackets. 
+      <p>
+      \([IQ \equiv CS]\)
+      </li>
+      <li>
+      No square brackets. 
+      <p>
+      \(IQ \equiv CS\)
+      </li>
+      <li>
+      Note the square brackets:
+      <p>
+      \([CS \Rightarrow IQ]\)
+      </li>
+      <li>
+      No square brackets; so, this is a predicate, not a Boolean. 
+      <p>
+      \(CS \Rightarrow IQ\)
+      </li>
+      <li>
+      The following formula is a Boolean value because both sides of
+    the implications are Booleans. Is the formula True or False? 
+      <p>
+      \([IQ \equiv (CS \wedge Mu)] \Rightarrow [IQ \Rightarrow CS] \)
+      </li>
+    </ol>
+
+    <h1 class="w3-text-teal">Predicates: Self Tests Answers</h1>
+
+    <figure>
+    <img src="PredicatesSelfTests/Slide1.jpg" alt="Fig1" style="width:80%">
+    <figcaption>Fig.1: Answers to Self Test</figcaption>
+    </figure>
+
+    
+    <ol>
+      <li>
+      \(CS \wedge IQ\)
+      <p>
+      Intersection of the extensions of CS and IQ.
+      </li>
+      <li>
+      \(CS \vee IQ\)
+      </li>
+      <p>
+      Union of the extensions of CS and IQ.
+      <li>
+      \((\neg CS) \wedge (\neg IQ)\)
+      </li>
+      <p>
+      The extension of \(\neg CS\) is the universal set excluding the
+      extension of CS. Similarly for \((\neg IQ)\).
+      <li>
+      Note square brackets. 
+      <p>
+      \([IQ \equiv CS]\)
+      <p>
+      Because of the square brackets, this term is a Boolean and not a
+      predicate. It is either the Boolean True which means it holds
+      for this universal set or it is the Boolean False. It is not a
+      function from an element to the Booleans.
+      <p>
+      This Boolean is True exactly when the extensions of \(IQ\) and
+      \(CS\) are identical. So, this Boolean is True for our set of
+      students exactly when a student is smart if and only if the
+      student is in CS.
+      </li>
+    </ol>
+
+    <figure>
+    <img src="PredicatesSelfTests/Slide2.jpg" alt="Fig1" style="width:80%">
+    <figcaption>Fig.2: Answers to Self Test</figcaption>
+    </figure>
+
+    <ol start="5">
+      Question:
+      <li>
+      No square brackets. 
+      <p>
+      \(IQ \equiv CS\)
+      </li>
+    </ol>
+      <p>Answer</p>
+      <p>
+      This is a predicate. It is a function from elements of the set
+      to the Booleans.
+      <p>
+      Consider a student Maya who is smart and in
+      CS. This predicate, applied to Maya, returns the Boolean "Maya
+      is smart" = "Maya is in CS", which is True.
+      <p> Consider another
+      student, Stupid, who is not smart and is not in CS. This predicate
+      applied to Stupid is the Boolean True because "Stupid is smart"
+      = "Stupid is in CS", since both sides of the equality are False.
+      <p>
+      Look at Einstein who is smart but is not in CS. The predicate
+      applied to Einstein is False.
+      <p>
+      The extension of \(IQ \equiv CS\) is the union of (1) the
+      intersection of the extensions of \(IQ\) and \(CS\), and (2) the
+      intersection of the extensions of \(\neg IQ\) and \(\neg CS\).
+
+    <figure>
+    <img src="PredicatesSelfTests/Slide3.jpg" alt="Fig1" style="width:80%">
+    <figcaption>Fig.3: Answers to Self Test</figcaption>
+    </figure>
+
+    <ol start="6">
+      Question:
+      <li>
+      Note the square brackets:
+      <p>
+      \([CS \Rightarrow IQ]\)
+      </li>
+      <li>
+      No square brackets; so, this is a predicate, not a Boolean. 
+      <p>
+      \(CS \Rightarrow IQ\)
+      </li>
+    </ol>
+
+    <p>Answer</p>
+    The Venn diagram on the left shows \([CS \Rightarrow IQ]\). This
+    is a Boolean: It is either True for the universal set in question
+    or it is False. It is not a function from elements of the set to
+    the Booleans.
+    <p>
+    It is True for the universal set when the extension of \(CS\) is a
+    subset of the extension of \(IQ\). It says that every student in
+    CS is smart.
+
+    <p>
+    The Venn diagram on the right shows \(CS \Rightarrow IQ\) without
+    the square brackets. This is a function from elements of the
+    universal set to the Booleans.
+    <p>
+    Apply this function to Stupid who is not in CS and not smart. The
+    antecedent "is in \(CS\)" is False, and so it doesn't matter what
+    the consequence is: This function applied to Stupid is True.
+    <p>
+    Applying this function to student X who is in CS and is not
+    smart returns False.
+    <p>
+    The extension of this predicate \(CS \Rightarrow IQ\) is the union
+    of (1) of (NOT CS) and (2) IQ.
+
+    <p>Question 8</p>
+    Yes, the formula is True because:
+    <p>
+    \(
+    [CS \wedge Mu \quad \Rightarrow \quad CS]
+    \)
+    
+
+    
+
+    
+      
+      
+
+
+    
+    
+<!---------------------------------------->
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>

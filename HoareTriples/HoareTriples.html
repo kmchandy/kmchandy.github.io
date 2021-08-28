@@ -43,19 +43,10 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   Algorithms</h3>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="Predicates.html">Review of Predicates</a>
+  href="HoareTriples.html">Review of Hoare Triples</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="LoopsExample.html">Examples</a>
-  
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="PredicatesSelfTest.html">Self Tests</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="PredicatesExercises.html">Exercises</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="LoopsExplorations.html">Explorations</a>
+  href="HoareTriplesSelfTest.html">Self Tests</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
   href="../Safety/Safety.html">Next: Safety</a> 
@@ -82,7 +73,6 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <!------------------------------------------------------->
     <h1 class="w3-text-teal">Review of Hoare Triples</h1>
     
-
 
 A <a
   href="https://en.wikipedia.org/wiki/Hoare_logic">Hoare triple</a>
@@ -164,9 +154,10 @@ are possible from a state in which \(x = -1\) by a command \(c\) that
 
 <p>Since the state satisfies the
     first precondition, \(x < 0\), the state after the transition must
-    satisfy the postcondition, \((x = 1) \vee (x = 2)\). The
+    satisfy the first postcondition, \((x = 1) \vee (x = 2)\). The
     remaining Hoare triples don't address the precondition \(x =
--1\). Therefore, the only transitions from \(x = -1\) are to either
+-1\), and so the postconditions of these Hoare triples are irrelevant
+    for this question. Therefore, the only transitions from \(x = -1\) are to either
 state \(x = 1\) or to state \(x = 2\).
 
 <p style="color:red;">Example</p>

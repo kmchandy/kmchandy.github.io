@@ -59,12 +59,12 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   href="Paxos.html">Explorations</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../SelfStabilizing/SelfStabilizing.html">
-  Next: Self Stabilizing Algorithms</a> 
+  href="../Byzantine/Byzantine.html">
+  Next: Byzantine Consensus: Written Messages</a> 
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../ApplicationsDiffusingComputations/ApplicationsDiffusingComputations.html">
-  Previous: Applications of Diffusing Computations
+  href="../ConsensusImpossible/ConsensusImpossible.html">
+  Previous: Consensus Impossible
   </a>
   
 </nav>
@@ -268,9 +268,16 @@ timelines. Timelines are horizontal and time progresses from left to
 right. The position of an event on the timeline be the
 <code>t</code> value of the agent that executes the event.
 
-<p class="w3-text-teal">Messages in a Timeline</p>
+<h4 class="w3-text-teal">Messages in a Timeline</h4>
 Messages are shown only for those messages that are accepted by the
-receiver. Let's look at this example. A proposer sends a message with
+receiver. Messages that are ignored by a receiver have no impact on
+the receiver's state. In the Paxos algorithm, these messages have no
+impact on the sender's state either. So, we don't need to consider
+these messages in the timeline.
+
+
+<h3 style="color:red;">Example</h3>
+Let's look at this example. A proposer sends a message with
 <code>t=T</code> and an acceptor <code>A</code> that receives this
 message ignores it because <code>A.t</code> \(\geq\)
 <code>t=T</code>. This message is not shown in the timeline because
@@ -385,7 +392,7 @@ receives <code>accept(T, V)</code> from a majority of acceptors. From
 the lemma it follows that after any learner learns <code>V</code>, the
 values learned by all learners is <code>V</code>.
 
-<h3 style="color:red;">Example</h3>
+<h2 style="color:red;">Example</h2>
 
 <p style="color:red;">Diagram Structure</p>
 The next diagram illustrates the idea behind the proof. The diagram

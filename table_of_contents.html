@@ -81,7 +81,8 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     Review: Nondeterminism, Predicates, Iteration
     </h2>
     This section reviews material that you may have learned in
-    earlier courses.
+    earlier courses. The key concepts are nondeterministic iteration,
+    predicates, and Hoare triples.
     <ol start="2">
       <li>
       <a href="Loops/Loops.html">Review: Nondeterministic iteration</a>
@@ -212,10 +213,24 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     href="SelfStabilization/SelfStabilization.html">Self Stabilization Algorithms</a>
     Self-stabilizing algorithms automatically correct themselves in response to transient faults. 
     </li>
+    
+    <li>
+    <a
+    href="ConsensusImpossible/ConsensusImpossible.html">Reaching
+    Consensus in a Finite Number of Steps is Impossible</a>
+    This module gives the intuition for why consensus among
+    distributed agents cannot be reached when message delays are
+    arbitrarily long.
+    </li>
+    
     <li>
     <a
     href="Paxos/Paxos.html">The Paxos Algorithm</a>
-    Achieving consensus among agents in the presence of error.
+    The Paxos algorithm is a best-effort algorithm for reaching
+    consensus among distributed agents in the presence of errors and
+    unbounded message delays. The algorithm does not
+    guarantee that consensus will be reached; however, if consensus is
+    reached then it has desirable properties.
     </li>
     <li>
     <a
@@ -242,24 +257,6 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <a href="BitCoin/BitCoin.html">
     Introduction to probabilistic distributed consensus algorithms in
     Bitcoin.</a>
-    </li>
-  </ol>
-
-  <h3 class="w3-text-teal">Algorithms for Clock Synchronization</h3>
-  Algorithms to reduce drift between clocks used by different agents.
-  <ol>
-    <li>
-    NTP
-    </li>
-    <li>
-    Clocks with bounded drift and channels with bounded message delay.
-    </li>
-    <li>
-    Adaptive synchronization algorithms when the drift is a Wiener
-    process.
-    </li>
-    <li>
-    Using clocks for managing resources shared by multiple agents.
     </li>
   </ol>
 
@@ -291,18 +288,39 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <h3 class="w3-text-teal">Cooperating Agents</h3>
   <ol>
     <li>
-    <a href="DiningPhilosophers/DiningPhilosophers.html">The distributed dining philosophers problem</a>
+    <a href="DiningPhilosophers/DiningPhilosophers.html">The
+  distributed dining philosophers problem. Mutual exclusion among
+  distributed agents. Concepts in distributed conflict resolution</a>
     </li>
     <li>
-    Mutual exclusion algorithms.
+    <a href="DrinkingPhilosophers/DrinkingPhilosophers.html">
+    The drinking philosophers problem. Fair sharing of resources among
+  distributed agents. Mechanisms for dynamic priorities among
+  competing agents. Use of time for priorities.
+    </a>
     </li>
     <li>
-    Fair sharing of resources among agents: the drinking philosophers
-  problem. 
+    <a href="CommitteeCoordination/CommitteeCoordination.html">
+    The <i>Committee Coordination Problem.</i> Rendezvous among
+  subsets of distributed agents. Setting up synchronizations.
+    </a>
+    </li>
+  </ol>
+  
+
+  <h3 class="w3-text-teal">Algorithms for Clock Synchronization</h3>
+  Algorithms to reduce drift between clocks used by different agents.
+  <ol>
+    <li>
+    <a href="NTP/NTP.html">
+    NTP</a>
+    </a>
     </li>
     <li>
-    Coordinating actions across agents: The committee
-  coordination problem.
+    <a href="UsingNTP/UsingNTP.html">
+    Reducing clock drift using NTP. Adaptive clock synchronization
+  algorithms. </a>
+    </a>
     </li>
   </ol>
 
