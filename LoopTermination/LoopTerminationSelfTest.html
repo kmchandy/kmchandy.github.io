@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>LoopTermination</title>
+<title>LoopTerminationSelfTest</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -78,92 +78,104 @@ hr.new2 {
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
     
-    <h1 class="w3-text-teal">Variant Functions</h1>
-    We use the term variant function, rather than loop variant,
-    because we will use the concept to prove properties of systems
-    that are not loops in programs. <i>A variant function is a function
-    from states of a system to a well-founded set.</i>
-    A
-    <a href="https://en.wikipedia.org/wiki/Well-founded_relation">
-    well-founded set</a>
-    is a set on which we can carry out proofs by
-    induction. We prove progress of most algorithms by finding a
-    variant function from states to a set of integers which is bounded
-    below, and showing that state transitions decrease the value of
-the function.
+    <h1 class="w3-text-teal">Variant Functions: Self Test</h1>
 
+    <!---------------------------------------------------------->
+    <h2 class="w3-text-teal">Question 1</h2>
+    Let \(x\) be a vector of positive integers. Does the following
+    nondeterministic iteration terminate? If so, what is \(x\) upon
+    termination? Prove your answer.
+    <p>
+    \(x\) has \(N\) elements indexed \(j\) where \(0 \leq j < N\).
+    <p>
+    for all \(0 \leq i, j < N\):
+    <p>
+    \(
+    x[j] > x[i] \quad \rightarrow \quad x[j] = x[j] - x[i]
+    \)
+
+    <!---------------------------------------------------------->
+    <h2 class="w3-text-teal">Question 2</h2>
+    <p>
+    This question is related to the distributed algorithm,
+    <i>Diffusing Computations</i>.
+    <p>
+    \(T\) is either empty or is a rooted tree with vertex \(root\) as the
+    root. Associated with each vertex
+    \(v\) on the tree is a variable \(v.parent\) which is
+    \(v\)'s parent in the tree if \(v\) is not the root, and is
+    \(None\) if \(v\) is the root. Because the tree is rooted, \(root\)
+    is an ancestor of all vertices on the tree.
+
+    <p>
+    Also associated with
+    each vertex \(v\) is an integer, \(v.count\), which is the number
+    of \(v\)'s children on the tree.
+    <p>
+    A vertex that is not in \(T\) has a zero count and no parent.
+    <p>
+    Consider the following algorithm:
+    <p>
+    For all vertices <code>v</code>
+    <pre>
+    (v.count == 0) and (v.parent != None)   ->
+                           v.parent.count -= 1
+                           v.parent = None
+    </pre>
+    <p>
+    Does the algorithm terminate? Prove your answer.
+
+    <!---------------------------------------------------------->
+    <h1 class="w3-text-teal">Answers</h1>
+
+    <h2 class="w3-text-teal">Question 1</h2>
+    Yes, the algorithm terminates.
+    <p>
+    An invariant of the algorithm is that all elements of \(x\) are
+    positive integers. Verify that this predicate holds initially and execution of
+all commands maintains this predicate.
 <p>
-For a few problems we use a variant functions from states to tuples of
-integers that are bounded below. We compare tuples
-<a href="https://en.wikipedia.org/wiki/Lexicographic_order">
-lexicographically</a>. For example \((0, 1) < (1, 0)\).
+Let \(f = \sum_{j} x[j]\)
+<p>
+\(f\) is bounded below by \(N\) because of the invariant.
+\(f\) has an integer value.
+<p>
+Verify that execution of any command with a True guard reduces
+    \(f\). Therefore \(f\) is a variant function, and the algorithm
+terminates.
+
+<p class="w3-text-teal">Termination Condition</p>
+If all the guards are False then all the elements of \(x\) are
+identical. Verify the invariant that the gcd (greatest common divisor)
+of the elements of \(x\) remain unchanged. Therefore, at termination,
+each element of \(x\) is the gcd of initial elements of \(x\).
+
+    <h2 class="w3-text-teal">Question 2</h2>
+Yes, the algorithm terminates.
+<p>
+A guard has value True exactly when \(v\) is a leaf of the tree, and
+executing the command removes \(v\) from the tree.
+<p>
+A variant function is the number of vertices in the tree. This is
+bounded below by 0, and execution of a command with a True guard
+reduces its value.
+<p>
+At termination the tree vanishes.
+
+<p class="w3-text-teal">An alternate variant function</p>
+An alternate variant function is the tree, T, itself. For any graphs
+\(G\), \(G'\), define \(G \leq G'\) exactly when \(G\) is a subraph of
+\(G'\). This variant function is bounded below by the empty tree, and
+the execution of a command with a True guard reduces the function.
+
     
-    <p>
-    Let \(f\) be a variant function. Then \(f = k\), for a constant
-    \(k\) is a predicate. The extension of this predicate is the set
-    of states \(s\) where \(f(s) = k\).
-
-<hr class="new2">
-    <h4 style="color:blue;">
-    We prove that execution of a loop terminates by proving that the
-    execution of any command whose guard evaluates to True reduces the
-    value of a variant function \(f\). 
-</h4>
-<hr class="new2">
-    <p>
-
-     If the execution of any command with a True guard reduces
-    \(f\) then every iteration
-    reduces 
-    \(f\). Since \(f\) is bounded below, it cannot decrease for ever.
-    Therefore, at some point in the
-    computation all guards are False.
-    And, at that that point
-    execution of the loop terminates.
-
-
-
-    <h4 class="w3-text-teal">Variant Functions and Hoare Triples</h4>
-    Let \(I\) be an invariant
-     of the loop, let the \(j\)-th guarded command have guard
-    \(g_{j}\) and command \(c_{j}\), and let \(f\) be a variant function
-    of the loop. We prove that the execution of any command with
-    a True guard reduces the variant function by proving the
-    following Hoare triple for all \(j\): 
-<p>
-\(\forall K: \quad
-\{(f = K) \wedge I \wedge g_{j}\} \; c_{j} \; \{f < k\}
-\)
-<p>
-Because \(I\) is an invariant it holds before every command is
-    executed. Since \(c_{j}\) is executed only if \(g_{j}\) holds, we
-    know that \(I \wedge g_{j}\) holds before \(c_{j}\) is
-    executed. We use this knowledge to show that execution of any
-command reduces the variant function.
-
-<!-------------------------------------------------------------------->
-    <h3 class="w3-text-teal">Variant Functions and Graphs</h3>
-If there is a variant function \(f\) then
-the state-transition graph has no cycles
-    because every edge of the graph is from a state with a higher
-value of \(f\) to a state with a lower value.
-The diagram below shows an acyclic graph with edges directed from
-higher to lower \(f\) values.
-
-<p>
-A termination state (vertex) is one without outgoing edges.
-The variant function tells us that the graph does not have paths with
-an infinite number of hops; every path reaches a terminal state in a
-finite number of steps.
 
 
 
 
-<figure>
-  <img src="VariantFunction.jpg" alt="Fig1" style="width:80%">>
-  <figcaption>Fig.1 - Variant Function decreases along every Edge</figcaption>
-</figure>
 
+
+    
 
   <footer id="myFooter">
 
