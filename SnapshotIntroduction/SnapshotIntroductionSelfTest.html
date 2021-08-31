@@ -98,7 +98,8 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <!---------------------------------------------------->
     Let \(C\) and \(C'\) be consistent cuts of a timeline diagram. Is
     it possible that there is an event \(e\) which is in \(C\) but
-    not in \(C'\)?
+    not in \(C'\), and another event \(e'\) which is in \(C'\) but
+    not in \(C\)?
     <p>
     Another way of asking the same question is as follows. Does the
     following always hold?
@@ -116,6 +117,61 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     example, in figure 2, timestamps 11, 12, 13, ... 17 correspond to
     the same state. Develop an algorithm by which different timestamps
     correspond to different states.
+
+    
+
+    <!---------------------------------------------------->
+    <h1 class="w3-text-teal">Answers</h1>
+<!---------------------------------------------------->
+<!---------------------------------------------------->
+    <h3 class="w3-text-teal">Question 1</h3>
+<!---------------------------------------------------->
+Yes, there exists such a trajectory. The proof is a straightforward
+    extention of the
+theorem about the snapshot visited in a trajectory.
+<p>
+Consider a permutation of events in the given trajectory where the
+    ordering of events are the same as in the given trajectory except
+    that events
+    in \(c_{0}\) occur first, and then events in \(c_{1}\)
+    that are not in \(c_{0}\), and and then events in \(c_{2}\)
+that are not in \(c_{1}\), and so on.
+This permutation of events is also a trajectory because the order of
+    dependent events is preserved. And this permutation visits the
+states \(S_{i}\) in order.
+
+<!---------------------------------------------------->
+    <h3 class="w3-text-teal">Question 2</h3>
+<!---------------------------------------------------->
+An example of cuts \(C\) and \(C'\) is as follows. Consider a computation:
+<ol>
+  <li> <code> x = x + 1</code></li>
+  <li> <code> y = y + 1</code></li>
+</ol>
+Let \(C\) consist of event 1, and \(C'\) consist of event 2. Both
+    \(C\) and \(C'\) are consistent cuts. And \(C\) contains event 1
+    which is not in \(C'\), while \(C'\) contains event 2
+which is not in \(C\).
+
+
+
+<!---------------------------------------------------->
+    <h3 class="w3-text-teal">Question 3</h3>
+<!---------------------------------------------------->
+Set the timestamp of an event \(e\) to 1 + the maximum of the
+    timestamps of events \(e'\) with edges to \(e\) in the timeline
+diagram.
+
+<figure>
+    <img src="../TimelineDiagrams/TimelineDiagrams/Slide17.jpg" alt="Fig17" style="width:75%">
+    <figcaption>Increment Timestamps</figcaption> 
+</figure>
+A timestamp of a vertex is the length of the longest path to the vertex from the initial
+    vertex (which is not shown). A longest path here is the one with
+    the most hops.
+
+
+
 
     
 
