@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>SnapshotIntroduction</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="SnapshotIntroduction.html">Snapshot Introduction</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="SnapshotIntroductionSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../DistributedSystems/DistributedSystems.html">
+  Next: Distributed Systems</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../TimelineDiagrams/TimelineDiagrams.html">Previous:
+  Timeline Diagrams
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+
+<!---------------------------------------------------->
+<h1 class="w3-text-teal">Snapshot: Introduction</h1>
+<!---------------------------------------------------->
+
+    <h2 class="w3-text-teal">Key Ideas</h2>
+    This module is a
+    <a href="../TimelineDiagrams/TimelineDiagrams.html">
+    continuation of the previous one.</a>
+
+    This module introduces the concepts of <i>snapshots</i>; relates
+    snapshots to consistent cuts; shows how the idea of <i>logical clocks</i> can
+    be obtained from consistent cuts; and presents two algorithms for
+    taking global snapshots.
+    
+
+<h2 class="w3-text-teal">Theorem: Snapshot Visited in Trajectory</h2>
+
+Let \(TD\) be the timeline diagram of a trajectory that starts in
+state \(S_{init}\) and ends in state \(S_{fini}\). Let \(S_{snap}\) be
+the state of a consistent cut of \(TD\). There exists a
+trajectory which starts in \(S_{init}\), visits \(S_{snap}\), and then
+    visits \(S_{fini}\).
+
+    <p>
+    (\(S_{snap}\) stands for the snapshot of a state.)
+
+<p class="w3-text-teal">Proof</p>
+The proof follows from the theorem on permuting events in a
+    trajectory. The intuition underlying the theorem is given by the
+    figure below.
+
+    
+
+<p>
+Let \(TD\) be the timeline diagram of a trajectory and let \(C'\) be the permutation of \(C\) where the
+order of events in \(C'\) is the same as in \(C\) except that events
+    in the consistent cut appear before events outside the cut.
+
+
+    From the theorem on permuting events, the graphs for the timeline
+    diagrams of \(C\) and \(C'\) are identical, and when they start at
+    the same state they end at the same state.
+    So \(C'\) starting in \(S_{init}\) also terminates in
+    \(S_{fini}\).
+
+    <p>
+    In trajectory \(C'\), events in the
+    consistent cut are visited before events that are not in the cut. 
+
+    The state of the system after events in the
+    cut and before events that are not in the cut is \(S_{snap}\). Therefore
+    trajectory \(C'\) visits state \(S_{snap}\). And so, \(C'\) is an
+    instance of a trajectory that starts in \(S_{init}\), visits
+    \(S_{snap}\), and then visits \(S_{fini}\). 
+
+<h4 style="color:red;">Illustration of the Theorem</h4>
+The diagram on the top left of the figure illustrates the idea behind
+the theorem. The diagram shows the timeline diagram of a trajectory
+\(C\) and a consistent cut of the timeline. Treating the cut as a
+string, and tautening the string to make it vertical and straight
+gives us the timeline diagram for \(C'\), and it is clear that the
+state of the cut is visited in between the start and end states.
+
+<figure>
+    <img src="../TimelineDiagrams/TimelineDiagrams_Slide15.jpg" alt="Fig8" style="width:75%">
+    <figcaption>Fig.1: Detecting Stable Properties</figcaption> 
+</figure>
+
+
+<h3 class="w3-text-teal"> Detecting Stable Properties using
+Snapshots</h3>
+
+<h5 class="w3-text-teal"> Theorem</h5>
+
+    Let \(P\) be a
+    <a href = "../Safety/Safety.html">stable predicate of a system</a>,
+    i.e. if \(P\) holds at any point in a trajectory it continues to
+    hold forever thereafter in that trajectory. Let \(s_{init}\) and \(s_{fini}\) be the
+    states in which a global snapshot algorithm starts and finishes,
+    and let \(s_{snap}\) be the global snapshot obtained by the
+algorithm.  Then:
+<hr class="new2">
+<h5 style="color:blue;">
+<ol>
+  <li>
+  If \(P\) holds in \(s_{init}\) then \(P\) holds in  \(s_{snap}\).
+  </li>
+  <li>
+  If \(\neg P\) holds in \(s_{fini}\) then \(\neg P\) holds in
+  \(s_{snap}\).
+  </li>
+</ol>
+</h5>
+<hr class="new2">
+
+<p class="w3-text-teal">Proof</p>
+If \(P\) holds in \(s_{init}\) then it holds in all states reachable
+from \(s_{init}\) including \(s_{snap}\).
+
+If \(\neg P\) holds in \(s_{fini}\) then \(\neg P\) holds in all
+states that can reach \(s_{fini}\) including \(s_{snap}\).
+
+<h4 style="color:red;">Illustration of the Theorem</h4>
+The diagram on the top left of figure 1 illustrates states in
+a snapshot. \(s_{start}\) is the state in which the snapshot algorithm
+starts. 
+\(s_{fini}\) is the state in which the snapshot algorithm
+ends.
+The times at which the algorithms start and end are shown as vertical
+lines.
+\(s_{snap}\) is the state at a consistent cut; it is the snapshot state.
+
+<p>
+The diagram on the top right illustrates that there exists a path from
+\(s_{start}\) to \(s_{snap}\) and then to \(s_{fini}\).
+
+<p>
+The diagram on the bottom left shows that if a stable property \(P\)
+holds in \(s_{start}\) --- illustrated by the orange color of the
+state --- then it holds in all states reachable from
+\(s_{start}\). And so, \(P\) holds in \(s_{snap}\) and \(s_{fini}\). So,
+these states are colored orange too.
+
+<p>
+The diagram on the bottom right shows that for a stable property
+\(P\), if \(\neg P\)
+holds in \(s_{fini}\) --- illustrated by the green color of the
+state --- then \(\neg P\) holds in all states that can reach 
+\(s_{fini}\). And so, \(\neg P\) holds in \(s_{snap}\) and \(s_{init}\). So,
+these states are colored green too.
+
+
+
+<h2 class="w3-text-teal">Timestamps and Logical Clocks</h2>
+A <i>logical clock</i> is an algorithm that gives timestamps to events
+where the timestamps satisfy the following constraint.
+
+<hr class="new2">
+<h5 style="color:blue;">
+
+Let \(T(e)\) be the
+timestamp assigned to event \(e\). For every edge
+\((e_{i}, e_{j})\) in the timeline diagram, \(T(e_{j}) > T(e_{i})\).
+</h5>
+<hr class="new2">
+
+<h4 style="color:red;">Examples of Event Timestamps</h4>
+The following diagram shows a timeline diagram with timestamps for
+events where the timestamps satisfy the above constraint.
+
+<figure>
+    <img src="../TimelineDiagrams/TimelineDiagrams_Slide12.jpg" alt="Fig8" style="width:75%">
+    <figcaption>Fig.2: Timestamps of Events</figcaption> 
+</figure>
+
+<p  class="w3-text-teal">The Cut at a Timestamp \(t\)</p>
+The cut at a timestamp \(t\) is the set of events consisting of all
+events with timestamps less than or equal to \(t\)
+The following figure shows the cut at timestamp \(t = 9\).
+
+<figure>
+    <img src="../TimelineDiagrams/TimelineDiagrams_Slide13.jpg" alt="Fig9" style="width:75%">
+    <figcaption>Fig.3: Cut at Timestamps \(9\)</figcaption> 
+</figure>
+
+<!-------------------------------------------------------------->
+<h3 class="w3-text-teal">Theorem: Cut at Timestamp \(T\) is a Consistent Cut</h3>
+If timestamps that satisfy the logical clock constraint are assigned
+to events, then the cut at \(t\), for any \(t\), is a consistent cut.
+<p class="w3-text-teal">Proof</p>
+<p>
+All edges from vertices with timestamps greater than \(t\) are to
+vertices with timestamps greater than \(t\).
+
+
+<h2 class="w3-text-teal">Logical Clock: Assign
+Timestamps to Events</h2> 
+Associate a timestamp with each variable at each point in the
+trajectory. The logical clock algorithm uses the following rules:
+<ol>
+  <li>
+The timestamp assigned to an event is any value greater
+than the maximum of the timestamps of the variables referenced in the
+  event immediately before the event
+  </li>
+  <li>
+  The timestamp assigned to a variable referenced in an event immediately
+  after the event is the timestamp of the event.
+  </li>
+</ol>
+The proof that these timestamps satisfy the logical clock rule ---
+for every edge
+\((e_{i}, e_{j})\) in the timeline diagram, \(T(e_{j}) > T(e_{i})\)
+--- is straightforward.
+
+<h4 style="color:red;">Examples of a Logical Clock Algorithm</h4>
+The figure below shows an example of the algorithm. Assume that the
+timestamps of all variables are \(0\) initially. The first event from left
+to right has an input variable \(W\) with timestamp \(0\); so, the
+event sets its timestamp to any value greater than \(0\) --- in this
+example it sets its value to \(5\), and that is the new timestamp
+associated with \(W\). The next event has inputs \(W\) with timestamp
+\(5\) and \(X\) with timestamp \(0\). This event sets its timestamp to
+any value greater than \(0\) and \(5\). It sets its value to \(10\)
+which is the new timestamp of this event's outputs.
+
+<figure>
+    <img src="../TimelineDiagrams/TimelineDiagrams_Slide14.jpg" alt="Fig14" style="width:75%">
+    <figcaption>Fig.4: Example of the Logical Clock Algorithm</figcaption> 
+</figure>
+
+
+<h2 class="w3-text-teal">A Global Snapshot Algorithm</h2>
+The algorithm takes a "snapshot" of each variable, i.e., makes a
+record of the
+value of each variable. The record of the variable is called a
+snapshot of the variable. A global snapshot is a tuple of snapshots of
+each variable. 
+<h4  class="w3-text-teal">A Global Snapshot Algorithm Using Logical
+Clocks</h4>
+For any timestamp \(t\):
+<hr class="new2">
+<h5 style="color:blue;">
+Record the value of each variable when the timestamp associated with
+the variable's timeline is \(t\).
+</h5>
+<hr class="new2">
+
+Because the cut at points at which the logical time is \(t\) is a
+consistent cut, the corresponding state is a global snapshot.
+
+<h4  class="w3-text-teal">Another Simple Global Snapshot Algorithm</h4>
+Next let's look at an algorithm that does not use timestamps.
+The algorithm begins by taking snapshots of one or more variables. The
+mechanism to start snapshots is irrelevant. The algorithm executes the
+following rule: 
+<hr class="new2">
+<h5 style="color:blue;">
+Before execution of an event, if a snapshot of any variable referenced in the event
+has already been recorded, then take snapshots all unrecorded variables referenced in the event.
+</h5>
+<hr class="new2">
+
+<p>
+The algorithm terminates if and when all variables have snapshots.
+
+<p class="w3-text-teal">Proof</p>
+From the algorithm, either all the variables referenced in an event are
+recorded before execution of the event, or all are unrecorded before
+execution of the event.
+Consider a cut consisting of the set of events that reference
+variables that are unrecorded before the event. This cut is a consistent
+cut because all edges from events outside the cut (i.e. events in
+which variables are recorded) are to
+events outside the cut. Because this cut is consistent, the
+state that is recorded is a snapshot.
+
+
+<h4  class="w3-text-teal">Summary</h4>
+This module described timeline diagrams, consistent cuts, logical clocks
+and timestamps of events, and algorithms for determining global
+snapshots. The concepts described here will be used to develop many
+distributed algorithms.
+
+
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>

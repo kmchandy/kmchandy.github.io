@@ -47,20 +47,11 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   href="TimelineDiagrams.html">Timeline Diagrams</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="AgentsExamples.html">Examples</a>
+  href="TimelineDiagramsSelfTest.html">Self Test</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="AgentsSelfTest.html">Self Test</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="AgentsExercises.html">Exercises</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="AgentsExplorations.html">Explorations</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="../DistributedSystems/DistributedSystems.html">
-  Next: Distributed Systems</a> 
+  href="../SnapshotIntroduction/SnapshotIntroduction.html">
+  Next: Introduction Snapshots</a> 
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="../ShortestPath/ShortestPath.html">Previous:
@@ -92,16 +83,22 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     This module describes <i>timelines</i> of systems. A system <i>trajectory</i>
     is represented by a path in a
     state-transition system. A timeline is a representation of the
-    trajectory as a sequence of state transitions.
+    trajectory as a sequence of state transitions that evolve over time.
     A <i>timeline diagram</i> is a timeline with a graph showing the
     relationship between state transitions.
+
     <p>
-    We define the following concepts in
-    this module: <i>valid cuts</i> of
-    timeline diagrams, <i>timestamps</i> of state transitions, <i>logical
-    clocks</i> and <i>global snapshots</i>. We study
-    algorithms to assign timestamps to state transitions and to
-    determine global snapshots of systems.
+    This module shows that permuting independent events doesn't change
+    the final state of a trajectory.
+    <a
+    href="https://en.wikipedia.org/wiki/Church%E2%80%93Rosser_theorem">
+    (This is an application of the
+    diamond property and the Church-Rosser theorem.</a> You don't need to
+    know the theorem to understand this module.)
+
+    <p>
+    The module introduces the concept of <i>cuts</i> in timelines and defines
+    <i>consistent cuts</i>.
 
 <!---------------------------------------------------->
 <h3 class="w3-text-teal">Timeline Diagrams</h3>
@@ -226,7 +223,7 @@ diagram of a path \(C'\) which is a permutation of \(C\) where
 \(e_{i}\) to \(e_{j}\) in \(TD\).
 <p>
 The graphs, including edge labels,
-are identical for the graphs of \(TD\) and \(TD'\). 
+are identical for \(TD\) and \(TD'\). 
 <p class="w3-text-teal">Proof</p>
 Proof follows by repeatedly flipping the order of adjacent
 indenpendent elements of \(TD\) until \(TD'\) is obtained.
@@ -262,7 +259,7 @@ appears before \(e_{j}\) in \(C\).
 Then \(C\) and \(C'\) end in the same state.
 
 <!------------------------------------------------------->
-<h2 class="w3-text-teal">Valid Cuts of Timelines</h2>
+<h2 class="w3-text-teal">Consistent Cuts of Timelines</h2>
 A time \(T\) is represented by a vertical line that cuts through the
 timelines of all variables.
 The system state at \(T\) is given by the variable values where
@@ -301,39 +298,41 @@ other events, \(1, 3, 4\), appear on the other.
 A <i>cut</i> of a timeline is a set of events. The curvilinear line in
 figure 6 is specified by the cut: \(0, 2, 5\).
 <!------------------------------------------------------->
-<h3 class="w3-text-teal">A Valid Cut</h3>
-A valid cut is one in which every edge to a vertex in the cut is from
+<h3 class="w3-text-teal">A Consistent Cut</h3>
+A consistent cut is one in which every edge to a vertex in the cut is from
 a vertex in the cut.
 <p>
-Equivalently, a cut is valid
+Equivalently, a cut is consistent
 exactly when every edge from a vertex outside the cut is to a vertex
 outside the cut.
+<p>
+We also use the term "valid cut" for "consistent cut."
 
-<p style="color:red;">Examples of Valid and Invalid Cuts</p>
-The cut \(0, 2, 5\) in figure 6 is a valid cut. We can prove the
-validity of this cut by showing 
+<p style="color:red;">Examples of Consistent and Inconsistent Cuts</p>
+The cut \(0, 2, 5\) in figure 6 is a consistent cut. We can prove the
+consistentity of this cut by showing 
 that every edge from \(1, 3, 4\) is to \(1, 3, 4\).
-An example of an <i>invalid</i> cut is \(0, 1, 5\) because the edge
+An example of an <i>inconsistent</i> cut is \(0, 1, 5\) because the edge
 \((2, 5)\) is from a vertex, \(2\) outside the cut to a vertex, \(5\),
 inside the cut.
 
-<h3 class="w3-text-teal">System State at a Valid cut</h3>
-The system state at a valid cut is specified by the values of
+<h3 class="w3-text-teal">System State at a Consistent cut</h3>
+The system state at a consistent cut is specified by the values of
 variables after events in the cut and before events that are not in
 the cut. It is given by the values of variable timelines intersected by
 the cut.
 <p>
-Let's get the state at the valid cut shown in figure 6. Going along
+Let's get the state at the consistent cut shown in figure 6. Going along
 the cut from bottom to top, the values at the points at which the cut
 intersects the variable timelines are: \(B = 6, Y = 3, Z = 0, W = 1, X
 = 0, A = 4\).
 
-<h4 class="w3-text-teal">Valid cuts and Instants in Time</h4>
-We will show that each curvilinear valid cut in a timeline diagram of a trajectory
+<h4 class="w3-text-teal">Consistent cuts and Instants in Time</h4>
+We will show that each curvilinear consistent cut in a timeline diagram of a trajectory
 corresponds to a point in time --- a vertical straight-line cut --- in
 the timeline diagram of another trajectory.
 
-<p>Pictorially, we pull the curvlinear valid cut taut to
+<p>Pictorially, we pull the curvlinear consistent cut taut to
 make it vertical. Doing so pushes events outside the cut to the right
 of the vertical line, and pushes events in the cut to the left of the
 line while <i>retaining the property that all edges
@@ -341,9 +340,9 @@ are directed from the past to the future,</i> i.e. from left to
 right. When the cut is a vertical line it represents an instant in
 time but in a different timeline diagram.
 
-<p style="color:red;">Example of Straightening a Curvilinear Valid
+<p style="color:red;">Example of Straightening a Curvilinear Consistent
 Cut</p>
-The figure below shows a curvilinear valid cut. Think of the cut as a
+The figure below shows a curvilinear consistent cut. Think of the cut as a
 string and tauten it to make it vertical. Doing so pushes events \(2\)
 and \(5\) to the left, and events \(1\)
 and \(4\) to the right, while ensuring that all edges are directed
@@ -351,212 +350,14 @@ from left to right. When the cut is vertical we get the diagram shown
 in figure 5.
 
 <figure>
-    <img src="TimelineDiagrams_Slide7.jpg" alt="Fig7" style="width:75%">
-    <figcaption>Fig.7: Straightening a Curvilinear Valid Cut</figcaption> 
+    <img src="TimelineDiagrams/Slide07.jpg" alt="Fig7" style="width:75%">
+    <figcaption>Fig.7: Straightening a Curvilinear Consistent Cut</figcaption> 
 </figure>
 
-
-<h2 class="w3-text-teal">Theorem: Snapshot Visited in Trajectory</h2>
-
-Let \(TD\) be the timeline diagram of a trajectory that starts in
-state \(S_{init}\) and ends in state \(S_{fini}\). Let \(S_{cut}\) be
-the state of a valid cut of \(TD\). There exists a
-trajectory which starts in \(S_{init}\), visits \(S_{cut}\), and then
-visits \(S_{fini}\).
-
-<p class="w3-text-teal">Proof</p>
-The proof follows from the theorem on permuting events in a
-trajectory. The intuition underlying the theorem is given by figure 7.
-
-<p>
-Let \(TD\) be the timeline diagram of a trajectory \(C = e_{0},
-e_{1}, \ldots\). Let \(C'\) be the permutation of \(C\) where the
-order of events in \(C'\) is the same as in \(C\) except that events
-in the cut appear before events outside the cut. From the theorem on
-permuting events, when \(C'\) starts in \(S_{init}\) it terminates in
-\(S_{fini}\). In trajectory \(C'\), the state of the system after events in the cut and
-before events that are not in the cut is \(S_{cut}\). Therefore
-trajectory \(C'\) visits state \(S_{cut}\).
-
-
-<h2 class="w3-text-teal">Theorem: Stable Properties and Snapshots</h2>
-    Let \(P\) be a
-    <a href = "../Safety/Safety.html">stable predicate of a system</a>,
-    i.e. if \(P\) holds at any point in a trajectory it continues to
-    hold forever thereafter in that trajectory. Let \(s_{init}\) and \(s_{fini}\) be the
-    states in which a global snapshot algorithm starts and finishes,
-    and let \(s_{snap}\) be the global snapshot obtained by the
-algorithm.  Then:
-<ol>
-  <li>
-  If \(P\) holds in \(s_{init}\) then \(P\) holds in  \(s_{snap}\).
-  </li>
-  <li>
-  If \(\neg P\) holds in \(s_{fini}\) then \(\neg P\) holds in
-  \(s_{snap}\).
-  </li>
-</ol>
-
-<p class="w3-text-teal">Proof</p>
-If \(P\) holds in \(s_{init}\) then it holds in all states reachable
-from \(s_{init}\) including \(s_{snap}\).
-
-If \(\neg P\) holds in \(s_{fini}\) then \(\neg P\) holds in all
-states that can reach \(s_{fini}\) including \(s_{snap}\).
-
-<h4 style="color:red;">Illustration of the Theorem</h4>
-
-<figure>
-    <img src="TimelineDiagrams_Slide15.jpg" alt="Fig8" style="width:75%">
-    <figcaption>Fig.8: Detecting Stable Properties</figcaption> 
-</figure>
-
-<p>
-The diagram on the top left of the above figure illustrates states in
-a snapshot. \(s_{start}\) is the state in which the snapshot algorithm
-starts. 
-\(s_{fini}\) is the state in which the snapshot algorithm
-ends.
-The times at which the algorithms start and end are shown as vertical
-lines.
-\(s_{snap}\) is the state at a valid cut; it is the snapshot state.
-
-<p>
-The diagram on the top right illustrates that there exists a path from
-\(s_{start}\) to \(s_{snap}\) and then to \(s_{fini}\).
-
-<p>
-The diagram on the bottom left shows that if a stable property \(P\)
-holds in \(s_{start}\) --- illustrated by the orange color of the
-state --- then it holds in all states reachable from
-\(s_{start}\). And so, \(P\) holds in \(s_{snap}\) and \(s_{fini}\). So,
-these states are colored orange too.
-
-<p>
-The diagram on the bottom right shows that for a stable property
-\(P\), if \(\neg P\)
-holds in \(s_{fini}\) --- illustrated by the green color of the
-state --- then \(\neg P\) holds in all states that can reach 
-\(s_{fini}\). And so, \(\neg P\) holds in \(s_{snap}\) and \(s_{init}\). So,
-these states are colored green too.
-
-
-
-<h2 class="w3-text-teal">Timestamps and Logical Clocks</h2>
-A <i>logical clock</i> is an algorithm that gives timestamps to events
-where the timestamps satisfy the following rule. Let \(T(e)\) be the
-timestamp assigned to event \(e\). For every edge
-\((e_{i}, e_{j})\) in the timeline diagram, \(T(e_{j}) > T(e_{i})\).
-
-<h4 style="color:red;">Examples of Event Timestamps</h4>
-The following diagram shows a timeline diagram with timestamps for
-events where the timestamps satisfy the above rule.
-
-<figure>
-    <img src="TimelineDiagrams_Slide12.jpg" alt="Fig8" style="width:75%">
-    <figcaption>Fig.9: Timestamps of Events</figcaption> 
-</figure>
-
-<p  class="w3-text-teal">The Cut at a Timestamp \(t\)</p>
-The cut at a timestamp \(t\) is the set of events consisting of all
-events with timestamps less than or equal to \(t\)
-The following figure shows the cut at timestamp \(t = 9\).
-
-<figure>
-    <img src="TimelineDiagrams_Slide13.jpg" alt="Fig9" style="width:75%">
-    <figcaption>Fig.10: Cut at Timestamps \(9\)</figcaption> 
-</figure>
-
-<!-------------------------------------------------------------->
-<h3 class="w3-text-teal">Theorem: Cut at Timestamp \(T\) is a Valid Cut</h3>
-The cut at \(t\), for any \(t\), is a valid cut.
-<p class="w3-text-teal">Proof</p>
-<p>
-All edges from vertices with timestamps greater than \(t\) are to
-vertices with timestamps greater than \(t\).
-
-
-<h2 class="w3-text-teal">Logical Clock: Assign
-Timestamps to Events</h2> 
-Associate a timestamp with each variable at each point in the
-trajectory. The logical clock algorithm uses the following rules:
-<ol>
-  <li>
-The timestamp assigned to an event is any value greater
-than the maximum of the timestamps of the variables referenced in the
-  event immediately before the event
-  </li>
-  <li>
-  The timestamp assigned to a variable referenced in an event immediately
-  after the event is the timestamp of the event.
-  </li>
-</ol>
-The proof that these timestamps satisfy the logical clock rule ---
-for every edge
-\((e_{i}, e_{j})\) in the timeline diagram, \(T(e_{j}) > T(e_{i})\)
---- is straightforward.
-
-<h4 style="color:red;">Examples of a Logical Clock Algorithm</h4>
-The figure below shows an example of the algorithm. Assume that the
-timestamps of all variables are \(0\) initially. The first event from left
-to right has an input variable \(W\) with timestamp \(0\); so, the
-event sets its timestamp to any value greater than \(0\) --- in this
-example it sets its value to \(5\), and that is the new timestamp
-associated with \(W\). The next event has inputs \(W\) with timestamp
-\(5\) and \(X\) with timestamp \(0\). This event sets its timestamp to
-any value greater than \(0\) and \(5\). It sets its value to \(10\)
-which is the new timestamp of this event's outputs.
-
-<figure>
-    <img src="TimelineDiagrams_Slide14.jpg" alt="Fig10" style="width:75%">
-    <figcaption>Fig.11: Example of the Logical Clock Algorithm</figcaption> 
-</figure>
-
-
-<h2 class="w3-text-teal">A Global Snapshot Algorithm</h2>
-The algorithm takes a "snapshot" of each variable, i.e., makes a
-record of the
-value of each variable. The record of the variable is called a
-snapshot of the variable. A global snapshot is a tuple of snapshots of
-each variable. 
-<h4  class="w3-text-teal">Global Snapshots Using Logical Clocks</h4>
-A variable's snapshot is its value when its timestamp is \(t\) for
-some fixed \(t\).
-Because the cut at points at which the logical time is \(t\) is a
-valid cut, the corresponding state is a global snapshot.
-
-<h4  class="w3-text-teal">A Simple Global Snapshot Algorithm</h4>
-Next let's look at an algorithm that does not use timestamps.
-The algorithm begins by taking snapshots of one or more variables. The
-mechanism to start snapshots is irrelevant. The algorithm executes the
-following rule: 
-<p>
-<i>Before execution of an event, if a snapshot of any variable referenced in the event
-has already been recorded, then take snapshots all unrecorded variables referenced in the event.</i>
-
-<p>
-The algorithm terminates if and when all variables have snapshots.
-
-<p class="w3-text-teal">Proof</p>
-From the algorithm, either all the variables referenced in an event are
-recorded before execution of the event, or all are unrecorded before
-execution of the event.
-Consider a cut consisting of the set of events that reference
-variables that are unrecorded before the event. This cut is a valid
-cut because all edges from events outside the cut (i.e. events in
-which variables are recorded) are to
-events outside the cut. Because this cut is valid, the
-state that is recorded is a snapshot.
-
-
-<h4  class="w3-text-teal">Summary</h4>
-This module described timeline diagrams, valid cuts, logical clocks
-and timestamps of events, and algorithms for determining global
-snapshots. The concepts described here will be used to develop many
-distributed algorithms.
-
-
-
+<h4 class="w3-text-teal">Summary</h4>
+This module introduced timeline diagrams; showed that permuting independent
+events doesn't change the final state;  and defined consistent cuts and states at
+consistent cuts.
 
   <footer id="myFooter">
 
@@ -567,8 +368,6 @@ distributed algorithms.
     </div>
   </footer>
 
-
-      
 
 
 <!-- END MAIN -->

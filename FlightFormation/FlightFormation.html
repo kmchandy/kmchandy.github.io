@@ -51,18 +51,19 @@ hr.new2 {
   <h3 class="w3-bar-item"><b>An Introduction to Distributed
   Algorithms</h3>
 
-
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="FlightFormation.html">Correctness Proof Example: Flight
-  Formation</a>
+  href="../ShortestPath/ShortestPath.html">Review: Examples of Correctness Proofs</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_5_3/Sorting.html">Next: Example: Sorting</a>
+  href="../FlightFormation/FlightFormation.html">More Examples: Flight Formation</a>
+  
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../TimelineDiagrams/TimelineDiagrams.html">Next: Timelines</a> 
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Chapter_5_1/AverageOfSensors.html">Previous:
-  Example: Average of Sensors</a>
-
+  href="../LoopTermination/LoopTermination.html">Previous: Variant
+  Functions</a>
   
 </nav>
 
@@ -83,7 +84,7 @@ hr.new2 {
 
     
     <p>
-    This module describes the proof of a simple concurrent system in
+    This module describes the proof of a concurrent system in
     which a collection of agents in space, move towards a formation,
     even though each agent can only communicate with its neighbors.
 
@@ -135,21 +136,8 @@ hr.new2 {
     <figcaption>Fig.1 - Movement of Agents</figcaption>
     </figure>
 
-    <p>
-    The next figure shows 3 diagrams from top to bottom. The diagram
-    at the top is the state at some point. The diagram in the middle
-    shows the state after agent 1 (red) moves to the midpoint of
-    agents 0 and 2. The diagram at the bottom shows the state after
-    agent 3 moves to the midpoint of agents 2 and 4. Note that the
-    agents seem to be moving away from the goal of having all agents
-    on the line connecting the stationary agents 0 and 5. 
 
-    <figure>
-    <img src="FlightFormation/Slide3.jpg" alt="Fig3" style="width:80%">>
-    <figcaption>Fig.2 - Movement of Agents</figcaption>
-    </figure>
-
- 
+     
 <h4 class="w3-text-teal">Specification</h4>
 <p>
 The desired terminal or goal state is specified by a predicate
@@ -173,21 +161,35 @@ The figure below shows the desired goal state.
 
     <figure>
     <img src="FlightFormation/Slide2.jpg" alt="Fig2" style="width:80%">>
-    <figcaption>Fig.3 - Desired Goal State</figcaption>
+    <figcaption>Fig.2 - Desired Goal State</figcaption>
     </figure>
 
 
     <p>
     The specification is that the program must terminate, and must
     terminate at a goal state. 
-    </p>
+</p>
+
+
+
+    <p>
+    The next figure shows 3 diagrams from top to bottom. The diagram
+    at the top is the state at some point. The diagram in the middle
+    shows the state after agent 1 (red) moves to the midpoint of
+    agents 0 and 2. The diagram at the bottom shows the state after
+    agent 3 moves to the midpoint of agents 2 and 4. Note that the
+    agents seem to be moving away from the goal of having all agents
+    on the line connecting the stationary agents 0 and 5. 
+
+    <figure>
+    <img src="FlightFormation/Slide3.jpg" alt="Fig3" style="width:80%">>
+    <figcaption>Fig.3 - Movement of Agents</figcaption>
+    </figure>
+
+
 
 <h1 class="w3-text-teal">Exercise: Prove Correctness</h1>
 
-
-
-
-<h2 class="w3-text-teal">Answer</h2>
   <p>
   Next, we give the structure of a proof. The challenge is to find a
   variant function. After you find a variant function the proof
