@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>SnapshotIntroductionExample</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="SnapshotIntroduction.html">Snapshot Introduction</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="SnapshotIntroductionExample.html">Snapshot Agents</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="SnapshotIntroductionSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../DistributedSystems/DistributedSystems.html">
+  Next: Distributed Systems</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../TimelineDiagrams/TimelineDiagrams.html">Previous:
+  Timeline Diagrams
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+
+    <!---------------------------------------------------->
+    <h1 class="w3-text-teal">Snapshot Example: Agents</h1>
+    <!---------------------------------------------------->
+
+    Timelines and snapshots apply to multiagent systems in which
+    interactions are synchronous, so-called rendezvous
+    interactions. We consider asynchronous systems in later modules.
+
+    <p>
+    A nonempty set of agents participates in an event. An event
+    may change the states of agents that participate in the
+    event, and leaves the states of all other agents unchanged.
+
+    <p>
+    For simplicity in exposition we assume that an event changes the
+    states of all agents that participate in the event. The more
+    general case where some agent states remain unchanged is akin to
+    having local variables of some agents that 
+    are read, but not modified, in an event. That case is a
+    straightforward extension.
+
+    <p>
+    <h3 style="color:red;">Example</h3>
+    The figure below shows a timeline diagram with 8 agents, indexed
+    0, .., 7 and 6
+    events indexed 0, ..., 5. The timelines are horizontal red lines and the events are
+    blue ellipses. The timeline diagram is a labeled directed graph
+    where the events are vertices. The input and output edges of an
+    event are sections of the timeline diagrams of agents
+    participating in the event.
+
+    <p>
+    For example, 
+    the only agents participating in event 0 are agents
+    0 and 1. The states of agents 0 and 1 are modified by event 0, and
+    the states of the other agents are left unchanged. The input edge
+    of agent 0 to event 0 is labeled with the state of agent 0 before event 0 is
+    executed, and the output edge is labeled with the state of agent 0 after event 0 is
+    executed. The states of agents other than agents 0 and 1 are left
+    unchanged by event 0.
+    <p>
+    The agents participating in event 4 are agents 1 and 2. The input
+    edge to event 4 along the timeline for agent 1 is labeled with the
+    state of agent 1 immediately before event 4 is executed; this is
+    also the state of agent 1 immediately after event 1 is executed.
+    <p>
+    Likewise event 1 modifies the states of agents 2 and 3, and leaves
+    the states of all other agents unchanged. Event 5 modifies the
+    states of agents 3, 4, 5, 6.
+
+    <figure>
+    <img src="../TimelineDiagrams/TimelineDiagrams/Slide18.jpg" alt="Fig18" style="width:75%">
+    <figcaption>Figure 1: Agent timelines</figcaption> 
+    </figure>
+
+Let's look at algorithms for agents take consistent cuts of
+timelines. Each agent records its own state at a point on its
+timeline. What conditions ensure that the set of agent states
+forms a global (i.e., entire system) state?
+
+<h3 style="color:red;">Example</h3>
+The next figure shows points at which each agent records its own
+state. The points are marked by small vertical brown lines. The
+agent timelines prior to these points are red, and those after these
+points are black.
+
+<p>Do these points correspond to a valid global state?
+
+    <figure>
+    <img src="../TimelineDiagrams/TimelineDiagrams/Slide19.jpg" alt="Fig19" style="width:75%">
+    <figcaption>Figure 2: Example of points at which agents record
+    local states</figcaption> 
+</figure>
+
+The next figure shows a cut specified by the curvilinear line
+connecting the points at which each agent records its state.
+
+    <figure>
+    <img src="../TimelineDiagrams/TimelineDiagrams/Slide20.jpg" alt="Fig20" style="width:75%">
+    <figcaption>Figure 3</figcaption>
+</figure>
+
+Let's think of the cut as a string, and let's tauten the string to
+make it a straight vertial line. When we do so we get a timeline diagram with events 0, 1, 2,
+4 on one side of the string and events 3, 5 on the other. In this
+timeline, all edges to events in the cut (i.e., events 0, 1, 2, 4) are 
+from  events in the cut. So this cut is a consistent cut.
+
+
+<h3 style="color:red;">Example</h3>
+
+The next figure is another example of points at which agents record
+their local states.
+
+    <figure>
+    <img src="../TimelineDiagrams/TimelineDiagrams/Slide21.jpg" alt="Fig21" style="width:75%">
+<figcaption>Figure 4</figcaption>
+</figure
+
+
+The next figure shows a cut specified by the curvilinear line
+connecting the points at which each agent records its state.
+
+    <figure>
+    <img src="../TimelineDiagrams/TimelineDiagrams/Slide22.jpg" alt="Fig22" style="width:75%">
+    <figcaption>Figure 5:</figcaption>
+</figure>
+
+Let's treat the cut as a string and try to tauten the string to make
+it a straight vertical line. We find that we can't make the string vertical because one
+side of the string is to the right of event 4 and the other side of
+is to the left.
+<p>
+It's easy to see that this cut is not consistent.
+
+<h2 class="w3-text-teal">An Algorithm</h3>
+A consistent cut has the
+following property: All input edges to an event inside the cut are
+from events inside the cut.
+
+<p>
+How can agents collaborate to check whether the points at which
+agents record local states satisfy this property?
+
+<p class="w3-text-teal">Counting Agent Interactions</p>
+Each agent records the
+    number of times that it participates in an event with another
+    agent. Let \(n[v, w]\) be the number of times that agent \(v\)
+    records as the number of times that it has participated in an
+    event that included agent \(w\), for \(v \neq w\). For simplicity,
+assume \(n[v, v] = 0\) for all \(v\).
+<p>
+Let's look at the counts \(n[v, w]\) at the cut points in the two
+examples.
+
+<h3 style="color:red;">Example</h3>
+In this consistent cut, \(n[v, w] = n[w, v]\), for all \(v, w\).
+
+    <figure>
+    <img src="../TimelineDiagrams/TimelineDiagrams/Slide23.jpg" alt="Fig23" style="width:75%">
+    <figcaption>Figure 23: </figcaption>
+</figure>
+
+<h3 style="color:red;">Example</h3>
+In this inconsistent cut, there exists \(v, w\) where \(n[v, w] \neq
+n[w, v]\).
+
+
+    <figure>
+    <img src="../TimelineDiagrams/TimelineDiagrams/Slide24.jpg" alt="Fig24" style="width:75%">
+    <figcaption>Figure 24: </figcaption>
+</figure>
+
+These diagrams suggest the following theorem.
+
+
+
+
+<!---------------------------------------------------->
+    <h3 class="w3-text-teal">Theorem</h3>
+<!---------------------------------------------------->
+
+<hr class="new2">
+<h5 style="color:blue;">
+    Let \(c\) be a cut where the value of \(n[v, w]\) is \(N[v,w]\) at the point on
+    agent \(v\)'s timeline that is crossed by the cut.
+\(c\) is a consistent cut exactly when:
+<p>
+for all \(v, w\): \(N[v, w] = N[w, v]\).
+</h5>
+<hr class="new2">
+
+
+
+<p class="w3-text-teal">Proof</p>
+<p>
+First we show that if the cut is consistent then the condition holds.
+We can prove by induction on any sequence of events that \(n[v,w] =
+n[w,v]\) for all \(v, w\). This is true initially, with all counts
+being zero. Then we show that each event in the sequence maintains this
+condition. Therefore this condition holds in all states in all
+trajectories. And so it holds in consistent cuts.
+<p>
+Next we show that if the condition holds then the cut is consistent.
+
+Let \(e\) and \(e'\) be two events where \(e'\) is the event that
+follows immediately after \(e\) in the sequence, where \(e\) is not in
+the cut and \(e'\) is in the cut.
+There is no edge from \(e\) to \(e'\) because if there were such an
+edge then the counts \(N[v, w]\) would include the increments due to
+\(e\). So \(e'\) is independent of \(e\). Therefore a permutation of
+the sequence of events in which the order of \(e\) and \(e'\) is
+flipped is also a trajectory. Moving events inside the cut ahead of
+events outside the cut, in this manner, gives a trajectory in which
+all events in the cut appear before all events outside the cut.
+
+<p style="color:red;">Example</p>
+In our example event 4 follows event 3, and event 3 is not in the cut
+while event 4 is in the cut. Event 3 does not have edges to event
+4. So, flipping the order of these events to get the permutation 0, 1,
+2, 4, 3, 5 is also a trajectory.
+
+
+<!---------------------------------------------------->
+    <h1 class="w3-text-teal">Snapshot Application</h1>
+<!---------------------------------------------------->
+We will see the following type of problem many times in distributed systems.
+<p>
+An agent is either <i>idle</i> or <i>active</i>, i.e., not idle.
+An idle agent remains idle until it is activated by an active
+    agent. An active agent can activate an idle agent at any time, and n
+    active agent can become idle at any time. An active agent \(x\)
+    activates an idle agent \(y\) when both agents participate in the
+same event. A trajectory is <i>terminated</i> when all agents are idle.
+<p>
+Let's look at an algorithm by which an agent determines when a
+    trajectory terminates. 
+
+<p>
+The algorithm has an external agent called the <i>detector</i>. For
+ach agent \(x\), 
+the detector has a local Boolean variable
+\(x.idle\).
+Initially, all agents are active and
+\(x.idle\) is False for all \(x\).
+
+<p> After an agent \(x\) changes state from idle
+to active, or from active to idle, it updates \(x.idle\).
+
+If at any
+point \(x.idle\) holds for all \(x\) then the detector claims that the
+trajectory  has terminated. Is the algorithm correct?
+
+<p>
+The answer depends on the atomicity of statements executed by agents.
+An agent changes state and then updates \(x.idle\). Changing state is
+an atomic operation. Updating \(x.idle\) is a different atomic
+operation. The two atomic operations are composed by sequential
+composition: first one and then the other. There may, however, be a
+gap between the two operations.
+
+<p>
+The figure below is a diagram of a situation where the gap between the
+two sequential atomic operations causes a problem. The diagram has
+timelines for agents \(x\) and \(y\) and a timeline for the detector
+(bottom of the figure). Both \(x\) and \(y\) are active
+initially. Then --- event 0 --- \(x\) becomes idle and (a little
+later) sets \(x.idle\) to True. The operation that sets \(x.idle\) to
+True is shown by a green vertical line. Then --- event 1 --- \(y\) activates
+\(x\). Then, after a delay, \(x\) sets \(x.idle\) to False. The action
+that sets \(x.idle\) to False is also shown
+by a green vertical line. Between
+these two actions of \(x\), agent \(y\) becomes idle --- event 2 ---
+and then sets
+\(y.idle\) to True, shown by the black vertical line.
+
+<p>
+There is an interval of time, shown by the gap after the black
+vertical line and the next green vertical line, at which \(x.idle\)
+and \(y.idle\) are both True, and so the detector claims that the
+trajectory has terminated. This claim is False because in event 3,
+\(y\) activates \(x\) and both agents are active. The claim is False
+because there is an interval during which
+\(x\) is active while \(x.idle\) is True.
+
+
+
+
+    <figure>
+    <img src="../TimelineDiagrams/TimelineDiagrams/Slide25.jpg" alt="Fig25" style="width:75%">
+    <figcaption>Figure 25: </figcaption>
+</figure>
+<p>
+A solution is that the detector detects termination only if the
+    information that updates its local state corresponds to a
+<i>consistent</i> cut. The detector has a local variable \(N[x,y]\)
+    which is updated when \(x.idle\) is updated, and a local variable
+    \(N[y,x]\) that is updated when \(y.idle\) is updated. The cut is
+consistent only if the counts match, i.e., \(N[x,y] = N[y,x]\).
+Initially these variables are 0.
+<p>
+Let's look at the sequence of updates to
+the detector's local variables.
+<ol>
+  <li>
+  At the first update --- represented by the first green vertical line
+    --- agent \(x\) sets \(x.idle\) to True and keeps \(N[x, y]\) at
+    0. So after this update
+    \(N[x, y] = N[y, x] = 0\), and \(y.idle = False\). The cut
+    represented by the detector's local variables is a consistent cut
+    because the counts match. However,
+   the detector does not claim that the trajectory has  terminated
+    because \(y.idle = False\). 
+  </li>
+  <li>
+  At the next update --- represented by the first black vertical line
+  --- agent \(y\) set \(y.idle\) to True and \(N[y, x]\) to 1.
+  The cut
+    represented by the detector's local variables is not a consistent cut
+  because the counts don't match. \(N[x, y] = 0 \neq N[y, x] = 1\).
+  Since the cut is not consistent, the detector doesn't use it.
+  </li>
+  <li>
+  At the next update --- represented by the second green vertical line
+    --- agent \(x\) sets \(x.idle\) to False and \(N[x, y]\) to 1. The
+    cut corresponding to the updates of \(x.idle\) and \(y.idle\) is
+    consistent because the counts match: \(N[x, y] =  N[y, x] =
+    1\). The detector does not claim termination because \(x.idle\) is
+  False.
+  </li>
+</ol>
+This algorithm assumes that the \(x.idle\) and \(N[x, v]\), all \(v\)
+    are updated in an atomic action. Can you design an algorithm with
+    atomic steps that update fewer variables?
+  
+
+
+ 
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
