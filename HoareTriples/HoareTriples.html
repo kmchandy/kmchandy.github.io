@@ -76,22 +76,21 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <!------------------------------------------------------->
     <h1 class="w3-text-teal">Review of Hoare Triples</h1>
     This is a <i>very short, limited review</i> of properties of Hoare
-    triples that you studied earlier.
+    triples that you probably studied in earlier courses.
 
     <p>
-A <a
-  href="https://en.wikipedia.org/wiki/Hoare_logic">Hoare triple</a>
-has the form \(\{P\} c \{Q\}\) where \(P\) and \(Q\) 
-    are predicates on states of a system and \(c\) is a command.
-    \(P\) is called the precondition and \(Q\) the
-  postcondition. The meaning of the triple is that if \(P\) holds when
-  the command \(c\) is initiated then execution of the command
-    terminates and \(Q\) holds upon termination.
+    A <a
+    href="https://en.wikipedia.org/wiki/Hoare_logic">Hoare triple</a>
+    has the form \(\{P\} c \{Q\}\) where \(P\) and \(Q\) are predicates on
+    states of a system and \(c\) is a command. The meaning of the
+    triple is that if \(P\) holds when the command \(c\) is initiated
+    then execution of the command terminates and \(Q\) holds upon
+    termination.  \(P\) is called the precondition and \(Q\) the
+    postcondition of the triple
 
     <p>
-    (Note: We assume total
-  rather than partial correctness.)
-  </p>
+    (Note: We assume total rather than partial correctness.)
+    </p>
   
   <h4 style="color:red;">Examples</h4>
   Examples of Hoare triples for the assignment statement \(x := x+1\)
