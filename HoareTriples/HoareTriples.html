@@ -44,6 +44,9 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 
   <a class="w3-bar-item w3-button w3-hover-black"
   href="HoareTriples.html">Review of Hoare Triples</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="HoareTriplesVideo.mp4"><i>Video</i></a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="HoareTriplesSelfTest.html">Self Tests</a>
@@ -72,18 +75,21 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     
     <!------------------------------------------------------->
     <h1 class="w3-text-teal">Review of Hoare Triples</h1>
-    
+    This is a <i>very short, limited review</i> of properties of Hoare
+    triples that you studied earlier.
 
+    <p>
 A <a
   href="https://en.wikipedia.org/wiki/Hoare_logic">Hoare triple</a>
 has the form \(\{P\} c \{Q\}\) where \(P\) and \(Q\) 
-  are predicates on states of a system and \(c\) is a command. A command could be a
-  statement of a program, an entire program, an action in hardware, or
-  any other change of state in a system such as temperature
-  increasing. \(P\) is called the precondition and \(Q\) the
+    are predicates on states of a system and \(c\) is a command.
+    \(P\) is called the precondition and \(Q\) the
   postcondition. The meaning of the triple is that if \(P\) holds when
   the command \(c\) is initiated then execution of the command
-  terminates and \(Q\) holds upon termination. (Note: We assume total
+    terminates and \(Q\) holds upon termination.
+
+    <p>
+    (Note: We assume total
   rather than partial correctness.)
   </p>
   
@@ -101,13 +107,16 @@ has the form \(\{P\} c \{Q\}\) where \(P\) and \(Q\)
   \{x = 0\} \; x := x+1 \; \{x > 0\}
   \) 
   </p>
-  <p>
-  \(
-  \{x = 1\} \;  x := x+1 \; \{x = 2\}
-  \)
+    <p>
+    And a set of Hoare triples:
     </p>
+    <p>
+    \(
+    \forall k: \quad \{x = k\} \;  x := x+1 \; \{x = k+1\}
+     \)
+ </p>
 
-    <h4 class="w3-text-teal">Variables not in the Triple</h4>
+    <h4 class="w3-text-teal">Variables not in the Hoare Triple</h4>
     Variables that are not mentioned in a Hoare triple are assumed,
     implicitly, to remain unchanged by the command. For example, if a
     program has variables \(x\) and \(y\), then the triple:
@@ -119,7 +128,7 @@ has the form \(\{P\} c \{Q\}\) where \(P\) and \(Q\)
     is implicitly equivalent to:
     <p>
   \(
-  \forall k: \{(x = 0) \wedge (y=k) \} \;  x := x+1 \; \{(x = 1)
+  \forall k: \quad \{(x = 0) \wedge (y=k) \} \;  x := x+1 \; \{(x = 1)
     \wedge (y = k)\}
   \)
 
@@ -146,19 +155,18 @@ has the form \(\{P\} c \{Q\}\) where \(P\) and \(Q\)
 
 
 
-<p style="color:red;">Example</p>
 What transitions
 are possible from a state in which \(x = -1\) by a command \(c\) that
-    satisfies the above three Hoare triples?
+    satisfies <i>all</i> the above three Hoare triples?
 </p>
 
 <p>Since the state satisfies the
     first precondition, \(x < 0\), the state after the transition must
     satisfy the first postcondition, \((x = 1) \vee (x = 2)\). The
-    remaining Hoare triples don't address the precondition \(x =
+    other two Hoare triples don't address the precondition \(x =
 -1\), and so the postconditions of these Hoare triples are irrelevant
-    for this question. Therefore, the only transitions from \(x = -1\) are to either
-state \(x = 1\) or to state \(x = 2\).
+    for this question. Therefore, the transitions from \(x = -1\) are to 
+states \(x = 1\) or \(x = 2\).
 
 <p style="color:red;">Example</p>
     What transitions
