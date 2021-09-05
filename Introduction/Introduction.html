@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Introduction</title><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large
+    w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)"
+    onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    
+    <a href="../cross_reference.html" class="w3-bar-item w3-button
+  w3-hide-small w3-hover-white">Index</a> 
+    
+    <a href="../Formulae.html" class="w3-bar-item w3-button
+  w3-hide-small w3-hover-white">Formulae</a> 
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+  
+
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Introduction.html">Introduction</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Loops/Loops.html">Review: Nondeterminism, Predicates</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Safety/Safety.html">Safety</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="TimelineDiagrams/TimelineDiagrams.html">Timelines, Snapshots</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="GlobalSnapshotApplications/GlobalSnapshotApplications.html">Detection
+  Algorithms</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Knowledge/Knowledge.html"> Knowledge, Diffusing Algorithms</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="SelfStabilization/SelfStabilization.html">Fault Tolerance</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="CryptoCurrencyIntroduction/CryptoCurrencyIntroduction.html">Cryptocurrency</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Progress/Progress.html">Temporal Logic: Progress</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DiningPhilosophers/DiningPhilosophers.html">Cooperating Agents</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Progress/Progress.html">Clock Synchronization</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Progress/Progress.html">Cloud computing algorithms</a>
+
+
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+    
+    
+    <!------------------------------------------------------------>
+    <h1 class="w3-text-teal">Introduction</h1>
+    <!------------------------------------------------------------>
+
+    <h2 class="w3-text-teal">Key Ideas</h2>
+    <p>
+    Concurrent systems consist of multiple interacting agents.
+    These systems impact almost everything you do from using social
+    media, credit cards, phones, and cryptocurrencies, playing
+    multiplayer games, and flying or driving.
+
+    <p>
+    Many of these systems run forever,
+    unlike programs that read input, produce output, and
+    halt.
+    Because they run forever, they must deal with component failures.
+    Errors in these systems have
+    catastrophic consequences, but testing them to ensure safety is
+    notoriously difficult because of nondeterministic interaction
+    among agents.
+
+    <p>
+    Discussing the different types of concurrent systems takes more
+    time than we have.
+    So in this course we restrict attention to:
+    <ol>
+      <li>
+      <i>fundamentals</i>,
+      </li>
+      <li>
+      <i>distributed</i> systems, i.e. message-passing systems,
+      </li>
+      <li>
+      <i>correctness</i>: 
+      proving that algorithms are correct,
+      </li>
+      <li>
+      <i>resilience</i>: systems that function despite unreliable components.
+      </li>
+    </ol>
+
+    <p>
+    The key concepts of the course are states, nondeterminism and
+    interleaving of atomic actions, the role of timelines and time,
+    and the use of temporal logic.
+
+    <h4 class="w3-text-teal">State</h4>
+    The future behavior of a system, given its state, is independent
+    of its past. The concept of state is fundamental to all
+    systems. You have used it in economics, control systems, 
+    stochastic processes, and in programming.
+    <p>
+    A state of a distributed system consists of the states of its
+    component agents and component communication links. We sometimes
+    emphasize the distinction between the <i>global</i> state of the
+    entire system and the local state of a component. The state of a
+    system changes when the staet of any component changes.
+<p>
+The trajectory of a system is a sequence of states over time. We use
+    the terms system trajectory, program computation, and paths of
+    state-transition systems interchangeably. For example, the state of a program
+    is given by the values of its variables and the computation of a
+    program is specified by the sequence of its states.
+
+    <p>
+    The systems that we discuss in those course have discrete
+    states. We also discuss a few systems with continuous state spaces.
+We represent systems by states and their transitions, and the focus of
+    this course is
+on an abstraction: <i>A state-transition system.</i>
+
+<h4 class="w3-text-teal">Interleaving Atomic Actions</h4>
+An agent executes atomic actions. The execution of an atomic action
+causes a  transition from one state to another: there are no
+intermediate states during the transition.
+
+<p>
+What happens if multiple agents execute atomic actions simultaneously? We
+represent simultaneity by choosing an arbitrary order of
+atomic actions. Suppose two agents request exclusive access to a
+file at exactly the same time; we represent this situation by having
+one of the agents make the request first, followed by the other. This
+interleaving of actions allows us to treat a trajectory as a
+sequence of state transitions caused by a sequence of actions.
+
+<p>
+The interleaving of actions is inherently nondeterministic. Many
+agents may be ready to execute actions at an instant, and we want to
+allow any of them to proceed next. Most 
+courses in sequential programming deal with deterministic systems: If
+you run the same program multiple times with the same input then you
+get the same behavior each time. In contrast, if a distributed system is executed
+multiple times it may produce different behaviors in different
+runs. That's why debugging deterministic
+sequential programs is easier than debugging distributed systems.
+
+<h4 class="w3-text-teal">Progress, Fairness, Temporal Logic</h4>
+Consider a system in which agents \(x\) and \(y\) send messages back
+and forth between the two of them. An agent \(z\) sends a "stop"
+message to both \(x\) and \(y\). When \(x\) or \(y\) receive a "stop"
+message they stop sending messages. What behaviors do we expect from
+this system?
+<p>
+The trajectory unfolds by picking one atomic action that an agent can
+perform. So, a trajectory could consist of \(x\) and \(y\) sending
+messages to each other infinitely often, while the "stop" message
+remains in flight forever. We expect, however, that message delivery
+will be fair. A system that delivers messages from \(x\) and \(y\),
+but not \(z\) is unfair. We may not know when a message
+will be delivered, but we do expect a message that is sent to be delivered at some
+time. We capture this concept using a
+<a
+    href="https://en.wikipedia.org/wiki/Computation_tree_logic">temporal
+logic.</a>
+
+<h4 class="w3-text-teal">Timelines, Time, Snapshots, Knowledge</h4>
+Timeline diagrams show each agent's states and actions at different
+points in time.
+Timelines are used in many disciplines,
+such as history, where objects change.
+In some cases the time in a timeline is real time, or physical
+time. In other cases, this time is "logical time" --- a concept that
+we use in lieu of real time.
+Timelines are a commonplace simple idea; however, they can be very
+useful in understanding how the states of different agents change as a
+trajectory unfolds.
+
+<p>
+In an informal discussion of a distributed algorithm we may talk about
+what an agent "knows." Endowing agents with the capability of human
+reasoning can be helpful while brainstorming algorithms; however,
+doing so can be dangerous because we may expect more from our agents
+than they deliver. We will define concepts such as "what an agent
+<i>knows</i>" and how an agent gains and loses knowledge with time.
+
+<p>
+A critical question for most distributed algorithms is: What does one
+agent know about the state of another agent? More generally, what does
+an agent know about the state of the entire system? This is related to
+the idea of global snapshots. And snapshots, in turn, are related to
+timelines. In this course we will spend time on using the idea of
+timelines to understand distributed systems, how agents' knowledge
+changes, and how an agent can take snapshots of others.
+
+
+<h4 class="w3-text-teal">Resilience to Failure</h4>
+A component can fail in different ways. A message channel may break
+and messages may no longer be delivered along the channel. An agent
+may send unexpected messages and an agent may pretend to be another
+agent. We will look at some important failure modes in this course and
+discuss resilient algorithms that deal with failures.
+
+
+<h4 class="w3-text-teal">Summary</h4>
+Concurrent systems are ubiquitous; they impact many of the things that
+you do.
+<p>
+This course focuses on fundamentals, message-passing systems,
+correctness of systems, and resilience to failure.
+<p>
+Key ideas that run through this course are states; nondeterminism and
+interleaving of atomic actions; fairness of actions and proving
+progress using temporal logic; the role of timelines in understanding
+what agents know and how they can take snapshots of states of other
+systems; and different failure modes and algorithms that are resilient
+to them. 
+    
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
