@@ -52,6 +52,9 @@ hr.new2 {
 
   <a class="w3-bar-item w3-button w3-hover-black"
   href="ShortestPath.html">Review: Examples of Correctness Proofs</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ShortestPathVideo.mp4">Video</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="../FlightFormation/FlightFormation.html">More Examples: Flight Formation</a>
@@ -109,15 +112,16 @@ hr.new2 {
     <pre>
 D = W
 for all i, j, k:
-  if d[i,j] + d[j, k] < d[i,k]:
-        d[i,k] = d[i,j] + d[j, k]
+  D[i,j] + D[j, k] < D[i,k]  ->   D[i,k] = D[i,j] + D[j, k]
     </pre>
 
     <h4 class="w3-text-teal">Invariant</h4>
     An invariant of the program is:
     <p>
     \(D \leq W\)
-    and for all \(i, j\): \(D[i,j]\) is the length of some path from
+    and
+    <br>
+    for all \(i, j\): \(D[i,j]\) is the length of a path from
     \(i\) to \(j\).
     
     <p>
