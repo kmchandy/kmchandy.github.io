@@ -244,6 +244,117 @@ predicates can be converted to proofs using sets of states by treating
 each predicate as its extension.
 </p>
 
+<h3 style="color:red;">Example</h3>
+Consider a system with variables \(x, y\) which are integers
+bounded above and below. The set of all possible states of the
+program is the <i>universal set</i> of discourse. The universal set is
+shown as the red box in the diagram below. Each state is represented
+by a point \(x, y\) in the diagram. The set of states which is the
+extension of the predicate \(x = 0\) is shown by the vertical blue
+line at \(x = 0\).
+    
+<figure>
+  <img src="Slide04.jpg" alt="Fig1" style="width:80%">>
+  <figcaption>Fig.1 - Set which is extension of \(x = 0\)</figcaption>
+</figure>
+
+The set of states which is the
+extension of the predicate \(y = 0\) is shown by the horizontal blue
+line at \(y = 0\) in the second box.
+    
+<figure>
+  <img src="Slide05.jpg" alt="Fig2" style="width:80%">>
+  <figcaption>Fig.2 - Set which is extension of \(y = 0\)</figcaption>
+</figure>
+
+The set of states which is the
+extension of the predicate \((x = 0) \wedge(y = 0)\) is shown by the blue
+box in the center at the intersection of the sets corresponding to 
+\((x = 0)\) and \((y = 0)\).
+<figure>
+  <img src="Slide06.jpg" alt="Fig3" style="width:80%">>
+  <figcaption>Fig.3 - Set which is extension of \((x = 0) \wedge(y = 0)\)</figcaption>
+</figure>
+
+
+
+The set of states which is the
+extension of the predicate \((x = 0) \vee (y = 0)\) is shown by the blue
+horizontal and vertical lines which is the union of the sets
+corresponding to
+\((x = 0)\) and \((y = 0)\).
+<figure>
+  <img src="Slide07.jpg" alt="Fig4" style="width:80%">>
+  <figcaption>Fig.4 - Set which is extension of \((x = 0) \vee(y = 0)\)</figcaption>
+</figure>
+
+
+
+The set of states which is the
+extension of the predicate \((x = 0) \equiv (y = 0)\) is shown in the blue
+spaces in the figure below. A state satisfies this predicate exactly
+when:
+<p>
+\(
+((x \neq 0) \wedge (y \neq 0)) \vee ((x = 0) \wedge (y = 0))
+\)
+<p>
+<figure>
+  <img src="Slide08.jpg" alt="Fig5" style="width:80%">>
+  <figcaption>Fig.5 - Set which is extension of \((x = 0) \equiv (y = 0)\)</figcaption>
+</figure>
+
+
+The set of states which is the
+extension of the predicate \((x = 0) \Rightarrow (y = 0)\) is shown in the blue
+spaces in the figure below. A state satisfies this predicate exactly
+when:
+<p>
+\(
+(x \neq 0) \vee (y = 0))
+\)
+<p>
+<figure>
+  <img src="Slide09.jpg" alt="Fig6" style="width:80%">>
+  <figcaption>Fig.6 - Set which is extension of \((x \geq 0) \equiv
+\neg(x < 0)\)
+</figcaption>
+</figure>
+
+<h3 style="color:red;">Example:Square bracket notation</h3>
+\([(x = 0) \; \equiv \; (y = 0)]  = False\)
+<p>
+Why?
+<p>
+Because there are states in which the values of the left-hand and
+right-hand sides of the equality are different. This is evident in the
+non-blue spaces inside the box representing the universal set.
+
+<figure>
+  <img src="Slide11.jpg" alt="Fig7" style="width:80%">>
+  <figcaption>Fig.7 - Square bracket notation
+</figcaption>
+</figure>
+
+\([(x \geq 0) \; \equiv \; \neg (x < 0)]  = True\)
+<p>
+Why?
+<p>
+Because every state satisfies this equality: either both left and
+right-hand sides are True or both are False. This is evident because
+the box representing the universal set is entirely blue.
+
+<figure>
+  <img src="Slide12.jpg" alt="Fig8" style="width:80%">>
+  <figcaption>Fig.8 - Square bracket notation
+</figcaption>
+</figure> 
+
+<h3 class="w3-text-teal">Summary</h3>
+This review module defined predicates and extensions of predicates; showed
+the relationship between operations on predicates and set operations
+on the extensions of the predicates; and introduced the square bracket notation.
+
     
 <!---------------------------------------->
   <footer id="myFooter">
