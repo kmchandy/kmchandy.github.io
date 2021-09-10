@@ -73,6 +73,20 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <div class="w3-twothird w3-container">
     
     <h1 class="w3-text-teal">Predicates: Self Tests</h1>
+
+
+    <h2 class="w3-text-teal">Problem 1</h2>
+    Is the following True?
+    <p>
+    For all predicates \(P\), \(Q\)
+    \(
+    [(P \Rightarrow Q) \quad \equiv\quad (Q \equiv (P \vee Q))]
+    \)
+    
+      
+      
+
+    <h2 class="w3-text-teal">Problem 2</h2>
     This exercise deals with predicates on students at a
     university. Let \(CS, Sp, IQ\) be predicates that hold for
     students in CS, who play a sport, and who are smart,
@@ -110,20 +124,134 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
       <p>
       \(CS \Rightarrow IQ\)
       </li>
-      <li>
-      The following formula is a Boolean value because both sides of
-    the implications are Booleans. Is the formula True or False? 
-      <p>
-      \([IQ \equiv (CS \wedge Mu)] \Rightarrow [IQ \Rightarrow CS] \)
-      </li>
     </ol>
 
     <h1 class="w3-text-teal">Predicates: Self Tests Answers</h1>
+    
+    <h2 class="w3-text-teal">Problem 1</h2>
+    Is the following True?
+    <p>
+    For all predicates \(P\), \(Q\):
+    \(
+    [(P \Rightarrow Q) \quad \equiv\quad (Q \equiv (P \vee Q))]
+    \)
+    <p>
+    The expression within the square brackets is a predicate. The
+    expression including the square brackets is a Boolean.
+    <p>
+    The question is this: Is the expression within the square brackets
+    universally True?
 
-    <figure>
-    <img src="PredicatesSelfTests/Slide1.jpg" alt="Fig1" style="width:80%">
-    <figcaption>Fig.1: Answers to Self Test</figcaption>
-    </figure>
+    There are several ways to answer this question.
+    A simple way is to use a Truth Table.
+
+<p class="w3-text-teal">Truth Table</p>
+       Consider states in
+    which \(P\) and \(Q\) take on different values and check
+    whether the left-hand and right-hand sides of the equivalence are
+identical. For this table, it is helpful to replace \(P \Rightarrow
+Q\) by \(\neg P \vee Q).
+
+<p>Note that \(\neg\) has precedence over \(\vee\), so \(\neg P \vee Q\)
+is the same as \((\neg P) \vee Q\).
+
+
+<p>
+We get the following Truth Table:
+<ol>
+  <li>
+<p>
+\(
+P = True, Q = True: 
+\)
+<p>
+Substituting for \(P, Q\), the formula becomes:
+<p>
+\(
+(\neg True \vee True) \quad \equiv \quad (True \equiv (True \vee
+True))
+\)
+<p>
+which simplifies to
+<p>
+\(
+True \quad \equiv \quad True
+  \)
+  </li>
+  <li>
+<p>
+\(
+P = True, Q = False: 
+\)
+<p>
+Substituting for \(P, Q\), the formula becomes:
+<p>
+\(
+(\neg True \vee False) \quad \equiv \quad (False \equiv (True \vee False))
+\)
+<p>
+which simplifies to
+<p>
+\(
+False \quad \equiv \quad False
+  \)
+  </li>
+  <li>
+<p>
+\(
+P = False, Q = True: 
+\)
+<p>
+Substituting for \(P, Q\), the formula becomes:
+<p>
+\(
+(\neg False \vee True) \quad \equiv \quad (True \equiv (False \vee True))
+\)
+<p>
+which simplifies to
+<p>
+\(
+True \quad \equiv \quad True
+  \)
+  </li>
+  <li>
+<p>
+\(
+P = False, Q = False: 
+\)
+<p>
+Substituting for \(P, Q\), the formula becomes:
+<p>
+\(
+(\neg False \vee False) \equiv (False \equiv (False \vee False))
+\)
+<p>
+which simplifies to
+<p>
+\(
+True \quad \equiv \quad True
+  \)
+  </li>
+</ol>
+<p>
+The formula is True for all values of \(P\) and \(Q\) and so it is
+true for every state, i.e., it is universally True.
+
+
+<p class="w3-text-teal">Venn Diagram</p>
+Drawing a Venn diagram is equivalent to testing all values of the
+predicates. Testing values of predicates merely checks points in all the different
+regions of a Venn diagram instead of drawing the diagram.
+
+<p class="w3-text-teal">Boolean Algebra</p>
+You can simplify the formula, step by step, using the laws of Boolean
+Algebra, to get True. This is the preferred method by logicians, but
+for this course you can use any method.
+    
+    
+
+<h2 class="w3-text-teal">Problem 2 Answers</h2>
+<p class="w3-text-teal">Parts 1-4</p>
 
     
     <ol>
@@ -159,20 +287,26 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
       student is in CS.
       </li>
     </ol>
+  
+
+The diagram below shows the answers for parts 1 through 4.
+<p>
+
 
     <figure>
-    <img src="PredicatesSelfTests/Slide2.jpg" alt="Fig1" style="width:80%">
-    <figcaption>Fig.2: Answers to Self Test</figcaption>
-    </figure>
+    <img src="PredicatesSelfTests/Slide1.jpg" alt="Fig1" style="width:80%">
+    <figcaption>Fig.1: Answers to Self Test, Problem 2. Parts 1 - 4</figcaption>
+</figure>
 
-    <ol start="5">
-      Question:
-      <li>
-      No square brackets. 
+    
+    <p class="w3-text-teal">Part 5</p>
+    
+      Draw Venn diagram illustrating extension of this predicate. Note
+      no square brackets.  
       <p>
-      \(IQ \equiv CS\)
-      </li>
-    </ol>
+    \(IQ \equiv CS\)
+
+    
       <p>Answer</p>
       <p>
       This is a predicate. It is a function from elements of the set
@@ -191,44 +325,25 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
       <p>
       The extension of \(IQ \equiv CS\) is the union of (1) the
       intersection of the extensions of \(IQ\) and \(CS\), and (2) the
-      intersection of the extensions of \(\neg IQ\) and \(\neg CS\).
+    intersection of the extensions of \(\neg IQ\) and \(\neg CS\).
+
+    <p>
+    The next diagram illustrates the formula. States in the blue
+    region satisfy the formula, and states outside do not. 
     
 
     <figure>
     <img src="PredicatesSelfTests/Slide4.jpg" alt="Fig4" style="width:80%">
-    <figcaption>Fig.3: Answers to Self Test</figcaption>
+    <figcaption>Fig.3: Answers to Self Test, Part 5</figcaption>
     </figure>
 
-    <ol start="6">
-      Question:
-      <li>
-      Note the square brackets:
-      <p>
-      \([CS \Rightarrow IQ]\)
-      </li>
-      <li>
-      No square brackets; so, this is a predicate, not a Boolean. 
-      <p>
-      \(CS \Rightarrow IQ\)
-      </li>
-    </ol>
-
-    <p>Answer</p>
-    The Venn diagram on the left shows \([CS \Rightarrow IQ]\). This
-    is a Boolean: It is either True for the universal set in question
-    or it is False. It is not a function from elements of the set to
-    the Booleans.
-
-    <figure>
-    <img src="PredicatesSelfTests/Slide3.jpg" alt="Fig3" style="width:80%">
-    <figcaption>Fig.3: Answers to Self Test</figcaption>
-    </figure>
-
+    <p class="w3-text-teal">Parts 6, 7</p>
     <p>
-    It is True for the universal set when the extension of \(CS\) is a
-    subset of the extension of \(IQ\). It says that every student in
-    CS is smart.
-
+    The Venn diagram on the left shows \([CS \Rightarrow IQ]\).
+    Note the square brackets. This is a Boolean which is True exactly
+    when the extension of \(CS\) is a subset of the extension of
+    \(IQ\). 
+    
     <p>
     The Venn diagram on the right shows \(CS \Rightarrow IQ\) without
     the square brackets. This is a function from elements of the
@@ -244,20 +359,10 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     The extension of this predicate \(CS \Rightarrow IQ\) is the union
     of (1) of (NOT CS) and (2) IQ.
 
-    <p>Question 8</p>
-    Yes, the formula is True because:
-    <p>
-    \(
-    [CS \wedge Mu \quad \Rightarrow \quad CS]
-    \)
-    
-
-    
-
-    
-      
-      
-
+    <figure>
+    <img src="PredicatesSelfTests/Slide3.jpg" alt="Fig3" style="width:80%">
+    <figcaption>Fig.3: Answers to Self Test Problem 2, Parts 6, 7</figcaption>
+    </figure>
 
     
     
