@@ -76,6 +76,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <!------------------------------------------------------->
     <h1 class="w3-text-teal">Hoare Triples: Self Test</h1>
 
+    <h3 class="w3-text-teal">Question 1</h3>
     Which of the following are True?
     <ol>
       <li>
@@ -119,6 +120,24 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
       </pre>
       </li>
     </ol>
+
+    <h3 class="w3-text-teal">Question 2</h3>
+    What is the weakest precondition \(P\) that satisfies the
+    following Hoare triple?
+    <p>
+    \(
+    \{P\} \; x := max(x, y) \; \{x = y\}
+    \)
+    <p>
+    Is the following a correct Hoare triple?
+    <p>
+    \(
+    \{(x \leq 0) \wedge (y \geq 0)\} \; x := max(x, y) \; \{x = y\}
+    \)
+    <p>
+    
+
+    
     
     <h2>Answers</h2>
     <ol>
@@ -236,6 +255,53 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
       </pre>
       </li>
     </ol>
+
+    <h3 class="w3-text-teal">Question 2</h3>
+    What is the weakest precondition \(P\) that satisfies the
+    following Hoare triple?
+    <p>
+    \(
+    \{P\} \; x := max(x, y) \; \{x = y\}
+    \)
+
+    <p class="w3-text-teal">Answer</p>
+    Substitute the right-hand side, i.e., \(max(x, y)\), of the assignment for
+    the left-hand side, i.e., \(x\), in the postcondition, i.e., \(x =
+    y\) to get:
+    <p>
+    \(
+    max(x, y) = y
+    \)
+    which simplifies to:
+    <p>
+    \(
+    x \leq y
+    \)
+    <p>
+    The answer is \(P \equiv (x \leq y)\), and we have the following
+    Hoare triple:
+    <p>
+    \(
+    \{x \leq y\}  \; x := max(x, y) \; \{x = y\}
+    \)
+    
+
+    <p class="w3-text-teal">Question</p>
+    Is the following a correct Hoare triple?
+    <p>
+    \(
+    \{(x \leq 0) \wedge (y \geq 0)\} \; x := max(x, y) \; \{x = y\}
+    \)
+    
+
+    <p class="w3-text-teal">Answer</p>
+    Yes because \((x \leq 0) \wedge (y \geq 0)\) is stronger than the
+    precondition \(x \leq y\), i.e.,
+    <p>
+    \(
+    [((x \leq 0) \wedge (y \geq 0)) \quad \Rightarrow \quad (x \leq y)]
+    \)
+    
     
 
 

@@ -217,6 +217,89 @@ In this course we will ensure that the commands specified in our
 algorithms can be executed in every state.
 </p>
 
+<h3 class="w3-text-teal">Weakest Precondition for Assignment</h3>
+What is the largest set of states in which execution of the assignment
+<pre>
+x = x + 1
+</pre>
+results in a state in which <code>x > 1</code>?
+<p>
+This question is equivalent to: What is the <i>weakest</i> preconditon
+\(P\) that satisfies the Hoare triple \(\{P\} x := x + 1 \{x > 1\}\)?
+<p>
+The answer is obtained by substituting the right-hand side (i.e. 
+\(x+1\)) of the assignment for the left-hand side (i.e., \(x\)) of the
+assignment in the postcondition
+(i.e., \(\{x > 1\}\).
+<p>
+With this substitution we get:
+<p>
+\(
+x + 1 > 1
+\)
+<p>
+Which simplifies to \(x > 0\). Therefore we get the Hoare triple:
+<p>
+\(
+\{x > 0\} x := x + 1 \{x > 1\}
+\)
+<p>
+<i>Any precondition that is stronger than the weakest
+precondition satisfies the Hoare triple.</i>
+<p>
+In terms of sets of
+states, any subset of the largest set (i.e., extension of \(x > 0\))
+also satisfies the Hoare triple. For example:
+<p>
+\(
+[(x = 5) \Rightarrow (x > 0)]
+\)
+<p>
+and therefore \(\{x = 5\} x := x + 1 \{x > 1\}\).
+
+
+<p style="color:red;">Example</p>
+What is the weakest precondition \(P\) that satisfies the following
+Hoare triple?
+<p>
+\(
+\{P\} x := 2*x + 3*y \{5*x + y > 25\}
+\)
+<p>
+Substitute \(2*x+3*y\) for \(x\) in \(5*x + y > 25\) to get:
+<p>
+\(
+5*(2*x + 3*y) + y > 25
+\), or
+<p>
+\(
+10*x + 16*y > 25
+\)
+<p>
+So, we have the Hoare triple:
+\(
+\{10*x +16*y > 25\}  x := 2*x + 3*y \{5*x + y > 25\}
+\)
+<p>
+<p style="color:red;">Example</p>
+Is the following Hoare triple correct?
+<p>
+\(
+\{(x = 1) \wedge (y =1)\} x := 2*x + 3*y \{5*x + y > 25\}
+\)
+<p>
+Yes, because \((x = 1) \wedge (y =1)\) is stronger than
+\(10*x +16*y > 25\), i.e.,
+<p>
+\(
+[(x = 1) \wedge (y =1) \quad \Rightarrow \quad (10*x +16*y >25)]
+\)
+<p>
+You can also verify the state transition directly. If the above assignment is executed
+in a state in which \((x = 1) \wedge (y =1)\) then in the next state
+\((x = 5) \wedge (y =1)\) which satisfies the postcondition.
+
+<!------------------------------------------------------------->
 <h2 class="w3-text-teal">Specifying commands by Hoare triples</h2>
 In this course, we specify commands in different ways. One way to
 specify a command \(c\) is by a set of Hoare triples \(\{ \{P\} c
