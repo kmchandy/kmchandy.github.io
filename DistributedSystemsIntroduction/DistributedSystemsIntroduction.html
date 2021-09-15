@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>DistributedSystems</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DistributedSystems.html">DistributedSystems and Timelines</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DistributedSystemsIntroductionVideo.mp4"><i>Video: Structure of
+  Distributed Systems</i></a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DistributedSystemsExample.html">Examples</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DistributedSystemsSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DistributedSystemsExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DistributedSystems.html">Explorations</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Channels/Channels.html">
+  Next: Distributed System Timelines</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../SnapshotIntroduction/SnapshotIntroduction.html">Previous:
+  Snapshots: Introduction
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Distributed Systems: Introduction</h1>
+    <!----------------------------------------------------------------->
+    <h2 class="w3-text-teal">Key Ideas</h2>
+    This module describes the model of distributed systems that we use
+    to describe algorithms.
+    <a href="Progress/Progress.html">Later, we will describe a more general
+    model defined in terms of a temporal logic.</a>
+
+    <!----------------------------------------------------------------->
+    <h3 class="w3-text-teal">Message Channels</h3>
+    
+    Message channels are a special shared variable used in distributed
+    systems. We use the abbreviation <i>channels</i> for message
+    channels.  The state of a channel is a queue of messages. An agent
+    sends a message along a channel by appending the 
+    message to the tail of the queue. A channel delivers a message to an
+    agent by
+    removing the message at the head of the queue and delivering it to
+    the agent. The messages in the queue are referred to as
+    "messages in flight along the channel," or "messages
+    in the channel." 
+
+   
+
+
+<h2 class="w3-text-teal">Distributed Systems: Introduction</h2>
+A distributed system consists of a set of agents and a set of named
+channels. For each channel \(c\), exactly one agent sends messages
+    along \(c\) and exactly one agent receives messages
+    along \(c\). An agent may send messages along multiple
+    channels, and may receive messages along multiple
+    channels.
+
+<p>
+A distributed system is represented by a labeled directed graph in which vertices
+represent agents and labeled directed edges represent named channels.
+
+    <h3 style="color:red;">Example</h3>
+    The figure below shows a distributed system with agents A, B, C, and
+    channels r, t, u, v, x, y, z. The figure shows that there can be
+    multiple channels from one agent to another; for example, the
+    channels called t and x are both from agent C to agent B.
+
+    <figure>
+    <img src="Channels_2.jpg" alt="Fig1" style="width:80%">
+    <figcaption>Fig.1: Graph Representation of a Distributed Systems</figcaption>
+</figure>
+
+The state of the system is a tuple with an element of the tuple for the state of
+    each agent and an element for the state of each channel.
+
+<h4 class="w3-text-teal">State Transitions</h4>
+    A distributed system changes state when a channel
+    delivers a message. The agent that receives the message may
+change its state and send messages on its outgoing channels.
+<p>
+Consider a state transition due to a channel \(u\) delivering a
+    message to an agent \(c\) which causes \(c\) to send messages on
+    its outgoing channels \(v\) and \(x\). This
+    state transition changes the states of channels \(u\), \(v\) and
+    \(x\) and may change the state of agent \(c\). The transition does not
+change the state of any other channel or any other agent.
+
+<h3 class="w3-text-teal">Model of Computation</h3>
+The model of computation we reviewed earlier is that of the <i>do - od
+</i> loop: Computation progresses by executing any guarded command
+whose guard evaluates to True. The model of computation for
+distributed systems is similar: Computation progresses by delivering a
+message from any channel that is not empty. There is one major
+difference: <i>fairness.</i>
+
+<h4 style="color:red;">Example</h4>
+Consider the following example of a system with a single agent \(x\) and channels \(red\)
+and \(blue\) directed from \(x\) to \(x\). Initially each channel
+contains a single token. Agent \(x\) has the following states:
+running and holding no tokens; stopped and holding a single token; and
+stopped and holding 
+two tokens.
+
+<p>
+Initially \(x\) is running and holds no tokens. If \(x\) receives a
+token along the blue channel while \(x\) is running it sends the blue
+token on channel \(blue\) and \(x\) remains running; this leaves the
+system state unchanged.  If \(x\) receives a token from the red
+channel then \(x\) stops.
+
+<p>
+The state of the system is a 3-tuple \(s\), where \(s_{0}, s_{1},
+s_{2}\) are the states of agent \(x\) and channels \(red\) and
+\(blue\), respectively. The state of an agent or channel is the set of
+tokens in it. \(\emptyset\) represents the empty set. The state transitions are:
+<ol>
+  <li>
+  <i>Deliver token on blue channel while \(x\) is running</i>:
+  <p>
+  \(
+  (0, 1, 1) \; \rightarrow \; (0, 1, 1)
+  \)
+  </li>
+  <li>
+  <i>Deliver token on red channel while \(x\) is running</i>: 
+  <p>
+  \(
+  (0, 1, 1) \; \rightarrow \; (1, 0, 1)
+  \)
+  </li>
+  <li>
+  <i>Deliver blue token while \(x\) is stopped</i>: 
+  <p>
+  \(
+  (1, 0, 1) \; \rightarrow \; (2, 0, 0)
+  \)
+  </li>
+</ol>
+<p>
+The state transition diagram is shown in the figure below.
+
+<p>
+Let's see why the <i>do-od</i> model of computation isn't adequate for
+this example. While \(x\) is running there are two guards that
+evaluate to True: (1) channel \(red\) is non-empty and (2) channel
+\(blue\) is non-empty. The computation can progress for ever by
+repeatedly executing the guarded command that delivers the token in
+the blue channel and never executing the command that delivers the
+token in the red channel.
+
+
+<h3 class="w3-text-teal">Fairness</h3>
+We will define the concept of <i>fairness</i> in terms of a temporal
+logic in a later module. Informally the model assumes that every message
+encounters a finite delay which is at least some positive constant.
+
+<h4 style="color:red;">Example</h4>
+In our example, the delay encountered by a message in the red channel
+is finite. Also the delay of a message in the blue channel is at least
+a positive constant. An arbitrary, <i>but finite</i> number of
+messages may be delivered on the blue channel before a message is
+delivered on the red channel. So, the system does not remain in state
+\(0, 1, 1)\) for ever. After a finite number of transitions from \((0,
+1, 1)\) to \((0, 1, 1)\) the system will transit from \((0, 1, 1)\) to
+\((1, 0, 1)\).
+
+<h3 class="w3-text-teal">Proofs of Correctness</h3>
+
+<h5 class="w3-text-teal">Safety</h5>
+The rules that we gave earlier for safety apply to distributed
+systems. The proofs are somewhat simpler because the only command that
+we have to deal with is the delivery of a message. For example,
+consider the definition of <i>stable</i>.
+
+<p>
+We defined \(P\) is <i>stable</i> as: the execution of a guarded
+command in a state in which \(P\) holds causes a transition to a state in
+which \(P\) continues to hold. The definition for a distributed system
+is the same: \(P\) is <i>stable</i>
+exactly when the delivery of a message in a state in which \(P\) holds
+causes a transition to a state in which \(P\) continues to hold.
+
+
+<h5 class="w3-text-teal">Progress</h5>
+
+We prove that a predicate \(P\) doesn't hold forever as
+follows. We show that if \(P\) holds then there is a non-empty channel
+such that delivery of a message from this channel causes a transition
+to a state in which \(\neg P\) holds.
+
+From fairness, we know that the channel will
+deliver a message eventually, and at that point \(P\) will no longer
+hold.
+
+<p>
+We discuss fairness, progress and temporal logic in a later module.
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+
