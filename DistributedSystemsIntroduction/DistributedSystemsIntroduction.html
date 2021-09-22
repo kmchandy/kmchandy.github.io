@@ -51,16 +51,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   Distributed Systems</i></a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="DistributedSystemsExample.html">Examples</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
   href="DistributedSystemsSelfTest.html">Self Test</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="DistributedSystemsExercises.html">Exercises</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="DistributedSystems.html">Explorations</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
   href="../Channels/Channels.html">
@@ -139,9 +130,17 @@ The state of the system is a tuple with an element of the tuple for the state of
     each agent and an element for the state of each channel.
 
 <h4 class="w3-text-teal">State Transitions</h4>
-    A distributed system changes state when a channel
-    delivers a message. The agent that receives the message may
-change its state and send messages on its outgoing channels.
+A distributed system changes state in only two ways:
+<ol>
+  <li><i>Message Delivery</i>: When a channel delivers a message which changes the state of the
+  channel and the state of the agent receiving the message, and </li>
+  <li>
+  <i>Internal Action</i>: An agent executes an <i>internal</i> action in which the agent
+  changes state without receiving a message.
+  </li>
+</ol>
+
+When an agent changes its state it may also send messages on its outgoing channels.
 <p>
 Consider a state transition due to a channel \(u\) delivering a
     message to an agent \(c\) which causes \(c\) to send messages on
@@ -149,6 +148,12 @@ Consider a state transition due to a channel \(u\) delivering a
     state transition changes the states of channels \(u\), \(v\) and
     \(x\) and may change the state of agent \(c\). The transition does not
 change the state of any other channel or any other agent.
+
+<p>
+Here is an example of an internal action. Agent \(c\) executes an
+internal action and sends messages on its outgoing channels. \(v\) and \(x\). This
+    state transition changes the states of channels \(v\) and \(x\)
+and may change the state of  \(c\).
 
 <h3 class="w3-text-teal">Model of Computation</h3>
 The model of computation we reviewed earlier is that of the <i>do - od
@@ -217,7 +222,8 @@ token in the red channel.
 <h3 class="w3-text-teal">Fairness</h3>
 We will define the concept of <i>fairness</i> in terms of a temporal
 logic in a later module. Informally the model assumes that every message
-encounters a finite delay which is at least some positive constant.
+encounters a finite positive delay, and that every agent that is ready
+to make a state transition does so after a finite delay.
 
 <h4 style="color:red;">Example</h4>
 In our example, the delay encountered by a message in the red channel
@@ -225,7 +231,7 @@ is finite. Also the delay of a message in the blue channel is at least
 a positive constant. An arbitrary, <i>but finite</i> number of
 messages may be delivered on the blue channel before a message is
 delivered on the red channel. So, the system does not remain in state
-\(0, 1, 1)\) for ever. After a finite number of transitions from \((0,
+\((0, 1, 1)\) for ever. After a finite number of transitions from \((0,
 1, 1)\) to \((0, 1, 1)\) the system will transit from \((0, 1, 1)\) to
 \((1, 0, 1)\).
 
@@ -233,16 +239,18 @@ delivered on the red channel. So, the system does not remain in state
 
 <h5 class="w3-text-teal">Safety</h5>
 The rules that we gave earlier for safety apply to distributed
-systems. The proofs are somewhat simpler because the only command that
-we have to deal with is the delivery of a message. For example,
+systems. The proofs are somewhat simpler because the only commands that
+we have to deal with are the delivery of a message to an agent or an
+internal action by an agent. For example,
 consider the definition of <i>stable</i>.
 
 <p>
-We defined \(P\) is <i>stable</i> as: the execution of a guarded
-command in a state in which \(P\) holds causes a transition to a state in
-which \(P\) continues to hold. The definition for a distributed system
-is the same: \(P\) is <i>stable</i>
-exactly when the delivery of a message in a state in which \(P\) holds
+The definition of \(P\) is <i>stable</i> is: the execution of a guarded
+command in a state in which \(P\) holds causes a transition to a state
+in which \(P\) continues to hold. The proof of stability for a distributed
+system is simple because we have only two kinds of events. So, \(P\) is
+<i>stable</i> exactly when (1) the delivery of a message or (2) an
+agent makes an internal transition, in a state in which \(P\) holds
 causes a transition to a state in which \(P\) continues to hold.
 
 
