@@ -107,7 +107,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
       <li>
       <pre>
       {x < 10}
-      if x > 0 then x = -3*x else x = 2*x
+      if x < 0 then x = -3*x else x = 2*x
       {x < 30}
       </pre>
       </li>
@@ -216,14 +216,16 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
       <li>
       <pre>
       {x < 10}
-      if x > 0 then x = -3*x else x = 2*x
+      if x < 0 then x = -3*x else x = 2*x
       {x < 30}
       </pre>
       <p>
       False.
       <p>
-      When \(x = - 11\), the precondition is satisfied but the
-      postcondition is not.
+      When \(x = - 11\), the precondition is satisfied.
+      The if-clause \(x < 0\) holds. So the assignment statement
+      \(x = -3 *x\) is executed which makes \(x = 33\) which violates
+      the postcondition.
       </li>
       <li>
       <pre>
