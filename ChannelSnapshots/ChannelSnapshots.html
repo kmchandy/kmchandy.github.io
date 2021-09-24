@@ -16,6 +16,14 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   bottom: 0;
   height: inherit;
 }
+/* Thick blue border */
+hr.new2 {
+  border: 5px solid blue;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
 </style>
 <body>
 
@@ -129,7 +137,28 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <p>
     This cut is inconsistent because there is an edge \((10, 11)\)
     from the future to the past. Next we give
-    an algorithm that avoids this situation.
+an algorithm that avoids this situation.
+
+
+
+
+<h3 class="w3-text-teal">Condition for Cut Consistency</h3>
+
+<hr class="new2">
+<h4 style="color:blue;">
+For a cut, let \(x_{s}\) and \(x_{r}\) be the numbers of messages sent
+and received along channel \(x\) before the cut.
+The cut is consistent
+if and only, for all channels \(x\): \(x_{s} \geq x_{r}\).
+</h4>
+<hr class="new2">
+
+
+This result follows because a message sent along channel \(x\) after
+the cut is sent after \(x_{s}\) messages are sent along the channel,
+and are therefore received only after \(x_{s}\) messages are received
+along the channel, and is therefore received after the cut.
+
 
     <h3 class="w3-text-teal">Global snapshot algorithm with channels</h3>
     Each agent records its state exactly once.
@@ -182,7 +211,7 @@ it hasn't done so. Therefore, events that an agent executes after it
 receives a marker are in the future. So, a message sent in a future
 event is received in a future event.
 
-<h4 class="w3-text-teal">Snapshots of Channels</h4>
+<h3 class="w3-text-teal">Snapshots of Channels</h3>
 The state of a channel \(x\) from an agent \(A\) to an
 agent \(B\), at a cut, is the sequence of messages that \(A\) sent along \(x\)
 in the past and that are received by \(B\) in the future.
@@ -201,6 +230,8 @@ messages that \(B\) receives after it records its state.
 So, the state of \(x\) at the cut is the sequence of messages that
 \(B\) receives along \(x\) after \(B\) records its state and before
 \(B\) receives a marker along \(x\)
+
+
 
 <h3 style="color:red;">Example: Channel Snapshot</h3>
 A diagram that illustrates the process by which an agent gets a
@@ -307,9 +338,27 @@ timestamps.
 The proof of correctness --- i.e. the algorithm assigns consistent
 timestamps --- is straightforward.
 
+
+<h2 class="w3-text-teal">Usig Logical Clocks for Global Snapshots</h2>
+  Each agent records its state when its logical time is at
+  a specified value \(T\). The state of a
+  channel is recorded by the receiver as the sequence of messages
+  received with timestamps less than \(T\) that are
+  received after the receiver's logical clock is at \(T\).
+  <p>
+  An agent's logical time is at \(T\) at
+  points on its timeline at or after an event with timestamp \(T\) and
+  before an event with timestamp greater than \(T\).
+
+  
+
 <h2 class="w3-text-teal">Summary</h2>
 This module extends the concepts of global snapshots and logical
-clocks to distributed systems.
+clocks to distributed systems. The module gives two algorithms for
+obtaining global snapshots: (1) Using markers and (2) using logical
+clocks. The module presents a necessary and sufficient condition for a
+cut to be consistent; this condition is based on counts of numbers of
+messages sent and received along a channel.
 
 
   <footer id="myFooter">

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>GlobalSnapshotApplications</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 5px solid blue;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="GlobalSnapshotApplications.html">Applications of Global Snapshots</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="GlobalSnapshotApplicationsExample.html">Examples</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="GlobalSnapshotApplicationsSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../DeadlockDetection_And/DeadlockDetection_And.html">
+  Next: Deadlock Detection I</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../ChannelSnapshots/ChannelSnapshots.html">Previous:
+  Distributed System Snapshots
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    
+    
+    <h2 style="color:red;">Example: Channel Counts</h2>
+    An agent that sends messages along a channel \(C\) maintains
+    a local variable, \(C_{s}\), which is the number of
+    messages that the agent sent along \(C\).
+    An agent that receives messages along a channel \(C\) maintains
+    a local variable, \(C_{r}\), which is the number of
+    messages that the agent received along \(C\).
+    Initially all the agents' local
+    variables, \(C_{s}\) and  \(C_{r}\), are \(0\).
+
+    <figure>
+    <img src="GlobalSnapshotApplications_1.jpg" alt="Fig1" style="width:50%">
+    <figcaption>Fig.1: Local Variables in Agents</figcaption>
+    </figure>
+    
+    <p>
+    The figure above shows two agents, \(A\) and \(B\), and a single
+    channel \(C\) directed from \(A\) to \(B\). Agent \(A\) has a
+    local variable \(C_{s}\) which is the number of messages that
+    \(A\) has sent along \(C\). Agent \(B\) has a
+    local variable \(C_{r}\) which is the number of messages that
+\(B\) has received along \(C\).
+
+<p>
+The figure below shows a point at which \(A\) has sent 4 messages
+\(m_{0}, m_{1}, m_{2}, m_{3}\), and \(A\) has received the first 2
+messages \(m_{0}, m_{1}\). At this point \(C_{s}=4, C_{r}=2\) and
+messages \(m_{2}, m_{3}\) are in transit along the channel.
+
+    <figure>
+    <img src="GlobalSnapshotApplications_2.jpg" alt="Fig2" style="width:50%">
+    <figcaption>Fig.2: Example of local variables at some point</figcaption>
+    </figure>
+
+
+<h2 style="color:red;">Example: Termination Detection Algorithm Execution</h2>
+
+<figure>
+    <img src="GlobalSnapshotApplications_3.jpg" alt="Fig3" style="width:50%">
+    <figcaption>Fig.3: Example of local variables at a point</figcaption>
+</figure>
+
+
+<p>
+The figure above shows an example of possible values of variables at
+some point. At this point, agent \(A\) has been continuously active
+and it has sent 3 messages along channel \(C\) and received 1 message along
+channel \(D\). Agent \(A\) has not sent any messages to the detector
+because \(A\) has not become idle.
+
+<p>
+Agent \(B\)
+became idle after receiving 1 message along channel \(C\) and sending
+2 messages along channel \(D\). When agent \(B\) became idle it sent a
+message to the 
+detector containing \(C_{r} = 1, D_{s} = 2\).
+This message is in transit from \(B\) to the detector.
+
+<p>
+The local variables, \(C'_{r}, C'_{s}, D'_{r}, D'_{s}\), of the detector
+are still their initial values (i.e. 0) because the detector hasn't received
+messages.
+
+
+<p>
+The next figure shows a possible later point. Agent \(A\)
+became idle after it sent 3 messages along channel \(C\) and received
+2 messages along \(D\). When it became idle \(A\) sent a message to
+the detector with the values \(C_{s} = 3, D_{r} = 2\). This message is
+in transit from \(A\) to the detector.
+
+<figure>
+    <img src="GlobalSnapshotApplications_4.jpg" alt="Fig4" style="width:50%">
+    <figcaption>Fig.4: Example of local variables at a later point</figcaption>
+</figure>
+
+The message that \(B\) sent to the detector with values \(C_{r} = 1,
+D_{s} = 2\) was received by the detector. Upon receiving this message
+the detector updated values of its own local variables to \(C'_{r} = 1,
+D'_{s} = 2\).
+
+<p>
+Agent \(B\) receives a message that \(A\) sent, and becomes active
+upon receiving the message.
+
+<figure>
+    <img src="GlobalSnapshotApplications_5.jpg" alt="Fig5" style="width:50%">
+    <figcaption>Fig.5: Example of local variables at termination</figcaption>
+</figure>
+
+The above figure shows the following case. Agent \(B\) received all
+the messages that \(A\) sent to it and then \(B\) became idle. When
+\(B\) became idle it sent a message \(C_{r} = 3, D_{s} = 2\). The
+message was received by the detector which updated its own local
+variables. The detector also received the message that \(A\) sent to
+it. At this point all agents are idle, all channels are empty, and the
+values of the detector's local variables  satisfy the condition
+\(C'_{s} = C'_{r}, D'_{s} = D'_{r}\). Since the detector has received
+a message from each agent at this point, the local termination
+condition holds.
+
+
+
+<h2 style="color:red;">Example: Timeline with Detector</h2>
+
+<figure>
+    <img src="GlobalSnapshotApplications_6.jpg" alt="Fig6" style="width:100%">
+    <figcaption>Fig.6: Timelines for termination detection</figcaption>
+</figure>
+
+The above figure shows a timeline diagram for the scenario described
+in the earlier figures. The system has timelines for agents \(A\) and
+\(B\), and a timeline for the detector. Message lines between agents
+are colored red, and message lines from agents to the detector are
+colored green.
+Idle periods in timelines are colored green, and active periods
+are colored blue.
+
+<p>
+Agent \(A\)'s sequence of events is as follows:
+<ol>
+  <li>Send message.</li>
+  <li>Receive message.</li>
+  <li>
+  Transition from active to idle. Send a message to
+  the detector with \(C_{s} = 1, D_{r} = 1\). At this point, \(C_{r} =
+  1, D_{s} = 2\). There is a message in transit from \(B\) to
+  \(A\), and \(B\) is active. So the trajectory has not terminated.
+  </li>
+  <li>
+  Receive a message and transition from idle to active.
+  </li>
+  <li>
+  Send message.
+  </li>
+  <li>
+  Send message.
+  </li>
+  <li>
+  Transition from active to idle.
+  Send a message to the detector with \(C_{s} = 3, D_{r} = 2\).
+  At this point, \(C_{r} = 3, D_{s} = 2\), and both channels are
+  empty.
+  But agent \(B\) is still active, and so the trajectory hasn't
+  terminated. 
+  </li>
+</ol>
+
+<p>
+Agent \(B\)'s sequence of events is as follows:
+<ol>
+  <li>Send message.</li>
+  <li>Receive message.</li>
+  <li>Send message.</li>
+  <li>
+  Transition from active to idle. Send a message to
+  the detector with \(C_{r} = 1, D_{s} = 2\). At this point, \(C_{s} =
+  3, D_{r} = 2\). There are 2 messages in transit from \(A\) to
+  \(B\), and \(A\) is active. So the trajectory has not terminated.
+  </li>
+  <li>Receive message.</li>
+  <li>Receive message.</li>
+  <li>
+  Transition from active to idle.
+  Send a message to the detector with \(C_{r} = 3, D_{s} = 2\).
+  At this point, \(C_{s} = 3, D_{r} = 2\). Both channels are
+  empty and both agents are idle.
+  So the trajectory has terminated. 
+  </li>
+</ol>
+
+The sequence of values of the local variables of the detector is as
+follows:
+<ol>
+  <li>
+  \([C'_{s} = 0, C'_{r} = -1,  D'_{s} = 0, D'_{r} = -1]\).
+  </li>
+  <li>
+  \([C'_{s} = 1, C'_{r} = -1,  D'_{s} = 0, D'_{r} = 1]\).
+  </li>
+  <li>
+  \([C'_{s} = 1, C'_{r} = 1,  D'_{s} = 2, D'_{r} = 1]\).
+  <li>
+  \([C'_{s} = 3, C'_{r} = 1,  D'_{s} = 2, D'_{r} = 2]\).
+  </li>
+  <li>
+  \([C'_{s} = 3, C'_{r} = 3,  D'_{s} = 2, D'_{r} = 2]\)
+  Local termination condition holds.
+  </li>
+</ol>
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+
