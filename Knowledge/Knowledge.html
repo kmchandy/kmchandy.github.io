@@ -98,203 +98,181 @@ hr.new1 {
     agents with human characteristics. For example, a programmer may
     say "an agent <i>knows</i> that another agent is idle." Endowing software with
     human capabilities can be dangerous when terms are ambiguous.
-    In this module we give a definition to the phrase "an agent
+    In this module we define a predicate "an agent
     knows \(P\)" where \(P\) is a predicate on states of a system.
     We use this definition to develop algorithms. The definitions and
     proofs are based on the concepts of timelines and 
     <a href="../ChannelSnapshots/ChannelSnapshots.html">consistent
     cuts.</a>
 
+    <p>
+    This module has several theorems which are obvious from the
+    definitions of consistent cuts and what agents know.
+
     <h3 class="w3-text-teal">What an Agent Knows</h3>
     For an agent \(x\), a state \(r\) of \(x\), and a predicate \(P\),
-    we use the phrase "<i style="color:blue;">agent \(x\) in state
-    \(r\) knows \(P\)</i>" 
-    to mean \([(s_{x} = r) \; \Rightarrow \; P]\) is an invariant of
-    the system.
-    Therefore, at every point of every trajectory of the
-    system, if the local state of agent \(x\) is \(r\) then the global
-    state satisfies \(P\).
-    We define a boolean function \(knows\) with arguments \(x, r,
-    P\) where
-    \(knows(x, r, P)\) means: "agent \(x\) in state
-    \(r\) knows \(P\)":
-    
+    "<i style="color:blue;">agent \(x\) in state \(r\) knows \(P\)</i>" 
+    is the Boolean True exactly when:
     <p>
-    <hr class="new2">
+    \(P\) holds when \(x\) is in state \(r\) in
+    all trajectories starting in initial states.
     <p>
     \(
-    knows(x, r, P) \quad = \quad
-    invariant \; [(s_{x} = r) \; \Rightarrow \; P]
+    [init \; \Rightarrow \; always([(x \; \textrm{in} \; r) \;
+    \Rightarrow \; P])]
     \)
-    <hr class="new2">
+
+    <p>
+    The phrase
+    "<i style="color:blue;">agent \(x\) knows \(P\) at a point \(T\) in a trajectory</i>"
+    means that at point \(T\) on the timeline for \(x\) in a
+    trajectory, \(x\) is in a state \(r\) such that \(x\) in state
+    \(r\) knows \(P\).
+    <p>
+    We use the abbreviation "\(P\) holds at a consistent cut" for
+    "\(P\) holds at the global state corresponding to a consistent cut"
+
+    <h3  style="color:red;">Example</h3>
+    A system has two agents \(x\) and \(y\) with a channel in each
+    direction between them. The system has two tokens in the initial
+    state. If an agent has a token then it sends it to the other
+    agent.
+    <figure>
+    <img src="KnowledgeDiagrams/Slide1.jpg" alt="Fig1" style="width:80%">>
+    <figcaption>When x holds one token it knows y does not hold both tokens</figcaption>
+    </figure>
+    <p>
+    Using our definition of knowledge, when \(x\) is in a
+    state in which \(x\) holds exactly one token, \(x\) knows that
+    \(y\) does not hold both tokens.
     
-
+    <p  style="color:red;">Example</p>
+    In the above system, the following statement is False because a
+    token may be in a channel.
     <p>
-    If <i>\(x\) in state \(r\) knows \(P\)</i> where
-    \(P\) is a predicate on the state of an agent \(y\) other
-    than \(x\), then the state of one agent gives us information about
-    the state of another agent. The phrase "\(x\)
-    knows" captures the idea that the our knowledge of the state of
-    \(y\) is based solely on the state of \(x\).
-
+    When \(x\) is in a
+    state in which \(x\) holds exactly one token, \(x\) knows that
+    \(y\) holds exactly one token.
     <p>
-    The next theorem tells us that if at some point in a trajectory,
-    \(x\) is in a  state \(r\) such that \(knows(x, r, P)\), where
-    \(P\) is a predicate on the state of another  agent \(y\), then
-    \(y\) cannot transit to a state in which \(\neg P\) without
-    receiving communication from \(x\). This communication from \(x\)
-    could be via intermediate agents. Speaking informally, it's as though
-    \(y\) needs permission from \(x\) to get out of states in which
-    \(P\) holds. 
+
+<h3 class="w3-text-teal">Theorem: Knowledge and Consistent Cuts</h3>
+Let \(P\) be a predicate on the states of a system.
+<p>
+<i style="color:blue;">
+If  \(x\) knows \(P\) at a point \(T\) in \(x\)'s timeline
+then \(P\) holds in every consistent cut through point
+\(T\).</i>
+
+<p>
+The proof of this statement follows from our earlier proof that there
+exists trajectories from initial states to all consistent cuts. And
+since \(P\) holds for the entire system given the state of agent \(x\) at point \(T\) on
+\(x\)'s timeline, it follows that \(P\) holds for the state at every consistent cut.
+
+    <h3  style="color:red;">Example</h3>
+    
+<figure>
+    <img src="KnowledgeDiagrams/Slide2.jpg" alt="Fig2" style="width:60%">>
+    <figcaption>Fig. 2. Agent A knows P in all consistent cuts that cross
+    point T</figcaption>
+</figure>
+
+<p>
+The top figurea in both diagrams above show a time T at which agent A knows
+that P holds. This implies that P holds in all consistent cuts through
+point T. The lower figures in the diagrams show consistent cuts which
+passes point T on A's timeline; the theorem says that P holds for the
+state at these cuts too. 
+
+<h3 class="w3-text-teal">Theorem: A Silent Agent retains Knowledge</h3>
+Let \(x\) be an agent in a system, and let \(P\) be a
+predicate on a subsystem that does not include \(x\).
+Let \(T\) and \(T'\) be points on \(x\)'s timeline with \(T < T'\). If
+\(x\) knows \(P\) at point \(T\) and \(x\) sends no messages in the
+interval \([T, T']\) then \(x\) knows \(P\) at \(T'\).
+
+<p class="w3-text-teal">Proof</p>
+Let \(c'\) be any consistent cut through point \(T'\) on \(x\)'s
+timeline. We will prove that \(P\) holds for the state at cut \(c'\).
+
+<p>
+Let \(c\) be the
+cut that is identical to \(c'\) except that it passes through point \(T\) on
+\(x\)'s timeline. \(c\) is consistent because there are no
+outgoing edges from \(x\)'s timeline between cuts \(c\) and
+\(c'\). Because \(x\) knows \(P\) at \(T\), \(P\) holds at \(c\). Since \(c\) and \(c'\)
+are identical except for the intersection with \(x\)'s timeline,
+it follows that \(P\) holds \(c'\).
+
+<h3 class="w3-text-teal">Theorem: Agents who don't listen remain Ignorant</h3>
+Let \(x\) be an agent in a system, and let \(P\) be a
+predicate on a subsystem that does not include \(x\).
+Let \(T\) and \(T'\) be points on \(x\)'s timeline with \(T < T'\). If
+\(x\) knows \(P\) at point \(T'\) and \(x\) received no messages in the
+interval \([T, T']\) then \(x\) knows \(P\) at \(T\).
+
+<p>The proof has exactly the same structure as the proof of the
+previous theorem.
+
+<h5 class="w3-text-teal">Consequence of the Theorem</h5>
+
+\(x\) didn't learn anything in the interval  \([T, T']\); everything
+\(x\) knows at the later point \(T'\) is knowledge it already had at
+the earlier point \(T\). The only way for an agent to gain knowledge is
+to receive messages. An agent cannot learn about other agents by only
+sending messages or making internal state transitions.
 
 
-<!------------------------------------------------------------>
-<h3 class="w3-text-teal">Theorem: Knowledge and Communication</h3>
-Let \(x\) and  \(y\) be different agents in a system, and let \(P\) be a
+<h3 class="w3-text-teal">Theorem: Knowledge is Control</h3>
+Let \(x\) and \(y\) be agents in a system, and let \(P\) be a
 predicate on the states of \(y\).
+Let \(T\) and \(T'\) be instants in a trajectory with \(T < T'\). If
+\(x\) knows \(P\) at  \(T\), and \(\neg P\) holds at \(T'\), then there
+is a path in the timeline diagram from point \(T\) on \(x\)'s timeline
+to point \(T'\) on \(y\)'s timeline.
+
+<p>Proof: If there is no path from point \(T\) on \(x\)'s timeline
+to point \(T'\) on \(y\)'s timeline then there exists a consistent cut
+which crosses \(x\)'s timeline at \(T\) and
+crosses \(y\)'s timeline at \(T'\).
+
+Such a cut is generated by the global-snapshot marker algorithm where
+\(x\) is the initiator at point \(T\).
+
+<h5 class="w3-text-teal">Consequence of the Theorem</h5>
+Suppose you and your friend communicate only by means of messages
+that are delayed by arbitrary (finite) amounts. Consider a situation
+where your friend knows
+that you are in the library at 9 pm. Then, from our definition of
+knowledge, because agents only know truth, you must be in the library
+at 9 pm. Moreover, you can't leave the library until
+you receive a message from your friend; this message may go through
+intermediate agents.
 
 <p>
-\(P\) holds at every point in a trajectory if:
-<ol>
-  <li>
-  The initial state of of \(x\) is \(r\) such
-  that \(knows(x, r, P)\), and
-  </li>
-  <li>
-  the timeline diagram of the trajectory has no path from an event in
-  the timeline of \(x\) to an event in the timeline of \(y\).
-  </li>
-</ol>
+In one of the exercises we'll look at knowledge when agents have
+clocks that may drift from each other but are not more than a some
+constant \(M\) units apart. If your friend knows that you will be in
+the library till her watch reads 9:00 pm, and your watches may drift apart
+by a minute, then you can leave the library at 9:01 pm. Clocks are
+useful even if they aren't perfect. More about clocks later.
 
-<p class="w3-text-teal">Proof</p>
-Let \(t\) be the initial point of the trajectory, i.e., the point
-before any agent executes any event.
-Let \(t'\) be any arbitrary point on the trajectory.
+
+<h3 class="w3-text-teal">Theorem: Communication to learn about
+Change</h3>
+This theorem is similar to the "knowledge is control" theorem.
 
 <p>
-We will show that there is a consistent cut that intersects the
-timeline of \(x\) at point \(t\) and intersects the timeline of \(y\)
-at point \(t'\).
-
-<p>
-Define the <i>future</i> as the set of events that are reachable from
-events in the timeline for \(x\). Define the <i>past</i> as the
-remaining events. All edges directed from the future are to the
-future. Therefore the cut is consistent. And so the state, \(s\),
-corresponding to the cut is a reachable global state. 
-
-<p>
-The local state of \(x\) is \(r\) when the global state is
-\(s\). Because \(x\) in state \(r\) knows \(P\), it follows
-that \(P\) holds in state \(s\).
+Let \(x\) and \(y\) be agents in a system, and let \(P\) be a
+predicate on the states of \(y\).
+Let \(T\) and \(T'\) be instants in a trajectory with \(T < T'\). If
+\(\neg P\) holds at \(T\) and \(x\) knows \(P\) at \(T'\) then there
+is a path in the timeline diagram from point \(T\) on \(x\)'s timeline
+to point \(T'\) on \(y\)'s timeline.
 
 
 
-<h3 class="w3-text-teal">Corollary: Permission to Falsify</h3>
-If
-at some point \(t\) in the trajectory, \(x\) is in a state \(r\)
-such that \(knows(x, r, P)\), where  \(P\) is a predicate on the
-  states of a different agent \(y\), and
-  at a later point \(t'\) in the trajectory, \(\neg P\) holds,
-
-then there is a chain of messages, starting from \(x\) after \(t\) and
-ending with \(y\) before \(t'\). This message chain may go through
-intermediate vertices.
-
-<p class="w3-text-teal">Discussion</p>
- This message chain is the communication
-from \(x\) that permits \(y\) to change its state from one in which
- \(P\) holds to one in which \(\neg P\) holds.
-
-<h3 class="w3-text-teal">Corollary: Persistence of knowledge in silent
-agents</h3>
-If at some point \(t\) in the trajectory, \(x\) is in a state \(r\)
-such that \(knows(x, r, P)\), where  \(P\) is a predicate on the
-states of a different agent, and \(x\) sends no messages from point
-\(t\) to a later point \(t'\), then \(P\) holds at every point between 
-\(t\) and \(t'\).
-
-<p class="w3-text-teal">Discussion</p>
-From the <i>permission to falsify</i> corollary, \(y\) cannot falsify
-\(P\) because \(y\) needs permission from \(x\) to do so, and \(x\)
-remains silent.
-
-
-<!------------------------------------------------------------>
-<h3 class="w3-text-teal">Theorem: Learning from Communication</h3>
-Let \(x\) and  \(y\) be different agents in a system, and let \(P\) be a
-predicate on the states of \(y\). Let \(s_{x}\) be the local state of
-agent \(x\) when the global state is \(s\).
-
-
-<p>
-In a trajectory, if
-<ol>
-  <li>
-  \(\neg P\) holds in the initial state, and
-  </li>
-  <li>
-  there is no path from an event in
-  the timeline of \(y\) to an event in the timeline of \(x\).
-  </li>
-</ol>
-then \( \neg knows(x, s_{x}, P)\) holds at every state.
-
-<p class="w3-text-teal">Proof</p>
-
-Let \(t\) be the initial point of the trajectory, i.e., the point
-before any agent executes any event.
-Let \(t'\) be any arbitrary point on the trajectory.
-
-<p>
-We will show that there is a consistent cut that intersects the
-timeline of \(y\) at point \(t\) and intersects the timeline of \(x\)
-at point \(t'\).
-
-<p>
-Define the <i>future</i> as the set of events that are reachable from
-events in the timeline for \(y\). Define the <i>past</i> as the
-remaining events. All edges directed from the future are to the
-future. Therefore the cut is consistent. And so the state, \(s\),
-corresponding to the cut is a reachable global state. 
-
-<p>
-In state \(s\), \(\neg P\) holds and the local state of agent \(x\) is
-\(s_{x}\). So, \([s_{x} \Rightarrow P]\) is not an
-invariant. Therefore, \( \neg knows(x, s_{x}, P)\).
-
-
-<p class="w3-text-teal">Discussion</p>
-If \(\neg P\) holds initially, and agent \(x\) receives no
-communication from agent \(y\), then \(x\) does not know whether \(P\)
-holds.
-
-
-
-<h3 class="w3-text-teal">Corollary: Learn by Listening</h3>
-Let \(x\) and \(y\) be different agents in a system, and let \(P\) be
-a predicate on the states of \(y\).  If at some point \(t\) in the
-trajectory, \(\neg P\) holds, and at a later point \(t'\) in the
-trajectory, \(knows(x, r, P)\) holds, then there is a chain of
-messages that starts from \(y\) after \(t\) and \(P\) holds, and
-that ends with \(y\) before \(t'\).
-
-<p class="w3-text-teal">Discussion</p>
- This message chain is the communication
-from \(y\) that informs \(x\) that \(P\) holds.
-
-<h4 class="w3-text-teal">Corollary: Persistence of ignorance among
-agents that don't listen</h4>
-If at some point \(t\) in the trajectory, \(\neg P \) holds, where  \(P\) is a predicate on the
-state of an agent \(y\), and a different agent \(x\) receives no messages from point
-\(t\) to a later point \(t'\), then \( \neg knows(x, s_{x}, P)\) holds at
-at every point between \(t\) and \(t'\).
-
-<p class="w3-text-teal">Discussion</p>
-If agent \(x\) receives no messages from any agent then it cannot
-learn that a different agent has changed state.
-
-<h3 class="w3-text-teal">Knowledge about Channels</h3>
+<h3 class="w3-text-teal">What Agents Know about Channel States</h3>
 Next, let's look at systems in which messages are acknowledged.
 For a pair of agents \(x, y\), let \(ms\) and \(mr\)
 be the number of messages that \(x\) has sent to \(y\), and  the number 
@@ -311,70 +289,70 @@ The following is an invariant:
 <p>
 The number of messages in the channel from \(x\) to \(y\) is \(ms -
 mr\).
-Because \(ms\) and \(ar\) are variables of agent \(x\):
-<p>
-
-<hr class="new2">
-Agent \(x\) <i>knows</i> an upper bound,\(\; ms - ar\), on the number of
+Because \(ms\) and \(ar\) are variables of agent \(x\),
+agent \(x\) <i>knows</i> an upper bound,\(\; ms - ar\), on the number of
 messages in channel \((x, y)\).
-<hr class="new2">
+So, \(x\) knows that the channel is empty when \(\; ms = ar\).
 
 <p class="w3-text-teal">What an agent cannot know</p>
 An agent cannot know that there are
-exactly, or at least, \(n\) messages in a channel, for \(n > 0\).
-You can prove this result using the concept of consistent cuts.
+exactly \(n\) messages in a channel, for \(n > 0\).
+You can prove this result using the concept of consistent
+cuts. Intuitively, the agent cannot know whether a message is in the
+channel or has been received.
 
-<h2 class="w3-text-teal">Extensions</h2>
-
-<h3 class="w3-text-teal">Chains of Knowledge</h3>
-Let \(s_{x}\) be the local state of an agent \(x\) when the global
-state is \(s\).
-We define a function \(K\) from agents-predicates to
-predicates as follows.
-For an agent \(x\) and a predicate \(P\):
-\(K(x, P)\) is a predicate which holds for a global state
-\(s\) exactly when \(knows(x, s_{x}, P)\).
-
+<h3  class="w3-text-teal">The Predicate \(x\) knows \(P\)</h3>
+We define a predicate "\(x\) knows \(P\)" as the weakest predicate \(Q\)
+that satisfies:
 <p>
-We can define predicates with arbitrarily long applications of \(K\),
-for example \(K(x, K(y, K(z, P)))\). The theorems and corollaries
-given above can be applied to such chains. The following result is one
-example.
+    \(
+    [init \; \Rightarrow \; always([Q \;
+    \Rightarrow \; P])]
+\)
+<p>
+As defined earlier, the predicate \(x\) knows \(P\) holds for a state
+\(r\) exactly when \(x\) in state \(r\) knows \(P\).
+<p>
+For example, in a system that passes tokens between agents, the
+predicate, "\(x\) knows that \(y\) holds no tokens," holds for those
+global states where we can deduce that \(y\) holds no tokens based solely on
+\(x\)'s state. 
 
-<h4 class="w3-text-teal">Chains of Permission</h4>
-If \(K(x, K(y, K(z, P)))\) holds at a point \(t\) in a
+<h4 class="w3-text-teal">Chains of Knowledge</h4>
+Let \(x, y, z\) be agents of a system and \(P\) be a predicate on
+states of the system. Then the following are all predicates:
+<ol>
+  <ul>
+    \(z\) knows \(P\)
+  </ul>
+  <ul>
+    \(y\) knows that \(z\) knows \(P\)
+  </ul>
+  <ul>
+    \(x\) knows that \(y\) knows that \(z\) knows \(P\)
+  </ul>
+</ol>
+The theorems given earlier apply to any predicate. For example, if
+\(x\) knows that \(y\) knows that \(z\) knows \(P\) at a point \(t\) in a
 trajectory, and \(\neg P\) holds at a later point \(t'\)
-then there must be a
-chain of communications that starts after \(t\) and ends before \(t'\),
-where the chain is first from \(x\) to \(y\), and then from
-\(y\) to \(z\). 
+then there must be path in the timeline diagram from point \(t\) on
+\(x\)'s timeline to point \(t'\) on \(z\)'s timeline.
 
-
-<h3 class="w3-text-teal">Knowledge about Subsystems</h3>
-A subsystem of a system consists of a subset of the agents and the
-channels between them. The theorems about knowledge of the state of an
-agent apply to knowledge of subsystems.
-
-<p>
-For example, let \(P\) be a predicate on the states of a subsystem,
-and \(x\) be an agent that is not in the subsystem.  If\(x\) knows
-\(P\) at a point \(t\) in a trajectory, and \(\neg P\) holds at a
-later point \(t'\) then there is a chain of messages from \(x\) to
-some agent in the subsystem.
-
-<h3 class="w3-text-teal">Shared Variables other than Channels</h3>
-Systems with shared variables other than channels are described in <a
-href="../Agents/Agents.html">the module on agents</a>. The theorems
-and proofs given in this module apply to such systems because the
-concept of consistent cuts is identical for systems with shared
-variables and systems with message-passing channels.
+<h5 class="w3-text-teal">Concurrent Systems with Shared Variables</h5>
+The theorems
+and proofs given in this module apply to systems with shared
+variables, and indeed any system with trajectories that are
+representable by timeline diagrams and with consistent cuts.
 
 <h3 class="w3-text-teal">Summary</h3>
 Many people working on distributed systems use the phrase "an agent
 knows." This module gives a definition of the concept that is
-consistent with intuitive definitions of knowledge. The definition
-allows us to obtain theorems on how agents learn --- acquire knowledge
---- and forget --- lose knowledge.
+consistent with intuitive definitions of knowledge.
+The central idea in this module is the
+relationship between what agents know and consistent cuts of
+timelines. We presented several theorems about agent knowledge which
+are intuitive when applied to human agents. The proofs are
+straightforward and are all based on consistent cuts of timelines.
 
   <footer id="myFooter">
 

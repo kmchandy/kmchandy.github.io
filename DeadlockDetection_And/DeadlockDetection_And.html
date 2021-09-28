@@ -126,13 +126,13 @@ A waiting agent \(u\) that holds a token in \(u_{waits}\)
     and (2) \(u_{waits}\), and (3) the set, \(u_{holds}\), of
 tokens that the agent holds.
 
-<p class="w3-text-teal">Deadlock</p>
+<h3 class="w3-text-teal">Deadlock</h3>
 A cycle of waiting agents is in a deadlock if each agent is waiting to
 acquire a token held by the next agent in the cycle. Our task is to
 design an algorithm by which an agent detects if is part of a
 deadlocked cycle.
 
-<p  style="color:red;">Example</p>
+<h3  style="color:red;">Example</h3>
 A system has one red, one blue and one green token.
 Agents \(x\), \(y\) and \(z\) are deadlocked in the following state.
 Agent \(x\) holds the red token and is waiting
@@ -149,7 +149,7 @@ does not record states of channels.
 Next we describe the global snapshot algorithm, with markers, tailored
 to this application.
 
-<p class="w3-text-teal">Initiating the Algorithm</p>
+<h4 class="w3-text-teal">Initiating the Algorithm</h4>
 A waiting agent \(x\) initiates the algorithm by sending a message, called a
 <i>marker</i> on each outgoing channel. We call \(x\) <i>the
 initiator</i>. Assume that there is only one initiator. (Multiple
@@ -159,20 +159,25 @@ initiator.)
 The marker \(m\)
 has a field \(m_{waits}\) that identifies the set
 of tokens for which the sender is waiting, i.e.,
-\(m_{waits} = x_{waits} - x_{holds}\).
+<p>
+\(m_{waits} = x_{waits} - x_{holds}\)
+<p>
+where \(x\) is the initiator, and for sets \(S\) and \(S'\), \(S -
+S'\) is the set consisting of elements that are in \(S\) and not in \(S'\).
 
-<p class="w3-text-teal">Propagating Markers</p>
-When \(y\) receives a marker \(m\), if there is a token common to 
-\(m_{waits}\), \(y_{holds}\), and \(y_{waits}\) then
+<h4 class="w3-text-teal">Propagating Markers</h4>
+When \(y\) receives a marker \(m\), if there is a token common to all
+three sets,
+\(m_{waits}\), \(y_{holds}\), \(y_{waits}\), then
 \(y\) sends a marker \(m'\) on each of its outgoing channels where 
 \(m'_{waits} = y_{waits} - y_{holds}\). 
 
-<p class="w3-text-teal">Termination Detection</p>
+<h4 class="w3-text-teal">Termination Detection</h4>
 When the initiator \(x\) receives a marker \(m\), the initiator
 detects that it is in a deadlocked cycle if there is a token common to 
 \(m_{waits}\), \(x_{holds}\), and \(x_{waits}\).
 
-<p class="w3-text-teal">Correctnes of the Algorithm</p>
+<h3 class="w3-text-teal">Correctnes of the Algorithm</h3>
 The algorithm is the global snapshot algorithm with markers, and we
 proved the correctness of the algorithm earlier.
 
