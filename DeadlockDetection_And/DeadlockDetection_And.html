@@ -102,29 +102,40 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     channels.</a>
 
     <p>
-    Agents in the system share a set of resources. An
-    example of a resource is exclusive access to a file.
-    A resource is represented as an
-    indivisible colored token, with each resource having its own
+    Agents in the system share a set of files.
+    Each shared file is represented as an
+    indivisible colored token, with each file having its own
     unique color. The system has at most one token of a given color.
 
     Tokens can be sent from agent to agent. Tokens are
     not duplicated or destroyed. 
 
     <p>
-    An agent is either <i>waiting</i> to acquire tokens or is <i>active</i>. 
-    A waiting agent \(u\) becomes active when it acquires all
-    the tokens in \(u_{waits}\).
-A waiting agent \(u\) that holds a token in \(u_{waits}\) 
-   continues to hold the token until \(u\) becomes
-    active. An active agent gives the tokens that it holds to
-    agents that request the tokens. While an agent is active,
-    \(u_{waits}\) is the empty set.
+    An agent \(u\) is in one of the following states:
+    <ol>
+      <li>
+      Executing without holding shared files.
+      </li>
+      <li>
+      Waiting to acquire a set \(u_{waits}\) of
+      shared files. 
+      </li>
+      <li>
+      Executing while holding all files in
+      \(u_{waits}\).
+      </li>
+    </ol>
+    <p>
 
-<p>
-    The state of an agent is given by (1) its waiting or active status,
-    and (2) \(u_{waits}\), and (3) the set, \(u_{holds}\), of
-tokens that the agent holds.
+    
+    
+    <figure>
+    <img src="DeadlockDetectionAnd/Slide1.jpg" alt="Fig1" style="width:100%">>
+    <figcaption>Fig.1 - The Life Cycle of an Agent</figcaption>
+    </figure>
+    An agent executes while holding files for only a finite
+    time. However, agents may wait forever to acquire files if they
+    form a deadlock cycle.
 
 <h3 class="w3-text-teal">Deadlock</h3>
 A cycle of waiting agents is in a deadlock if each agent is waiting to
@@ -138,16 +149,18 @@ Agents \(x\), \(y\) and \(z\) are deadlocked in the following state.
 Agent \(x\) holds the red token and is waiting
 to acquire a blue token; agent \(y\) holds the blue token and is waiting
 to acquire the green token; and agent \(z\) holds the green token and is waiting
-to acquire the red token.
+    to acquire the red token.
+    
+    <figure>
+  <img src="DeadlockDetectionAnd/Slide2.jpg" alt="Fig1" style="width:100%">
+  <figcaption>Fig.1 - An Example of a Deadlock</figcaption>
+</figure>
 
 <h2 class="w3-text-teal">An Algorithm</h2>
 The definition of a deadlocked cycle depends only on the local states
-of agents and <i>is independent of the states of message channels.</i>
-So, we can use a simpler version of the global snapshot algorithm which
+of agents and is independent of the states of message channels.
+So, we use a simpler version of the global snapshot algorithm which
 does not record states of channels.
-
-Next we describe the global snapshot algorithm, with markers, tailored
-to this application.
 
 <h4 class="w3-text-teal">Initiating the Algorithm</h4>
 A waiting agent \(x\) initiates the algorithm by sending a message, called a
@@ -158,7 +171,7 @@ initiator.)
 <p>
 The marker \(m\)
 has a field \(m_{waits}\) that identifies the set
-of tokens for which the sender is waiting, i.e.,
+of tokens for which the sender needs to start executing, i.e.,
 <p>
 \(m_{waits} = x_{waits} - x_{holds}\)
 <p>
@@ -170,7 +183,12 @@ When \(y\) receives a marker \(m\), if there is a token common to all
 three sets,
 \(m_{waits}\), \(y_{holds}\), \(y_{waits}\), then
 \(y\) sends a marker \(m'\) on each of its outgoing channels where 
-\(m'_{waits} = y_{waits} - y_{holds}\). 
+\(m'_{waits} = y_{waits} - y_{holds}\) if \(y\) hasn't already sent markers.
+
+<p>
+So, \(y\) sends markers if it receives a marker and the sender of that
+marker is waiting to acquire a token that \(y\) holds, and \(y\) is
+waiting to receive additional tokens.
 
 <h4 class="w3-text-teal">Termination Detection</h4>
 When the initiator \(x\) receives a marker \(m\), the initiator
@@ -178,7 +196,7 @@ detects that it is in a deadlocked cycle if there is a token common to
 \(m_{waits}\), \(x_{holds}\), and \(x_{waits}\).
 
 <h3 class="w3-text-teal">Correctnes of the Algorithm</h3>
-The algorithm is the global snapshot algorithm with markers, and we
+The algorithm is the global snapshot algorithm, and we
 proved the correctness of the algorithm earlier.
 
 
