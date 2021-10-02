@@ -130,7 +130,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     
     
     <figure>
-    <img src="DeadlockDetectionAnd/Slide1.jpg" alt="Fig1" style="width:100%">>
+    <img src="DeadlockDetectionAnd/Slide1.jpg" alt="Fig1" style="width:100%">
     <figcaption>Fig.1 - The Life Cycle of an Agent</figcaption>
     </figure>
     An agent executes while holding files for only a finite
@@ -187,13 +187,33 @@ three sets,
 
 <p>
 So, \(y\) sends markers if it receives a marker and the sender of that
-marker is waiting to acquire a token that \(y\) holds, and \(y\) is
+marker is waiting to acquire a token that \(y\) holds and needs, and \(y\) is
 waiting to receive additional tokens.
 
 <h4 class="w3-text-teal">Termination Detection</h4>
 When the initiator \(x\) receives a marker \(m\), the initiator
 detects that it is in a deadlocked cycle if there is a token common to 
 \(m_{waits}\), \(x_{holds}\), and \(x_{waits}\).
+
+<h3  style="color:red;">Example</h3>
+Let's look at the steps of the algorithm for the example given
+earlier.
+<p style="color:red;">Initiation</p>
+Agent \(x\) initiates the algorithm by sending markers
+requesting the blue token.
+
+<p style="color:red;">Marker Propagation</p>
+When agent \(y\) receives the marker, it
+holds the blue token, and it needs the blue token as well as
+the green token; so, it sends markers requesting the green token. When
+agent \(z\) receives the marker, it
+holds the green token, and it needs the green token as well as
+the red token; so, it sends markers requesting the green token.
+
+<p style="color:red;">Termination Detection</p>
+At the point the initiator \(x\) gets the marker, it holds the red
+token, and and it needs the red token as well as
+additional tokens; so, it detects termination.
 
 <h3 class="w3-text-teal">Correctnes of the Algorithm</h3>
 The algorithm is the global snapshot algorithm, and we
