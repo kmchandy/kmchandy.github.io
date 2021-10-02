@@ -156,7 +156,18 @@ to acquire the green token; and agent \(z\) holds the green token and is waiting
   <figcaption>Fig.1 - An Example of a Deadlock</figcaption>
 </figure>
 
-<h2 class="w3-text-teal">An Algorithm</h2>
+    <h2 class="w3-text-teal">An Algorithm</h2>
+    A general approach to detecting stable properties has two phases
+    (1) obtain a global snapshot, and (2) analyze the global
+    snapshot. The 
+    first phase reduces analysis of a dynamic system
+    into the analysis of static snapshot. The second step
+    analyzes <i>static</i> date structures such as graphs.
+
+    <p>This module describes an algorithm consisting of a single phase
+    that is an optimization of the two-phase algorithm.
+
+    <p>
 The definition of a deadlocked cycle depends only on the local states
 of agents and is independent of the states of message channels.
 So, we use a simpler version of the global snapshot algorithm which
