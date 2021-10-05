@@ -87,17 +87,17 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <ol>
       <li>
       <pre>
-      avg = (x + y + z)/3.0
+      avg = (x + y)/2.0
       </pre>
       </li>
       <li>
       <pre>
-      var = (x-avg)*(x-avg) + (y-avg)*(y-avg) + (z-avg)*(z-avg)
+      var = (x-avg)*(x-avg) + (y-avg)*(y-avg)
       </pre>
       </li>
       <li>
       <pre>
-      x, y = max(x, y), min(x, y)
+      x, y = max(x, y)+1, min(x, y)-1
       </pre>
       </li>
       <li>
@@ -128,17 +128,17 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <ol>
       <li>
       <pre>
-      avg = (x + y + z)/3.0
+      avg = (x + y)/2.0
       </pre>
       </li>
       <li>
       <pre>
-      x, y = max(x, y), min(x, y)
+      x, y = max(x, y)+1, min(x, y)-1
       </pre>
       </li>
       <li>
       <pre>
-      var = (x-avg)*(x-avg) + (y-avg)*(y-avg) + (z-avg)*(z-avg)
+      var = (x-avg)*(x-avg) + (y-avg)*(y-avg)
       </pre>
       </li>
       <li>
@@ -153,17 +153,66 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
       </li>
     </ol>
     <p>
-    Are the timeline diagrams for the original sequence and the
+    Are the graphs of the timeline diagrams for the original sequence and the
     permuted sequence identical?
 
 
+    <!---------------------------------------------------->
+    <h1 class="w3-text-teal">Timeline Diagrams: Self-Test Answers</h1>
+    <!---------------------------------------------------->
 
+
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 1</h2>
+    <!---------------------------------------------------->
+    The cut is inconsistent because event 2 depends on event 3. This
+    is because event 2 reads variables \(x\) and \(y\) which are
+    modified in event 3.
+
+
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 2</h2>
+    <!---------------------------------------------------->
+    The graphs are not identical. The graph for question 1 has an edge
+    from the event:
+    
+      <pre>
+      var = (x-avg)*(x-avg) + (y-avg)*(y-avg)
+    </pre>
+
+    to the event:
+    
+      <pre>
+      x, y = max(x, y)+1, min(x, y)-1
+    </pre>
+
+    This is because the event that modifies var reads
+    x and y.
+
+    <p>
+    The graph for question 2 has an edge in the opposite direction,
+    i.e. from the event:
+    
+      <pre>
+      x, y = max(x, y)+1, min(x, y)-1
+    </pre>
+    to the event
+    
+      <pre>
+      var = (x-avg)*(x-avg) + (y-avg)*(y-avg)
+    </pre>
+
+    <p>
+    If the graphs for the timeline diagrams of questions 1 and 2 were
+    identical then the final values for both sequences would be
+    identical. Try the case where x = y = 0 before the sequence is
+    executed. For question 1, the final value of var is 0, and for
+    question 2, the final value of var is 2.
 
     
-<figure>
-    <img src="TimelineDiagrams_Slide1.jpg" alt="Fig1" style="width:75%">
-    <figcaption>Fig.1: A Timeline</figcaption>
-</figure>
+    
+    
+
 
 
 

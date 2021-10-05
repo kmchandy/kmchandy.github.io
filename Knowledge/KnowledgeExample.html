@@ -122,7 +122,6 @@ hr.new1 {
     <hr class="new2">
 
     <p class="w3-text-teal">Notation</p>
-    We restrict attention to system trajectories that start in initial states.
     The phrase
     "<i style="color:blue;">agent \(x\) knows \(P\) at a point \(T\) in a trajectory</i>"
     means that at point \(T\) on the timeline for \(x\) in a
@@ -133,20 +132,27 @@ hr.new1 {
     "\(P\) holds at the global state corresponding to a consistent cut"
 
     <h3  style="color:red;">Example</h3>
-    A system has two agents \(x\) and \(y\) with channels between
-    them. Initially, the system has a single indivisible, indestructible
-    tokens that cannot be created. So, the system has a single tokens in
-every state in every trajectory.
-<p>
-When \(x\) is in a state in which it holds the token then \(x\)
-knows that \(y\) holds no tokens.
-<p>
-When \(x\) is in a state in which it holds no tokens then \(x\) knows
-that the token is in a channel or at \(y\).
-The following statement is False. "When \(x\) is in a state in which
-it holds no tokens, \(x\) knows that \(y\) holds the token."
-The statement is False because the token could be in a channel.
-
+    A system has two agents \(x\) and \(y\) with a channel in each
+    direction between them. The system has two tokens in the initial
+    state. If an agent has a token then it sends it to the other
+    agent.
+    <figure>
+    <img src="KnowledgeDiagrams/Slide1.jpg" alt="Fig1" style="width:80%">>
+    <figcaption>When x holds one token it knows y does not hold both tokens</figcaption>
+    </figure>
+    <p>
+    Using our definition of knowledge, when \(x\) is in a
+    state in which \(x\) holds exactly one token, \(x\) knows that
+    \(y\) does not hold both tokens.
+    
+    <p  style="color:red;">Example</p>
+    In the above system, the following statement is False because a
+    token may be in a channel.
+    <p>
+    When \(x\) is in a
+    state in which \(x\) holds exactly one token, \(x\) knows that
+    \(y\) holds exactly one token.
+    <p>
 
 <h3 class="w3-text-teal">Theorem: Knowledge and Consistent Cuts</h3>
 Let \(P\) be a predicate on the states of a system.
