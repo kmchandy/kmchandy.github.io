@@ -158,6 +158,89 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 
 
     <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 3</h2>
+    <!---------------------------------------------------->
+    Consider the same sequence of events as in Question 1.
+    Computation proceeds by executing any statement after executing
+     all statements on which it depends. 
+
+    <p>
+    Timestamps for all edges initially (before any statement is
+    executed) are all 0. 
+
+    <p>
+    True or False?
+
+    The following timestamps of the outgoing edges of these events
+    satisfies the logical clock requirement.
+    <ol>
+      <li>
+      Timestamp = 10
+      <pre>
+      avg = (x + y)/2.0
+      </pre>
+      </li>
+      <li>
+      Timestamp = 20
+      <pre>
+      var = (x-avg)*(x-avg) + (y-avg)*(y-avg)
+      </pre>
+      </li>
+      <li>
+      Timestamp = 15
+      <pre>
+      x, y = max(x, y)+1, min(x, y)-1
+      </pre>
+      </li>
+      <li>
+      Timestamp = 30
+      <pre>
+      span_square = (x-y)*(x-y)
+      </pre>
+      </li>
+      <li>
+      Timestamp = 35
+      <pre>
+      diff = span_square - var
+      </pre>
+      </li>
+    </ol>
+
+
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 4</h2>
+    <!---------------------------------------------------->
+    \(C_{1}\) and \(C_{2}\) are consistent cuts of a trajectory, and
+    \(C_{1} \subseteq C_{2}\). In other words all events that occur
+    before the cut line for \(C_{1}\) also occur before the cut line
+    for \(C_{2}\).
+    <p>
+    True or False?
+    There is a path in the state transition graph from the global
+    state at \(C_{1}\) to the global state  at \(C_{2}\)?
+    
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 5</h2>
+    <!---------------------------------------------------->
+    Same situation as Question 4.
+    <p class="w3-text-teal">Part 1</p>
+    True of False?
+    If a stable property \(P\) holds in \(C_{1}\) then it also holds
+    in \(C_{2}\)
+    <p class="w3-text-teal">Part 2</p>
+    True of False?
+    If a stable property \(P\) holds in \(C_{2}\) then it also holds
+    in \(C_{1}\)
+    <p class="w3-text-teal">Part 2</p>
+    Let \(P\) be a stable property.
+    True of False?
+    If  \(\neg P\) holds in \(C_{2}\) then \(\neg P\) also holds
+    in \(C_{1}\).
+
+
+
+
+    <!---------------------------------------------------->
     <h1 class="w3-text-teal">Timeline Diagrams: Self-Test Answers</h1>
     <!---------------------------------------------------->
 
@@ -208,6 +291,85 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     identical. Try the case where x = y = 0 before the sequence is
     executed. For question 1, the final value of var is 0, and for
     question 2, the final value of var is 2.
+
+
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 3</h2>
+    <!---------------------------------------------------->
+    Order the sequence of events in increasing order of timestamps to
+    get events: 1, 3, 2, 4, 5.
+    <p>
+    Let's look at answering the question in two ways.
+    <p class="w3-text-teal">Are the timestamps of output edges of each
+    event greater than the timestamps of the input edges of each
+event in the timeline diagram?</p>
+
+<p>
+There is an edge from event 2 to event 3 in the timeline diagram
+because event 2 reads variables \(x\) and \(y\) while event 3 modifies
+these variables. The timestamp for this edge is 20, and this edge is
+an input edge to event 3. Event 3 has an output edge with timestamp
+15. So, the timestamp of an output edge of an event is less than or
+equal to that of an input edge to the event. This violates the logical
+clock requirement.
+<p>
+Now let's look at another, equivalent, way of answering the question.
+
+    
+   <p class="w3-text-teal">Does this permutation change the order of
+dependent events?</p>
+    Does this permutation change the order of dependent events? If the
+    order of dependent events is changed then the timestamps do not
+    follow the logical clock requirement. If the permutation only
+    changes the order of independent events, while maintaining the
+    order of dependent events, then the timestamps follow the logical
+clock requirement.
+
+<p>
+
+Does this permutation change the order of dependent events?
+    Yes, it does because events 2 and 3 are inter-dependent since
+    event 2 reads variables \(x\) and \(y\) while event 3 modifies
+    these variables. 
+
+
+    <!---------------------------------------------------->
+<h2 class="w3-text-teal">Question 4</h2>
+<!---------------------------------------------------->
+Yes, there is a path from the global state at \(C_{1}\) to the global
+state at \(C_{2}\). This is because we can create a trajectory by
+permuting events in the given trajectory so that all
+the events in \(C_{1}\) occur first and then all the events in
+\(C_{2}\).
+
+
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 5</h2>
+    <!---------------------------------------------------->
+    Same situation as Question 4.
+    <p class="w3-text-teal">Part 1</p>
+    True of False?
+    If a stable property \(P\) holds in \(C_{1}\) then it also holds
+in \(C_{2}\)
+<p class="w3-text-teal">Answer</p>
+True. This is because the global state at \(C_{2}\) is reachable from
+    the global state at \(C_{1}\). Since \(P\) holds in the state at \(C_{1}\) it
+    also holds in all states reachable from this state.
+    <p class="w3-text-teal">Part 2</p>
+    True of False?
+    If a stable property \(P\) holds in \(C_{2}\) then it also holds
+in \(C_{1}\)
+<p class="w3-text-teal">Answer</p>
+False. \(P\) can be False in \(C_{1}\) and then become True between
+    \(C_{1}\) and \(C_{2}\).
+
+    <p class="w3-text-teal">Part 3</p>
+    Let \(P\) be a stable property.
+    True of False?
+    If  \(\neg P\) holds in \(C_{2}\) then \(\neg P\) also holds
+    in \(C_{1}\).
+<p class="w3-text-teal">Answer</p>
+True. Same reason as part 1.
 
     
     
