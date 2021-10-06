@@ -113,7 +113,10 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     The state of a system is given by the values of a set of
     variables. A state transition modifies some variables and reads,
     but does not modify, other variables. We assume that a transition
-    that modifies a variable also reads that variable.
+    that modifies a variable also reads that variable. We start with a
+    very simple kind of program in which each state transition
+    corresponds to the execution of a statement that modifies one
+    variable and reads arbitrarily many.
     <p>
     A trajectory is a sequence of states
     \(s_{0}, s_{1}, \ldots\) where the system has a transition from
