@@ -109,27 +109,27 @@ hr.new1 {
     <h5 style="color:blue;">
     "<i style="color:blue;">agent \(x\) in state \(r\) knows \(P\)</i>" 
     is a Boolean which holds if and only if:
-    <br>
-    \(P\) holds when agent \(x\) is in state \(r\) in
-    all trajectories that start in initial states.
     <p>
+    \(P\) holds when agent \(x\) is in state \(r\) in
+    all trajectories that start in initial states, i.e.,
+    <p style="text-align:center">
     \(
     [init \; \Rightarrow \; always([(x \; \textrm{in} \; r) \;
     \Rightarrow \; P])]
     \)
-    
-    <h5>
+    </p>
+    </h5>
     <hr class="new2">
 
     <p class="w3-text-teal">Notation</p>
     We restrict attention to system trajectories that start in initial states.
-    The phrase
-    "<i style="color:blue;">agent \(x\) knows \(P\) at a point \(T\) in a trajectory</i>"
-    means that at point \(T\) on the timeline for \(x\) in a
-    trajectory, \(x\) is in a state \(r\) such that \(x\) in state
-    \(r\) knows \(P\).
+    For an agent \(x\), predicate \(P\), and a point \(T\) in a
+    trajectory, the phrase
+    "<i style="color:blue;">\(x\) knows \(P\) at \(T\)</i>"
+    means that at point \(T\), \(x\) is in a state in which \(x\)
+    knows \(P\).
     <p>
-    We use the abbreviation "\(P\) holds at a consistent cut" for
+    We use the abbreviation "<i style="color:blue;">\(P\) holds at a consistent cut</i>" for
     "\(P\) holds at the global state corresponding to a consistent cut"
 
     <h3  style="color:red;">Example</h3>
@@ -216,7 +216,7 @@ to receive messages. An agent cannot learn about other agents by only
 sending messages or making internal state transitions.
 
 
-<h3 class="w3-text-teal">Theorem: Knowledge is Control</h3>
+<h3 class="w3-text-teal">Theorem: Knowledge implies Control</h3>
 Let \(x\) and \(y\) be agents in a system, and let \(P\) be a
 predicate on the states of \(y\).
 Let \(T\) and \(T'\) be instants in a trajectory with \(T < T'\). If
@@ -260,8 +260,8 @@ Let \(x\) and \(y\) be agents in a system, and let \(P\) be a
 predicate on the states of \(y\).
 Let \(T\) and \(T'\) be instants in a trajectory with \(T < T'\). If
 \(\neg P\) holds at \(T\) and \(x\) knows \(P\) at \(T'\) then there
-is a path in the timeline diagram from point \(T\) on \(x\)'s timeline
-to point \(T'\) on \(y\)'s timeline.
+is a path in the timeline diagram from point \(T\) on \(y\)'s timeline
+to point \(T'\) on \(x\)'s timeline.
 
 
 

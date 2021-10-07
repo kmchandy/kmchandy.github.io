@@ -253,30 +253,6 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     If \(P\) holds in \(C_{0}\) then \(P\) also holds in 
     \(C_{1}\) and \(C_{2}\).
 
-    
-    <!---------------------------------------------------->
-    <h2 class="w3-text-teal">Question 7</h2>
-    <!---------------------------------------------------->
-<figure>
-  <img src="TimelineDiagramsSelfTestSlide1.jpg" alt="Fig1" style="width:80%">>
-  <figcaption>Vector Timestamps</figcaption>
-</figure>
-This question is about vector clocks which are described in the video
-<br>
-https://kmchandy.github.io/SnapshotIntroduction/VectorClocksVideo.mp4
-
-<p>
-The figure is a part of a timeline diagram with three agents, A, B,
-C. The edges of the diagram are timestamped with vectors of size 3
-which correspond to timestamps of components A, B, C, in that order.
-For example the top horizontal edge has vector timestamp [10, 11, 2]
-which correspond to a timestamp 10 for agent A, 11 for agent B, and 2
-for agent C.
-<p>
-The diagram shows 3 events indexed 1, 2, 3. The inputs to event 3 have
-vector timestamps [10, 11, 2], [7, 15, 6] and [3, 12, 8]. What is the
-smallest vector timestamp of the output edge from event 3? Assume that
-the elements of vector timestamps are integers.
 
 
     <!---------------------------------------------------->
@@ -434,17 +410,6 @@ True. Same reason as for question 5.
 True. Same reason as for question 5.
 
     
-    <!---------------------------------------------------->
-    <h2 class="w3-text-teal">Question 7</h2>
-<!---------------------------------------------------->
-As the video shows, we first find the maximum of the vector timestamps
-    of the input edges. The maximum of [10, 11, 2], [7, 15, 6] and [3,
-12, 8] is [10, 15, 8].
-<p>
-Then we add [0, k, 0] for a positive value k. The smallest value that
-can be added is [0, 1, 0]. Adding this vector gives:
-<br>
-[10, 15, 8] + [0, 1, 0] = [10, 16, 8]
 
     
     

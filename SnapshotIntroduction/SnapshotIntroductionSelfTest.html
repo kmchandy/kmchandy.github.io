@@ -123,6 +123,67 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 
     
 
+    
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 4</h2>
+    <!---------------------------------------------------->
+<figure>
+  <img src="TimelineDiagramsSelfTestSlide1.jpg" alt="Fig1" style="width:80%">>
+  <figcaption>Vector Timestamps</figcaption>
+</figure>
+This question is about vector clocks which are described in the video
+<br>
+https://kmchandy.github.io/SnapshotIntroduction/VectorClocksVideo.mp4
+
+<p>
+The figure is a part of a timeline diagram with three agents, A, B,
+C. The edges of the diagram are timestamped with vectors of size 3
+which correspond to timestamps of components A, B, C, in that order.
+For example the top horizontal edge has vector timestamp [10, 11, 2]
+which correspond to a timestamp 10 for agent A, 11 for agent B, and 2
+for agent C.
+<p>
+The diagram shows 3 events indexed 1, 2, 3. The inputs to event 3 have
+vector timestamps [10, 11, 2], [7, 15, 6] and [3, 12, 8]. What is the
+smallest vector timestamp of the output edge from event 3? Assume that
+the elements of vector timestamps are integers.
+<p>
+<i>Note that event 3 reads the states of agents A, B, and C, but
+modifies the state of only agent B, but does not modify the states of
+agents A and C.</i>
+
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 5</h2>
+<!---------------------------------------------------->
+Variation of question 4:
+
+<figure>
+  <img src="TimelineDiagramsSelfTestSlide2.jpg" alt="Fig1" style="width:80%">>
+  <figcaption>Vector Timestamps</figcaption>
+</figure>
+This question is about vector clocks which are described in the video
+<br>
+https://kmchandy.github.io/SnapshotIntroduction/VectorClocksVideo.mp4
+
+<p>
+The figure is a part of a timeline diagram with three agents, A, B,
+C. The edges of the diagram are timestamped with vectors of size 3
+which correspond to timestamps of components A, B, C, in that order.
+For example the top horizontal edge has vector timestamp [10, 11, 2]
+which correspond to a timestamp 10 for agent A, 11 for agent B, and 2
+for agent C.
+<p>
+The diagram shows 3 events indexed 1, 2, 3. The inputs to event 3 have
+vector timestamps [10, 11, 2], [7, 15, 6] and [3, 12, 8]. What is the
+smallest vector timestamp of the output edge from event 3? Assume that
+the elements of vector timestamps are integers.
+<p>
+<i>Note that event 3 reads the states of agents A, B, and C, and also
+modifies the state of all three agents, A, B, C.</i>
+
+
+
+
     <!---------------------------------------------------->
     <h1 class="w3-text-teal">Answers</h1>
 <!---------------------------------------------------->
@@ -171,9 +232,43 @@ A timestamp of a vertex is the length of the longest path to the vertex from the
 
 
 
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 4</h2>
+<!---------------------------------------------------->
+As the video shows, we first find the maximum of the vector timestamps
+    of the input edges. The maximum of [10, 11, 2], [7, 15, 6] and [3,
+12, 8] is [10, 15, 8].
+<p>
+Then we add [0, k, 0] for a positive value k. Why add [0, k, 0]?
+    Because this event does not modify the states of agents A and C,
+    and does modify the state of agent B. And, the vector timestamp
+    shows the timestamps of agents A, B, C in that order.
+
+The smallest value that
+can be added is [0, 1, 0]. Adding this vector gives:
+<br>
+[10, 15, 8] + [0, 1, 0] = [10, 16, 8]
 
     
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 5</h2>
+<!---------------------------------------------------->
+As the video shows, we first find the maximum of the vector timestamps
+    of the input edges. The maximum of [10, 11, 2], [7, 15, 6] and [3,
+12, 8] is [10, 15, 8].
+<p>
+Then we add [1, 1, 1]. Why add [1, 1, 1]?
+Because this event modifies the states of A, B, and C.
+<p>
+If the event only modified the states of A and B, but not C, we would
+add [1, 1, 0].
+Likewise if it modified the states of B and C, but not A, we would add
+[0, 1, 1]
+<p>
 
+ Adding [1, 1, 1] gives:
+<br>
+[10, 15, 8] + [1, 1, 1] = [11, 16, 9]
 
   <footer id="myFooter">
 
