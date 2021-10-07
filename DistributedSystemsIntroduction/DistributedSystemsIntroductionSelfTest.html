@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>DistributedSystemsSelfTest</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DistributedSystemsIntroduction.html">Distributed Systems: Introduction</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DistributedSystemsIntroductionVideo.mp4"><i>Video: Structure of
+  Distributed Systems</i></a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DistributedSystemsIntroductionSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Channels/Channels.html">
+  Next: Distributed System Timelines</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../SnapshotIntroduction/SnapshotIntroduction.html">Previous:
+  Snapshots: Introduction
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!----------------------------------------------------------------->
+    <h1 class="w3-text-teal">Distributed Systems: Introduction. Self Test</h1>
+    <!----------------------------------------------------------------->
+
+    <!----------------------------------------------------------------->
+    <h2 class="w3-text-teal">Question 1</h2>
+    <!----------------------------------------------------------------->
+
+    A system has two agents \(A\) and \(B\), and channels \(x\), \(y\)
+    from agent \(A\) to agent \(B\), and channel \(z\) from \(B\) to
+    \(A\).
+    <p>
+    The system has four indivisible tokens with ids 0, 1, 2, 3. Tokens
+    are indivisible and cannot be created or destroyed. A token's id
+    remains unchanged.
+    <p>
+    Initially channel \(x\) contains tokens with ids 0, 1, 2 with id 0
+    ahead of id 1 ahead of id 2. Initially channel \(z\) contains the
+    token with id 3. Initially channel \(y\) is empty, and initially agents
+    \(A\) and \(B\) hold no tokens.
+    <p>
+    Agent \(A\)'s actions are as follows. When it receives a token
+    with id 0, 1, or 2 it sends the token immediately on channel
+    \(x\).
+    When it receives a token with id 3, agent \(A\) immediately sends
+    the token on channel \(y\).
+    <p>
+    When agent \(B\) receives a token it immediately sends the token
+    out on channel \(z\).
+    <p>
+    True or False? The very first token token that \(B\) receives has
+    id 0.
+
+    
+
+    <!----------------------------------------------------------------->
+    <h2 class="w3-text-teal">Question 2</h2>
+    <!----------------------------------------------------------------->
+    Consider the same system as in question 1.
+    <p>
+    True or False? There is a system trajectory (starting from the
+    initial state) that reaches a state in which channel \(z\)
+    contains: first the token with id 0, then the token with id 2, and then the
+    token with id 1.
+
+    <!----------------------------------------------------------------->
+    <h2 class="w3-text-teal">Question 3</h2>
+    <!----------------------------------------------------------------->
+    Consider the same system as in question 1.
+    <p>
+    True or False? There is a system trajectory (starting from the
+    initial state) that reaches a state in which channel \(z\)
+    contains: first the token with id 2, then the token with id 3, and then the
+    token with id 0.
+
+    <!----------------------------------------------------------------->
+    <h2 class="w3-text-teal">Question 4</h2>
+    <!----------------------------------------------------------------->
+    Consider the same system as in question 1.
+    <p>
+    Let \(P\) be the predicate: channel \(y\) contains
+    the token with id 3 OR channel \(z\) contains
+the token with id 3. Let \(init\) be the predicate that defines the
+    initial state. 
+<p>
+True or False?
+\(
+[init \; \Rightarrow \; always(P)]
+\)
+
+
+
+    <!----------------------------------------------------------------->
+    <h1 class="w3-text-teal">Distributed Systems: Introduction. Self
+    Test Answers</h1>
+<!----------------------------------------------------------------->
+
+    <!----------------------------------------------------------------->
+    <h2 class="w3-text-teal">Answer to Question 1</h2>
+<!----------------------------------------------------------------->
+False.
+<p>
+The token with id 3 can move from channel \(z\) to channel \(y\) and
+    then be received by agent \(B\) before tokens in channel \(x\) are
+delivered to \(B\).
+
+    <!----------------------------------------------------------------->
+    <h2 class="w3-text-teal">Answer to Question 2</h2>
+<!----------------------------------------------------------------->
+False
+<p>
+The state of a channel is a queue. The order in which messages are
+    received along a channel is the same as the order in which
+    messages are sent along the channel. So, the tokens in
+channel \(z\) has to follow the cyclic order
+<br>
+0 -> 1 -> 2 -> 0 -> 1 -> 2 -> 0 -> 1 -> 2 -> ....
+<br>
+interspersed with token with id 3.
+
+    <!----------------------------------------------------------------->
+    <h2 class="w3-text-teal">Answer to Question 3</h2>
+<!----------------------------------------------------------------->
+True
+<p>
+Same reasoning as for question 2.
+
+    <!----------------------------------------------------------------->
+    <h2 class="w3-text-teal">Answer to Question 4</h2>
+<!----------------------------------------------------------------->
+True
+<p>
+\(P\) holds in all states in all trajectories that start in an
+    initial state, and therefore \([init \; \Rightarrow \; P]\).
+
+
+
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+
