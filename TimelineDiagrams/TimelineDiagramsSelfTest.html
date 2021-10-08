@@ -47,7 +47,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   href="TimelineDiagrams.html">Timeline Diagrams</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="AgentsSelfTest.html">Self Test</a>
+  href="TimelineDiagramsSelfTest.html">Self Test</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
   href="../SnapshotIntroduction/SnapshotIntroduction.html">
@@ -77,6 +77,49 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <!---------------------------------------------------->
     <h1 class="w3-text-teal">Timeline Diagrams: Self Test</h1>
     <!---------------------------------------------------->
+
+
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 0</h2>
+    <!---------------------------------------------------->
+    Consider the following sequence of events with each event
+    specified by a statement.
+    <ol>
+      <li>
+      <pre>
+      avg = (x + y)/2.0
+      </pre>
+      </li>
+      <li>
+      <pre>
+      var = (x-avg)*(x-avg) + (y-avg)*(y-avg)
+      </pre>
+      </li>
+      <li>
+      <pre>
+      x, y = max(x, y)+1, min(x, y)-1
+      </pre>
+      </li>
+      <li>
+      <pre>
+      span_square = (x-y)*(x-y)
+      </pre>
+      </li>
+      <li>
+      <pre>
+      diff = span_square - var
+      </pre>
+      </li>
+    </ol>
+
+    <p class="w3-text-teal">Part 1</p>
+    Are the first two statements independent?
+
+    <p class="w3-text-teal">Part 2</p>
+    Are statements 2 and 3 independent?
+
+    
+    
 
 
     <!---------------------------------------------------->
@@ -253,13 +296,89 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     If \(P\) holds in \(C_{0}\) then \(P\) also holds in 
     \(C_{1}\) and \(C_{2}\).
 
+    
+    
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 7</h2>
+    <!---------------------------------------------------->
+Consider the following sequence of events (statement executions).
+
+<ol>
+  <li>
+  x = x* x
+  </li>
+  <li>
+  y = y + 1
+  </li>
+  <li>
+  x, y = max(x, y), min(x, y)
+  </li>
+</ol>
+
+<p class="w3-text-teal">Part 1</p>
+Are events 1 and 2 independent?
+
+<p class="w3-text-teal">Part 2</p>
+Are events 2 and 3 independent?
+
+<p class="w3-text-teal">Part 3</p>
+Will the sequence: event 2 then event 1 then event 3 give the same
+final values as the sequence 1, 2, 3?
+
+<p class="w3-text-teal">Part 4</p>
+Consider a cut consisting of only event 2. Events 1 and 3 are outside
+the cut. Is the cut consistent?
+
+<p class="w3-text-teal">Part 5</p>
+Consider the following timestamps. T(1) = 20, T(2) = 10, T(3) = 40.
+Do these timestamps satisfy the logical clock rule?
+
+<p class="w3-text-teal">Part 6</p>
+
+Initially x = 4, y = 0.
+With the above timestamps, what is the global state at logical time
+15? Time 25? Time 40?
+
+
+
+
+
+  
+  
+
+
 
 
     <!---------------------------------------------------->
     <!---------------------------------------------------->    
     <h1 class="w3-text-teal">Timeline Diagrams: Self-Test Answers</h1>
     <!---------------------------------------------------->
-    <!---------------------------------------------------->    
+<!---------------------------------------------------->
+
+
+
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 0</h2>
+<!---------------------------------------------------->
+<p class="w3-text-teal">Part 1</p>
+Statements 1 and 2 are dependent because statement 1 modifies a
+variable, avg, that is read in statement 2.
+<p>
+In the timeline diagram
+    statement (or event) 1 has an edge to event 2 to
+indicate the dependence.
+
+
+<p class="w3-text-teal">Part 2</p>
+Statements 2 and 3 are dependent because statement 2 reads a
+variable, x,  that is modified in statement 3.
+<p>
+In the timeline diagram
+    event 2 has an edge to statement event 3 to
+indicate the dependence.
+
+
+
 
 
     <!---------------------------------------------------->
@@ -410,6 +529,64 @@ True. Same reason as for question 5.
 True. Same reason as for question 5.
 
     
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 7</h2>
+    <!---------------------------------------------------->
+Consider the following sequence of events (statement executions).
+
+<ol>
+  <li>
+  x = x * z
+  </li>
+  <li>
+  y = y + z
+  </li>
+  <li>
+  x, y = max(x, y), min(x, y)
+  </li>
+</ol>
+
+<p class="w3-text-teal">Part 1</p>
+Are events 1 and 2 independent?
+<p>
+Yes, they are independent. The variables modified in each event are
+not accessed in the other event.
+
+<p class="w3-text-teal">Part 2</p>
+Are events 2 and 3 independent?
+<p>
+No, event 3 is dependent on event 2. A variable (y) modified event 2
+is accessed event 3. So, there is an edge in the timeline diagram from
+event 2 to event 3.
+
+
+<p class="w3-text-teal">Part 3</p>
+Will the sequence: event 2 then event 1 then event 3 give the same
+final values as the sequence 1, 2, 3?
+
+<p>
+Yes. Because events 1 and 2 are independent and adjacent, the order in which they
+occur can be permuted.
+
+<p class="w3-text-teal">Part 4</p>
+Consider a cut consisting of only event 2. Events 1 and 3 are outside
+the cut. Is the cut consistent?
+
+<p>
+Yes, the cut is consistent. Events in the cut depend only on earlier events in
+the cut. In terms of the timeline diagram, there is no edge from
+outside the cut (i.e. events 1 and 3) directed towards any event in
+the cut.
+
+<p class="w3-text-teal">Part 5</p>
+Consider the following timestamps. T(1) = 20, T(2) = 10, T(3) = 40.
+Do these timestamps satisfy the logical clock rule?
+
+<p class="w3-text-teal">Part 6</p>
+
+Initially x = 4, y = 0.
+With the above timestamps, what is the global state at logical time
+15? Time 25? Time 40?
 
     
     
