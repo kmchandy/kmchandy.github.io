@@ -78,7 +78,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <h1 class="w3-text-teal">Timeline Diagrams: Self Test</h1>
     <!---------------------------------------------------->
 
-
+    Look at question 7,
     <!---------------------------------------------------->
     <h2 class="w3-text-teal">Question 0</h2>
     <!---------------------------------------------------->
@@ -311,7 +311,7 @@ Consider the following sequence of events (statement executions).
   y = y + 1
   </li>
   <li>
-  x, y = max(x, y), min(x, y)
+  x = max(x, y)
   </li>
 </ol>
 
@@ -542,7 +542,7 @@ Consider the following sequence of events (statement executions).
   y = y + z
   </li>
   <li>
-  x, y = max(x, y), min(x, y)
+  x = max(x, y)
   </li>
 </ol>
 
@@ -555,7 +555,7 @@ not accessed in the other event.
 <p class="w3-text-teal">Part 2</p>
 Are events 2 and 3 independent?
 <p>
-No, event 3 is dependent on event 2. A variable (y) modified event 2
+No, they are dependent because event 3 is dependent on event 2. A variable (y) modified in event 2
 is accessed event 3. So, there is an edge in the timeline diagram from
 event 2 to event 3.
 
@@ -576,19 +576,54 @@ the cut. Is the cut consistent?
 Yes, the cut is consistent. Events in the cut depend only on earlier events in
 the cut. In terms of the timeline diagram, there is no edge from
 outside the cut (i.e. events 1 and 3) directed towards any event in
-the cut.
+the cut (i.e., event 2).
+
+<p>
+Note that there is an edge directed from
+inside the cut to outside the cut; this is the edge from event 2 to
+event 3. The edges that cross the cut boundary go from inside the cut to
+outside. There are no edges from outside the cut to inside.
 
 <p class="w3-text-teal">Part 5</p>
 Consider the following timestamps. T(1) = 20, T(2) = 10, T(3) = 40.
-Do these timestamps satisfy the logical clock rule?
+Do these timestamps satisfy the logical clock rule? Assume that
+initial timestamps are all 0.
+
+<p>
+Yes. Each edge in the timeline diagram is directed from a
+lower-timestamp event to a higher timestamp event.
 
 <p class="w3-text-teal">Part 6</p>
 
-Initially x = 4, y = 0.
+Initially x = 4, y = 2, Z = 3
 With the above timestamps, what is the global state at logical time
 15? Time 25? Time 40?
+<p>
+The global state at logical time 15 is the state after event 2 is
+executed and before events 1 and 3 are executed. This is because event
+2 is the only event with a timestamp less than or equal to 15.
+<p>
+After event 2, y  = y + z = 2 + 3 = 5. And x, z remains unchanged at
+4, 3. So the
+state is (x, y, z) = (4, 5, 3)
+<p>
+The global state at logical time 25 is the state after events 1 and 2
+have been
+executed and before event 3 is executed. This is because events
+1 and 2 have timestamps less than or equal to 25, and event 3 has a
+timestamp that exceeds 25.
+<p>
+After event 2, y = 5.
 
-    
+<p>
+After event 1, x = 4*3 = 12. And y and z remain unchanged at 5 and 3. So the
+state is (x, y, z) = (12, 5, 3)
+
+
+<p>
+The global state at logical time 40 is the state after events 1, 2 and 3
+have been executed. x = max(x, y) = max(12, 5) = 12. So, the state is
+(x, y, z) = (12, 5, 3)
     
     
 
