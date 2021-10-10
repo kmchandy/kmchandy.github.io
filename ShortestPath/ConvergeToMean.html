@@ -184,6 +184,130 @@ If the algorithm is correct, then show that if the invariant holds and
 all guards are False then the desired postcondition of the algorithm
 holds. Give a value of \(\delta\).
 
+<h1 class="w3-text-teal">ANSWERS</h1>
+
+<h4 class="w3-text-teal">Part 1</h4>
+Is the algorithm correct?
+<p class="w3-text-teal">Answer</p>
+Yes
+
+<h4 class="w3-text-teal">Part 2</h4>
+
+<ol>
+  <li>
+  Invariant \(I\):
+  <p>
+  \(
+  \sum_{v} v.m = \sum_{v} v.M
+  \)
+  </li>
+  <li>
+  Prove \(I\) holds initially.
+  <p>
+  Follows from \(v.m = v.M\), all \(v\).
+  </li>
+  <li>
+  Prove that \(I\) is stable.
+  <p>
+  For a transition due to the execution of a guarded command for an
+  edge \((v, w)\):
+  <p>
+  for all k:
+  <br>
+  \(
+  \{(v.m + w.m) = k \} \; g(v, w) \; \rightarrow \; c(v, w) \{(v.m +
+  w.m) = k\}
+  \)
+  <p>
+  The above Hoare triple follows from the definition of \(mid\).
+  </li>
+</ol>
+  
+
+<h4 class="w3-text-teal">Part 3</h4>
+If the algorithm is correct then
+<ol type="a">
+  <li>Give a variant function:
+  <p class="w3-text-teal">Answer</p>
+  We
+  will identify a positive constant \(\gamma\), and use the following
+  function as the variant function:
+  <p>
+  \(
+  \lceil \sum_v v.m * v.m)/\gamma \rceil
+  \)
+  <p>
+  The notation \(\lceil x \rceil\) stands for the smallest integer greater than
+  or equal to  \(x\). 
+  </li>
+  Carry out the following steps.
+  <li>
+  Show that the function is well-founded,
+  i.e., show that the value of the function cannot decrease forever.
+  
+  <p class="w3-text-teal">Answer</p>
+  The function is bounded below by 0.
+  <p>
+  The function is a variant function because it takes on integer
+  values and is bounded below.
+  <p>
+
+ Therefore the function can decrease
+  only a finite number of times.
+  </li>
+  <li>
+  Show that execution of a guarded command with a true guard
+  reduces the value of the variant function.
+  
+  <p class="w3-text-teal">Answer</p>
+  If the guard \(g(v, w)\) is True then
+  <p>
+  \(v.m^{2} + w.m^{2} \geq (mid + \epsilon)^{2} + (mid -
+  \epsilon)^{2}\)
+  <p>
+  So, each execution of the guarded command reduces the variant function
+  by at least
+  <p>
+  \(
+  (mid + \epsilon)^{2} + (mid - \epsilon)^{2} - 2* mid^{2}
+  \quad
+  \geq
+  \quad
+  2*\epsilon^{2}
+  \)
+  <p>
+  Defining \(\gamma\) as a positive value less than
+  \(2*\epsilon^{2}\), reduces the variant function at each step.
+  </li>
+</ol>
+
+
+<p class="w3-text-teal">Part 4</p>
+If the algorithm is correct, then show that if the invariant holds and
+all guards are False then the desired postcondition of the algorithm
+holds. Give a value of \(\delta\).
+
+<p class="w3-text-teal">Answer</p>
+If all the guards are False, then for every edge \((v, w)\):
+<p>
+\(|v.m -w.m| < 2*\epsilon\)
+<p>
+Since the graph is connected, there is a path of at most \(N-1\) hops
+from any vertex to any vertex. Therefore, for any pair of vertices
+\(v\), \(w\):
+<p>
+\(|v.m -w.m| < 2*\epsilon*N\)
+<p>
+Therefore
+\(|v.m - avg| < 2*\epsilon*N\)
+<p>
+So, let \(\delta =  2*\epsilon*N\). You can calculate a tighter
+\(\delta\); however, this one is adequate since the problem only asks
+for any \(\delta\). We can achieve any value of \(\delta\) by making
+\(\epsilon\) sufficiently small: \(\epsilon < \delta/(2*N)\)
+
+
+
   <footer id="myFooter">
 
     <div class="w3-container w3-theme-l1">
