@@ -160,6 +160,33 @@ True or False?
 \)
 
 
+    <!----------------------------------------------------------------->
+    <h2 class="w3-text-teal">Question 5</h2>
+    <!----------------------------------------------------------------->
+    Consider the same system as in question 1.
+    <p>
+Let \(P\) be the predicate specifying that channel \(z\)
+    contains: first the token with id 2, then the token with id 3, and then the
+    token with id 0, and channel \(x\) contains the token with id
+1. The state that satisfies \(P\) is shown in Fig. 3.
+<p>
+Let \(Q\) be the predicate which specifies that channel \(z\)
+    contains the token with id 3, and then the
+    token with id 0, and and channel \(x\) contains the token with id
+    1 followed by the token with id 2. This state is shown in the
+figure below.
+
+    <figure>
+    <img src="DistributedSystemsIntroductionSelfTest/Slide4.jpg" alt="Fig4" style="width:80%">
+    <figcaption>Fig.4: Question 5</figcaption>
+    </figure>
+<p>
+True or False?
+\(
+[P \; \Rightarrow \; next(Q)]
+\)
+
+
 
     <!----------------------------------------------------------------->
     <h1 class="w3-text-teal">Distributed Systems: Introduction. Self
@@ -203,6 +230,40 @@ True
 <p>
 \(P\) holds in all states in all trajectories that start in an
     initial state, and therefore \([init \; \Rightarrow \; P]\).
+
+    <!----------------------------------------------------------------->
+    <h2 class="w3-text-teal">Answer to Question 5</h2>
+<!----------------------------------------------------------------->
+False.
+<p>
+Recall that \(next(P)\) holds for a state \(s\) exactly when in
+<i>all</i> paths from \(s\) the next state satisfies \(P\).
+The key point is "<i>all paths</i>" as opposed to "there exists a
+path."
+<p>
+In terms of Computation Tree Logic, \(next(P) = AX(P)\)
+    where \(A\) stands for <i>all</i> and \(X\) stands for
+    \(neXt\). (Some papers on CTL use \(G\), for "globally" instead of
+\(A\).)
+<p>
+So, the question is fig. 4 the next state in all paths from the state
+    shown in fig. 3? There exists a transition from the state of fig.3
+    to that of fig. 4; however, there also exists a transtion from the
+state of fig. 3 to the state shown in fig. 5.
+
+
+
+    <figure>
+    <img src="DistributedSystemsIntroductionSelfTest/Slide5.jpg" alt="Fig5" style="width:80%">
+    <figcaption>Fig.5: Answer 5</figcaption>
+</figure>
+
+In this transition token 0 moves from channel \(x\) to channel \(z\).
+
+<p>
+So not <i>all</i> transitions from states in which \(P\) holds are to
+states in which \(Q\) holds.
+
 
 
 
