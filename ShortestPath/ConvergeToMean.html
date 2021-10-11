@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>ConvergeToMean</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new4 {
+  border: 5px solid blue;
+}
+/* Thin blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+
+</style>
+
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+  
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../ShortestPath/ShortestPath.html">Review: Examples of Correctness Proofs</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../FlightFormation/FlightFormation.html">More Examples: Flight Formation</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ConvergeToMean.html">More Examples:
+  Agents Converge to Mean</a>
+  
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../TimelineDiagrams/TimelineDiagrams.html">Next: Timelines</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../LoopTermination/LoopTermination.html">Previous: Variant
+  Functions</a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+    
+    <h1 class="w3-text-teal">Example: Converge To Mean</h1>
+
+    Let \(G\) be an undirected connected graph. Because \(G\) is a
+    connected graph there is a path from
+    every vertex to every vertex. Let \(N\) be the number of vertices
+    in \(G\). We are given that \(N > 1\).
+    
+    <p>
+    A vertex of the graph represents an agent. An agent \(j\) can
+    communicate with an agent \(k\) if and only if there is an edge
+    between vertices \(j\) and \(k\) in the graph.
+    Associated with each agent \(v\) is a
+    floating point number, \(v.m\); these values change as the
+    algorithm proceeds. Let \(v.M\) be the initial value
+    of \(v.m\). Let \(avg\) be the average of the \(v.M\) over all
+    \(v\):
+    <p>
+    \(
+    avg = \sum_{v} v.M /N
+    \)
+    <p>
+    Consider the following algorithm by which agents collaborate to
+    compute an approximation to \(avg\).  The algorithm is a
+    <i>do-od</i> loop with a guarded command for every edge \((v,
+    w)\). Because the graph is undirected the guarded
+    commands for \((v, w)\) and \((w, v)\) are the same.
+
+    <p>
+In the program, \(\epsilon\) is a positive, small constant and \(|x|\) stands
+for the magnitude of \(x\). The guarded command for edge \(\{v, w\}\)
+    is:
+    <p>
+    \(
+    g(v, w) \rightarrow c(v, w)
+    \)
+    <p>
+    where \(g(v, w)\) is
+
+    \(
+     |v.m - mid(v, w) | >= \epsilon
+    \)
+    <p>
+    and where \(mid(v, w) = (v.m + w.m)/2.0\),
+    <p>
+    and \(c(v, w)\) is
+
+    \(
+    v.m,  w.m = mid(v, w), mid(v, w)
+    \)
+    <p>
+    This guard is True if \(v.m\) and \(w.m\) are further than
+    \(\epsilon\) away from their midpoint, and the command moves them
+    towards their midpoints.
+    
+<p>
+
+We want the algorithm to terminate, and at termination we want \(v.m\),
+for each \(v\), to be approximately \(avg\). We want to identify a positive constant \(delta\) such that at
+termination \(|v.m - avg| < \delta\).
+
+    You don't need to identify the smallest \(\delta\).
+    
+
+<p class="w3-text-teal">Part 1</p>
+Is the algorithm correct?
+
+<p class="w3-text-teal">Part 2</p>
+If the algorithm is correct, then:
+<ol type="a">
+  <li> Give the invariant \(I\) that you use to prove correctness. If
+  the algorithm is incorrect, give an example.
+  </li>
+  To show that the algorithm is correct enter the following steps:
+  <li>  Show that \(I\) holds initially, and
+  </li>
+  <li> Show that \(I\) is stable.
+  </li>
+</ol>
+
+<p class="w3-text-teal">Part 3</p>
+If the algorithm is correct then
+<ol type="a">
+  <li>Give a variant function.
+  </li>
+  Carry out the following steps.
+  <li>
+  Show that the function is well-founded,
+  i.e., show that the value of the function cannot decrease forever.
+  </li>
+  <li>
+  Show that execution of a guarded command with a true guard
+  reduces the value of the variant function.
+  </li>
+</ol>
+
+<p class="w3-text-teal">Part 4</p>
+If the algorithm is correct, then show that if the invariant holds and
+all guards are False then the desired postcondition of the algorithm
+holds. Give a value of \(\delta\).
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
