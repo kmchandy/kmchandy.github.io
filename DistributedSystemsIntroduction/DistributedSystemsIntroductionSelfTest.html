@@ -200,7 +200,7 @@ False.
 <p>
 The token with id 3 can move from channel \(z\) to channel \(y\) and
     then be received by agent \(B\) before tokens in channel \(x\) are
-delivered to \(B\).
+delivered to \(B\). So, the token with id 3 may be received first.
 
     <!----------------------------------------------------------------->
     <h2 class="w3-text-teal">Answer to Question 2</h2>
@@ -210,7 +210,7 @@ False
 The state of a channel is a queue. The order in which messages are
     received along a channel is the same as the order in which
     messages are sent along the channel. So, the tokens in
-channel \(z\) has to follow the cyclic order
+channel \(z\) have to follow the cyclic order
 <br>
 0 -> 1 -> 2 -> 0 -> 1 -> 2 -> 0 -> 1 -> 2 -> ....
 <br>
@@ -229,7 +229,7 @@ Same reasoning as for question 2.
 True
 <p>
 \(P\) holds in all states in all trajectories that start in an
-    initial state, and therefore \([init \; \Rightarrow \; P]\).
+    initial state, and therefore \([init \; \Rightarrow \; always(P)]\).
 
     <!----------------------------------------------------------------->
     <h2 class="w3-text-teal">Answer to Question 5</h2>
@@ -238,18 +238,24 @@ False.
 <p>
 Recall that \(next(P)\) holds for a state \(s\) exactly when in
 <i>all</i> paths from \(s\) the next state satisfies \(P\).
-The key point is "<i>all paths</i>" as opposed to "there exists a
-path."
+Equivalently, \(next(P)\) holds for a state \(s\) exactly when in
+<i>all</i> transitions from \(s\) are to states in which \(P\) holds.
+The key point is "<i>all</i> transitions" as opposed to "<i>there exists</i> 
+transitions."
 <p>
 In terms of Computation Tree Logic, \(next(P) = AX(P)\)
     where \(A\) stands for <i>all</i> and \(X\) stands for
-    \(neXt\). (Some papers on CTL use \(G\), for "globally" instead of
-\(A\).)
+    \(neXt\).
 <p>
-So, the question is fig. 4 the next state in all paths from the state
-    shown in fig. 3? There exists a transition from the state of fig.3
-    to that of fig. 4; however, there also exists a transtion from the
-state of fig. 3 to the state shown in fig. 5.
+So, the question is this: Are <i>all</i> transitions from the state
+shown in fig. 3 to the state shown in fig. 4?
+
+<p>
+The answer to this question is <i>No</i> because
+there exists a transtion from the
+state shown in fig. 3 to the state shown in fig. 5. This transition
+occurs when the token with id 0 on channel \(x\) is received by agent \(B\) and put on
+channel \(z\).
 
 
 
@@ -257,8 +263,6 @@ state of fig. 3 to the state shown in fig. 5.
     <img src="DistributedSystemsIntroductionSelfTest/Slide5.jpg" alt="Fig5" style="width:80%">
     <figcaption>Fig.5: Answer 5</figcaption>
 </figure>
-
-In this transition token 0 moves from channel \(x\) to channel \(z\).
 
 <p>
 So not <i>all</i> transitions from states in which \(P\) holds are to
