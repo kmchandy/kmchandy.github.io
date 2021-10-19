@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>KnowledgeSelfTest</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* Thick blue border */
+hr.new1 {
+  border: 1px solid blue;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Knowledge.html">Knowledge</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="KnowledgeExample.html">Examples</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="KnowledgeSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../DiffusingComputations/DiffusingComputations.html">
+  Next: Diffusing Computations</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../DeadlockDetection_And/DeadlockDetection_And.html">Previous:
+  Detecting Deadlocks I
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Self Test</h1>
+
+    <h2 class="w3-text-teal">Problem 1</h2>
+    <h4 class="w3-text-teal">Do Agents only know Truth?</h4>
+    True or False?
+    <p>
+    \(
+    [x \; \textrm{knows} \; P \quad \Rightarrow \quad P]
+    \)
+
+
+    <h2 class="w3-text-teal">Problem 2</h2>
+    
+    <figure>
+    <img src="KnowledgeSelfTest/Slide1.jpg" alt="Fig1" style="width:60%">>
+    <figcaption>Fig. 1. Agent A knows P at point T
+    </figcaption>
+    </figure>
+    The figure is a timeline diagram for agents A, B. Message lines
+    are colored red. T is a time represented as a vertical line.
+
+    <p> Let P be a predicate on the states of agent B. If at time T,
+    agent A knows P, then P must hold at all points between what point
+    and T?
+
+    <ol>
+      <li>
+      between point U and T, but not necessarily before U
+      </li>
+      <li>  
+      between point V and T, but not necessarily before V
+      </li>
+      <li>  
+      between point W and T, but not necessarily before W,
+      </li>
+    </ol>
+
+
+    <h2 class="w3-text-teal">Problem 3</h2>
+    
+    <figure>
+    <img src="KnowledgeSelfTest/Slide2.jpg" alt="Fig2" style="width:60%">>
+    <figcaption>Fig. 2. Agent A knows P at point T
+    </figcaption>
+    </figure>
+    
+    The figure is a timeline diagram for agents A, B. Message lines
+    are colored red. T is a time represented as a vertical line.
+
+    <p> Let P be a predicate on the states of agent B. If at time T,
+    agent A knows P, then P must hold at all points between T and what
+    point?
+
+    <ol>
+      <li>
+      between point T and point 1, but not necessarily before 1
+      </li>
+      <li>  
+      between point T and point 2, but not necessarily before 2
+      </li>
+      <li>  
+      between point T and point 3, but not necessarily before 3
+      </li>
+      <li>  
+      between point T and point 4, but not necessarily before 4
+      </li>
+      <li>  
+      between point T and point 5, but not necessarily before 5
+      </li>
+    </ol>
+    
+
+    <h2 class="w3-text-teal">Problem 4</h2>
+    Let \(P\) be a predicate on the states of an agent \(y\), and let \(x\)
+    be a different agent in the system. Let \(T\) and \(T'\) be points on a
+    timeline with \(T < T'\).
+    <p class="w3-text-teal">Part a</p>
+    True or False? If \(\neg(x \; \textrm{knows} \; P)\) holds at \(T\)
+    and \(x \; \textrm{knows} \; P\) holds at \(T'\) then \(x\) must
+    have received a message between \(T\) and \(T'\).
+    <p class="w3-text-teal">Part b</p>
+    True or False? If \(\neg(x \; \textrm{knows} \; P)\) holds at \(T\)
+    and \(x \; \textrm{knows} \; P\) holds at \(T'\) then \(x\) must
+    have sent a message between \(T\) and \(T'\).
+
+    
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Answers</h1>
+
+    <h2 class="w3-text-teal">Problem 1</h2>
+    True.
+    <p>Follows from definition of
+    \(x \; \textrm{knows} \; P\).
+
+    <h2 class="w3-text-teal">Problem 2</h2>
+    \(P\) must hold at all points between point \(V\)
+    and \(T\) but not necessarily before \(V\).
+    <p>
+    Follows directly from the theorem on communication to learn about
+    change.
+    
+    <p  style="color:red;">Example</p>
+    Consider this example: The system has a single indivisible token.
+    \(P\) is the predicate: "Agent \(B\) does not hold a token."
+    Agent \(B\) holds the token before point \(V\) and sends the token
+    to \(A\) at \(V\). Agent \(A\) knows \(P\) when it receives the
+    token. But \(P\) does not hold before \(V\).
+<p  style="color:red;">Anthropomorphic Argument</p>
+Proofs in which we assume digital agents have human capabilities can
+be faulty. They give insight, but it's best to use definitions.
+    <p>
+     Agent \(A\) gets no message with information after the
+    message sent by \(B\) at point \(V\). So, agent \(A\) does not
+    learn anything after that point. If there is a transition from
+    \(\neg P\) to \(P\) after point \(V\) then there is no way for
+\(A\) to find out about this transition.
+<p>
+
+    
+
+    <h2 class="w3-text-teal">Problem 3</h2>
+\(P\) must hold between \(T\) and point \(4\) on \(B\)'s timeline.
+    <p>
+Follows directly from the theorem knowledge implies control.
+<p  style="color:red;">Anthropomorphic Argument</p>
+Proofs in which we assume digital agents have human capabilities can
+be faulty. They give insight, but it's best to use definitions.
+<p>
+Agent \(B\) can change \(P\) only after getting permission
+from agent \(A\). This permission may be communicated through
+intermediate agents. The earliest point that \(B\) gets a message is
+at point \(4\).
+
+
+    <h2 class="w3-text-teal">Problem 4</h2>
+<p class="w3-text-teal">Part a</p>
+True.
+<p>
+Because \(\neg(x \; \textrm{knows} \; P)\) holds at \(T\) there is
+some state of the system where \(\neg P\) holds for the local state
+\(s\) of
+agent \(y\) while the state of agent \(x\) is its state at point \(T\).
+<p>
+Because \(x \; \textrm{knows} \; P\) holds at \(T'\) the state of
+\(y\) cannot be \(s\) at point \(T'\). So there is a transition from
+\(s\) to a different state \(s'\) at some point between \(T\) and
+\(T'\). If \(x\) doesn't get a message after \(y\) transits from 
+\(s\) to \(s'\), then the cut through point \(T'\) on \(x\)'s timeline and point
+\(T\) on \(y\)'s timeline is a consistent cut. So, 
+\(\neg(x \; \textrm{knows} \; P)\) holds at \(T'\) as well.
+
+<p class="w3-text-teal">Part b</p>
+False.
+<p>
+Example. \(P\) is the predicate "\(y\) does not hold a token." And
+\(x\) gets a token from \(y\) between points \(T\) and \(T'\). So,
+\(\neg(x \; \textrm{knows} \; P)\) holds at \(T\) and
+\(x \; \textrm{knows} \; P\) at \(T'\), and \(x\) sends no messages.
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+
