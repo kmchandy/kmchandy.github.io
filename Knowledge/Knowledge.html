@@ -88,64 +88,112 @@ hr.new1 {
     <h1 class="w3-text-teal">What Agents Know</h1>
 
     <h1 class="w3-text-teal">Key Ideas</h1>
-    We sometimes invest software
+    We sometimes use anthropmorphic arguments in reasoning about
+    systems --- we invest digital
     agents with human characteristics. For example, a programmer may
     say "an agent <i>knows</i> that another agent is idle." Endowing software with
     human capabilities can be dangerous when terms are ambiguous.
-    In this module we define a predicate "an agent
+    <p>
+    In this module we define a predicate "agent \(x\)
     knows \(P\)" where \(P\) is a predicate on states of a system.
-    We use this definition to develop algorithms. The definitions and
-    proofs are based on the concepts of timelines and 
-    <a href="../ChannelSnapshots/ChannelSnapshots.html">consistent
-    cuts.</a>
+    In later modules, we will use this definition to discuss
+    algorithms.
 
     <p>
-    This module has several theorems which are obvious from the
-    definitions of consistent cuts and what agents know.
+    This module presents several theorems. The proofs follow in a
+    straightforward way from the definition of
+    <a href="../ChannelSnapshots/ChannelSnapshots.html">consistent
+    cuts </a>.
 
-    <h3 class="w3-text-teal">What an Agent Knows</h3>
-    For an agent \(x\), a state \(r\) of \(x\), and a predicate \(P\),
+    <h2 class="w3-text-teal">What an Agent Knows</h2>
+    Let \(x\) be an agent, \(P\) a predicate on system states, and
+    \(Q\) a predicate on states of \(x\).
+    <p>
+    \(P\) is a <i>global predicate</i> because it is a predicate on
+    states of the entire system. \(Q\) is a <i>local
+    predicate</i> of \(x\) because it is a predicate only on the states of
+    agent \(x\) and is independent of the states of channels and the
+    states of other agents.
+
+    <p>
+    We
+    define the predicate "\(x\) <i>knows</i> \(P\)" as follows.
     <hr class="new2">
     <h5 style="color:blue;">
-    "<i style="color:blue;">agent \(x\) in state \(r\) knows \(P\)</i>" 
-    is a Boolean which holds if and only if:
     <p>
-    \(P\) holds when agent \(x\) is in state \(r\) in
-    all trajectories that start in initial states, i.e.,
-    <p style="text-align:center">
+    \(x\) knows \(P\) is the weakest predicate \(Q\) on the states of
+    \(x\) such that:
+    
+    <p>
     \(
-    [init \; \Rightarrow \; always([(x \; \textrm{in} \; r) \;
+    [init \; \Rightarrow \; always([Q \;
     \Rightarrow \; P])]
     \)
-    </p>
+    <p>
     </h5>
     <hr class="new2">
-
-    <p class="w3-text-teal">Notation</p>
-    We restrict attention to system trajectories that start in initial states.
-    For an agent \(x\), predicate \(P\), and a point \(T\) in a
-    trajectory, the phrase
-    "<i style="color:blue;">\(x\) knows \(P\) at \(T\)</i>"
-    means that at point \(T\), \(x\) is in a state in which \(x\)
-    knows \(P\).
     <p>
-    We use the abbreviation "<i style="color:blue;">\(P\) holds at a consistent cut</i>" for
-    "\(P\) holds at the global state corresponding to a consistent cut"
+    If the system is in a state where \(x\) knows \(P\) then we can
+    deduce that
+    the entire system satisfies a global predicate
+    \(P\) merely from the local state of agent \(x\).
 
     <h3  style="color:red;">Example</h3>
-    A system has two agents \(x\) and \(y\) with channels between
-    them. Initially, the system has a single indivisible, indestructible
-    tokens that cannot be created. So, the system has a single tokens in
-every state in every trajectory.
+    A system consisting of agents \(0, \ldots,  N\) has two indivisible
+    tokens which are not created or destroyed. Let \(P\) be the
+    predicate: "all channels and agents \(1, \ldots, N\) have
+no tokens." 
+
 <p>
-When \(x\) is in a state in which it holds the token then \(x\)
-knows that \(y\) holds no tokens.
+"Agent \(0\) knows P" is a predicate on the states of agent
+\(0\). This predicate holds in those states of agent \(0\) which
+guarantee that \(P\) holds.
+
 <p>
-When \(x\) is in a state in which it holds no tokens then \(x\) knows
-that the token is in a channel or at \(y\).
-The following statement is False. "When \(x\) is in a state in which
-it holds no tokens, \(x\) knows that \(y\) holds the token."
-The statement is False because the token could be in a channel.
+"Agent \(0\) knows P" holds exactly when agent \(0\)
+holds both tokens. We can deduce properties of all channels and all
+agents solely from the state of agent \(0\).
+
+<p  style="color:red;">Example</p>
+Let \(P\) be the predicate: "all channels and agents \(1, \ldots, N\)
+collectively hold exactly one token." 
+"Agent \(0\) knows P" holds exactly when agent \(0\)
+holds one token.
+
+<p  style="color:red;">Example</p>
+This example deals with a system consisting of two agents \(x\) and
+\(y\) and channels in both directions between the agents. The system
+has a single indivisible token that is not created or destroyed. Let
+\(P\) be the predicate: "\(y\) does <i>not</i> hold the token."
+Agent \(x\) knows \(P\) when \(x\) holds the token. 
+<p>
+\(\neg\) (\(x\) knows \(P\)) is a predicate too. In this
+example, this predicate
+holds when \(x\) does not hold the token.
+
+<p  style="color:red;">Example</p>
+Let \(P\) be the predicate: "\(y\) holds the token."
+Agent \(x\) knows \(P\) is universally False because this predicate holds in no
+state. Why is that?
+<p>
+It's because the token could be in a channel; so, we can only deduce
+that the token is in a channel or at \(y\). We cannot deduce from the
+state of agent \(x\) that \(y\) holds the token.
+Agent \(x\) can never know that \(y\) holds the token.
+<p>
+Note, however, that \(x\) knows that \(y\) does <i>not</i> hold the
+token when \(x\) holds the token. Agent \(x\)'s knowledge of the
+predicates "\(y\) holds the token" and "\(y\) does <i>not</i> hold the
+token" are not symmetric.
+
+<h5 class="w3-text-teal">Notation</h5>
+    "\(x\) knows \(P\) at a point \(T\)" in a timeline means that at
+    point \(T\) agent \(x\) is in a state where the predicate "\(x\)
+knows \(P\)" holds.
+
+<p>
+"\(x\) knows \(P\) when \(x\) is in state \(s\)" means that the
+predicate "\(x\) knows \(P\)" holds in \(s\).
 
 
 <h3 class="w3-text-teal">Theorem: Knowledge and Consistent Cuts</h3>
@@ -153,25 +201,23 @@ Let \(P\) be a predicate on the states of a system.
 <p>
 <i style="color:blue;">
 If  \(x\) knows \(P\) at a point \(T\) in \(x\)'s timeline
-then \(P\) holds in every consistent cut through point
-\(T\).</i>
+then \(P\) holds in every consistent cut through that point.</i>
 
-<p>
-The proof of this statement follows from our earlier proof that there
-exists trajectories from initial states to all consistent cuts. And
-since \(P\) holds for the entire system given the state of agent \(x\) at point \(T\) on
-\(x\)'s timeline, it follows that \(P\) holds for the state at every consistent cut.
+<p class="w3-text-teal">Proof</p>
+The states corresponding to all consistent cuts that pass through the same
+point on \(x\)'s timeline have the same common value for \(x\)'s local
+state.
 
     <h3  style="color:red;">Example</h3>
     
 <figure>
-    <img src="KnowledgeDiagrams/Slide2.jpg" alt="Fig2" style="width:60%">>
+    <img src="KnowledgeDiagrams/Slide02.jpg" alt="Fig2" style="width:60%">>
     <figcaption>Fig. 2. Agent A knows P in all consistent cuts that cross
     point T</figcaption>
 </figure>
 
 <p>
-The top figurea in both diagrams above show a time T at which agent A knows
+The top figure in both diagrams above show a time T at which agent A knows
 that P holds. This implies that P holds in all consistent cuts through
 point T. The lower figures in the diagrams show consistent cuts which
 passes point T on A's timeline; the theorem says that P holds for the
@@ -193,9 +239,27 @@ Let \(c\) be the
 cut that is identical to \(c'\) except that it passes through point \(T\) on
 \(x\)'s timeline. \(c\) is consistent because there are no
 outgoing edges from \(x\)'s timeline between cuts \(c\) and
-\(c'\). Because \(x\) knows \(P\) at \(T\), \(P\) holds at \(c\). Since \(c\) and \(c'\)
+\(c'\).
+
+<p>
+Because \(x\) knows \(P\) at \(T\), \(P\) holds at \(c\). Since \(c\) and \(c'\)
 are identical except for the intersection with \(x\)'s timeline,
 it follows that \(P\) holds \(c'\).
+
+<h5  style="color:red;">Example</h5>
+<figure>
+    <img src="KnowledgeDiagrams/Slide04.jpg" alt="Fig3" style="width:60%">>
+<figcaption>Fig. 3. Illustration of Proof of Silent Agents
+</figcaption>
+</figure>
+
+<h5 class="w3-text-teal">Consequence of the Theorem</h5>
+An agent doesn't lose knowledge by getting information from other
+agents.
+<p>
+An agent can only lose knowledge by sending information to
+other agents. This seems counterintuitive; we'll look at the reasoning
+underlying this in a later theorem.
 
 <h3 class="w3-text-teal">Theorem: Agents who don't listen remain Ignorant</h3>
 Let \(x\) be an agent in a system, and let \(P\) be a
@@ -211,7 +275,9 @@ previous theorem.
 
 \(x\) didn't learn anything in the interval  \([T, T']\); everything
 \(x\) knows at the later point \(T'\) is knowledge it already had at
-the earlier point \(T\). The only way for an agent to gain knowledge is
+the earlier point \(T\).
+
+<p>The only way for an agent to gain knowledge is
 to receive messages. An agent cannot learn about other agents by only
 sending messages or making internal state transitions.
 
@@ -229,8 +295,25 @@ to point \(T'\) on \(y\)'s timeline then there exists a consistent cut
 which crosses \(x\)'s timeline at \(T\) and
 crosses \(y\)'s timeline at \(T'\).
 
-Such a cut is generated by the global-snapshot marker algorithm where
-\(x\) is the initiator at point \(T\).
+<h5  style="color:red;">Example</h5>
+In the figure below, agent \(A\) at point \(T\) knows that agent \(C\)
+holds no tokens. At a later point \(T'\) agent \(C\) holds a
+token. What must happen between points \(T\) and \(T'\)?
+<figure>
+    <img src="KnowledgeDiagrams/Slide08.jpg" alt="Fig4" style="width:60%">>
+<figcaption>Fig. 4. What must happen between T and T'?
+</figcaption>
+</figure>
+
+There must be a path in the timeline diagram from point \(T\) on agent
+\(A\)'s timeline to point \(T'\) on agent \(C\)'s timeline. This path
+is represented by edges that show time elapsing on a timeline and
+message edges between timelines.
+<figure>
+    <img src="KnowledgeDiagrams/Slide09.jpg" alt="Fig5" style="width:60%">>
+<figcaption>Fig. 5. There must be a path from A at T to C at T'?
+</figcaption>
+</figure>
 
 <h5 class="w3-text-teal">Consequence of the Theorem</h5>
 Suppose you and your friend communicate only by means of messages
@@ -263,7 +346,25 @@ Let \(T\) and \(T'\) be instants in a trajectory with \(T < T'\). If
 is a path in the timeline diagram from point \(T\) on \(y\)'s timeline
 to point \(T'\) on \(x\)'s timeline.
 
+<h5  style="color:red;">Example</h5>
+In the figure below, agent \(C\) holds a token at point \(T\).
+At a later point \(T'\) agent \(A\) knows that agent \(C\) holds no
+tokens. What must happen between points \(T\) and \(T'\)?
+<figure>
+    <img src="KnowledgeDiagrams/Slide10.jpg" alt="Fig6" style="width:60%">>
+<figcaption>Fig. 6. What must happen between T and T'?
+</figcaption>
+</figure>
 
+There must be a path in the timeline diagram from point \(T\) on agent
+\(C\)'s timeline to point \(T'\) on agent \(A\)'s timeline. This path
+is represented by edges that show time elapsing on a timeline and
+message edges between timelines.
+<figure>
+    <img src="KnowledgeDiagrams/Slide11.jpg" alt="Fig7" style="width:60%">>
+<figcaption>Fig. 7. There must be a path from C at T to A at T'?
+</figcaption>
+</figure>
 
 <h3 class="w3-text-teal">What Agents Know about Channel States</h3>
 Next, let's look at systems in which messages are acknowledged.
@@ -287,31 +388,14 @@ agent \(x\) <i>knows</i> an upper bound,\(\; ms - ar\), on the number of
 messages in channel \((x, y)\).
 So, \(x\) knows that the channel is empty when \(\; ms = ar\).
 
-<p class="w3-text-teal">What an agent cannot know</p>
+<h3 class="w3-text-teal">What an agent cannot know</h3>
 An agent cannot know that there are
 exactly \(n\) messages in a channel, for \(n > 0\).
 You can prove this result using the concept of consistent
 cuts. Intuitively, the agent cannot know whether a message is in the
 channel or has been received.
 
-<h3  class="w3-text-teal">The Predicate \(x\) knows \(P\)</h3>
-We define a predicate "\(x\) knows \(P\)" as the weakest predicate \(Q\)
-that satisfies:
-<p>
-    \(
-    [init \; \Rightarrow \; always([Q \;
-    \Rightarrow \; P])]
-\)
-<p>
-As defined earlier, the predicate \(x\) knows \(P\) holds for a state
-\(r\) exactly when \(x\) in state \(r\) knows \(P\).
-<p>
-For example, in a system that passes tokens between agents, the
-predicate, "\(x\) knows that \(y\) holds no tokens," holds for those
-global states where we can deduce that \(y\) holds no tokens based solely on
-\(x\)'s state. 
-
-<h4 class="w3-text-teal">Chains of Knowledge</h4>
+<h3 class="w3-text-teal">Chains of Knowledge</h3>
 Let \(x, y, z\) be agents of a system and \(P\) be a predicate on
 states of the system. Then the following are all predicates:
 <ol>
@@ -356,6 +440,47 @@ straightforward and are all based on consistent cuts of timelines.
     </div>
   </footer>
 
+
+    <h5 style="color:blue;">
+    "<i style="color:blue;">agent \(x\) in state \(r\) knows \(P\)</i>" 
+    is a Boolean which holds if and only if:
+    <p>
+    \(P\) holds when agent \(x\) is in state \(r\) in
+    all trajectories that start in initial states, i.e.,
+    <p style="text-align:center">
+    \(
+    [init \; \Rightarrow \; always([(x \; \textrm{in} \; r) \;
+    \Rightarrow \; P])]
+    \)
+    </p>
+    </h5>
+    <hr class="new2">
+
+    <p class="w3-text-teal">Notation</p>
+    We restrict attention to system trajectories that start in initial states.
+    For an agent \(x\), predicate \(P\), and a point \(T\) in a
+    trajectory, the phrase
+    "<i style="color:blue;">\(x\) knows \(P\) at \(T\)</i>"
+    means that at point \(T\), \(x\) is in a state in which \(x\)
+    knows \(P\).
+    <p>
+    We use the abbreviation "<i style="color:blue;">\(P\) holds at a consistent cut</i>" for
+    "\(P\) holds at the global state corresponding to a consistent cut"
+
+    <h3  style="color:red;">Example</h3>
+    A system has two agents \(x\) and \(y\) with channels between
+    them. Initially, the system has a single indivisible, indestructible
+    tokens that cannot be created. So, the system has a single tokens in
+every state in every trajectory.
+<p>
+When \(x\) is in a state in which it holds the token then \(x\)
+knows that \(y\) holds no tokens.
+<p>
+When \(x\) is in a state in which it holds no tokens then \(x\) knows
+that the token is in a channel or at \(y\).
+The following statement is False. "When \(x\) is in a state in which
+it holds no tokens, \(x\) knows that \(y\) holds the token."
+The statement is False because the token could be in a channel.
 
       
 

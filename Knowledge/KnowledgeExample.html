@@ -83,59 +83,19 @@ hr.new1 {
   
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
-
-    <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">What Agents Know</h1>
-
-    <h1 class="w3-text-teal">Key Ideas</h1>
-    We sometimes invest software
-    agents with human characteristics. For example, a programmer may
-    say "an agent <i>knows</i> that another agent is idle." Endowing software with
-    human capabilities can be dangerous when terms are ambiguous.
-    In this module we define a predicate "an agent
-    knows \(P\)" where \(P\) is a predicate on states of a system.
-    We use this definition to develop algorithms. The definitions and
-    proofs are based on the concepts of timelines and 
-    <a href="../ChannelSnapshots/ChannelSnapshots.html">consistent
-    cuts.</a>
-
-    <p>
-    This module has several theorems which are obvious from the
-    definitions of consistent cuts and what agents know.
-
-    <h3 class="w3-text-teal">What an Agent Knows</h3>
-    For an agent \(x\), a state \(r\) of \(x\), and a predicate \(P\),
-    <hr class="new2">
-    <h5 style="color:blue;">
-    "<i style="color:blue;">agent \(x\) in state \(r\) knows \(P\)</i>" 
-    is a Boolean which holds if and only if:
-    <br>
-    \(P\) holds when agent \(x\) is in state \(r\) in
-    all trajectories that start in initial states.
-    <p>
-    \(
-    [init \; \Rightarrow \; always([(x \; \textrm{in} \; r) \;
-    \Rightarrow \; P])]
-    \)
-    
-    <h5>
-    <hr class="new2">
-
-    <p class="w3-text-teal">Notation</p>
-    The phrase
-    "<i style="color:blue;">agent \(x\) knows \(P\) at a point \(T\) in a trajectory</i>"
-    means that at point \(T\) on the timeline for \(x\) in a
-    trajectory, \(x\) is in a state \(r\) such that \(x\) in state
-    \(r\) knows \(P\).
-    <p>
-    We use the abbreviation "\(P\) holds at a consistent cut" for
-    "\(P\) holds at the global state corresponding to a consistent cut"
-
     <h3  style="color:red;">Example</h3>
     A system has two agents \(x\) and \(y\) with a channel in each
     direction between them. The system has two tokens in the initial
     state. If an agent has a token then it sends it to the other
     agent.
+    <p>
+    The figure below illustrates how a token may move between the
+  agents. The figure has three diagrams. A token is shown as a red
+    disc.
+    In all three diagrams, one token is at agent \(x\). In the top
+  diagram, one token is on the channel to agent \(y\); in the middle
+    diagram, one token is at \(y\); and in the lower diagram,
+    one token is on the channel to agent \(x\).
     <figure>
     <img src="KnowledgeDiagrams/Slide1.jpg" alt="Fig1" style="width:80%">>
     <figcaption>When x holds one token it knows y does not hold both tokens</figcaption>
@@ -146,12 +106,12 @@ hr.new1 {
     \(y\) does not hold both tokens.
     
     <p  style="color:red;">Example</p>
-    In the above system, the following statement is False because a
-    token may be in a channel.
+    In the above system, let \(P\) be the predicate:
+    "\(y\) holds exactly one token."
     <p>
-    When \(x\) is in a
-    state in which \(x\) holds exactly one token, \(x\) knows that
-    \(y\) holds exactly one token.
+    The predicate, "\(x\) knows \(P\)" is universally False. There is
+    no state in which \(x\) knows that \(y\) holds exactly one token because
+    tokens may be in channels.
     <p>
 
 <h3 class="w3-text-teal">Theorem: Knowledge and Consistent Cuts</h3>
