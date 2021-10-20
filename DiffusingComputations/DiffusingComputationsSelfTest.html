@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>DiffusingComputationsSelfTest</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* Thick blue border */
+hr.new1 {
+  border: 1px solid blue;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DiffusingComputations.html">DiffusingComputations</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DiffusingComputationsExample.html">Diagrams</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ScenarioActiveIdle.html">Scenario: Active & Idle Agents</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DiffusingComputationsSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../ApplicationsDiffusingComputation/ApplicationsDiffusingComputation.html">
+  Next: Applications of Diffusing Computation</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Knowledge/Knowledge.html">Previous:
+  What Agents Know
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Diffusing Computations Self Test</h1>
+    <!--------------------------------------------------------->
+
+    <!--------------------------------------------------------->
+    <h3 class="w3-text-teal">Question 1</h3>
+    <!--------------------------------------------------------->
+    In this module we differentiate between acks and messages. An ack
+    travels along channels exactly like a message does; however, we
+    use acks only to acknowledge messages. So acks are not themselves
+    acknowledged. 
+
+    
+    <p class="w3-text-teal">Part a</p>
+    
+    When agent \(x\) gets a message from agent \(y\) then which of the
+    following is True
+    <ol>
+      <li>
+      At that point agent \(y\) is on the tree, i.e., \(y.parent \neq
+      null\)
+      </li>
+      <li>
+      At that point agent \(y\) is not on the tree, i.e., \(y.parent =
+      null\)
+      </li>
+    </ol>
+    
+    <p class="w3-text-teal">Part b</p>
+    
+    When agent \(x\) gets a message from agent \(y\) then what action
+    does \(x\) take if \(x.parent = null\)?
+    
+    
+    <p class="w3-text-teal">Part c</p>
+    
+    When agent \(x\) gets a message from agent \(y\) then what action
+    does \(x\) take if \(x.parent \neq null\)?
+    
+    
+    <p class="w3-text-teal">Part d</p>
+    If <code>x.num_unacked = 0</code> then which of the following is
+    True?
+    <ol>
+      <li>
+      There are no messages in \(x\)'s outgoing channels.
+      </li>
+      <li>
+      \(x\) has no descendants.
+      </li>
+      <li>
+      There are no acks in \(x\)'s incoming channels
+      </li>
+    </ol>
+
+    <p class="w3-text-teal">Part e</p>
+    True or False?
+    <p>
+    If \(x.parent = y\), then \(x\) has received more messages from
+    \(y\) than \(x\) has sent acks to \(y\).
+
+    <p class="w3-text-teal">Part f</p>
+    True or False?
+    <p>
+    If \(x.parent = y\), and \(w\) is different from \(x\) and \(y\),
+    then \(x\) has received more messages from \(w\) than \(x\) has
+    sent acks to \(w\). 
+      
+
+    
+
+    <h3 class="w3-text-teal">Question 2</h3>
+    Associated with each agent \(x\) is a constant \(x.N\). Your
+    algorithm can use local variables of \(x\).
+    <p>
+    There is a path (sequence of directed channels) from agent \(0\)
+    to every agent. If there is an edge from agent \(x\) to \(y\) then
+    there is an edge back from \(y\) to \(x\).
+    <p>
+    Design an algorithm by which agent \(0\) obtains \(sum_{x} x.N\). 
+
+    
+    <figure>
+    <img src="DiffusingComputations/Slide02.jpg" alt="Fig2" style="width:100%">
+    <figcaption>
+       Fig. 2. Diffusing Computations: The Problem
+    </figcaption>
+    </figure>
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Answers</h1>
+    <!--------------------------------------------------------->
+
+    <!--------------------------------------------------------->
+    <h3 class="w3-text-teal">Question 1</h3>
+    <!--------------------------------------------------------->
+
+    
+    <p class="w3-text-teal">Part a</p>
+    
+    When agent \(x\) gets a message from agent \(y\) then which of the
+    following is True
+    <ol>
+      <li>
+      At that point agent \(y\) is on the tree, i.e., \(y.parent \neq
+      null\)
+      </li>
+      <li>
+      At that point agent \(y\) is not on the tree, i.e., \(y.parent =
+      null\)
+      </li>
+    </ol>
+    
+    <p class="w3-text-teal">Part a: Answer</p>
+    At that point agent \(y\) is on the tree, i.e., \(y.parent \neq
+    null\).
+    <p>
+    This is because if there is a message in an outgoing channel from
+    \(y\) then \(y\) is on the tree.
+    
+    <p class="w3-text-teal">Part b</p>
+    
+    When agent \(x\) gets a message from agent \(y\) then what action
+    does \(x\) take if \(x.parent = null\)?
+    
+    <p class="w3-text-teal">Part b: Answer</p>
+    Agent \(x\) sets \(x.parent = y\) and does not (immediately) send
+    an ack to \(y\) for that message.
+    
+    
+    <p class="w3-text-teal">Part c</p>
+    
+    When agent \(x\) gets a message from agent \(y\) then what action
+    does \(x\) take if \(x.parent \neq null\)?
+    
+    <p class="w3-text-teal">Part c: Answer</p>
+    Agent \(x\) sends an ack to \(y\) and leaves \(x.parent\) unchanged.
+    
+    
+    <p class="w3-text-teal">Part d</p>
+    If <code>x.num_unacked = 0</code> then which of the following is
+    True?
+    <ol>
+      <li>
+      There are no messages in \(x\)'s outgoing channels.
+      </li>
+      <li>
+      \(x\) has no descendants.
+      </li>
+      <li>
+      There are no acks in \(x\)'s incoming channels
+      </li>
+    </ol>
+    
+    <p class="w3-text-teal">Part d: Answer</p>
+    All are True. 
+
+    <p class="w3-text-teal">Part e</p>
+    True or False?
+    <p>
+    If \(x.parent = y\), then \(x\) has received more messages from
+    \(y\) than \(x\) has sent acks to \(y\).
+    
+    <p class="w3-text-teal">Part e: Answer</p>
+    True.
+    <p>
+    \(x\) has received one more message than it has acknowledged.
+
+    <p class="w3-text-teal">Part f</p>
+    True or False?
+    <p>
+    If \(x.parent = y\), and \(w\) is different from \(x\) and \(y\),
+    then \(x\) has received more messages from \(w\) than \(x\) has
+    sent acks to \(w\). 
+    
+    <p class="w3-text-teal">Part f: Answer</p>
+    False.
+    <p>
+    \(x\) immediately acknowledges messages from agents other than its
+    predecessors. 
+      
+
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+
