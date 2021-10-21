@@ -61,12 +61,6 @@ hr.new1 {
   href="ApplicationsDiffusingComputationSelfTest.html">Self Test</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="ApplicationsDiffusingComputationExercises.html">Exercises</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="ApplicationsDiffusingComputation.html">Explorations</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
   href="../SelfStabilization/SelfStabilization.html">
   Next: Self Stabilization</a> 
   
@@ -99,66 +93,85 @@ hr.new1 {
     cases in which the network is static and then study an algorithm
     in which an agent learns properties of the network while the
     network is changing.
-
-    <!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Acquiring Graph Information</h2>
+    <p>
     In this problem,  agents are in a static network. If there is an edge
     from an agent \(x\) to an agent \(y\), in the network,  then there is an edge in the
     reverse direction.
-    Associated with each agent \(x\) is some value, \(x.v\), such as
-    the agent's coordinates. An agent,  the
-    <i>initiator</i>, starts a computation by which it learns
-    the values of all the agents in the network.
-    
-    <p>
-    Associated with each agent \(x\) is a local variable, \(x.values\),
-    which is a
-    <a href="https://en.wikipedia.org/wiki/Multiset">multiset</a>
-    of agent values.
-    (A multiset is
-    unlike a set in that a multiset can have multiple instances of an
-    element. A multiset is also called a bag.)
 
+    <!--------------------------------------------------------->
+    <h2 class="w3-text-teal">Acquiring Graph Information</h2>
+    Associated with each agent \(x\) is some constant value, \(x.v\),
+    where \(x.v\) is arbitrary. For example \(x.v\) could
+    be: the coordinates of agent \(x\) in 3D space, or agent \(x\)'s
+    lists of assets and liabilities, or the files for which it has
+    exclusive locks.
     <p>
-    We want
-    \(initiator.values\) to be the multiset of values of all 
-    agents when the program terminates.
+    An agent, called the
+    <i>initiator</i>, starts a computation by which it learns
+    the values of all the agents in the network. When the the
+    computation terminates, the initiator will have a set
+    \(initiator.values\) where the elements of the set
+    are pairs \((x, x.v)\), with one element for each agent in the system.
 
     <p>
     We first give the program and then prove its correctness. The
-    program is a simpler diffusion computation. The simplification
-    comes from the fact that each agent becomes active exactly once,
-    and only to record its values. Also
-    a message traverses a channel exactly once, and an
-    acknowledgment traverses a channel exactly once.
+    program is a simple version of a diffusing computation. The simplification
+    comes from the facts that:
+    <ol>
+      <li>
+      <i>Each agent becomes active only when it receives its first
+      message.</i> It doesn't change its active/idle state when it
+      receives subsequent messages.
+      So each agent changes from idle to active exactly once.
+      <li>
+      After an agent sets its parent to a non-null value, it does not
+      change its parents thereafter. So, the tree grows, and once an
+      edge of the tree is created that edge is never changed.
+      </li>
+      </li>
+      <li>
+      <i>For each channel \(c\), exactly one message and exactly one
+      ack traverses the channel in the algorithm</i>
+      </li>
+    </ol>
 
     <p>
-    In a general
-    diffusing computation a message may activate an agent multiple
-    times; by contrast, in the simpler algorithm, a message is used
-    merely to tell an agent to record its values. So, we will use
-    <i>record</i> in place of <i>message</i>.
+    By contrast, in a general diffusing computation an agent may
+    become active multiple times because each time an idle agent receives a
+    message it becomes active. In the general case, edges of the tree
+    are created and may be later deleted.
 
 <p>
-Associated with each agent is a local boolean variable
-\(received\_all\_acks\) which is true exactly when the agent has
+Associated with each agent \(x\) is a local boolean variable
+\(x.received\_all\_acks\) which is True exactly when agent \(x\) has
 received acks for all the messages that it has sent.
+<p>
+Each ack has a field called <i>values</i> which is a set. The elements
+    of this set are pairs \((x, x.v)\) where \(x\) is an agent.
+    <h3 class="w3-text-teal">Simpler Version</h3>
 
-Acks have a field called <i>values</i> which is a multiset.
-    
-
-    <h3 class="w3-text-teal">Program 1</h3>
+    Initially, \(x.parent = null\) for all agents \(x\) other than the
+    initiator. 
+<p>
+    The initiator starts the computation by executing the following
+program:
 <pre>
-0: initially for all agents x excluding initiator:
-      (x.parent = null)
+initiator.values = {(initiator, initiator.v)}
+send a message to each neighbor of the initiator
+</pre>
 
-1: if (x.parent == null) and (x receives record from y):
+    Next we give the program for an agent \(x\)
+other than the initiator.
+    
+<pre>
+
+1: if (x.parent == null) and (x receives a message from y):
        x.parent = y
-       x.values = {x.v}
-       send record to each neighbor of x other than x.parent
+       // x.parent does not change from now onwards.
+       x.values = {(x, x.v)}
+       send a message to each neighbor of x other than x.parent
 
-2: if (x.parent != null) and (x receives record from y):
-          // {} is the empty multiset
+2: if (x.parent != null) and (x receives a message from y):
           send ack(values = {}) to y
 
 3: if x receives an ack
@@ -170,25 +183,19 @@ Acks have a field called <i>values</i> which is a multiset.
 
 
 
-The initiator starts the computation by executing the following
-program:
-<pre>
-initiator.values = {initiator.v}
-send record to each neighbor of the initiator
-</pre>
-
 
 <h3 class="w3-text-teal">Proof outline</h3>
 The steps of the proof are as follows:
 <ol>
   <li>
-  An agent \(x\) changes \(x.parent\) exactly once.
+  An agent \(x\) changes \(x.parent\) exactly once from \(null\) to a
+  non-\(null\) value.
   The initiator is the ancestor of all agents \(x\) for which
   \(x.parent\) is not null.
   The tree propagates to span all agents reachable from the initiator.
   </li>
   <li>
-  For each agent \(x\), its value \(x.v\) is propagated exactly once
+  For each agent \(x\), its value \((x, x.v)\) is propagated exactly once
   to its parent. This value is then propagated along edges of
   the tree through ancestors of \(x\) to the initiator.
   </li>
@@ -196,15 +203,15 @@ The steps of the proof are as follows:
   
 
 
-
-<h3 class="w3-text-teal">Examples</h3>
-The algorithm, <i>program 1</i>, can be optimized for problems in
+<h2 style="color:red;">Examples</h2>
+The algorithm can be optimized for problems in
 which the initiator has to discover different kinds of information
 about graphs. For example, if agents have colors and the initiator has
 to discover the numbers of agents of each color, then <i>values</i>
-can be counts of agents of each color rather than a multiset.
+can be counts of agents of each color, and counts can be summed
+instead of taking unions of sets.
 
-<p>
+<h4 style="color:red;">Example</h4>
 Next, we look at an example of an algorithm in which an
 agent acquires a specific kind of graph information. 
 An agent has a color, either red or blue, and the color does not
@@ -215,18 +222,18 @@ An optimization is that if the diffusing computation reaches a red
 agent then the red agent does not diffuse the
 computation even further. We give the optimized algorithm, <i>program
 2</i>, below. It's proof of correctness is similar to the proof of
-program 1.
+program  given above.
 
-<h3 class="w3-text-teal">Program 2: Detecting a red agent</h3>
+<h3 style="color:red;">Program 2: Detecting a red agent</h3>
 <pre>
-1: if (x.parent == null) and  (x receives record from y):
+1: if (x.parent == null) and  (x receives a message from y):
         x.parent = y
         if x.color == red:
              send ack(color=red) to y
         else:
-             send record to all neighbors of x other than y
+             send a message to all neighbors of x other than y
 
-2: if (x.parent != null) and x receives record from y:
+2: if (x.parent != null) and x receives a message from y:
           send ack(color=x.color) to y
 
 3: if (x receives an ack A) and (x has not sent an ack to x.parent):
@@ -346,11 +353,12 @@ incoming channels are empty. Statement 4 identifies the computation as
 not terminated when \(x\) receives a message.
 
 <h2 class="w3-text-teal">Communication Deadlock Detection</h2>
-Communication deadlock is identical with one difference. An idle agent in
-termination detection becomes active if it receives a message from any
+Communication deadlock is identical to termination detection with one
+difference. An idle agent in 
+termination detection becomes active if it receives a message from <i>any</i>
 agent. By contrast, in the communication deadlock problem, an idle
-agent becomes active only if receives a message from a set of agents
-for which it is waiting.
+agent becomes active only if receives <i>a message from a set of agents
+for which it is waiting.</i>
 
 An earlier
 <a href="../DeadlockDetection_And/DeadlockDetection_And.html">module
