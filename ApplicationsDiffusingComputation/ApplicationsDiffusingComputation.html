@@ -258,7 +258,7 @@ algorithm to solve the same problem. This algorithm combines diffusing
 computation and the snapshot algorithm, and is a small modification of
 <i>program 2</i>. 
 
-<h3 class="w3-text-teal">Termination Detection: Problem Specification</h3>
+<h5 class="w3-text-teal">Problem Specification</h5>
 <p>
 For convenience, the problem definition from the earlier
 module is repeated here.
@@ -280,7 +280,7 @@ module is repeated here.
     Our task is to develop an algorithm that detects that a system has
 entered a terminated state.
 
-<h3 class="w3-text-teal">Termination Detection Algorithm</h3>
+<h5 class="w3-text-teal">Algorithm</h5>
 In analogy with <i>program 2</i>, let's give colors to agents.
 Let's specify that an agent that is
 idle throughout the snapshot algorithm is colored blue. An agent that
@@ -316,7 +316,7 @@ The statement that we add is:
 
 <h4 class="w3-text-teal">Proof outline</h4>
 Consider the following modification to the snapshot algorithm: replace 
-the <i>ack</i> and <i>record</i> of program 2 by
+the <i>ack</i> and <i>message</i> of program 2 by
 markers of the snapshot algorithm. The resulting program is identical
 to the snapshot algorithm with two differences:
 <ol>
@@ -369,7 +369,7 @@ communication-deadlock case, an
  idle agent became active if it receives messages
 from <i>any</i> of the agents for which it is waiting.
 
-<h3 class="w3-text-teal">Communication Deadlock: Problem Specification</h3>
+<h5 class="w3-text-teal">Problem Specification</h5>
 An agent is either <i>active</i> or <i>waiting</i>.
 Associated with each waiting agent \(x\) is a non-empty set
 \(x.waits\) of agents;
@@ -379,7 +379,7 @@ receives a message from an agent that is not in \(x.waits\).
 A waiting agent does not send messages.
 Active agents may send messages.
 
-<h3 class="w3-text-teal">Communication Deadlock: The Algorithm</h3>
+<h5 class="w3-text-teal">The Algorithm</h5>
 The algorithm for communication deadlock detection is the same as that
 for termination detection except that the network is restricted to
 agents that are waiting. The network has a channel between a pair of

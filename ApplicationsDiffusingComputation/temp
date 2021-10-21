@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>ApplicationsDiffusingComputationExample</title>
+<title>ApplicationsDiffusingComputationSelfTest</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -83,14 +83,122 @@ hr.new1 {
   
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
+    
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Examples: Combining Algorithms</h1>
+    <!--------------------------------------------------------->
+    These examples show how to <i>compose</i> or combine
+    algorithms.
 
     <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Self Test</h1>
+    <h2 class="w3-text-teal">Snapshot Termination Detection</h2>
+    <!--------------------------------------------------------->
+
+    This algorithm combines the global snapshot algorithm and
+    diffusing computations to get an algorithm that is initiated by a
+    <i>single agent which detects when the snapshot algorithm has
+    terminated</i>.
+    
+    <p class="w3-text-teal">Single initiator of snapshot</p>
+
+    <a
+    href="https://kmchandy.github.io/DiffusingComputations/DiffusingComputations.html"> 
+    An earlier module gave the rules for the global snapshot
+    algorithm. </a>
+    These rules allow multiple agents to start recording
+    their states either independently or when they receive markers
+    from other agents who have recorded their own states. Now,
+    let's design an algorithm in which a single agent, called the
+    <i>initiator</i> is the only agent that records its state
+    independently, and all other agents record their 
+    states only when they receive markers.
+    
+    <p class="w3-text-teal">Initiator detects termination of snapshot</p>
+
+    A global snapshot is complete when all agents have recorded their
+    own states and the states of all incoming channels.
+    The rules for the snapshot algorithm don't specify how an agent
+    detects that the global snapshot is complete.
+    Now let's look at an algorithm by which the initiator
+    detects that the snapshot algorithm is over.
+    In this algorithm the initiator does not get the local snapshots
+    of all the agents; the initiator merely detects that the states of
+    all agents and channels have been recorded.
+
+    
+
+    <!--------------------------------------------------------->
+    <h4 class="w3-text-teal">Problem Specification</h4>
+    <!--------------------------------------------------------->
+    <p>
+    A system is as specified in diffusing computations. There is a
+    channel from agent \(x\) to agent \(y\) if and only there is a
+    channel from \(y\) to \(x\). All agents are reachable, by a
+    sequence of channels from an agent called the <i>initiator.</i>
+    <p>
+    Modify the global snapshot algorithm so that it is started by a
+    single agent which detects that the algorithm has
+    terminated. 
+
+    <!--------------------------------------------------------->
+    <h4 class="w3-text-teal">Solution: Combine Algorithms</h4>
+<!--------------------------------------------------------->
+The solution is a diffusing computation algorithm which takes global
+snapshots.
+<p>
+A message in the diffusing computation is a marker in the
+snapshot algorithm.
+When a message (i.e. marker) is
+    received by an idle agent the agent becomes active, sends messages
+    (i.e., markers)
+specified by the snapshot algorithm, and becomes idle.
+
+<p>
+The diffusing computation terminates when all agents are idle and all
+channels are empty.
+So the computation terminates when each agent has completed its step
+    of the snapshot algorithm, and when all markers have been
+received.
+This implies that at termination the states of all
+agents and channels have finished
+being recorded.
+
+
+
+
+    <!--------------------------------------------------------->
+    <h2 class="w3-text-teal">Initiator Acquires
+    the Global Snapshot</h2>
+<!--------------------------------------------------------->
+In the algorithm given above the initiator detects that the global
+    snapshot is complete --- i.e., each agent has
+    finished recording its state and the states of its incoming
+    channels. The algorithm does not show how the local information of
+each agent is sent to the initiator. An algorithm to send agent
+    information to the initiator
+operates in two phases.
+<ol>
+  <li>
+  Execute a diffusing computation in which the initiator detects that
+  a global snapshot is complete.
+  </li>
+  <li>
+  Initiate the
+<a
+  href="https://kmchandy.github.io/ApplicationsDiffusingComputation/ApplicationsDiffusingComputation.html">
+  algorithm to acquire graph information.</a>
+  The information that is acquired from each agent is its recorded state and
+  the recorded states of its incoming channels.
+  </li>
+</ol>
+
+
+    <!--------------------------------------------------------->
+    <h2 class="w3-text-teal">Self Test:Application</h2>
 <!--------------------------------------------------------->
 <p>
-    This problem is to apply the
-    <a href="ApplicationsDiffusingComputationExample.html">algorithm in which the initiator takes a
-global snapshot and then acquires the global snapshot.</a>
+This problem is to apply the algorithm in which the initiator takes a
+global snapshot and then acquires the global snapshot.
 
     <p class="w3-text-teal">The Problem</p>
     The system has a set of indivisible indestructible tokens. Tokens
