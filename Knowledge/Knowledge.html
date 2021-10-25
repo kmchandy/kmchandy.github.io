@@ -441,50 +441,6 @@ straightforward and are all based on consistent cuts of timelines.
   </footer>
 
 
-    <h5 style="color:blue;">
-    "<i style="color:blue;">agent \(x\) in state \(r\) knows \(P\)</i>" 
-    is a Boolean which holds if and only if:
-    <p>
-    \(P\) holds when agent \(x\) is in state \(r\) in
-    all trajectories that start in initial states, i.e.,
-    <p style="text-align:center">
-    \(
-    [init \; \Rightarrow \; always([(x \; \textrm{in} \; r) \;
-    \Rightarrow \; P])]
-    \)
-    </p>
-    </h5>
-    <hr class="new2">
-
-    <p class="w3-text-teal">Notation</p>
-    We restrict attention to system trajectories that start in initial states.
-    For an agent \(x\), predicate \(P\), and a point \(T\) in a
-    trajectory, the phrase
-    "<i style="color:blue;">\(x\) knows \(P\) at \(T\)</i>"
-    means that at point \(T\), \(x\) is in a state in which \(x\)
-    knows \(P\).
-    <p>
-    We use the abbreviation "<i style="color:blue;">\(P\) holds at a consistent cut</i>" for
-    "\(P\) holds at the global state corresponding to a consistent cut"
-
-    <h3  style="color:red;">Example</h3>
-    A system has two agents \(x\) and \(y\) with channels between
-    them. Initially, the system has a single indivisible, indestructible
-    tokens that cannot be created. So, the system has a single tokens in
-every state in every trajectory.
-<p>
-When \(x\) is in a state in which it holds the token then \(x\)
-knows that \(y\) holds no tokens.
-<p>
-When \(x\) is in a state in which it holds no tokens then \(x\) knows
-that the token is in a channel or at \(y\).
-The following statement is False. "When \(x\) is in a state in which
-it holds no tokens, \(x\) knows that \(y\) holds the token."
-The statement is False because the token could be in a channel.
-
-      
-
-
 <!-- END MAIN -->
 </div>
 
