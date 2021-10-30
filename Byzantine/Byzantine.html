@@ -134,8 +134,18 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     retreat.</li>
       <li><i>Consensus</i>: Loyal lieutenants come to a consensus: either all of them
     attack or all of them retreat.</li>
-    </ol>
-    The specification does not require that traitors be discovered.
+  </ol>
+
+  <p>
+  If the general is loyal then consensus follows because all
+  lieutenants obey the general. The challenge is to ensure consensus
+  when the general is disloyal.
+
+  <p>
+  
+    The specification does not require that traitors be
+    discovered. For example, the algorithm doesn't have to determine
+    whether the general or a lieutenant is loyal or disloyal. 
 
     <p>
     The algorithm proceeds as follows. A loyal general gives the same
@@ -172,25 +182,33 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     consensus, makes the problem interesting.
 
     
-    <h4 class="w3-text-teal">Oral and Written Messages</h4>
-    We begin by looking at two versions of the problem. In the first
-    version a lieutenant sends copies of messages to other
-    lieutenants but cannot modify the copies. Also, a lieutenant
-    cannot forge signatures. If a lieutenant \(B\) gets a copy of a message
-    \(M\) signed by \(Y\), where the message is forwarded to \(B\) by
-    \(X\), then \(B\) knows 
-    that \(M\) was sent by \(Y\), even if \(X\) is a traitor.
+    <h3 class="w3-text-teal">Oral and Written Messages</h3>
+  We begin by looking at two versions of the problem.
 
-    <p>
-    In the
-    second version, messages can be modified and signatures can be
-    forged.
-    If a lieutenant \(B\) gets a copy of a message
-    \(M\) signed by \(Y\), where the message is forwarded to \(B\) by
-    \(X\), then \(B\) does not know 
-    that \(M\) was sent by \(Y\), because a traitor \(X\) may have
-    modified the message and forged \(Y\)'s signature.
+  <h4 class="w3-text-teal">Written Messages</h4>
+  In this
+    version a lieutenant may send copies of messages to other
+lieutenants but cannot modify the copies. Also, a lieutenant
+cannot forge signatures. 
+<p>
+For example, suppose lieutenant \(A\) sends lieutenant \(B\) a message
+  \(M\). All messages are signed and encrypted; so message \(M\) is
+  signed by \(A\). Lieutenant \(B\) can forward the message to
+  lieutenant \(C\); however, \(B\) cannot modify the message or forge
+  the signature on it. So, when \(C\) gets message \(M\), \(C\) knows
+that \(A\) sent exactly that message.
 
+
+    <h4 class="w3-text-teal">Oral Messages</h4>
+    In this version of the problem, messages can be modified and signatures can be
+forged.
+<p>
+Consider the same example as in the previous paragraph.
+Suppose lieutenant \(A\) sends lieutenant \(B\) a message
+\(M\). Lieutenant \(B\) can send a message \(M'\) to lieutenant \(C\)
+    and forge \(A\)'s signature on the message. So, when \(C\)
+    receives the message \(C\) doesn't know whether \(M'\) was sent by  
+\(A\) or modified by agents that forwarded the message.
     <p>
     In the literature, the two versions are referred to as the 
     with <i>written</i> and <i>oral message</i> versions, respectively. This is
@@ -199,8 +217,9 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     another lieutenant \(C\)  told \(B\) that \(C\) is going to attack when
     \(C\) said no such thing. When they send written messages, the
     receiver of a message can detect modified messages and forged
-    signatures. 
-
+    signatures. We will also refer to the written version as the 
+<i>encrypted</i> version, and the oral version as 
+<i>unencrypted</i>.
 <p>
 In summary: Byzantine consensus with written messages assumes that messages are
 encrypted and encrypted messages can be copied but not modified, and
@@ -220,43 +239,123 @@ there is only one loyal agent because the requirement of consensus is
 vaccuous; there is no other loyal agent with which to reach consensus.
 So we now assume \(N \geq t + 2\).
 
-<p  class="w3-text-teal">Initially</p>
-Initially no messages have been sent and all lieutenants are
-uncomitted: they have not committed to attack or to retreat.
+<p>
+We give the algorithm for loyal agents. Disloyal agents may take any
+action and send any message in each round.
 
-<p class="w3-text-teal">Round \(t + 1 \geq j \geq 0\)</p>
-If a lieutenant \(B\) who has not committed to attack on previous
+<p>
+The algorithm proceeds in a sequence of synchronous rounds. We
+describe the algorithm in two parts: in the first part the algorithm
+does not terminate; we discuss termination in the second part. Next we
+describe the first part.
+
+<p class="w3-text-teal">Initiation of round \(0\) </p>
+The general starts round 0 by sending a message to each lieutenant. A
+message is either attack or retreat.
+
+<p>
+A faulty general may not
+send a message to a lieutenant.
+A lieutenant that doesn't receive a message from the general treats
+the absence of the message as though the general had sent a default
+message. Let's assume that the default is retreat.
+So, a lieutenant that does not get a message in round 0 acts as though
+it received a retreat message on this round.
+<p>
+At the start of round 0 no lieutenant has committed
+to attack or retreat.
+
+<p class="w3-text-teal">Round \(j\) where \(j \geq 0\)</p>
+(We discuss termination later; for the time being assume that rounds
+go on forever.)
+<p>
+During round \(j\),
+if a lieutenant \(B\) who has not committed to attack on previous
 rounds receives an
-attack message signed by the general and \(j\) attack messages signed
-by \(j\) distinct lieutenants other than \(B\) , then:
+attack message signed by the general and at least \(j\) attack messages signed
+by \(j\) distinct lieutenants other than \(B\) , then at the end of
+round \(j\):
 <ol>
-  <li>\(B\) commits to attack at the end of the round regardless
-  of messages that it may receive on subsequent rounds, and
+  <li>
+  If \(B\) commits to attack at the end of round \(j\) then
+  \(B\) remains committed to attack on all subsequent rounds.
+  <p>
+  Note that the attack and retreat commands are not treated in a symmetric
+  fashion.
+  If \(B\) does not commit to attack at the end of round \(j\) it may
+  commit to attack in a later round.
   </li>
   <li>
-  \(B\) broadcasts a copy of the attack message signed by the general and
-  copies of
+  If lieutenant \(B\) commits to attack for the first time on round
+  \(j\) then \(B\) broadcasts the evidence that it received which
+  caused it to commit. This evidence consists of a copy of the attack
+  message signed by the general and copies of
   the attack messages signed by \(j\) distinct lieutenants.
   In addition \(B\) broadcasts a copy of an attack message
   signed by \(B\) itself. Thus \(B\) broadcasts an attack message
   signed by the general and \(j+1\) attack messages signed by \(j+1\) distinct
-  lieutenants.
+  lieutenants. These messages are received by all lieutenants at the start of the next
+  (i.e. \(j+1\)-th) round.
+  <p>
+  If lieutenant \(B\) does not commit to attack on round \(j\) then it
+  sends no messages on this round.
   </li>
 </ol>
-The algorithm terminates at the end of round \(t+1\) where \(t\) is
-the maximum number of disloyal agents.
+
+
+
+
+<h4  class="w3-text-teal">Theorem: loyal lieutenants obey a loyal
+general.</h4> 
+
+<p>
+If the general broadcasts attack
+messages on round 0 then all loyal lieutenants commit to attack at the
+end of round 0.
+If the general never sends attack messages then lieutenants never
+receive copies of attack messages signed by the general; so,
+loyal lieutenants never commit to attack.
+Therefore, when the general is loyal, consensus among loyal
+lieutenants is reached by the end of round 0.
+
+
+<h4  class="w3-text-teal">Theorem: if any loyal lieutenant commits to
+  attack for the first time on round \(j\) then all loyal lieutenants commit to
+attack by the end of round \(j +  1\).</h4>
+
+<p class="w3-text-teal">Proof</p>
+A loyal lieutenant commits to attack  attack for the first time on
+round \(j\) if it receives an attack message from the general and
+attack messages from at least \(j\) lieutenants.
+
+<p>
+(These messages may
+have been forwarded by other lieutenants. Moreover, some of these
+attack messages may have been generated by disloyal lieutenants.)
+
+<p>
+When the loyal lieutenant commits to attack it sends copies of the evidence it
+received and a message commmiting itself to attack. So, on round
+\(j+1\) all loyal
+lieutenants receive an attack message from the general and \(j+1\)
+attack messages from different lieutenants; and so they commit to
+attack on round \(j+1\) if they haven't done so.
+
+<h3 style="color:red;">Example</h3>
+
+The figure below illustrates a situation in which a loyal lieutenant C commits to
+attack on round 2, if it hasn't already committed to attack by then.
+The figure shows C
+getting attack messages (red boxes) signed by the general and lieutenants A and B on
+round 2. The general and lieutenants A and B may be disloyal or
+loyal.
 
     <figure>
     <img src="Slide02.jpg" alt="Fig2" style="width:100%">
     <figcaption>Fig.2: Example of a lieutenant committing to attack</figcaption>
 </figure>
 
-The figure illustrates a situation in which a loyal lieutenant C commits to
-attack on round 2, if it hasn't already committed to attack by then.
-The figure shows C
-getting attack messages (red boxes) signed by the general and lieutenants A and B on
-round 2. The general and lieutenants A and B may be disloyal or
-loyal. 
+ 
 
 <p>
  Because C is loyal it follows the algorithm, and C
@@ -285,69 +384,36 @@ messages that it received are loyal; but, it doesn't matter because D
 has proof that they sent those messages. So, D commits to attack on
 round 3.
 
-<h3  class="w3-text-teal">Proof of Correctness</h3>
-<h4  class="w3-text-teal">Proof: loyal lieutenants obey a loyal
-general.</h4> 
+<h4  class="w3-text-teal">Theorem: if no loyal lieutenant commits to
+  attack by the start of round \(t\) then all loyal lieutenants never commit to
+attack.</h4>
+Consider the case where the general is disloyal because we have
+already dealt with the case of a loyal general.
 
 <p>
-If the general broadcasts attack
-messages on round 0 then all loyal lieutenants commit to attack at the
-end of round 0.
-If the general never sends attack messages then lieutenants never
-receive copies of attack messages signed by the general; so,
-loyal lieutenants never commit to attack.
-Therefore, when the general is loyal, consensus among loyal
-lieutenants is reached by the end of round 0.
+Since the general is disloyal and the system has a maximum of \(t\)
+disloyal officers, there are at most \(t-1\) disloyal lieutenants. On
+round \(t\) these disloyal lieutenants can send attack messages from
+at most \(t-1\) lieutenants. But, a loyal lieutenant commits to
+attack for the first time on round \(t\), only if it receives at least
+\(t\) messages. So, no loyal lieutenant commits to attack on round
+\(t\).
 
 
-<h4  class="w3-text-teal">Proof: loyal lieutenants come to a consensus
-even if the general is disloyal.</h4>
-We will prove that:
-<ol>
-  <li>
-  <i>Case 1</i>: if any loyal lieutenant commits to attack on any round \(j \leq t\)
-  then all loyal lieutenants commit to attack by the end of round \(t +
-  1\).
-  </li>
-  <li>
-  <i>Case 2</i> if no loyal lieutenant commits to attack on
-  any round \(j \leq t\) then no loyal lieutenant commits to
-  attack by the end of round \(t + 1\).
-  </li>
-</ol>
-Therefore, either (case 1) all loyal lieutenants commit to attack by
-the end of round \(t + 1\) or (case 2) no loyal lieutenant 
-commits to attack by the end of round \(t + 1\).  So, consensus is
-reached by the end of round \(t + 1\).
+<h3 style="color:red;">Example</h3>
+Consider a system with a general and four lieutenants, A, B, C,
+D. Assume that the general and lieutenant D are disloyal. If none of
+A, B, C have committed to attack at the start of round 2, then none of
+them will commit to attack during round 2. This is because D can send
+signed attack messages from the general and from D, but that's not
+enough evidence on round 2 to cause loyal lieutenants to commit to
+attack. 
 
-<p  class="w3-text-teal">Case 1: When the consensus is to attack</p>
-If any loyal lieutenant commits to attack on round \(j\) then it broadcasts an attack
-message signed by the general and also broadcasts \(j + 1\) messages
-signed by \(j + 1\) different lieutenants in
-that round. So on round \(j + 1\) all loyal lieutenants, who have not
-yet committed to attack, receive an
-attack message signed by the general and \(j + 1\) messages
-signed by \(j + 1\) different lieutenants; and so they too
-commit to attack by round \(j + 1\). So
-if any loyal lieutenant commits to attack on any round \(j\) then
-all loyal lieutenants commit to attack by the end of round \(j +
-1\). Therefore, if 
-if any loyal lieutenant commits to attack on any round \(j \leq t\) then
-all loyal lieutenants commit to attack by the end of round \(t +
-1\). 
+<h4  class="w3-text-teal">Termination</h4>
+The algorithm terminates at the end of round \(t\) because subsequent
+rounds don't change the outcome of all loyal
+lieutenants.
 
-<p  class="w3-text-teal">Case 2: When the consensus is to retreat</p>
-If no loyal lieutenant commits to attack on any round \(j \leq t\)
-then no loyal lieutenant commits to attack on round \(t + 1\).  This
-is because a loyal lieutenant commits to attack on round \(t + 1\)
-only if it receives \(t + 1\) attack messages signed by \(t + 1\)
-different lieutenants. On round \(t + 1\), a loyal lieutenant can
-receive at most \(t\) attack messages signed by \(t\) different
-lieutenants --- these are the \(t\) traitors --- because, by
-assumption, loyal lieutenants sent no attack messages on the first
-\(t\) rounds. Therefore, if no loyal lieutenant commits to attack on
-any round \(j \leq t\) then a consensus to retreat is reached by the
-end of round \(t + 1\).
 
 
   <footer id="myFooter">
