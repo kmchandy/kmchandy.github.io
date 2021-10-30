@@ -287,6 +287,7 @@ wait to receive promise(t, v, acceptT) messages from a
 // Acceptor A. Step A.2
 upon receiving propose(t, v) from P:
     if t >= A.t:
+       A.t = t
        A.v = v
        A.acceptT = t
        send accept(A.t, A.v) to all learners
