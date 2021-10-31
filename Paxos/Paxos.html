@@ -216,7 +216,7 @@ between agents is shown in the figure below.
 
 <p>
 <figure>
-    <img src="PaxosFigures/Slide2.jpg" alt="Fig1" style="width:80%">
+    <img src="PaxosFigures/Slide02.jpg" alt="Fig1" style="width:80%">
     <figcaption>Fig.1: Proposers, Acceptors and Learners</figcaption>
 </figure>
 
@@ -298,7 +298,11 @@ In step P.1, if a proposer sends <code>prepare(t)</code> and a
 different proposer sends <code>prepare(t')</code> then <code>t</code>
 and <code>t'</code> are different because ties are broken by using
 proposer ids. Assume that the <code>t</code> value implicitly includes
-the proposer id; the proposer id is used only to break ties. 
+the proposer id; the proposer id is used only to break ties.
+
+<p>
+We shall say that acceptor \(A\) <i>"accepts"</i> <code>(A.t, A.v)</code> at
+step A.2 if it sends <code>accept(A.t, A.v)</code>.
 
 <h4 class="w3-text-teal">Algorithm Steps</h4>
 The algorithm has only one point where an agent waits: Step P.2.
@@ -325,7 +329,7 @@ iteration of the loop by executing step P.1.
 <h3 style="color:red;">Example</h3>
 <p>
 <figure>
-    <img src="PaxosFigures/Slide7.jpg" alt="Fig2" style="width:100%">
+    <img src="PaxosFigures/Slide07.jpg" alt="Fig2" style="width:100%">
     <figcaption>Fig.2: Timelines</figcaption>
 </figure>
 
@@ -398,7 +402,7 @@ The next two figures illustrate the meaning of <code>A.t</code> for an
 acceptor <code>A</code>. 
 
 <figure>
-    <img src="PaxosFigures/Slide3.jpg" alt="Fig3" style="width:100%">
+    <img src="PaxosFigures/Slide03.jpg" alt="Fig3" style="width:100%">
     <figcaption>Fig.3: Meaning of A.t for Acceptor A</figcaption>
 </figure>
 
@@ -407,7 +411,7 @@ Acceptor <code>A</code> ignores all
 which <code>t < A.t</code>.
 
 <figure>
-    <img src="PaxosFigures/Slide4.jpg" alt="Fig4" style="width:100%">
+    <img src="PaxosFigures/Slide04.jpg" alt="Fig4" style="width:100%">
     <figcaption>Fig.4: Meaning of A.t for Acceptor </figcaption>
 </figure>
 
@@ -421,7 +425,9 @@ In timeline diagrams for Paxos we show only messages that are
 accepted. A message that is lost or discarded is not shown.
 
 
-<h2 class="w3-text-teal">Proof of Correctenss</h2>
+<h2 class="w3-text-teal">Correctenss</h2>
+In the following the symbol "-" denotes any arbitrary value.
+
 <!-------------------------------------------------------->
 <h3  class="w3-text-teal">Theorem 1: Learners only learn values
 proposed by proposers</h3>
@@ -436,19 +442,146 @@ the <code>v</code> field is either <code>null</code> or
 <code>P</code>.
 
 <!-------------------------------------------------------->
-<h4  class="w3-text-teal">Theorem 2: If a majority of acceptors
-accepts (T, V) and any acceptor accepts (T', V') where \(T' \geq T\) then V'
-= V</h4>
+<h4  class="w3-text-teal">Theorem 2</h4>
+Let \(T_{0}\) be the smallest value of \(T\) such that a majority of
+acceptors \(accept(T, -)\). Let \(V_{0}\) be the value accepted;
+so a majority accepts \((T_{0}, V_{0})\). Let \(P\) be the earliest
+time at which any acceptor accepts \((T_{0}, V_{0})\).
+<p>
+Then \(R.acceptT < T_{0}\) for all acceptors \(R\) at time \(P\).
+<!-------------------------------------------------------->
+<h4  class="w3-text-teal">Theorem 3</h4>
+If a majority of acceptors
+accepts \((T, V)\) and any acceptor accepts \((T', V')\) where \(T' \geq T\) then \(V'
+= V\).
 
-<h5 class="w3-text-teal">Proof</h5>
+  
+<h2 style="color:red;">Example: Illustration of Proof</h2>
+We give the idea underlying the proof before giving the proof itself. 
+The next sequence of diagrams illustrates the idea.
+<p>
+In the following we refer to the \(j\)-th acceptor either as acceptor
+\(j\) or as \(R_{j}\).
+
+<h4 style="color:red;">Example: Illustration of Proof of Theorem
+2</h4>
+The figure below shows a timeline diagram for proposers A, B, C
+and acceptors 1 - 5. Acceptors 3, 4, 5 have accepted \((T_{0}, V_{0})\). No
+majority of acceptors have accepted (T, V) for \(T < T_{0}\).
+<p>
+The acceptors that accept \((T_{0}, V_{0})\) may do so at different
+points in time. Let \(P\) be the earliest time at which any acceptor
+accepts \((T_{0}, V_{0})\). In the diagram acceptor 3 is the first to
+accept \((T_{0}, V_{0})\) and point \(P\) is marked.
+<p>
+Consider an acceptor that does not accept  \((T_{0}, V_{0})\).
+In the diagram, acceptors 1 and 2 do not accept 
+\((T_{0}, V_{0})\). Let \(T'\) be the value of \(acceptT\)
+for acceptor 1 at point \(P\). (The same argument holds for acceptor
+2.)
+<p>
+The theorem says: \(T' < T_{0}\).
+
+<figure>
+    <img src="PaxosFigures/Slide08.jpg" alt="Fig5" style="width:100%">
+    <figcaption>Fig.5: Illustration of Theorem </figcaption>
+</figure>
+
+<p>
+What sequence of events must occur for \(R1.acceptT\) at point \(P\)
+to be \(T'\)?
+
+<p>
+Acceptor R1 must have received \(propose(T', -)\) from some
+proposer. In the diagram this proposer is \(B\).
+
+<figure>
+    <img src="PaxosFigures/Slide09.jpg" alt="Fig5" style="width:100%">
+    <figcaption>Fig.5: Illustration of Theorem </figcaption>
+</figure>
+
+<p>
+Proposer \(B\) sent \(propose(T', _)\) only because it received
+\(promise(T', -, -)\) from a majority of acceptors. Any two
+majorities have at least one element in common. So, at least one of
+the acceptors that sent \(promise(T', -, -)\) also accepted \((T_{0},
+V_{0})\). In the diagram this acceptor is R3.
+
+<figure>
+    <img src="PaxosFigures/Slide10.jpg" alt="Fig5" style="width:100%">
+    <figcaption>Fig.5: Illustration of Theorem </figcaption>
+</figure>
+<p>
+Because an acceptor sends \(promise(T', -, -)\) and later accepts \((T_{0},
+V_{0})\) it follows that \(T' < T_{0}\).
+
+<h4 style="color:red;">Example: Illustration of Proof of Theorem
+3</h4>
+
+Theorem 3 says: If a majority of acceptors accepts \((T_{0}, V_{0})\)  and any acceptor accepts \((T_{1}, V_{1})\) where \(T_{1} \geq T_{0}\), then \(V_{1} = V_{0}\).
+
+
+The figure below shows a timeline diagram for proposers A, B, C
+and acceptors 1 - 5. Acceptors 3, 4, 5 have accepted \((T_{0}, V_{0})\). No
+majority of acceptors have accepted (T, V) for \(T < T_{0}\).
+
+
+<figure>
+    <img src="PaxosFigures/Slide05.jpg" alt="Fig5" style="width:100%">
+    <figcaption>Fig.5: Illustration of Theorem </figcaption>
+</figure>
+In this figure, acceptor 1 has accepted \((T_{1}, V_{1})\). The diagram
+    illustrates the first step of the induction. No acceptor has
+    accepted \((T, V)\) where \(T_{0} < T < T_{1}\)
+
+<p>
+The next figure shows the steps that must precede acceptor 1 accepting
+\((T_{1}, V_{1})\). Acceptor 1 must have received a \(propose(T_{1},
+V_{1})\) message from some proposer before acceptor 1 accepted
+\((T_{1}, V_{1})\). In the diagram this proposer is C. 
+
+
+<figure>
+    <img src="PaxosFigures/Slide06.jpg" alt="Fig6" style="width:100%">
+    <figcaption>Fig.6: Illustration of Theorem </figcaption>
+</figure>
+
+<p>
+Proposer C sends \(propose(T_{1}, V_{1})\) only after receiving
+\(promise(T_{1}, -, -)\) messages from a majority of acceptors.
+In the figure, proposer C
+receives \(promise(T_{1}, -, -)\) messages from acceptors 1, 2, and
+3. Let's analyze the promise messages received by proposer C.
+<p>
+The majority that accepts \((T_{0}, V_{0})\) and the majority that
+sends \(promise(T_{1}, -, -)\) must have at least one acceptor in
+common. In the figure acceptor 3 is common to both majorities.
+<p>
+Acceptor 3 sends \(promise(T_{1}, V_{0}, T_{0})\). 
+
+Acceptor 1 sends \(promise(T_{1}, R_{1}.V, R_{1}.acceptT)\) and we
+have shown that \(R_{1}.acceptT < T_{0}\) at point \(P\).
+The same argument holds for acceptor 2.
+
+<p>
+Proposer C inspects the promise messages that it receives from acceptors
+1, 2 and 3 and picks the message with the largest
+value of accepT. This message is \(promise(T_{1}, V_{0}, T_{0})\) sent
+by acceptor 3. Therefore, proposer C sends \(propose(T_{1}, V_{1})\) where
+\(V_{1} = V_{0}\).
+
+
+
+<h3 class="w3-text-teal">Proof</h3>
+Next we give the outline of the proof.
+<p>
 The proof is by induction. Let \(T_{0}\) be the smallest value of
 \(T\) such that a majority of acceptors accepts \((T, V)\). Let the
 sequence of accepts with \(T\)-value greater than \(T_{0}\) be
 \(T_{1}, T_{2}, \ldots\) where \(T_{j} < T_{(j+1)}\). Assume that the
-theorem holds for all accepts with \(T\)-values up to \(T_{k}\), i.e.,
-assume \(T_{j} = T_{0}\) for \(0 \leq j \leq k\), 
-and prove that it
-holds for accepts \((T_{(k+1)}, V_{(k+1)})\), i.e., prove that
+theorem holds for the first \(k\) accepts in the sequence,
+i.e., assume \(V_{j} = V_{0}\) for \(0 \leq j \leq k\)
+and prove that
 \(V_{(k+1)} = V_{0}\).
 
 <p class="w3-text-teal">Base Case</p>
@@ -462,7 +595,7 @@ proposer; let this proposer be proposer \(P\).
 <p>
 From step P.2, proposer \(P\) sends \(propose(T_{(k+1)}, V_{(k+1)})\)
 only if it receives \(promise(T_{(k+1)}, -, -)\) from a majority of
-acceptors.
+acceptors. 
 
 <p>
 Because any two majorities have at least one element in common, there
@@ -492,45 +625,7 @@ has \(V = V_{0}\). So, proposer \(P\) sends
 propose(T_{(k+1)}, V_{0})
 \)
 and the theorem follows.
-  
-<h3 style="color:red;">Example: Illustration of Proof</h3>
-The next sequence of diagrams illustrates the idea underlying the
-proof. The figure below shows a timeline diagram for proposers A, B, C
-and acceptors 1 - 5. Acceptors 3, 4, 5 have accepted \((T_{0}, V_{0})\). No
-majority of acceptors have accepted (T, V) for \(T < T_{0}\).
 
-
-<figure>
-    <img src="PaxosFigures/Slide5.jpg" alt="Fig5" style="width:100%">
-    <figcaption>Fig.5: Illustration of Theorem </figcaption>
-</figure>
-In this figure, acceptor 1 has accepted \((T_{1}, V_{1})\). The diagram
-    illustrates the first step of the induction. No acceptor has
-    accepted \((T, V)\) where \(T_{0} < T < T_{1}\)
-
-<p>
-The next figure shows the steps that must precede acceptor 1 accepting
-\((T_{1}, V_{1})\). Acceptor 1 must have received a \(propose(T_{1},
-V_{1})\) message from some proposer. In the diagram this proposer is C.
-
-
-<figure>
-    <img src="PaxosFigures/Slide6.jpg" alt="Fig6" style="width:100%">
-    <figcaption>Fig.6: Illustration of Theorem </figcaption>
-</figure>
-
-<p>
-Proposer C sends \(propose(T_{1}, V_{1})\) only after receiving
-\(promise(T_{1}, -, -)\) messages from a majority of acceptors. The
-symbol "-" denotes an arbitrary value. In the figure, proposer C
-receives \(promise(T_{1}, -, -)\) messages from acceptors 1, 2, and
-3.
-<p>
-The two majorities have at least one acceptor in common. In the figure
-that acceptor is 3. Acceptor 3 sends \(promise(T_{1}, V_{0},
-T_{0})\). Acceptors 1 and 2 send \(promise(T_{1}, _, acceptT)\) where
-\(acceptT < T_{0}\). From step P.2 proposer C sends  \(propose(T_{1},
-V_{0})\).
 
 
   <footer id="myFooter">
