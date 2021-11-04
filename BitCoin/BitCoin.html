@@ -78,33 +78,39 @@ hr.new2 {
     
     <h2 class="w3-text-teal">Introduction to Bitcoin</h3>
     Bitcoin is based on cryptography and distributed consensus. We
-    discussed the aspects of cryptography required for Bitcoin in the
-    previous module. This module focuses on distributed consensus.
+    discussed aspects of cryptography required for Bitcoin in an
+    <a
+    href="../CryptoCurrencyIntroduction/CryptoCurrencyIntroduction.html">
+    earlier module.</a> Now we focus on the distributed consensus
+    algorithm used by BitCoin.
     
     <a href="https://www.lopp.net/pdf/princeton_bitcoin_book.pdf">
     This Princeton University book
     has a superb (and longer) description of consensus in Bitcoin.</a>
     
     <p>
-    We discussed distributed consensus in the modules on Paxos and
-    Byzantine Generals. The specification of consensus is weaker in
-    Bitcoin. Also, the Bitcoin algorithm to achieve consensus is different
-    from the Paxos and Byzantine Generals algorithms.
+    We discussed distributed consensus in the modules on
+    <a href="../Paxos/Paxos.html">Paxos</a> and
+    <a href="../Byzantine/Byzantine.html">Byzantine Generals with
+    written</a> and
+    <a href="../Byzantine_Oral/Byzantine.html">oral messages.</a>
+    The specification of consensus is weaker in
+    Bitcoin and the algorithm used to obtain consensus is different
+    from those used in Paxos and Byzantine Generals written and oral
+    algorithms. 
 
     <h4 class="w3-text-teal">No assumptions about numbers of agents</h4>
     The Byzantine Generals algorithm uses an upper bound on the number
-    of faulty agents and a lower bound on the number of non-faulty
-    ones. Paxos assumes that the total number of agents is known. 
+    of faulty agents. The oral version of the problem uses a lower
+    bound on the number of non-faulty 
+    agents. Paxos assumes that the total number of agents is known. 
     Bitcoin makes no assumptions about numbers of faulty and
-    non-faulty agents. There are unlikely situations where the Bitcoin
-    algorithm may not work, but we will ignore them. An example of
-    such a situation is one in which all agents but one 
-    collude to prevent that one agent from executing transactions.
+    non-faulty agents. 
 
 <h4 class="w3-text-teal">Incentives and transaction fees</h4>
 When a currency is managed by a single trusted agent, such as a
 bank, we assume that the bank gets some reward for its
-service. Bitcoin pays agents with Bitcoins for checking validity of
+service. The system pays agents with Bitcoins for checking validity of
 transactions; this payment either consists of new coins found by "mining" or
 voluntary transaction fees paid by payers and payees.
 
@@ -114,7 +120,7 @@ voluntary transaction fees paid by payers and payees.
 
     We saw in the previous module that aggregating small transactions
     into a larger transaction reduces the amounts of resources
-    required to manage the tamper-proof ledger. We call this ledger a
+    required to manage the tamper-resistant ledger. We call this ledger a
 <i>block chain</i>.
 
 <p>
