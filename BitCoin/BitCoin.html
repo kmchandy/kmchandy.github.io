@@ -104,19 +104,18 @@ hr.new2 {
     of faulty agents. The oral version of the problem uses a lower
     bound on the number of non-faulty 
     agents. Paxos assumes that the total number of agents is known. 
-    Bitcoin makes no assumptions about numbers of faulty and
-    non-faulty agents. 
+    The BitCoin algorithm makes no assumptions about numbers of faulty and
+    non-faulty agents.
 
-<h4 class="w3-text-teal">Incentives and transaction fees</h4>
-When a currency is managed by a single trusted agent, such as a
-bank, we assume that the bank gets some reward for its
-service. The system pays agents with Bitcoins for checking validity of
-transactions; this payment either consists of new coins found by "mining" or
-voluntary transaction fees paid by payers and payees.
-
-
-    <h4 class="w3-text-teal">No trusted agent that manages the block
-    chain</h4>
+    <h4 class="w3-text-teal">No trusted agent</h4>
+    In an earlier module we described an algorithm for a
+    cryptocurrency that had many of the features that we expect a
+    cryptocurrency to have; however, that algorithm has a
+    characteristic which is problematic to some: It relies on a
+    trusted agent.
+    <p>
+    BitCoin is a modification of that algorithm. BitCoin does not have
+    a trusted agent.
 
     We saw in the previous module that aggregating small transactions
     into a larger transaction reduces the amounts of resources
@@ -133,6 +132,16 @@ validates transactions, collects some of the transactions into a block,
 update their copies to the most recent version of the master copy that
     they receive.
 
+
+<h4 class="w3-text-teal">Incentives and transaction fees</h4>
+When a currency is managed by a single trusted agent, such as a
+bank, we assume that the bank gets some reward for its
+service. The system pays agents with Bitcoins for checking validity of
+transactions; this payment either consists of new coins found by "mining" or
+voluntary transaction fees paid by payers and payees.
+
+
+    
     <p>
     Two agents may have different copies of the block chain because one agent has
     a more recent one. The two copies can differ in only one way: <i>the
