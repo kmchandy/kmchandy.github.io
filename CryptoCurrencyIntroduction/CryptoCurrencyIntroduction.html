@@ -599,20 +599,43 @@ following steps:
   </li>
 </ol>
 
-<h4 class="w3-text-teal">Optimizations: Blocks</h4>
-Verifying large numbers of small transactions, with a concommitant long
-ledger <code>L</code> is more expensive than verify small numbers of
-large transactions with a shorter ledger. Some payers in a large transaction
-may pay to some payees, while other payers pay to other payees,
-and we can make a transaction as big as we want. The disadvantage of
-requiring large transactions is that the system may have to wait for
-enough small transactions to arrive to make a sizable one.
-In the next module we will show
-how transactions are put into blocks and we refer to the ledger as a
-<i>block chain</i>.
+<h3 class="w3-text-teal">Optimizations: Blocks and Block Chain</h3>
+Verifying large numbers of small transactions requires more
+computation than verify smaller numbers of blocks of transactions.
+A <i>block chain</i> is a tamper-evident ledger in which
+each element of the ledger is a block of transactions.
+A block of transactions can be aggregated into a single large
+transaction by aggregating all the payers and payees of the smaller
+transactions. 
+
+<h3 class="w3-text-teal">Checking the Trusted Agent</h3>
+Consider a system in which the trusted agent broadcasts its current
+copy of the tamper-evident ledger to all agents.
+Every agent can inspect its copy of the tamper-evident ledger to determine whether the
+ledger has been tampered with. So, every agent can validate its trust
+in the trusted agent; however, this validation
+suffers from a crucial problem: Agents may only
+have copies of <i>old, stale</i> versions of the ledger.
+By the time that an agent receives a copy of the ledger, the trusted
+agent may have added more transactions to the ledger.
 
 
-<h4 class="w3-text-teal">Advantages of this cryptocurrency</h4>
+    <figure>
+    <img src="CryptoCurrencyIntroduction/Slide4.jpg" alt="Fig4" style="width:100%">
+    <figcaption>Fig.4: Old Copy is a Prefix of the Block Chain</figcaption>
+</figure>
+
+<p>
+An old copy of the ledger can differ from the current copy in only one
+way: the current copy may have transactions appended to the end
+of the old copy. So all agents can validate <i>past</i> behavior of the
+trusted agent. An agent cannot, however, treat its copy of the ledger
+as the master copy. This will be an issue when we eliminate trusted
+agents in the BitCoin algorithm.
+
+
+
+<h3 class="w3-text-teal">Advantages of this cryptocurrency</h3>
 Any agent can get a copy of the tamper-resistant ledger and verify that all
 transactions in the ledger are valid. Any agent can verify that
 the only way in which the ledger is modified is that elements are
@@ -629,7 +652,7 @@ public information is the agent's public key, and an agent can create
 multiple public keys. Every agent can verify the correctness of every
 transaction.
 
-<h4 class="w3-text-teal">Disadvantages of this cryptocurrency</h4>
+<h3 class="w3-text-teal">Disadvantages of this cryptocurrency</h3>
 Users may not trust the bank. Transactions are not private because the
 bank has a record of all transactions. And the bank is a single point
 of failure.
