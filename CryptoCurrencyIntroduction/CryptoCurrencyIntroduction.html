@@ -106,23 +106,46 @@ hr.new2 {
     colliding pair \(x, y\).
 
     <p>
-    A  brute-force algorithm inspects
-    all possible values of \(x, y\) until it finds a pair \(x,
-    y\)  such that \(H(x) = H(y)\). If the maximum length of the input
-    string of \(H\) is \(n\) then the the computation time of the
-    brute-force algorithm is of the order of \(2^{n}\).
+    Consider a hash function \(H\) that outputs \(n\)-bit numbers and
+    whose input is \(m\) bit strings. As a specific example lets
+    assume \(m = 20\) and \(n = 4\). We can
+    find a collision in the following way.
+    <p>
+    Let \(D\) be an
+    array of size \(2^{n} = 16\). Initially \(D\) contains null values. Repeat the following
+    iteration until a collision is found.
+    <p>
+    Pick a random input \(x\).
+    If \(D[H(x)]\) is not null then there is a collision between
+    \(D[H(x)]\) and \(x\). If \(D[H(x)]\) is null then set \(D[H(x)] =
+    x\)
 
     <p>
+    By the pigeon-hole principle, we will find a collision in at most
+    \(2^{n} + 1 = 17\) iterations.
+
+    This  brute-force algorithm uses space \(2^{n}\) and finds a
+    collision in at most  \(2^{n} + 1\) steps.
+
+From the <a href="https://en.wikipedia.org/wiki/Birthday_problem">
+Birthday Paradox</a> a collision will be found with high probability
+in \(2^{n/2}\) iterations though
+the worse-case time is \(2^{n}+1\). If \(n = 256\) then 
+executing even \(2^{128}\) steps is still intractable.
+
+<p>
     A hash function \(H\) is said to be <i>collision resistant</i> if 
     the only known ways of
-    finding collisions in the hash functions are about as slow as
-    the brute force algorithm. 
+    finding collisions in the hash functions are intractable. Of
+    course, for \(H\) to be collision resistant the output of \(H\)
+    must be \(n\)-bits for large \(n\). For example \(n = 256\) in the
+    SHA-256 hash function. 
     
 
-    <h2 class="w3-text-teal">Commitment</h2>
+    <h2 class="w3-text-teal">Commitment using Hashes</h2>
     You bet that your soccer friend, Megan, cannot predict the winner
     of the 2022 World Cup. Megan puts the name of the predicted
-    winner, \(W\) in an envelope and
+    winner, \(W\), in an envelope and
     gives it to a trusted third party. After the World Cup is over,
     the third party reveals Megan's prediction, and at that point you
     can find out whether Megan's prediction was accurate.
@@ -154,9 +177,9 @@ Can you discover Megan's prediction before she reveals it?
 
 
     <p>
-It's easy. There are only 32 teams playing. Compute \(H(x)\) where
-    \(x\) runs over each of the 32 teams. One of those teams has to be
-\(W\). You can discover her prediction in at most 32 steps.
+It's easy. There are only 210 teams playing. Compute \(H(x)\) where
+    \(x\) runs over each of the 210 teams. One of those teams has to be
+\(W\). You can discover her prediction in at most 210 steps.
 
 <p>
 Let's try another algorithm.  Megan selects a secret value \(r\) which
@@ -179,7 +202,7 @@ or can she change her "prediction" after knowing the winner of the
 World Cup? 
 
 <p>
-Suppose Megan has values \(r\) and \(r'\) such that (H(r + 'Brazil') =
+Suppose Megan has values \(r\) and \(r'\) such that H(r + 'Brazil') =
 H(r' + 'Italy'). After the World Cup is over, she can announce that
 her secret is \(r\) if Brazil wins, and announce that it is \(r'\) if
 Italy wins.
@@ -217,28 +240,15 @@ algorithm that solves this problem is not significantly lower than
 \(2^{n}\).
 
 <p>
-Now, let's look at the following related problem.
-Given \(H\), \(r\), and a set \(Y\) of \(n\)-bit strings, compute any \(x\) such that
-\(H(r+x) \in Y\).
-If \(Y\) consists of a single element \(y\) then this problem is the
-same as that in the previous paragraph.
-If \(Y\) is a set of all \(n\)-bit strings then this problem is
-trivial because any \(x\) solves the problem.
-
-<p>
-Consider three
-puzzles: In the first puzzle \(Y\) consists of a single value,
-\(K_{1}\); in the second puzzle \(Y\) consists of a different single value,
-\(K_{2}\); and in the third puzzle \(Y\) consists of a both
-\(K_{1}\) and \(K_{2}\). Let the times to solve these three puzzles be
-\(t_{1}, t_{2}, t_{3}\) respectively. 
-Then
-\(
-t_{3} = \textrm{min} \: (t_{1}, t_{2})
-\)
-because puzzle 3 is solved when the first of puzzle 1 or
-puzzle 2 is solved. So, we can control the expected time to solve a
-puzzle by changing the cardinality of \(Y\)
+Now, let's look at the following related problem.  Given \(H\), \(r\),
+and a set \(Y\) of \(n\)-bit strings, compute any \(x\) such that
+\(H(r+x) \in Y\).  If \(Y\) consists of a single element \(y\) then
+this problem is the same as that in the previous paragraph.  If \(Y\)
+is a set of all \(n\)-bit strings then this problem is trivial because
+any \(x\) solves the problem.  The probability that a random value
+hashes to an element of \(Y\) is proportional to the cardinality of
+\(Y\).  So, the cardinality of \(Y\) controls the expected time to
+solve the puzzle.
 
 <h3 class="w3-text-teal">A Cryptographic Hash Function</h3>
 <i>A cryptographic hash function is one that is collision resistant,
@@ -546,7 +556,8 @@ for all transactions after transaction 3146 and before the current
 transaction to ensure that the agent (7xxxx) hasn't already spent the
 2.1 coins that it got in transaction 3146.
 
-Every agent can inspect the tamper-resistant ledger to check that
+Every agent that has the bank's hash pointer to the end of the
+tamper-evident ledger can inspect the ledger to check that
 double-spending hasn't occurred.
 
 <p>
@@ -630,8 +641,12 @@ An old copy of the ledger can differ from the current copy in only one
 way: the current copy may have transactions appended to the end
 of the old copy. So all agents can validate <i>past</i> behavior of the
 trusted agent. An agent cannot, however, treat its copy of the ledger
-as the master copy. This will be an issue when we eliminate trusted
-agents in the BitCoin algorithm.
+as the master copy because the agent may not have the transactions
+added most recently to the ledger.
+
+<p>
+In the next module we will see how the BitCoin algorithm addresses
+this problem.
 
 
 
