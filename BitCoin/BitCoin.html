@@ -322,7 +322,7 @@ chain copy \(L +
 X\), solves the puzzle and appends a block \(X_{1}\) to get a new copy
 \(L + X + X_{1}\) of the block chain which the agent broadcasts. An
 agent receives this copy; makes its copy \(L + X + X_{1}\);
-then solves the puzzle; and then appends a block \(X_{d21}\) to get a new copy
+then solves the puzzle; and then appends a block \(X_{2}\) to get a new copy
 \(L + X + X_{1} + X_{2}\) of the block chain; which it broadcasts. When agent
 \(A\) receives a message \(L + X + X_{1} + X_{2} + \ldots \) it sets
 its local copy to this message. Block \(Y\) becomes an "orphan" block
@@ -423,10 +423,24 @@ block quickly. So, it's possible that agents that offer no fee or low
 fees may have to wait a long time before their transactions enter the
 block chain.
 
+<p>
+Incentives are critical for BitCoin. Miners get paid to
+get their blocks into the long-term "consensus" block chain.
+Miners have an incentive to police the block chain because 
+they don't get paid for appending erroneous blocks. If a miner appends
+an erroneous block to the chain then other
+miners won't extend chains containing the erroneous block, and so the
+erroneous block will become an orphan.
+<p>
+Any agent can check whether its copy of the block chain is
+valid; however, agents making ordinary transactions don't
+need to do so because there are many miners each of whom has an
+incentive to ensure that the block chain is legitimate.
+
 <h2 class="w3-text-teal">Attacks</h2>
 Next, looks look at challenge number 4.
 
-<h4 class="w3-text-teal">Stealing coins</h4>
+<h3 class="w3-text-teal">Stealing coins</h3>
 Can an agent steal a coin from an agent \(X\) by appending a block to
 the chain where the block contains a transaction in which \(X\) gives
 coins to \(Y\)?
@@ -437,55 +451,87 @@ No, this can't happen thanks to cryptography. A transaction into which
 cannot forge \(X\)'s signature, and so \(Y\) cannot create blocks that
 contain such fraudulent transactions.
 
-<h4 class="w3-text-teal">Double spend</h4>
-Can an agent spend the same coin twice, effectively duplicating the
-coin?
+<h3 class="w3-text-teal">Double spend</h3>
+Can an agent spend the same coin twice? Can an agent buy something
+without paying for it?
 
 <p>
-Consider a simple transaction: A buyer gives the seller a Bitcoin
-\(\alpha\) to pay for a good.
-The
-good is kept in escrow until the seller is sure that the seller has
-received \(\alpha\).
+Consider the following transaction using conventional checks issued by
+banks. A buyer gives a seller a check for $\(\alpha\) for the
+item. The item is put in escrow.  When the check clears and the seller
+receives the payment the item is given to the buyer.
 
 <p>
-The buyer 
-broadcasts a transaction in which the buyer gives the seller
-\(\alpha\).
-Some agent puts
-the transaction into a block, appends the block to its copy of the
-block chain and broadcasts the block. Let's call this block \(X\), and
-let the block chain before the block is appended be \(L\), and so the
-new proposed block chain is \(L + X\).
-When the buyer gets a copy of block \(X\), the buyer
-concludes that it possesses \(\alpha\) because the transaction has been recorded in a block
-chain. So it releases the good to the seller. 
+Next, let's execute this transaction using
+BitCoins.
+
 
 <p>
-After receiving the good from the seller, the buyer cheats. The buyer
-creates a block, \(Y\), that includes a transaction in which the buyer
-transfers \(\alpha\) to itself.  The buyer appends \(Y\) to \(L\) to
-create a chain \(L + Y\). The chain \(L + Y\) is valid, and so other
-agents may append blocks to it.  Eventually, the longest chain may
-contain \(Y\) but not \(X\).  In this case the seller doesn't get
-paid.
+The buyer broadcasts a transaction in which the buyer gives the seller
+the payment \(\alpha\) in BitCoins.
+The amount \(\alpha\) is specified as
+a pair (transaction id, array index) described in the section <i>pay
+transactions</i> in 
+<a
+href=
+"https://kmchandy.github.io/CryptoCurrencyIntroduction/CryptoCurrencyIntroduction.html">
+the module introducing crypto currencies.</a>
 
 <p>
+A miner puts the transaction into a block \(X\);
+appends the block to its copy \(L\) of the block chain; and broadcasts the extended
+block chain \(L + X\).
+The seller listens to block chains broadcast by miners.
+When the seller gets a copy of the block chain \(L + X\), the
+seller concludes that it has received the payment \(\alpha\) from the
+buyer because the 
+transaction has been recorded in a block chain. So the seller gives
+the item to the buyer.  
+
+<p>
+The buyer cheats. The buyer creates a transaction in which the buyer
+transfers the same BitCoins \(\alpha\) to the buyer itself.
+A miner creates a block \(Y\) that includes this transaction.
+A miner who has only received block
+chain \(L\) (and hasn't yet received chain \(L + X\)) appends \(Y\) to
+\(L\) to get a chain \(L + Y\), and broacasts \(L + Y\).
+
+<p>
+Now we have a situation in which one
+miner broadcasts a legitimate block chain \(L + X\) and a different
+miner broadcasts a legitimate block chain \(L + Y\). Both chains have
+the same length; so, miners have no preference about which chain to
+extend further.
+
+<p>
+We've seen this situation before:  look at <i>block collisions</i> described
+earlier in this module. Both block chains will be extended, but
+eventually, with very high probability, one of the blocks \(X\) or
+\(Y\) will drop out of chain.
+
+<p class="w3-text-teal">
 How should sellers protect themselves?
+</p>
 
 <p>
-A seller should not give the good to the buyer until the transaction
-in which the seller is paid is in a block, and several more blocks are
-appended to the block chain after that. In the example, the seller waits until it
-sees a block chain \(L + X + L'\) where \(L'\) consists of some \(m\)
-blocks; if \(m\) is large enough, it is extremely likely that \(X\)
-will remain in the block chain as the chain gets longer.
+What is the equivalent of the buyer's check clearing in the bank?
+<p>
+A seller should give the item to the buyer only after the transaction
+appears with high confidence in a block in the chain --- see Figure 1.
+The seller listens to block chains broadcast by miners. If the seller
+gets a block chain \(L + X + L'\) where \(L'\) is itself a long block chain
+then the seller has high confidence that the transaction is in the
+permanent record.
 
 <p>
-The seller gets greater confidence the larger the value of \(m\), but
-the buyer has to wait longer to get the good after paying for
-it. There are various ways of reducing the impact of the wait. 
-Even \(m = 6\) gives adequate confidence in most cases.
+The seller waits to get block chains in which its transaction appears
+in a block which is then followed by \(m\) blocks, for large
+\(m\). The larger the value of \(m\), the greater the seller's
+confidence, but the longer the buyer has to wait to get paid.
+length of the extension \(L'\).
+<a href="https://www.lopp.net/pdf/princeton_bitcoin_book.pdf">
+A value of \(m = 6\) gives adequate confidence in most cases.</a>
+
 
 
 <h3 class="w3-text-teal">Fraudulent miners</h3>
