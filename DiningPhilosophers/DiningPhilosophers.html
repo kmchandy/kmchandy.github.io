@@ -657,42 +657,12 @@ thinking to hungry in which case the variant function \((nT, nH)\)
 decreases. 
 
 <h2 class="w3-text-teal">Summary: Key Ideas of this Module</h2>
-The next figure summarizes the key ideas of this module.
-<ol>
-  <li>
-  The distributed dining philosophers problem is a distributed version
-  of a mutual exclusion problem. The algorithm is an example of
-  conflict resolution in distributed systems --- multiple agents
-  compete with only of them winning at a time. We will see versions of
-  this problem in different applications.
-  </li>
-  <li>
-  One way to resolve conflicts is to have agents collectively
-  determine relative priorities among themselves, and agents with
-  higher priority win conflicts. The challenge is to design an
-  algorithm in which priorities form a partial ordering --- the
-  priority graph is acyclic. We can ensure acyclicity by having a
-  winner of a conflict get lower priority than all its neighbors: in
-  the priority graph all edges are directed towards the winner.
-  <li>
-  <li>
-  We often use indivisible tokens that are neither created nor
-  destroyed. An agent that holds a token knows that other agents don't
-  hold the same token. The safety part of conflict resolution
-  specifications can often be discharged by using tokens.
-  </li>
-</ol>
-
-An important way of resolving conflicts is to use time: either logical
-time, or an approximation to true time. The next modules illustrate
-the use of time in conflict resolution. A homework problem asks you to
-use time to solve the dining philosophers problem.
-
-
-<figure>
-    <img src="Slide17.jpg" alt="Fig17" style="width:100%">
-    <figcaption>Fig.17: Key Ideas of this Module</figcaption> 
-</figure>
+This module introduced the problem of distributed mutual exclusion;
+showed how the good neighbor policy --- a winning agent reduces its
+priority to be lower than all the agents that it competes with --
+solves this conflict resolution problem; introduced tokens and what
+agents know about other agents holding tokens; and showed a proof
+pattern that is one of the most common patterns for proving progress.
 
 <!--------------------------------------------------------------->
   <footer id="myFooter">
