@@ -77,72 +77,59 @@ hr.new4 {
 <h1 class="w3-text-teal">Dining Philosophers</h1>
 <!---------------------------------------------------->
 
-The modules in this section describe algorithms by which agents manage
-    conflicts in sharing indivisible resources. This module describes
-    algorithms for a distributed mutual exclusion problem called
-    <i>The Distributed Dining Philosophers Problem</i> which is based
-    on Edgsger Wybe Dijkstra's problem of 5 dining philosophers around
-    a table.
+This and following modules describe algorithms by which agents manage
+conflicts among themselves. This module describes an
+    algorithm for a distributed mutual exclusion problem called
+    <a href="https://en.wikipedia.org/wiki/Dining_philosophers_problem">
+    <i>The Distributed Dining Philosophers Problem</i>
+    </a>.
 
 <!---------------------------------------------------->
-<h4 class="w3-text-teal">Goals of this Module</h4>
+<h3 class="w3-text-teal">Key Concepts</h3>
     <!---------------------------------------------------->
-    This module has four goals that are shown in figure 1.
     
-    <figure>
-    <img src="Slide01.jpg" alt="Fig1" style="width:100%">
-    <figcaption>Fig.1: Goals of this module</figcaption>
-    </figure>
-    
-
-    <h4 class="w3-text-teal">1. Conflict Resolution: Distributed Dining
-    Philosophers</h4> 
-    This module gives algorithms for the  <i>distributed dining
-    philosophers problem</i> which is an example of algorithms for
-    managing conflicts among competing agents in a distributed system.
-
-    <p class="w3-text-teal">Mutual Exclusion</p>
-    A <i>mutual exclusion</i> or <i>mutex</i> problem is one in which
-    entry into a critical section of an agent's program is mutually
-    exclusive: While any agent is in its critical section no other
-    agent can be in its critical section. Algorithms ensure that all
-    agents that want to enter their critical sections do so
-    eventually. The distributed dining philosophers is a
-    generalization of the mutex problem to distributed systems.
+    <h4 class="w3-text-teal">1. Mutual Exclusion</h4>
+    The distributed dining philosophers is a generalization of the
+    mutual exclusion problem to distributed systems.  A <i>mutual
+    exclusion</i> or <i>mutex</i> problem is one in which only one
+    agent can carry out some activity such as executing a <i>critical
+    section</i> of a program. Mutex algorithms ensure that all agents
+    that want to carry out such activities do so eventually. 
 
     <h4 class="w3-text-teal">2. Priorities among Agents</h4>
-    When multiple agents are in a conflict that only one of them can
-    win, we want to ensure that every agent wins eventually. A
+    Distributed conflict-resolution algorithms ensure that
+    when multiple agents are in a conflict that only one of them can
+    win, every agent wins eventually. A
     standard way of managing conflicts is to have agents agree on
-    relative priorities among themselves and the agent with higher
-    priority wins in a conflict.
+    relative priorities among themselves; the agent with higher
+    priority wins.
 
     <p>
-    One idea that we use often to ensure that all agents win conflicts
-    eventually is as follows: <i>An agent that wins a conflict reduces
-    its priority with respect to all the agents with which it
-    competes.</i> 
+    Distributed algorithms often use a good-neighbor policy to ensure
+    that all agents win conflicts eventually: <i>An agent that wins a
+    conflict makes its priority lower than the priorities of all the
+    agents with which it competes.</i>
     
-<h4 class="w3-text-teal">3. Tokens</h4>
-We often use the concept of tokens to develop algorithms for conflict
-resolution in distributed systems. The system has a fixed number of
-indivisible tokens. Tokens are neither created nor destroyed. If the
-system has exactly one token then an agent that holds that token knows
-that no other agent holds that token. This knowledge is at the core of
-many conflict resolution algorithms.
-<p>
-Some algorithms, use sets of named or colored tokens. The names
-(colors) of tokens are immutable. If there are \(N\) red colored
-tokens in a system, and an agent holds \(M\) of them then that agent
-knows that other agents hold at most \(N-M\) of them and some tokens
-may be in channels.
+    <h4 class="w3-text-teal">3. Tokens and What Agents Know</h4>
+    An agent can resolve a conflict with other agents only if it knows
+    something about the states of other agents. For example, what
+    agents want to enter a critical section and what are their
+priorities?
+
+    <a href="../Knowledge/Knowledge.html">
+    What agents know is defined in this module.</a> We used the
+    concept of tokens to illustrate what agents know.  A system has a
+    fixed number of indivisible tokens which are neither created nor
+    destroyed. An agent that holds a token knows that no other agent
+    holds that token.  This knowledge is at the core of many conflict
+    resolution algorithms.
 
 
 <!---------------------------------------------------->
 <h2 class="w3-text-teal">The Problem</h2>
 <!---------------------------------------------------->
 
-<h4 class="w3-text-teal">States in Mutual Exclusion</h4>
+<h4 class="w3-text-teal">Agent States in a Mutual Exclusion Problem</h4>
     <figure>
     <img src="Slide02.jpg" alt="Fig2" style="width:100%">
     <figcaption>Fig.2: States in Mutual Exclusion</figcaption>
@@ -163,31 +150,24 @@ An agent in a mutual exclusion problem is in one of three states:
   </li>
   <li>
   <i>In critical section</i>:
-  The agent executes in its critical section. It does so for only
-  finite time after which it transits to the state --- outside
+  The agent executes in its critical section.  An agent does not
+  remain in its critical section forever. It does so for only
+  <i>finite</i> time after which it transits to the state, outside
   critical section.
   </li>
 </ol>
 
 <p>
-The system has a <i>fair</i> guarded command: "If an agent is in its
-critical section then it transits to executing outside its critical
-section." Because this action is fair, an agent remains continuously
-in its critical section for only a finite number of steps.
-<p>
-The system has a <i>unfair</i> guarded command: "If an agent is in its
-executing outside critical section then it transits to waiting to enter its critical
-section." Because this action is unfair we don't know how often, or
-even whether, this action will be executed. So, an agent executing
-outside its critical section may remain in that state for ever.
-<p>
-Our problem is to design the operating system algorithm to ensure that
-a state waiting to enter its critical section does so eventually.
+Clients determine transitions from <i>outside critical section</i> to <i>waiting to
+enter critical section</i>, and from <i>in critical section</i> to
+<i>outside critical section</i>.
 
+The operating system determines transitions from <i>waiting to
+enter critical section</i> to <i>outside critical section</i>.
 
 
 <!----------------------------------------------------------->
-<h4 class="w3-text-teal">States in Dining Philosophers</h4>
+<h4 class="w3-text-teal">Agent States in the Dining PhilosophersProblem</h4>
     <figure>
     <img src="Slide03.jpg" alt="Fig3" style="width:100%">
     <figcaption>Fig.3: States in Dining Philosophers</figcaption>
@@ -206,7 +186,7 @@ The states "Thinking", "Hungry", and "Eating" correspond exactly to
 section</i>, and <i>In critical section</i>, respectively.
 
 
-<h4 class="w3-text-teal">Communication Structure</h4>
+<h3 class="w3-text-teal">Agent Communication Structure</h3>
     <figure>
     <img src="Slide04.jpg" alt="Fig4" style="width:100%">
     <figcaption>Fig.4: Communication among Agents</figcaption>
@@ -216,13 +196,16 @@ The commununication structure among agents is represented by an
 undirected graph in which the nodes are agents and each edge
 represents two channels, one in each direction. The agents are either
 OS or client agents. There is one client agent associated with each OS
-agent. For example client agent \(w\) is associated with OS agent
-\(w\). The diagram does not show all clients.
+agent. Clients are shown as squares and OS agents as circles.
+For example client agent \(w\) is associated with OS agent
+\(w\). The diagram does not show all clients so as not to make the
+diagram too crowded.
 
 <p>
 A pair of OS agents are neighbors when there is an edge between
 them. A pair of client agents are neighbors when the OS agents with
-which they are associated are neighbors.
+which they are associated are neighbors. For example, in the figure, 
+\(w\) and \(y\) are neighbors.
 
 <!------------------------------------------------------------->
 <h2 class="w3-text-teal">Specification</h2>
@@ -231,27 +214,25 @@ which they are associated are neighbors.
 Let \(safe\) be the predicate <i>Neighboring clients are
 not eating</i>, and let \(init\) be a predicate that holds initially.
 <p>
-The safety part of the specification is:
+The safety part of the specification is that \(safe\) holds in every state in every path from
+every initial state:
 <p>
-\(init \stackrel{*}{\rightarrow} safe\)
-<p>
-This says that \(safe\) holds in every state in every path from
-every initial state. This specification is equivalent to \([init
-\Rightarrow A(safe)]\).
+\([init
+\Rightarrow A(safe)]\)
 
 
 
 <h3 class="w3-text-teal">Progress: Hungry agents eat eventually</h3>
-The progress part of the specification is: For every agent \(v\):
+The progress part of the specification is that every hungry agent
+transits to eating state eventually.
 <p>
+For every agent \(v\):
+<br>
 \(
 v.state = hungry \quad \leadsto \quad v.state = eating
 \)
-<p>
-Our problem is to design an OS algorithm such that every hungry agent
-eats eventually.
 
-<h4 style="color:red;">Example of Safety</h4>
+<h3 style="color:red;">Example of Safety</h3>
     <figure>
     <img src="Slide05.jpg" alt="Fig5" style="width:100%">
     <figcaption>Fig.5: Diagrams illustrating Safety</figcaption>
@@ -264,32 +245,50 @@ there are no edges between red vertices. The diagram on the right
 shows an unsafe state because there are edges between red vertices.
 
 
-<h3 class="w3-text-teal">Client's Program</h3>
-The client's program is straightforward. This module focuses on the OS
-agent. Next we give an example of an implementation of the client's
-program.
+<h3 class="w3-text-teal">The Client's Program</h3>
 
 <p>
 We use two tokens that move
 between a client and its OS agent. The tokens are called the
-<i>resource token</i> and the <i>request token</i>. When the client is
-thinking it holds the request token but not the resource token. The
-client transits to hungry by sending the request token to its OS
-agent. When the OS agent gets the request token, the agent sends both
-the request and resource token to the client when it is safe for the client to eat
-(i.e. the safety specification is satisfied). The client is eating
-when it has both tokens. The client transits from eating to thinking
-by sending the resource token back to the OS agent.
+<i>resource token</i> and the <i>request token</i>. The client's
+states are represented by which tokens the client holds.
+
+<ol>
+  <li><i>Thinking State</i>: A thinking client holds the request token but
+  not the resource token.
+  </li>
+  <li><i>Transition: Thinking to Hungy</i>: Send the request token to
+  the OS.
+  </li>
+  <li><i>Hungry State</i>: The client holds neither the request nor the
+  resource token.
+  </li>
+  <li><i>Transition Hungry to Eating</i>: The client transits to
+  eating when it receives both the request and resource token.
+  </li>
+  <li><i>Eating</i>: The client holds both the request and resource tokens.
+  </li>
+  </li>
+  <li><i>Transition from Eating to Thinking</i>:
+  The client holds sends the resource token to the OS and continues to
+  hold the request token.
+  </li>
+</ol>
+
+The figure below illustrates the states of the client. The request
+    token is shown as a square and the resource token as a circle.
     <figure>
     <img src="Slide06.jpg" alt="Fig6" style="width:100%">
     <figcaption>Fig.6: Client's Program</figcaption>
 </figure>
+
+<h3 class="w3-text-teal">What the OS Knows</h3>
 While the OS agent holds the request token it knows that its client is
-hungry. And while the OS agent holds the resource token it knows that its client is
+hungry. While the OS agent holds the resource token it knows that its client is
 not eating.
 
 <!--------------------------------------------------------------->
-<h3 class="w3-text-teal">Guaranteeing Safety with Fork Tokens</h3>
+<h2 class="w3-text-teal">Introduction of Tokens</h2>
 We introduce a token on each edge of the agent communication graph,
 see figure 4. The token on an edge \(v, w\) is in one of four states:
 held by \(v\), in the channel from \(v\) to \(w\), held by \(w\), or
@@ -310,8 +309,8 @@ forks for all the edges incident on it. Therefore, while an agent eats
 none of its neighbors do, and so the safety specification is satisfied.
 
 <!--------------------------------------------------------------->
-<h4 class="w3-text-teal">Key Question: When does a hungry agent yield
-forks?</h4>
+<h3 class="w3-text-teal">Key Question: When does a hungry agent yield
+forks?</h3>
 An eating philosopher holds on to all its forks until it finishes
 eating. A thinking philosopher can give a fork to a neighbor that
 requests it. So the key question is: <i>Under what conditions should a
@@ -334,23 +333,28 @@ The figure shows a system with 3 agents indexed 0, 1, 2. The forks are
     holds the fork that it shares with 
     agent \((j-1)\:\textrm{mod}\:3\). So, if all hungry agents yield
     forks, the states can alternate for ever between the one on the
-left and the one on the right.
+left and the one on the right. In this case hungry agents starve: they
+    remain hungry forever.
 
 <p>
 If hungry agents don't yield forks then the state on the left persists
-for ever, and so hungry agents don't eat.
+for ever. In this case too, hungry agents starve.
 
 
 <!--------------------------------------------------------------->
-<h3 class="w3-text-teal">Agent Priorities form a Partial Order</h3>
-Let's assign priorities to agents so that a hungry agent \(v\) releases a
-fork to a neighbor \(w\) only if \(v\) has lower priority than
-\(w\). If there is a cycle of agents, all with the same priority, then
-we get the situation shown in figure 8. So, we will ensure that in all
-states reachable from initial states, priorities form a partial
-order. Equivalently, the priority graph is acyclic, where the graph
-has an edge from \(v\) to \(w\) exactly when \(v\) has higher priority
-over \(w\).
+<h3 class="w3-text-teal">Creating a Partial Order of Priorities</h3>
+Let's assign priorities to agents so that a hungry agent \(v\)
+releases a fork to a neighbor \(w\) only if \(v\) has lower priority
+than \(w\). If there is a cycle of agents, all with the same priority,
+then we get the situation shown in figure 8. So, we will ensure that
+priorities form a partial order in all states in all
+transitions. Priorities form a partial order exactly when the priority
+graph is acyclic. The graph has an edge from \(v\) to \(w\) exactly
+when \(v\) has higher priority over \(w\).
+
+<p>
+In the figure below, the diagram on the left shows an acyclic priority
+graph while the one on the right shows a graph with a cycle.
 
     <figure>
     <img src="Slide09.jpg" alt="Fig9" style="width:100%">
@@ -365,55 +369,65 @@ over \(w\).
 
 <figure>
     <img src="Slide10.jpg" alt="Fig10" style="width:100%">
-    <figcaption>Fig.10: How should priorities change when \(v\) eats?</figcaption> 
+    <figcaption>Fig.10: How should priorities change when \(v\)
+    eats?</figcaption>  
 </figure>
 
-How should priorities change when an agent eats? For example, consider
+How should priorities change when an agent eats so that the priority
+graph remains acyclic? For example, consider
 the priority graph shown in figure 10. Assume agent \(v\) has all its
 forks and is about to eat. Should the directions of edges incident on
 \(v\) be flipped? Or should \(v\) have lower priority than all its
 neighbors, i.e. all edges incident on \(v\) point towards \(v\)?
 
 <p>
-One of the goals of this module was to show that an effective rule is
-that a winner of a conflict gets lower priority than all the agents
-with which it competes. So, an agent that starts eating gets lower
+What happens if we flip the directions of the edges incident on \(v\)?
+After the flip, the edges are directed from \(w\), \(x\) and \(y\) towards \(v\), and
+from \(v\) to \(u\). But now we have a cycle: \(y\) to \(v\) to \(u\)
+to \(w\) to \(y\). So, flipping edge directions doesn't work.  
+
+<p>
+What happens if agents adopt the good neighbor policy?
+The winner of a conflict gives itself lower priority than <i>all</i> the agents
+with which it competes. So, an agent that starts eating gives itself lower
 priority than all its neighbors. All edges point towards an eating
-agent.
+agent. 
 <figure>
     <img src="Slide11.jpg" alt="Fig11" style="width:100%">
     <figcaption>Fig.11: Winner gets lower priority than its neighbors</figcaption> 
 </figure>
+When all edges incident on a vertex point towards the vertex then
+there is no cycle through that vertex. So, directing all edges
+incident on an eating vertex towards the eating vertex maintains
+acyclicity of the graph.
+<p>
+For example, in the figure directing all edges incident on vertex \(v\) towards
+ \(v\) ensures that no new cycle is created.
 
 <h4 class="w3-text-teal">
 Agent's priority does not decrease until the agent
 eats.</h4>
 
-If there is no path from a vertex \(y\) to a vertex \(u\) before \(v\)
-eats then there continues to be no path from \(y\) to \(u\) after
-\(v\) eats.  This is because the edges that change direction are
-incident on \(v\), and there can be no path in which \(v\) is an
-intermediate node when there are no outgoing edges from \(v\).
-
 <h3 class="w3-text-teal">How an Agent knows its Priority</h3>
-The forks held by an eating agent are called <i>dirty</i> forks. When
+We assign an attribute <i>clean / dirty</i> to forks.
+A fork is either <i>dirty</i> or <i>clean</i>.
+The forks held by an eating agent are <i>dirty</i>. When
 an agent receives a fork from another agent, the receiving agent
-cleans the fork; so the receiver holds a <i>clean</i> fork until it
-next eats. (This is the "hygenic solution:" Another sad attempt at CS
+cleans the fork. So the receiver holds a <i>clean</i> fork, and the
+fork remains clean until an agent next eats with it.
+(This is the "hygenic solution:" Another - sad? - attempt at CS
 humor.)
 
 <p>
-A fork is either <i>dirty</i> or <i>clean</i>, i.e., not dirty.
 An agent holding a dirty fork knows that it has lower priority than
 the agent with which it shares the fork. Likewise,
 an agent holding a clean fork knows that it has higher priority than
-the agent with which it shares the fork. If an agent \(v\) shares a
-fork with agent \(w\), then while \(v\) does not hold the fork
-that it shares with \(w\), agent \(v\) does not know if that fork is
-clean or dirty; so \(v\) does not know whether it has
-higher or lower priority than \(w\).
+the agent with which it shares the fork.
+<p>
+If an agent does not hold the fork that it shares with a neighbor then
+the agent does not know its priority with respect to that neighbor.
 
-<h3 style="color:red;">Example of fork's lifecycle</h3>
+<h2 style="color:red;">Example of a Fork's Lifecycle</h2>
 The diagram below shows states of a fork shared by agents \(u\) and
 \(v\). The red arrow shows priority, and the black arrows show
 channels. The blue dot represents the fork.
@@ -452,12 +466,9 @@ priority. \(v\) holds on to the fork until it next eats.
 
 <h2 class="w3-text-teal">Algorithm</h2>
 <h3 class="w3-text-teal">Properties of Reachable States</h3>
-Here is a list of some of the properties of all states reachable
-from initial states.
+Here is a list of some of the properties of states in all
+trajectories. 
 <ol>
-  <li>
-  A pair of neighbors shares exactly one fork between them.
-  </li>
   <li>
   The priority graph is acyclic. \(u\) has priority over a neighbor
   \(v\) exactly when \(u\) holds the fork that it shares with \(v\)
@@ -472,18 +483,24 @@ from initial states.
   All forks held by thinking philosphers are dirty.
   </li>
   <li>
-  Thinking philosophers never send requests and never receive forks.
+  Thinking philosophers never send requests and never receive
+  forks. Thinking philosophers respond to request for forks by sending
+  the requested forks.
   </li>
 </ol>
 
 <h3 class="w3-text-teal">Initial States</h3>
-Initially all philosophers are thinking and all channels are
+Initially all philosophers are thinking; all forks are dirty; and all channels are
 empty. The forks are placed so that the priority graph is acyclic.
+The initial assignment of forks is as follows.
+Given an arbitrary acyclic graph, for any edge directed from \(v\) to
+\(w\), the fork shared by \(v\) and \(w\) is initially at \(w\) and
+the fork is dirty. 
 
 <h3 class="w3-text-teal">Algorithm Commands</h3>
 
 <p>
-The algorithm is specified by the following guarded commands.
+The algorithm is specified by the following commands.
 <ol>
   <li>
   When a thinking philosophers gets a request for a fork that it holds
@@ -508,7 +525,8 @@ The algorithm is specified by the following guarded commands.
   <li>
   When an eating philosopher receives a request for a fork it
   registers the request in memory, and continues eating while holding
-  the fork; it sends requested forks when it transits to thinking.
+  the fork. When an eating philosopher transits to thinking it sends
+  forks for all requests that it received.
   </li>
 </ol>
 
@@ -548,54 +566,31 @@ hungry and \(v.e\) holds exactly when \(v\) is
 eating.
 
 <h3 class="w3-text-teal">Variant Function</h3>
-Let's find a variant function \(f\) such that:
+To prove this progress property we find a variant function that:(1)
+<i>safety</i>: does not increase , and (2)
+<i>progress</i>: does not remain unchanged, while \(v\) remains hungry.
 <p>
-\(
- v.h \wedge (f = k) \; \leadsto \; v.e \vee (v.h \wedge (f < k))
-\)
-<p>
-The above equation says that a hungy philosopher \(v\) eats or
-continues to remain hungry whie the value of \(f\) decreases.
-Because the range of \(f\) is a well-founded set, which is bounded
-below, the value of \(f\) can decrease only a finite number of
-steps. So, we use induction to prove that the above implies \(v.h
-\leadsto v.e\).
-<p>
-We prove the above formula in two steps:
-
-<h4 class="w3-text-teal">Safety</h4>
-\(
- v.h \wedge (f = k) \; \rightarrow \; v.e \vee (v.h \wedge (f \leq k))
-\)
-<p>
-This formula says that if philosopher \(v\) is hungry, then in the
-next step either \(v\) eats or \(v\) remains hungry and \(f\) stays
-the same or decreases. Note that this formula allows for the possibility that
-\(v\) remains hungry and \(f\) remains unchanged from one state to the
-next.
-
-<h4 class="w3-text-teal">Progress</h4>
-\(
- v.h \wedge (f = k) \; \leadsto \; \neg (v.h \wedge (f = k))
-\)
-<p>
-This formula says that \(v\) does not remain hungry while \(f\) remains
-unchanged forever. Formula () follows from formulae () and ().
-
-<h4 class="w3-text-teal">Variant Function</h4>
-To prove that a hungry philosopher \(v\) eats, we
-define a variant function as follows. The value of the function in a
-state is a pair \(nT, nH\) of
-integers which are the number of thinking and hungry philosophers,
+We propose a variant function which is a pair of integers
+ \(nT, nH\),  which are the number of thinking and hungry philosophers,
 respectively, of 
-higher priority than \(v\) in that state.
+higher priority than \(v\).
 In terms of the priority graph, \(nT, nH\) are the numbers of thinking
 and hungry philosophers (i.e. vertices) with paths to \(v\). 
 
 <h3 style="color:red;">Example of Variant Function</h3>
-The figure below shows the priority graph in a state of the
-system. Forks are located at philosophers and are shown as small
-colored circles. A dirty fork is colored red and clean one is blue.
+The figure below shows a portion of the priority graph in a state of the
+system. The figure only shows philosophers with higher priority than
+philosopher \(v\), i.e., it only shows vertices in the graph with
+paths to \(v\). Since eating philosophers have lower priority than
+their neighbors, eating philosophers don't appear in this graph.
+<p>
+A hungry philosopher is marked with an "H" and a thinking philosopher
+with a "T." In the diagram, philosophers \(v, w, x, y\) are hungry and
+\(u\) is thinking.
+Forks are located at philosophers and are shown as small
+colored circles. A dirty fork is colored red and clean one is
+blue. For example the fork shared by \(v\) and \(y\) is at \(y\) and
+is clean.
 
 
 <figure>
@@ -604,44 +599,62 @@ colored circles. A dirty fork is colored red and clean one is blue.
     thinking, hungry agents</figcaption> 
 </figure>
 
-<p>
-The next diagram is an example of changes to the variant function. The
+<h3 style="color:red;">Example of Changes to Variant Function</h3>
+The next figure is an example of changes to the variant function. The
 diagram on the top left shows the higher priority vertices in the
-state of the previous figure. The graphs of vertices with higher
-priority than \(v\) are shown for a scenario in which \(x\), \(y\) and
-\(w\) eat in that order.
+state of the previous figure. If agent \(x\) eats next the priority
+graph transits to the diagram on the top right, and the variant
+function \((nT, nH)\) changes from \((1, 3)\) to \((1, 2)\). 
+
+
 
 <figure>
     <img src="Slide16.jpg" alt="Fig16" style="width:100%">
     <figcaption>Fig.16: Example of Values of the Variant Function</figcaption> 
 </figure>
 
-<h4 class="w3-text-teal">Proof of Safety</h4>
-Next we show that if \(v\) is hungry in a state then in the next state
-either (1) \(v\) is eating or (2) the variant function does not
-increase.
-Let \(G\) be the subgraph of the priority graph consisting of vertices
-with paths to \(v\).
+
+If agent \(y\) eats next the priority
+graph transits to the diagram on the bottom right, and the variant
+function \((nT, nH)\) changes from \((1, 2)\) to \((1, 1)\).
+
+If agent \(w\) eats next the priority
+graph transits to the diagram on the bottom left, and the variant
+function \((nT, nH)\) changes from \((1, 1)\) to \((0, 0)\).
+
+<h4 class="w3-text-teal">Proof that the variant function does not increase
+while \(v\) remains hungry</h4>
+
 
 <p>
 If a philosopher of higher priority than \(v\) transits from thinking
-to hungry then \(nT\) decreases, and if it transits from hungry to
-eating then \(nH\) decreases. If a philosopher that does not have
-higher priority than \(v\) changes state then \(G\) remains unchanged.
+to hungry then \(nT\) decreases. Though \(nH\) increases, the variant function \((nT,
+nH)\) decreases because ordering of function values is done
+lexicographically.
+<p>
+If a philosopher of higher priority than \(v\) transits from hungry
+to eating then \(nH\) decreases,  and so the variant function \((nT,
+nH)\) decreases.
 
-<h4 class="w3-text-teal">Proof of Progress</h4>
-We will show that \(v\) cannot remain hungry and the variant function
-remain unchanged for ever.
+<h4 class="w3-text-teal">Proof that the variant function changes or
+\(v\) transits to eating.</h4>
 <p>
-Let \(w\) be a highest-priority hungry process, i.e. a process with no
-hungry process with priority higher than \(w\). (Note: \(w\) may be
-the same as \(v\).) 
+Let \(w\) be a highest-priority hungry philosopher, i.e. a philosopher with no
+hungry philosopher with priority higher than \(w\). (Note: \(w\) may be
+the same as \(v\).)
+All philosophers with priority higher than \(w\) are thinking. In the
+next paragraph we show that either \(w\) gets all its forks and then transits
+from hungry to eating, thus decreasing the variant function \((nT,
+nH)\),  or the variant function decreases in another way. In either
+case the variant function decreases.
 <p>
-\(w\) requests forks from its neighbors. It eventually gets forks from
-all its lower priority neighbors. All its higher priority neighbors
-are thinking. A higher priority neighbor \(x\) either (1) send the requested fork to \(w\) or (2) becomes
-hungry. If \(w\) gets all its forks it eats. If \(x\) becomes hungry
-the value of the variant function decreases.
+From the algorithm, a hungry philosopher \(w\) requests forks from its
+neighbors. From the algorithm, \(w\) eventually gets forks from 
+all its lower priority neighbors. A higher priority neighbor \(x\) of
+\(w\) is thinking. So when \(x\) gets a request for a fork from \(w\)
+either (1) \(x\) sends the requested fork to \(w\) or (2) \(x\) transits from
+thinking to hungry in which case the variant function \((nT, nH)\)
+decreases. 
 
 <h2 class="w3-text-teal">Summary: Key Ideas of this Module</h2>
 The next figure summarizes the key ideas of this module.
