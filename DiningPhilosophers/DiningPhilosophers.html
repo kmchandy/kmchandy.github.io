@@ -53,8 +53,8 @@ hr.new4 {
   Drinking Philosophers</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../MorePropertiesOfLeadsTo/MorePropertiesOfLeadsTo.html">Previous:
-  More Properties of Leads To</a>
+  href="../BasicLeadsTo/BasicLeadsTo.html">Previous:
+  Introduction to Leads To</a>
 
 </nav>
 
@@ -636,17 +636,20 @@ If a philosopher of higher priority than \(v\) transits from hungry
 to eating then \(nH\) decreases,  and so the variant function \((nT,
 nH)\) decreases.
 
-<h4 class="w3-text-teal">Proof that the variant function changes or
-\(v\) transits to eating.</h4>
+<h4 class="w3-text-teal">Proof that
+the variant function cannot remain unchanged forever while
+\(v\) remains hungry
+and 
+</h4>
+
 <p>
 Let \(w\) be a highest-priority hungry philosopher, i.e. a philosopher with no
 hungry philosopher with priority higher than \(w\). (Note: \(w\) may be
 the same as \(v\).)
 All philosophers with priority higher than \(w\) are thinking. In the
 next paragraph we show that either \(w\) gets all its forks and then transits
-from hungry to eating, thus decreasing the variant function \((nT,
-nH)\),  or the variant function decreases in another way. In either
-case the variant function decreases.
+from hungry to eating, or the variant function decreases.
+
 <p>
 From the algorithm, a hungry philosopher \(w\) requests forks from its
 neighbors. From the algorithm, \(w\) eventually gets forks from 
