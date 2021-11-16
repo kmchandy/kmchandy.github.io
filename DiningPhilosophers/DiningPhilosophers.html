@@ -257,7 +257,7 @@ states are represented by which tokens the client holds.
   <li><i>Thinking State</i>: A thinking client holds the request token but
   not the resource token.
   </li>
-  <li><i>Transition: Thinking to Hungy</i>: Send the request token to
+  <li><i>Transition: Thinking to Hungry</i>: Send the request token to
   the OS.
   </li>
   <li><i>Hungry State</i>: The client holds neither the request nor the
@@ -282,11 +282,33 @@ The figure below illustrates the states of the client. The request
     <figcaption>Fig.6: Client's Program</figcaption>
 </figure>
 
+Initially all clients are thinking; all resource tokens are with OS
+agents; and all request tokens are with clients.
+
 <h3 class="w3-text-teal">What the OS Knows</h3>
 While the OS agent holds the request token it knows that its client is
 hungry. While the OS agent holds the resource token it knows that its client is
 not eating.
+    <figure>
+    <img src="DiningPhilosophers/Slide23.jpg" alt="Fig6" style="width:100%">
+    <figcaption>Fig.7: OS Agent's Program</figcaption>
+</figure>
 
+
+<p>
+When a client transits from thinking to hungry it sends its request
+token to the agent. When the OS receives the request token, the OS
+also has the resource token; so the OS knows that its client is
+hungry. There is an interval after the client sends the request token
+and before the OS receives it during which the client is hungry but
+the OS doesn't know that. An OS agent does not need to know 
+what state its client is in at every point. Likewise, a client does
+not need to know its OS agent's state at every point.
+<p>
+A client is hungry <i>leads-to</i> its OS agent knowing that its client is
+hungry. The <i>leads-to</i> captures the fact that the OS doesn't know
+the client's state at the instant that the client transitions from
+thinking to hungry.
 <!--------------------------------------------------------------->
 <h2 class="w3-text-teal">Introduction of Tokens</h2>
 We introduce a token on each edge of the agent communication graph,
