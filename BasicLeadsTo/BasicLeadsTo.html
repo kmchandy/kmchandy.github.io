@@ -16,6 +16,14 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   bottom: 0;
   height: inherit;
 }
+/* Thick blue border */
+hr.new5 {
+  border: 5px solid blue;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
 </style>
 <body>
 
@@ -97,6 +105,24 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     holds. The interval between the point at which the trajectory
     visits \(s\) and the later point at which the trajectory visits
     \(s'\) is finite.
+
+    <hr class="new2">
+    <h4 style="color:blue;">
+    <p>
+    We will almost always prove progress by proving a formula of the
+    form:
+    <p>
+    \(
+    R \leadsto \neg R
+    \)
+    </h4>
+    <hr class="new2">
+    which says that predicate \(R\) does not hold forever.
+    <p>
+    An
+    example of such a formula is that a message \(M\) is at the head
+    of a channel; that condition does not persist forever because the
+    message will be delivered eventually.
     
     <!------------------------------------------------------>
     <h1 class="w3-text-teal">Formulae using Leads To</h1>
@@ -129,10 +155,10 @@ The proof is straightforward.
 <!-------------------------------------------------------->
 <h2 class="w3-text-teal">Basic Property of \(\leadsto\)</h2>
 <!-------------------------------------------------------->
-
+Let \(R = P \wedge \neg Q\).
 <p>
     \(
-    (P \rightarrow (P \cup Q)) \wedge (P \leadsto \neg P)
+    (R \; \rightarrow \; (R \cup Q)) \wedge (R \; \leadsto \; \neg R)
     \quad \Rightarrow \quad (P \leadsto Q)
     \)
     </p>
@@ -140,12 +166,19 @@ The proof is straightforward.
 
   <p>
   <b>Proof outline</b>:
-  \(P \; \rightarrow \; (P \cup Q) \) implies that every
-  path from a vertex in \(P\) either (1) remains in \(P\) forever
+  \(R \; \rightarrow \; (R \cup Q) \) implies that every
+  trajectory from a vertex in \(R\) either (1) remains in \(R\) forever
   or (2) visits a vertex in \(Q\). 
-  But, \(P \leadsto \neg P\) implies that the first case is not
-  possible.
-    </p>
+  But, \(R \leadsto \neg R\) implies that the first case is not
+  possible. So, every trajectory from a vertex in \(R\) visits a
+  vertex in \(Q\)
+</p>
+<p>
+Trajectories from \(P \wedge Q\) are already in \(Q\), and therefore
+  every trajectory from a vertex in \(P \wedge Q\) visits a vertex in
+\(Q\).
+The theorem follows from \(P =  (R \vee (P \wedge Q) \)
+
 
 <figure>
   <img src="../ProgressProperties/BasicPropertyOfLeadsTo.jpg"
@@ -159,6 +192,20 @@ We call this property the <i>basic</i> property because it is the
 property on which most proofs of progress are based.
 </p>
 
+<p>
+The left-hand side of \(\leadsto\) in the Basic Property has two
+parts:
+<ol>
+  <li>
+  <i>Safety</i>: \(R \; \rightarrow \; (R \cup Q)\) which deals only
+  with a transition from a state to the next.
+  </li>
+  <li>
+  <i>Progress</i>: \(R \leadsto \neg R\) which says that \(R\) does
+  not hold forever.
+  </li>
+</ol>
+
 
 <!-------------------------------------------------------->
 <h2 class="w3-text-teal">Variant Functions and \(\leadsto\)</h2>
@@ -171,59 +218,88 @@ the system to a well-founded set.
 The following theorem is an extension of the basic property. Let \(P\)
 and \(Q\) be predicates
 
-<p>
-\(
-(P \wedge (f \leq K)) \; \rightarrow \; (P \wedge (f \leq K)) \vee Q
-\)
-<br>
-\(\wedge\)
-<br>
-\(
-(P \wedge (f \leq K)) \; \leadsto \;  \neg (P \wedge (f \leq K))
-\)
+<p class="w3-text-teal">Variant Function Theorem<p>
+\(\forall K: \quad 
+P \wedge (f = K) \; \leadsto \;  (P \wedge (f < K))
+\vee Q\)
 <br>
 \(\Rightarrow\)
 <br>
 \(P \leadsto Q\)
-<p>
-The first part of the theorem is a safety property.
 
-<h4 class="w3-text-teal">Variant function doesn't increase while \(P\)
-holds</h4>
+<p class="w3-text-teal">Proof</p>
+The left-hand side of the implication is the following leads-to
+formula: If \(P \wedge \neg Q\) holds  and the value of the
+variant function is \(K\) in a state \(s\) then
+all trajectories from \(s\) enter a state in which: (1) \(P\) holds and
+the variant function value decreases or (2) \(Q\) holds.
+<p>
+Since the
+value of the variant function can decrease only a finite number of
+times it follows that 
+<p>
+
 \(
-(P \wedge (f \leq K)) \; \rightarrow \; (P \wedge (f \leq K)) \vee Q
+P \wedge (f = K) \quad \leadsto \quad Q
 \)
 <p>
-This formula says that
-if \(P\) holds and the variant function value is at most \(K\) in a
-state then in the next state either:
+Take the disjunction of the left-hand side of the \(\leadsto\) over
+all \(K\) in the above equation to get: \(P \leadsto Q\).
+
+
+<!-------------------------------------------------------->
+<h3 class="w3-text-teal">Useful way of Proving Progress</h3>
+<!-------------------------------------------------------->
+A convenient and useful way of proving \(P \leadsto Q\) is to use the
+variant function theorem coupled with the basic property. This proof
+has two parts:
 <ol>
-  <li>
-  \(P\) holds and the variant function value remains at most \(K\), or
+  <li><i>Safety</i>:
+  The variant function doesn't increase until \(Q\) holds.
   </li>
-  <li>
-  \(Q\) holds.
+  <li><i>Progress</i>:
+  Eventually the value of the variant function changes or \(Q\) holds.
   </li>
 </ol>
-The second part of the theorem is a progress property.
+The second part uses concepts about progress such as \(\leadsto\),
+whereas the first part only deals with transitions from a state to the
+next state.
 
-<h4 class="w3-text-teal">Variant function cannot remain unchanged while \(P\)
+<h4 class="w3-text-teal">Variant function doesn't increase while
+\(\neg Q\)
 holds</h4>
 \(
-(P \wedge (f \leq K)) \; \leadsto \;  \neg (P \wedge (f \leq K))
+(P \wedge (f = K) \wedge \neg Q) \; \rightarrow \; (P \wedge (f \leq K)) \vee Q
 \)
 <p>
-This formula says that the following situation cannot hold forever:
-\(P\) holds and the value of the variant
-function is at most \(K\).
+This formula says that if \(P \wedge \neg Q\) holds in a state where
+the value of the variant function is \(K\) then in the next state
+either (1) \(P \wedge \neg Q\) continues to hold with the same or lower
+value of the variant function or (2) \(Q\) holds.
+
+<h4 class="w3-text-teal">Variant function cannot remain unchanged
+while \(\neg Q\) holds</h4>
+Let \(R \; \equiv \; (P \wedge (f = K) \wedge \neg Q)\). Then:
 <p>
-The proof of the theorem follows from a direct application of the
-basic property and disjunction of the left-hand sides.
+\(R \leadsto \neg R\)
+<p>
+This formula says that \(R\) does not hold forever. 
+<p>
+The variant function theorem
+follows from the two parts.
 
 <!-------------------------------------------------------->
 <h2 class="w3-text-teal">Eventually and CTL</h2>
 <!-------------------------------------------------------->
-We define an operator <i>Eventually</i> or \(E\) as follows:
+We define an operator <i>Eventually</i> or \(E\) on predicates as
+follows:
+For a predicate \(Q\),
+\(E(Q)\) holds for a state \(s\) exactly when for every trajectory that
+starts in \(s\):
+\(Q\) holds in \(s\) or at a future point in
+the trajectory.
+<p>
+
 So \(E(Q)\) is the weakest predicate \(P\) such that \(P \leadsto
 Q\). Therefore
 <p>
@@ -237,13 +313,6 @@ and
 (P \leadsto Q) \; \equiv \; [P \; \Rightarrow \; E(Q)]
 \)
 <p>
-\(E(Q)\) holds for a state \(s\) exactly when for every trajectory that
-starts in \(s\):
-\(Q\) holds in \(s\) or \(Q\) holds in a state in a future point in
-the trajectory.
-
-<p>
-
 
 The definition of <i>Eventually</i> in terms of CTL is
 \(E = AF\)
