@@ -274,6 +274,55 @@ Yes because eventually every trajectory that starts from \(init\)
 visits and forever thereafter remains in a state in which
 \((xcount = 10) \wedge (ycount = 5)\).
     
+<h3 style="color:red;">Example</h3>
+What is the meaning of \(E(A(Q))\)?
+
+<p>
+A state \(s\) is in \(E(P)\) if and only if all trajectories that
+visit \(s\) visit a state in \(P\) at or after it visits
+\(s\).
+<p>
+Therefore a state \(s\) is in \(E(A(Q))\) if and only if all trajectories that
+visit \(s\) eventually visit and remain forever in states that satisfy
+\(Q\).
+
+<h3 style="color:red;">Example</h3>
+Is the following true?
+<p>
+\(
+E(A(P)) \wedge E(A(Q)) \; \equiv \; E(A(P \wedge Q))
+\)
+<p>
+A state \(s\) is in \(E(A(P)) \wedge E(A(Q))\) if and only if all
+trajectories that visit \(s\) eventually visit and remain forever in states that satisfy
+\(P\) and in states that satisfy \(Q\). Therefore if a state \(s\) is
+in \(E(A(P)) \wedge E(A(Q))\) then it is also in \(E(A(P \wedge Q))\)
+i.e.,
+<p>
+\(
+E(A(P)) \wedge E(A(Q)) \; \Rightarrow \; E(A(P \wedge Q))
+\)
+
+<p>
+The  converse,
+<br>
+\(
+E(A(P \wedge Q)) \; \Rightarrow \; E(A(P)) \wedge E(A(Q))
+\)
+<br>
+
+is also true because \(E\) and \(A\) are monotonic functions,
+i.e. for any predicates \(R, R'\):
+<p>
+\(
+[R \Rightarrow R'] \wedge E(R) \quad \Rightarrow \quad E(R')
+\)
+<p>
+\(
+[R \Rightarrow R'] \wedge A(R) \quad \Rightarrow \quad A(R')
+\)
+
+    
 
 <hr class="new2">
     <h4 style="color:blue;">    
