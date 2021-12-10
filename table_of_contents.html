@@ -1,6 +1,7 @@
+
 <!DOCTYPE html>
 <html lang="en">
-<title>TableOfContents</title>
+<title>index</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -11,29 +12,43 @@
 html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 .w3-sidebar {
   z-index: 3;
-  width: 250px;
+  width: 150px;
   top: 43px;
   bottom: 0;
   height: inherit;
 }
+/* Thick blue border */
+hr.new5 {
+  border: 5px solid blue;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+
 </style>
+
 <body>
 
-<!-- Navbar ---------------------------------------------------------->
+<!-- Navbar -->
 <div class="w3-top">
   <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
     <a class="w3-bar-item w3-button w3-right w3-hide-large
     w3-hover-white w3-large w3-theme-l1"
-    href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    href="javascript:void(0)" onclick="w3_open()"><i class="fa
+    fa-bars"></i>
+    </a>
     <a href="index.html" class="w3-bar-item w3-button w3-hide-small
-    w3-hover-white">About the Course</a>
-    <a href="table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
-    w3-hover-white">Table of Contents</a>
+    w3-hover-white">Distributed Algorithms
+    </a>
+    <a href="index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Contents
+    </a>
     <a href="cross_reference.html"
-    class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+    class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index
+    </a>
   </div>
   </div>
-<!-- Navbar ---------------------------------------------------------->
  
 
 <!-- Sidebar -->
@@ -42,15 +57,16 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <i class="fa fa-remove"></i>
   </a>
   
-  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  <h4 class="w3-bar-item"><b> Distributed
   Algorithms</h3>
+  
 </nav>
 
 <!-- Overlay effect when opening sidebar on small screens -->
 <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
-<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
-<div class="w3-main" style="margin-left:250px">
+<!-- Main content: shift it to the right by 150 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:150px">
   
 <script id="MathJax-script" async
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
@@ -59,315 +75,288 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
 
+    <h2 class="w3-text-teal">Table of Contents</h2>
 
-    <h1 class="w3-text-teal">An Introduction to Distributed
-    Algorithms</h1>
-    <h5> K. Mani Chandy
-    <br>
-    Simon Ramo Professor, Emeritus
-    <br>
-    California Institute of Technology
-    </h5>
-    <h1 class="w3-text-teal">Table of Contents</h1>
-    <ol start="1">
+    <h4 class="w3-text-teal">Review of Basics</h4>
+    <ol>
       <li>
-    <h2 class="w3-text-teal">
-     Introduction
-    </h2>
-    <a href="Introduction/Introduction.html">
-    Why study distributed algorithms?
-    Key ideas that run through the course.
+      <a href="ReviewOfBasics/ReviewOfBasics.html">
+      Review of Basics: Introduction
+      </a> 
+      </li>
+      <li>
+      <a href="Loops/Loops.html">
+      Nondeterministic iteration: do-od loops
+      </a> 
+      </li>
+      <li>
+      <a href="Predicates/Predicates.html">
+      Predicates
+      </a>
+      </li>
+      <li>
+      <a href="HoareTriples/HoareTriples.html">
+      Hoare triples
+      </a>
+      </li>
+      <li>
+      <a href="LoopTermination/LoopTermination.html">
+      Proving termination of loops: variant functions.
       </a>
       </li>
     </ol>
 
-    
-    <h2 class="w3-text-teal">
-    Review: Nondeterminism, Predicates, Iteration
-    </h2>
-    This section reviews material that you may have learned in
-    earlier courses. The key concepts are nondeterministic iteration,
-    predicates, and Hoare triples.
-    <ol start="2">
+    <h4 class="w3-text-teal">Foundations of Distributed Systems</h4>
+    <ol>
       <li>
-      <a href="Loops/Loops.html">Review: Nondeterministic iteration</a>
-      A review of do-od loops and guarded commands.
+      <a href="Safety/Safety.html">
+      State-transition systems and safety
+      </a>
       </li>
       <li>
-      <a href="Predicates/Predicates.html">Review: predicates</a>
+      <a
+      href=
+      "DistributedSystemsIntroduction/DistributedSystemsIntroduction.html">
+      Distributed Systems: Introduction
+      </a>
       </li>
       <li>
-      <a href="HoareTriples/HoareTriples.html">Review: Hoare triples</a>
+      <a
+      href="Channels/Channels.html">
+      Agent timelines
+      </a>
+      </li>
+      <li>
+      <a href="Progress/Progress.html">
+      Progress: Introduction
+      </a>
+      </li>
+      <li>
+      <a href="ProgressProperties/ProgressProperties.html">
+      Progress: Proofs
+      </a>
       </li>
     </ol>
 
-    <!------------------------------------------------------------------->
-    <h2 class="w3-text-teal">Safety and Termination</h2>
+    <h4 class="w3-text-teal">Global Snapshots and Logical Clocks</h4>
     <ol>
       <li>
-      <a href="Safety/Safety.html">Safety</a>
-      Representation of a state transition system as a directed graph.
-      <i>Always</i>, <i>next</i>, <i>stable</i>, <i>Invariant</i>
-    defined in terms of sets of states and predicates.
+      <a href="TimelineDiagrams/TimelineDiagrams.html">
+      Timelines
+      </a>
       </li>
       <li>
-      <a href="LoopTermination/LoopTermination.html">Proving
-      termination.</a> Review of the use of variant
-      functions to prove termination of executions.
+      <a href="SnapshotIntroduction/SnapshotIntroduction.html">
+      Introduction to snapshots in shared-memory systems.
+      </a>
       </li>
       <li>
-      <a href="ShortestPath/ShortestPath.html">Examples of proving the correctness of
-    systems: all-points shortest paths in a graph and sorting.</a>
+      <a href="SnapshotIntroduction/VectorClocks.html">
+      Vector clocks
+      </a>
       </li>
       <li>
-      <a href="FlightFormation/FlightFormation.html">Another example of proving the correctness of
-    systems: flight formation.</a>
+      <a href="SnapshotIntroduction/SnapshotIntroductionExample.html">
+      Snapshots of shared-memory systems
+      </a>
+      </li>
+      <li>
+      <a href="Channels/Channels.html">
+      Consistent cuts across timelines of distributed systems
+      </a>
+      </li>
+      <li>
+      <a href="ChannelSnapshots/ChannelSnapshots.html">
+      Global snapshots
+      </a>
+      </li>
+      <li>
+      <a href="SnapshotIntroduction/SnapshotIntroduction.html">
+      Logical clocks
+      </a>
       </li>
     </ol>
-</h3>
-      
 
-    <h2 class="w3-text-teal">Timelines, Global Snapshots, Logical
-    Clocks</h2>
-    This section introduces the concept of timelines and timeline
-    diagrams. The section defines cuts  of
-    timelines. The concept of  a valid cut of a timeline is used to define global snapshots
-    and timestamps assigned by logical clocks. This section describes
-    algorithms for logical clocks and snapshots for simple action systems and
-    for distributed systems.
+    <h4 class="w3-text-teal">Detection Algorithms</h4>
     <ol>
       <li>
-      <a href="TimelineDiagrams/TimelineDiagrams.html">Timeline Diagrams</a>
-      The concept of a timeline defined for an action system
-    consisting of a set of actions where an action reads and writes variables.
+      <a
+      href="GlobalSnapshotApplications/GlobalSnapshotApplications.html"> 
+      Detecting Termination
+      </a>
       </li>
       <li>
       <a
-    href="SnapshotIntroduction/SnapshotIntroduction.html">Snapshot: Introduction</a>
-      An introduction to the concept of global snapshots. This
-    introduction uses timelines of variables that are read and
-    modified by events. Later, we will look at snapshots for
-    shared-memory systems with agents and then with distributed systems.
+      href="DeadlockDetection_And/DeadlockDetection_And.html"> 
+      Detecting database deadlock
+      </a>
       </li>
       <li>
       <a
-    href="SnapshotIntroduction/SnapshotIntroductionExample.html">Snapshots of
-    Shared Memory</a>
-      Snapshot algorithms and timelines for shared-memory systems.
+      href=
+      "ApplicationsDiffusingComputation/ApplicationsDiffusingComputation.html"> 
+      Detecting communication deadlock
+      </a>
       </li>
-      <li>
-      <a
-    href="DistributedSystemsIntroduction/DistributedSystemsIntroduction.html">Distributed
-    Systems: Introduction</a> 
-      An introduction to distributed systems defined in terms of
-    agents and message-passing channels. The representation of
-    channels in terms of guarded commands.
-      </li>
-    <li>
-    <a
-    href="Channels/Channels.html">Distributed System Timelines</a>
-    Timeline diagrams for systems in which agents communicate by
-    sending and receiving messages.
-    </li>
-    <li>
-    <a
-    href="ChannelSnapshots/ChannelSnapshots.html">Snapshots of
-    Distributed Systems</a>
-    Consistent cuts, logical clocks, and the global snapshot
-    algorithm for distributed systems.
-    </li>
-  </ol>
-
-  
-  <!----------------------------------------------------------------->
-  <h2 class="w3-text-teal">Detection Algorithms</h2>
-  Algorithms by which an agent detects that the system is in a stable
-  state. Examples of such algorithms are termination detection and
-  deadlock detection. These algorithms are based on the concept of
-  consistent cuts of timelines. 
-  <ol>
-    <li>
-    <a
-    href="GlobalSnapshotApplications/GlobalSnapshotApplications.html">Termination
-    Detection</a>
-    An application of consistent cuts of timeline diagrams: detecting
-    that a computation has terminated.
-    </li>
-    <li>
-    <a
-    href="DeadlockDetection_And/DeadlockDetection_And.html">Deadlock
-    Detection I</a>
-    Algorithm to detect deadlock in systems in which an idle agent is
-    made active when it receives a message from <i>all</i> agents for
-    which it is waiting. This algorithm is based on consistent
-    cuts. The algorithm can be used to detect deadlock in database
-    systems. 
-    </li>
-  </ol>
-
-<!----------------------------------------------------------------->
-  <h2 class="w3-text-teal">What an Agent Knows, Diffusing Computations</h2>
-  <ol>
-    <li>
-    <a
-    href="Knowledge/Knowledge.html">Concept of knowledge: What an
-    agent knows</a>. What does an agent know about the states of other
-  agents? About the states of channels? How does this knowledge change
-  as the agent sends and receives messages?
-    </li>
-    <li>
-    <a
-    href="DiffusingComputations/DiffusingComputations.html">Diffusing Computations
-    </a>
-    Algorithms in which an agent starts a computation across a network
-    of agents; detects that the computation has terminated; and
-    collects information from participating agents.
-    </li>
-    <li>
-    <a
-    href="ApplicationsDiffusingComputation/ApplicationsDiffusingComputation.html">Applications
-  of Diffusing Computations</a>
-    Learning structures of networks in which an agent is
-  embedded. Termination detection. Communication deadlock detection.
-    </li>
-</ol>
-
-
-
-  
-  <h2 class="w3-text-teal">Resilient Algorithms</h2>
-  Algorithms that are resilient to errors. Algorithms that use varying
-  amounts of resources. Algorithms that use incentives for agents to
-  participate. 
-  <ol>
-    <li>
-    <a
-    href="SelfStabilization/SelfStabilization.html">Self Stabilization Algorithms</a>
-    Self-stabilizing algorithms automatically correct themselves in response to transient faults. 
-    </li>
+    </ol>
     
-    <li>
-    <a
-    href="ConsensusImpossible/ConsensusImpossible.html">Reaching
-    Consensus in a Finite Number of Steps is Impossible</a>
-    This module gives the intuition for why consensus among
-    distributed agents cannot be reached when message delays are
-    arbitrarily long.
-    </li>
+    <h4 class="w3-text-teal">Diffusing and gossip computations</h4>
+    <ol>
+      <li>
+      <a
+      href=
+      "DiffusingComputations/DiffusingComputations.html"> 
+      The Dijkstra-Scholten diffusing computation algorithm
+      </a>
+      </li>
+    </ol>
     
-    <li>
-    <a
-    href="Paxos/Paxos.html">The Paxos Algorithm</a>
-    The Paxos algorithm is a best-effort algorithm for reaching
-    consensus among distributed agents in the presence of errors and
-    unbounded message delays. The algorithm does not
-    guarantee that consensus will be reached; however, if consensus is
-    reached then it has desirable properties.
-    </li>
-    <li>
-    <a
-    href="Byzantine/Byzantine.html">Byzantine Algorithms: Written Messages</a>
-    Algorithms that reach consensus among a set of faulty agents who
-  may corrupt messages. This algorithm assumes that messages are encrypted.
-    </li>
-    <li>
-    <a
-    href="Byzantine_Oral/Byzantine.html">Byzantine Algorithms: Oral Messages</a>
-    Algorithms that reach consensus among a set of faulty agents who
-  may corrupt messages. This algorithm deals with messages that may be forged.
-    </li>
-  </ol>
+    <h4 class="w3-text-teal">Self stabilization</h4>
+    <ol>
+      <li>
+      <a
+      href="SelfStabilization/SelfStabilization.html">
+      Self stabilization of a token ring
+      </a>
+      </li>
+    </ol>
 
-  <h3 class="w3-text-teal">Cryptocurrency</h3>
-  <ol>
-    <li>
-    <a
-    href="CryptoCurrencyIntroduction/CryptoCurrencyIntroduction.html">
-    Introduction to cryptographic hash functions.</a>
-    </li>
-    <li>
-    <a href="BitCoin/BitCoin.html">
-    Introduction to probabilistic distributed consensus algorithms in
-    Bitcoin.</a>
-    </li>
-  </ol>
+    <h4 class="w3-text-teal">Agent knowledge</h4>
+    <ol>
+      <li>
+      <a href="Knowledge/Knowledge.html">
+      How processes learn
+      </a>
+      </li>
+    </ol>
 
-  <h3 class="w3-text-teal">Proving Progress</h3>
-  <ol>
-    <li>
-    <a href="Progress/Progress.html">Labeled graphs, Temporal Logic</a>
-    Using labeled graphs to represent transactions systems.
-    Computation Tree Logic.  
-    </li>
-    <li>
-    <a href="ProgressProperties/ProgressProperties.html">
-    Leads-To. Transient<a>
-    </li>
-    <li>
-    <a href="PropertiesOfTemporalLogicRelations/PropertiesOfTemporalLogicRelations.html">
-    Properties of <i>leads-to</i>.</a>
-    </li>
-    <li>
-    <a href="CompositionOfTemporalOperators/CompositionOfTemporalOperators.html">
-    Composition of temporal logic operators</a>
-    </li>
-    <li>
-    <a href="MorePropertiesOfLeadsTo/MorePropertiesOfLeadsTo.html">
-    More properties of <i>leads-to</i>.</a>
-    </li>
-    <li>
-    <a href="BasicLeadsTo/BasicLeadsTo.html">
-    Introduction and basic properties of <i>leads-to</i>.</a>
-    </li>
-  </ol>
+    <h4 class="w3-text-teal">Consensus</h4>
+    <ol>
+      <li>
+      <a
+      href="ConsensusImpossible/ConsensusImpossible.html">
+      Impossibility of asynchronous consensus with faulty agents
+      </a>
+      </li>
+      <li>
+      <a
+      href="Paxos/Paxos.html">
+      The Paxos algorithm
+      </a>
+      </li>
+      <li>
+      The Raft algorithm
+      </li>
+    </ol>
 
-  <h3 class="w3-text-teal">Cooperating Agents</h3>
-  <ol>
-    <li>
-    <a href="DiningPhilosophers/DiningPhilosophers.html">The
-  distributed dining philosophers problem. Mutual exclusion among
-  distributed agents. Concepts in distributed conflict resolution</a>
-    </li>
-    <li>
-    <a href="DrinkingPhilosophers/DrinkingPhilosophers.html">
-    The drinking philosophers problem. Fair sharing of resources among
-  distributed agents. Mechanisms for dynamic priorities among
-  competing agents. Use of time for priorities.
-    </a>
-    </li>
-    <li>
-    <a href="CommitteeCoordination/CommitteeCoordination.html">
-    The <i>Committee Coordination Problem.</i> Rendezvous among
-  subsets of distributed agents. Setting up synchronizations.
-    </a>
-    </li>
-  </ol>
-  
+    <h4 class="w3-text-teal">Cryptocurrency</h4>
+    <ol>
+      <li> 
+      <a
+      href="CryptoCurrencyIntroduction/CryptoCurrencyIntroduction.html">
+      Introduction to cryptographic hash functions.
+      </a>
+      </li>
+      <li>
+      <a href="BitCoin/BitCoin.html">
+      BitCoin algorithm
+      </a>
+      </li>
+      <li>
+      Etherium algorithm
+      </li>
+    </ol>
 
-  <h3 class="w3-text-teal">Algorithms for Clock Synchronization</h3>
-  Algorithms to reduce drift between clocks used by different agents.
-  <ol>
-    <li>
-    <a href="NTP/NTP.html">
-    NTP</a>
-    </a>
-    </li>
-    <li>
-    <a href="UsingNTP/UsingNTP.html">
-    Reducing clock drift using NTP. Adaptive clock synchronization
-  algorithms. </a>
-    </a>
-    </li>
-  </ol>
+    <h4 class="w3-text-teal">Byzantine faults</h4>
+    Algorithms dealing with Byzantine faults
+    <ol>
+      <li>
+      <a
+      href="Byzantine/Byzantine.html">
+      Byzantine algorithms with written messages
+      </a>
+      </li>
+      <li>
+      <a
+      href="Byzantine/Byzantine.html">
+      Byzantine algorithms with oral messages
+      </a>
+      </li>
+    </ol>
 
+    <h4 class="w3-text-teal">Distributed collaboration</h4>
+    <ol>
+      <li>
+      <a href="DiningPhilosophers/DiningPhilosophers.html">
+      Mutual exclusion: Distributed dining philosophers
+      </a>
+      </li>
+      <li>
+      <a href="DrinkingPhilosophers/DrinkingPhilosophers.html">
+      Distributed resource management: Drinking philosophers
+      </a>
+      </li>
+      <li>
+      Rendezvous in distributed systems: Committee coordination
+      </li>
+    </ol>
+
+    <h4 class="w3-text-teal">Clock synchronization</h4>
+    <ol>
+      <li>
+      Network and Precision Time Protocols
+      </li>
+      <li>
+      Clock synchronization in distributed systems
+      </li>
+    </ol>
+
+    
+
+    <h4 class="w3-text-teal">Cloud-computing algorithms</h4>
+    <ol>
+      <li>
+      Map-reduce
+      </li>
+      <li>
+      Millwheel
+      </li>
+    </ol>
+
+    <h4 class="w3-text-teal">Stream algorithms</h4>
+    <ol>
+      <li>
+      Finding repeated elements in streams: Misra & Gries
+      </li>
+      <li>
+      Finding repeated elements in streams: Approximate algorithms
+      </li>
+    </ol>
+
+    <h4 class="w3-text-teal">Continuous distributed systems</h4>
+    <ol>
+      <li>
+      Asynchronous averaging
+      </li>
+    </ol>
+
+    <h4 class="w3-text-teal">Distributed data structures</h4>
+    <ol>
+      <li>
+      Distributed tables: hashing
+      </li>
+      <li>
+      Distributed data: BigTable
+      </li>
+    </ol>
     
 
   <footer id="myFooter">
 
     <div class="w3-container w3-theme-l1">
-      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <p>K. Mani Chandy,
       <br>
-      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</p>
     </div>
   </footer>
 

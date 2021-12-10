@@ -11,7 +11,7 @@
 html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 .w3-sidebar {
   z-index: 3;
-  width: 250px;
+  width: 200px;
   top: 43px;
   bottom: 0;
   height: inherit;
@@ -24,10 +24,16 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
     <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
     <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
-    w3-hover-white">About the Course</a>
+    w3-hover-white">Distributed Algorithms</a>
     <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
-    w3-hover-white">Table of Contents</a>
-    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+    w3-hover-white">Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button
+    w3-hide-small w3-hover-white">Index</a>
+    
+    <a 
+    class="w3-bar-item w3-button w3-hide-small">
+    Review of Basics
+    </a>
   </div>
   </div>
  
@@ -38,32 +44,32 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     <i class="fa fa-remove"></i>
   </a>
 
-  <!-------------------------->
-  <h3 class="w3-bar-item"><b>An Introduction to Distributed
-  Algorithms</h3>
-
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="HoareTriples.html">Review of Hoare Triples</a>
+  href="HoareTriples.html">HoareTriples</a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
   href="HoareTriplesVideo.mp4"><i>Video</i></a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="HoareTriplesSelfTest.html">Self Tests</a>
+  href="HoareTriplesSelfTest.html">Self Test</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../LoopTermination/LoopTermination.html">
+  Next: Loop termination
+  </a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Predicates/Predicates.html">
+  Previous: Predicates
+  </a>
 
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Safety/Safety.html">Next: Safety</a> 
-  
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Predicates/Predicates.html"> Previous: Predicates</a>
-  
 </nav>
 
 <!-- Overlay effect when opening sidebar on small screens -->
 <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
-<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
-<div class="w3-main" style="margin-left:250px">
+<!-- Main content: shift it to the right by 200 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:200px">
   
 <script id="MathJax-script" async
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">

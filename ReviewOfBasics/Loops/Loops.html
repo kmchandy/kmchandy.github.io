@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Loops</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 200px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new4 {
+  border: 5px solid blue;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+
+</style>
+
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Distributed Algorithms</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button
+    w3-hide-small w3-hover-white">Index</a>
+    
+    <a href="../ReviewOfBasics.html"
+    class="w3-bar-item w3-button w3-hide-small">
+    Review of Basics
+    </a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Loops.html">Nondeterministic Iteration</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="NondeterministicIterationVideo.mp4"><i>Video</i></a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="LoopsExample.html">Examples</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="LoopsSelfTest.html">Self Test</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Predicates/Predicates.html">Next: Predicates</a>
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 200 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:200px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+    
+    
+    <!------------------------------------------------------------>
+    <h1 class="w3-text-teal">Nondeterministic Iteration</h1>
+    <!------------------------------------------------------------>
+    
+    This module is a review of nondeterministic iteration implemented
+    as
+    <a href="https://en.wikipedia.org/wiki/Guarded_Command_Language">
+    <i>do-od</i> loops.</a> The syntax of these loops is irrelevant for
+    this course; our only concern is nondeterminstic selection of
+    commands to be executed.
+    </a>
+    
+    <p>
+    A <i>do-od</i> loop is
+    different from <i>while</i> loops in languages such as Python
+    because execution of a <i>do-od</i> loop is non-deterministic. 
+
+
+    A <i>do-od</i> loop consists of a set of guarded commands. A guarded
+    command consists of a guard and a command, and we use the syntax:
+    <pre>
+guard -> command
+    </pre>
+    The execution of the loop is as follows: Execute any guarded command
+    of the loop for which the guard evaluates to True. The loop
+    terminates when all guards evaluate to False.
+    </p>
+
+
+    <p>
+    A do-od loop is an example of a nondeterministic program:
+    Multiple guards may be true and the guard that is executed is
+    chosen nondeterministically.
+    
+
+    <h3 style="color:red;">Example: Sorting</h3>
+    Let \(X\) be an array of \(N\) numbers. The following loop sorts
+    the array in ascending order.  (We assume that indices
+    start at 0.)
+    <pre>
+for all i where 0 < i < N:
+   X[i-1] > X[i]   ->    X[i-1], X[i] = X[i], X[i-1]
+    </pre>
+    
+    The loop has \(N-1\) guarded commands. Execution of the loop
+    proceeds by executing any of the \(N-1\) guarded commands for
+    which the guard is true. So, execution of the loop proceeds by
+    flipping any adjacent pair of elements that is out of
+    order. Execution of the loop terminates when all guards are False,
+    and therefore all adjacent pairs are in order. 
+
+
+    
+    
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>

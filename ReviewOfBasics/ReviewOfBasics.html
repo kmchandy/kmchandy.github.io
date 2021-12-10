@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<title>ReviewOfBasics</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 150px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new5 {
+  border: 5px solid blue;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+
+</style>
+
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large
+    w3-hover-white w3-large w3-theme-l1"
+    href="javascript:void(0)" onclick="w3_open()"><i class="fa
+    fa-bars"></i>
+    </a>
+    <a href="index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Distributed Algorithms
+    </a>
+    <a href="table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Contents
+    </a>
+    <a href="../cross_reference.html"
+    class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index
+    </a>
+
+    <a href="ReviewOfBasics.html"
+    class="w3-bar-item w3-button w3-hide-small">
+    Review of Basics
+    </a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5
+  w3-animate-left"
+  id="mySidebar">
+  <a href="javascript:void(0)"
+  onclick="w3_close()"
+  class="w3-right w3-xlarge w3-padding-large w3-hover-black
+  w3-hide-large"
+  title="Close Menu">
+  <i class="fa fa-remove"></i>
+  </a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ReviewOfBasics.html">Review of Basics</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Loops/Loops.html">Iteration</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Predicates/Predicates.html">
+  Predicates
+  </a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="HoareTriples/HoareTriples.html">
+  Hoare Triples
+  </a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="LoopTermination/LoopTermination.html">
+  Termination
+  </a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html">
+  Correctness Proofs
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 150 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:150px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+
+
+    <h3 class="w3-text-teal">Review of Basics</h3>
+    This section is for undergraduates taking a course on distributed
+    algorithms who may benefit from a quick review of sequential
+    programming concepts.
+
+    <p>
+    Programmers use iteration, invariants, loop variants, predicates,
+    and Hoare triples to design sequential algorithms.
+    The same concepts, with small modifications, are used to design
+    distributed algorithms.
+    This section is a review of these basic concepts.
+
+    <p>
+    The section reviews
+    <a href="Loops/Loops.html">nondeterministic iteration in the form
+    of Dijkstra's <i>do-od loop.</i>
+    </a>
+    Nondeterminism is a key concept in distributed
+    algorithms.
+    Nondeterminism in distributed algorithms is an extension of
+    nondeterministic iterations --- <i>do-od loops.</i>
+
+    <p>
+    The section also reviews
+    <a href="Predicates/Predicates.html">predicates
+    </a>
+    and shows the relation between predicates and sets of states of a
+    system.
+    We review
+    <a href="HoareTriples/HoareTriples.html">Hoare triples
+    </a>
+    to show the relationship between programs and pre- and
+    post-conditions.
+    This section includes a review of
+    <a href="LoopTermination/LoopTermination.html">loop variants, also
+    called variant functions, 
+    </a>
+    which are used to prove that an iteration terminates.
+    The section closes with
+    <a
+    href="ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html">
+    examples of proofs of correctness of algorithms written as
+    nondeterministic iterations. 
+    </a>
+
+    
+
+
+  <!------------------------------------------------------->
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <p>K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</p>
+    </div>
+  </footer>
+
+
+</body>
+</html>
