@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Invariant</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 200px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new4 {
+  border: 5px solid blue;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+
+</style>
+
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Distributed Algorithms</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button
+    w3-hide-small w3-hover-white">Index</a>
+    
+    <a href="../ReviewOfBasics.html"
+    class="w3-bar-item w3-button w3-hide-small">
+    Review of Basics
+    </a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Invariant.html">Invariant</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../LoopTermination/LoopTermination.html">
+  Next: Termination
+  </a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../HoareTriples/HoareTriples.html">
+  Previous: Hoare Triples
+  </a>
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 200 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:200px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+    
+    <h1 class="w3-text-teal">Invariants</h1>   
+    The state of a <i>do-od</i> loop is given by the values of program
+    variables.
+    A computation of the loop is a sequence of states.
+    The same <i>do-od</i> loop may have multiple computations because
+    the selection of the next guarded command to execute is
+    nondeterministic.
+    <p>
+    An initial state of the computation satisfies the initial
+    condition of the loop.
+    Each execution of a guarded command in which the guard is true
+    causes a state transition.
+    If execution of the loop terminates then the terminal state is one
+    in which all the guards are false.
+    If execution of the loop does not terminate then the corresponding
+    computation is infinite.
+    <p>
+    An invariant is a predicate that holds in every state of every
+    computation.
+    <hr class="new2">
+    <h5 style="color:blue;">
+    We can prove that predicate \(P\) is an invariant by showing that
+    <ol>
+      <li>
+      \(P\) holds initially, and
+      </li>
+      <li>
+      If \(P\) holds in a state before a state transition then  \(P\)
+      holds in the state after the state transition, i.e., for every
+    command \(s\):
+      \(
+      \{P\} \; s \{P\}
+      \)
+      </li>
+    </ol>
+    </h5>
+    <hr class="new2">
+
+    Self tests are given in
+    <a href =
+    "../ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html">
+    Examples of Correctness Proofs.
+    </a>
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
