@@ -11,7 +11,7 @@
 html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 .w3-sidebar {
   z-index: 3;
-  width: 250px;
+  width: 200px;
   top: 43px;
   bottom: 0;
   height: inherit;
@@ -20,7 +20,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 hr.new4 {
   border: 5px solid blue;
 }
-/* Thin blue border */
+/* Thick blue border */
 hr.new2 {
   border: 2px solid blue;
 }
@@ -33,11 +33,20 @@ hr.new2 {
 <div class="w3-top">
   <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
     <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
-    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
-    w3-hover-white">About the Course</a>
-    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
-    w3-hover-white">Table of Contents</a>
-    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+    
+    <a href="../../../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Distributed Algorithms</a>
+    
+    <a href="../../../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Contents</a>
+    
+    <a href="../../../cross_reference.html" class="w3-bar-item w3-button
+    w3-hide-small w3-hover-white">Index</a>
+    
+    <a href="../../ReviewOfBasics.html"
+    class="w3-bar-item w3-button w3-hide-small">
+    Review of Basics
+    </a>
   </div>
   </div>
  
@@ -47,31 +56,39 @@ hr.new2 {
   <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
     <i class="fa fa-remove"></i>
   </a>
-  
-  <h3 class="w3-bar-item"><b>An Introduction to Distributed
-  Algorithms</h3>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../ShortestPath/ShortestPath.html">Review: Examples of Correctness Proofs</a>
-  
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="../FlightFormation/FlightFormation.html">More Examples: Flight Formation</a>
-  
+  href="../ExamplesCorrectnessProofs.html">
+  Examples of Correctness Proofs
+  </a>
 
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../TimelineDiagrams/TimelineDiagrams.html">Next: Timelines</a> 
+  href="../Sorting/Sorting.html">Sorting</a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
-  href="../LoopTermination/LoopTermination.html">Previous: Variant
-  Functions</a>
+  href="../ShortestPath/ShortestPath.html">Shortest Paths</a>
   
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../AverageOfSensors/AverageOfSensors.html">
+  Distributed averaging
+  </a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../FlightFormation/FlightFormation.html">
+  Flight formation
+  </a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../EarliestMeetingTime/EarliestMeetingTime.html">
+  Earliest meeting time
+  </a>
 </nav>
 
 <!-- Overlay effect when opening sidebar on small screens -->
 <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
-<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
-<div class="w3-main" style="margin-left:250px">
+<!-- Main content: shift it to the right by 200 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:200px">
   
 <script id="MathJax-script" async
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
@@ -79,22 +96,68 @@ hr.new2 {
   
   <div class="w3-row w3-padding-64">
   <div class="w3-twothird w3-container">
+
     
-    <h1 class="w3-text-teal">Example: Flight Formation</h1>
+    
+    <h1 class="w3-text-teal">Self Test: Flight Formation</h1>
 
     
     <p>
-    This module describes the proof of a concurrent system in
+    This self test is to prove a concurrent system in
     which a collection of agents in space, move towards a formation,
     even though each agent can only communicate with its neighbors.
 
     
-    <h2 class="w3-text-teal">Problem Description</h2>
+    <h4 class="w3-text-teal">Specification</h4>
+<p>
+    Agents \(0\) and \(N\) are called anchors. The anchors are
+    stationary while the other agents move so as to create a specified
+    formation. 
+    
+    For \(0 < j < N\), agent \(j\)'s neighbors are agents \(j-1\) and
+    \(j+1\).
+
     <p>
-    The problem deals with agents moving in 3-D space; however, since
-    the essential ideas of the solution are clear for the case of 2-D
-    we restrict consideration to 2-D space.
-    </p>
+    Let agent \(j\)'s location be \(l[j]\), and let its initial value
+    be \(l[j]^{0}\).
+    When the computation terminates, the anchors must be at their
+    initial positions, and the locations of other agents must be 
+    \(\epsilon\)-close to the midpoint of the locations of its
+    neighbors.
+    <p>
+    <ol>
+      <li>
+      Anchors are stationary.
+      <p>
+    \(
+    (l[0] = l[0]^{0}) \wedge (l[N] = l[N]^{0})
+      \)
+      </li>
+      <li>
+      Other agents are approximately at midpoints of their
+    neighbors.
+      \(
+      \forall 0 < j < N :
+      \)
+      \(
+      \quad
+      |l[j] - mid | < \epsilon
+      \)
+      <p>
+      where \(mid = (l[j-1]+ l[j+1])/2 \)
+      </li>
+   </ol>
+   
+<p>
+The figure below shows the desired terminal state.
+
+    <figure>
+    <img src="FlightFormation/Slide2.jpg" alt="Fig2" style="width:80%">>
+    <figcaption>Fig.1 - Desired Terminal State</figcaption>
+    </figure>
+
+
+    <h3 class="w3-text-teal">Agent Actions</h3>
     
     <p>
     Agents \(0\) and \(N\) are stationary.
@@ -133,46 +196,11 @@ hr.new2 {
 
     <figure>
     <img src="FlightFormation/Slide1.jpg" alt="Fig1" style="width:80%">>
-    <figcaption>Fig.1 - Movement of Agents</figcaption>
-    </figure>
+    <figcaption>Fig.2 - Movement of Agents</figcaption>
+   </figure>
 
 
-     
-<h4 class="w3-text-teal">Specification</h4>
-<p>
-The desired terminal or goal state is specified by a predicate
-    \(goal\) which specifies that each agent's location should be
-    \(\delta\)-close to the midpoint of the locations of its
-    neighbors. \(goal\) is defined as:
-</p>
-<p>
-\(
-\forall 0 < j < N :
-\)
-\(
-\quad
-    |l[j] - mid | < \epsilon
-\)
-<p>
-where \(mid = (l[j-1]+ l[j+1])/2 \)
-</p>
-<p>
-The figure below shows the desired goal state.
-
-    <figure>
-    <img src="FlightFormation/Slide2.jpg" alt="Fig2" style="width:80%">>
-    <figcaption>Fig.2 - Desired Goal State</figcaption>
-    </figure>
-
-
-    <p>
-    The specification is that the program must terminate, and must
-    terminate at a goal state. 
-</p>
-
-
-
-    <p>
+   <p>
     The next figure shows 3 diagrams from top to bottom. The diagram
     at the top is the state at some point. The diagram in the middle
     shows the state after agent 1 (red) moves to the midpoint of
@@ -188,17 +216,30 @@ The figure below shows the desired goal state.
 
 
 
-<h1 class="w3-text-teal">Exercise: Prove Correctness</h1>
+<h2 class="w3-text-teal">Self Test: Proof of Correctness</h2>
+    
+    <h5 class="w3-text-teal">Test 1</h5>
+    Give and prove an invariant of the loop.
+    
+    <h5 class="w3-text-teal">Test 2</h5>
+    Prove that the loop terminates by giving a variant function for
+    the loop. 
+    
+    <h5 class="w3-text-teal">Test 3</h5>
+Show that the specification holds upon termination of the loop.
 
-  <p>
-  Next, we give the structure of a proof. The challenge is to find a
-  variant function. After you find a variant function the proof
-  follows from elementary geometry.
-</p>
+<h3 class="w3-text-teal">Answers</h3>
+   
+<h5 class="w3-text-teal">Answer 1</h5>
+The invariant is: The anchors are stationary.
 
-<h4 class="w3-text-teal">Variant Function</h4>
-    <p>
-    Let \(f(l)\) be a variant function defined as the sum of the
+      <p>
+    \(
+    (l[0] = l[0]^{0}) \wedge (l[N] = l[N]^{0})
+\)
+<h5 class="w3-text-teal">Answer 2</h5>
+<p>
+A variant function \(f\) is the sum of the
     square of the lengths between neighboring agents.
     </p>
     <p>
@@ -206,33 +247,30 @@ The figure below shows the desired goal state.
     f(l) = \sum_{j=1}^{N} ((x_{j} - x_{j-1})^{2} + (y_{j} - y_{j-1})^{2})
     \)
 </p>
-
-<p class="w3-text-teal">Proof Obligation</p>
-We need to show that the execution of any guarded command with a True
+This variant function is bounded below.
+You can show that the execution of any guarded command with a True
 guard reduces the value of the variant function by at least a positive
-constant \(\delta\). This variant function is bounded below by
-\(0\). So, if the value of the variant function in a state is \(K\)
-then the program terminates in at most \(K/\delta\) steps from this
-state. 
+constant \(\delta\).
+So, variant function value can decrease for only a finite number of
+    steps. 
 
 <p>
-A little bit of high-school geometry on triangles shows that execution
-of any guarded command with a True guard changes \(f(l)\) by at least
-a positive constant 
-\(\delta\). We leave it to you to determine \(\delta\). The largest
+We leave it to you to determine \(\delta\). The largest
 value of \(\delta\) is immaterial; all you need to do is show that
 there exists a positive value. (Hint: \(\delta\) depends on
 \(\epsilon\) and the initial configuration.)
 </p>
 
 
-  <p class="w3-text-teal">Termination Condition</p>
+<h5 class="w3-text-teal">Answer 3</h5>
 <p>
-Our proof obligation is to show that if all guards evaluate to False
-then\(goal\) holds.  This is trivial.
+We must show that if the invariant holds and all guards are false then
+the specification is satisfied. This is trivial.
 </p>
 
 
+<h1 class="w3-text-teal">Extensions</h1>
+Design a similar algorithm in which agents move in 3-D space.
 
   <footer id="myFooter">
 
@@ -241,18 +279,11 @@ then\(goal\) holds.  This is trivial.
       <br>
       Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
     </div>
-  </footer>
-
-<h4 id="Definitions" class="w3-text-teal">
-    Definitions of Concepts used in this Page</h4>
+    </footer>
 
 
-<p class="w3-text-teal">Transitory</p>
-</p>
-<p>
-\(
-transitory(P) \quad \equiv \quad (P \leadsto \neg P)
-\)
+
+    
 <!-- END MAIN -->
 </div>
 
