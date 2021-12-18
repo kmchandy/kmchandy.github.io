@@ -83,50 +83,203 @@ border: 5px solid blue; } /* Thick blue border */ hr.new2 { border:
   <div class="w3-twothird w3-container">
     
     <h1 class="w3-text-teal">Safety in Transition Systems</h1>
-    This module describes the concepts that we use to prove safety in
-    distributed systems.
-    The concepts are the same as those used in proving
-    <a href="../../ReviewOfBasics/Loops/Loops.html">
-    nondeterministic iterations --- do-od loops.
+    
+    <h3 class="w3-text-teal">Key Ideas</h3>
+    This module shows how state-transition systems are represented as
+    <a
+    href="https://en.wikipedia.org/wiki/Directed_graph">
+    directed graphs.
     </a>
-    
-    
+    A system is safe if all paths from initial states
+    of the system remain in safe states. <i>This module defines all the
+    concepts that we use in this course to prove that a system is
+    safe.</i>
+    These concepts are <i>stable</i>,
+    <a href="https://en.wikipedia.org/wiki/Loop_invariant">
+    <i>invariant</i></a>, <i>always</i>
+    and <i>next</i>. We define these concepts in terms of graphs.
+    and also in terms of 
+    <a
+    href="https://en.wikipedia.org/wiki/Computation_tree_logicComputation
+    Tree Logic">
+    Computation Tree Logic (CTL).</a>
     
     <!---------------------------------------------------------->
-    <p class="w3-text-teal">Representing a System by a Graph</p>
+    <h3 class="w3-text-teal">Representing a System by a Graph</h3>
   We represent the states and state transitions of a system by a
   <a href="https://en.wikipedia.org/wiki/Directed_graph">directed graph</a>
   in which vertices represent states and edges
-    represent  transitions.
-    A <i>computation</i> is a path through the graph.
-    We also use the term <i>system trajectory</i> to represent a path
-    through the graph, emphasizing that vertices represent states.
-    In this module we treat vertex and state, edges and state
-    transitions, computations and paths as equivalent.
+  represent  transitions. A system trajectory is a path through the
+    graph.
+
+    Let \(G = (V, \rightarrow) \) be a <a
+		      href="https://en.wikipedia.org/wiki/Directed_graph">
+		      <b>directed graph </b> </a> where \(V\) is the
+		      set of vertices and \(\rightarrow \) is a binary
+		      relation on vertices that specifies the set of
+		      edges: \(v \rightarrow w\) indicates that there
+		      is an edge from vertex \(v\) to vertex \(w\) in
+		      the graph.
+      </p>
+
+      <a name="Example"></a>
+    <h4 style="color:red;">Example</h4>
+    
+<figure>
+  <img src="GraphExample.jpg" alt="Fig1" style="width:60%">>
+  <figcaption>Fig.1 - An Example of a Graph</figcaption>
+</figure>
+
+		      <p style="color:red;"><b>Examples of vertices</b></p>
+\( V = \{0, 1, 2, 3, 4, 5, 6, 7 \} \)
+
+		     
+
+<p style="color:red;"><b>Examples of edges</b></p>
+\( 0 \rightarrow 1, \; 0 \rightarrow 2, \;  0 \rightarrow 3, \; 0 \rightarrow 7, \;
+\; 1 \rightarrow 7, \; 2 \rightarrow 4,\)
+\(2 \rightarrow 5 , \; 3 \rightarrow 5, \;  3 \rightarrow 6, \; 4 \rightarrow 5, \; 5
+\rightarrow 4, \; 6 \rightarrow 6, \; 7 \rightarrow 6\)
+</p>
+
+
+
+		      <h3 class="w3-text-teal">Paths</h3>
+		      We use the notation
+		      \(\stackrel{*}{\rightarrow}\)
+		      to denote the transitive closure of
+		      \(\rightarrow\).
+		      So, \(v \stackrel{*}{\rightarrow} w\) holds exactly
+		      when there exists a path from \(v\) to \(w\) in
+the graph. We assume that there exists a path, with zero hops, from each
+vertex to itself.
+\(\forall v: \; v \rightarrow v \).
+
+
+<p style="color:red;"><b>Example of paths</b></p>
+\(
+1 \stackrel{*}{\rightarrow} 1, \; 1 \stackrel{*}{\rightarrow} 7, \;
+7 \stackrel{*}{\rightarrow} 7, \; 7 \stackrel{*}{\rightarrow} 6, 
+  \; 1 \stackrel{*}{\rightarrow} 6,
+  \)
+
+
+		      <h4 class="w3-text-teal" id=Graph3> Convention</h4>
+		      We use upper case \(P, Q, R, X, Y\) to refer to sets of vertices,
+		      and lower case \(u, v, w \) to  refer to individual
+		      vertices.
+		      All formulae containing these terms are
+implicitly universally qualified.
+</p>
+
+<h4 class="w3-text-teal">Relations between Vertex Sets</h4>
+
+<p class="w3-text-teal">\(P \rightarrow Q\)</p>
+We extend the relation \(\rightarrow\)
+to sets of vertices as follows.
+      \(P \rightarrow Q\) holds exactly when every edge from every vertex in
+\(P\) ends at a vertex in \(Q\).
+</p>
+
+<p>
+\(
+\forall v \in P: (v \rightarrow w) \; \Rightarrow \; (w \in Q)
+\)
+</p>
+
+
+<figure>
+  <img src="ArrowRelation.jpg" alt="Fig2" style="width:60%">>
+  <figcaption>Fig.2 - Illustration of \(P \rightarrow Q\)</figcaption>
+</figure>
+<p>
+The diagram illustrates \(P \rightarrow Q\). The diagram shows that
+  there may be vertices in \(Q\), such as vertex \(x\), for which
+  there is no edge from \(P\).
+
+<p style="color:red;"><b>Example of \(P \rightarrow Q\)</b></p>
+\(
+\{2, 3\} \rightarrow \{4, 5, 6\}
+\)
+</p>
+
+<p>
+  Explanation: All outgoing edges from vertices \(2\) and \(3\)
+terminate at vertices in \(\{4, 5, 6\}\).
+</p>
+
+<h4 class="w3-text-teal">\(P \stackrel{*}{\rightarrow} Q\)</h4>
+<p>
+We extend the relation \(\stackrel{*}{\rightarrow}\)
+to sets of vertices in the same way.
+
+\(P \stackrel{*}{\rightarrow} Q\) holds exactly when every path
+from every vertex in \(P\) ends at a vertex in \(Q\).
+</p>
+<p>
+\(
+\forall v \in P: (v \stackrel{*}{\rightarrow} w) \; \Rightarrow \; (w \in Q)
+\)
+</p>
 
 <figure>
   <img src="PathRelation.jpg" alt="Fig3" style="width:60%">>
   <figcaption>Fig.3 - Illustration of \(P \stackrel{*}{\rightarrow} Q\)</figcaption>
 </figure>
 
-    <h3 class="w3-text-teal">Safety Proof Obligation</h3>
-    Let \(init\) be the set of initial states of the system;
-    the system can start in any state in \(init\).
-    \(init\) is not empty.
-    <p>
-    Let  \(safe\) be a set of states where we want to prove that all
-    computations that start in states in \(init\) remain in
-    \(safe\).
-    <hr class="new2">
-    <p style="color:blue;">
-    Our proof obligation is to show that every state on every path
-    from every state in \(init\) is in \(safe\).
-    </p>
-    <hr class="new2">
-    <p>
-    For sets \(P, Q\) of states, we will use the short form, "<i>every
-    path from \(P\) is in \(Q\)</i>" for "every state in every path
-    from every vertex in \(P\) is in \(Q\)."
+<p>
+In the diagram, all the vertices in the outer circle are in
+  \(Q\). Both vertices in the green area and the yellow area are in
+\(Q\). The vertices in the yellow area are in \(P\).
+The graph shows that no path from the yellow
+area can escape the outer circle.
+</p>
+<p>
+\(P\) lies entirely within \(Q\) because there are zero-length paths
+from each vertex in \(P\) back to itself (and so \(P
+\stackrel{*}{\rightarrow} P\)) and these paths must lie
+inside \(Q\).
+</p>
+<p>
+\(
+P \stackrel{*}{\rightarrow} Q \quad \Rightarrow \quad P \subseteq Q
+\)
+</p>
+
+<p>
+There may be a vertex \(w\) in \(Q\)
+which has an edge to a vertex outside \(Q\). Then there can be no
+path to \(w\) from \(P\) because, in that case, there would be a path from \(P\)
+to outside \(Q\).
+</p>
+
+<p style="color:red;"><b>Example of \(P \stackrel{*}{\rightarrow}
+Q\)</b></p>
+<p>
+\(
+\{1, 2\} \rightarrow \{1, 2, 4, 5, 6, 7\}
+\)
+</p>
+
+<p>
+  Explanation: There is a zero-hop path from vertex \(1\) back to
+itself, and from vertex \(2\) back to itself. There are paths from
+\(2\) to \(4\) and \(5\), and there are paths from \(1\) to \(6\) and
+\(7\). There are no paths from \(1\) or \(2\) to \(0\) or \(3\).
+
+<h3 class="w3-text-teal">Safety Proof Obligation</h3>
+Let \(init\) be the set of initial vertices and \(safe\) be the set of
+safe vertices.
+</p>
+
+
+<hr class="new2">
+<h4 style="color:blue;">To prove that a system is safe, we must show
+that:
+<p>
+\(init \stackrel{*}{\rightarrow} safe \quad \)
+<h4>
+<hr class="new2">
 
 
 <!----------------------------------------------->

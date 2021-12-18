@@ -11,7 +11,7 @@
 html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 .w3-sidebar {
   z-index: 3;
-  width: 200px;
+  width: 150px;
   top: 43px;
   bottom: 0;
   height: inherit;
@@ -32,18 +32,24 @@ hr.new2 {
 <!-- Navbar -->
 <div class="w3-top">
   <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
-    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
-    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    <a class="w3-bar-item w3-button w3-right w3-hide-large
+    w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)"
+    onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    
+    <a href="../../index.html" class="w3-bar-item w3-button w3-hide-small
     w3-hover-white">Distributed Algorithms</a>
-    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    
+    <a href="../../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
     w3-hover-white">Contents</a>
-    <a href="../cross_reference.html" class="w3-bar-item w3-button
+    
+    <a href="../../cross_reference.html" class="w3-bar-item w3-button
     w3-hide-small w3-hover-white">Index</a>
     
     <a href="../ReviewOfBasics.html"
     class="w3-bar-item w3-button w3-hide-small">
     Review of Basics
     </a>
+    
   </div>
   </div>
  
@@ -73,8 +79,8 @@ hr.new2 {
 <!-- Overlay effect when opening sidebar on small screens -->
 <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
-<!-- Main content: shift it to the right by 200 pixels when the sidebar is visible -->
-<div class="w3-main" style="margin-left:200px">
+<!-- Main content: shift it to the right by 150 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:150px">
   
 <script id="MathJax-script" async
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
@@ -108,8 +114,10 @@ hr.new2 {
 guard -> command
     </pre>
     The execution of the loop is as follows: Execute any guarded command
-    of the loop for which the guard evaluates to True. The loop
-    terminates when all guards evaluate to False.
+    of the loop for which the guard evaluates to True. Execution of the loop
+    terminates when all guards evaluate to False. We will look at
+    examples where we are required to show that execution of the loop
+    terminates and other examples where the loop may execute forever.
     </p>
 
 
@@ -135,16 +143,17 @@ for all i where 0 < i < N:
     order. Execution of the loop terminates when all guards are False,
     and therefore all adjacent pairs are in order.
 
+
+
     <hr class="new2">
-    <h5 style="color:blue;">
+    <p style="color:blue;">
     In the next chapter,
     <a href="../FoundationsOfDistributedAlgorithms"><i>Foundations of
 Distributed Algorithms</i></a>,
 we will see that a model of distributed computation is
     nondeterministic iteration in which one agent is selected
-    nondeterministically to change its state at each step. The model
-    extends do-od loops by introducting the concept of fairness.
-    </h5>
+    nondeterministically to change its state at each step.
+    </p>
     <hr class="new2">
 
 
