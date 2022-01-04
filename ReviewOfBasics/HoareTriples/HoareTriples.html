@@ -11,7 +11,7 @@
 html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 .w3-sidebar {
   z-index: 3;
-  width: 200px;
+  width: 150px;
   top: 43px;
   bottom: 0;
   height: inherit;
@@ -63,7 +63,7 @@ hr.new2 {
   
   <a class="w3-bar-item w3-button w3-hover-black"
   href="../Invariant/Invariant.html">
-  Next: States and Safety
+  Next: States, Invariants, Safety
   </a>
   
   <a class="w3-bar-item w3-button w3-hover-black"
@@ -76,8 +76,8 @@ hr.new2 {
 <!-- Overlay effect when opening sidebar on small screens -->
 <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
-<!-- Main content: shift it to the right by 200 pixels when the sidebar is visible -->
-<div class="w3-main" style="margin-left:200px">
+<!-- Main content: shift it to the right by 150 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:150px">
   
 <script id="MathJax-script" async
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
@@ -94,7 +94,7 @@ hr.new2 {
 
     
     <hr class="new2">
-    <h5 style="color:blue;">
+    <p style="color:blue;">
     A <a
     href="https://en.wikipedia.org/wiki/Hoare_logic">Hoare triple</a>
     has the form \(\{P\} c \{Q\}\) where \(P\) and \(Q\) are predicates on
@@ -102,6 +102,7 @@ hr.new2 {
     triple is that if \(P\) holds when the command \(c\) is initiated
     then execution of the command terminates and \(Q\) holds upon
     termination.
+    </p>
     </h5>
     <hr class="new2">
 
