@@ -1,0 +1,52 @@
+
+    <!------------------------------------------------------------>
+    <h1 class="w3-text-teal">Nondeterministic Iteration</h1>
+    <!------------------------------------------------------------>
+    
+    This module is a review of nondeterministic iteration implemented
+    as
+    <a href="https://en.wikipedia.org/wiki/Guarded_Command_Language">
+<i>do-od</i> loops.</a>
+
+    A <i>do-od</i> loop consists of a set of guarded commands. A guarded
+    command consists of a guard and a command, and we use the syntax:
+    <pre>
+guard -> command
+</pre>
+    The execution of the loop is as follows: Execute any guarded command
+    of the loop for which the guard evaluates to True. Execution of the loop
+    terminates when all guards evaluate to False.
+    
+    <p>
+    A do-od loop is an example of a nondeterministic program:
+    Multiple guards may be true and the command that is executed is
+    chosen nondeterministically.
+
+    <h3 style="color:red;">Example: Sorting</h3>
+    Let \(X\) be an array of \(N\) numbers. The following loop sorts
+    the array in ascending order.  (We assume that indices
+    start at 0.)
+    <pre>
+for all i where 0 < i < N:
+   X[i-1] > X[i]   ->    X[i-1], X[i] = X[i], X[i-1]
+    </pre>
+    
+    The loop has \(N-1\) guarded commands. Execution of the loop
+    proceeds by executing any of the \(N-1\) guarded commands for
+    which the guard is true. So, execution of the loop proceeds by
+    flipping any adjacent pair of elements that is out of
+    order. Execution of the loop terminates when all guards are False,
+    and therefore all adjacent pairs are in order.
+
+
+
+    <hr class="new2">
+    <h5 style="color:blue;">
+    Distributed computation is modeled as
+    nondeterministic iteration where at each step one agent is
+    selected nondeterministically to change its state.
+    This model extends the do-od loop by adding the concept of
+    <a href=""><i>fairness</i></a>.
+
+    </h5>
+    <hr class="new2">

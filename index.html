@@ -1,341 +1,204 @@
-
+<title>table_of_contents.html</title>
+<!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
+
 <html lang="en">
-<title>index</title>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
 <link rel="stylesheet"
 href="https://fonts.googleapis.com/css?family=Roboto">
+
 <link rel="stylesheet"
 href="https://www.w3schools.com/lib/w3-theme-blue.css">
 
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <style>
 html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
 /* Thick blue border */
 hr.new2 {
   border: 2px solid blue;
 }
 </style>
 
+
 <body>
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
 
+  <a href="index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
 
+  <a href="table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+
+<nav
+class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5
+w3-animate-left" 
+id="mySidebar">
+
+<a href="javascript:void(0)"
+onclick="w3_close()"
+class="w3-right w3-xlarge w3-padding-large w3-hover-black
+w3-hide-large"
+title="Close Menu">
+<i class="fa fa-remove"></i>
+</a>
+
+<!--END Heading  ---------------------------->
+ 
+<!-- Start Sidebar----------> 
+ 
+<a class="w3-bar-item w3-button w3-hover-black "
+href="ReviewOfBasics/Introduction/Introduction.html" > 
+Review Sequential Programs
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="FoundationsOfDistributedSystems/Introduction/Introduction.html" > 
+Foundations
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="Timelines/Introduction/Introduction.html" > 
+Snapshots and Clocks
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="GlobalSnapshotApplications/GlobalSnapshotApplications.html" > 
+Detection Algorithms
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="DiffusingComputations/DiffusingComputations.html" > 
+Diffusion and Gossip Algorithms
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="SelfStabilization/SelfStabilization.html" > 
+Self Stabilization
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="Knowledge/Knowledge.html" > 
+What Agents Know
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="ConsensusImpossible/ConsensusImpossible.html" > 
+Consensus
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="Byzantine/Byzantine.html" > 
+Byzantine Faults
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="CryptoCurrencyIntroduction/CryptoCurrencyIntroduction.html" > 
+Cryptocurrency
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="DiningPhilosophers/DiningPhilosophers.html" > 
+Distributed Collaboration
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="ClockSynchronization/Introduction/Introduction.html" > 
+Clock Synchronization
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="CloudComputing/Introduction/Introduction.html" > 
+Cloud Computing Algorithms
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="Streams/Introduction/Introduction.html" > 
+Stream Algorithms
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="DistributedData/Introduction/Introduction.html" > 
+Distributed Data
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="ContinuousSystems/Introduction/Introduction.html" > 
+Continuous Systems
+</a>
+
+</nav>
+<!-- End Sidebar---------->
+ 
+<!-- Start overlay ---------------------------------->
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large"
+  onclick="w3_close()"
+  style="cursor:pointer"
+  title="close side menu"
+  id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
 <script id="MathJax-script" async
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
 </script>
   
-  <div class="w3-row w3-padding-64">
-  <div class="w3-twothird w3-container">
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+<!-- End overlay ---------------------------------->
+  <h2 class="w3-text-teal">Distributed Algorithms</h2>
+  This website has short, self-contained descriptions of distriubuted algorithms and
+  additional supporting material such as videos, examples, self tests, and longer
+  explanations.
+  Similar methods are used to design
+  both sequential and distributed algorithms.
+  The website uses the
+  <a
+  href="https://dl.acm.org/doi/10.5555/59087">UNITY</a> model of computation, which is
+  an incremental extension of
+  <a href="https://en.wikipedia.org/wiki/Guarded_Command_Language">
+  guarded command iteration</a>.
+
+  <p>
+   <p>
+ Algorithms are described in terms of graphs as
+  well as by using UNITY logic which is related to the universal
+  fragment of 
+  <a href="https://en.wikipedia.org/wiki/Computation_tree_logic">
+  Computation Tree Logic</a>.
+  Informal algorithm descriptions allow reader to understand key
+   ideas quickly; however, the descriptions have enough detail so that readers can
+  use them to construct formal proofs.
+  <p>
+  The website is used in undergraduate classes taken by students with
+  an elementary knowledge of graphs.
+  
+  
+<!--Start Footer--------------------------------------->
 
 
-
-    <h3 class="w3-text-teal">About</h3>
-    This website contains descriptions of distributed algorithms.
-The description of each algorithm is self contained.
-Some descriptions include videos, self tests, and examples.
-More algorithms, programs and simulations are being added.
-This material is used in a course for third-year undergraduates at
-Caltech.
-
-    
-
-    <h3 class="w3-text-teal">Contents</h3>
-
-    <h4 class="w3-text-teal">Basics</h4>
-    Review of basic concepts from sequential algorithms.
-    <ol>
-      <li>
-      <a href="ReviewOfBasics/ReviewOfBasics.html">
-      Basics: Introduction
-      </a> 
-      </li>
-      <li>
-      <a href="ReviewOfBasics/Loops/Loops.html">
-      Nondeterministic iteration
-      </a> 
-      </li>
-      <li>
-      <a href="ReviewOfBasics/Predicates/Predicates.html">
-      Predicates
-      </a>
-      </li>
-      <li>
-      <a href="ReviewOfBasics/HoareTriples/HoareTriples.html">
-      Hoare triples
-      </a>
-      </li>
-      <li>
-      <a href="ReviewOfBasics/Invariant/Invariant.html">
-      States & Invariant
-      </a>
-      </li>
-      <li>
-      <a href="ReviewOfBasics/LoopTermination/LoopTermination.html">
-      Proving termination.
-      </a>
-      </li>
-      <li>
-      <a href=
-      "ReviewOfBasics/ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html">
-      Examples: correctness.
-      </a>
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Foundations of Distributed Systems</h4>
-    <ol>
-      <li>
-      <a href="FoundationsOfDistributedSystems/FoundationsOfDistributedSystems.html">
-      Foundations Of Distributed Systems: Introduction
-      </a> 
-      </li>
-      <li>
-      <a href="Safety/Safety.html">
-      State-transition systems and safety
-      </a>
-      </li>
-      <li>
-      <a
-      href=
-      "DistributedSystemsIntroduction/DistributedSystemsIntroduction.html">
-      Distributed Systems: Introduction
-      </a>
-      </li>
-      <li>
-      <a
-      href="Channels/Channels.html">
-      Agent timelines
-      </a>
-      </li>
-      <li>
-      <a href="Progress/Progress.html">
-      Progress: Introduction
-      </a>
-      </li>
-      <li>
-      <a href="ProgressProperties/ProgressProperties.html">
-      Progress: Proofs
-      </a>
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Global Snapshots and Logical Clocks</h4>
-    <ol>
-      <li>
-      <a href="TimelineDiagrams/TimelineDiagrams.html">
-      Timelines
-      </a>
-      </li>
-      <li>
-      <a href="SnapshotIntroduction/SnapshotIntroduction.html">
-      Introduction to snapshots in shared-memory systems.
-      </a>
-      </li>
-      <li>
-      <a href="SnapshotIntroduction/VectorClocks.html">
-      Vector clocks
-      </a>
-      </li>
-      <li>
-      <a href="SnapshotIntroduction/SnapshotIntroductionExample.html">
-      Snapshots of shared-memory systems
-      </a>
-      </li>
-      <li>
-      <a href="Channels/Channels.html">
-      Consistent cuts across timelines of distributed systems
-      </a>
-      </li>
-      <li>
-      <a href="ChannelSnapshots/ChannelSnapshots.html">
-      Global snapshots
-      </a>
-      </li>
-      <li>
-      <a href="SnapshotIntroduction/SnapshotIntroduction.html">
-      Logical clocks
-      </a>
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Detection Algorithms</h4>
-    <ol>
-      <li>
-      <a
-      href="GlobalSnapshotApplications/GlobalSnapshotApplications.html"> 
-      Detecting Termination
-      </a>
-      </li>
-      <li>
-      <a
-      href="DeadlockDetection_And/DeadlockDetection_And.html"> 
-      Detecting database deadlock
-      </a>
-      </li>
-      <li>
-      <a
-      href=
-      "ApplicationsDiffusingComputation/ApplicationsDiffusingComputation.html"> 
-      Detecting communication deadlock
-      </a>
-      </li>
-    </ol>
-    
-    <h4 class="w3-text-teal">Diffusing and gossip computations</h4>
-    <ol>
-      <li>
-      <a
-      href=
-      "DiffusingComputations/DiffusingComputations.html"> 
-      The Dijkstra-Scholten diffusing computation algorithm
-      </a>
-      </li>
-    </ol>
-    
-    <h4 class="w3-text-teal">Self stabilization</h4>
-    <ol>
-      <li>
-      <a
-      href="SelfStabilization/SelfStabilization.html">
-      Self stabilization of a token ring
-      </a>
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Agent knowledge</h4>
-    <ol>
-      <li>
-      <a href="Knowledge/Knowledge.html">
-      How processes learn
-      </a>
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Consensus</h4>
-    <ol>
-      <li>
-      <a
-      href="ConsensusImpossible/ConsensusImpossible.html">
-      Impossibility of asynchronous consensus with faulty agents
-      </a>
-      </li>
-      <li>
-      <a
-      href="Paxos/Paxos.html">
-      The Paxos algorithm
-      </a>
-      </li>
-      <li>
-      The Raft algorithm
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Cryptocurrency</h4>
-    <ol>
-      <li> 
-      <a
-      href="CryptoCurrencyIntroduction/CryptoCurrencyIntroduction.html">
-      Introduction to cryptographic hash functions.
-      </a>
-      </li>
-      <li>
-      <a href="BitCoin/BitCoin.html">
-      BitCoin algorithm
-      </a>
-      </li>
-      <li>
-      Etherium algorithm
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Byzantine faults</h4>
-    Algorithms dealing with Byzantine faults
-    <ol>
-      <li>
-      <a
-      href="Byzantine/Byzantine.html">
-      Byzantine algorithms with written messages
-      </a>
-      </li>
-      <li>
-      <a
-      href="Byzantine/Byzantine.html">
-      Byzantine algorithms with oral messages
-      </a>
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Distributed collaboration</h4>
-    <ol>
-      <li>
-      <a href="DiningPhilosophers/DiningPhilosophers.html">
-      Mutual exclusion: Distributed dining philosophers
-      </a>
-      </li>
-      <li>
-      <a href="DrinkingPhilosophers/DrinkingPhilosophers.html">
-      Distributed resource management: Drinking philosophers
-      </a>
-      </li>
-      <li>
-      Rendezvous in distributed systems: Committee coordination
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Clock synchronization</h4>
-    <ol>
-      <li>
-      Network and Precision Time Protocols
-      </li>
-      <li>
-      Clock synchronization in distributed systems
-      </li>
-    </ol>
-
-    
-
-    <h4 class="w3-text-teal">Cloud-computing algorithms</h4>
-    <ol>
-      <li>
-      Map-reduce
-      </li>
-      <li>
-      Millwheel
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Stream algorithms</h4>
-    <ol>
-      <li>
-      Finding repeated elements in streams: Misra & Gries
-      </li>
-      <li>
-      Finding repeated elements in streams: Approximate algorithms
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Continuous distributed systems</h4>
-    <ol>
-      <li>
-      Asynchronous averaging
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Distributed data structures</h4>
-    <ol>
-      <li>
-      Distributed tables: hashing
-      </li>
-      <li>
-      Distributed data: BigTable
-      </li>
-    </ol>
-
-
-
-    
-  <footer id="myFooter">
+</h5>
 
     <div class="w3-container w3-theme-l1">
       <p>K. Mani Chandy,
@@ -344,8 +207,37 @@ Caltech.
       <br>
       California Institute of Technology</p>
     </div>
-  </footer>
+</footer>
+    
 
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
 
 </body>
 </html>

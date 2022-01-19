@@ -1,0 +1,86 @@
+
+    
+    <h2 class="w3-text-teal">States, Invariants, Stable, Safety</h2>   
+    The state of a <i>do-od</i> loop is given by the values of its
+    variables.
+    The execution of a guarded command, whose guard evaluates to true,
+    may change values of variables, and thus cause a transition from
+    one state to another.
+    There are no transitions from a state in which the guards of all
+    commands are false.
+    If the guards of multiple commands are true in a state \(s\) then
+    there can be transitions from \(s\) to multiple different states;
+    any of these transitions from \(s\) could be taken.
+
+    <p style="color:red;">Example</p>
+    Consider a do-od loop that sorts an array \(x[0, 1, 2,
+    3]\) in increasing order by flipping adjacent out-of-order
+    pairs. The loop has a guarded command for each adjacent pair of
+    elements; the guard evaluates to true when the pair is out
+    of order, and the command switches the pair.
+    <p>
+    If \(x =[10, 5, 1]\) then one of two commands can be executed:
+    either flip \(x[0], x[1]\) or flip \(x[1], x[2]\).
+    The state-transition graph has edges from state \(x =[10, 5, 1]\)
+    to state \(x =[5, 10, 1]\) and to state \(x =[10, 1, 5]\).
+
+    <h4 class="w3-text-teal">States and Graphs</h4>
+    The states and state transitions of a system are represented by a
+    <a href="https://en.wikipedia.org/wiki/Directed_graph">
+    directed graph
+    </a>
+    in which vertices represent states and edges represent
+    transitions.
+    We call this graph the state-transition graph.
+
+    <h4 class="w3-text-teal">Computations and Paths</h4>
+    A <i>computation</i> is a sequence of states where there exists a
+    transition from each state in the sequence to the next state of
+    the sequence.
+    A computation is represented by a path through the
+    state-transition graph. 
+    <p>
+    In this module, we treat the following as equivalent: vertex and
+    state, edge and state transition, computation and path.
+
+<h4 class="w3-text-teal">Stable</h4>
+A predicate \(P\) on states is said to be <i>stable</i> exactly when all
+transitions from states in which \(P\) holds are to states in
+which \(P\) holds.
+In the state-transition diagram, a set \(P\) of vertices is stable exactly
+when all edges from vertices in \(P\) are to vertices in \(P\).
+
+<p>
+We prove that a predicate \(P\) is stable for a do-od loop by
+showing that it is maintained by all its guarded commands:
+<p>
+\(
+\{P\} \; g \rightarrow c \; \{P\}
+\)
+    
+<h4 class="w3-text-teal">Initial Conditions and Invariants</h4>
+The <i>initial condition</i> of a loop is a predicate that holds when
+iterations of the loop are initiated.
+An <i>invariant</i> of a loop is a stable predicate that holds
+initially.
+
+<p>
+The initial condition and invariant specify an initial and invariant
+set of states in the state-transition diagram.
+All paths from initial states remain forever in the invariant
+set of set of states.
+
+
+    <h3 class="w3-text-teal">
+    Self tests
+    </h3>
+    are given in
+    <a href =
+    "../ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html">
+    Examples of Correctness Proofs.
+    </a>
+
+    <h3 class="w3-text-teal">Summary</h3>
+    Proofs of safety for distributed and sequential algorithms are
+identical.
+We will review the material in this module when we discuss safety.

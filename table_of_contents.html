@@ -1,92 +1,185 @@
-
+<title>table_of_contents.html</title>
+<!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
+
 <html lang="en">
-<title>index</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <style>
 html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 .w3-sidebar {
   z-index: 3;
-  width: 150px;
+  width: 250px;
   top: 43px;
   bottom: 0;
   height: inherit;
 }
 /* Thick blue border */
-hr.new5 {
-  border: 5px solid blue;
-}
-/* Thick blue border */
 hr.new2 {
   border: 2px solid blue;
 }
-
 </style>
 
+
 <body>
-
-<!-- Navbar -->
 <div class="w3-top">
-  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
-    <a class="w3-bar-item w3-button w3-right w3-hide-large
-    w3-hover-white w3-large w3-theme-l1"
-    href="javascript:void(0)" onclick="w3_open()"><i class="fa
-    fa-bars"></i>
-    </a>
-    <a href="index.html" class="w3-bar-item w3-button w3-hide-small
-    w3-hover-white">Distributed Algorithms
-    </a>
-    <a href="index.html" class="w3-bar-item w3-button w3-hide-small
-    w3-hover-white">Contents
-    </a>
-    <a href="cross_reference.html"
-    class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index
-    </a>
-  </div>
-  </div>
- 
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
 
-<!-- Sidebar -->
-<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
-  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
-    <i class="fa fa-remove"></i>
+  <a href="index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
   </a>
-  
-  <h4 class="w3-bar-item"><b> Distributed
-  Algorithms</h3>
-  
+
+  <a href="table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+
+<nav
+class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5
+w3-animate-left" 
+id="mySidebar">
+
+<a href="javascript:void(0)"
+onclick="w3_close()"
+class="w3-right w3-xlarge w3-padding-large w3-hover-black
+w3-hide-large"
+title="Close Menu">
+<i class="fa fa-remove"></i>
+</a>
+
+<!--END Heading  ---------------------------->
+ 
+<!-- Start Sidebar----------> 
+ 
+<a class="w3-bar-item w3-button w3-hover-black "
+href="ReviewOfBasics/Introduction/Introduction.html" > 
+Review Sequential Programs
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="FoundationsOfDistributedSystems/Introduction/Introduction.html" > 
+Foundations
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="Timelines/Introduction/Introduction.html" > 
+Snapshots and Clocks
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="GlobalSnapshotApplications/GlobalSnapshotApplications.html" > 
+Detection Algorithms
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="DiffusingComputations/DiffusingComputations.html" > 
+Diffusion and Gossip Algorithms
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="SelfStabilization/SelfStabilization.html" > 
+Self Stabilization
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="Knowledge/Knowledge.html" > 
+What Agents Know
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="ConsensusImpossible/ConsensusImpossible.html" > 
+Consensus
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="Byzantine/Byzantine.html" > 
+Byzantine Faults
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="CryptoCurrencyIntroduction/CryptoCurrencyIntroduction.html" > 
+Cryptocurrency
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="DiningPhilosophers/DiningPhilosophers.html" > 
+Distributed Collaboration
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="ClockSynchronization/Introduction/Introduction.html" > 
+Clock Synchronization
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="CloudComputing/Introduction/Introduction.html" > 
+Cloud Computing Algorithms
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="Streams/Introduction/Introduction.html" > 
+Stream Algorithms
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="DistributedData/Introduction/Introduction.html" > 
+Distributed Data
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="ContinuousSystems/Introduction/Introduction.html" > 
+Continuous Systems
+</a>
+
 </nav>
+<!-- End Sidebar---------->
+ 
+<!-- Start overlay ---------------------------------->
 
 <!-- Overlay effect when opening sidebar on small screens -->
-<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+<div class="w3-overlay w3-hide-large"
+  onclick="w3_close()"
+  style="cursor:pointer"
+  title="close side menu"
+  id="myOverlay"></div>
 
-<!-- Main content: shift it to the right by 150 pixels when the sidebar is visible -->
-<div class="w3-main" style="margin-left:150px">
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
   
 <script id="MathJax-script" async
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
 </script>
   
-  <div class="w3-row w3-padding-64">
-  <div class="w3-twothird w3-container">
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
 
-    <h2 class="w3-text-teal">Table of Contents</h2>
+<!-- End overlay ---------------------------------->
+    <h3 class="w3-text-teal">Contents</h3>
 
-    <h4 class="w3-text-teal">Review of Basics</h4>
+    <h4 class="w3-text-teal">Review: Sequential Programming Basics</h4>
+    Review of basic concepts from sequential algorithms.
     <ol>
       <li>
-      <a href="ReviewOfBasics/ReviewOfBasics.html">
-      Review of Basics: Introduction
+      <a href="ReviewOfBasics/Introduction/Introduction.html">
+      Basics: Introduction
       </a> 
       </li>
       <li>
       <a href="ReviewOfBasics/Loops/Loops.html">
-      Nondeterministic iteration: do-od loops
+      Nondeterministic iteration
       </a> 
       </li>
       <li>
@@ -101,54 +194,83 @@ hr.new2 {
       </li>
       <li>
       <a href="ReviewOfBasics/Invariant/Invariant.html">
-      States, Invariant, Stable, Safety
+      States & Invariant
       </a>
       </li>
       <li>
       <a href="ReviewOfBasics/LoopTermination/LoopTermination.html">
-      Proving termination of loops: variant functions.
+      Proving termination.
       </a>
       </li>
       <li>
       <a href=
       "ReviewOfBasics/ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html">
-      Examples of correctness proofs.
+      Examples: correctness.
+      </a>
+      
+    <ol>
+      <li>
+      <a href="ReviewOfBasics/ExamplesCorrectnessProofs/Sorting/Sorting.html">
+      Sorting
       </a>
       </li>
+      <li>
+      <a href="ReviewOfBasics/ExamplesCorrectnessProofs/ShortestPath/ShortestPath.html">
+      Shortest paths in a graph
+      </a>
+      </li>
+      <li>
+      <a href="ReviewOfBasics/ExamplesCorrectnessProofs/AverageOfSensors/AverageOfSensors.html">
+      Distributed averaging
+      </a>
+      </li>
+      <li>
+      <a href="ReviewOfBasics/ExamplesCorrectnessProofs/FlightFormation/FlightFormation.html">
+      Agents forming patterns in flight
+      </a>
+      </li>
+      <li>
+      <a href="ReviewOfBasics/ExamplesCorrectnessProofs/EarliestMeetingTime/EarliestMeetingTime.html">
+      Earliest meeting time of concurrent agents
+      </a>
+      </li>
+    </ol>
+  </li>
+      <li>
+      <a href="ReviewOfBasics/Safety/Safety.html">
+      State transition systems
+      </a>
+      </li>
+  
     </ol>
 
     <h4 class="w3-text-teal">Foundations of Distributed Systems</h4>
     <ol>
       <li>
-      <a href="FoundationsOfDistributedSystems/FoundationsOfDistributedSystems.html">
+      <a href="FoundationsOfDistributedSystems/Introduction/Introduction.html">
       Foundations Of Distributed Systems: Introduction
       </a> 
       </li>
       <li>
-      <a href="Safety/Safety.html">
-      State-transition systems and safety
-      </a>
-      </li>
-      <li>
       <a
       href=
-      "DistributedSystemsIntroduction/DistributedSystemsIntroduction.html">
+      "FoundationsOfDistributedSystems/DistributedSystemsIntroduction/DistributedSystemsIntroduction.html">
       Distributed Systems: Introduction
       </a>
       </li>
       <li>
       <a
-      href="Channels/Channels.html">
+      href="FoundationsOfDistributedSystems/Channels/Channels.html">
       Agent timelines
       </a>
       </li>
       <li>
-      <a href="Progress/Progress.html">
+      <a href="FoundationsOfDistributedSystems/Progress/Progress.html">
       Progress: Introduction
       </a>
       </li>
       <li>
-      <a href="ProgressProperties/ProgressProperties.html">
+      <a href="FoundationsOfDistributedSystems/ProgressProperties/ProgressProperties.html">
       Progress: Proofs
       </a>
       </li>
@@ -265,6 +387,24 @@ hr.new2 {
       </li>
     </ol>
 
+    <h4 class="w3-text-teal">Byzantine faults</h4>
+    Algorithms dealing with Byzantine faults
+    <ol>
+      <li>
+      <a
+      href="Byzantine/Byzantine.html">
+      Byzantine algorithms with written messages
+      </a>
+      </li>
+      <li>
+      <a
+      href="Byzantine/Byzantine.html">
+      Byzantine algorithms with oral messages
+      </a>
+      </li>
+    </ol>
+
+
     <h4 class="w3-text-teal">Cryptocurrency</h4>
     <ol>
       <li> 
@@ -283,22 +423,6 @@ hr.new2 {
       </li>
     </ol>
 
-    <h4 class="w3-text-teal">Byzantine faults</h4>
-    Algorithms dealing with Byzantine faults
-    <ol>
-      <li>
-      <a
-      href="Byzantine/Byzantine.html">
-      Byzantine algorithms with written messages
-      </a>
-      </li>
-      <li>
-      <a
-      href="Byzantine/Byzantine.html">
-      Byzantine algorithms with oral messages
-      </a>
-      </li>
-    </ol>
 
     <h4 class="w3-text-teal">Distributed collaboration</h4>
     <ol>
@@ -365,17 +489,49 @@ hr.new2 {
       Distributed data: BigTable
       </li>
     </ol>
-    
+<!--Start Footer--------------------------------------->
 
-  <footer id="myFooter">
+
+</h5>
 
     <div class="w3-container w3-theme-l1">
       <p>K. Mani Chandy,
       <br>
-      Simon Ramo Professor, Emeritus, California Institute of Technology</p>
+      Simon Ramo Professor, Emeritus,
+      <br>
+      California Institute of Technology</p>
     </div>
-  </footer>
+</footer>
+    
 
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
 
 </body>
 </html>
