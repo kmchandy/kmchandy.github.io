@@ -115,6 +115,10 @@ Loop Variants
 href="../ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html" > 
 Correctness Proofs: Examples
 </a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../Safety/Safety.html" > 
+Proving Safety
+</a>
 
 </nav>
 <!-- End Sidebar---------->
@@ -191,14 +195,15 @@ all guards are False.
     following Hoare triple for all \(j\): 
 <p>
 \(\forall K: \quad
-\{(f = K) \wedge I \wedge g_{j}\} \; c_{j} \; \{f < k\}
+\{(f = k) \wedge I \wedge g_{j}\} \; c_{j} \; \{f < k\}
 \)
 <p>
 Because \(I\) is an invariant it holds before every command is
     executed. Since \(c_{j}\) is executed only if \(g_{j}\) holds, we
     know that \(I \wedge g_{j}\) holds before \(c_{j}\) is
-    executed. We use this knowledge to show that execution of any
-command reduces the variant function.
+executed.
+Execution of the command reduces the variant function from \(k\) to
+    some smaller value.
 
 <!-------------------------------------------------------------------->
     <h3 class="w3-text-teal">Variant Functions and Graphs</h3>
@@ -210,11 +215,9 @@ The diagram below shows an acyclic graph with edges directed from
 higher to lower \(f\) values.
 
 <p>
-A termination state (vertex) is one without outgoing edges.
-The variant function tells us that the graph does not have paths
-that start at initial states and that have
-an infinite number of hops; every path reaches a terminal state in a
-finite number of steps.
+A terminal state (vertex) is one without outgoing edges.
+The existence of a variant function tells us that a terminal state is
+reached from an initial state in a finite number of state transitions.
 
 
 <figure>
