@@ -171,32 +171,33 @@ Continuous Systems
   This website has short, self-contained descriptions of distributed
   algorithms.
   It also has supporting videos, examples, self tests, and longer
-  descriptions.
+  explanations.
   The material is used in an undergraduate class taken by students with
   an elementary knowledge of graphs.
   Informal descriptions allow students to understand key ideas
   quickly while ancillary material provides proofs and details.
 
   <p>
-  The course emphasizes that methods used to design  sequential and
-  distributed algorithms are similar.
+  Methods used in this course to design distributed algorithms
+  are extensions of methods used in sequential algorithms.
   The computation model of distributed systems is
   the 
   <a
   href="https://dl.acm.org/doi/10.5555/59087">UNITY</a> model
   which is an incremental extension of the
   <a href="https://en.wikipedia.org/wiki/Guarded_Command_Language">
-  nondeterministic loop<a>.
+  nondeterministic loop<a> used in sequential programming.
   The descriptions of many distributed algorithms are based on the
-  familiar loop.
+  this familiar loop.
 
   <p>
-  The descriptions of some algorithms require <i>fairness</i> and a
-  <i>temporal logic</i>.
-  These descriptions use
+  Reasoning about the correctness of some algorithms require the
+  concept of <i>fairness</i>. 
+  We use simple
   <a href="https://dl.acm.org/doi/10.5555/59087">
-  UNITY logic</a> because it is simple and is 
-  is defined in terms of the universal fragment of the widely-used 
+  UNITY logic</a> to reason about these algorithms.
+  We define this logic in terms of the universal fragment of the
+  widely-used 
   <a href="https://en.wikipedia.org/wiki/Computation_tree_logic">
   Computation Tree Logic</a>.
   Algorithm descriptions have enough detail to allow readers
