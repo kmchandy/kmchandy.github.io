@@ -1,5 +1,10 @@
   <!--------------------------------------------------------->
-  <h2 class="w3-text-teal">State Transition Systems and Graphs</h2>
+<h2 class="w3-text-teal">Proving Safety</h2>
+In this module we use methods for reasoning about sequential programs
+--- reviewed in the previous modules of this chapter ---
+to reason about the safety of concurrent systems.
+
+<p>
   We represent the states and state transitions of a system by a <a
   href="https://en.wikipedia.org/wiki/Directed_graph">directed
   graph</a> in which vertices represent states and edges represent
@@ -8,8 +13,30 @@
   A <i>computation</i> (also called <i>trajectory</i>) is a path
 through the graph.
 An empty path is also a computation.
-  In this module we treat vertex and state, edges and state
-  transitions, computations and paths as equivalent. 
+In this module the following are equivalent:
+vertex and state, edges and state transitions, computations and
+paths.
+<p>
+We begin by introducing <i>stable sets of states</i> and then describe
+how we prove safety for both sequential and concurrent programs.
+
+<!----------------------------------------------->
+<h3 class="w3-text-teal">Stable Sets of Vertices</h3>
+A set of vertices is stable exactly when every edge from a vertex in
+the set is to a vertex in the set.
+<p>
+Because there are no edges from inside a stable set to outside the
+set, there are also no paths from vertices inside a stable set to
+vertices outside the set.
+There may, however, be paths from outside a stable set into the set.
+</p>
+
+
+
+<figure>
+  <img src="StablePaths.jpg" alt="Fig5" style="width:50%">>
+  <figcaption>Fig.4 - Paths from a stable set remain in the set</figcaption>
+</figure>
 
 
   <h3 class="w3-text-teal">Safety Proof Obligation</h3>
@@ -21,39 +48,10 @@ An empty path is also a computation.
   Let  \(safe\) be a set of states where we want to prove that all
   computations that start in states in \(init\) remain in
   \(safe\).
-    <hr class="new2">
-    <p style="color:blue;">
-    Our proof obligation is to show that every state on every path
+    Our safety proof obligation is to show that every state on every path
     from every state in \(init\) is in \(safe\).
-    </p>
-    <hr class="new2">
-    <p>
-
-
-<!----------------------------------------------->
-<h3 class="w3-text-teal">Stable</h3>
-<i>stable</i> is a function from sets of vertices to the Booleans.
-\(stable(P)\) holds exactly when every edge from a vertex in \(P\) is
-to a vertex in \(P\).
 </p>
 
-
-
-<figure>
-  <img src="StablePaths.jpg" alt="Fig5" style="width:50%">>
-  <figcaption>Fig.4 - Paths from a stable set remain in the set</figcaption>
-</figure>
-
-<p>
-Because there are no edges from inside a stable set to outside the
-set, there are also no paths from inside a stable set to outside the
-set.
-There may,however, be paths from outside a stable set into the set.
-</p>
-
-
-<!-------------------------------------------------->
-<h3 class="w3-text-teal">How to Prove Safety: Invariants</h3>
 <hr class="new2">
 <h5 style="color:blue;">
 We prove safety
@@ -73,17 +71,15 @@ init \subseteq I \subseteq safe \quad
 </figure>
 
 <p>
-Any stable vertex set \(I\) that satisfies the above equation, \(init
-\subseteq I \subseteq safe\), is called an <i>invariant</i> of the
-graph.  Because \(I\) is stable, all paths from \(I\) remain within
-\(I\).  So all paths from \(init\) remain within \(I\).  Therefore,
-all paths from \(init\) remain within \(safe\).
+Because \(I\) is stable, all paths from \(I\) remain within
+\(I\).  Because \(init\) is a subset of \(I\), all paths from \(init\)
+remain within \(I\). 
+All paths from \(init\) remain within \(safe\) because \(I\)
+is in \(safe\).
 
-<p>
- We discharge our safety proof obligation by finding an
-invariant. 
-A system may have many invariants; all we have to do is find any one.
-</p>
+<h3  class="w3-text-teal">Invariant</h3>
+Any stable vertex set \(I\) that satisfies the equation
+\(init \subseteq I\) is an invariant.
 
 <!----------------------------------->
 <h3  class="w3-text-teal">Definition in Terms of Predicates</h3>
@@ -91,24 +87,30 @@ The concepts defined in terms of graphs extend to definitions in terms
 of
 <a href="../Predicates/Predicates.html">predicates</a> on states in
 the obvious way:
-A predicate corresponds to the set of vertices which is the extension
-of the predicate.
-Next, we summarize the definitions in terms of predicates.
+The extension of a predicate \(P\) is the set of states for which the
+predicate holds.
 <p>
-A predicate \(P\) is stable exactly when execution of all commands in which
-\(P\) holds terminate in states in which \(P\) continues to hold.
+A predicate \(P\) is stable exactly when execution of all commands in
+states in which
+\(P\) holds terminate in states in which \(P\) holds.
 In the terms of Hoare triples, \(P\) is stable exactly when, for all
 commands \(c\):
-<p>
+<bf>
 \(
-\{P\} \: c \: \{P\})
+\{P\} \: c \: \{P\}
 \)
 <p>
-Let \(init\) be a predicate that holds initially. Then \(P\) is an
-invariant exactly when:
+We use the following method to prove that a predicate \(safe\) holds
+for all states in all computations starting in states where \(init\)
+holds. We find any predicate \(I\) such that: 
 <p>
 \(
-[init \Rightarrow P] \wedge stable(P)
+[init \Rightarrow I] \wedge [I \Rightarrow safe] \wedge stable(I)
+\)
+<p>
+\(I\) is an invariant exactly when:
+\(
+[init \Rightarrow I] \wedge stable(I)
 \)
 
 <!----------------------------------->
