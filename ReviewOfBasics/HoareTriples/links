@@ -1,10 +1,6 @@
-../HoareTriples/HoareTriplesVideo.mp4#VIDEO
-../HoareTriples/HoareTriplesSelfTest.html#TEST
-../Introduction/Introduction.html#Review: Introduction
-../Loops/Loops.html#Nondeterministic Iteration
-../Predicates/Predicates.html#Predicates
+../Introduction/Introduction.html#CHAPTER: Review Sequential Programming
+../HoareTriples/HoareTriples.html#MODULES:
 ../HoareTriples/HoareTriples.html#Hoare Triples
-../Invariant/Invariant.html#Invariant
-../LoopTermination/LoopTermination.html#Loop Variants
-../ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html#Correctness Proofs: Examples
-../Safety/Safety.html#Proving Safety
+../HoareTriples/HoareTriplesExamples.html#Examples
+../HoareTriples/HoareTriplesVideo.mp4#Video
+../HoareTriples/HoareTriplesSelfTest.html#Self Test

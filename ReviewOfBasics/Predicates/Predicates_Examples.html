@@ -1,4 +1,4 @@
-<title>ReviewOfBasics/Predicates/Predicates.html</title>
+<title>ReviewOfBasics/Predicates/Predicates_Examples.html</title>
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
 
@@ -84,7 +84,7 @@ href="../Introduction/Introduction.html" >
 CHAPTER: Review of Sequential Programming
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../Loops/Loops.html" > 
+href="../Predicates/Predicates.html" > 
 MODULES:
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
@@ -123,53 +123,92 @@ Predicates: Video
 <div class="w3-twothird w3-container">
 
 <!-- End overlay ---------------------------------->
- <!------------------------------------------------------------>
-<h2 class="w3-text-teal">Predicates on States</h2>
-<!------------------------------------------------------------>
-The state of a program is given by the values of its variables.
-We reason about the correctness of programs by reasoning about sets of
-program states.
-For example, we will prove properties of a program such as:
-all states in all computations that start from any state in a set
-<i>init</i> of states  are in a set <i>safe</i>.
-<p>
-We use operations, such as union and intersection, on sets of
-states. For example, for a program with variables <code>x, y, z</code> the
-set <i>safe</i> may be defined as the 
-intersection of the set of states in which  <code>x > y</code> and the
-set in which <code>y > z</code>.
+<h3 style="color:red;">Example</h3>
+Consider a program with integer variables \(x, y\).
+The state of the program is given by the value of the tuple \(x, y\).
+The <i>universal set</i> is the set of all possible values of \(x,
+y\).
 
 <p>
-In this course, a 
- <a
- href="https://en.wikipedia.org/wiki/Predicate_(mathematical_logic)">predicate
- </a>
-is a function from states of a program to
-the Boolean constants \(\{True, False\}\).
-For example, for a program with variables
-<code>x, y</code>, the predicate <code>x > y</code> is true in
- the state <code>(x, y) = (1, 0)</code> and is false in the state
-<code>(x, y) = (1, 1)</code>. 
 
-
-</p>
-
-    <p class="w3-text-teal">Set of elements associated with a predicate</p>
-A predicate \(P\) on states of a program defines a set of states
-for which \(P\) holds. 
-For example, for a program with variables <code>(x, y)</code>, the
-state <code>(x, y) = (1, 0)</code> is a member of the set of states
-for which the
-predicate <code>x > y</code> whereas <code>(x, y) = (0, 1)</code> is
-not. 
-</p>
+Each state is represented by a point \(x, y\) in the plane.
+The universal set is shown as the red box that bounds the values that
+integers take in the program.
 
 <p>
-Disjunction (<i>or</i>, \(\vee\)) and conjunction  (<i>and</i>,
-\(\wedge\)) of predicates correspond to the union \(\cup\) and 
-intersection \(\cap\), respectively, of the corresponding sets of states.
-True is a predicate whose extension is the universal set, and
-False is a predicate whose extension is the empty set.
+The set of states for which a predicate holds is called the extension
+of the predicate. The
+extension of the predicate \(x = 0\) is shown by the vertical blue
+line, \(x = 0\).
+    
+<figure>
+  <img src="PredicatesImages/Slide1.jpeg" alt="Fig1" style="width:80%">>
+  <figcaption>Fig.1 - Set which is extension of \(x = 0\)</figcaption>
+</figure>
+
+The set of states which is the
+extension of the predicate \(y = 0\) is shown by the horizontal blue
+\(y = 0\).
+    
+<figure>
+  <img src="PredicatesImages/Slide2.jpeg" alt="Fig2" style="width:80%">>
+  <figcaption>Fig.2 - Set which is extension of \(y = 0\)</figcaption>
+</figure>
+
+The set of states which is the
+extension of the predicate \((x = 0) \wedge(y = 0)\) is shown by the blue
+square in the right most diagram: the box is at the intersection of
+\((x = 0)\) and \((y = 0)\).
+<figure>
+  <img src="PredicatesImages/Slide3.jpeg" alt="Fig3" style="width:80%">>
+  <figcaption>Fig.3 - Set which is extension of \((x = 0) \wedge(y = 0)\)</figcaption>
+</figure>
+
+
+
+The set of states which is the
+extension of the predicate \((x = 0) \vee (y = 0)\) is shown by the blue
+horizontal and vertical lines in the rightmost diagram; this set is
+the union of the sets 
+corresponding to
+\((x = 0)\) and \((y = 0)\).
+<figure>
+  <img src="PredicatesImages/Slide4.jpeg" alt="Fig4" style="width:80%">>
+  <figcaption>Fig.4 - Set which is extension of \((x = 0) \vee(y = 0)\)</figcaption>
+</figure>
+
+
+
+The set of states which is the
+extension of the predicate \((x = 0) \equiv (y = 0)\) is shown in the blue
+spaces in the rightmost diagram. A state satisfies this predicate exactly
+when:
+<p>
+\(
+((x \neq 0) \wedge (y \neq 0)) \vee ((x = 0) \wedge (y = 0))
+\)
+<p>
+<figure>
+  <img src="PredicatesImages/Slide5.jpeg" alt="Fig5" style="width:80%">>
+  <figcaption>Fig.5 - Set which is extension of \((x = 0) \equiv (y = 0)\)</figcaption>
+</figure>
+
+
+The set of states which is the
+extension of the predicate \((x = 0) \Rightarrow (y = 0)\) is shown in the blue
+spaces in the figure below. A state satisfies this predicate exactly
+when:
+<p>
+\(
+(x \neq 0) \vee (y = 0))
+\)
+<p>
+<figure>
+  <img src="PredicatesImages/Slide6.jpeg" alt="Fig6" style="width:80%">>
+  <figcaption>Fig.6 - Set which is extension of \((x \geq 0) \equiv
+\neg(x < 0)\)
+</figcaption>
+</figure>
 <!--Start Footer--------------------------------------->
 
     <hr class="new2">

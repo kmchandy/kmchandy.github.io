@@ -13,14 +13,18 @@
     <pre>
 guard -> command
 </pre>
-    The execution of the loop is as follows: Execute any guarded command
+    The execution of the loop is as follows: Execute <i>any</i> guarded command
     of the loop for which the guard evaluates to True. Execution of the loop
     terminates when all guards evaluate to False.
     
-    <p>
-    A do-od loop is an example of a nondeterministic program:
-    Multiple guards may be true and the command that is executed is
-    chosen nondeterministically.
+<p>
+Loops in most programming languages are deterministic: the next
+statement to be executed is uniquely determined by the current state
+of the program.
+
+A do-od loop is nondeterministic: Multiple guards may be true and the
+next statement to be executed can be any guarded command with a true
+guard. 
 
     <h3 style="color:red;">Example: Sorting</h3>
     Let \(X\) be an array of \(N\) numbers. The following loop sorts
@@ -36,17 +40,4 @@ for all i where 0 < i < N:
     which the guard is true. So, execution of the loop proceeds by
     flipping any adjacent pair of elements that is out of
     order. Execution of the loop terminates when all guards are False,
-    and therefore all adjacent pairs are in order.
-
-
-
-    <hr class="new2">
-    <h5 style="color:blue;">
-    Distributed computation is modeled as
-    nondeterministic iteration where at each step one agent is
-    selected nondeterministically to change its state.
-    This model extends the do-od loop by adding the concept of
-    <a href=""><i>fairness</i></a>.
-
-    </h5>
-    <hr class="new2">
+    at which point the array is in order.

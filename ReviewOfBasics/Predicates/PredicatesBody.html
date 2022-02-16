@@ -1,0 +1,47 @@
+ <!------------------------------------------------------------>
+<h2 class="w3-text-teal">Predicates on States</h2>
+<!------------------------------------------------------------>
+The state of a program is given by the values of its variables.
+We reason about the correctness of programs by reasoning about sets of
+program states.
+For example, we will prove properties of a program such as:
+all states in all computations that start from any state in a set
+<i>init</i> of states  are in a set <i>safe</i>.
+<p>
+We use operations, such as union and intersection, on sets of
+states. For example, for a program with variables <code>x, y, z</code> the
+set <i>safe</i> may be defined as the 
+intersection of the set of states in which  <code>x > y</code> and the
+set in which <code>y > z</code>.
+
+<p>
+In this course, a 
+ <a
+ href="https://en.wikipedia.org/wiki/Predicate_(mathematical_logic)">predicate
+ </a>
+is a function from states of a program to
+the Boolean constants \(\{True, False\}\).
+For example, for a program with variables
+<code>x, y</code>, the predicate <code>x > y</code> is true in
+ the state <code>(x, y) = (1, 0)</code> and is false in the state
+<code>(x, y) = (1, 1)</code>. 
+
+
+</p>
+
+    <p class="w3-text-teal">Set of elements associated with a predicate</p>
+A predicate \(P\) on states of a program defines a set of states
+for which \(P\) holds. 
+For example, for a program with variables <code>(x, y)</code>, the
+state <code>(x, y) = (1, 0)</code> is a member of the set of states
+for which the
+predicate <code>x > y</code> whereas <code>(x, y) = (0, 1)</code> is
+not. 
+</p>
+
+<p>
+Disjunction (<i>or</i>, \(\vee\)) and conjunction  (<i>and</i>,
+\(\wedge\)) of predicates correspond to the union \(\cup\) and 
+intersection \(\cap\), respectively, of the corresponding sets of states.
+True is a predicate whose extension is the universal set, and
+False is a predicate whose extension is the empty set.

@@ -1,4 +1,4 @@
-<title>ReviewOfBasics/Predicates/Predicates.html</title>
+<title>ReviewOfBasics/NondeterministicIteration/NondeterministicIteration.html</title>
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
 
@@ -84,20 +84,20 @@ href="../Introduction/Introduction.html" >
 CHAPTER: Review of Sequential Programming
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../Loops/Loops.html" > 
+href="../NondeterministicIteration/NondeterministicIteration.html" > 
 MODULES:
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../Predicates/Predicates.html" > 
-Predicates
+href="../NondeterministicIteration/NondeterministicIteration.html" > 
+Nondeterministic Iteration
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../Predicates/Predicates_Examples.html" > 
-Predicates: Example
+href="../NondeterministicIteration/NondeterministicIterationVideo.mp4" > 
+Video
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../Predicates/PredicatesVideo.mp4" > 
-Predicates: Video
+href="../NondeterministicIteration/NondeterministicIteration_Examples.html" > 
+Examples
 </a>
 
 </nav>
@@ -123,53 +123,50 @@ Predicates: Video
 <div class="w3-twothird w3-container">
 
 <!-- End overlay ---------------------------------->
- <!------------------------------------------------------------>
-<h2 class="w3-text-teal">Predicates on States</h2>
-<!------------------------------------------------------------>
-The state of a program is given by the values of its variables.
-We reason about the correctness of programs by reasoning about sets of
-program states.
-For example, we will prove properties of a program such as:
-all states in all computations that start from any state in a set
-<i>init</i> of states  are in a set <i>safe</i>.
+
+    <!------------------------------------------------------------>
+    <h1 class="w3-text-teal">Nondeterministic Iteration</h1>
+    <!------------------------------------------------------------>
+    
+    This module is a review of nondeterministic iteration implemented
+    as
+    <a href="https://en.wikipedia.org/wiki/Guarded_Command_Language">
+<i>do-od</i> loops.</a>
+
+    A <i>do-od</i> loop consists of a set of guarded commands. A guarded
+    command consists of a guard and a command, and we use the syntax:
+    <pre>
+guard -> command
+</pre>
+    The execution of the loop is as follows: Execute <i>any</i> guarded command
+    of the loop for which the guard evaluates to True. Execution of the loop
+    terminates when all guards evaluate to False.
+    
 <p>
-We use operations, such as union and intersection, on sets of
-states. For example, for a program with variables <code>x, y, z</code> the
-set <i>safe</i> may be defined as the 
-intersection of the set of states in which  <code>x > y</code> and the
-set in which <code>y > z</code>.
+Loops in most programming languages are deterministic: the next
+statement to be executed is uniquely determined by the current state
+of the program.
 
-<p>
-In this course, a 
- <a
- href="https://en.wikipedia.org/wiki/Predicate_(mathematical_logic)">predicate
- </a>
-is a function from states of a program to
-the Boolean constants \(\{True, False\}\).
-For example, for a program with variables
-<code>x, y</code>, the predicate <code>x > y</code> is true in
- the state <code>(x, y) = (1, 0)</code> and is false in the state
-<code>(x, y) = (1, 1)</code>. 
+A do-od loop is nondeterministic: Multiple guards may be true and the
+next statement to be executed can be any guarded command with a true
+guard. 
 
+    <h3 style="color:red;">Example: Sorting</h3>
+    Let \(X\) be an array of \(N\) numbers. The following loop sorts
+    the array in ascending order.  (We assume that indices
+    start at 0.)
+    <pre>
+for all i where 0 < i < N:
+   X[i-1] > X[i]   ->    X[i-1], X[i] = X[i], X[i-1]
+    </pre>
+    
+    The loop has \(N-1\) guarded commands. Execution of the loop
+    proceeds by executing any of the \(N-1\) guarded commands for
+    which the guard is true. So, execution of the loop proceeds by
+    flipping any adjacent pair of elements that is out of
+    order. Execution of the loop terminates when all guards are False,
+    at which point the array is in order.
 
-</p>
-
-    <p class="w3-text-teal">Set of elements associated with a predicate</p>
-A predicate \(P\) on states of a program defines a set of states
-for which \(P\) holds. 
-For example, for a program with variables <code>(x, y)</code>, the
-state <code>(x, y) = (1, 0)</code> is a member of the set of states
-for which the
-predicate <code>x > y</code> whereas <code>(x, y) = (0, 1)</code> is
-not. 
-</p>
-
-<p>
-Disjunction (<i>or</i>, \(\vee\)) and conjunction  (<i>and</i>,
-\(\wedge\)) of predicates correspond to the union \(\cup\) and 
-intersection \(\cap\), respectively, of the corresponding sets of states.
-True is a predicate whose extension is the universal set, and
-False is a predicate whose extension is the empty set.
 <!--Start Footer--------------------------------------->
 
     <hr class="new2">

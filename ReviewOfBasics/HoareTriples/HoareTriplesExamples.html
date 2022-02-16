@@ -1,4 +1,4 @@
-<title>ReviewOfBasics/Predicates/Predicates.html</title>
+<title>ReviewOfBasics/HoareTriples/HoareTriplesExamples.html</title>
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
 
@@ -81,23 +81,27 @@ title="Close Menu">
  
 <a class="w3-bar-item w3-button w3-hover-black "
 href="../Introduction/Introduction.html" > 
-CHAPTER: Review of Sequential Programming
+CHAPTER: Review Sequential Programming
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../Loops/Loops.html" > 
+href="../HoareTriples/HoareTriples.html" > 
 MODULES:
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../Predicates/Predicates.html" > 
-Predicates
+href="../HoareTriples/HoareTriples.html" > 
+Hoare Triples
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../Predicates/Predicates_Examples.html" > 
-Predicates: Example
+href="../HoareTriples/HoareTriplesExamples.html" > 
+Examples
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../Predicates/PredicatesVideo.mp4" > 
-Predicates: Video
+href="../HoareTriples/HoareTriplesVideo.mp4" > 
+Video
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../HoareTriples/HoareTriplesSelfTest.html" > 
+Self Test
 </a>
 
 </nav>
@@ -123,53 +127,100 @@ Predicates: Video
 <div class="w3-twothird w3-container">
 
 <!-- End overlay ---------------------------------->
- <!------------------------------------------------------------>
-<h2 class="w3-text-teal">Predicates on States</h2>
-<!------------------------------------------------------------>
-The state of a program is given by the values of its variables.
-We reason about the correctness of programs by reasoning about sets of
-program states.
-For example, we will prove properties of a program such as:
-all states in all computations that start from any state in a set
-<i>init</i> of states  are in a set <i>safe</i>.
-<p>
-We use operations, such as union and intersection, on sets of
-states. For example, for a program with variables <code>x, y, z</code> the
-set <i>safe</i> may be defined as the 
-intersection of the set of states in which  <code>x > y</code> and the
-set in which <code>y > z</code>.
+<h2 style="color:red;">Examples</h2>
+Consider the following Hoare triples.
 
-<p>
-In this course, a 
- <a
- href="https://en.wikipedia.org/wiki/Predicate_(mathematical_logic)">predicate
- </a>
-is a function from states of a program to
-the Boolean constants \(\{True, False\}\).
-For example, for a program with variables
-<code>x, y</code>, the predicate <code>x > y</code> is true in
- the state <code>(x, y) = (1, 0)</code> and is false in the state
-<code>(x, y) = (1, 1)</code>. 
+    <ol>
+      <li>
+\(
+\{x < 0\} \; c \; \{(x = 1) \vee (x = 2)\}
+\)
+</li>
+<li>
+\(
+\{x > 0\} \; c \; \{(x = 0) \vee (x = -1)\}
+\)
+</li>
+<li>
+\(
+\{x > 1\} \; c \; \{x < 0\}
+\)
+</li>
+</ol>
 
 
+
+What transitions
+are possible from a state in which \(x = -1\) by a command \(c\) that
+    satisfies <i>all</i> the above three Hoare triples?
 </p>
 
-    <p class="w3-text-teal">Set of elements associated with a predicate</p>
-A predicate \(P\) on states of a program defines a set of states
-for which \(P\) holds. 
-For example, for a program with variables <code>(x, y)</code>, the
-state <code>(x, y) = (1, 0)</code> is a member of the set of states
-for which the
-predicate <code>x > y</code> whereas <code>(x, y) = (0, 1)</code> is
-not. 
+<p>Since the state satisfies the
+    first precondition, \(x < 0\), the state after the transition must
+    satisfy the first postcondition, \((x = 1) \vee (x = 2)\). The
+    other two Hoare triples don't address the precondition \(x =
+-1\), and so the postconditions of these Hoare triples are irrelevant
+    for this question. Therefore, the transitions from \(x = -1\) are to 
+states \(x = 1\) or \(x = 2\).
+
+<p style="color:red;">Example</p>
+    What transitions
+are possible from a state in which \(x = 2\) that satisfy all of the
+    above Hoare triples?
 </p>
 
 <p>
-Disjunction (<i>or</i>, \(\vee\)) and conjunction  (<i>and</i>,
-\(\wedge\)) of predicates correspond to the union \(\cup\) and 
-intersection \(\cap\), respectively, of the corresponding sets of states.
-True is a predicate whose extension is the universal set, and
-False is a predicate whose extension is the empty set.
+The first Hoare triple doesn't address the precondition \(x = 2\).
+<p>
+The precondition \(x > 0\) of the second triple holds when \(x = 2\)
+and therefore its postcondition, \((x = 0) \vee (x = -1)\), must hold in the
+next state.
+<p>
+The precondition \(x > 1\) of the third triple holds when \(x = 2\)
+and therefore its postcondition, \(x < 0\), must hold in the
+next state.
+<p>
+Both postconditions, \((x = 0) \vee (x = -1)\) and \(x <
+0\) must hold in the next state. So the only transition from \(x = 2\)
+is to state \(x = -1\).
+
+
+<p style="color:red;">Example</p>
+<p>
+    What transitions
+are possible from a state in which \(x = 0\)?
+</p>
+
+<p>
+None of the three preconditions hold when \(x = 0\), and therefore the
+next state can be <i>any</i> state. 
+
+
+<p style="color:red;">Example: Unimplementable Commands</p>
+What transitions satisfy all the following Hoare triples?
+<p>
+\(
+\{x = 0\} \; c \; \{x > 0\}, \quad \{x = 0\} \; c \; \{x < 0\}
+\)
+</p>
+<p>
+This command cannot be initiated in a state in which \(x = 0\) because
+both postconditions \(x > 0\) and \(x < 0\) must hold when the command
+terminates.
+
+<p>
+In this course we will ensure that the commands specified in our
+algorithms can be executed in every state.
+</p>
+
+<h3 class="w3-text-teal">Summary</h3>
+We may specify a command by sets of pre- and post-conditions that the
+command must specify.
+There may be many commands that satisfy these conditions, and we can
+use any command that satisfies these conditions in an
+implementation. Specifying commands in this way allows us to describe
+algorithms in terms of predicates rather than by using statements in a
+specific programming language.
 <!--Start Footer--------------------------------------->
 
     <hr class="new2">

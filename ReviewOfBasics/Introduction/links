@@ -1,8 +1,5 @@
-../Introduction/Introduction.html#Review: Sequential Programs
-../Loops/Loops.html#Nondeterministic Iteration
+../Introduction/Introduction.html#CHAPTER: Review Sequential Programming
+../Introduction/Introduction.html#MODULES:
+../NondeterministicIteration/NondeterministicIteration.html#Nondeterministic Iteration
 ../Predicates/Predicates.html#Predicates
 ../HoareTriples/HoareTriples.html#Hoare Triples
-../Invariant/Invariant.html#Invariant
-../LoopTermination/LoopTermination.html#Loop Variants
-../ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html#Correctness Proofs: Examples
-../Safety/Safety.html#Proving Safety

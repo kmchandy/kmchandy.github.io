@@ -1,0 +1,32 @@
+
+    <h2 class="w3-text-teal">Nondeterministic Iteration: Examples</h2>
+
+    <h3 class="w3-text-teal">Shortest Path from a Source</h3>
+    
+    We are given a matrix \(W\) of numbers which represents a directed
+    graph where \(W[i,j]\) is the weight of the edge
+    \((i,j)\). If edge \((i, j)\) does not exist then \(W[i,j]\) is a
+    suitably large value \(inf\). Edge weights may be negative. There are no
+    cycles of negative length in 
+    the graph. The problem is to find the shortest path from vertex
+    \(0\) to all the other vertices.
+
+    Let \(d\) be an array where \(d[i]\) becomes the weight of the
+    shortest-weight path to \(i\).
+    
+
+    <h4 class="w3-text-teal">Nondeterministic Iteration</h4>
+    Initially:
+    <p>
+    \(
+    d[0] = 0
+    \)
+    <br>
+    For \(i \neq 0\): \(d[i] = inf\)
+
+    <p class="w3-text-teal">Iteration</p>
+    For all \(i, j\):
+    <p>
+    \(
+    d[j] > d[i] + W[i,j] \quad \rightarrow \quad d[j] = d[i] + W[i,j]
+    \)
