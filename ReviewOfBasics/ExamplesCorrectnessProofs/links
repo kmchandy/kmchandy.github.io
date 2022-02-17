@@ -1,8 +1,8 @@
-../Introduction/Introduction.html#Review: Introduction
-../Loops/Loops.html#Nondeterministic Iteration
-../Predicates/Predicates.html#Predicates
-../HoareTriples/HoareTriples.html#Hoare Triples
-../Invariant/Invariant.html#Invariant
-../LoopTermination/LoopTermination.html#Loop Variants
+../Introduction/Introduction.html#CHAPTER: Review Sequential Programming
+../ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html#MODULES:
 ../ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html#Correctness Proofs: Examples
-../Safety/Safety.html#Proving Safety
+Sorting/Sorting.html#Sorting
+ShortestPath/ShortestPath.html#Shortest Path
+AverageOfSensors/AverageOfSensors.html#Distributed Averaging
+FlightFormation/FlightFormation.html#Flight Formation
+EarliestMeetingTime/EarliestMeetingTime.html#Schedule Earliest Meeting

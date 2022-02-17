@@ -81,35 +81,35 @@ title="Close Menu">
  
 <a class="w3-bar-item w3-button w3-hover-black "
 href="../Introduction/Introduction.html" > 
-Review: Introduction
+CHAPTER: Review Sequential Programming
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../Loops/Loops.html" > 
-Nondeterministic Iteration
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../Predicates/Predicates.html" > 
-Predicates
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../HoareTriples/HoareTriples.html" > 
-Hoare Triples
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../Invariant/Invariant.html" > 
-Invariant
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../LoopTermination/LoopTermination.html" > 
-Loop Variants
+href="../ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html" > 
+MODULES:
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
 href="../ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html" > 
 Correctness Proofs: Examples
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../Safety/Safety.html" > 
-Proving Safety
+href="Sorting/Sorting.html" > 
+Sorting
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="ShortestPath/ShortestPath.html" > 
+Shortest Path
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="AverageOfSensors/AverageOfSensors.html" > 
+Distributed Averaging
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="FlightFormation/FlightFormation.html" > 
+Flight Formation
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="EarliestMeetingTime/EarliestMeetingTime.html" > 
+Schedule Earliest Meeting
 </a>
 
 </nav>
@@ -135,23 +135,69 @@ Proving Safety
 <div class="w3-twothird w3-container">
 
 <!-- End overlay ---------------------------------->
-    <h2 class="w3-text-teal">Self Tests: Examples of Correctness Proofs</h2>
-    This section consists of self tests of correctness proofs.
-    You can use these tests to check your knowledge of
-    nondeterministic iteration and: 
-    <ol>
-      <li>
-      Invariants
-      </li>
-      <li>
-      Variant functions
-      </li>
-      <li>
-      Predicate that holds upon termination
-      </li>
-    </ol>
+<h2 class="w3-text-teal">Examples of Correctness Proofs</h2>
+This module is a very brief review of proofs of correctness of
+nondeterministic iterations by using invariants and loop variants
+(also called variant functions).
 
-    The self tests cover the following problems:
+<h4 class="w3-text-teal">Invariants</h4>
+An <i>invariant</i> of a do-od loop is a predicate that holds initially and
+after every iteration of the loop. We prove that a predicate \(I\) is an
+invariant of a loop by showing that:
+<ol>
+  <li>
+  \(I\) holds initially, and
+  </li>
+  <li>
+  if \(I\) holds before the execution of any guarded command of the
+  loop then \(I\) continues to hold when the command terminates, i.e.,
+  we prove the following Hoare triple for every guarded command \(g
+  \rightarrow c\) of the loop. 
+<p>
+  \(\{I\} \; g \rightarrow c \; \{I\}\)
+  </li>
+</ol>
+If a loop terminates then \(I\) holds upon termination and all
+guards evaluate to false.
+
+
+<h4 class="w3-text-teal">Variant Functions</h4>
+We prove that loops terminate by using loop variants, also
+called variant functions.
+<i>A variant function</i> is a function
+from states of a system to a well-founded set.
+
+    A
+    <a href="https://en.wikipedia.org/wiki/Well-founded_relation">
+    well-founded set</a>
+    is a set on which we can carry out proofs by
+    induction. In this course we generally use well-founded sets that are
+    integers or vectors of integers that are bounded below.
+
+<p>
+We prove that execution of a loop terminates by proving that the
+execution of any command whose guard evaluates to true reduces the
+value of a variant function \(f\).
+Since \(f\) is bounded below it cannot decrease forever.
+Therefore the computation terminates, and when it does
+all guards evaluate to false.
+
+<p>
+Let \(I\) be an invariant of a loop.
+Then \(I \wedge g\) holds prior to execution of any guarded command
+\(g \rightarrow c\) because guard \(g\) is true.
+We prove that the execution of any command with
+a true guard reduces the variant function by proving the
+following Hoare triple for each guarded command \(g \rightarrow c\).
+<p>
+\(\forall k: \quad
+\{(f = k) \wedge I \wedge g\} \; c \; \{f < k\}
+\)
+
+<h4 class="w3-text-teal">Examples of Correctness Proofs</h4>
+The remainder of this module consists of self tests of correctness
+proofs of nondeterministic iterations.
+The self tests, with solutions, cover the following problems:
     <ol>
       <li>
       <a href="Sorting/Sorting.html">
@@ -180,29 +226,17 @@ Proving Safety
       </li>
     </ol>
 
-    <hr class="new2">
     <h5 style="color:blue;">
-    You will see that proofs of correctness of distributed and
-    sequential algorithms are much the same.
-    Concepts in sequential algorithms also appear in reasoning about
-    distributed systems with continuous states that evolve over
-    continuous time.
+    The concepts used in proving correctness of sequential algorithms
+    are also used in proving distributed algorithms.
     </h5>
-    <hr class="new2">
-
 <!--Start Footer--------------------------------------->
-<h5 style="color:red;">
-<a href="../../index.html">Contents</a>
 
-</h5>
-
-    <div class="w3-container w3-theme-l1">
+    <hr class="new2">
       <p>K. Mani Chandy,
-      <br>
-      Simon Ramo Professor, Emeritus,
-      <br>
+      Emeritus Simon Ramo Professor,
       California Institute of Technology</p>
-    </div>
+    
 </footer>
     
 
