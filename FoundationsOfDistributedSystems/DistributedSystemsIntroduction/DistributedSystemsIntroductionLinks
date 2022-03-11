@@ -1,6 +1,2 @@
-../Introduction/Introduction.html#CHAPTER: Review Sequential Programming
-../Introduction/Introduction.html#MODULES:
-../NondeterministicIteration/NondeterministicIteration.html#Nondeterministic Iteration
-../Predicates/Predicates.html#Predicates
-../HoareTriples/HoareTriples.html#Hoare Triples
-../ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html#Examples of Correctness Proofs
+../DistributedSystemsIntroduction/DistributedSystemsIntroduction.html#CHAPTER: Distributed Systems Introduction
+../DistributedSystemsIntroduction/DistributedSystemsIntroduction.html#MODULES:
