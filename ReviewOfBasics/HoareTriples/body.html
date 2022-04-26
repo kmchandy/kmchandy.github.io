@@ -1,7 +1,6 @@
     <!------------------------------------------------------->
     <h1 class="w3-text-teal">Hoare Triples</h1>
-    This is a very short, very limited, review of Hoare
-    triples that you studied in earlier courses.
+    This module is a review of Hoare triples.
 
     
     <hr class="new2">
@@ -20,9 +19,13 @@
     \(P\) is called the precondition and \(Q\) the
     postcondition of the triple
 
-    <p>
-    (We assume total rather than partial correctness.)
-    </p>
+We assume
+<a
+href="https://en.wikipedia.org/wiki/Hoare_logic#Partial_and_total_correctness">
+total
+</a>
+rather than partial correctness.
+</p>
   
   <h4 style="color:red;">Examples</h4>
   Examples of Hoare triples for the assignment statement \(x := x+1\)
@@ -38,8 +41,7 @@
   \{x = 0\} \; x := x+1 \; \{x > 0\}
   \) 
   </p>
-    <p>
-    And a set of Hoare triples:
+    and:
     </p>
     <p>
     \(
@@ -61,4 +63,10 @@
   \(
   \forall k: \quad \{(x = 0) \wedge (y=k) \} \;  x := x+1 \; \{(x = 1)
     \wedge (y = k)\}
-  \)
+\)
+
+<p>
+
+While designing a program we may specify a command in terms of its
+pre- and post-conditions and later implement the command in a
+programming language.

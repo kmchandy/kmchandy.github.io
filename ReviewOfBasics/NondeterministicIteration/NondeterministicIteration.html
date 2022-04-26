@@ -31,6 +31,10 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 hr.new2 {
   border: 2px solid blue;
 }
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
 </style>
 
 
@@ -128,28 +132,31 @@ Examples
     <h1 class="w3-text-teal">Nondeterministic Iteration</h1>
     <!------------------------------------------------------------>
     
-    This module is a review of nondeterministic iteration implemented
-    as
+This module reviews <i>nondeterminism</i>
+in the form of 
     <a href="https://en.wikipedia.org/wiki/Guarded_Command_Language">
 <i>do-od</i> loops.</a>
 
-    A <i>do-od</i> loop consists of a set of guarded commands. A guarded
-    command consists of a guard and a command, and we use the syntax:
+    A <i>do-od</i> loop consists of a set of <b>guarded commands</b>. A guarded
+    command consists of a <b>guard</b> and a <b>command</b> with the syntax:
     <pre>
 guard -> command
 </pre>
-    The execution of the loop is as follows: Execute <i>any</i> guarded command
+    The execution of the do-od loop is as follows: Execute <i>any</i> guarded command
     of the loop for which the guard evaluates to True. Execution of the loop
     terminates when all guards evaluate to False.
     
 <p>
-Loops in most programming languages are deterministic: the next
+Most programming languages are deterministic: the next
 statement to be executed is uniquely determined by the current state
 of the program.
 
-A do-od loop is nondeterministic: Multiple guards may be true and the
-next statement to be executed can be any guarded command with a true
-guard. 
+By contrast, a do-od loop is nondeterministic: Multiple guards may be true and the
+next statement to be executed can be <i>any</i> guarded command with a true
+guard.
+
+Different executions of the same do-od loop may execute commands in
+different orders.
 
     <h3 style="color:red;">Example: Sorting</h3>
     Let \(X\) be an array of \(N\) numbers. The following loop sorts
@@ -160,16 +167,18 @@ for all i where 0 < i < N:
    X[i-1] > X[i]   ->    X[i-1], X[i] = X[i], X[i-1]
     </pre>
     
-    The loop has \(N-1\) guarded commands. Execution of the loop
-    proceeds by executing any of the \(N-1\) guarded commands for
-    which the guard is true. So, execution of the loop proceeds by
-    flipping any adjacent pair of elements that is out of
-    order. Execution of the loop terminates when all guards are False,
-    at which point the array is in order.
+The loop has \(N-1\) guarded commands, where the <i>i</i>-th command
+is:
+<pre>
+X[i-1] > X[i]   ->    X[i-1], X[i] = X[i], X[i-1]
+</pre>
+Execution of the loop proceeds by 
+    flipping <i>any</i> adjacent pair of elements that is out of
+    order. Execution terminates when every adjacent pair is in order.
 
 <!--Start Footer--------------------------------------->
 
-    <hr class="new2">
+    <hr class="new1">
       <p>K. Mani Chandy,
       Emeritus Simon Ramo Professor,
       California Institute of Technology</p>

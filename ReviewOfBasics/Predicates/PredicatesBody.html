@@ -1,21 +1,13 @@
  <!------------------------------------------------------------>
 <h2 class="w3-text-teal">Predicates on States</h2>
 <!------------------------------------------------------------>
-The state of a program is given by the values of its variables.
-We reason about the correctness of programs by reasoning about sets of
-program states.
-For example, we will prove properties of a program such as:
-all states in all computations that start from any state in a set
-<i>init</i> of states  are in a set <i>safe</i>.
-<p>
-We use operations, such as union and intersection, on sets of
-states. For example, for a program with variables <code>x, y, z</code> the
-set <i>safe</i> may be defined as the 
-intersection of the set of states in which  <code>x > y</code> and the
-set in which <code>y > z</code>.
+This module is a review of predicates on states of programs.
 
 <p>
-In this course, a 
+The state of a program is given by the values of its variables.
+We will use set operations, such as union and intersection, on sets of
+states.
+For this course, a 
  <a
  href="https://en.wikipedia.org/wiki/Predicate_(mathematical_logic)">predicate
  </a>
@@ -27,21 +19,22 @@ For example, for a program with variables
 <code>(x, y) = (1, 1)</code>. 
 
 
-</p>
-
     <p class="w3-text-teal">Set of elements associated with a predicate</p>
-A predicate \(P\) on states of a program defines a set of states
-for which \(P\) holds. 
-For example, for a program with variables <code>(x, y)</code>, the
-state <code>(x, y) = (1, 0)</code> is a member of the set of states
-for which the
-predicate <code>x > y</code> whereas <code>(x, y) = (0, 1)</code> is
-not. 
-</p>
+Associated with a predicate \(P\) is a set of all the states of a
+program for which \(P\) holds; this set is called the
+<a
+href="https://en.wikipedia.org/wiki/Extension_(predicate_logic)">
+extension of predicate \(P\)
+</a>.
+
+
+Disjunction (<i>or</i>), conjunction  (<i>and</i>) and negation
+(<i>not</i>) of predicates
+correspond to the union
+intersection, and complement, respectively, of the corresponding sets of states.
+The extensions of the predicates True and False are the universal and
+empty sets, respectively.
 
 <p>
-Disjunction (<i>or</i>, \(\vee\)) and conjunction  (<i>and</i>,
-\(\wedge\)) of predicates correspond to the union \(\cup\) and 
-intersection \(\cap\), respectively, of the corresponding sets of states.
-True is a predicate whose extension is the universal set, and
-False is a predicate whose extension is the empty set.
+For convenience, we use predicates more often than sets of states.
+</p>

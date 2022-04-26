@@ -44,17 +44,6 @@ def make_module_from_parts(header, overlay, footer, links, body, module_name):
         outfile.write("\n")
     return
 
-def make_module(frame, contents):
-    print('frame ', frame)
-    print('contents ', contents)
-    with open(frame) as infile:
-        header, overlay, footer = infile.read().split()
-    with open(contents) as infile:
-        links, body, module_name = infile.read().split()
-    make_module_from_parts(
-        header, overlay, footer, links, body, module_name)
-    
-
 
 if __name__ == "__main__":
     header, links, overlay, body, footer, module_name = sys.argv[1:]
