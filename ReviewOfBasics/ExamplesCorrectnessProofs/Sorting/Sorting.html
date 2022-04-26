@@ -1,4 +1,4 @@
-<title>ReviewOfBasics/ExamplesCorrectnessProofs/AverageOfSensors/AverageOfSensors.html</title>
+<title>ReviewOfBasics/ExamplesCorrectnessProofs/Sorting/Sorting.html</title>
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
 
@@ -29,6 +29,10 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 }
 /* Thick blue border */
 hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
   border: 2px solid blue;
 }
 </style>
@@ -135,144 +139,103 @@ Schedule Earliest Meeting
 <div class="w3-twothird w3-container">
 
 <!-- End overlay ---------------------------------->
-    <h1 class="w3-text-teal">Self Test: Distributed Averaging</h1>
+    <h1 class="w3-text-teal">Self Test: Sorting</h1>
 
-    <p>
-    
-    This self test is about analyzing a concurrent system in
-    which a collection of agents, each with access to two sensor
-    readings, computes the average sensor reading.
-    An extension of the problem, given at the end of this page,
-    considers a general case in which agents have access to arbitrary
-    subsets of sensor readings. Later sections describe algorithms in
-    which the state space is continuous and the state evolves over
-    continuous time; we use differential equations to represent
-    continuous state transions and Lyapunov functions to prove
-    progress as opposed to discrete transitions and variant functions.
-    <p>
-
-    <h2 class="w3-text-teal">Problem Description</h2>
     
     <p>
-    We are given a connected undirected graph in which each vertex represents a
-    sensor and each edge represents an agent. Sensor \(j\) has a
-    value \(t_{j}\). Initially the value of \(t_{j}\) is \(t_{j}^{0}\) where \(t_{j}^{0}\)
-    is a measurement made by sensor \(j\). The specification of the
-    algorithm is that the computation must terminate, and at termination
-    each sensor value must approximately equal the average of all the
-    sensor readings.
-
-    <p class="w3-text-teal">Specification</p>
-    
-    We are given a positive constant \(\epsilon\) which determines the
-    accuracy of the result.
-    Let \(avg(X)\) be the average of the elements of \(X\). The
-    specification is that at termination, the following predicates
-    must hold.
-</p>
+    This module is a test of proving a do-od loop that sorts an array,
+    \(X\), in place.
+    <h4 class="w3-text-teal">Specification</h4>
+    Let \(X^{init}\) be the initial value of \(X\) and \(X^{fini}\) be
+    its value when the loop terminates. The specification of the loop
+    is that execution of the loop terminates, and
     <ol>
       <li>
-      <p>
-      \(
-      avg(t) = avg(t^{0})
-      \)
-      </p>
+      \(X^{fini}\) is a permutation of \(X^{init}\), and
       </li>
-
       <li>
-      <p>
-      \(t_{i}\) and \(t_{j}\) are sufficiently close for all edges
-      \(i,j\):
-      </p>
-      <p>
-      \(
-      \forall \; \textrm{edges} \; (i, j): \; |t_{i} - t_{j}| <
-      \epsilon
-      \)
-      </p>
+      \(X^{fini}\) is in ascending order.
       </li>
-</ol>
-</p>
+    </ol>
+      
+      
 
-<h3 class="w3-text-teal">Agent Steps</h3>
-The shared variables of the system are the sensor readings. The agent
-corresponding to an edge \((i, j)\), executes the following guarded
-command.
-<p>
-\(
-\textbf{if} \; |t_{i} - t_{j}| \geq \epsilon \; \textbf{then} \;
-t_{i} = t_{j} = (t_{i} + t_{j})/2.0
-\)
-</p>
+    <h2 class="w3-text-teal">Iterations</h2>
+    Let \(X\) be an array of \(N\) numbers.
+    Prove that the following loop satisfies the specification. 
 
-<p>
-In this example, agents have no local variables; agents have no
-state.
-The state of the system is given by the values of the shared
-variables.
-Let \(t\) be the vector whose \(j\)-th element is \(t_{j}\). Then the
-system state is \(t\).
-The timeline diagram consists of lines for each shared
-variable.
+    <pre>
+for all i where 0 < i < N:
+   X[i-1] > X[i]   ->    X[i-1], X[i] = X[i], X[i-1]
+    </pre>
+    
+    The loop flips any adjacent pair that is out of order.
 
-<h2 class="w3-text-teal">Self Test: Proof of Correctness</h2>
+
+    <h2 class="w3-text-teal">Self Test: Proof of Correctness</h2>
     
     <h5 class="w3-text-teal">Test 1</h5>
-    Give and prove an invariant of the loop.
+    Give and prove an invariant of the loop, i.e, show that (1) the
+    invariant holds initially and (2) if it holds before a command is
+    executed then it holds after the command has executed.
     
     <h5 class="w3-text-teal">Test 2</h5>
     Prove that the loop terminates by giving a variant function for
-    the loop. 
+    the loop. Show that (1) the function is bounded below, and (2)
+    the function value can decrease only a finite number of times
+    before the bound is reached, and (3) the execution of every guarded
+    command with a true guard reduces the function.
     
     <h5 class="w3-text-teal">Test 3</h5>
-Show that the specification holds upon termination of the loop.
+    Prove that the specification holds upon termination of the
+    loop, i.e. show that if the invariant holds and all the guards are
+    false then the specification holds.
 
-<h3 class="w3-text-teal">Answers</h3>
-   
+    <h3 class="w3-text-teal">Answers</h3>
+    
     <h5 class="w3-text-teal">Answer 1</h5>
+    The following is an invariant:
+    <p>
+    \(X\) is a permutation of \(X^{init}\).
+    <p>
+    The predicate holds initially and every state transition maintains
+    it.
+    
+    <h5 class="w3-text-teal">Answer 2</h5>
+    Define a variant function \(f(x)\) as the number of out-of-order
+    pairs in \(x\):
+    </p>
+    <p>
+    \(
+    f(x) = |\{(i, j) | (i < j) \wedge (x[i] > x[j]\} |
+    \)
+    </p>
+    The function has the following properties
+    <ol>
+      <li>
+      It is bounded below.
+      </li>
+      <li>
+      It can decrease only a finite number of times before the bound
+      is reached because the function value is integer.
+      </li>
+      <li>
+      The execution of any guarded command with a true guard decreases
+      the function.
+      </li>
+    </ol>
 
-There are several examples of invariants and
-variant functions. Here is one example.
-
-<p>
-The proof of the following invariant is
-straightforward.
-
-<p class="w3-text-teal">Invariant</p>
-
-      <p>
-      \(
-      avg(t) = avg(t^{0})
-      \)
-</p>
-
-
-
-<h5 class="w3-text-teal">Answer 2</h5>
-<p>
-A variant function \(f\) is:
-
-<p>
-\(f \; = \; \sum_{j} t_{j}^{2} /2 \)
-</p>
-This function has the following properties:
-<ol>
-  <li>
-  It is bounded below
-  </li>
-  <li>
-  An execution of a command with a true guard reduces \(f\) by at
-  least \(\epsilon^{2}/2\). So the variant function can decrease in
-  only a finite number of steps.
-  </li>
-</ol>
-
-<h5 class="w3-text-teal">Answer 3</h5>
-If the invariant holds and all guards are false then the specification
-is satisfied: the proof is straightforward.
+    <h5 class="w3-text-teal">Answer 3</h5>
+    Since the invariant holds
+    \(X^{fini}\) is a permutation of \(X^{init}\).
+    <p>
+    Since all the guards evaluate to False at termination
+    \(X^{fini}\) is in ascending order.
+    <p>Therefore, if the invariant holds and all the guards evaluate
+    to False then specification holds.
 <!--Start Footer--------------------------------------->
 
-    <hr class="new2">
+    <hr class="new1">
       <p>K. Mani Chandy,
       Emeritus Simon Ramo Professor,
       California Institute of Technology</p>
