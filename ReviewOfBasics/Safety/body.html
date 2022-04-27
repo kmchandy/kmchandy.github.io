@@ -1,8 +1,7 @@
   <!--------------------------------------------------------->
 <h2 class="w3-text-teal">Proving Safety</h2>
-In this module we use methods for reasoning about sequential programs
---- reviewed in the previous modules of this chapter ---
-to reason about the safety of concurrent systems.
+This module reviews methods used to prove safety of sequential
+programs. 
 
 <p>
   We represent the states and state transitions of a system by a <a
@@ -14,20 +13,17 @@ to reason about the safety of concurrent systems.
 through the graph.
 An empty path is also a computation.
 In this module the following are equivalent:
-vertex and state, edges and state transitions, computations and
-paths.
-<p>
-We begin by introducing <i>stable sets of states</i> and then describe
-how we prove safety for both sequential and concurrent programs.
+vertex and state; edges and state transitions; trajectories,
+computations and paths.
 
 <!----------------------------------------------->
 <h3 class="w3-text-teal">Stable Sets of Vertices</h3>
-A set of vertices is stable exactly when every edge from a vertex in
-the set is to a vertex in the set.
+A set of states is stable exactly when every transition from a state in
+the set is to a state in the set.
 <p>
-Because there are no edges from inside a stable set to outside the
-set, there are also no paths from vertices inside a stable set to
-vertices outside the set.
+Because there are no transitions from inside a stable set to outside the
+set, there are also no paths from states inside a stable set to
+states outside the set.
 There may, however, be paths from outside a stable set into the set.
 </p>
 
@@ -46,7 +42,7 @@ There may, however, be paths from outside a stable set into the set.
 
   <p>
   Let  \(safe\) be a set of states where we want to prove that all
-  computations that start in states in \(init\) remain in
+  paths that start in states in \(init\) remain in
   \(safe\).
     Our safety proof obligation is to show that every state on every path
     from every state in \(init\) is in \(safe\).
@@ -78,21 +74,22 @@ All paths from \(init\) remain within \(safe\) because \(I\)
 is in \(safe\).
 
 <h3  class="w3-text-teal">Invariant</h3>
-An invariant set of vertices is a stable set that includes \(init\),
-the initial set of vertices.
+An invariant set of states is a stable set that includes \(init\),
+the initial set of states.
 
 <!----------------------------------->
 <h3  class="w3-text-teal">Definition in Terms of Predicates</h3>
-The concepts defined in terms of graphs extend to definitions in terms
+The concepts defined in terms of sets of states extend to definitions in terms
 of
 <a href="../Predicates/Predicates.html">predicates</a> on states in
 the obvious way:
 The extension of a predicate \(P\) is the set of states for which the
 predicate holds.
 <p>
-A predicate \(P\) is stable exactly when execution of all commands in
-states in which
-\(P\) holds terminate in states in which \(P\) holds.
+A predicate \(P\) is stable exactly when all transitions from
+states in which \(P\) holds terminate in states in which \(P\) holds.
+So, \(P\) is stable exactly when execution of all commands in states
+in which \(P\) holds terminate in states in which \(P\) holds.
 In the terms of Hoare triples, \(P\) is stable exactly when, for all
 commands \(c\):
 <bf>
@@ -101,24 +98,13 @@ commands \(c\):
 \)
 <p>
 We use the following method to prove that a predicate \(safe\) holds
-for all states in all computations starting in states where \(init\)
-holds. We find any predicate \(I\) such that: 
-<p>
+for all states in all paths starting from \(init\): Find an invariant
+\(I\) such that:
 \(
-[init \Rightarrow I] \wedge [I \Rightarrow safe] \wedge stable(I)
-\)
-<p>
-\(I\) is an invariant exactly when:
-\(
-[init \Rightarrow I] \wedge stable(I)
+[I \Rightarrow safe]
 \)
 
 <!----------------------------------->
 <h3  class="w3-text-teal">Summary</h3>
-This module presents the key concepts used to prove safety in this
-course. 
-We showed how state-transition systems are represented as directed
-graphs. We showed how safety can be defined in terms of 
-paths in graphs. We defined the concepts <i>stable</i> and
-<i>invariant</i> in terms of edges and paths in graphs, and we showed
-how these concepts are used to prove safety.
+This module reviews key concepts used to prove safety in this
+course.
