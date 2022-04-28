@@ -31,6 +31,10 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 hr.new2 {
   border: 2px solid blue;
 }
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
 </style>
 
 
@@ -80,28 +84,12 @@ title="Close Menu">
 <!-- Start Sidebar----------> 
  
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../Introduction/Introduction.html" > 
-CHAPTER: Review Sequential Programming
+href="../DistributedSystemsIntroduction/DistributedSystemsIntroduction.html" > 
+CHAPTER: Distributed Systems Introduction
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../Introduction/Introduction.html" > 
+href="../DistributedSystemsIntroduction/DistributedSystemsIntroduction.html" > 
 MODULES:
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../NondeterministicIteration/NondeterministicIteration.html" > 
-Nondeterministic Iteration
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../Predicates/Predicates.html" > 
-Predicates
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../HoareTriples/HoareTriples.html" > 
-Hoare Triples
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html" > 
-Examples of Correctness Proofs
 </a>
 
 </nav>
@@ -131,109 +119,138 @@ Examples of Correctness Proofs
     <!--------------------------------------------------------->
     <h2 class="w3-text-teal">Distributed Systems: Introduction</h2>
   <!----------------------------------------------------------------->
-A distributed system consists of a set of agents and a set of
-channels, and is represented by a labeled directed graph in which vertices
+A distributed system consists of a set of agents and a set of message-passing
+channels. It is represented by a labeled directed graph in which vertices
   represent agents and labeled directed edges represent named
   channels.
   <p style="color:red;">Example</p>
-    The figure below shows a distributed system with agents A, B, C, and
-    channels r, t, u, v, x, y, z. The figure shows that there can be
-    multiple channels from one agent to another; for example, the
-    channels called t and x are both from agent C to agent B.
+    The figure below shows a distributed system with agents A, B, C.
 
     <figure>
     <img src="Channels_2.jpg" alt="Fig1" style="width:50%">
     <figcaption>Fig.1: Graph Representation of a Distributed Systems</figcaption>
   </figure>
-  In the graph, an edge labeled \(z\) directed from a vertex \(A\)
-  represents a channel \(z\) directed from agent \(A\).
-  Likewise, an edge labeled \(r\) towards vertex \(A\)
-  represents a channel \(r\) directed towards agent \(A\).
+  An edge labeled \(z\) directed from a vertex \(A\) to
+    a vertex \(B\)
+represents a channel \(z\) directed from agent \(A\) to agent \(B\).
+
+A channel  \(z\) from an agent \(A\) to an agent \(B\) is called an
+<i>outgoing</i> channel of \(A\) and an <i>incoming</i> channel of \(B\).
 
   <p class="w3-text-teal">Agent State</p>
-  Each agent has a set of variables that are local to the agent;
-  other agents and channels cannot access these variables.
-  The state of an agent is given by the values of its variables.
+  Each agent has a set of variables that are <i>local</i> to the agent;
+other agents and channels cannot access these variables.
+The state of an agent is given by the values of its variables.
+<p>
+Agent's may have local clocks; however, clocks are not perfectly
+  synchronized. The instant at which one agent's clock reads 1200 may be
+  before, after, or at the same instant at which a different clock
+reads 1200.
+We will discuss clock synchronization in later modules.
 
-  <p class="w3-text-teal">Channels</p>
-  Consider a channel \(c\) directed from an agent \(A\) to an agent \(B\):
-  Agent \(A\) can send messages along \(c\), and agent \(B\) can
-  receive messages along \(c\).
-  \(c\).
-
-  <p>
+<p class="w3-text-teal">Channels</p>
   We will study different types of channels in this course.
   Messages may get lost, or messages may overtake
   earlier messages, in some channel types.
-  The type of channel that we will study in the next several chapters is one in which
-  all messages sent are delivered; messages are delivered in the order
-  sent; and message delays are arbitrary (but finite).
-  This type of channel is a model of message-passing using the TCP
-  protocol.
+  The type of channel that we will study in this module and in the next several chapters
+is a model of message-passing using the TCP
+protocol; we describe this channel next.
+
+<p>
+An agent can send messages on its outgoing channels and receive
+messages on its incoming channels.
+All messages sent are delivered; messages are delivered in the order
+sent; and message delays are arbitrary (but finite).
 
   
-  <p>
-The state of this type of channel is a sequence of messages; these are
+<p class="w3-text-teal">Channel State</p>
+The state of a channel is a sequence of messages; these are
 the messages in the channel.
 When an agent sends a message along a channel the message is
 appended to the tail of the sequence of messages in the channel.
 A nonempty channel removes the message at the head of the sequence of
 messages in the channel and delivers it to the receiving agent.
 
-  <p class="w3-text-teal">System State</p>
+  <h4 class="w3-text-teal">System States and Transitions</h4>
   The state of a system is given by the states of its agents and
-channels.
-
-<h4 class="w3-text-teal">State Transitions</h4>
-State transitions are called events. A distributed system changes
+channels. A system changes
 state in only two ways:
 <ol>
-  <li> A message is delivered to an agent.
+  <li> A message \(m\) at the head of a channel \(c\) which is directed
+  towards an agent \(B\) is delivered to \(B\). Message \(m\) is
+  removed from channel \(c\). The state of agent \(B\) may change, and
+  \(B\) may send messages when it receives the message.
   </li>
   <li>
   An agent changes state without receiving messages.
   </li>
-  <ol>
+</ol>
 
 <p class="w3-text-teal">Message Delivery Event</p>
-A message in a non-empty channel can be delivered to an agent
-  independent of the state of the agent or the messages in the
-  channel.
-  The receiving agent cannot block a channel from delivering a
-  message.
-  A receiving agent may have mailboxes or other data structures into which
-  messages are delivered; the states of these data structures are parts
-  of the state of the receiving agent.
+A message in a non-empty channel is delivered to an agent
+independent of the state of the system.
+An agent does not block a channel from delivering a message.
+A receiving agent may have mailboxes or other data structures into which
+messages are delivered; the states of these data structures are parts
+of the state of the receiving agent.
 
-  <p>
-  When an agent receives a message the agent may change the values of
-  its variables and send messages on the agent's outgoing
-  channels. The next state of the agent depends only on the message
+<p>
+When an agent receives a message the agent may change the values of
+its variables and send messages on the agent's outgoing
+channels. The next state of the agent and the messages sent by the
+    agent depend only on the message
   that the agent receives, the channel that delivers the message, and
   the agent's state when it receives the message.
   
 <p class="w3-text-teal">Internal Event</p>
 An agent may change its state without receiving a message. For
-    example, an agent may wait for some time (as determined by the
-    agent's local clock) to receive an acknowledgment to a message
-    that it has sent, and take action if an acknowledgment is not
-    received. 
-
+example, an agent may take action if it does not receive a
+message in some time (determined by the agent's local clock).
+An internal event may change the state of the agent and send messages on the
+    agent's outgoing channels.
+    The next state of the agent and the messages sent by the
+    agent depend only on the state of the agent prior to the transition.
 
 
 
 <h3 class="w3-text-teal">Model of Computation</h3>
-The model of computation we reviewed earlier is that of the <i>do - od
-</i> loop: Computation progresses by executing any guarded command
-whose guard evaluates to True. The model of computation for
-distributed systems is similar: Computation progresses by delivering a
-message from any channel that is not empty. There is one major
-difference: <i>fairness.</i>
+    We described the <i>do - od</i> loop and nondeterministic
+    iteration in an earlier module.
+    The model of computation for distributed systems is also the <i>do
+    - od</i> loop with one difference ---  <i>fairness</i> --- which
+    we will describe later in this module.
+    
+    <p class="w3-text-teal">Message Delivery Event</p>
+    Each channel has one guarded command associated with it.
+    Execution of the action of this guarded command delivers a message
+    from this channel.
+    The guard is that the channel is non-empty.
+Execution of the action delivers the message in the channel and may
+    change the values of 
+the agent's variables and send messages on the agent's outgoing
+    channels.
+
+    
+    <p class="w3-text-teal">Internal Event</p>
+    Each agent has a single guarded command associated with it,
+where the guard is a predicate on states of the agent and
+execution of the action is an internal event of the agent.
+    Here is an example of a guarded command for an agent with
+variables <code>x, y</code>.
+<pre>
+x < y  ->  (y = x; send y on channel c)
+</pre>
+The guard may be the constant <code>False</code> in which case the
+corresponding action is never executed.
+
+<h4 class="w3-text-teal">Timelines</h4>
+We first show how timelines represent computations and
+then discuss fairness.
 
 
 <!--Start Footer--------------------------------------->
 
-    <hr class="new2">
+    <hr class="new1">
       <p>K. Mani Chandy,
       Emeritus Simon Ramo Professor,
       California Institute of Technology</p>

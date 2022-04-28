@@ -2,23 +2,23 @@
     <!--------------------------------------------------------->
     <h2 class="w3-text-teal">Distributed Systems: Introduction</h2>
   <!----------------------------------------------------------------->
-A distributed system consists of a set of agents and a set of
-channels, and is represented by a labeled directed graph in which vertices
+A distributed system consists of a set of agents and a set of message-passing
+channels. It is represented by a labeled directed graph in which vertices
   represent agents and labeled directed edges represent named
   channels.
   <p style="color:red;">Example</p>
-    The figure below shows a distributed system with agents A, B, C, and
-    channels r, t, u, v, x, y, z. The figure shows that there can be
-    multiple channels from one agent to another; for example, the
-    channels called t and x are both from agent C to agent B.
+    The figure below shows a distributed system with agents A, B, C.
 
     <figure>
     <img src="Channels_2.jpg" alt="Fig1" style="width:50%">
     <figcaption>Fig.1: Graph Representation of a Distributed Systems</figcaption>
   </figure>
-  In the graph, an edge labeled \(z\) directed from a vertex \(A\) to
+  An edge labeled \(z\) directed from a vertex \(A\) to
     a vertex \(B\)
-  represents a channel \(z\) directed from agent \(A\) to agent \(B\).
+represents a channel \(z\) directed from agent \(A\) to agent \(B\).
+
+A channel  \(z\) from an agent \(A\) to an agent \(B\) is called an
+<i>outgoing</i> channel of \(A\) and an <i>incoming</i> channel of \(B\).
 
   <p class="w3-text-teal">Agent State</p>
   Each agent has a set of variables that are <i>local</i> to the agent;
@@ -30,14 +30,13 @@ Agent's may have local clocks; however, clocks are not perfectly
   before, after, or at the same instant at which a different clock
 reads 1200.
 We will discuss clock synchronization in later modules.
-Many distributed algorithms use agents' local clocks.
 
 <p class="w3-text-teal">Channels</p>
   We will study different types of channels in this course.
   Messages may get lost, or messages may overtake
   earlier messages, in some channel types.
   The type of channel that we will study in this module and in the next several chapters
-is is a model of message-passing using the TCP
+is a model of message-passing using the TCP
 protocol; we describe this channel next.
 
 <p>
@@ -47,7 +46,7 @@ All messages sent are delivered; messages are delivered in the order
 sent; and message delays are arbitrary (but finite).
 
   
-  <p>
+<p class="w3-text-teal">Channel State</p>
 The state of a channel is a sequence of messages; these are
 the messages in the channel.
 When an agent sends a message along a channel the message is
@@ -55,20 +54,22 @@ appended to the tail of the sequence of messages in the channel.
 A nonempty channel removes the message at the head of the sequence of
 messages in the channel and delivers it to the receiving agent.
 
-  <p class="w3-text-teal">System State</p>
+  <h4 class="w3-text-teal">System States and Transitions</h4>
   The state of a system is given by the states of its agents and
-channels.
-
-<h4 class="w3-text-teal">State Transitions</h4>
-State transitions are called events. A distributed system changes
+channels. A system changes
 state in only two ways:
 <ol>
-  <li> A message is delivered to an agent.
+  <li> <b>Message Delivery</b>:
+  A message \(m\) at the head of a channel \(c\) which is directed
+  towards an agent \(B\) is delivered to \(B\). Message \(m\) is
+  removed from channel \(c\). The state of agent \(B\) may change, and
+  \(B\) may send messages when it receives the message.
   </li>
   <li>
+  <b>Internal Transition</b>:
   An agent changes state without receiving messages.
   </li>
-  <ol>
+</ol>
 
 <p class="w3-text-teal">Message Delivery Event</p>
 A message in a non-empty channel is delivered to an agent
