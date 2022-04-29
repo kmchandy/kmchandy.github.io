@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>SafetySelfTest</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 5px solid blue;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+
+</style>
+
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+  
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Safety.html">Safety</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="SafetySelfTest.html">Self Tests</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../LoopTermination/LoopTermination.html">Next: Variant Functions</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../HoareTriples/HoareTriples.html">Previous: Hoare Triples</a> 
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+    
+    <h1 class="w3-text-teal">Safety: Self Test</h1>
+
+
+    <h3 class="w3-text-teal">Question 1</h3>
+    <figure>
+    <img src="GraphExample.jpg" alt="Fig1" style="width:80%">>
+    <figcaption>Fig.1 - An Example of a Graph</figcaption>
+    </figure>
+
+    For the above graph what are the following:
+    <ol>
+      <li>
+      Let the extension of predicate \(P\) be \(\{1\}\). What is the
+    extension of the 
+    strongest predicate \(Q\) such that \(P \stackrel{*}{\rightarrow}
+      Q\)?
+      <p>
+      Note: The <i>strongest</i> predicate is the one whose extension
+    is the smallest.
+      </li>
+      <li>
+      Let \(init =\{1\}\), and let \(safe =\{1, 3, 6, 7\}\). Is
+    \(init \stackrel{*}{\rightarrow} safe \) True?
+      </li>
+    </ol>
+      
+      
+
+    <h3 class="w3-text-teal">Question 2</h3>
+    <p>
+    Which of the following are True? Explain your reasoning.
+    <ol>
+      <li>
+      \(
+      (P \stackrel{*}{\rightarrow} Q) \wedge [Q \Rightarrow R] \quad \Rightarrow  \quad
+      (P \stackrel{*}{\rightarrow} R)
+      \)
+      </li>
+      <li>
+      \(
+      (P \stackrel{*}{\rightarrow} Q) \wedge (P'
+      \stackrel{*}{\rightarrow} Q) \quad \Rightarrow  \quad
+      ((P \vee P') \stackrel{*}{\rightarrow} Q)
+      \)
+      </li>
+      <li>
+      \(
+      next(P) \wedge next(Q) \quad \equiv \quad next(P \wedge Q)
+      \)
+      </li>
+      </li>
+      <li>
+      \(
+      next(P) \wedge always(Q) \quad \Rightarrow \quad always(P \wedge Q)
+      \)
+      </li>
+      <li>
+      \(
+      next(P) \wedge always(Q) \quad \Rightarrow \quad next(P \wedge Q)
+      \)
+      </li>
+      <li>
+      \(
+      stable(P) \wedge stable(Q) \quad \Rightarrow \quad stable(P \wedge Q)
+      \)
+      </li>
+    </ol>
+
+    <h1 class="w3-text-teal">Answers</h1>
+
+    <h3 class="w3-text-teal">Question 1</h3>
+    <ol>
+      <li>
+      Let the extension of predicate \(P\) be \(\{1\}\). What is the
+    extension of the 
+    strongest predicate \(Q\) such that \(P \stackrel{*}{\rightarrow}
+      Q\)?
+      <p>
+      Note: The <i>strongest</i> predicate is the one whose extension
+    is the smallest.
+      <p>
+      Answer:
+      <p>
+      \(
+      Q = \{1, 6, 7\}
+      \)
+      <p>
+      Because there are paths from vertex 1 to vertices 1, 6, 7, it
+    follows that \(P \stackrel{*}{\rightarrow} Q\) is False for any
+      stronger \(Q\).
+      <p>
+      Adding vertices to \(Q\) weakens \(Q\), i.e., makes the
+    extension of \(Q\) larger. And we are looking for the strongest
+    \(Q\). 
+      </li>
+      <li>
+      Let \(init =\{1\}\), and let \(safe =\{1, 3, 6, 7\}\). Is
+      \(init \stackrel{*}{\rightarrow} safe\) True?
+      <p>
+      Yes, because a path from 1 visits only 1, 6, 7. Having vertex 3
+    in \(safe\) doesn't change the fact that all paths from \(init\) remain in
+    \(safe\). 
+      </li>
+    </ol>
+
+    
+      
+      
+
+    <h3 class="w3-text-teal">Question 2</h3>
+    <p>
+    Which of the following are True? Explain your reasoning.
+    <ol>
+      <li>
+      \(
+      (P \stackrel{*}{\rightarrow} Q) \wedge [Q \Rightarrow R] \quad \Rightarrow  \quad
+      (P \stackrel{*}{\rightarrow} R)
+      \)
+      <p>
+      True
+      <p>
+      Every vertex on every path from every vertex in P is in Q, and
+    because the extension of Q is in the extension of R, it follows
+    that every vertex on every path from every vertex in P is also in R.
+      </li>
+      <li>
+      \(
+      (P \stackrel{*}{\rightarrow} Q) \wedge (P'
+      \stackrel{*}{\rightarrow} Q) \quad \Rightarrow  \quad
+      ((P \vee P') \stackrel{*}{\rightarrow} Q)
+      \)
+      <p>
+      True
+      <p>
+      Every vertex on every path from every vertex in P is in Q, and
+      every vertex on every path from every vertex in P' is in Q. So,
+      every vertex on every path from every vertex which is in P or in
+      P' is also in Q.
+      </li>
+      <li>
+      \(
+      next(P) \wedge next(Q) \quad \equiv \quad next(P \wedge Q)
+      \)
+      <p>
+      True
+      <p>
+      \(v\) is in \(next(P)\) exactly when every hop from \(v\) lands
+    in \(P\). 
+      \(v\) is in \(next(Q)\) exactly when every hop from \(v\) lands
+      in \(Q\).
+      So \(v\) is in \(next(P) \wedge next(Q)\) exactly when every hop from \(v\) lands
+      in \(P \wedge Q\).
+      <p>
+      The definition of \(v\) is in \(next(P \wedge Q)\) exactly when
+      every hop from \(v\) lands in \(P \wedge Q\).
+      <p>
+      So both sides of the \(equiv\) are the same.
+      </li>
+      </li>
+      <li>
+      \(
+      next(P) \wedge always(Q) \quad \Rightarrow \quad always(P \wedge Q)
+      \)
+      <p>
+      False
+      <p>
+      Consider a graph with vertices 0, 1, 2 and edges (0, 1), (1,
+      2), and self loops (0, 0), (1, 1), (2, 2). Let \(Q =
+      \{0, 1, 2\}\), and \(P = \{0, 1\}\).
+      <p>
+      What is \(always(Q)\)?
+      <p>
+      \(always(Q) = \{0, 1, 2\}\). Every vertex on every path from 0,
+    1, 2 is 0, 1 or 2.
+      <p>
+      What is \(next(P)\)?
+      <p>
+      \(next(P) = \{0\}\) because every hop from 0 is to 0 or 1, and
+      there is a hop from 1 to 2 which is outside 0, 1.
+      <p>
+      What is \(always(P \wedge Q)\)?
+      <p>
+      \(always(P \wedge Q) = always(\{0\}) = \{\}\) because there
+    is no vertex such that every path from that vertex remains forever
+    at 0.
+      <p>
+      What is \(next(P) \wedge always(Q)\)?
+      <p>
+      \(next(P) \wedge always(Q) = \{0\} \cap \{0, 1, 2\} = \{0\}\)
+      <p>
+      So, this question reduces to: Is \(\{0\}\) a subset of \(\{\}\)?
+      </li>
+      <li>
+      \(
+      next(P) \wedge always(Q) \quad \Rightarrow \quad next(P \wedge Q)
+      \)
+      <p>
+      True
+      <p>
+      \(v\) is in \(next(P)\) exactly when every hop from \(v\) is in
+      \(P\).
+      <p>
+      \(v\) is in \(always(Q)\) exactly when every vertex on every
+    path from \(v\) is in \(Q\), which implies that every hop from \(v\) is in
+      \(Q\).
+      <p>
+      So every hop from a vertex \(v\) in \(next(P) \wedge
+    always(Q)\) is to a vertex in \(P \wedge Q\).
+      </li>
+      <li>
+      \(
+      stable(P) \wedge stable(Q) \quad \Rightarrow \quad stable(P \wedge Q)
+      \)
+      <p>
+      True
+      <p>
+      If \(v\) is in both \(stable(P)\) and \(stable(Q)\) then every
+    path from \(v\) remains in both \(P\) and in \(Q\), and therefore
+    remains in \(P \wedge Q\).
+      </li>
+    </ol>
+    
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>

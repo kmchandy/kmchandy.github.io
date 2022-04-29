@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>ChannelSnapshotsAssignment</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 5px solid blue;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../ChannelSnapshots.html">Global Snapshots with Channels</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../GlobalSnapshotAlgorithmVideo.mp4"><i>Video: Distributed
+  System Snapshots</i></a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../LogicalClockDistributedSystemVideo.mp4"><i>Video: Logical Clock</i>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../ChannelSnapshotsSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ChannelSnapshotsAssignment.html">Assignment</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ChannelSnapshotsAssignmentSolution.html">Solution to Assignment</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../../GlobalSnapshotApplications/GlobalSnapshotApplications.html">
+  Next: Termination Detection</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../../Channels/Channels.html">Previous:
+  Distributed System Timelines
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Assignment</h1>
+    <!--------------------------------------------------------->
+
+
+
+The graph of agents has the following structure. (Recall that vertices
+represent agents, and directed edges represent channels.) All cycles
+in the graph pass through agent 0. There is a path from agent 0 to
+every agent, and there is path from every agent to agent 0.
+
+    <p>
+The system has a set of indivisible indestructible tokens; however,
+agents can create tokens. So, the number of tokens in the system may
+increase but does not decrease.
+
+    <p class="w3-text-teal">Part 1<p>
+
+Design an algorithm by which agent 0 gets a count \(N_{snap}\) of the
+number of tokens in the system which satisfies the following
+condition:
+    <p>
+    \(
+    N_{init} \leq N_{snap} \leq N_{init}
+    \)
+<p>
+where \(N_{init}, N_{fini}\) are the numbers of tokens in the system
+when the algorithm starts and finishes (respectively).
+
+    <p class="w3-text-teal">Part 2<p>
+
+    Give a short proof of the correctness of your algorithm.
+ 
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+

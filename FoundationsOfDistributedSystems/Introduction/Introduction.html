@@ -1,0 +1,125 @@
+<!-----------HEADING---------------------------------------------->
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+</style>
+
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<div class="w3-twothird w3-container">
+  
+  <!-----------END HEADING------------------------------------------>
+
+
+
+    <h2 class="w3-text-teal">Foundations Of Distributed Systems</h2>
+    This chapter describes concepts at the foundation of distributed
+    systems.
+    These concepts are extensions of concepts in sequential
+    programming. 
+
+    <h4 class="w3-text-teal">Agents and Channels as Vertices and Edges</h4>
+    Distributed systems are defined in terms of their states and state
+    transitions.
+
+    <a href="Safety/Safety.html">Safety</a>
+    shows how states and state transitions are represented as vertices
+    and edges of directed graphs.
+    
+    <h4 class="w3-text-teal">Safety</h4>
+    We have to prove that distributed systems remain forever in
+    <i>safe</i> states.
+    <a href="Safety/Safety.html">Safety</a> shows that we prove this
+    by showing that safety is invariant: Initial 
+    states are safe and all transitions from safe states are to safe
+    states.
+
+    <p>
+    Distributed systems are defined as sets of agents
+    and communication channels between agents.
+    <a
+    href="DistributedSystemsIntroduction/DistributedSystemsIntroduction.html">
+    Distributed Systems Introduction
+    </a>
+    discusses representation of agents and channels as vertices and
+    edges, respectively, of directed graphs.
+
+    <h4 class="w3-text-teal">System Timelines</h4>
+    <a
+    href="Channels/Channels.html">
+    Timelines
+    </a>
+    show how the state of a system evolves over time.
+    Timelines are a useful concept in designing distributed
+    algorithms.
+
+    <h4 class="w3-text-teal">Progress: Introduction</h4>
+    We prove that trajectories or computations of distributed systems
+    progress towards their goals by using a concept, called <i>leads
+    to</i> from temporal logic.
+    <a
+    href="Progress/Progress.html">
+    Progress
+    </a>
+    defines this concept and discusses how we use CTL (computation
+    tree logic) to prove correctness.
+    The emphasis throughout this website is on the similarity of
+    concepts in sequential and distributed algorithms, and we show how
+    concepts such as invariants and variant functions are used to
+prove safety and progress.
+
+<h4 class="w3-text-teal">Rules to Prove Progress</h4>
+<a
+    href="ProgressProperties/ProgressProperties.html">
+    Progress Properties
+</a>
+gives three simple rules that we use to prove that distributed systems
+progress towards their goals.
+
+<hr class="new2">
+<h5 style="color:blue;">
+This chapter introduces the simple, central concepts of distributed
+algorithms.
+These concepts are based on properties of paths in directed graphs and
+are extensions of concepts from sequential programming.
+</h5>
+<hr class="new2">
+    
+
+
+<!------------------------------------------------------->
+<footer id="myFooter">
+
+<h5 style="color:red;">
+<a href="../index.html">Contents</a>
+</h5>
+
+    <div class="w3-container w3-theme-l1">
+      <p>K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus,
+      <br>
+      California Institute of Technology</p>
+    </div>
+
+
+<!-- END MAIN -->
+</div>
+</body>
+</html>
+<!------------------------------------------------------->

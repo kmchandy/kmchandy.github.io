@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>DiffusingComputations</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* Thick blue border */
+hr.new1 {
+  border: 1px solid blue;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DiffusingComputations.html">DiffusingComputations</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DiffusingComputationsExample.html">Diagrams</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="ScenarioActiveIdle.html">Scenario: Active & Idle Agents</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DiffusingComputationsSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../ApplicationsDiffusingComputation/ApplicationsDiffusingComputation.html">
+  Next: Applications of Diffusing Computation</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Knowledge/Knowledge.html">Previous:
+  What Agents Know
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Diffusing Computations</h1>
+
+    <!--------------------------------------------------------->
+    <h2 class="w3-text-teal">Key Ideas</h2>
+    <p  class="w3-text-teal">Diffusing Computations</p>
+    This module describes diffusing computations.
+    An agent can use diffusing computations to learn about the
+    structure of the  network
+    in which the agent operates. For example, an agent can use
+    diffusing computations to determine the number of agents in the
+    network or to determine if the system is deadlocked.
+    
+    <p  class="w3-text-teal">Data Structures Modified by Multiple
+    Agents Concurrently</p>
+    The module shows how data structures --- in this case a tree ---
+    play critical roles in distributed algorithms just as they do in
+    sequential algorithms.
+    The algorithm maintains the invariants that
+    define the data structure even though the structure is modified
+    concurrently by multiple agents.
+
+    <p  class="w3-text-teal">An Application of Agent Knowledge</p>
+    We use the concept of
+    <a href="../Knowledge/Knowledge.html"><i>what an
+    agent knows</i></a> to ensure that an agent modifies the data
+    structure only when
+    it know that it can do so while maintaining the invariants that
+    define the structure.
+
+    <h3 class="w3-text-teal">The Problem</h3>
+    In this module we deal with systems in which an agent is either
+    <i>idle</i> or <i>active</i>. An idle agent remains idle until it
+    receives a message at which point it becomes active. An idle agent
+    does not send messages. An active agent may send messages. An
+    active agent may become idle at any time.
+
+    <p>
+    Initially, the system has a single active agent. This agent is
+    called <i>the initiator</i>. Initially all channels are empty.
+
+    The computation terminates exactly when all agents
+    are idle and all channels are empty.
+
+    <p>
+    The computation may never
+    terminate. Our first problem is to design an algorithm that
+    enables the initiator to know 
+    that the computation has terminated if it terminates. Later, we
+    will extend this algorithm to enable the initiator to learn about
+    the network.
+
+    <p>
+    In this system, for every channel from an agent \(x\) to an agent
+    \(y\), there is a channel from \(y\) to \(x\). For any pair \(x,
+    y\) of agents there exists at most one channel from \(x\) to
+    \(y\), and at most one channel from \(y\) to \(x\).
+                                                                                                      
+    <p>
+    An agent \(y\) sends an <i>ack</i> (acknowledgment) along channel
+\((y, x)\) after receiving a message along channel \((x, y)\).
+An ack is different from a message; so acks aren't acked.
+<p>
+Initially all channels are empty: there are no messages or acks in
+transit along channels.
+Let
+    \(x.num\_unacked\) be the number of \(x\)'s unacknowledge
+    messages, i.e, the number of messages that \(x\) has sent
+    minus the number of acks that \(x\) has received. 
+<a href="../Knowledge/Knowledge.html">Agent \(x\) knows</a>
+that there are no messages in any of its outgoing channels when
+\(x.num\_unacked = 0\).
+
+<!------------------------------------------------------>
+<h3 class="w3-text-teal">A Rooted Tree</h3>
+The theorems on knowledge tell us that for an agent to become active there
+ must be a chain of messages from the initiator to the
+agent.
+A data structure
+with paths between the initiator and active agents is a tree,
+rooted at the initiator, and which spans active agents.
+ For each agent \(x\) let \(x.parent\) be either \(null\) or an agent
+which is
+\(x\)'s parent in the tree. Agent \(x\) is not on the tree exactly
+when \(x.parent = null\).
+
+<p>
+We will prove the following invariants.
+
+<h3 class="w3-text-teal">Invariants</h3>
+<ol>
+  <li>
+  The tree is rooted at the initiator, i.e.
+  if \(x.parent \neq null\) then the initiator is an
+  <a
+  href="https://en.wikipedia.org/wiki/Lowest_common_ancestor">ancestor</a>
+  of \(x\).
+  </li>
+  <li>
+  An agent is off the tree exactly when the agent is idle and the
+  agent has no unacknowledged messages:
+  <p>
+  \(
+  (x.parent = null) \quad \equiv \quad x.idle \wedge
+  (x.num\_unacked = 0)
+  \)
+  </li>
+  <li>
+  If \(x\)'s parent is not \(null\) then \(x\)'s parent has at least
+  one unacknowledged message.
+  <p>
+  \(
+  x.parent \neq null \quad \Rightarrow \quad x.parent.num\_unacked > 0
+  \)
+</ol>
+From invariant 3, it follows that an agent has no children if it has
+no unacknowledged messages. So, from invariant 1, if the initiator has
+no unacknowledged messages then all agents, apart from the initiator,
+are idle and have no messages in outgoing channels. Therefore
+computation has terminated when
+<p>
+\(
+initiator.idle \wedge (initiator.num\_unacked = 0)
+\)
+<p>
+So, the initiator knows that the computation has terminated when the
+initiator is idle and no unacknowledged messages.
+Next we give an algorithm that maintains the above invariants.
+
+
+
+
+<h1 class="w3-text-teal">Program for an agent</h1>
+Next we propose a program for an agent \(x\)
+other than the initiator.
+
+
+<h4 class="w3-text-teal">Program</h4>
+<pre>
+0: initially:
+      x.parent = null
+      x.idle = True
+      x.num_unacked = 0
+
+1. When x sends a message:
+      x.num_unacked = x.num_unacked + 1
+
+2. When x receives a message from y:
+      x.idle = False
+      if x.parent = null:
+         x.parent = y
+      else
+         send ack to y
+
+3. When x receives an ack:
+      x.num_unacked = x.num_unacked - 1
+      if (x.num_unacked == 0) and x.idle:
+              send ack to x.parent
+              x.parent = null
+
+4. When x becomes idle:
+       x.idle = True
+       if x.num_unacked == 0:
+              send ack to x.parent
+              x.parent = null
+</pre>
+
+<p class="w3-text-teal">The Initiator</p>
+The program for the initiator is the same except that initially the
+initiator is active. Also, to keep the exposition uniform for the
+initiator and the other agents, we assume that the initiator has a
+parent which is not one of the agents of the network. We call the initiator's parent
+\(external\). This agent plays no role other than to keep the proofs
+identical for the invariant and other agents. 
+<pre>
+initiator.parent = external
+initiator.idle = False
+initiator.num_unacked = 0
+external.num_unacked = 1
+</pre>
+
+
+<!------------------------------------------------------>
+<h2 class="w3-text-teal">Proof of Correctness</h2>
+
+<p class="w3-text-teal">Safety</p>
+The proof that the invariants are satisfied is carried out by showing
+that they hold initially and then verifying that
+each of the four commands maintains the invariants. The verification
+step is straightforward if a bit laborious.
+
+<p class="w3-text-teal">Progress</p>
+
+<p>
+If all agents are idle and there are no messages in channels then
+the underlying computation has terminated.
+We will prove that if the underlying computation does terminate then
+the detection algorithm terminates as well, i.e. the tree
+vanishes, and at that point the initiator knows that the computation has
+terminated.
+After the underlying computation terminates, the only action that
+executes is action 3: receiving an ack. 
+
+<p>A variant function is
+the following graph. A
+vertex \(x\) is in the graph exactly when \(x.parent\) is not null or
+there is an ack in transit along the channel from \(x\) to its parent.
+Define a partial order \(<\) between graphs as \(G \leq G'\)
+when \(G\) is a subgraph of \(G'\). This graph is a tree because the
+only pending acks are from a vertex to its parent (rule 3).
+
+<p>
+Next we prove that every execution of an action while the variant
+function is not the empty graph reduces the variant function.
+When all acks are delivered to \(y\), it sends an ack to its parent.
+So while the tree is not empty there is an ack in some channel.
+When \(y\) receives an ack from \(x\), the edge \((x, y)\) is
+deleted from the tree. Therefore every
+execution of action 3 reduces the variant function.
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Knowledge</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* Thick blue border */
+hr.new1 {
+  border: 1px solid blue;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Knowledge.html">Knowledge</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="KnowledgeExample.html">Examples</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="KnowledgeSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../DiffusingComputations/DiffusingComputations.html">
+  Next: Diffusing Computations</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../DeadlockDetection_And/DeadlockDetection_And.html">Previous:
+  Detecting Deadlocks I
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">What Agents Know</h1>
+
+    <h1 class="w3-text-teal">Key Ideas</h1>
+    We sometimes use anthropmorphic arguments in reasoning about
+    systems --- we invest digital
+    agents with human characteristics. For example, a programmer may
+    say "an agent <i>knows</i> that another agent is idle." Endowing software with
+    human capabilities can be dangerous when terms are ambiguous.
+    <p>
+    In this module we define a predicate "agent \(x\)
+    knows \(P\)" where \(P\) is a predicate on states of a system.
+    In later modules, we will use this definition to discuss
+    algorithms.
+
+    <p>
+    This module presents several theorems. The proofs follow in a
+    straightforward way from the definition of
+    <a href="../ChannelSnapshots/ChannelSnapshots.html">consistent
+    cuts </a>.
+
+    <h2 class="w3-text-teal">What an Agent Knows</h2>
+    Let \(x\) be an agent, \(P\) a predicate on system states, and
+    \(Q\) a predicate on states of \(x\).
+    <p>
+    \(P\) is a <i>global predicate</i> because it is a predicate on
+    states of the entire system. \(Q\) is a <i>local
+    predicate</i> of \(x\) because it is a predicate only on the states of
+    agent \(x\) and is independent of the states of channels and the
+    states of other agents.
+
+    <p>
+    We
+    define the predicate "\(x\) <i>knows</i> \(P\)" as follows.
+    <hr class="new2">
+    <h5 style="color:blue;">
+    <p>
+    \(x\) knows \(P\) is the weakest predicate \(Q\) on the states of
+    \(x\) such that:
+    
+    <p>
+    \(
+    [init \; \Rightarrow \; always([Q \;
+    \Rightarrow \; P])]
+    \)
+    <p>
+    </h5>
+    <hr class="new2">
+    <p>
+    If the system is in a state where \(x\) knows \(P\) then we can
+    deduce that
+    the entire system satisfies a global predicate
+    \(P\) merely from the local state of agent \(x\).
+
+    <h3  style="color:red;">Example</h3>
+    A system consisting of agents \(0, \ldots,  N\) has two indivisible
+    tokens which are not created or destroyed. Let \(P\) be the
+    predicate: "all channels and agents \(1, \ldots, N\) have
+no tokens." 
+
+<p>
+"Agent \(0\) knows P" is a predicate on the states of agent
+\(0\). This predicate holds in those states of agent \(0\) which
+guarantee that \(P\) holds.
+
+<p>
+"Agent \(0\) knows P" holds exactly when agent \(0\)
+holds both tokens. We can deduce properties of all channels and all
+agents solely from the state of agent \(0\).
+
+<p  style="color:red;">Example</p>
+Let \(P\) be the predicate: "all channels and agents \(1, \ldots, N\)
+collectively hold exactly one token." 
+"Agent \(0\) knows P" holds exactly when agent \(0\)
+holds one token.
+
+<p  style="color:red;">Example</p>
+This example deals with a system consisting of two agents \(x\) and
+\(y\) and channels in both directions between the agents. The system
+has a single indivisible token that is not created or destroyed. Let
+\(P\) be the predicate: "\(y\) does <i>not</i> hold the token."
+Agent \(x\) knows \(P\) when \(x\) holds the token. 
+<p>
+\(\neg\) (\(x\) knows \(P\)) is a predicate too. In this
+example, this predicate
+holds when \(x\) does not hold the token.
+
+<p  style="color:red;">Example</p>
+Let \(P\) be the predicate: "\(y\) holds the token."
+Agent \(x\) knows \(P\) is universally False because this predicate holds in no
+state. Why is that?
+<p>
+It's because the token could be in a channel; so, we can only deduce
+that the token is in a channel or at \(y\). We cannot deduce from the
+state of agent \(x\) that \(y\) holds the token.
+Agent \(x\) can never know that \(y\) holds the token.
+<p>
+Note, however, that \(x\) knows that \(y\) does <i>not</i> hold the
+token when \(x\) holds the token. Agent \(x\)'s knowledge of the
+predicates "\(y\) holds the token" and "\(y\) does <i>not</i> hold the
+token" are not symmetric.
+
+<h5 class="w3-text-teal">Notation</h5>
+    "\(x\) knows \(P\) at a point \(T\)" in a timeline means that at
+    point \(T\) agent \(x\) is in a state where the predicate "\(x\)
+knows \(P\)" holds.
+
+<p>
+"\(x\) knows \(P\) when \(x\) is in state \(s\)" means that the
+predicate "\(x\) knows \(P\)" holds in \(s\).
+
+
+<h3 class="w3-text-teal">Theorem: Knowledge and Consistent Cuts</h3>
+Let \(P\) be a predicate on the states of a system.
+<p>
+<i style="color:blue;">
+If  \(x\) knows \(P\) at a point \(T\) in \(x\)'s timeline
+then \(P\) holds in every consistent cut through that point.</i>
+
+<p class="w3-text-teal">Proof</p>
+The states corresponding to all consistent cuts that pass through the same
+point on \(x\)'s timeline have the same common value for \(x\)'s local
+state.
+
+    <h3  style="color:red;">Example</h3>
+    
+<figure>
+    <img src="KnowledgeDiagrams/Slide02.jpg" alt="Fig2" style="width:60%">>
+    <figcaption>Fig. 2. Agent A knows P in all consistent cuts that cross
+    point T</figcaption>
+</figure>
+
+<p>
+The top figure in both diagrams above show a time T at which agent A knows
+that P holds. This implies that P holds in all consistent cuts through
+point T. The lower figures in the diagrams show consistent cuts which
+passes point T on A's timeline; the theorem says that P holds for the
+state at these cuts too. 
+
+<h3 class="w3-text-teal">Theorem: A Silent Agent retains Knowledge</h3>
+Let \(x\) be an agent in a system, and let \(P\) be a
+predicate on a subsystem that does not include \(x\).
+Let \(T\) and \(T'\) be points on \(x\)'s timeline with \(T < T'\). If
+\(x\) knows \(P\) at point \(T\) and \(x\) sends no messages in the
+interval \([T, T']\) then \(x\) knows \(P\) at \(T'\).
+
+<p class="w3-text-teal">Proof</p>
+Let \(c'\) be any consistent cut through point \(T'\) on \(x\)'s
+timeline. We will prove that \(P\) holds for the state at cut \(c'\).
+
+<p>
+Let \(c\) be the
+cut that is identical to \(c'\) except that it passes through point \(T\) on
+\(x\)'s timeline. \(c\) is consistent because there are no
+outgoing edges from \(x\)'s timeline between cuts \(c\) and
+\(c'\).
+
+<p>
+Because \(x\) knows \(P\) at \(T\), \(P\) holds at \(c\). Since \(c\) and \(c'\)
+are identical except for the intersection with \(x\)'s timeline,
+it follows that \(P\) holds \(c'\).
+
+<h5  style="color:red;">Example</h5>
+<figure>
+    <img src="KnowledgeDiagrams/Slide04.jpg" alt="Fig3" style="width:60%">>
+<figcaption>Fig. 3. Illustration of Proof of Silent Agents
+</figcaption>
+</figure>
+
+<h5 class="w3-text-teal">Consequence of the Theorem</h5>
+An agent doesn't lose knowledge by getting information from other
+agents.
+<p>
+An agent can only lose knowledge by sending information to
+other agents. This seems counterintuitive; we'll look at the reasoning
+underlying this in a later theorem.
+
+<h3 class="w3-text-teal">Theorem: Agents who don't listen remain Ignorant</h3>
+Let \(x\) be an agent in a system, and let \(P\) be a
+predicate on a subsystem that does not include \(x\).
+Let \(T\) and \(T'\) be points on \(x\)'s timeline with \(T < T'\). If
+\(x\) knows \(P\) at point \(T'\) and \(x\) received no messages in the
+interval \([T, T']\) then \(x\) knows \(P\) at \(T\).
+
+<p>The proof has exactly the same structure as the proof of the
+previous theorem.
+
+<h5 class="w3-text-teal">Consequence of the Theorem</h5>
+
+\(x\) didn't learn anything in the interval  \([T, T']\); everything
+\(x\) knows at the later point \(T'\) is knowledge it already had at
+the earlier point \(T\).
+
+<p>The only way for an agent to gain knowledge is
+to receive messages. An agent cannot learn about other agents by only
+sending messages or making internal state transitions.
+
+
+<h3 class="w3-text-teal">Theorem: Knowledge implies Control</h3>
+Let \(x\) and \(y\) be agents in a system, and let \(P\) be a
+predicate on the states of \(y\).
+Let \(T\) and \(T'\) be instants in a trajectory with \(T < T'\). If
+\(x\) knows \(P\) at  \(T\), and \(\neg P\) holds at \(T'\), then there
+is a path in the timeline diagram from point \(T\) on \(x\)'s timeline
+to point \(T'\) on \(y\)'s timeline.
+
+<p>Proof: If there is no path from point \(T\) on \(x\)'s timeline
+to point \(T'\) on \(y\)'s timeline then there exists a consistent cut
+which crosses \(x\)'s timeline at \(T\) and
+crosses \(y\)'s timeline at \(T'\).
+
+<h5  style="color:red;">Example</h5>
+In the figure below, agent \(A\) at point \(T\) knows that agent \(C\)
+holds no tokens. At a later point \(T'\) agent \(C\) holds a
+token. What must happen between points \(T\) and \(T'\)?
+<figure>
+    <img src="KnowledgeDiagrams/Slide08.jpg" alt="Fig4" style="width:60%">>
+<figcaption>Fig. 4. What must happen between T and T'?
+</figcaption>
+</figure>
+
+There must be a path in the timeline diagram from point \(T\) on agent
+\(A\)'s timeline to point \(T'\) on agent \(C\)'s timeline. This path
+is represented by edges that show time elapsing on a timeline and
+message edges between timelines.
+<figure>
+    <img src="KnowledgeDiagrams/Slide09.jpg" alt="Fig5" style="width:60%">>
+<figcaption>Fig. 5. There must be a path from A at T to C at T'?
+</figcaption>
+</figure>
+
+<h5 class="w3-text-teal">Consequence of the Theorem</h5>
+Suppose you and your friend communicate only by means of messages
+that are delayed by arbitrary (finite) amounts. Consider a situation
+where your friend knows
+that you are in the library at 9 pm. Then, from our definition of
+knowledge, because agents only know truth, you must be in the library
+at 9 pm. Moreover, you can't leave the library until
+you receive a message from your friend; this message may go through
+intermediate agents.
+
+<p>
+In one of the exercises we'll look at knowledge when agents have
+clocks that may drift from each other but are not more than a some
+constant \(M\) units apart. If your friend knows that you will be in
+the library till her watch reads 9:00 pm, and your watches may drift apart
+by a minute, then you can leave the library at 9:01 pm. Clocks are
+useful even if they aren't perfect. More about clocks later.
+
+
+<h3 class="w3-text-teal">Theorem: Communication to learn about
+Change</h3>
+This theorem is similar to the "knowledge is control" theorem.
+
+<p>
+Let \(x\) and \(y\) be agents in a system, and let \(P\) be a
+predicate on the states of \(y\).
+Let \(T\) and \(T'\) be instants in a trajectory with \(T < T'\). If
+\(\neg P\) holds at \(T\) and \(x\) knows \(P\) at \(T'\) then there
+is a path in the timeline diagram from point \(T\) on \(y\)'s timeline
+to point \(T'\) on \(x\)'s timeline.
+
+<h5  style="color:red;">Example</h5>
+In the figure below, agent \(C\) holds a token at point \(T\).
+At a later point \(T'\) agent \(A\) knows that agent \(C\) holds no
+tokens. What must happen between points \(T\) and \(T'\)?
+<figure>
+    <img src="KnowledgeDiagrams/Slide10.jpg" alt="Fig6" style="width:60%">>
+<figcaption>Fig. 6. What must happen between T and T'?
+</figcaption>
+</figure>
+
+There must be a path in the timeline diagram from point \(T\) on agent
+\(C\)'s timeline to point \(T'\) on agent \(A\)'s timeline. This path
+is represented by edges that show time elapsing on a timeline and
+message edges between timelines.
+<figure>
+    <img src="KnowledgeDiagrams/Slide11.jpg" alt="Fig7" style="width:60%">>
+<figcaption>Fig. 7. There must be a path from C at T to A at T'?
+</figcaption>
+</figure>
+
+<h3 class="w3-text-teal">What Agents Know about Channel States</h3>
+Next, let's look at systems in which messages are acknowledged.
+For a pair of agents \(x, y\), let \(ms\) and \(mr\)
+be the number of messages that \(x\) has sent to \(y\), and  the number 
+of messages that \(y\) has received from \(x\), respectively.
+Let \(as\) and \(ar\) be
+the number of acknowledgements that \(y\) has sent to \(x\), and
+the number of acknowledgements that \(x\) has received from \(y\),
+respectively.
+
+The following is an invariant:
+<p>
+\(ms \geq mr \geq as \geq ar \)
+
+<p>
+The number of messages in the channel from \(x\) to \(y\) is \(ms -
+mr\).
+Because \(ms\) and \(ar\) are variables of agent \(x\),
+agent \(x\) <i>knows</i> an upper bound,\(\; ms - ar\), on the number of
+messages in channel \((x, y)\).
+So, \(x\) knows that the channel is empty when \(\; ms = ar\).
+
+<h3 class="w3-text-teal">What an agent cannot know</h3>
+An agent cannot know that there are
+exactly \(n\) messages in a channel, for \(n > 0\).
+You can prove this result using the concept of consistent
+cuts. Intuitively, the agent cannot know whether a message is in the
+channel or has been received.
+
+<h3 class="w3-text-teal">Chains of Knowledge</h3>
+Let \(x, y, z\) be agents of a system and \(P\) be a predicate on
+states of the system. Then the following are all predicates:
+<ol>
+  <ul>
+    \(z\) knows \(P\)
+  </ul>
+  <ul>
+    \(y\) knows that \(z\) knows \(P\)
+  </ul>
+  <ul>
+    \(x\) knows that \(y\) knows that \(z\) knows \(P\)
+  </ul>
+</ol>
+The theorems given earlier apply to any predicate. For example, if
+\(x\) knows that \(y\) knows that \(z\) knows \(P\) at a point \(t\) in a
+trajectory, and \(\neg P\) holds at a later point \(t'\)
+then there must be path in the timeline diagram from point \(t\) on
+\(x\)'s timeline to point \(t'\) on \(z\)'s timeline.
+
+<h5 class="w3-text-teal">Concurrent Systems with Shared Variables</h5>
+The theorems
+and proofs given in this module apply to systems with shared
+variables, and indeed any system with trajectories that are
+representable by timeline diagrams and with consistent cuts.
+
+<h3 class="w3-text-teal">Summary</h3>
+Many people working on distributed systems use the phrase "an agent
+knows." This module gives a definition of the concept that is
+consistent with intuitive definitions of knowledge.
+The central idea in this module is the
+relationship between what agents know and consistent cuts of
+timelines. We presented several theorems about agent knowledge which
+are intuitive when applied to human agents. The proofs are
+straightforward and are all based on consistent cuts of timelines.
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+

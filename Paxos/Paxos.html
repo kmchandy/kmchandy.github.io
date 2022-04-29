@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Paxos</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Paxos.html">The Paxos Algorithm</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PaxosExamples.html">Paxos Examples</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Byzantine/Byzantine.html">
+  Next: Byzantine Consensus: Written Messages</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../ConsensusImpossible/ConsensusImpossible.html">
+  Previous: Consensus Impossible
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">The Paxos Algorithm</h1>
+    
+    <h2 class="w3-text-teal">Key Idea: Consensus with Faulty
+    Agents</h1>
+    <a
+    href="https://en.wikipedia.org/wiki/Consensus_(computer_science)">
+    Algorithms by which groups of agents come to a consensus are among
+    the most fundamental problems in distributed computing.
+    </a>
+
+    <p>
+    <a href="../ConsensusImpossible/ConsensusImpossible.html">
+    From the FLP theorem, which we discussed in the earlier
+    module,</a> we 
+    know that that there is no algorithm that guarantees that
+    consensus among distributed agents will be reached if messages
+    are delayed for arbitrary time. Next we describe an algorithm that
+    enables consensus to be reached in most situations,
+    though there is a possibility that
+    consensus may never be reached. We can use probabalistic
+    algorithms to reduce the probability of
+    never reaching consensus.
+
+    <p>
+    Why is reaching consensus so important? There are many problems in
+    which messages are sent to groups of agents who collectively
+    maintain a common <i>consensus</i> state. A bank may use a group
+    of agents, rather than a single agent, to maintain bank
+    balances. Multiple agents reduce the possibility of
+    system-wide failure due to the failure of a single agent.
+    Managing replicated databases requires the replications to come to
+    a consensus on the sequence of transactions that is applied to the
+    database. Cryptocurrency transactions also require collections of
+    agents to come to a consensus about sequences of the
+    transactions. In distributed control systems  agents have to come
+    to a consensus about the 
+    state of the environment so that they can operate in concert.
+    In some applications, multiple agents have to elect a single
+    leader.
+    
+    <p>
+    This module describes,
+    <a href="https://en.wikipedia.org/wiki/Paxos_(computer_science)">
+<i>Paxos</i>, an important algorithm by which agents in a
+distributed system come to a consensus.</a>
+
+<a href="https://en.wikipedia.org/wiki/Raft_(algorithm)">
+There are other algorithms, such as <i>Raft</i> that deal with this
+problem;</a>
+however, we don't have time to discuss them in this course.
+
+    
+<h3 class="w3-text-teal">Assumptions</h3>
+
+    <p>
+In the Paxos algorithm, messages may be lost and may
+    overtake each other. Agents may stop
+    and restart later, and agents may be arbitrarily slow. By
+contrast, in the algorithms that we have discussed so far we assume that:
+messages are not lost; messages sent along a
+channel are delivered in the order sent; and agents take
+actions when they received messages. The Paxos algorithm places far
+fewer restrictions on systems; however, Paxos may not terminate
+whereas we prove termination or progress of most of the algorithms in
+this course.
+
+<p>
+Paxos requires that messages are not modified while in transit. Paxos
+also requires that the receiver of a message knows the identity of the
+sender of that message. If an agent \(x\) sends a message \(m\) to an
+agent \(y\), then the message may be lost. If, however, \(y\) receives
+\(m\) then \(m\) is identical to the message that \(x\) sent, and
+\(y\) knows that \(x\) sent \(m\).
+
+<p>
+Paxos also requires that agents do not have
+<a href="../Byzantine/Byzantine.html">Byzantine faults.</a>
+We discuss Byzantine faults in the following modules.
+
+<h3 class="w3-text-teal">Specification</h3>
+<p>
+The algorithm has agents called
+<i>proposers</i> and others called <i>learners</i>. (In an
+implementation an agent may play the role of both proposer and
+learner.) Proposers propose values. Learners come to a consensus among
+    the proposed values.
+
+    <p>
+Associated with each learner \(L\) is a local variable \(L.value\)
+which is initially \(null\). Similarly, each proposer \(P\) has a
+local variable \(P.value\) which is initially the value that the
+proposer is proposing.
+<p>
+The specification has three parts.
+<ol>
+  <li>
+  Learners learn only proposed values.
+  <p> For every learner \(L\):
+  <p>
+  \(
+  (L.value \neq null) \quad \Rightarrow \quad
+  (\exists \; \textrm{proposer} \: P : L.value = P.value)
+  \)
+  </li>
+  <li>
+  <i>All learners learn the same value.</i>
+  <p>
+  For all learners \(L\) and \(L'\):
+  <p>
+  \(
+  (L.value \neq null) \wedge (L'.value \neq null) \quad \Rightarrow \quad
+  ( L.value = L'.value)
+  \)
+  </li>
+  <li>
+  <i>After a learner learns a value it doesn't later learn a different
+  value.</i>
+  <p>
+  For all learners \(L\), and for all non-null values \(V\):
+  <p>
+  \(
+  stable (L.value = V)
+  \)
+  </li>
+</ol>
+
+<h2 class="w3-text-teal">The Paxos Algorithm</h2>
+The Paxos Algorithm, proposed by Leslie Lamport, has an additional
+layer of agents called <i>acceptors</i>. The communication structure
+between agents is shown in the figure below.
+
+<p>
+<figure>
+    <img src="PaxosFigures/Slide02.jpg" alt="Fig1" style="width:80%">
+    <figcaption>Fig.1: Proposers, Acceptors and Learners</figcaption>
+</figure>
+
+<h4 class="w3-text-teal">Messages and Local Variables</h4>
+In the description of the algorithm, <code>t</code> and
+<code>acceptT</code> are numbers and <code>v</code> is either
+<code>null</code> or 
+<code>P.value</code> of some proposer <code>P</code>.
+
+
+<p class="w3-text-teal">Message Types</p>
+Proposers to acceptors: <code>prepare(t)</code>
+<br>
+Acceptors reply to proposer:
+<code>promise(t, v, acceptT)</code>.
+<br>
+Proposers  to acceptors:
+<code>propose(t, v)</code>.
+<br>
+Acceptors to learners: 
+<code>accept(t, v)</code>.
+
+<p class="w3-text-teal">Local Variables</p>
+The local variables are as follows.
+<br>
+Proposer <code>P</code>: <code>(P.t, P.v)</code>.
+<br>
+Acceptor <code>A</code>: <code>(A.t, A.v, A.acceptT)</code>.
+
+<h4 class="w3-text-teal">Learners</h4>
+The algorithm for learners is simple:
+A learner determines that the consensus value is <code>V</code> if the
+learner receives <code>accept(T, V)</code> messages from a majority of
+acceptors with identical values of <code>(T, V)</code>.
+
+<h4 class="w3-text-teal">Proposers and Acceptors</h4>
+
+<p>
+The algorithm for proposers and acceptors is given below.
+
+<pre>
+Initial values:
+  For all proposers P: P.v = P.value
+  For all acceptors A: A.v = null
+// Setting initial times to 0 simplifies explanation.
+Initial times:
+  For all proposers P, and acceptors A:
+        P.t = A.t = A.acceptT = 0
+  
+// Proposer P. Step P.1
+P.T = P.T + any positive value
+send prepare(P.t) to all acceptors
+
+// Acceptor A. Step A.1
+upon receiving prepare(t) from P:
+   if t > A.t:
+      A.t = t
+      send promise(A.t, A.v, A.acceptT) to P
+
+// Proposer P. Step P.2
+wait to receive promise(t, v, acceptT) messages from a
+     majority of acceptors where t == P.t:
+     if v is not null for any of these messages:
+         P.v =  the v field of the promise message
+                with the largest acceptT field
+     send propose(P.t, P.v) to all acceptors
+      
+// Acceptor A. Step A.2
+upon receiving propose(t, v) from P:
+    if t >= A.t:
+       A.t = t
+       A.v = v
+       A.acceptT = t
+       send accept(A.t, A.v) to all learners
+</pre>
+
+<p>
+In step P.1, if a proposer sends <code>prepare(t)</code> and a
+different proposer sends <code>prepare(t')</code> then <code>t</code>
+and <code>t'</code> are different because ties are broken by using
+proposer ids. Assume that the <code>t</code> value implicitly includes
+the proposer id; the proposer id is used only to break ties.
+
+<p>
+We shall say that acceptor \(A\) <i>"accepts"</i> <code>(A.t, A.v)</code> at
+step A.2 if it sends <code>accept(A.t, A.v)</code>.
+
+<h4 class="w3-text-teal">Algorithm Steps</h4>
+The algorithm has only one point where an agent waits: Step P.2.
+In step P.2, a proposer waits for a bounded time
+to receive promise messages from a majority of acceptors. If these
+messages don't arrive within this time then the proposer aborts this
+iteration and starts the next iteration i.e. back to step P.1.
+The proposer repeatedly executes a
+loop consisting of steps P.1 and P.2.
+We will discuss termination of this loop later.
+
+<h3 style="color:red;">Example</h3>
+Consider a system with 5 acceptors. In step P.2 the proposer
+implicitly starts a timer. The
+proposer waits to
+receive <code>promise(t, v, acceptT)</code> with 
+<code>t == P.t</code> from at least 3 acceptors. Suppose it gets 
+<code>promise(t, v, acceptT)</code> messages from 3 acceptors, but for some of the
+messages <code>t != P.t</code>. In this case the proposer continues to
+wait for more messages. If the timer goes off while the proposer is
+waiting then the proposer aborts step P.2 and initiates the next
+iteration of the loop by executing step P.1.
+
+<h3 style="color:red;">Example</h3>
+<p>
+<figure>
+    <img src="PaxosFigures/Slide07.jpg" alt="Fig2" style="width:100%">
+    <figcaption>Fig.2: Timelines</figcaption>
+</figure>
+
+Assume that proposers propose colors and all learners come to a
+consensus on a single proposed color. Assume that the color of
+proposer <code>Z</code> is 'red'.
+
+<p>
+The diagram shows the timeline for a proposer <code>Z</code>, acceptor
+<code>A</code> and learner <code>L</code>. The diagram doesn't show
+multiple proposers, acceptors and learners to prevent the diagram from
+getting too crowded.
+
+<p>
+The first event in the timeline is a prepare message sent by proposer
+<code>Z</code> when <code>Z.t = 10</code>. The message,
+<code>prepare(10)</code> sent by <code>Z</code> is received by acceptor
+<code>A</code>.
+
+
+When acceptor <code>A</code> gets the prepare message it replies with
+<code>promise(10, A.v, A.acceptT)</code>.
+
+<p>
+Assume that proposer <code>Z</code> gets <code>promise(t, A.v,
+A.acceptT)</code> messages from a
+majority of acceptors where <code>t = 10</code> before step P.2 times
+out.
+
+<p style="color:red;">Example: Proposer proposes its own value</p>
+If <code>A.v = null</code> for <i>all</i> these messages, then the
+proposer proposes its own value, i.e., 
+<code>Z</code> sends <code>propose(10, 'red')</code> to all acceptors
+where <code>'red'</code> is <code>Z</code>'s color.
+
+<p style="color:red;">Example: Proposer proposes value from acceptor</p>
+If <code>A.v != null</code> for at least one of these messages then 
+<code>Z</code>
+inspects these messages to find the <code>A.v</code> in the message with the
+largest value of <code>A.acceptT</code>.
+Assume that <code>Z</code> receives
+<code>promise(10, null, 0)</code>,
+<code>promise(10, 'green', 4)</code>, and
+<code>promise(10, 'blue', 6)</code>.
+The promise message with the highest <code>A.acceptT</code> is
+<code>promise(10, 'blue', 6)</code>.
+So, <code>Z</code> sends
+<code>propose(10, 'blue')</code> to all acceptors. 
+
+<p>
+If in step P.2, proposer <code>Z</code> sends
+<code>propose(10, 'blue')</code> to all acceptors, and
+<code>A</code> receives this message,  then <code>A</code>
+sends <code>accept(10, 'blue')</code> to all learners.
+
+<p style="color:red;">Example: Next Round</p>
+In this example proposer <code>Z</code> starts a new round by sending
+<code>prepare(11)</code>. It's possible that in this round
+<code>Z</code> gets <code>promise(11, A.v, A.acceptT)</code> messages
+from at least a majority of acceptors where <code>A.v = null</code> for
+<i>all</i> the message that <code>Z</code> receives. In this example 
+<code>Z</code> sends <code>propose(11, 'red')</code> to all
+acceptors. Note that in this case <code>Z</code> sends 
+<code>propose(10, 'blue')</code> and later sends
+<code>propose(11, 'red')</code>. This example shows that <code>Z</code> may change the
+value that it proposes.
+
+<h3 style="color:red;">Example</h3>
+The next two figures illustrate the meaning of <code>A.t</code> for an
+acceptor <code>A</code>. 
+
+<figure>
+    <img src="PaxosFigures/Slide03.jpg" alt="Fig3" style="width:100%">
+    <figcaption>Fig.3: Meaning of A.t for Acceptor A</figcaption>
+</figure>
+
+Acceptor <code>A</code> ignores all
+<code>prepare(t)</code> and code>propose(t, v)</code> messages for
+which <code>t < A.t</code>.
+
+<figure>
+    <img src="PaxosFigures/Slide04.jpg" alt="Fig4" style="width:100%">
+    <figcaption>Fig.4: Meaning of A.t for Acceptor </figcaption>
+</figure>
+
+<!-------------------------------------------------------->
+<p class="w3-text-teal">Timeline Diagram for Paxos</p>
+In the Paxos algorithm an agent may discard a message without
+taking action. For example, in step A.2 an acceptor <code>A</code> discards messages
+with timestamps equal to or earlier than <code>A.t</code> without
+taking action. 
+In timeline diagrams for Paxos we show only messages that are
+accepted. A message that is lost or discarded is not shown.
+
+
+<h2 class="w3-text-teal">Correctenss</h2>
+In the following the symbol "-" denotes any arbitrary value.
+
+<!-------------------------------------------------------->
+<h3  class="w3-text-teal">Theorem 1: Learners only learn values
+proposed by proposers</h3>
+The proof of part 1 --
+learners only learn values of proposers --- follows from
+the following invariant which has a straightforward proof.
+
+<p  class="w3-text-teal">Invariant</p>
+For every proposer, acceptor, and message,
+the <code>v</code> field is either <code>null</code> or
+<code>P.value</code> for some proposer
+<code>P</code>.
+
+<!-------------------------------------------------------->
+<h4  class="w3-text-teal">Theorem 2</h4>
+Let \(T_{0}\) be the smallest value of \(T\) such that a majority of
+acceptors \(accept(T, -)\). Let \(V_{0}\) be the value accepted;
+so a majority accepts \((T_{0}, V_{0})\). Let \(P\) be the earliest
+time at which any acceptor accepts \((T_{0}, V_{0})\).
+<p>
+Then \(R.acceptT < T_{0}\) for all acceptors \(R\) at time \(P\).
+<!-------------------------------------------------------->
+<h4  class="w3-text-teal">Theorem 3</h4>
+If a majority of acceptors
+accepts \((T, V)\) and any acceptor accepts \((T', V')\) where \(T' \geq T\) then \(V'
+= V\).
+
+  
+<h2 style="color:red;">Example: Illustration of Proof</h2>
+We give the idea underlying the proof before giving the proof itself. 
+The next sequence of diagrams illustrates the idea.
+<p>
+In the following we refer to the \(j\)-th acceptor either as acceptor
+\(j\) or as \(R_{j}\).
+
+<h4 style="color:red;">Example: Illustration of Proof of Theorem
+2</h4>
+The figure below shows a timeline diagram for proposers A, B, C
+and acceptors 1 - 5. Acceptors 3, 4, 5 have accepted \((T_{0}, V_{0})\). No
+majority of acceptors have accepted (T, V) for \(T < T_{0}\).
+<p>
+The acceptors that accept \((T_{0}, V_{0})\) may do so at different
+points in time. Let \(P\) be the earliest time at which any acceptor
+accepts \((T_{0}, V_{0})\). In the diagram acceptor 3 is the first to
+accept \((T_{0}, V_{0})\) and point \(P\) is marked.
+<p>
+Consider an acceptor that does not accept  \((T_{0}, V_{0})\).
+In the diagram, acceptors 1 and 2 do not accept 
+\((T_{0}, V_{0})\). Let \(T'\) be the value of \(acceptT\)
+for acceptor 1 at point \(P\). (The same argument holds for acceptor
+2.)
+<p>
+The theorem says: \(T' < T_{0}\).
+
+<figure>
+    <img src="PaxosFigures/Slide08.jpg" alt="Fig5" style="width:100%">
+    <figcaption>Fig.5: Illustration of Theorem </figcaption>
+</figure>
+
+<p>
+What sequence of events must occur for \(R1.acceptT\) at point \(P\)
+to be \(T'\)?
+
+<p>
+Acceptor R1 must have received \(propose(T', -)\) from some
+proposer. In the diagram this proposer is \(B\).
+
+<figure>
+    <img src="PaxosFigures/Slide09.jpg" alt="Fig5" style="width:100%">
+    <figcaption>Fig.5: Illustration of Theorem </figcaption>
+</figure>
+
+<p>
+Proposer \(B\) sent \(propose(T', _)\) only because it received
+\(promise(T', -, -)\) from a majority of acceptors. Any two
+majorities have at least one element in common. So, at least one of
+the acceptors that sent \(promise(T', -, -)\) also accepted \((T_{0},
+V_{0})\). In the diagram this acceptor is R3.
+
+<figure>
+    <img src="PaxosFigures/Slide10.jpg" alt="Fig5" style="width:100%">
+    <figcaption>Fig.5: Illustration of Theorem </figcaption>
+</figure>
+<p>
+Because an acceptor sends \(promise(T', -, -)\) and later accepts \((T_{0},
+V_{0})\) it follows that \(T' < T_{0}\).
+
+<h4 style="color:red;">Example: Illustration of Proof of Theorem
+3</h4>
+
+Theorem 3 says: If a majority of acceptors accepts \((T_{0}, V_{0})\)  and any acceptor accepts \((T_{1}, V_{1})\) where \(T_{1} \geq T_{0}\), then \(V_{1} = V_{0}\).
+
+
+The figure below shows a timeline diagram for proposers A, B, C
+and acceptors 1 - 5. Acceptors 3, 4, 5 have accepted \((T_{0}, V_{0})\). No
+majority of acceptors have accepted (T, V) for \(T < T_{0}\).
+
+
+<figure>
+    <img src="PaxosFigures/Slide05.jpg" alt="Fig5" style="width:100%">
+    <figcaption>Fig.5: Illustration of Theorem </figcaption>
+</figure>
+In this figure, acceptor 1 has accepted \((T_{1}, V_{1})\). The diagram
+    illustrates the first step of the induction. No acceptor has
+    accepted \((T, V)\) where \(T_{0} < T < T_{1}\)
+
+<p>
+The next figure shows the steps that must precede acceptor 1 accepting
+\((T_{1}, V_{1})\). Acceptor 1 must have received a \(propose(T_{1},
+V_{1})\) message from some proposer before acceptor 1 accepted
+\((T_{1}, V_{1})\). In the diagram this proposer is C. 
+
+
+<figure>
+    <img src="PaxosFigures/Slide06.jpg" alt="Fig6" style="width:100%">
+    <figcaption>Fig.6: Illustration of Theorem </figcaption>
+</figure>
+
+<p>
+Proposer C sends \(propose(T_{1}, V_{1})\) only after receiving
+\(promise(T_{1}, -, -)\) messages from a majority of acceptors.
+In the figure, proposer C
+receives \(promise(T_{1}, -, -)\) messages from acceptors 1, 2, and
+3. Let's analyze the promise messages received by proposer C.
+<p>
+The majority that accepts \((T_{0}, V_{0})\) and the majority that
+sends \(promise(T_{1}, -, -)\) must have at least one acceptor in
+common. In the figure acceptor 3 is common to both majorities.
+<p>
+Acceptor 3 sends \(promise(T_{1}, V_{0}, T_{0})\). 
+
+Acceptor 1 sends \(promise(T_{1}, R_{1}.V, R_{1}.acceptT)\) and we
+have shown that \(R_{1}.acceptT < T_{0}\) at point \(P\).
+The same argument holds for acceptor 2.
+
+<p>
+Proposer C inspects the promise messages that it receives from acceptors
+1, 2 and 3 and picks the message with the largest
+value of accepT. This message is \(promise(T_{1}, V_{0}, T_{0})\) sent
+by acceptor 3. Therefore, proposer C sends \(propose(T_{1}, V_{1})\) where
+\(V_{1} = V_{0}\).
+
+
+
+<h3 class="w3-text-teal">Proof</h3>
+Next we give the outline of the proof.
+<p>
+The proof is by induction. Let \(T_{0}\) be the smallest value of
+\(T\) such that a majority of acceptors accepts \((T, V)\). Let the
+sequence of accepts with \(T\)-value greater than \(T_{0}\) be
+\(T_{1}, T_{2}, \ldots\) where \(T_{j} < T_{(j+1)}\). Assume that the
+theorem holds for the first \(k\) accepts in the sequence,
+i.e., assume \(V_{j} = V_{0}\) for \(0 \leq j \leq k\)
+and prove that
+\(V_{(k+1)} = V_{0}\).
+
+<p class="w3-text-teal">Base Case</p>
+The base case is \(k = 0\)
+
+<p class="w3-text-teal">Induction Step</p>
+Let acceptor \(A\) accept \((T_{(k+1)}, V_{(k+1)})\). From step A.2,
+acceptor  \(A\) received \(propose(T_{(k+1)}, V_{(k+1)})\) from a
+proposer; let this proposer be proposer \(P\).
+
+<p>
+From step P.2, proposer \(P\) sends \(propose(T_{(k+1)}, V_{(k+1)})\)
+only if it receives \(promise(T_{(k+1)}, -, -)\) from a majority of
+acceptors. 
+
+<p>
+Because any two majorities have at least one element in common, there
+is at least one acceptor that sent \(promise(T_{(k+1)}, -, -)\) and
+also accepts \((T_{0}, V_{0})\).
+
+<p>
+By the induction assumption any
+acceptor \(B\) that accepts \((T_{j}, V_{j})\) for any  \(0 \leq j \leq k\) sends
+<p>
+\(
+promise(T_{(k+1)},V_{0}, B.acceptT)
+\)
+<p>
+where \(T_{0} \leq B.acceptT \leq T_{k}\).
+
+<p>
+Any acceptor \(C\) that did not accept \((T_{j}, V_{j})\) for any
+\(0 \leq j \leq k\)
+sends
+\(promise(T, V, C.acceptT)\) where \(C.acceptT < T_{0}\).
+
+<p>
+From step P.2 the promise message with the largest value of acceptT
+has \(V = V_{0}\). So, proposer \(P\) sends
+\(
+propose(T_{(k+1)}, V_{0})
+\)
+and the theorem follows.
+
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+

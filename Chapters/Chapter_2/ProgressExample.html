@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Progress</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+  
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="Progress.html">Chapter: Progress</a>
+  <a class="w3-bar-item w3-button w3-hover-black" href="ProgressExample.html">More Examples</a>
+  <a class="w3-bar-item w3-button w3-hover-black" href="ProgressSelfTest.html">Self Test</a>
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_1/Safety.html">Previous Chapter: Safety</a>
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_3/Properties.html">Next Chapter: Properties of
+  Leads To</a>
+  </nav>
+
+  
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+
+<h3 style="color:red;">Example</h3>
+  <figure>
+  <img src="LabeledGraph.jpg" alt="Fig2" style="width:50%">
+  <figcaption>Fig.1 - Example of a Labeled Graph</figcaption>
+  </figure>
+<p>
+
+
+<!------------------------------------------------------>
+  <p style="color:red;"><b>Examples of Fair Paths</b></p>
+
+  <ol>
+    <li>
+    \(
+    3 \stackrel{a}{\rightarrow} 4 \stackrel{b}{\rightarrow} 3
+  \stackrel{a}{\rightarrow} 4 \stackrel{b}{\rightarrow} 3
+  \stackrel{a}{\rightarrow} 4 \stackrel{b}{\rightarrow} 3 \ldots
+    \)
+    <br>
+    This path cycles between vertices \(3\) and \(4\) traversing edges
+  labeled \(a\) and \(b\) for ever.
+    </li>
+    <li>
+    \(
+    8 \stackrel{a}{\rightarrow} 9 \stackrel{a}{\rightarrow} 8
+  \stackrel{a}{\rightarrow} 9 \stackrel{c}{\rightarrow} 1
+    \stackrel{a}{\rightarrow} 1 \stackrel{b}{\rightarrow} 1
+    \stackrel{a}{\rightarrow} 1 \stackrel{b}{\rightarrow} 1 \ldots
+    \)
+    <br>
+    This path reaches vertex \(1\) and loops around it traversing edges
+  labeled \(a\) and \(b\) for ever.
+    </li>
+  </ol>
+  
+<!------------------------------------------------------>
+  <p style="color:red;"><b>Examples of paths that are not
+  fair</b></p>
+  <ol>
+    <li>
+    \(
+    8 \stackrel{b}{\rightarrow} 8
+    \stackrel{a}{\rightarrow} 9 \stackrel{a}{\rightarrow} 8
+    \stackrel{a}{\rightarrow} 9 \stackrel{a}{\rightarrow} 8
+    \stackrel{a}{\rightarrow} 9 \stackrel{a}{\rightarrow} 8
+    \ldots
+    \)
+    <br>
+    This path traverses an edge labeled \(b\) once and thereafter
+  traverses only edges labeled \(a\). This path is not fair because it
+  only traverses infinitely-often label \(b\) only a finite number of times.
+    </li>
+    <li>
+    \(
+    6 \stackrel{a}{\rightarrow} 5 \stackrel{b}{\rightarrow} 3 \stackrel{b}{\rightarrow} 0
+    \stackrel{b}{\rightarrow} 5 \stackrel{b}{\rightarrow} 3 \stackrel{b}{\rightarrow} 0
+    \stackrel{b}{\rightarrow} 5 \stackrel{b}{\rightarrow} 3 \stackrel{b}{\rightarrow} 0
+    \ldots
+    \)
+    <br>
+    This path traverses an edge labeled \(a\) once and thereafter
+  traverses only edges labeled \(b\). This path is not fair because it
+  only traverses infinitely-often label \(a\) only a finite number of times.
+    </li>
+  </ol>
+
+
+
+  <!------------------------------------------------------>
+  <p style="color:red;"><b>An example of \(P \leadsto Q\)</b></p> is:
+  
+    \(
+    \{8, 9\} \leadsto \{1, 2\}
+    \)
+    <br>
+    A fair path that enters any vertex in \(\{8, 9\}\) cannot remain
+  in \(\{8, 9\}\) for ever because the 
+  path will traverse
+  infinitely-often label \(b\) which takes the path out of \(\{8,
+  9\}\). Transitions out of \(\{8, 9\}\) are to \(\{1, 2\}\).
+  
+  <ol>
+    <li>
+    \(
+    \{1, 2\} \leadsto \{1, 2\}
+    \)
+    <br>
+    There is a path, with no hops, from every vertex to itself. So
+  \(v\) is in \(E(\{v\})\) for all vertices \(v\).
+    </li>
+    <li>
+    \(
+    \{8, 9\} \leadsto \{1, 2\}
+    \)
+    <br>
+    A fair path that enters any vertex in \(\{8, 9\}\) cannot remain
+  in \(\{8, 9\}\) for ever because the 
+  path will traverse
+  infinitely-often label \(b\) which takes the path out of \(\{8,
+  9\}\). Transitions out of \(\{8, 9\}\) are to \(\{1, 2\}\).
+    </li>
+    <li>
+    \(
+    \{8\} \leadsto \{1, 2\}
+    \) and\(
+    \{9\} \leadsto \{1, 2\}
+    \) 
+    <br>
+     Follows from the discussion above.
+    </li>
+    <li>
+    \(
+    \{10\} \leadsto \{9\}
+    \)
+    <br>
+     A fair path that enters \(\{10\}\) cannot remain in \(\{10\}\) for ever because the
+  path will traverse
+    infinitely-often label \(a\) which takes the path out of \(\{10\}\).
+    Transitions out of \(\{10\}\) are to \(\{9\}\).
+    </li>
+    <li>
+    \(
+    \{10\} \leadsto \{1, 2\}
+    \)
+    <br>
+     A fair path that enters \(\{10\}\) later enters \(\{8, 9\}\), and
+  a path that enters \(\{8, 9\}\) later enters \(\{1, 2\}\).
+    </li>
+    <li>
+    \(
+    \{1, 2, 8, 9, 10\} \leadsto \{1, 2\}
+    \)
+    <br>
+     Follows from the previous results.
+    </li>
+    </li>
+  </ol>
+
+  <!------------------------------------------------------>
+  <p style="color:red;"><b>An examples of \(\neg (P \leadsto
+  Q)\)</b></p> is:
+    \(
+    \neg (\{7\} \leadsto \{1, 2\})
+    \)
+    <br>
+    There is a fair path from \(7\) throug \(6\) that
+  never visits \(\{1, 2\}\).
+  <ol>
+    <li>
+    \(
+    \neg (\{7\} \leadsto \{1, 2\})
+    \)
+    <br>
+    There is a fair path from \(7\) throug \(6\) that
+  never visits \(\{1, 2\}\).
+    </li>
+    <li>
+    \(
+    \neg (\{0, 3, 4, 5, 6\} \leadsto \{1, 2\})
+    \)
+    <br>
+    There exist fair paths from these vertices that never visit \(\{1,
+  2\}\). 
+    </li>
+  </ol>
+
+
+  <!------------------------------------------------------>
+  <p style="color:red;"><b>An example of Eventually: E(P)</b></p> is:
+  
+    \(
+    E({1, 2}) = \{1, 2, 8, 9, 10\}
+  \)
+  because all paths that start at vertices in \{1, 2, 8, 9, 10\} and
+    that traverse labels \(a\) and \(b\) infinitely
+    often, visit vertices \(1\) and \(2\).
+  <ol>
+    <li>
+    \(
+    E({1, 2}) = \{1, 2, 8, 9, 10\}
+    \)
+    <br>
+    From the earlier discussion, 
+    \(
+    \{1, 2, 8, 9, 10\} \leadsto \{1, 2\}
+    \)
+    and
+    \(
+    \neg (\{0, 3, 4, 5, 6, 7\} \leadsto \{1, 2\})
+    \)
+    </li>
+    <li>
+    \(
+    E({0}) = \{0\}
+    \)
+    <br>
+    Every path from \(0\) visits \(0\), by definition; so, all fair
+  paths from \(0\) visit \(0\). So, \(0\) is in \(E({0})\). One can
+  construct fair paths from all the vertices other than \(0\) that
+  never visit \(0\).
+    </li>
+
+  </ol>
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+  
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>

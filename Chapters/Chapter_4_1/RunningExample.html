@@ -1,0 +1,344 @@
+<title>RunningExample</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+
+  <h3 class="w3-bar-item"><b>Section: State Transition Systems</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="RunningExample.html">Example of State-Transition Systems</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PredicatesExample.html">Examples</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PredicatesSelfTest.html">Self Tests</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PredicatesExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="PredicatesExplorations.html">Explorations</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_5/EarliestMeetingTime.html">Next: Example -
+  Earliest Meeting Time</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Chapter_4/Model.html">Previous:
+  State Transition Systems</a>
+
+
+</nav>
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Example of a Transition System</h1>
+
+    This module contains a simple example of a state-transition system.
+    </p>
+    
+    <h2 class="w3-text-teal">Finding the Earliest Meeting Time</h2>
+    Three agents - Maya, Liu, and Eve - want to find a day at which
+    all of them can meet. Associated with each agent \(j\) is a
+    function \(f_{j}\) where \(f_{j}(d)\) is the
+    earliest day at or after day \(d\) that agent \(j\) can meet.
+    </p>
+    
+
+    <p>
+    For example, assume that Maya, Liu and Eve are agents \(0\), \(1\),
+    and \(2\), respectively. Maya, Liu and Eve can only meet on days that are multiples
+    of 2, 3, 5, respectively (but none can meet on day 0).
+    For example, \(f_{0}(5) = 6\) because the earliest time that Maya can meet on or after day
+    5 is day 6, because she cannot meet on day 5 since 5 is not a
+    multiple of 2, and she can meet on day 6.
+    Here are some examples of values of \(f_{j}(d)\):
+    </p>
+
+    <p>
+    \(
+    f_{0}(5) = 6, \; f_{0}(6) = 6, \; f_{0}(7) = 8
+    \)
+    <br>
+    \(
+    f_{1}(5) = 6, \;  f_{1}(6) = 6, \; f_{1}(7) = 9
+    \)
+    <br>
+    \(
+    f_{2}(5) = 5, \; f_{2}(6) = 10, \; f_{2}(7) = 10
+    \)
+    </p>
+
+    <p>
+    In the example, the earliest day that Maya, Liu and Eve can all meet is the least
+    common multiple of 2, 3, and 5 which is 30.
+    <p>
+
+    The function \(f_{j}\) is private to agent \(j\). An agent
+    doesn't know the function of other agents.
+    There exists some day, perhaps in the distant future, at which all
+    agents can meet, and that day is \(m\). Therefore:
+    
+    <ol>
+      <li>
+      <p>
+      All agents can meet on day \(m\).
+      </p>
+      \(
+      \forall j: f_{j}(m) = m
+      \)
+      </p>
+      </li>
+      <li>
+      For every day \(d\) before \(m\), at least one agent cannot meet
+      at \(t\). 
+      </p>
+      <p>
+    \(
+    \forall d < m: \exists j:  f_{j}(d) > d
+      \)
+      </p>
+      </li>
+  </ol>
+    
+
+    <p>
+  Associated with agent \(j\) is a variable \(t_{j}\).
+  Let \(N\) be the number of agents, and
+  let \(t\) be the vector whose elements are \(t_{j}\).
+  Let \(M\) and  \(\emptyset\) be vectors of length \(N\) where
+  all elements of \(M\) are \(m\) and all elements of \(\emptyset\)
+  are \(0\).
+  In our example, \(t = [t_{0}, t_{1}, t_{2}]\),
+  \(M = [30, 30, 30]\), and \(\emptyset = [0, 0, 0]\).
+  </p>
+  <p>
+  The specification of the system is that each agent's proposed time
+  should eventually become the earliest time at which all agent's can
+  meet.
+  </p>
+    <p>
+    \(
+    (t = \emptyset) \; \leadsto \; (t = M)
+    \)
+  </p>
+  
+
+<h4 class="w3-text-teal">States</h4>
+<p>
+The states of the system are given by the values of \(t\).
+</p>
+
+<h4 class="w3-text-teal">Initial Conditions</h4>
+<p>
+The initial condition is: \(t = \emptyset\).
+</p>
+
+<h4 class="w3-text-teal">Actions</h4>
+  <p>
+  There are many ways of solving this problem. Next, we give an
+  example for the specific purpose of illustrating state-transition
+  systems. The actions in this example are not the obvious way of
+  solving the problem and were chosen because the show different
+  types of actions.
+  </p>
+
+  <h4 class="w3-text-teal">Fair Actions</h4>
+  <ol>
+    <li>
+  <p>
+  <i>Action \(a_{i,j}\) for all \(i, j\).</i>
+  </p>
+  <p>
+  If \(t_{i}\) exceeds \(t_{j}\) then agent \(j\) increases \(t_{j}\)
+  to \(t_{i}\).
+  </p>
+  <p>
+  
+  \(
+  \{ (t=T) \} \; a_{i,j} \; \{\; t_{j} = max(T_{i}, T_{j}) \; \}
+\)
+    </p>
+    </li>
+
+
+    <li>
+<p>
+<i>Action \(b_{j}\) for all \(j\):</i>
+  </p>
+  <p>
+  Agent \(j\) sets \(t_{j}\) to the next time that it can meet
+  at or after \(t_{j}\).
+
+<p>
+\(
+\{ t=T \} \; b_{j} \; \{\; t_{j} = f_{j}(T_{j}) \; \}
+\)
+    </p>
+    </li>
+</ol>
+
+<p>
+In our example, if \(T = [3, 5, 7]\), then Maya's 
+actions, \(a_{1, 0}\) and \(a_{2, 0}\), in that state are: \(t_{0} =
+max(3, 5) = 5\) and \(t_{0} = max(3, 7) = 7\), respectively.
+Maya's action \(b_{0}\) in that state
+is: \(t_{0} = f_{0}(3) = 4\).
+</p>
+
+<h4 class="w3-text-teal">Other Actions</h4>
+Actions that are not fair represent errors or
+situations outside the designer's control. Here we give an example to
+illustrate such actions though the example does not represent errors.
+</p>
+<p>
+Each agent \(j\) has an action \(c_{j}\) that may be executed an
+arbitrary number of times in a trajectory.
+Agent \(j\) sets its proposed value \(t_{j}\) to any value between its
+current value and the next time that agent can meet at or after
+\(t_{j}\).
+</p>
+
+<p>
+Action \(c_{j}\) is defined by the Hoare triple:
+</p>
+<p>
+\(
+\{ t=T \} \; c_{j} \; \{\; T_{j} \leq t_{j} \leq f_{j}(T_{j}) \; \}
+\)
+</p>
+
+<p>
+Action \(c_{2}\) for Eve in state [3, 5, 7] establishes the post condition:
+\(
+7 \leq t_{j} \leq f_{2}(7) = 9
+\).
+So, possible state transitions due to the executions of \(b_{2}\) in
+this state are to the following states \([3, 5, 7], [3, 5, 8], [3, 5, 9]\).
+</p>
+
+<h4 class="w3-text-teal">The Labeled Graph</h4>
+The labeled graph for this system is too large to draw. So, in the figure
+we show a few examples of state transitions. These transitions are due to actions \(a_{1, 0}\),
+\(a_{2, 0}\), \(b_{0}\), and \(c_{2}\) executed in state \([3, 5, 7]\).
+</p>
+
+<figure>
+  <img src="FairTransitions.jpg" alt="Fig2" style="width:50%">>
+  <figcaption>Fig.1 - Fair Transitions for Maya</figcaption>
+</figure>
+
+<figure>
+  <img src="UnFairTransitions.jpg" alt="Fig2" style="width:50%">>
+  <figcaption>Fig.2 - Other Transitions for Eve</figcaption>
+</figure>
+
+<!---------------------------------------->
+<h4 class="w3-text-teal">Practicalities</h4>
+<p>
+The model executes one action at a time.
+Actions that can be executed in arbitrary order represent actions that
+can be executed concurrently.
+A set of
+actions can execute concurrently provided that no action in the set modifies
+variables that are accessed by other actions in the set.
+We must ensure that an agent does not access a variable that is being
+modified by another agent by using locks or message-passing. We will
+discuss variables shared by agents in the next two sections.
+</p>
+
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>

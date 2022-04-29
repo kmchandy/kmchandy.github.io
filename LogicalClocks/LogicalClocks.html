@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>LogicalClocks</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="LogicalClocks.html">Logical Clocks</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="LogicalClocksExample.html">Examples</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="LogicalClocksSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="LogicalClocksExercises.html">Exercises</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="LogicalClocks.html">Explorations</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../GlobalSnapshots/GlobalSnapshots.html">
+  Next: Global Snapshots</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Timelines/Timelines.html">Previous:
+  Properties of Timelines, Consistent Cuts
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Timestamps and Logical Clocks</h1><p>
+    In this module we develop algorithms that assign a number, called
+    a timestamp, to each event. The timestamps are said to be
+    <i>consistent</i> exactly when the successors of an event, in the
+    timeline graph, have greater timestamps than the event does.
+
+    <p>
+    Let \(t_{e}\) to each event \(e\) in a timeline diagram.
+    The timestamps are <i>consistent</i> for a graph \(G\) exactly when
+    <p>
+    \(
+    \forall (v, w) \in G: t_{v} < t_{w}
+    \)
+    </p>
+
+    <h4 style="color:red;">Example</h4>
+    The figure below shows consistent timestamps. Every edge in the
+    graph is from a lower timestamp to a higher timestamp.
+
+    <figure>
+    <img src="LogicalClocksFigures_01.jpg" alt="Fig1" style="width:80%">
+    <figcaption>Fig.1: Consistent timestamps</figcaption>
+    </figure>
+
+    <h4 class="w3-text-teal">Cut corresponding to a Timestamp</h4>
+    The cut corresponding to a timestamp \(T\) is defined as a cut that
+    intersects the timeline of an agent or shared variable at an edge
+    \((e, e')\) where \(t_{e} \leq T < t_{e'}\).
+
+
+    
+    <h3 class="w3-text-teal">Theorem: Consistent Timelines and Cuts</h3>
+    For all consistent timestamps, for all \(T\), the cut
+    corresponding to \(T\) is a consistent cut. 
+
+    <p class="w3-text-teal">Proof</p>
+    An event \(w\) is in the past with respect to a cut corresponding to
+    \(T\) exactly when \(t_{w} \leq T\).
+    From the consistency of the timestamps, for all edges \((v, w)\),
+    \(t_{v} \leq T\). Therefore, all edges to events in the past are
+    from the past.
+
+    <h4 style="color:red;">Example</h4>
+    A cut corresponding to the timestamp 10 is curvilinear in the
+    diagram shown on top of the figure. This is because the points
+    corresponding to timestamp 10 occur at different times in this
+    trajectory. Similarly, cuts corresponding to timestamps 15 and 25
+    are curvilinear in this example trajectory.
+
+<p>
+The cuts shown in the trajectory on top are consistent; so, there
+exists a trajectory --- shown in the lower diagram --- in which
+the corresponding cuts are vertical.
+
+    <figure>
+    <img src="LogicalClocksFigures_02.jpg" alt="Fig2" style="width:80%">
+    <figcaption>Fig.2:Curvilinear cut at t in a timeline is vertical
+    in another </figcaption>
+</figure>
+
+
+    <h3 class="w3-text-teal">Algorithm for Consistent Timestamps</h3>
+    Prior to executing an event \(e\) an agent \(a\) takes the following
+    steps. Let \(V\) be the set of variables referenced in the event.
+    For each \(v\) in \(V\), let
+    \(r(v)\) be the most recent event in which \(v\) is referenced.
+    Let \(r(a)\) be the most recent event executed by \(a\).
+    Assign event \(e\) any timestamp \(t_{e}\) where:
+    <p>
+    \(
+    t_{e} > \textrm{max}(r(a), \; \textrm{max}_{v} \: r(v))
+    \)
+    </p>
+    <p>
+    For example, the algorithm could set \(t_{e}\) to \(1 +
+    \textrm{max}(r(a), \; \textrm{max}_{v} \: r(v))\). 
+
+    <p>
+Why would we want to increase \(t_{e}\) by more than 1? Later, we will
+use algorithms in which the timestamp of an event is approximately the
+same as the real time at which the event occurred. In this case,
+timestamps are increased by amounts dependent on the real
+times that have elapsed.
+
+<p>
+The timestamp given by an agent to a point on the agent's timeline is
+called the value of the agent's logical clock at the point. Later we
+will see how real clocks can influence logical clocks.
+
+<p class="w3-text-teal">A distributed algorithm to compute a
+global snapshot</p>
+Assign consistent timestamps to events.
+The state at a cut corresponding to any timestamp \(T\) is a global state.
+
+<p class="w3-text-teal">Application: A rollback and recovery
+algorithm</p>
+An application of the timestamp algorithm is rollback and recovery.
+The timestamp algorithm records a sequence of global states \(s_{t}\)
+for different timestamps \(t\).
+If an error is detected during a computation then the
+computation is restarted from the most recent recorded global
+snapshot. 
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+

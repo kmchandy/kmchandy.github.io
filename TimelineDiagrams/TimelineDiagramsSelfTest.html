@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>TimelineDiagrams</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="TimelineDiagrams.html">Timeline Diagrams</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="TimelineDiagramsSelfTest.html">Self Test</a>
+
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../SnapshotIntroduction/SnapshotIntroduction.html">
+  Next: Introduction Snapshots</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../ShortestPath/ShortestPath.html">Previous:
+  Examples of Correctness Proofs
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+
+    <!---------------------------------------------------->
+    <h1 class="w3-text-teal">Timeline Diagrams: Self Test</h1>
+    <!---------------------------------------------------->
+
+    Look at question 7,
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 0</h2>
+    <!---------------------------------------------------->
+    Consider the following sequence of events with each event
+    specified by a statement.
+    <ol>
+      <li>
+      <pre>
+      avg = (x + y)/2.0
+      </pre>
+      </li>
+      <li>
+      <pre>
+      var = (x-avg)*(x-avg) + (y-avg)*(y-avg)
+      </pre>
+      </li>
+      <li>
+      <pre>
+      x, y = max(x, y)+1, min(x, y)-1
+      </pre>
+      </li>
+      <li>
+      <pre>
+      span_square = (x-y)*(x-y)
+      </pre>
+      </li>
+      <li>
+      <pre>
+      diff = span_square - var
+      </pre>
+      </li>
+    </ol>
+
+    <p class="w3-text-teal">Part 1</p>
+    Are the first two statements independent?
+
+    <p class="w3-text-teal">Part 2</p>
+    Are statements 2 and 3 independent?
+
+    
+    
+
+
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 1</h2>
+    <!---------------------------------------------------->
+    Consider the following sequence of events with each event
+    specified by a statement.
+    <ol>
+      <li>
+      <pre>
+      avg = (x + y)/2.0
+      </pre>
+      </li>
+      <li>
+      <pre>
+      var = (x-avg)*(x-avg) + (y-avg)*(y-avg)
+      </pre>
+      </li>
+      <li>
+      <pre>
+      x, y = max(x, y)+1, min(x, y)-1
+      </pre>
+      </li>
+      <li>
+      <pre>
+      span_square = (x-y)*(x-y)
+      </pre>
+      </li>
+      <li>
+      <pre>
+      diff = span_square - var
+      </pre>
+      </li>
+    </ol>
+
+    <p>
+    Consider a cut \(c\) defined as follows. The events 1 and 3 are
+    before the cut, and events 2, 4, and 5 are after the cut.
+    <p>
+    Is the cut a consistent cut?
+
+    
+
+
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 2</h2>
+    <!---------------------------------------------------->
+    Consider the following permutation of the events in the above sequence
+    <ol>
+      <li>
+      <pre>
+      avg = (x + y)/2.0
+      </pre>
+      </li>
+      <li>
+      <pre>
+      x, y = max(x, y)+1, min(x, y)-1
+      </pre>
+      </li>
+      <li>
+      <pre>
+      var = (x-avg)*(x-avg) + (y-avg)*(y-avg)
+      </pre>
+      </li>
+      <li>
+      <pre>
+      span_square = (x-y)*(x-y)
+      </pre>
+      </li>
+      <li>
+      <pre>
+      diff = span_square - var
+      </pre>
+      </li>
+    </ol>
+    <p>
+    Are the graphs of the timeline diagrams for the original sequence and the
+    permuted sequence identical?
+
+
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 3</h2>
+    <!---------------------------------------------------->
+    Consider the same sequence of events as in Question 1.
+    Computation proceeds by executing any statement after executing
+     all statements on which it depends. 
+
+    <p>
+    Timestamps for all edges initially (before any statement is
+    executed) are all 0. 
+
+    <p>
+    True or False?
+
+    The following timestamps of the outgoing edges of these events
+    satisfies the logical clock requirement.
+    <ol>
+      <li>
+      Timestamp = 10
+      <pre>
+      avg = (x + y)/2.0
+      </pre>
+      </li>
+      <li>
+      Timestamp = 20
+      <pre>
+      var = (x-avg)*(x-avg) + (y-avg)*(y-avg)
+      </pre>
+      </li>
+      <li>
+      Timestamp = 15
+      <pre>
+      x, y = max(x, y)+1, min(x, y)-1
+      </pre>
+      </li>
+      <li>
+      Timestamp = 30
+      <pre>
+      span_square = (x-y)*(x-y)
+      </pre>
+      </li>
+      <li>
+      Timestamp = 35
+      <pre>
+      diff = span_square - var
+      </pre>
+      </li>
+    </ol>
+
+
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 4</h2>
+    <!---------------------------------------------------->
+    \(C_{1}\) and \(C_{2}\) are consistent cuts of a trajectory, and
+    \(C_{1} \subseteq C_{2}\). In other words all events that occur
+    before the cut line for \(C_{1}\) also occur before the cut line
+    for \(C_{2}\).
+    <p>
+    True or False?
+    There is a path in the state transition graph from the global
+    state at \(C_{1}\) to the global state  at \(C_{2}\)?
+    
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 5</h2>
+    <!---------------------------------------------------->
+    Same situation as Question 4.
+    <p class="w3-text-teal">Part 1</p>
+    True of False?
+    If a stable property \(P\) holds in \(C_{1}\) then it also holds
+    in \(C_{2}\)
+    <p class="w3-text-teal">Part 2</p>
+    True of False?
+    If a stable property \(P\) holds in \(C_{2}\) then it also holds
+    in \(C_{1}\)
+    <p class="w3-text-teal">Part 2</p>
+    Let \(P\) be a stable property.
+    True of False?
+    If  \(\neg P\) holds in \(C_{2}\) then \(\neg P\) also holds
+    in \(C_{1}\).
+
+    
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 6</h2>
+    <!---------------------------------------------------->
+    Let \(C_{0}\), \(C_{1}\), \(C_{2}\) be consistent cuts of a
+    timeline diagram where \(C_{0} \subseteq C_{1} \subseteq C_{2}\).
+    Let \(P\) be a stable predicate.
+    <p class="w3-text-teal">Part 1</p>
+    True or False?
+    If \(\neg P\) holds in \(C_{2}\) then \(\neg P\) also holds in 
+    \(C_{0}\) and \(C_{1}\).
+    <p class="w3-text-teal">Part 2</p>
+    True or False?
+    If \(P\) holds in \(C_{0}\) then \(P\) also holds in 
+    \(C_{1}\) and \(C_{2}\).
+
+    
+    
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 7</h2>
+    <!---------------------------------------------------->
+Consider the following sequence of events (statement executions).
+
+<ol>
+  <li>
+  x = x* x
+  </li>
+  <li>
+  y = y + 1
+  </li>
+  <li>
+  x = max(x, y)
+  </li>
+</ol>
+
+<p class="w3-text-teal">Part 1</p>
+Are events 1 and 2 independent?
+
+<p class="w3-text-teal">Part 2</p>
+Are events 2 and 3 independent?
+
+<p class="w3-text-teal">Part 3</p>
+Will the sequence: event 2 then event 1 then event 3 give the same
+final values as the sequence 1, 2, 3?
+
+<p class="w3-text-teal">Part 4</p>
+Consider a cut consisting of only event 2. Events 1 and 3 are outside
+the cut. Is the cut consistent?
+
+<p class="w3-text-teal">Part 5</p>
+Consider the following timestamps. T(1) = 20, T(2) = 10, T(3) = 40.
+Do these timestamps satisfy the logical clock rule?
+
+<p class="w3-text-teal">Part 6</p>
+
+Initially x = 4, y = 0.
+With the above timestamps, what is the global state at logical time
+15? Time 25? Time 40?
+
+
+
+
+
+  
+  
+
+
+
+
+    <!---------------------------------------------------->
+    <!---------------------------------------------------->    
+    <h1 class="w3-text-teal">Timeline Diagrams: Self-Test Answers</h1>
+    <!---------------------------------------------------->
+<!---------------------------------------------------->
+
+
+
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 0</h2>
+<!---------------------------------------------------->
+<p class="w3-text-teal">Part 1</p>
+Statements 1 and 2 are dependent because statement 1 modifies a
+variable, avg, that is read in statement 2.
+<p>
+In the timeline diagram
+    statement (or event) 1 has an edge to event 2 to
+indicate the dependence.
+
+
+<p class="w3-text-teal">Part 2</p>
+Statements 2 and 3 are dependent because statement 2 reads a
+variable, x,  that is modified in statement 3.
+<p>
+In the timeline diagram
+    event 2 has an edge to statement event 3 to
+indicate the dependence.
+
+
+
+
+
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 1</h2>
+    <!---------------------------------------------------->
+    The cut is inconsistent because event 2 depends on event 3. This
+    is because event 2 reads variables \(x\) and \(y\) which are
+    modified in event 3.
+
+
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 2</h2>
+    <!---------------------------------------------------->
+    The graphs are not identical. The graph for question 1 has an edge
+    from the event:
+    
+      <pre>
+      var = (x-avg)*(x-avg) + (y-avg)*(y-avg)
+    </pre>
+
+    to the event:
+    
+      <pre>
+      x, y = max(x, y)+1, min(x, y)-1
+    </pre>
+
+    This is because the event that modifies var reads
+    x and y.
+
+    <p>
+    The graph for question 2 has an edge in the opposite direction,
+    i.e. from the event:
+    
+      <pre>
+      x, y = max(x, y)+1, min(x, y)-1
+    </pre>
+    to the event
+    
+      <pre>
+      var = (x-avg)*(x-avg) + (y-avg)*(y-avg)
+    </pre>
+
+    <p>
+    If the graphs for the timeline diagrams of questions 1 and 2 were
+    identical then the final values for both sequences would be
+    identical. Try the case where x = y = 0 before the sequence is
+    executed. For question 1, the final value of var is 0, and for
+    question 2, the final value of var is 2.
+
+
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 3</h2>
+    <!---------------------------------------------------->
+    Order the sequence of events in increasing order of timestamps to
+    get events: 1, 3, 2, 4, 5.
+    <p>
+    Let's look at answering the question in two ways.
+    <p class="w3-text-teal">Are the timestamps of output edges of each
+    event greater than the timestamps of the input edges of each
+event in the timeline diagram?</p>
+
+<p>
+There is an edge from event 2 to event 3 in the timeline diagram
+because event 2 reads variables \(x\) and \(y\) while event 3 modifies
+these variables. The timestamp for this edge is 20, and this edge is
+an input edge to event 3. Event 3 has an output edge with timestamp
+15. So, the timestamp of an output edge of an event is less than or
+equal to that of an input edge to the event. This violates the logical
+clock requirement.
+<p>
+Now let's look at another, equivalent, way of answering the question.
+
+    
+   <p class="w3-text-teal">Does this permutation change the order of
+dependent events?</p>
+    Does this permutation change the order of dependent events? If the
+    order of dependent events is changed then the timestamps do not
+    follow the logical clock requirement. If the permutation only
+    changes the order of independent events, while maintaining the
+    order of dependent events, then the timestamps follow the logical
+clock requirement.
+
+<p>
+
+Does this permutation change the order of dependent events?
+    Yes, it does because events 2 and 3 are inter-dependent since
+    event 2 reads variables \(x\) and \(y\) while event 3 modifies
+    these variables. 
+
+
+    <!---------------------------------------------------->
+<h2 class="w3-text-teal">Question 4</h2>
+<!---------------------------------------------------->
+Yes, there is a path from the global state at \(C_{1}\) to the global
+state at \(C_{2}\). This is because we can create a trajectory by
+permuting events in the given trajectory so that all
+the events in \(C_{1}\) occur first and then all the events in
+\(C_{2}\).
+
+
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 5</h2>
+    <!---------------------------------------------------->
+    Same situation as Question 4.
+    <p class="w3-text-teal">Part 1</p>
+    True of False?
+    If a stable property \(P\) holds in \(C_{1}\) then it also holds
+in \(C_{2}\)
+<p class="w3-text-teal">Answer</p>
+True. This is because the global state at \(C_{2}\) is reachable from
+    the global state at \(C_{1}\). Since \(P\) holds in the state at \(C_{1}\) it
+    also holds in all states reachable from this state.
+    <p class="w3-text-teal">Part 2</p>
+    True of False?
+    If a stable property \(P\) holds in \(C_{2}\) then it also holds
+in \(C_{1}\)
+<p class="w3-text-teal">Answer</p>
+False. \(P\) can be False in \(C_{1}\) and then become True between
+    \(C_{1}\) and \(C_{2}\).
+
+    <p class="w3-text-teal">Part 3</p>
+    Let \(P\) be a stable property.
+    True of False?
+    If  \(\neg P\) holds in \(C_{2}\) then \(\neg P\) also holds
+    in \(C_{1}\).
+<p class="w3-text-teal">Answer</p>
+True. Same reason as part 1.
+
+    
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 6</h2>
+    <!---------------------------------------------------->
+    Let \(C_{0}\), \(C_{1}\), \(C_{2}\) be consistent cuts of a
+    timeline diagram where \(C_{0} \subseteq C_{1} \subseteq C_{2}\).
+    Let \(P\) be a stable predicate.
+    <p class="w3-text-teal">Part 1</p>
+    True or False?
+    If \(\neg P\) holds in \(C_{2}\) then \(\neg P\) also holds in 
+\(C_{0}\) and \(C_{1}\).
+<p class="w3-text-teal">Answer</p>
+True. Same reason as for question 5.
+
+    <p class="w3-text-teal">Part 2</p>
+    True or False?
+    If \(P\) holds in \(C_{0}\) then \(P\) also holds in 
+    \(C_{1}\) and \(C_{2}\).
+<p class="w3-text-teal">Answer</p>
+True. Same reason as for question 5.
+
+    
+    <!---------------------------------------------------->
+    <h2 class="w3-text-teal">Question 7</h2>
+    <!---------------------------------------------------->
+Consider the following sequence of events (statement executions).
+
+<ol>
+  <li>
+  x = x * z
+  </li>
+  <li>
+  y = y + z
+  </li>
+  <li>
+  x = max(x, y)
+  </li>
+</ol>
+
+<p class="w3-text-teal">Part 1</p>
+Are events 1 and 2 independent?
+<p>
+Yes, they are independent. The variables modified in each event are
+not accessed in the other event.
+
+<p class="w3-text-teal">Part 2</p>
+Are events 2 and 3 independent?
+<p>
+No, they are dependent because event 3 is dependent on event 2. A variable (y) modified in event 2
+is accessed event 3. So, there is an edge in the timeline diagram from
+event 2 to event 3.
+
+
+<p class="w3-text-teal">Part 3</p>
+Will the sequence: event 2 then event 1 then event 3 give the same
+final values as the sequence 1, 2, 3?
+
+<p>
+Yes. Because events 1 and 2 are independent and adjacent, the order in which they
+occur can be permuted.
+
+<p class="w3-text-teal">Part 4</p>
+Consider a cut consisting of only event 2. Events 1 and 3 are outside
+the cut. Is the cut consistent?
+
+<p>
+Yes, the cut is consistent. Events in the cut depend only on earlier events in
+the cut. In terms of the timeline diagram, there is no edge from
+outside the cut (i.e. events 1 and 3) directed towards any event in
+the cut (i.e., event 2).
+
+<p>
+Note that there is an edge directed from
+inside the cut to outside the cut; this is the edge from event 2 to
+event 3. The edges that cross the cut boundary go from inside the cut to
+outside. There are no edges from outside the cut to inside.
+
+<p class="w3-text-teal">Part 5</p>
+Consider the following timestamps. T(1) = 20, T(2) = 10, T(3) = 40.
+Do these timestamps satisfy the logical clock rule? Assume that
+initial timestamps are all 0.
+
+<p>
+Yes. Each edge in the timeline diagram is directed from a
+lower-timestamp event to a higher timestamp event.
+
+<p class="w3-text-teal">Part 6</p>
+
+Initially x = 4, y = 2, Z = 3
+With the above timestamps, what is the global state at logical time
+15? Time 25? Time 40?
+<p>
+The global state at logical time 15 is the state after event 2 is
+executed and before events 1 and 3 are executed. This is because event
+2 is the only event with a timestamp less than or equal to 15.
+<p>
+After event 2, y  = y + z = 2 + 3 = 5. And x, z remains unchanged at
+4, 3. So the
+state is (x, y, z) = (4, 5, 3)
+<p>
+The global state at logical time 25 is the state after events 1 and 2
+have been
+executed and before event 3 is executed. This is because events
+1 and 2 have timestamps less than or equal to 25, and event 3 has a
+timestamp that exceeds 25.
+<p>
+After event 2, y = 5.
+
+<p>
+After event 1, x = 4*3 = 12. And y and z remain unchanged at 5 and 3. So the
+state is (x, y, z) = (12, 5, 3)
+
+
+<p>
+The global state at logical time 40 is the state after events 1, 2 and 3
+have been executed. x = max(x, y) = max(12, 5) = 12. So, the state is
+(x, y, z) = (12, 5, 3)
+    
+    
+
+
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>

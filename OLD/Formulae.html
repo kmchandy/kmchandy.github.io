@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Formulae</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+    
+    <a href="Formulae.html" class="w3-bar-item w3-button
+    w3-hide-small w3-hover-white">Formulae</a>
+    
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+  
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+    
+      <h1 class="w3-text-teal">An Introduction to Distributed
+    Algorithms</h1>
+    <h5> K. Mani Chandy
+    <br>
+    Simon Ramo Professor, Emeritus
+    <br>
+    California Institute of Technology
+    </h5>
+
+    <h1 class="w3-text-teal">Useful Formulae</h1>
+
+    <!------------------------------------------------------>
+    <h2 class="w3-text-teal">Properties similar to those of
+    Implication</h2>
+    
+    
+    <h3 class="w3-text-teal">Strengthen Left-Hand Side</h3>
+    <ol>
+      <li>
+      \(
+      (R \Rightarrow P) \wedge (P \Rightarrow Q)  \quad \Rightarrow
+    \quad (R \Rightarrow Q)
+      \)
+      </li>
+      <li>
+      \(
+      (R \Rightarrow P) \wedge \{P\}c\{Q\} \quad \Rightarrow
+    \quad \{R\}c\{Q\}
+      \)
+      </li>
+      <li>
+      \(
+      (R \Rightarrow P) \wedge P \rightarrow Q \quad \Rightarrow
+    \quad R \rightarrow Q
+      \)
+      </li>
+      <li>
+      \(
+      (R \Rightarrow P) \wedge P \stackrel{*}{\rightarrow} Q \quad
+    \Rightarrow 
+    \quad R \stackrel{*}{\rightarrow} Q
+      \)
+      </li>
+      <li>
+      \(
+      (R \Rightarrow P) \wedge P \leadsto Q \quad \Rightarrow
+    \quad R \leadsto Q
+      \)
+      </li>
+    </ol>
+
+
+    
+    <h3 class="w3-text-teal">Weaken Right-Hand Side</h3>
+    <ol>
+      <li>
+      \(
+      (Q \Rightarrow R) \wedge (P \Rightarrow Q)  \quad \Rightarrow
+    \quad (P \Rightarrow R)
+      \)
+      </li>
+      <li>
+      \(
+      (Q \Rightarrow R) \wedge \{P\}c\{Q\} \quad \Rightarrow
+    \quad \{P\}c\{R\}
+      \)
+      </li>
+      <li>
+      \(
+      (Q \Rightarrow R) \wedge P \rightarrow Q \quad \Rightarrow
+    \quad P \rightarrow R
+      \)
+      </li>
+      <li>
+      \(
+      (Q \Rightarrow R) \wedge P \stackrel{*}{\rightarrow} Q \quad
+    \Rightarrow 
+    \quad P \stackrel{*}{\rightarrow} R
+      \)
+      </li>
+      <li>
+      \(
+      (Q \Rightarrow R) \wedge P \leadsto Q \quad \Rightarrow
+    \quad P \leadsto R
+      \)
+      </li>
+    </ol>
+
+
+    
+    <h3 class="w3-text-teal">Disjunction Left-Hand Side</h3>
+    <ol>
+      <li>
+      \(
+      (P \Rightarrow R) \wedge (Q \Rightarrow R)  \quad \equiv
+    \quad ((P \vee Q) \Rightarrow R)
+      \)
+      </li>
+      <li>
+      \(
+      \{P\}c\{R\} \wedge \{Q\}c\{R\} \quad \equiv
+    \quad \{P \vee Q\}c\{R\}
+      \)
+      </li>
+      <li>
+      \(
+      (P \rightarrow R) \wedge (Q \rightarrow R) \quad \equiv
+    \quad (P \vee Q) \rightarrow R
+      \)
+      </li>
+      <li>
+      \(
+      (P \stackrel{*}{\rightarrow} R) \wedge (Q
+    \stackrel{*}{\rightarrow} R) \quad \equiv 
+    \quad (P \vee Q) \stackrel{*}{\rightarrow} R
+      \)
+      </li>
+      <li>
+      \(
+      (P \leadsto R) \wedge (Q \leadsto R) \quad \equiv
+    \quad ((P \vee Q) \leadsto R)
+      \)
+      </li>
+    </ol>
+
+
+    
+    <h3 class="w3-text-teal">Conjunction Right-Hand Side</h3>
+    <ol>
+      <li>
+      \(
+      (P \Rightarrow Q) \wedge (P \Rightarrow R)  \quad \equiv
+    \quad P \Rightarrow (Q \wedge R)
+      \)
+      </li>
+      <li>
+      \(
+      \{P\}c\{Q\} \wedge \{P\}c\{R\} \quad \equiv
+    \quad \{P\}c\{Q \wedge R\}
+      \)
+      </li>
+      <li>
+      \(
+      (P \rightarrow Q) \wedge (P \rightarrow R) \quad \equiv
+    \quad P \rightarrow (Q \wedge R)
+      \)
+      </li>
+      <li>
+      <p>
+      \(
+      (P \stackrel{*}{\rightarrow} Q) \wedge (P
+    \stackrel{*}{\rightarrow} R) \quad \equiv 
+    \quad P \stackrel{*}{\rightarrow} (Q \wedge R) 
+      \)
+      </li>
+      <li>
+      <p>
+      For \(stable(Q)\) and \(stable(R)\):
+      </p>
+      <p>
+      \(
+      (P \leadsto Q) \wedge (P \leadsto R)
+      \quad \equiv \quad
+      P \leadsto (Q \wedge R) 
+      \)
+      </p>
+    </ol>
+
+
+    <h3 class="w3-text-teal">Disjunction of Relations</h3>
+    <ol>
+      <li>
+      \(
+      ((P \Rightarrow Q) \wedge (P' \Rightarrow Q'))  \quad \Rightarrow
+    \quad ((P \vee P') \Rightarrow (Q \vee Q'))
+      \)
+      </li>
+      <li>
+      \(
+      (\{P\}c\{Q\} \wedge \{P'\}c\{Q'\})  \quad \Rightarrow
+    \quad (\{P \vee P'\}c\{Q \vee Q'\})
+      \)
+      </li>
+      <li>
+      \(
+      (P \rightarrow Q) \wedge (P' \rightarrow Q') \quad \Rightarrow
+    \quad ((P \vee P') \rightarrow (Q \vee Q'))
+      \)
+      </li>
+      <li>
+      \(
+      (P \stackrel{*}{\rightarrow} P') \wedge (P'
+    \stackrel{*}{\rightarrow} Q') \quad \Rightarrow 
+    \quad ((P \vee P') \stackrel{*}{\rightarrow} (Q \vee Q'))
+      \)
+      </li>
+      <li>
+      \(
+      (P \leadsto Q) \wedge (P' \leadsto Q') \quad \Rightarrow
+    \quad ((P \vee P') \leadsto (Q \vee Q'))
+      \)
+      </li>
+    </ol>
+
+
+    <h3 class="w3-text-teal">Conjunction of Relations</h3>
+    <ol>
+      <li>
+      \(
+      ((P \Rightarrow Q) \wedge (P' \Rightarrow Q'))  \quad \Rightarrow
+    \quad ((P \wedge P') \Rightarrow (Q \wedge Q'))
+      \)
+      </li>
+      <li>
+      \(
+      (\{P\}c\{Q\} \wedge \{P'\}c\{Q'\})  \quad \Rightarrow
+    \quad (\{P \wedge P'\}c\{Q \wedge Q'\})
+      \)
+      </li>
+      <li>
+      \(
+      (P \rightarrow Q) \wedge (P' \rightarrow Q') \quad \Rightarrow
+    \quad ((P \wedge P') \rightarrow (Q \wedge Q'))
+      \)
+      </li>
+      <li>
+      \(
+      (P \stackrel{*}{\rightarrow} P') \wedge (P'
+    \stackrel{*}{\rightarrow} Q') \quad \Rightarrow 
+    \quad ((P \wedge P') \stackrel{*}{\rightarrow} (Q \wedge Q'))
+      \)
+      </li>
+      <li>
+      <p>
+      For \(stable(Q)\) and \(stable(Q')\):
+      </p>
+      \(
+      (P \leadsto Q) \wedge (P' \leadsto Q') \quad \Rightarrow
+    \quad ((P \wedge P') \leadsto (Q \wedge Q'))
+      \)
+      </li>
+    </ol>
+
+    
+
+    <h3 class="w3-text-teal">False Implies Everything</h3>
+    Follows from strengthening left side.
+    <ol>
+      <li>
+      \(
+      False  \; \Rightarrow \; P
+      \)
+      </li>
+      <li>
+      \(
+      \{False\}c\{Q\}
+      \)
+      </li>
+      <li>
+      \(
+      False \rightarrow Q
+      \)
+      </li>
+      <li>
+      \(
+      False \stackrel{*}{\rightarrow} Q
+      \)
+      </li>
+      <li>
+      \(
+      False \leadsto Q
+      \)
+      </li>
+    </ol>
+    
+
+    <h3 class="w3-text-teal">Everything Implies True</h3>
+    Follows from strengthening left side.
+    <ol>
+      <li>
+      \(
+      P  \; \Rightarrow \; True
+      \)
+      </li>
+      <li>
+      \(
+      \{P\}c\{True\}
+      \)
+      </li>
+      <li>
+      \(
+      P \rightarrow True
+      \)
+      </li>
+      <li>
+      \(
+      P \stackrel{*}{\rightarrow} True
+      \)
+      </li>
+      <li>
+      \(
+      P \leadsto True
+      \)
+      </li>
+    </ol>
+
+    <h1 class="w3-text-teal">Relationships between \(N\), \(A\), \(E\),
+    \(\rightarrow\), \(\leadsto\)</h1>
+
+    <ol>
+      <li>
+      \(
+      P \rightarrow Q \quad \equiv \quad P \Rightarrow N(Q)
+      \)
+      </li>
+      <li>
+      \(
+      P \stackrel{*}{\rightarrow} Q \quad \equiv \quad P \Rightarrow A(Q)
+      \)
+      </li>
+      <li>
+      \(
+      P \leadsto Q \quad \equiv \quad P \Rightarrow E(Q)
+      \)
+      </li>
+    </ol>
+
+
+    <h3 class="w3-text-teal">Monotonicity</h3>
+
+    <ol>
+      <li>
+      \(
+      P \Rightarrow Q \quad \equiv \quad N(P) \Rightarrow N(Q)
+      \)
+      </li>
+      <li>
+      \(
+      P \Rightarrow Q \quad \equiv \quad A(P) \Rightarrow A(Q)
+      \)
+      </li>
+      <li>
+      \(
+      P \Rightarrow Q \quad \equiv \quad E(P) \Rightarrow E(Q)
+      \)
+      </li>
+    </ol>
+
+
+
+    <h3 class="w3-text-teal">Idempotence</h3>
+
+    <ol>
+      <li>
+      \(
+      A(A(Q)) = Q
+      \)
+      </li>
+      <li>
+      \(
+      E(E(Q)) = Q
+      \)
+      </li>
+   </ol>
+
+
+
+    <h3 class="w3-text-teal">Distributivity over Conjunction</h3>
+
+    <ol>
+      <li>
+      \(
+      N(P \wedge Q) = N(P) \wedge N(Q)
+      \)
+      </li>
+      <li>
+      \(
+      A(P \wedge Q) = A(P) \wedge A(Q)
+      \)
+      </li>
+      <li>
+      \(
+      E(A(P \wedge Q)) = E(A(P)) \wedge E(A(Q))
+      \)
+      </li>
+    </ol>
+
+    <h3 class="w3-text-teal">Stable Sets</h3>
+
+    The following are equivalent:
+    <ol>
+      <li>
+      \(
+      stable(Q)
+      \)
+      </li>
+      <li>
+      \(
+      Q \Rightarrow N(Q)
+      \)
+      </li>
+      <li>
+      \(
+      Q \equiv A(Q)
+      \)
+      </li>
+      <li>
+      \(
+      Q \rightarrow Q
+      \)
+      </li>
+      <li>
+      \(
+      Q \stackrel{*}{\rightarrow} Q
+      \)
+      </li>
+   
+    </ol>
+
+
+
+    <h3 class="w3-text-teal">Conjunctions and Disjunctions of Stable Predicates are
+    Stable</h3>
+
+    <ol>
+      <li>
+      \(
+      stable(P) \wedge stable(Q) \quad \equiv \quad stable(P \wedge Q)
+      \)
+      </li>
+      <li>
+      \(
+      stable(P) \vee stable(Q) \quad \equiv \quad stable(P \vee Q)
+      \)
+      </li>
+    </ol>
+
+    <h3 class="w3-text-teal">Corollary</h3>
+    The stable sets that are subsets of \(Q\) form a
+    <a href="https://en.wikipedia.org/wiki/Lattice_(order)">lattice</a> with the
+    empty set at the bottom and \(A(Q)\) at the top.
+    </p>
+
+    <h3 class="w3-text-teal">Stability of Always</h3>
+    <ol>
+      <li>
+      \(
+      stable(A(Q))
+      \)
+      </li>
+      <li>
+      \(
+      stable(E(A(Q)))
+      \)
+      </li>
+    </ol>
+
+
+    <h3 class="w3-text-teal">Single Hops and Infinite Paths</h3>
+    <ol>
+      <li>
+      \(
+      A(Q) = Q \wedge N(A(Q))
+      \)
+      </li>
+      <li>
+      \(
+      E(Q) = Q \vee N(E(Q))
+      \)
+      </li>
+    </ol>
+
+
+
+
+
+
+    
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
