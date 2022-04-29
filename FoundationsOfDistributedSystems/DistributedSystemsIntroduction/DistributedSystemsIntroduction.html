@@ -166,86 +166,97 @@ sent; and message delays are arbitrary (but finite).
 <p class="w3-text-teal">Channel State</p>
 The state of a channel is a sequence of messages; these are
 the messages in the channel.
+<p>
+Sending a message:
 When an agent sends a message along a channel the message is
 appended to the tail of the sequence of messages in the channel.
-A nonempty channel removes the message at the head of the sequence of
-messages in the channel and delivers it to the receiving agent.
+
+<p>
+Receiving a message:
+A message at the head of the sequence of messages in a nonempty
+channel is removed from the sequence and delivered to the receiving
+agent. 
 
   <h4 class="w3-text-teal">System States and Transitions</h4>
   The state of a system is given by the states of its agents and
-channels. A system changes
-state in only two ways:
+channels. The system makes state transitions in two ways:
 <ol>
-  <li> A message \(m\) at the head of a channel \(c\) which is directed
-  towards an agent \(B\) is delivered to \(B\). Message \(m\) is
-  removed from channel \(c\). The state of agent \(B\) may change, and
-  \(B\) may send messages when it receives the message.
+  <li> <b>Message Delivery</b>:
+  A message \(m\) at the head of a channel \(c\) which is directed
+  towards an agent \(B\) is delivered to \(B\). 
   </li>
   <li>
+  <b>Internal Transition</b>:
   An agent changes state without receiving messages.
   </li>
 </ol>
 
-<p class="w3-text-teal">Message Delivery Event</p>
-A message in a non-empty channel is delivered to an agent
-independent of the state of the system.
-An agent does not block a channel from delivering a message.
-A receiving agent may have mailboxes or other data structures into which
-messages are delivered; the states of these data structures are parts
-of the state of the receiving agent.
+When an agent changes state it may send messages on its outgoing
+channels. State transitions are specified by guarded commands as
+described next.
 
-<p>
-When an agent receives a message the agent may change the values of
-its variables and send messages on the agent's outgoing
-channels. The next state of the agent and the messages sent by the
-    agent depend only on the message
-  that the agent receives, the channel that delivers the message, and
-  the agent's state when it receives the message.
-  
-<p class="w3-text-teal">Internal Event</p>
-An agent may change its state without receiving a message. For
-example, an agent may take action if it does not receive a
-message in some time (determined by the agent's local clock).
-An internal event may change the state of the agent and send messages on the
-    agent's outgoing channels.
-    The next state of the agent and the messages sent by the
-    agent depend only on the state of the agent prior to the transition.
+<h4 class="w3-text-teal">Guarded Command: Message Delivery</h4>
+
+<p class="w3-text-teal">Guard for Message Delivery</p>
+
+The guard for the delivery of a message from a channel
+\(c\) is that \(c\) is nonempty.
 
 
+<p class="w3-text-teal">Command for Message Delivery</p>
+The command may change the state of the
+agent that receives the messages and the agent may send messages on
+its outgoing channels.
+The next state of the agent and the messages sent by the
+agent depend only on (1) the message that
+the agent receives, (2) the identity of the
+channel \(c\) from which the message is delivered, and (3) the agent's state
+when it receives the message.
 
-<h3 class="w3-text-teal">Model of Computation</h3>
-    We described the <i>do - od</i> loop and nondeterministic
-    iteration in an earlier module.
-    The model of computation for distributed systems is also the <i>do
-    - od</i> loop with one difference ---  <i>fairness</i> --- which
-    we will describe later in this module.
-    
-    <p class="w3-text-teal">Message Delivery Event</p>
-    Each channel has one guarded command associated with it.
-    Execution of the action of this guarded command delivers a message
-    from this channel.
-    The guard is that the channel is non-empty.
-Execution of the action delivers the message in the channel and may
-    change the values of 
-the agent's variables and send messages on the agent's outgoing
-    channels.
+<h4 class="w3-text-teal">Guarded Command: Internal Transition</h4>
+<p class="w3-text-teal">Guard for Internal Transition</p>
+The guard for an internal transition of an agent \(B\) is a predicate
+on the state of \(B\).
+The guard is independent of the states of all channels and the states
+of all agents other than \(B\).
 
-    
-    <p class="w3-text-teal">Internal Event</p>
-    Each agent has a single guarded command associated with it,
-where the guard is a predicate on states of the agent and
-execution of the action is an internal event of the agent.
-    Here is an example of a guarded command for an agent with
-variables <code>x, y</code>.
+<p class="w3-text-teal">Command for Internal Transition</p>
+The command may change the state of the
+\(B\) and may send messages on \(B\)'s outgoing channels.
+\(B\)'s next state and the messages sent by the
+agent depend only on \(B\)'s state prior to the transition.
+
+<h4 class="w3-text-teal">Model of Computation</h4>
+We begin by using the model of computation of nondeterministic
+iteration: the
+<a href="../../ReviewOfBasics/NondeterministicIteration/NondeterministicIteration.html ">do-od loop</a> from
+sequential programming: execute any command whose guard evaluates to
+True. Later we will introduce the concept of fairness.
+
+<h4 class="w3-text-teal">Examples</h4>
+An agent has incoming channels \(temperature\) and
+\(pressure\). It has outgoing channels \(alarm\) and \(boiler\). The
+agent has variables \(last\_temperature\) and \(last\_pressure\).
+
+Here is an example of a command for message delivery from the
+\(temperature\) channel. Let \(T\) be the message at the head of this
+channel.
 <pre>
-x < y  ->  (y = x; send y on channel c)
+if (T > last_temperature) and (T > 80):
+   send message "high temperature" on alarm channel
+   send message "lower heat" on boiler channel
+last_temperature = T
 </pre>
-The guard may be the constant <code>False</code> in which case the
-corresponding action is never executed.
+
+An example of a guarded command for an internal transition is as
+follows. An agent has a Boolean variable \(active\).
+<pre>
+active -> send message "alert" on alarm channel
+          active = False
+</pre>
 
 <h4 class="w3-text-teal">Timelines</h4>
-We first show how timelines represent computations and
-then discuss fairness.
+Next we describe a graphical representation of system trajectories.
 
 
 <!--Start Footer--------------------------------------->
