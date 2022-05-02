@@ -1,0 +1,152 @@
+<!--------------------------------------------------------->
+    <h2 class="w3-text-teal">Distributed System: An Example</h2>
+<!----------------------------------------------------------------->
+<p>
+This example is a distributed systems version of the <i>earliest
+meeting time</i> problem
+<a
+href="../../../ReviewOfBasics/ExamplesCorrectnessProofs/EarliestMeetingTime/EarliestMeetingTime.html">
+discussed earlier</a>.
+
+<p class="w3-text-teal">Agents</p>
+Three professors (agents) indexed \(0, 1, 2\) want to find the earliest time that all
+of them are free so that they can schedule an exam for a student. Each
+professor \(j\) has a local variable \(T_{j}\) where professor \(j\)
+can meet at time \(T_{j}\).
+<p>
+Associated with each professor \(j\) is a function \(f_{j}\) where for
+any time \(t\), \(f_{j}(t)\) is the earliest time at or after \(t\)
+that professor \(j\) can meet. All professors can meet at time \(t\)
+exactly when:
+<p>
+\(
+f_{j}(t) = t
+\)
+for all \(t\).
+
+<p>
+We assume that there exists some time at which all professors can
+meet. Otherwise, the student would never get to take the exam! Let the
+earliest meeting time for all professors be \(\tau\).
+
+<p class="w3-text-teal">Channels</p>
+There is a channel from each professor to each of the other professors
+as shown in the diagram. Let \(c_{j,k}\) be the channel from professor
+\(j\) to professor \(k\).
+
+    <figure>
+    <img src="EarliestMeetingTimeSlides/EarliestMeetingTimeSlides.002.jpeg" alt="Fig1" style="width:100%">
+    <figcaption>Fig.1: Graph Representation of the Distributed System</figcaption>
+  </figure>
+
+<p class="w3-text-teal">Initial State</p>
+Let \(T_{j}^{0}\) be the earliest time that professor \(j\) can meet.
+Initially  \(T_{j} = T_{j}^{0}\) and each of the two channels from
+professor \(j\) contain a single message \(T_{j}^{0}\).
+
+<p class="w3-text-teal">State Transitions</p>
+In this example agents (i.e. professors) have no internal transitions. The
+only transitions are delivery of messages from channels.
+
+<p>
+As we discussed earlier, the computation of the system is defined by a
+set of guarded commands where computation proceeds by executing <i>any</i>
+command whose guard evaluates to true. The guard for delivering a
+message from a channel is that the channel is not empty. The command
+associated with this guard is as follows:
+
+<p class="w3-text-teal">Action on Receiving a Message</p>
+Let \(t\) be the message at the head of a channel \(c\) directed
+towards professor \(T_{j}^{0}\). The command associated with
+delivering this message is:
+<pre>
+if t > T[j]:
+   T[j] = t
+   send T[j] on both outgoing channels of j
+else:
+   pass
+</pre>
+
+The proof that the algorithm terminates with \(T_{j} = \tau\) for all
+\(j\) is left as an exercise.
+
+<h3 class="w3-text-teal">A Possible Trajectory</h3>
+Assume that professor \(0, 1, 2\) can only meet on days that are
+postive multiples of 2, 3, and 4, respectively.
+Then the earliest time that all professors can meet
+is 12.
+Let's look at one of may possible system trajectories.
+
+<p class="w3-text-teal">Initially</p>
+Initially the outgoing channels from professors 0, 1, 2 each contain
+the message \(2, 3, 4\), respectively. Each channel has exactly one
+message.
+
+
+
+    <figure>
+    <img src="EarliestMeetingTimeSlides/EarliestMeetingTimeSlides.003.jpeg" alt="Fig1" style="width:100%">
+    <figcaption>Fig.2: Initial State</figcaption>
+  </figure>
+
+<p class="w3-text-teal">A First Step</p>
+Since all the channels are nonempty, the command corresponding to
+the delivery of a message from any channel can be executed. Assume
+that the command for channel \(c_{2, 0}\) is executed, i.e., the
+message \(4\) in this channel is delivered to professor \(0\). The
+state of professor \(0\) changes because \(T_{0}\) becomes 4, and
+this professor send message 4 on channel \(c_{0, 2}\), and so the state of this
+channel becomes the sequence \([2, 4]\) with message \(2\) ahead of message
+\(4\).
+
+
+
+    <figure>
+    <img src="EarliestMeetingTimeSlides/EarliestMeetingTimeSlides.004.jpeg" alt="Fig1" style="width:100%">
+    <figcaption>Fig.2: A First Step</figcaption>
+  </figure>
+
+
+<p class="w3-text-teal">A Second Step</p>
+At the end of the first step, the guard for delivery of a message from channel \(c_{2, 0}\) is
+false because the channel is empty. The guard for every other channel is
+true, and so the next transition can be the delivery of a message from
+any channel other than \(c_{2, 0}\). Suppose the next message is delivered from
+channel \(c_{0, 2}\). This message is 2 because that's the message at
+the head of the sequence of messages in transit along the
+channel. Delivery of this message removes the message from the
+channel, and the execution of the command does not change the state of
+professor \(2\). The state of channel \(c_{0, 2}\) now consists of a
+single message \(4\).
+
+
+
+    <figure>
+    <img src="EarliestMeetingTimeSlides/EarliestMeetingTimeSlides.005.jpeg" alt="Fig1" style="width:100%">
+    <figcaption>Fig.2: A Second Step</figcaption>
+  </figure>
+
+<p class="w3-text-teal">A Third Step</p>
+At the end of the first step, all the channels other than \(c_{2, 0}\) are nonempty, and so a
+message can be delivered from any of them. Suppose the next message
+delivered is the message \(4\) in channel \(c_{0, 2}\). The
+delivery of this message does not change the state of professor \(4\),
+and channel \(c_{0, 2}\) becomes empty.
+
+
+
+    <figure>
+    <img src="EarliestMeetingTimeSlides/EarliestMeetingTimeSlides.006.jpeg" alt="Fig1" style="width:100%">
+    <figcaption>Fig.2: A Third Step</figcaption>
+  </figure>
+
+
+<p class="w3-text-teal">Following Steps</p>
+At the end of the second step the only nonempty channels are those to and from professor
+\(1\). You can identify a third step in the trajectory. The trajectory
+proceeds in this manner until all guards evaluate to false, i.e., all
+channels are empty.
+
+<p>
+You can check that all trajectories end in a state in which all
+channels are empty and \(T_{j} = 12\) for all \(j\).
