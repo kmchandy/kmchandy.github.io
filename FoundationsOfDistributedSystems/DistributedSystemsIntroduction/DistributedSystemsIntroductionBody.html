@@ -110,11 +110,13 @@ The command may change the state of the
 agent depend only on \(B\)'s state prior to the transition.
 
 <h4 class="w3-text-teal">Model of Computation</h4>
-We begin by using the model of computation of nondeterministic
+We begin by using the familiar model of computation of nondeterministic
 iteration: the
 <a href="../../ReviewOfBasics/NondeterministicIteration/NondeterministicIteration.html ">do-od loop</a> from
 sequential programming: execute any command whose guard evaluates to
-True. Later we will introduce the concept of fairness.
+True. Later we will introduce the concept of fairness and also allow
+for the possibility that some commands are not executed even
+though their guards remain true forever.
 
 <h4 class="w3-text-teal">Examples</h4>
 An agent has incoming channels \(temperature\) and
@@ -138,6 +140,10 @@ active -> send message "alert" on alarm channel
           active = False
 </pre>
 
-<h4 class="w3-text-teal">Timelines</h4>
-Next we describe a graphical representation of system trajectories.
+<h4 class="w3-text-teal">Next</h4>
+Look at a
+<a href="./Example/Example.html">a detailed example</a>, or
+<a href="DistributedSystemsIntroductionVideo.mp4">a video of this material</a>, or
+move on to new material, <a href="Timelines.html">timelines</a>:
+a graphical representation of system trajectories.
 

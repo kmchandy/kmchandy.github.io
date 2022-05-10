@@ -16,7 +16,12 @@ def make_module_from_parts(header, overlay, footer, links, body, module_name):
             list_of_links = infile.read().splitlines()
 
             for link_and_name in list_of_links:
-                link, name = link_and_name.split('#')
+                try:
+                    link, name = link_and_name.split('#')
+                except Exception:
+                    print ('link and name ', link_and_name)
+                    print ('Error in links file')
+                    return
                 outfile.write(
                     '<a class="w3-bar-item w3-button w3-hover-black "')
                 outfile.write("\n")

@@ -1,0 +1,86 @@
+<!--------------------------------------------------------->
+    <h2 class="w3-text-teal">Timelines</h2>
+<!--------------------------------------------------------->
+A <i>timeline</i> diagram depicts the evolution of a <i>single</i>
+trajectory over time.  In a timeline diagram, the horizontal (i.e. x-)
+axis represents time.  Each agent has its own timeline which shows the
+evolution of states of that agent. An agent's timeline is represented
+by a horizontal line; the state of an agent \(B\) at time t is
+represented by the point, at time \(t\), on \(B\)'s line. A state
+transition of an agent is called an <i>event at that agent.</i>
+
+<p style="color:red;">Example</p>
+<figure>
+    <img src="Timelines/Timelines.001.jpeg" alt="Fig1" style="width:100%">
+    <figcaption>Fig.1: A Timeline Diagram</figcaption>
+  </figure>
+In the figure the blue horizontal lines are the timelines for agents
+\(A\) and \(B\). The blue circles numbered 1, 3, 5 on the timeline for
+agent \(A\) represent events at agent \(A\); likewise, blue circles
+numbered 2, 4 on the timeline for agent \(B\) represent \(B\)'s
+events. An event can be an internal state transition, which is one
+without receiving messages. An example of an internal event is event 1
+on the timeline for agent \(A\). Events 2, 3, 4, 5 are receive-message
+events.
+
+<p class="w3-text-teal">Message Timelines</p>
+A message sent by an agent \(A\) at time \(t\) and received by agent
+\(B\) at time \(t'\) is represented by a straight line starting at
+point \(t\) on \(A\)'s timeline and ending at point \(t'\) on \(B\)'s
+timeline; this line is the timeline for the message. In the diagram,
+agent \(A\) sends messages \(m_{0}\) and \(m_{1}\), while agent \(B\)
+sends messages \(r_{0}\) and \(r_{1}\).
+
+<p class="w3-text-teal">Channel States in Timeline Diagrams</p>
+The state of a channel \(c\) at time \(T\) is the sequence (in time
+order) of messages that are sent along \(c\) before \(T\) and that are
+received after \(T\).
+
+<p style="color:red;">Example</p>
+<figure>
+    <img src="Timelines/Timelines.002.jpeg" alt="Fig2" style="width:100%">
+    <figcaption>Fig.2: Global State from a Timeline Diagram</figcaption>
+</figure>
+
+The next diagram shows how the global state of the system --- the
+states of all agents and channels --- at time \(T\) are represented in
+the timeline diagram.  The diagram shows timelines for agents \(A, B,
+D\). Agent \(A\) sends messages \(m_{0}\) along a channel \(c'\) and
+\(m_{1}\) along a different channel \(c\) at event 1.  When agent \(D\)
+receives \(m_{0}\) at event 2 it sends message \(r_{0}\) to \(A\).
+When agent \(A\) receives \(r_{0}\) at event 3 it sends message
+\(m_{2}\) to \(B\) along channel \(c\).
+
+<p>
+In the diagram, the state of \(c\) is the sequence of \(c\)-message
+lines that are cut by the vertical line at \(T\); these are the
+message lines for \(m_{1}\) and \(m_{2}\) in that order. The state of
+an agent \(A\) at \(T\) is, likewise, the state on \(A\)'s timeline at
+the point where the timeline is cut by the vertical line at \(T\).  The global
+state of the system at T is obtained from the points at which agent
+timelines and message lines are cut by the vertical line at \(T\).
+
+<p class="w3-text-teal">Properties of Timeline Diagrams</p>
+The properties of a timeline diagram depend on the assumptions we make
+about channels and agents. Let's look at some examples of assumptions
+and their consequences. Suppose all messages sent along a channel c
+from agent B to agent D are delayed by at least T and at most T' time
+units. The top diagram in the figure below shows a message (red line)
+that is delivered with a delay between T and T'. The lower diagram
+shows a message that is delivered with a delay outstide the (T, T')
+interval, and so this diagram does not represent a trajectory of this
+system.
+<figure>
+    <img src="Timelines/Timelines.003.jpeg" alt="Fig3" style="width:100%">
+    <figcaption>Fig.3: Valid and Invalid Timeline Diagrams</figcaption>
+  </figure>
+
+<p class="w3-text-teal">Takeaway</p>
+A timeline is a familiar concept that help us to understand the
+behavior of multi-agent systems. 
+
+
+
+
+
+
