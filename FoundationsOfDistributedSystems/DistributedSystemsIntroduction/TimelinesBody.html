@@ -61,6 +61,19 @@ In this diagram agent \(A\) sends messages \(m_{0}\) and
 \(m_{1}\), while agent \(B\)
 sends messages \(r_{0}\) and \(r_{1}\).
 
+<h4 class="w3-text-teal">Timelines: Partial and Total Orders</h4>
+The events in a timeline diagram are assumed to be a total order: two events don't
+occur at exactly the same instant.
+The graph is acyclic because all edges are
+directed forward in time.
+An acyclic graph represents a partial order, and so the graph of a
+timeline diagram is a partial order because the vertices of the graph
+don't have to be in any specific sequence.
+The total order of event in a timeline diagram is consistent with
+partial order specified by the graph, i.e. if there is an edge from
+event \(e\) to event \(e'\) in the graph then \(e\) occurs before
+\(e'\) in the timeline diagram.
+
 <h4 class="w3-text-teal">Channel States in Timeline Diagrams</h4>
 The state of a channel \(c\) at time \(T\) is the sequence (in time
 order) of messages that are sent along \(c\) before \(T\) and that are
