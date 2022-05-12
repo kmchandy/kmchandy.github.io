@@ -103,6 +103,10 @@ SelfTest
 href="../DistributedSystemsIntroduction/Timelines.html" > 
 Timelines
 </a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../DistributedSystemsIntroduction/AgentLogs.html" > 
+Agent Logs
+</a>
 
 </nav>
 <!-- End Sidebar---------->
@@ -193,9 +197,11 @@ sends messages \(r_{0}\) and \(r_{1}\).
 <h4 class="w3-text-teal">Timelines: Partial and Total Orders</h4>
 The events in a timeline diagram are assumed to be a total order: two events don't
 occur at exactly the same instant.
-The graph of vertices and edges is acyclic because all edges are
+The graph is acyclic because all edges are
 directed forward in time.
-An acyclic graph represents a partial order.
+An acyclic graph represents a partial order, and so the graph of a
+timeline diagram is a partial order because the vertices of the graph
+don't have to be in any specific sequence.
 The total order of event in a timeline diagram is consistent with
 partial order specified by the graph, i.e. if there is an edge from
 event \(e\) to event \(e'\) in the graph then \(e\) occurs before
@@ -321,15 +327,15 @@ and \(\tau'\) ends in the same state as \(\tau\) does.
 <h4 class="w3-text-teal">Proof</h4>
 
 <p class="w3-text-teal">The sequence of states of an agent in \(D'\)
-is a valid trajectory of the agent</p>
+is a trajectory of the agent</p>
 The graphs for \(D\) and \(D'\) are identical and so the sequence of
 events and states of each agent are identical in \(D\) and \(D'\). The
 proof that the graphs are identical is carried out by induction. The
 induction hypothesis is that the inputs and outputs of the first \(n\)
 events in \(D\) are the same as in the corresponding events in \(D'\).
 
-<p class="w3-text-teal">The sequence of states of a chanel in \(D'\)
-is a valid sequence</p> 
+<p class="w3-text-teal">The sequence of states of a channel in \(D'\)
+is a trajectory of the channel</p> 
 Because the graphs in \(D\) and \(D'\) are identical, messages along a
 channel \(c\) are sent in the same order and received in the same
 order in \(D\) and \(D'\).  Because edges are directed forwards in

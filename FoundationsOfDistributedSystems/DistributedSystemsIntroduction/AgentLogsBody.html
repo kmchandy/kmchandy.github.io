@@ -1,0 +1,45 @@
+<!--------------------------------------------------------->
+<h2 class="w3-text-teal">From Agent Logs to System Trajectories</h2>
+<!--------------------------------------------------------->
+The theorem in the
+<a href="/Timelines.html">Timelines module</a> is important and should be
+viewed in multiple ways. One way is as follows. Suppose each agent
+logs the sequence of events at that agent, i.e., the agent logs its
+state before and after each of its event, the message (if any) received in the
+event, and the messages (if any) sent in the event. In terms of a
+timeline diagram, each agent records the labeled edges directed towards
+and away from each of the agent's events (see figure below).
+
+<h4 class="w3-text-teal">The Problem</h4>
+Given the logs of all the agents how can we determine the trajectory
+of the entire system --- the sequence of global states of the system?
+
+<p style="color:red;">Example</p>
+The figure below shows logs of each of the three agents in the example
+given in the Timelines module.
+<figure>
+    <img src="Timelines/Timelines.006.jpeg" alt="Fig1" style="width:100%">
+    <figcaption>Fig.1: Logs of Agents</figcaption>
+</figure>
+What are the ways in which these agent logs can be stitched together
+to get a log of the trajectory of the global system?
+In the Timelines module we saw at least two ways of composing the
+agent logs. The two timelines are given again below
+<figure>
+    <img src="Timelines/Timelines.007.jpeg" alt="Fig2" style="width:100%">
+    <figcaption>Fig.2: Different Timelines Composed from Same Logs of Agents</figcaption>
+</figure>
+
+<h4 class="w3-text-teal">Requirement for Composing Agent Logs</h4>
+The theorem tells us that the only requirement is:
+
+<p class="w3-text-teal">
+Each message is received only <i>after</i> it is sent.
+</p>
+
+<p style="color:red;">Example</p>
+Here is another timeline diagram that satisfies this requirement.
+<figure>
+    <img src="Timelines/Timelines.008.jpeg" alt="Fig3" style="width:100%">
+    <figcaption>Fig.3: One More Timeline Composed Logs of Agents</figcaption>
+</figure>
