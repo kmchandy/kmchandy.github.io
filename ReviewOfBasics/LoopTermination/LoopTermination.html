@@ -31,6 +31,10 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 hr.new2 {
   border: 2px solid blue;
 }
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
 </style>
 
 
@@ -80,44 +84,24 @@ title="Close Menu">
 <!-- Start Sidebar----------> 
  
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../LoopTermination/VariantFunctions.mp4" > 
-VIDEO
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../LoopTermination/LoopTerminationSelfTest.html" > 
-TEST
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
 href="../Introduction/Introduction.html" > 
-Review: Introduction
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../Loops/Loops.html" > 
-Nondeterministic Iteration
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../Predicates/Predicates.html" > 
-Predicates
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../HoareTriples/HoareTriples.html" > 
-Hoare Triples
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../Invariant/Invariant.html" > 
-Invariant
+CHAPTER: Review of Sequential Programming
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
 href="../LoopTermination/LoopTermination.html" > 
-Loop Variants
+MODULES
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html" > 
-Correctness Proofs: Examples
+href="../LoopTermination/LoopTermination.html" > 
+Loop Termination
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../Safety/Safety.html" > 
-Proving Safety
+href="../LoopTermination/VariantFunctions.mp4" > 
+Loop Termination: Video
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../LoopTermination/LoopTerminationSelfTest.html" > 
+Loop Termination: Self Test
 </a>
 
 </nav>
@@ -194,7 +178,7 @@ all guards are False.
     a True guard reduces the variant function by proving the
     following Hoare triple for all \(j\): 
 <p>
-\(\forall k: \quad
+\(\forall K: \quad
 \{(f = k) \wedge I \wedge g_{j}\} \; c_{j} \; \{f < k\}
 \)
 <p>
@@ -241,18 +225,12 @@ progress towards their goals.
 The concept of variant functions in sequential programming is a
 central concept in reasoning about progress of distributed systems.
 <!--Start Footer--------------------------------------->
-<h5 style="color:red;">
-<a href="../../index.html">Contents</a>
 
-</h5>
-
-    <div class="w3-container w3-theme-l1">
+    <hr class="new1">
       <p>K. Mani Chandy,
-      <br>
-      Simon Ramo Professor, Emeritus,
-      <br>
+      Emeritus Simon Ramo Professor,
       California Institute of Technology</p>
-    </div>
+    
 </footer>
     
 

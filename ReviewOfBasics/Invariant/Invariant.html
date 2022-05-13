@@ -31,6 +31,10 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 hr.new2 {
   border: 2px solid blue;
 }
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
 </style>
 
 
@@ -81,10 +85,14 @@ title="Close Menu">
  
 <a class="w3-bar-item w3-button w3-hover-black "
 href="../Introduction/Introduction.html" > 
-Review: Introduction
+CHAPTER: Review Sequential Programming
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../Loops/Loops.html" > 
+href="../Invariant/Invariant.html" > 
+MODULES:
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../NondeterministicIteration/NondeterministicIteration.html" > 
 Nondeterministic Iteration
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
@@ -101,15 +109,11 @@ Invariant
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
 href="../LoopTermination/LoopTermination.html" > 
-Loop Variants
+Loop Termination
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
 href="../ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html" > 
 Correctness Proofs: Examples
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../Safety/Safety.html" > 
-Proving Safety
 </a>
 
 </nav>
@@ -137,7 +141,7 @@ Proving Safety
 <!-- End overlay ---------------------------------->
 
     
-    <h2 class="w3-text-teal">States, Invariants, Stable, Safety</h2>   
+    <h2 class="w3-text-teal">Invariant and Stable Predicates</h2>   
     The state of a <i>do-od</i> loop is given by the values of its
     variables.
     The execution of a guarded command, whose guard evaluates to true,
@@ -222,18 +226,12 @@ set of set of states.
 identical.
 We will review the material in this module when we discuss safety.
 <!--Start Footer--------------------------------------->
-<h5 style="color:red;">
-<a href="../../index.html">Contents</a>
 
-</h5>
-
-    <div class="w3-container w3-theme-l1">
+    <hr class="new1">
       <p>K. Mani Chandy,
-      <br>
-      Simon Ramo Professor, Emeritus,
-      <br>
+      Emeritus Simon Ramo Professor,
       California Institute of Technology</p>
-    </div>
+    
 </footer>
     
 

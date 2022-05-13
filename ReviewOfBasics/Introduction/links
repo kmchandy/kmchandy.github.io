@@ -3,4 +3,6 @@
 ../NondeterministicIteration/NondeterministicIteration.html#Nondeterministic Iteration
 ../Predicates/Predicates.html#Predicates
 ../HoareTriples/HoareTriples.html#Hoare Triples
+../Invariant/Invariant.html#Invariants
+../LoopTermination/LoopTermination.html#Loop Termination
 ../ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html#Examples of Correctness Proofs

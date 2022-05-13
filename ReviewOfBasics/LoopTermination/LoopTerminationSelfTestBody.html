@@ -1,0 +1,90 @@
+
+    <h1 class="w3-text-teal">Loop Termination: Self Test</h1>
+
+    <!---------------------------------------------------------->
+    <h2 class="w3-text-teal">Question 1</h2>
+    Let \(x\) be a vector of positive integers. Does the following
+    nondeterministic iteration terminate? If so, what is \(x\) upon
+    termination? Prove your answer.
+    <p>
+    \(x\) has \(N\) elements indexed \(j\) where \(0 \leq j < N\).
+    <p>
+    for all \(0 \leq i, j < N\):
+    <p>
+    \(
+    x[j] > x[i] \quad \rightarrow \quad x[j] = x[j] - x[i]
+    \)
+
+    <!---------------------------------------------------------->
+    <h2 class="w3-text-teal">Question 2</h2>
+    <p>
+    This question is related to the distributed algorithm,
+    <i>Diffusing Computations</i>.
+    <p>
+    \(T\) is either empty or is a rooted tree with vertex \(root\) as the
+    root. Associated with each vertex
+    \(v\) on the tree is a variable \(v.parent\) which is
+    \(v\)'s parent in the tree if \(v\) is not the root, and is
+    \(None\) if \(v\) is the root. Because the tree is rooted, \(root\)
+    is an ancestor of all vertices on the tree.
+
+    <p>
+    Also associated with
+    each vertex \(v\) is an integer, \(v.count\), which is the number
+    of \(v\)'s children on the tree.
+    <p>
+    A vertex that is not in \(T\) has a zero count and no parent.
+    <p>
+    Consider the following algorithm:
+    <p>
+    For all vertices <code>v</code>
+    <pre>
+    (v.count == 0) and (v.parent != None)   ->
+                           v.parent.count -= 1
+                           v.parent = None
+    </pre>
+    <p>
+    Does the algorithm terminate? Prove your answer.
+
+    <!---------------------------------------------------------->
+    <h1 class="w3-text-teal">Answers</h1>
+
+    <h2 class="w3-text-teal">Question 1</h2>
+    Yes, the algorithm terminates.
+    <p>
+    An invariant of the algorithm is that all elements of \(x\) are
+    positive integers. Verify that this predicate holds initially and execution of
+all commands maintains this predicate.
+<p>
+Let \(f = \sum_{j} x[j]\)
+<p>
+\(f\) is bounded below by \(N\) because of the invariant.
+\(f\) has an integer value.
+<p>
+Verify that execution of any command with a True guard reduces
+    \(f\). Therefore \(f\) is a variant function, and the algorithm
+terminates.
+
+<p class="w3-text-teal">Termination Condition</p>
+If all the guards are False then all the elements of \(x\) are
+identical. Verify the invariant that the gcd (greatest common divisor)
+of the elements of \(x\) remain unchanged. Therefore, at termination,
+each element of \(x\) is the gcd of initial elements of \(x\).
+
+    <h2 class="w3-text-teal">Question 2</h2>
+Yes, the algorithm terminates.
+<p>
+A guard has value True exactly when \(v\) is a leaf of the tree, and
+executing the command removes \(v\) from the tree.
+<p>
+A variant function is the number of vertices in the tree. This is
+bounded below by 0, and execution of a command with a True guard
+reduces its value.
+<p>
+At termination the tree vanishes.
+
+<p class="w3-text-teal">An alternate variant function</p>
+An alternate variant function is the tree, T, itself. For any graphs
+\(G\), \(G'\), define \(G \leq G'\) exactly when \(G\) is a subraph of
+\(G'\). This variant function is bounded below by the empty tree, and
+the execution of a command with a True guard reduces the function.
