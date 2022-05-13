@@ -1,5 +1,5 @@
 <!--------------------------------------------------------->
-<h2 class="w3-text-teal">From Agent Logs to System Trajectories</h2>
+<h2 class="w3-text-teal">Agent Logs and Cuts of Timelines</h2>
 <!--------------------------------------------------------->
 The theorem in the
 <a href="/Timelines.html">Timelines module</a> is important and should be
@@ -30,16 +30,66 @@ agent logs. The two timelines are given again below
     <figcaption>Fig.2: Different Timelines Composed from Same Logs of Agents</figcaption>
 </figure>
 
-<h4 class="w3-text-teal">Requirement for Composing Agent Logs</h4>
-The theorem tells us that the only requirement is:
+<h4 class="w3-text-teal">Requirement for Composing Agent Logs to get a
+Global System Trajectory</h4>
 
 <p class="w3-text-teal">
 Each message is received only <i>after</i> it is sent.
 </p>
+The result follows directly from the theorem.
+<p>
+The requirement is that all message lines in the timeline diagram are
+directed towards later times, i.e. towards the right.
 
 <p style="color:red;">Example</p>
 Here is another timeline diagram that satisfies this requirement.
 <figure>
-    <img src="Timelines/Timelines.008.jpeg" alt="Fig3" style="width:100%">
+    <img src="Timelines/Timelines.008.jpeg" alt="Fig3" style="width:80%">
     <figcaption>Fig.3: One More Timeline Composed Logs of Agents</figcaption>
 </figure>
+
+<h3 class="w3-text-teal">Cuts across Timelines</h3>
+A consistent cut of a timeline diagram is a partition of the set
+of events in the trajectory into <i>past</i> and <i>future</i> where
+there is no edge from the future to the past.
+  
+
+<p style="color:red;">Example</p>
+The figure below shows consistent cuts across two timeline diagrams
+where past events are colored black and future events are green.
+There is no edge directed from green to black.
+<figure>
+    <img src="Timelines/Timelines.009.jpeg" alt="Fig4" style="width:100%">
+    <figcaption>Fig.4: Consistent Cuts</figcaption>
+</figure>
+
+Each agent has a point on its own timeline where events on that
+agent before the point are in the past, and events  on that
+agent after the point are in the future.
+
+<h3 class="w3-text-teal">Theorem about Consistent Cuts</h3>
+For any consistent cut, \([past, future]\),  of a timeline diagram of
+a trajectory \(\tau\)
+there exists a trajectory \(\tau'\) with the same events as \(\tau\)
+where all past events occur before all future events in \(\tau'\).
+
+<p class="w3-text-teal">Proof of Theorem on Consistent Cuts</p>
+The intuitive idea of the proof is that we can get \(\tau'\), the
+lower diagram, from \(\tau\), the upper diagram, by straightening the line
+separating future from past in \(\tau\). As the line gets
+straightened, some events move towards the right and others to the
+left, while maintaining the key requirement that messages are received
+only after they are sent.
+
+<p>
+A formal proof is based on induction in the order of events in
+\(\tau'\). Assume that there exists a trajectory, starting from the
+initial state, with \(n\) events and prove that there exists a
+trajectory with \(n+1\) events.
+
+<h4 class="w3-text-teal">Takeaway</h4>
+Local agent trajectories can be stitched together to get global system
+trajectories if all messages are received only after they are
+sent. This requirement is obvious and useful. It leads to the theorem
+on consistent cuts, which is the key to many algorithms by which an
+agent learns properties of an entire system.
