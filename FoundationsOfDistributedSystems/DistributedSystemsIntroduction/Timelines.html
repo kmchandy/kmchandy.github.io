@@ -134,221 +134,168 @@ SelfTest
 <!--------------------------------------------------------->
     <h2 class="w3-text-teal">Timelines</h2>
 <!--------------------------------------------------------->
-A <i>timeline</i> diagram depicts the evolution of a <i>single</i>
+A timeline diagram depicts the evolution of a <i>single</i>
 trajectory of a system over time.  A state transition of an agent
-during this trajectory is called an <i>event at that agent in the
-trajectory.</i> In this module we restrict attention to a single
-trajectory.  So, all events refer to state transitions during
-the same trajectory.
+during this trajectory is called an <i>event</i> at that agent.
 
-<h4 class="w3-text-teal">Timeline Diagrams</h4>
 A timeline diagram is a labeled directed graph which is laid out in a
 specific way.  Vertices of the graph represent events.  The graph has
 an edge directed from an event at an agent to the next event at that
-agent.  An edge from the \(k\)-th event of an agent to the \(k+1\)-th
-event of that agent is labeled with the state of the agent between the
-two events.
+agent; the edge is labeled with the state of the agent between the two
+events. 
 
 <p>
-In a timeline diagram, the horizontal (i.e. x-) axis represents time.
-Each agent has its own timeline which shows the evolution of states of
-that agent. An agent's timeline is represented by a horizontal line
-and all the vertices representing events of an agent are placed on the
-same horizontal line.
+The horizontal axis represents time.  Each agent has its own timeline
+represented by a horizontal line with all events
+of an agent on the same line.
+
+<p>
+A message \(m\) sent by an agent \(A\) at an event \(e\) and received
+by an agent \(B\) at event \(e'\) is represented by an edge directed from
+\(e\) to \(e'\), and this edge is labeled \(m\).
 
 
-<p style="color:red;">Example</p>
+<h4 style="color:red;">Example</h4>
 <figure>
     <img src="Timelines/Timelines.001.jpeg" alt="Fig1" style="width:100%">
     <figcaption>Fig.1: A Timeline Diagram</figcaption>
-  </figure>
-In the figure the blue horizontal lines are the timelines for agents
-\(A\) and \(B\). The blue circles numbered A0, A1, A2, A3 on the timeline for
-agent \(A\) represent events at agent \(A\); likewise, blue circles
-numbered B0, B1, B2 on the timeline for agent \(B\) represent \(B\)'s
-events.
-
-<p>
-An event can be an internal state transition, which is one
-without receiving messages. An example of an internal event is event A1
-on the timeline for agent \(A\). Events A2, A3, B1, B2 are receive-message
-events; these events occur when a message is received.
+</figure>
+This example shows a timeline diagram with two agents, \(A\) and
+\(B\).  The vertices  A0, A1, A2, A3 represent events at agent \(A\);
+likewise vertices B0, B1 B2,represent \(B\)'s events.
 
 <p>
 An edge along an agent's timeline is labeled with the state of that
 agent at the point. For example, the edge from event A1 to event A2 is
 labeled \(S[A1]\) which is agent \(A\)'s state after event A1 and
-before event A2. 
+before event A2.
 
+<p>
+Event A1 is an example of an internal event in which an agent changes
+state without receiving a message.
+Event A2 is an example of an event in which an agent changes
+state when it receives a message.
 
-<h4 class="w3-text-teal">Message Timelines</h4>
-A message \(m\) sent by an agent \(A\) at an event \(e\) and received by agent
-\(B\) at event \(e'\) is represented by an edge directed from \(e\) to
-\(e'\), and this edge is labeled \(m\). 
-In the diagram,
-agent \(A\) sends messages \(m_{0}\) in event A1 and this message is
-received by agent \(B\) in event B1, and the message is represented by
-an edge directed from event A1 to event B1, and the edge is labeled
-\(m_{0}\). 
-In this diagram agent \(A\) sends messages \(m_{0}\) and
-\(m_{1}\), while agent \(B\)
-sends messages \(r_{0}\) and \(r_{1}\).
-
-<h4 class="w3-text-teal">Timelines: Partial and Total Orders</h4>
-The events in a timeline diagram are assumed to be a total order: two events don't
-occur at exactly the same instant.
-The graph is acyclic because all edges are
-directed forward in time.
-An acyclic graph represents a partial order, and so the graph of a
-timeline diagram is a partial order because the vertices of the graph
-don't have to be in any specific sequence.
-The total order of event in a timeline diagram is consistent with
-partial order specified by the graph, i.e. if there is an edge from
-event \(e\) to event \(e'\) in the graph then \(e\) occurs before
-\(e'\) in the timeline diagram.
+<p>
+The diagram shows that
+agent \(A\) sends message \(m_{0}\) in event A1 and this message is
+received by agent \(B\) in event B1.
 
 <h4 class="w3-text-teal">Channel States in Timeline Diagrams</h4>
 The state of a channel \(c\) at time \(T\) is the sequence (in time
 order) of messages that are sent along \(c\) before \(T\) and that are
-received after \(T\).
+received after \(T\). The state of \(c\) at \(T\) can be obtained from
+the timeline diagram as the sequence of labels of edges representing
+messages along \(c\) that are cut by the \(T\)-line, the vertical line
+at \(T\).
 
-<p style="color:red;">Example</p>
+<h4 style="color:red;">Example</h4>
 <figure>
     <img src="Timelines/Timelines.002.jpeg" alt="Fig2" style="width:100%">
     <figcaption>Fig.2: Global State from a Timeline Diagram</figcaption>
 </figure>
-
-The next diagram shows how the global state of the system --- the
-states of all agents and channels --- at time \(T\) are represented in
-the timeline diagram.  The diagram shows timelines for agents \(A, B,
-D\). Agent \(A\) sends messages \(m_{0}\) along a channel \(x\) and sends
-\(m_{1}\) along a different channel \(c\) at event A1.  When agent \(D\)
-receives \(m_{0}\) at event D1 it sends message \(r_{0}\) to \(A\)
-along a channel \(y\).
+Figure 2 shows 
+timeline diagram with agents \(A, B, D\). Agent \(A\) sends messages
+\(m_{0}\) along a channel \(x\) and sends \(m_{1}\) along a different
+channel \(c\) at event A1.  When agent \(D\) receives \(m_{0}\) at
+event D1 it sends message \(r_{0}\) to \(A\) along a channel \(y\).
 When agent \(A\) receives \(r_{0}\) at event A2 it sends message
-\(m_{2}\) to \(B\) along channel \(c\).
-When agent \(B\) receives message \(m_{1}\) at event B1 it sends message
-message \(u_{0}\) to \(A\) along a channel \(v\).
+\(m_{2}\) to \(B\) along channel \(c\).  When agent \(B\) receives
+message \(m_{1}\) at event B1 it sends message message \(u_{0}\) to
+\(A\) along a channel \(v\).
 
 <p>
-In the diagram, the state of \(c\) at time \(T\) is the sequence of \(c\)-message
-lines that are cut by the vertical line at \(T\); these are the
-message lines for \(m_{1}\) and \(m_{2}\) in that order.
-
-<p>
-The state of an agent \(A\) at \(T\) is, likewise, the state on
-\(A\)'s timeline at the point where the timeline is cut by the
-vertical line at \(T\).  (The label of the edge is not shown so as not
-to make the diagram too crowded). The global state of the system at T
-is obtained from the points at which agent timelines and message lines
-are cut by the vertical line at \(T\).
+The state of \(c\) at time \(T\) is the sequence of labels, \([m_{1},
+m_{2}]\), of edges representing messages on \(c\) that are cut by the
+\(T\)-line.  The state of an agent \(A\) at \(T\) is the label of the
+edge on \(A\)'s timeline cut by the \(T\)-line.  So, the global state
+of the system at T can be obtained from labels of edges cut by the
+\(T\)-line.
 
 
 <h4 class="w3-text-teal">The Trajectory: Sequence of Global States</h4>
-A trajectory is a sequence of <i>global</i> states in a path from
-an initial state in the global state-transition graph. The timeline
-diagram represents a trajectory; the sequence of global states is
-determined by moving the vertical line representing time after each
-event.
+A trajectory is a sequence of <i>global</i> states.
+The sequence of global states can be obtained from the timeline diagram
+from the labels of edges cut by vertical lines before each event.
 
-<p style="color:red;">Example</p>
+<h4 style="color:red;">Example</h4>
 <figure>
     <img src="Timelines/Timelines.003.jpeg" alt="Fig3" style="width:100%">
     <figcaption>Fig.3: Global States in the Trajectory</figcaption>
 </figure>
+The sequence of events in this trajectory is: Initital events (A0, B0, D0)
+in any order followed by the sequence A1, D1, A2, B1, A3, B2.
+
 The figure shows vertical lines corresponding to different points in
-the timeline diagram before and after each event. The global state is
-given by the states of all agents and channels. The global state
-after events A1, B0, D1 is shown in the diagram; the states of agents
-A, B, D at this point are \(S[A1], S[B0], S[D1]\), respectively. The
-state of the channel \(c\) from agent A to agent B is a sequence consisting of the
-single message \(m_{1}\), and the state of the channel \(d\) from
-agent D to agent A is a sequence consisting of the
-single message \(r_{0}\), and all other channels are empty.
+the timeline diagram before each event.
 
-<p>
-The diagram also shows the next global state in which the agent states
-are \(S[A2], S[B0], S[D1]\), and the state of channel \(c\) is the
-sequence \([m_{1}, m_{2}]\), and all other channels are empty.
-
-
-<h4 class="w3-text-teal">The Outputs of an Event depend only on its
-Inputs</h4>
-The inputs of an event on the timeline of an agent \(B\) are the state
-of \(B\) immediately before the event and the message (if any) that is
-received by \(B\) in the event.
-<i>The outputs of the event depend only on its inputs</i>.
-<figure>
-    <img src="Timelines/Timelines.004.jpeg" alt="Fig4" style="width:100%">
-    <figcaption>Fig.4: Event outpus depend only in its inputs</figcaption>
-</figure>
-The figure shows two events: A2 and B1. The labels of the two edges
-directed towards the event A2 are \(S[A1]\) and \(r_{0}\). So, the
-labels of the edges directed from event A2 can be \(S[A2]\) and
-\(m_{2}\), regardless of where event A2 appears in the timeline
-diagram.
-
-<p>
-Similarly the outputs \(S[B1]\) and \(u_{0}\) of event B1 depend only
-on its inputs, \(S[B0]\) and \(m_{1}\), regardless of where the event
-occurs in the timeline diagram.
-
-<p>
-Look at the timeline diagram below obtained by flipping the order of events
-A2 and B1 in figure 3. Because the inputs to these events are the same
-in both diagrams their outputs are the same as well. The directed
-graphs in both diagrams are identical; the difference is in the way
-that vertices are laid out across time.
+<h4 class="w3-text-teal">Different Trajectories with Identical Graphs</h4>
+Are there different trajectories with identical graphs?
+Look at the next figure.
 
 <figure>
     <img src="Timelines/Timelines.005.jpeg" alt="Fig5" style="width:100%">
-    <figcaption>Fig.5: Flip order of Events</figcaption>
+    <figcaption>Fig.4: A Different Trajectory with Same Graph</figcaption>
 </figure>
+The trajectory in this diagram is specified by the sequence of events:
+Initial events (A0, B0, D0) followed by the sequence A1, D1, B1,
+A2, A3, B2.
 
 <p>
-The trajectories in the two diagrams are different. For example, in
-figure 5 the trajectory passes the global state in which the states of
-agents A, B, D are \(S[A2], S[B0], S[D1]\), respectively, whereas this
-global state is not entered in the trajectory of figure 3.
-<i>The trajectories are different though the graphs are identical.</i>
-Both trajectories start in the same global state and end in the same
-global state;
-however, they visit different global states along the way.
-This observation gives us the following theorem.
+The graphs of figures 3 and 4 are the same but the trajectories that
+the figures represent are different.  In figure 4 event B1 occurs
+before event A2 whereas in figure 3, B1 occurs after A2.  So, there is
+a global state after B1 and before A2 in figure 4 that is never
+visited in figure 3.
+<p>
+The <i>local</i> timelines of each agent --- i.e., the horizontal
+lines in the diagram --- are identical in both figures; however, an
+event B1 on an agent B occurs before an event A2 on a different agent
+A, in figure 3, but the events appear in the reverse order in figure
+4.
+<p>
+The following theorem captures the idea illustrated by figures 3 and
+4.  
 
-<h4 class="w3-text-teal">Theorem </h4>
-Let \(D\) be a timeline diagram representing a trajectory \(\tau\) of a
-system. Let \(D'\) be obtained from \(D\) by permuting the order of
-events with the restriction that all edges in \(D'\) are directed
-forwards in time. Then \(D'\) represents a trajectory \(\tau'\) of the
-same system. Moreover, \(\tau'\) starts in the same state as \(\tau\) does,
-and \(\tau'\) ends in the same state as \(\tau\) does.
+<h3 class="w3-text-teal">Theorem</h3>
+Given a timeline diagram Z of a system, let Z' be another timeline
+diagram with the same graph as D.  The local trajectory of each agent
+is the same in both Z and Z'; however, an event
+\(e\) on one agent which appears before an event \(e'\) on a different
+agent in Z may appear in the reverse order in Z'.
+
+<p>
+A necessary and sufficient conditions for Z' to represent a trajectory
+of the same system is that in Z' <i>each message is received only after
+it is sent.</i>
+
 
 <h4 class="w3-text-teal">Proof</h4>
+The condition is necessary because there is no system in which a
+message is received before it is sent. Next we show that the condition
+is sufficient.
+<p>
+The proof is by induction on the sequence of events in Z'. Assume that
+there exists a trajectory consisting of the first \(n\) events of Z'
+where the inputs and outputs of each event in Z' are the same as those
+of the corresponding events in Z. Let \(e\) be the \(n+1\)-th event in
+Z'. By the induction assumption, the inputs to \(e\) are the same in Z
+and Z'. Therefore, the outputs of \(e\) in Z' are the same as in Z.
 
-<p class="w3-text-teal">The sequence of states of an agent in \(D'\)
-is a trajectory of the agent</p>
-The graphs for \(D\) and \(D'\) are identical and so the sequence of
-events and states of each agent are identical in \(D\) and \(D'\). The
-proof that the graphs are identical is carried out by induction. The
-induction hypothesis is that the inputs and outputs of the first \(n\)
-events in \(D\) are the same as in the corresponding events in \(D'\).
 
-<p class="w3-text-teal">The sequence of states of a channel in \(D'\)
-is a trajectory of the channel</p> 
-Because the graphs in \(D\) and \(D'\) are identical, messages along a
-channel \(c\) are sent in the same order and received in the same
-order in \(D\) and \(D'\).  Because edges are directed forwards in
-time, a message is received along a channel only after it is sent
-along that channel in \(D'\). So, the sequence of states of a channel
-in \(D'\) are queues with messages appended to the tail of the queue
-and removed from its head.
+<h4 class="w3-text-teal">Theorem in Terms of Timelines</h4>
+Given a timeline diagram Z that represents a trajectory of a
+system. Consider a diagram Z' obtained by moving vertices on each
+horizontal line in Z to the right or left. Then Z' represents a trajectory
+if and only if <i>all edges are directed forwards in time</i>,
+i.e. towards the right.
+
+
 
 <h4 class="w3-text-teal">Takeaway</h4>
-Timelines are a familiar concept, and they are helpful in
+Timelines are a familiar concept, helpful in
 understanding distributed systems and other multi-agent
-systems. Analyzing the behavior of a system by studying the timelines
-of each of the component agents can provide insight.
+systems.
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
