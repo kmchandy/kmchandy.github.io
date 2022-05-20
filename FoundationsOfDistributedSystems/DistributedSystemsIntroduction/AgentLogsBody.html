@@ -1,28 +1,28 @@
 <!--------------------------------------------------------->
 <h2 class="w3-text-teal">Agent Logs and Cuts of Timelines</h2>
 <!--------------------------------------------------------->
-The theorem in the
-<a href="/Timelines.html">Timelines module</a> is important and should be
-viewed in multiple ways. One way is as follows. Suppose each agent
-logs the sequence of events at that agent, i.e., the agent logs its
-state before and after each of its event, the message (if any) received in the
-event, and the messages (if any) sent in the event. In terms of a
+Let's look at the problem of reconstructing a log of events of the
+global system given logs recorded by each agent of that agent's own
+events.
+Each agent records the sequence of events at that agent, and its own
+local state before each event, and the messages sent and received (if
+any) in each of its events.
+In terms of a
 timeline diagram, each agent records the labeled edges directed towards
 and away from each of the agent's events (see figure below).
 
-<h4 class="w3-text-teal">The Problem</h4>
-Given the logs of all the agents how can we determine the trajectory
-of the entire system --- the sequence of global states of the system?
 
-<p style="color:red;">Example</p>
+
+<h4 style="color:red;">Example</h4>
 The figure below shows logs of each of the three agents in the example
 given in the Timelines module.
 <figure>
     <img src="Timelines/Timelines.006.jpeg" alt="Fig1" style="width:100%">
     <figcaption>Fig.1: Logs of Agents</figcaption>
 </figure>
-What are the ways in which these agent logs can be stitched together
-to get a log of the trajectory of the global system?
+
+What global system trajectories can produce this collection of agent
+logs?
 In the Timelines module we saw at least two ways of composing the
 agent logs. The two timelines are given again below
 <figure>
@@ -30,16 +30,11 @@ agent logs. The two timelines are given again below
     <figcaption>Fig.2: Different Timelines Composed from Same Logs of Agents</figcaption>
 </figure>
 
-<h4 class="w3-text-teal">Requirement for Composing Agent Logs to get a
-Global System Trajectory</h4>
-
+The theorem tells us that any global sequence of events represents a
+system trajectory if and only if:
 <p class="w3-text-teal">
-Each message is received only <i>after</i> it is sent.
+each message is received <i>after</i> it is sent.
 </p>
-The result follows directly from the theorem.
-<p>
-The requirement is that all message lines in the timeline diagram are
-directed towards later times, i.e. towards the right.
 
 <p style="color:red;">Example</p>
 Here is another timeline diagram that satisfies this requirement.

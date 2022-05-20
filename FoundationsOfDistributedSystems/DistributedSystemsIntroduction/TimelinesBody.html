@@ -158,6 +158,54 @@ if and only if <i>all edges are directed forwards in time</i>,
 i.e. towards the right.
 
 
+<h3 class="w3-text-teal">Cuts across Timelines</h3>
+A consistent cut of a timeline diagram is a partition of the events in
+the diagram into two subsets called <i>past</i> and <i>future</i>, and
+in which there is no message from a <i>future</i> event
+to a <i>past</i> event.
+
+<p>Equivalently, a consistent cut is a partition in which all
+messages <i>from future</i> events are <i>to future</i> events.
+This is also
+equivalent to: all edges <i>to past</i> events are <i>from past</i>
+events.
+
+<p>
+An inconsistent cut is a partition of the events into <i>past</i> and
+<i>future</i> where there exists a message from a future event
+to a past event.
+  
+
+<h4 style="color:red;">Example</h4>
+The figure below shows cuts across two timeline diagrams
+where past events are colored black and future events are green.
+<figure>
+    <img src="Timelines/Timelines.009.jpeg" alt="Fig4" style="width:100%">
+    <figcaption>Fig.5: Cuts of Timelines</figcaption>
+</figure>
+
+The cuts in figure 5 are consistent because there is no edge from
+green to black.
+
+<h3 class="w3-text-teal">Theorem about Consistent Cuts</h3>
+For any cut, \([past, future]\), of a timeline diagram of a trajectory
+\(\tau\) there exists a trajectory \(\tau'\) with the same events as
+\(\tau\) where all past events occur before all future events in
+\(\tau'\), if and only if the cut is consistent.
+<p>
+The proof follows directly from the theorem on trajectories.
+
+<p style="color:red;">Example</p>
+The cut in the diagram on the top of figure 5 is consistent.
+Therefore, there exists a timeline diagram, shown at the bottom of the
+figure, in which all past events occur before all
+future events.
+<p>
+The straight vertical purple line in the lower diagram represents an instant
+in time: it separates past (events before that instant) from future
+(events after that instant). The curvy purple line in the upper
+diagram corresponds to the straight line in the lower diagram.
+
 
 <h4 class="w3-text-teal">Takeaway</h4>
 Timelines are a familiar concept, helpful in
