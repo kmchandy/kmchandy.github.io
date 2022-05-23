@@ -130,26 +130,42 @@ Timelines
 <!--------------------------------------------------------->
     <h2 class="w3-text-teal">Timelines</h2>
 <!--------------------------------------------------------->
-A timeline diagram depicts the evolution of a <i>single</i>
-trajectory of a system over time.  A state transition of an agent
-during this trajectory is called an <i>event</i> at that agent.
-
-A timeline diagram is a labeled directed graph which is laid out in a
-specific way.  Vertices of the graph represent events.  The graph has
-an edge directed from an event at an agent to the next event at that
-agent; the edge is labeled with the state of the agent between the two
-events. 
+A timeline is a graphical representation of the sequence of state
+transitions of a trajectory.
 
 <p>
-The horizontal axis represents time.  Each agent has its own timeline
+A state transition which changes the state of an agent is called an
+<i>event</i> at that agent.  The graph of a trajectory is an acyclic
+    labeled directed graph in which each vertex represents an event,
+    and the edges are as follows: There is an edge directed from an
+    event at an agent to the next event at that agent; the edge is
+    labeled with the state of the agent between the two events.  A
+    message \(m\) sent at an event \(e\) and received at an event
+    \(e'\) is represented by an edge directed from \(e\) to \(e'\),
+    and the edge is labeled \(m\).
+
+<p>
+The graph is acyclic because each edge is directed from an event
+towards a later event.
+
+A <i>timeline diagram</i> of a trajectory is a graph of the trajectory where
+the graph is laid out in the following way.
+The horizontal axis represents time.  
+
+<p>
+The events in the timeline are placed in the order in which they occur,
+with events appearing earlier in the trajectory appearing earlier in
+the timeline (i.e. towards the left).
+For convenience, the initial state is represented by a set of initial events,
+one for each agent, and these initial events are shown at the same
+instant (same vertical line).
+
+<p>
+Each agent has its own timeline
 represented by a horizontal line with all events
-of an agent on the same line.
-
-<p>
-A message \(m\) sent by an agent \(A\) at an event \(e\) and received
-by an agent \(B\) at event \(e'\) is represented by an edge directed from
-\(e\) to \(e'\), and this edge is labeled \(m\).
-
+of the same agent on the same horizontal line. An edge from an event at an
+agent to the next event at that agent is shown horizontally, directed
+from left to right.
 
 <h4 style="color:red;">Example</h4>
 <figure>
@@ -209,10 +225,13 @@ of the system at T can be obtained from labels of edges cut by the
 \(T\)-line.
 
 
-<h4 class="w3-text-teal">The Trajectory: Sequence of Global States</h4>
-A trajectory is a sequence of <i>global</i> states.
-The sequence of global states can be obtained from the timeline diagram
-from the labels of edges cut by vertical lines before each event.
+<h4 class="w3-text-teal">Sequence of Global States</h4>
+The sequence of <i>global</i> states in a trajectory can be 
+obtained from the timeline diagram from the labels of edges cut by the
+sequence of vertical lines before each event.
+The starting and ending states of the trajectory are obtained from the
+earliest (leftmost) and latest (rightmost) vertical
+lines in the diagram.
 
 <h4 style="color:red;">Example</h4>
 <figure>
@@ -224,7 +243,6 @@ in any order followed by the sequence A1, D1, A2, B1, A3, B2.
 
 The figure shows vertical lines corresponding to different points in
 the timeline diagram before each event.
-
 <h4 class="w3-text-teal">Different Trajectories with Identical Graphs</h4>
 Are there different trajectories with identical graphs?
 Look at the next figure.
@@ -249,72 +267,128 @@ lines in the diagram --- are identical in both figures; however, an
 event B1 on an agent B occurs before an event A2 on a different agent
 A, in figure 3, but the events appear in the reverse order in figure
 4.
-<p>
-The following theorem captures the idea illustrated by figures 3 and
-4.  
+The starting states of the trajectories in figures 3 and 4 are the
+same, and so are the final states.
+The following observation captures the idea illustrated by figures 3 and
+4.
 
-<h3 class="w3-text-teal">Theorem</h3>
-Given a timeline diagram Z of a system, let Z' be another timeline
-diagram with the same graph as D.  The local trajectory of each agent
-is the same in both Z and Z'; however, an event
-\(e\) on one agent which appears before an event \(e'\) on a different
-agent in Z may appear in the reverse order in Z'.
 
-<p>
-A necessary and sufficient conditions for Z' to represent a trajectory
-of the same system is that in Z' <i>each message is received only after
-it is sent.</i>
+<h4 class="w3-text-teal">Theorem</h4>
+Let \(X\) be a trajectory specified by a sequence of events, and
+let \(Y\) be a permutation of this sequence with the following
+property. For any pair of events \(e, e'\) where  \(e\)
+appears before \(e'\) in \(X\):
+\(e\) also appears before \(e'\) in \(Y\) if
+<ol>
+  <li>
+  \(e\) and \(e'\) are events on the same agent, or
+  </li>
+  <li>
+  a message is sent in \(e\) is received in \(e'\).
+  </li>
+</ol>
+Before we prove the theorem, let's see what the theorem means in terms
+of timelines.
+The first condition says that the local timelines for each agent ---
+the horizontal lines --- are
+the same in  \(X\) and \(Y\).
+The second condition says that a message is received only after it is
+sent. Together the conditions are that the graph of \(Y\) is the same
+as that of \(X\), and all edges in \(Y\) are directed forwards in
+time. Figures 3 and 4 illustrate the theorem with \(X, Y\) as the
+trajectores in figures 3 and 4, respectively.
 
 
 <h4 class="w3-text-teal">Proof</h4>
-The condition is necessary because there is no system in which a
-message is received before it is sent. Next we show that the condition
-is sufficient.
+The theorem holds trivially if \(X\) and \(Y\) are identical. If \(X\)
+and \(Y\) are different then there exists a pair of consecutive events
+\(e\) and \(e'\) in \(X\) where  \(e'\) appears after \(e\) in \(X\)
+but \(e'\) appears before \(e\) in \(Y\). Let \(Z\) be the
+trajectory obtained by flipping the order of \(e\) and \(e'\) in
+\(X\).
+We will prove that \(Z\) is also a trajectory. 
+
+<figure>
+    <img src="Timelines/Timelines.006.jpeg" alt="Fig5" style="width:100%">
+    <figcaption>Fig.5: Switching order of consecutive independent events</figcaption>
+</figure>
+
 <p>
-The proof is by induction on the sequence of events in Z'. Assume that
-there exists a trajectory consisting of the first \(n\) events of Z'
-where the inputs and outputs of each event in Z' are the same as those
-of the corresponding events in Z. Let \(e\) be the \(n+1\)-th event in
-Z'. By the induction assumption, the inputs to \(e\) are the same in Z
-and Z'. Therefore, the outputs of \(e\) in Z' are the same as in Z.
+Let \(e\) be at an
+agent \(A\) and \(e'\) be at an agent \(B\). From condition 1, agents
+\(A\) and \(B\) are different.
+Therefore, the state of \(A\) immediately before \(e\) and the state
+of \(B\) immediately before \(e'\) are independent of the order of the
+events. 
+<p>
+Because of condition 2, the message (if any) received in \(e'\) is
+sent before \(e\), and the message (if any) sent in \(e\) is
+received after \(e'\).
+Therefore messages received in events \(e\) and
+\(e'\) are independent of their order.
+<p>
+The messages received and the states of the agents before the
+events are independent of the order of events.
+So the messages sent and the states of the agents after the
+events are independent of the order of events. Therefore \(Z\) is also
+a trajectory. 
+
+<p>
+\(Z\) is closer to \(Y\) than \(X\) where the measure of closeness is
+the number of out-of-order pairs of events. The proof follows by repeatedly
+flipping out-of-order adjacent pairs until \(Y\) is obtained.
 
 
-<h4 class="w3-text-teal">Theorem in Terms of Timelines</h4>
-Given a timeline diagram Z that represents a trajectory of a
-system. Consider a diagram Z' obtained by moving vertices on each
-horizontal line in Z to the right or left. Then Z' represents a trajectory
-if and only if <i>all edges are directed forwards in time</i>,
-i.e. towards the right.
-
-
-<h3 class="w3-text-teal">Cuts across Timelines</h3>
-A consistent cut of a timeline diagram is a partition of the events in
-the diagram into two subsets called <i>past</i> and <i>future</i>, and
-in which there is no message from a <i>future</i> event
+<h3 class="w3-text-teal">Cuts of Trajectories</h3>
+A cut of a trajectory is a partition of the events in
+the trajectory into two subsets called <i>past</i> and <i>future</i>.
+A <i>consistent cut</i> is one
+in which there is no edge in the graph from a <i>future</i> event
 to a <i>past</i> event.
 
-<p>Equivalently, a consistent cut is a partition in which all
-messages <i>from future</i> events are <i>to future</i> events.
-This is also
-equivalent to: all edges <i>to past</i> events are <i>from past</i>
-events.
-
-<p>
-An inconsistent cut is a partition of the events into <i>past</i> and
-<i>future</i> where there exists a message from a future event
-to a past event.
+<p>The following are equivalent definitions of a consistent cut:
+<ol>
+  <li>
+  All edges <i>to past</i> events are <i>from past</i> events.
+  </li>
+  <li>
+  All edges <i>from future</i> events are <i>to future</i> events.
+  </li>
+</ol>
   
 
 <h4 style="color:red;">Example</h4>
-The figure below shows cuts across two timeline diagrams
+The figure below shows cuts across timeline diagrams of two different trajectories
 where past events are colored black and future events are green.
 <figure>
-    <img src="Timelines/Timelines.009.jpeg" alt="Fig4" style="width:100%">
-    <figcaption>Fig.5: Cuts of Timelines</figcaption>
+    <img src="Timelines/Timelines.010.jpeg" alt="Fig6" style="width:100%">
+    <figcaption>Fig.6: Cuts of Timelines</figcaption>
 </figure>
 
-The cuts in figure 5 are consistent because there is no edge from
+The cuts in both diagrams are identical: past events are A0, A1, B0,
+D0, D1. 
+The cuts are consistent because there is no edge from
 green to black.
+<p>
+A purple vertical line, representing an instant in time, separates past from
+future in the lower diagram.
+By contrast, a curved line separates past from future in the upper
+diagram. There is no vertical line that separates past from future in
+the upper diagram because a past event (B1) appears after a future
+event (A2).
+
+<p>
+Given the upper diagram, in which past and future are separated by a
+curved line,
+we can use the following intuitive method to obtain the trajectory of the lower
+diagram in which past and future are separated by a vertical line.
+Treat the purple curved separating line in the upper diagram as a
+string, and pull the string taut. Doing so may push some events, such as
+A2, to the right, and other events, such as B1, to the left.
+As events move, while the string is tautened, all edges always remain
+directed from past to future. This is because there is no edge that
+crosses the string from the right to the left. Therefore the
+conditions of the theorem are always satisfied.
 
 <h3 class="w3-text-teal">Theorem about Consistent Cuts</h3>
 For any cut, \([past, future]\), of a timeline diagram of a trajectory
@@ -329,12 +403,6 @@ The cut in the diagram on the top of figure 5 is consistent.
 Therefore, there exists a timeline diagram, shown at the bottom of the
 figure, in which all past events occur before all
 future events.
-<p>
-The straight vertical purple line in the lower diagram represents an instant
-in time: it separates past (events before that instant) from future
-(events after that instant). The curvy purple line in the upper
-diagram corresponds to the straight line in the lower diagram.
-
 
 <h4 class="w3-text-teal">Takeaway</h4>
 Timelines are a familiar concept, helpful in
