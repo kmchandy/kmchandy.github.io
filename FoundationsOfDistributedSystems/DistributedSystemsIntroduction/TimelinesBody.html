@@ -109,11 +109,8 @@ lines in the diagram.
     <img src="Timelines/Timelines.003.jpeg" alt="Fig3" style="width:100%">
     <figcaption>Fig.3: Global States in the Trajectory</figcaption>
 </figure>
-The sequence of events in this trajectory is: Initital events (A0, B0, D0)
-in any order followed by the sequence A1, D1, A2, B1, A3, B2.
 
-The figure shows vertical lines corresponding to different points in
-the timeline diagram before each event.
+
 <h4 class="w3-text-teal">Different Trajectories with Identical Graphs</h4>
 Are there different trajectories with identical graphs?
 Look at the next figure.
@@ -129,18 +126,11 @@ A2, A3, B2.
 <p>
 The graphs of figures 3 and 4 are the same but the trajectories that
 the figures represent are different.  In figure 4 event B1 occurs
-before event A2 whereas in figure 3, B1 occurs after A2.  So, there is
-a global state after B1 and before A2 in figure 4 that is never
-visited in figure 3.
-<p>
-The <i>local</i> timelines of each agent --- i.e., the horizontal
-lines in the diagram --- are identical in both figures; however, an
-event B1 on an agent B occurs before an event A2 on a different agent
-A, in figure 3, but the events appear in the reverse order in figure
-4.
-The starting states of the trajectories in figures 3 and 4 are the
-same, and so are the final states.
-The following observation captures the idea illustrated by figures 3 and
+before event A2 whereas in figure 3, B1 occurs after A2.  So, the
+global state after B1 and before A2 in figure 4 is never
+visited in figure 3;
+However, figures 3 and 4 have the same starting and ending states.
+The following theorem captures the idea illustrated by figures 3 and
 4.
 
 
@@ -155,7 +145,7 @@ appears before \(e'\) in \(X\):
   \(e\) and \(e'\) are events on the same agent, or
   </li>
   <li>
-  a message is sent in \(e\) is received in \(e'\).
+  a message sent in \(e\) is received in \(e'\).
   </li>
 </ol>
 Before we prove the theorem, let's see what the theorem means in terms
@@ -177,7 +167,9 @@ and \(Y\) are different then there exists a pair of consecutive events
 but \(e'\) appears before \(e\) in \(Y\). Let \(Z\) be the
 trajectory obtained by flipping the order of \(e\) and \(e'\) in
 \(X\).
-We will prove that \(Z\) is also a trajectory. 
+We will prove that \(Z\) is also a trajectory. The diagram to the left
+in the figure below shows the events before their order is switched, while
+the diagram to the right shows the events after their order is switched.
 
 <figure>
     <img src="Timelines/Timelines.006.jpeg" alt="Fig5" style="width:100%">
@@ -264,8 +256,7 @@ conditions of the theorem are always satisfied.
 <h3 class="w3-text-teal">Theorem about Consistent Cuts</h3>
 For any cut, \([past, future]\), of a timeline diagram of a trajectory
 \(\tau\) there exists a trajectory \(\tau'\) with the same events as
-\(\tau\) where all past events occur before all future events in
-\(\tau'\), if and only if the cut is consistent.
+\(\tau\) in which all \(past\) events occur before all \(future\) events.
 <p>
 The proof follows directly from the theorem on trajectories.
 
