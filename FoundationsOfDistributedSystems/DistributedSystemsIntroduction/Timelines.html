@@ -395,6 +395,24 @@ Therefore, there exists a timeline diagram, shown at the bottom of the
 figure, in which all past events occur before all
 future events.
 
+
+<h3 class="w3-text-teal">Corollary</h3>
+Consider an algorithm that computes the state at a consistent
+cut. Let \(s_{init}\) and \(s_{fini}\) be the states in which the
+algorithm starts and finishes (respectively), and let \(s_{snap}\) be
+the state at the consistent cut. Then there exists a trajectory from
+\(s_{init}\) that visits \(s_{snap}\) and later visits \(s_{fini}\).
+
+<p>
+For example, an algorithm in the top diagram of figure 5 determines
+the global state \(s_{snap}\) along the curved consistent cut during a
+trajectory. Let \(s_{init}\) and \(s_{fini}\) be the states before the
+algorithm starts and after it finishes, i.e. at the left and
+right-hand ends of the timeline diagram. Then, the diagram in the
+lower diagram of figure 5 also represents a trajectory 
+from \(s_{init}\) to \(s_{snap}\) and then to \(s_{fini}\).
+
+
 <h4 class="w3-text-teal">Takeaway</h4>
 Timelines are a familiar concept, helpful in
 understanding distributed systems and other multi-agent

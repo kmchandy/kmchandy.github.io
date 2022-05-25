@@ -48,17 +48,17 @@ hr.new1 {
   onclick="w3_open()">
   <i class="fa fa-bars"></i></a>
 
-  <a href="../index.html"
+  <a href="../../index.html"
   class="w3-bar-item w3-button w3-hide-small w3-hover-white">
   Distributed Algorithms
   </a>
 
-  <a href="../table_of_contents.html"
+  <a href="../../table_of_contents.html"
   class="w3-bar-item w3-button w3-hide-small w3-hover-white">
   Contents
   </a>
 
-  <a href="../cross_reference.html"
+  <a href="../../cross_reference.html"
   class="w3-bar-item w3-button w3-hide-small w3-hover-white">
   Index
   </a>
@@ -133,12 +133,18 @@ Assignment Solution
     <h2 class="w3-text-teal">Snapshots of Distributed Systems</h2>
 
     <!--------------------------------------------------------->
-The snapshot algorithm determines the global state of a system at a
-<a href=
-"../FoundationsOfDistributedSystems/DistributedSystemsIntroduction/Timelines.html">
-consistent cut of a timeline diagram.</a>
+The global snapshot algorithm determines a global state of a
+system. The algorithm cannot be instantaneous because it requires collaboration among multiple agents.
+Let the states in which the algorithm starts and ends be
+\(s_{init}\) and \(s_{fini}\), respectively, and let \(s_{snap}\) be
+the snapshot determined by the algorithm. The specification of the
+snapshot algorithm is that \(s_{snap}\) must be the
+<a href="">state of a consistent cut.</a>
+From the <a href="">theorem and corollary on consistent cuts</a>,
+there exists a trajectory from \(s_{init}\) through \(s_{snap}\) to
+\(s_{fini}\). 
 
-<h4 class="w3-text-teal">Brief Review of Consistent Cuts</h4>
+<h4 class="w3-text-teal">A Brief Review of Consistent Cuts</h4>
 A consistent cut of a timeline diagram is a partition of the events in
 the diagram into two subsets called <i>past</i> and <i>future</i>, and
 in which there is no message from a future event
@@ -179,8 +185,10 @@ alt="Fig3" style="width:80%">
     <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.004.jpeg" alt="Fig4" style="width:80%">
     <figcaption>Fig.4: Inconsistent Local Snapshots</figcaption>
 </figure>
-What algorithm allows local snapshots such as those in figure 3, but not
-those in figure 4?
+The global snapshot algorithm can have local snapshots, such as those in
+figure 3, that result in consistent cuts. And the algorithm must
+disallow local snapshots, such as in figure 4, that result in
+inconsistent cuts.
 
     <h3 class="w3-text-teal">Global snapshot algorithm</h3>
 The algorithm employs a special kind of message called a <i>marker</i>
@@ -312,7 +320,7 @@ point at which the purple wavy line (the cut) crosses \(A\)'s timeline.
 
 The event shown as a yellow circle on \(B\)'s timeline represents the
 event in which \(B\) receives messages \(m_{0}\) before \(B\) takes its
-own snapshot. The events shown as organge circles represent events in
+own snapshot. The events shown as orange circles represent events in
 which \(B\) receives messages \(m_{1}, m_{2}\) after \(B\) takes its
 own snapshot and before \(B\) receives the marker. The black event
 represents \(B\) receiving message \(m_{3}\) after \(B\) takes its
