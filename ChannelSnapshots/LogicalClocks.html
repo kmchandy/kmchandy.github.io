@@ -132,15 +132,31 @@ Assignment Solution
 A logical clock algorithm is one in which each agent assigns a
 number \(t(e)\), called
 a timestamp, to each event \(e\) in its trajectory.
-The timestamp of an event
+The timestamp of an event is
 called the value of the logical clock, or the logical time, at the event.
 The specification of the algorithm is as follows.
 
 <p>
 For all
 \(t\), with <i>past</i> events defined as events with timestamps of \(t\) or
-less, and <i>future</i> events as those with timestamps greater than
-\(t\), the cut \([past, future]\) must be a consistent cut.
+less,  the cut \([past, future]\) must be consistent.
+
+<h4 style="color:red;">Examples of Consistent Cut based on
+Timestamps</h4>
+
+The figure below shows a set of timestamps in a timeline diagram with
+agents \(A, B, D\), and with one channel from each agent to every
+other agent. Timestamps are shown as integers inside the circles
+representing events. Initial events have timestamps of 0. The next
+event on agent \(A\) is an internal event, and its timestamp can be
+any value greater than 0; the diagram shows a timestamp of 1. This
+event sends a message and the message also has the same timestamp of
+1.
+<p>
+The first (non-initial) event on agent \(D\) occurs when it receives a
+message with timestamp 1. So, the timestamp for this event must be
+greater than 1 and greater than 0 (the preceding event on the
+agent). In the diagram the timestamp is set to 2.
 
 
 <figure>
@@ -148,6 +164,11 @@ less, and <i>future</i> events as those with timestamps greater than
     <figcaption>Fig. 1: Consistent Cut based on Timestamps</figcaption>
 </figure>
 
+The diagram shows a cut in which the <i>past</i> consists of events
+with timestamps at most 2. Because all edges are directed from lower-
+to higher-numbered timestamps, all edges from the future (events with timestamps
+greater than 2) are directed towards events in the future. And do the
+cut is consistent.
 <p>
 From the specification it follows that for all edges \((e, e')\) in
 the timeline diagram:
@@ -165,11 +186,12 @@ The timestamp of an initial event is arbitrary.
 For any event \(e'\) on an agent, let \(e\) be the event
 that immediately precedes \(e\) on that agent.
 For an internal event \(e'\) (i.e. an event in which no message is
-received), set \(t(e')\) to any value such that
-\(t(e') > t(e)\). 
+received), set \(t(e')\) to any value greater than
+\(t(e)\). 
 For an event \(e'\) in which 
-message with timestamp \(T\) is received, set \(t(e')\) to any value such that
-\(t(e') > \textrm{max}(t(e), T)\).
+message with timestamp \(T\) is received, set \(t(e')\) to any value
+greater than
+\(\textrm{max}(t(e), T)\).
 
 <h4 class="w3-text-teal">Using Logical Clocks to Determine Global
 Snapshots</h4>
@@ -177,21 +199,33 @@ The state of an agent is its state between past and future. Likewise,
 the state of a channel is the sequence of messages sent in the past
 and received in the future. So, the global snapshot for any \(T\) can
 be obtained in the following way:
-<p>
-each agent records its
-state after an event with timestamp at most \(T\) and before an event
-with timestamp greater than \(T\). An agent records the state of an
-incoming channel as the sequence of messages that it receives on its
-events with timestamps greater than \(T\) where the messages have
-timestamps at most \(T\).
+<ol>
+  <li>
+  Each agent records its state after an event with timestamp at most
+  \(T\) and before an event with timestamp greater than \(T\).
+  </li>
+  <li>
+  An agent starts recording the state of an incoming channel when the
+  agent assigns a timestamp greater than \(T\) to an event. It stops
+  the recording when it receives a message on the channel where the
+  message has timestamp greater than \(T\), and does
+  not include this message in the recording. So, the
+  state of the channel is recorded as the sequence of messages sent in
+  the past (i.e., messages with timestamps less than or equal to
+  \(T\)) that are received in the future (i.e. events with timestamps
+  greater than \(T\)).
+  </li>
+</ol>
 
-<h4 style="color:red;">Example</h4>
+<h4 style="color:red;">Example of a Global Snapshot using Timestamps</h4>
 The figure shows the global snapshot in which <i>past</i> events are those with
 snapshots at most 2. The state of agent \(A\), is its state after its
 event with timestamp 1 and before 
 its event with timestamp 3.
 The state of agent \(B\) is its state after its event with timestamp 2 and before
 its event with timestamp 4.
+The state of agent \(D\) is its state after its event with timestamp 2 and before
+its event with timestamp 3.
 
 <p>
 Agent \(A\) records the state of its incoming channel from \(B\) as
