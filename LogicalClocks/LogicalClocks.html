@@ -1,12 +1,23 @@
+<title>LogicalClocks/LogicalClocks.html</title>
+<!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
+
 <html lang="en">
-<title>LogicalClocks</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <style>
 html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 .w3-sidebar {
@@ -16,61 +27,94 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   bottom: 0;
   height: inherit;
 }
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
 </style>
+
+
 <body>
-
-
-<!-- Navbar -->
 <div class="w3-top">
-  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
-    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
-    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
-    w3-hover-white">About the Course</a>
-    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
-    w3-hover-white">Table of Contents</a>
-    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
   </div>
   </div>
+
+<nav
+class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5
+w3-animate-left" 
+id="mySidebar">
+
+<a href="javascript:void(0)"
+onclick="w3_close()"
+class="w3-right w3-xlarge w3-padding-large w3-hover-black
+w3-hide-large"
+title="Close Menu">
+<i class="fa fa-remove"></i>
+</a>
+
+<!--END Heading  ---------------------------->
  
+<!-- Start Sidebar----------> 
+ 
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../ChannelSnapshots/ChannelSnapshots.html" > 
+Global Snapshots
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../ChannelSnapshots/GlobalSnapshotAlgorithmVideo.mp4" > 
+Snapshots: Video
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../ChannelSnapshots/ChannelSnapshotsSelfTest.html" > 
+Snapshots: Self Test
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../ChannelSnapshots/ChannelSnapshotsAssignment/ChannelSnapshotsAssignment.html" > 
+Snapshots: Assignment
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../ChannelSnapshots/ChannelSnapshotsAssignment/ChannelSnapshotsAssignmentSolution.html" > 
+Assignment Solution
+</a>
 
-<!-- Sidebar -->
-<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
-  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
-    <i class="fa fa-remove"></i>
-  </a>
-
-  <!-------------------------->
-  <h3 class="w3-bar-item"><b>An Introduction to Distributed
-  Algorithms</h3>
-  
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="LogicalClocks.html">Logical Clocks</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="LogicalClocksExample.html">Examples</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="LogicalClocksSelfTest.html">Self Test</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="LogicalClocksExercises.html">Exercises</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="LogicalClocks.html">Explorations</a>
-
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="../GlobalSnapshots/GlobalSnapshots.html">
-  Next: Global Snapshots</a> 
-  
-  <a class="w3-bar-item w3-button w3-hover-black"
-  href="../Timelines/Timelines.html">Previous:
-  Properties of Timelines, Consistent Cuts
-  </a>
-  
 </nav>
+<!-- End Sidebar---------->
+ 
+<!-- Start overlay ---------------------------------->
 
 <!-- Overlay effect when opening sidebar on small screens -->
-<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+<div class="w3-overlay w3-hide-large"
+  onclick="w3_close()"
+  style="cursor:pointer"
+  title="close side menu"
+  id="myOverlay"></div>
 
 <!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
 <div class="w3-main" style="margin-left:250px">
@@ -79,124 +123,101 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
 </script>
   
-  <div class="w3-row w3-padding-64">
-  <div class="w3-twothird w3-container">
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
 
+<!-- End overlay ---------------------------------->
     <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Timestamps and Logical Clocks</h1><p>
-    In this module we develop algorithms that assign a number, called
-    a timestamp, to each event. The timestamps are said to be
-    <i>consistent</i> exactly when the successors of an event, in the
-    timeline graph, have greater timestamps than the event does.
-
-    <p>
-    Let \(t_{e}\) to each event \(e\) in a timeline diagram.
-    The timestamps are <i>consistent</i> for a graph \(G\) exactly when
-    <p>
-    \(
-    \forall (v, w) \in G: t_{v} < t_{w}
-    \)
-    </p>
-
-    <h4 style="color:red;">Example</h4>
-    The figure below shows consistent timestamps. Every edge in the
-    graph is from a lower timestamp to a higher timestamp.
-
-    <figure>
-    <img src="LogicalClocksFigures_01.jpg" alt="Fig1" style="width:80%">
-    <figcaption>Fig.1: Consistent timestamps</figcaption>
-    </figure>
-
-    <h4 class="w3-text-teal">Cut corresponding to a Timestamp</h4>
-    The cut corresponding to a timestamp \(T\) is defined as a cut that
-    intersects the timeline of an agent or shared variable at an edge
-    \((e, e')\) where \(t_{e} \leq T < t_{e'}\).
-
-
-    
-    <h3 class="w3-text-teal">Theorem: Consistent Timelines and Cuts</h3>
-    For all consistent timestamps, for all \(T\), the cut
-    corresponding to \(T\) is a consistent cut. 
-
-    <p class="w3-text-teal">Proof</p>
-    An event \(w\) is in the past with respect to a cut corresponding to
-    \(T\) exactly when \(t_{w} \leq T\).
-    From the consistency of the timestamps, for all edges \((v, w)\),
-    \(t_{v} \leq T\). Therefore, all edges to events in the past are
-    from the past.
-
-    <h4 style="color:red;">Example</h4>
-    A cut corresponding to the timestamp 10 is curvilinear in the
-    diagram shown on top of the figure. This is because the points
-    corresponding to timestamp 10 occur at different times in this
-    trajectory. Similarly, cuts corresponding to timestamps 15 and 25
-    are curvilinear in this example trajectory.
+<h1 class="w3-text-teal">Logical Clocks</h1>
+A logical clock algorithm is one in which each agent assigns a
+number \(t(e)\), called
+a timestamp, to each event \(e\) in its trajectory.
+The timestamp of an event
+called the value of the logical clock, or the logical time, at the event.
+The specification of the algorithm is as follows.
 
 <p>
-The cuts shown in the trajectory on top are consistent; so, there
-exists a trajectory --- shown in the lower diagram --- in which
-the corresponding cuts are vertical.
+For all
+\(t\), with <i>past</i> events defined as events with timestamps of \(t\) or
+less, and <i>future</i> events as those with timestamps greater than
+\(t\), the cut \([past, future]\) must be a consistent cut.
 
-    <figure>
-    <img src="LogicalClocksFigures_02.jpg" alt="Fig2" style="width:80%">
-    <figcaption>Fig.2:Curvilinear cut at t in a timeline is vertical
-    in another </figcaption>
+
+<figure>
+    <img src="../ChannelSnapshots/Timelines/Timelines.011.jpeg" alt="Fig1" style="width:100%">
+    <figcaption>Fig. 1: Consistent Cut based on Timestamps</figcaption>
 </figure>
 
+<p>
+From the specification it follows that for all edges \((e, e')\) in
+the timeline diagram:
+\(t(e') > t(e)\).
+The algorithm follows directly from this requirement.
 
-    <h3 class="w3-text-teal">Algorithm for Consistent Timestamps</h3>
-    Prior to executing an event \(e\) an agent \(a\) takes the following
-    steps. Let \(V\) be the set of variables referenced in the event.
-    For each \(v\) in \(V\), let
-    \(r(v)\) be the most recent event in which \(v\) is referenced.
-    Let \(r(a)\) be the most recent event executed by \(a\).
-    Assign event \(e\) any timestamp \(t_{e}\) where:
-    <p>
-    \(
-    t_{e} > \textrm{max}(r(a), \; \textrm{max}_{v} \: r(v))
-    \)
-    </p>
-    <p>
-    For example, the algorithm could set \(t_{e}\) to \(1 +
-    \textrm{max}(r(a), \; \textrm{max}_{v} \: r(v))\). 
 
-    <p>
-Why would we want to increase \(t_{e}\) by more than 1? Later, we will
-use algorithms in which the timestamp of an event is approximately the
-same as the real time at which the event occurred. In this case,
-timestamps are increased by amounts dependent on the real
-times that have elapsed.
+<h4 class="w3-text-teal">Algorithm</h4>
+<i>Timestamps of messages</i>: An agent assigns a timestamp of
+\(t(e)\) to all messages that it sends in event \(e\).
+
 
 <p>
-The timestamp given by an agent to a point on the agent's timeline is
-called the value of the agent's logical clock at the point. Later we
-will see how real clocks can influence logical clocks.
+The timestamp of an initial event is arbitrary.
+For any event \(e'\) on an agent, let \(e\) be the event
+that immediately precedes \(e\) on that agent.
+For an internal event \(e'\) (i.e. an event in which no message is
+received), set \(t(e')\) to any value such that
+\(t(e') > t(e)\). 
+For an event \(e'\) in which 
+message with timestamp \(T\) is received, set \(t(e')\) to any value such that
+\(t(e') > \textrm{max}(t(e), T)\).
 
-<p class="w3-text-teal">A distributed algorithm to compute a
-global snapshot</p>
-Assign consistent timestamps to events.
-The state at a cut corresponding to any timestamp \(T\) is a global state.
+<h4 class="w3-text-teal">Using Logical Clocks to Determine Global
+Snapshots</h4>
+The state of an agent is its state between past and future. Likewise,
+the state of a channel is the sequence of messages sent in the past
+and received in the future. So, the global snapshot for any \(T\) can
+be obtained in the following way:
+<p>
+each agent records its
+state after an event with timestamp at most \(T\) and before an event
+with timestamp greater than \(T\). An agent records the state of an
+incoming channel as the sequence of messages that it receives on its
+events with timestamps greater than \(T\) where the messages have
+timestamps at most \(T\).
 
-<p class="w3-text-teal">Application: A rollback and recovery
-algorithm</p>
-An application of the timestamp algorithm is rollback and recovery.
-The timestamp algorithm records a sequence of global states \(s_{t}\)
-for different timestamps \(t\).
-If an error is detected during a computation then the
-computation is restarted from the most recent recorded global
-snapshot. 
+<h4 style="color:red;">Example</h4>
+The figure shows the global snapshot in which <i>past</i> events are those with
+snapshots at most 2. The state of agent \(A\), is its state after its
+event with timestamp 1 and before 
+its event with timestamp 3.
+The state of agent \(B\) is its state after its event with timestamp 2 and before
+its event with timestamp 4.
 
-  <footer id="myFooter">
+<p>
+Agent \(A\) records the state of its incoming channel from \(B\) as
+the sequence of messages with timestamps at most 2 that it receives in
+its events with timestamps greater than 2. \(A\) stops recording the
+state of this channel when it receives a message on the channel with
+timestamp greater than 2. The diagram doesn't have any message from
+\(B\) to \(A\) with timestamp greater than 2; so, in this diagram
+\(A\) is continuing to record the state of this channel at the end of
+this trajectory.
 
-    <div class="w3-container w3-theme-l1">
-      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
-      <br>
-      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
-    </div>
-  </footer>
+<h4 class="w3-text-teal">Logical Time and Causality</h4>
+Lamport proposed logical clocks originally so that if an event \(e\)
+could have an impact on an event \(e'\) --- if there is a path from
+\(e\) to \(e'\) in the timeline diagram --- then \(t(e') > t(e)\). We
+will use logical time for its relevance to timeline diagrams,
+causality and global snapshots.
+<!--Start Footer--------------------------------------->
 
-
-      
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
 
 
 <!-- END MAIN -->
@@ -229,4 +250,3 @@ function w3_close() {
 
 </body>
 </html>
-

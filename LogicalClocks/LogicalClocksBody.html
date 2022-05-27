@@ -1,326 +1,83 @@
-
-
     <!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Snapshots of Distributed Systems</h2>
+<h1 class="w3-text-teal">Logical Clocks</h1>
+A logical clock algorithm is one in which each agent assigns a
+number \(t(e)\), called
+a timestamp, to each event \(e\) in its trajectory.
+The timestamp of an event
+called the value of the logical clock, or the logical time, at the event.
+The specification of the algorithm is as follows.
 
-    <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Key Ideas</h1>
-    
-    <h3 class="w3-text-teal">Snapshot Algorithm: The Idea</h3>
-The snapshot algorithm determines the global state of a system at a
-<a href=
-"../FoundationsOfDistributedSystems/DistributedSystemsIntroduction/Timelines.html">
-consistent cut of a timeline diagram.</a>
-A quick review: A consistent cut of a timeline diagram is a partition of the events in
-the diagram into two subsets called <i>past</i> and <i>future</i>, and
-in which there is no message from a future event
-to a past event.
+<p>
+For all
+\(t\), with <i>past</i> events defined as events with timestamps of \(t\) or
+less, and <i>future</i> events as those with timestamps greater than
+\(t\), the cut \([past, future]\) must be a consistent cut.
 
-<h4 style="color:red;">Review: Examples of Cuts</h4>
-<figure>
-    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.001.jpeg"
-alt="Fig1" style="width:80%"> 
-    <figcaption>Fig.1: A consistent cut</figcaption>
-</figure>
-Figure 1 shows a consistent cut, and figure 2 shows an inconsistent one.
 
 <figure>
-    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.002.jpeg" alt="Fig2" style="width:80%">
-    <figcaption>Fig.2: An inconsistent cut</figcaption>
+    <img src="../ChannelSnapshots/Timelines/Timelines.011.jpeg" alt="Fig1" style="width:100%">
+    <figcaption>Fig. 1: Consistent Cut based on Timestamps</figcaption>
 </figure>
 
-    <p>
-    We use the phrase "an agent B takes its local snapshot" for "an
-agent B records B's state."
-A key question is <i>when</i> should an agent take
-its own local snapshot to ensure that the collection of local
-snapshots form a consistent cut? 
+<p>
+From the specification it follows that for all edges \((e, e')\) in
+the timeline diagram:
+\(t(e') > t(e)\).
+The algorithm follows directly from this requirement.
 
-<h4 style="color:red;">Examples of Consistent and Inconsistent Local
+
+<h4 class="w3-text-teal">Algorithm</h4>
+<i>Timestamps of messages</i>: An agent assigns a timestamp of
+\(t(e)\) to all messages that it sends in event \(e\).
+
+
+<p>
+The timestamp of an initial event is arbitrary.
+For any event \(e'\) on an agent, let \(e\) be the event
+that immediately precedes \(e\) on that agent.
+For an internal event \(e'\) (i.e. an event in which no message is
+received), set \(t(e')\) to any value greater than
+\(t(e)\). 
+For an event \(e'\) in which 
+message with timestamp \(T\) is received, set \(t(e')\) to any value
+greater than
+\(\textrm{max}(t(e), T)\).
+
+<h4 class="w3-text-teal">Using Logical Clocks to Determine Global
 Snapshots</h4>
-In the next two figures, the points at which each agent takes its
-local snapshot are shown as yellow circles. Past events are those
-earlier than the points at which agents take their local
-snapshots. Figure 3 shows agent snapshot points corresponding to a
-consistent cut, and figure 4 shows inconsistent snapshot points. 
-<figure>
-    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.003.jpeg"
-alt="Fig3" style="width:80%"> 
-    <figcaption>Fig.3: Consistent Local Snapshots</figcaption>
-</figure>
-<figure>
-    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.004.jpeg" alt="Fig4" style="width:80%">
-    <figcaption>Fig.4: Inconsistent Local Snapshots</figcaption>
-</figure>
-What algorithm allows local snapshots such as those in figure 3, but not
-those in figure 4?
-
-    <h3 class="w3-text-teal">Global snapshot algorithm</h3>
-    Each agent takes its local snapshot exactly once.
-<ol>
-  <li>
-  The algorithm begins by one or more agents taking their snapshots.
-  </li>
-  <li>
-  When an agent takes its snapshot it sends a special message on each
-  of its outgoing channels. We call this message a <i>marker</i>. A
-  marker is distinct from all other messages.
-  </li>
-  <li>
-  An agent that hasn't taken a snapshot does so when it receives a
-  marker.
-  </li>
-</ol>
-We assume that there is a path of directed channels from each agent to every
-other agent so that all agents receive markers eventually.
-
-<h3 style="color:red;">Example</h3>
-Figure 5 illustrates the algorithm. In this example, there is exactly one channel
-between from each agent to each different agent. When B takes its
-snapshot it sends markers
-to A and C. Markers are shown as green edges.
-Agent C takes its snapshot when it receives the marker
-which ensures that C's snapshot is before event 11.
-
-    <figure>
-    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.005.jpeg" alt="Fig5" style="width:80%">
-    <figcaption>Fig.5: Markers ensure cuts are consistent</figcaption>
-</figure>
-When agents B and C receive markers they take their snapshots if they
-    haven't done so already, and send markers in their turn. These
-markers are shown in the next figure.
-
-
-
-    <figure>
-    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.006.jpeg" alt="Fig6" style="width:80%">
-    <figcaption>Fig.6: Showing all Markers</figcaption>
-
-<h4 class="w3-text-teal">Proof of correctness</h4>
-The points at which agents take their snapshots form a cut where
-events on an agent's timeline before the agent takes its snapshot are
-past events.  A cut is consistent exactly when all messages sent in
-the future are received in the future.
+The state of an agent is its state between past and future. Likewise,
+the state of a channel is the sequence of messages sent in the past
+and received in the future. So, the global snapshot for any \(T\) can
+be obtained in the following way:
 <p>
-Let \(m\) be a message sent in a future event. We will prove that
-\(m\) is received in a future event.
+each agent records its
+state after an event with timestamp at most \(T\) and before an event
+with timestamp greater than \(T\). An agent records the state of an
+incoming channel as the sequence of messages that it receives on its
+events with timestamps greater than \(T\) where the messages have
+timestamps at most \(T\).
+
+<h4 style="color:red;">Example</h4>
+The figure shows the global snapshot in which <i>past</i> events are those with
+snapshots at most 2. The state of agent \(A\), is its state after its
+event with timestamp 1 and before 
+its event with timestamp 3.
+The state of agent \(B\) is its state after its event with timestamp 2 and before
+its event with timestamp 4.
 
 <p>
-Because \(m\) is sent in a future event, \(m\) is sent after the
-sender takes its snapshot.  When an agent takes its snapshot it sends
-markers on all its outgoing channels.  So, \(m\) is sent along a
-channel after the sender sends a marker on that channel.
+Agent \(A\) records the state of its incoming channel from \(B\) as
+the sequence of messages with timestamps at most 2 that it receives in
+its events with timestamps greater than 2. \(A\) stops recording the
+state of this channel when it receives a message on the channel with
+timestamp greater than 2. The diagram doesn't have any message from
+\(B\) to \(A\) with timestamp greater than 2; so, in this diagram
+\(A\) is continuing to record the state of this channel at the end of
+this trajectory.
 
-<p>
-Channels are first-in-first-out.  So the receiver gets \(m\) after
-receiving a marker.  And so the receiver gets \(m\) after the receiver
-takes its snapshot.  Events after an agent takes its snapshot are
-future events.  Therefore \(m\) is received in the future.
-
-<h3 class="w3-text-teal">Snapshots of Channels</h3>
-Next we look at how the algorithm records snapshots of channels.
-From the timeline theorem, the sequence of messages in the channel in
-a global snapshot are the messages sent on the channel in the past and
-received on the channel in
-the future.
-
-<p>
-Messages sent in the
-past are messages sent before the sender takes its snapshot.
-Messages received in the future are messages received after the
-receiver takes its snapshot. 
-So, the messages in the channel in a snapshot are the messages sent 
-before the sender takes its snapshot and received after the receiver
-takes its snapshot.
-
-<p>
-When an agent takes its local snapshot it sends a marker on each of
-its outgoing channels.
-So, messages sent along a channel in the past are messages sent before
-a marker is sent along that channel.
-
-<p>
-Because channels are first-in-first-out, 
-messages sent along a channel in the past are messages received along
-the channel before
-a marker is received along that channel.
-Therefore, the messages in a channel in a snapshot are the messages
-that the receiver receives along the channel before the receiver
-receives a marker on that channel and after the receiver takes its
-local snapshot.
-So, an algorithm for recording channel snapshots is as follows.
-
-<p>
-Let \(B\) be the agent receiving messages sent on a channel \(c\).
-The snapshot of \(c\) is determined by \(B\) as the sequence of
-messages that \(B\) receives after \(B\) takes its local snapshot and
-before \(B\) gets a marker along \(c\).
-<h3 style="color:red;">Example: Channel Snapshot</h3>
-A diagram that illustrates the process by which an agent gets a
-snapshot of an incoming channel is shown below. The diagram shows the
-timelines for two agents, \(A\) and \(B\).
-
-<p>
-Agent \(A\) sends messages \(m_{0}, m_{1}, m_{2}\), then sends a
-marker (colored green), and then message \(m_{3}\), to agent \(B\) on a
-channel \(x\). All the messages in the diagram are sent on the same
-channel.
-
-<p>
-The events shown as blue circles on \(A\)'s timeline are
-events in which \(A\) sends messages \(m_{0}, m_{1}, m_{2}\) before
-\(A\) takes its local snapshot.  The event shown as a black circle
-shows \(A\) sending messages \(m_{3}\) after \(A\) takes its local
-snapshot. The point at which \(A\) takes its local snapshot is the
-point at which the purple wavy line (the cut) crosses \(A\)'s timeline.
-
-    <figure>
-    <img src="ChannelSnapshots_3.jpg" alt="Fig3" style="width:100%">
-    <figcaption>Fig.3: Snapshot of a channel</figcaption>
-    </figure>
-
-The event shown as a yellow circle on \(B\)'s timeline represents the
-event in which \(B\) receives messages \(m_{0}\) before \(B\) takes its
-own snapshot. The events shown as organge circles represent events in
-which \(B\) receives messages \(m_{1}, m_{2}\) after \(B\) takes its
-own snapshot and before \(B\) receives the marker. The black event
-represents \(B\) receiving message \(m_{3}\) after \(B\) takes its
-snapshot.
-
-<p>
-The messages that \(A\) sent in the past are \(m_{0}, m_{1}, m_{2}\).
-The messages that \(B\) receives in the future are \(m_{1}, m_{2},
-m_{3}, \ldots\).
-The state of the channel, at the cut, is the sequence of messages \([m_{1},
-m_{2}]\) that \(A\) sent in the past and that \(B\) receives in the
-future.
-This is shown as the sequence of red message lines that
-cross the wavy purple line which represents the global snapshot.
-These are the messages that \(B\) receives after it takes its local
-snapshot and before it receives the marker.
-
-
-
-<h2 class="w3-text-teal">Logical clocks with channels</h2>
-Next, we extend the idea of 
-<a href="../TimelineDiagrams/TimelineDiagrams.html">logical clocks</a>
-to distributed systems.
-
-<p>
-Each event is assigned a
-timestamp such that for every edge \((e, e')\) in the timeline graph,
-the timestamp for \(e'\) is strictly greater than the timestamp for
-\(e\). Figure 4 gives two examples of timestamps that satisfy this
-criterion. Both examples are for the same timeline diagram. In both
-diagrams, the top horizontal line is the timeline for an agent A, and
-the bottom line for agent B. Messages between the agents are shown as
-red lines.
-
-    <figure>
-    <img src="ChannelSnapshots_4.jpg" alt="Fig4" style="width:100%">
-    <figcaption>Fig.4: Two examples of timestamps</figcaption>
-</figure>
-
-In the diagram, message lines are
-timestamped with a value greater than or equal to the timestamp of the
-sending event. Because the timestamps shown in figure 4 are
-consistent, cuts at any timestamp \(t\) are also consistent.
-
-Figure 5 has examples of consistent cuts corresponding to timestamps
-of 32 and 60 for the lower timeline diagram of figure 4.
-
-    <figure>
-    <img src="ChannelSnapshots_5.jpg" alt="Fig5" style="width:100%">
-    <figcaption>Fig.5: Consistent cuts at two timestamps</figcaption>
-</figure>
-
-
-<h3 class="w3-text-teal">An Algorithm for Logical Clocks</h3>
-An algorithm that obeys the following rules assigns consistent
-timestamps.
-
-<ol>
-  <li>
-  An agent assigns a timestamp \(t\) to an event \(e\) where \(t\) is
-  greater than the timestamp assigned to the most recent event executed
-  by the agent before \(e\).
-  </li>
-  <li>
-  When an agent assigns a timestamp \(t\) to an event that sends a
-  message \(m\) the agent also assigns timestamp \(t'\) to \(m\) where
-  \(t' \geq t\).
-  </li>
-  <li>
-  When an agent receives a message with timestamp \(t\) the agent
-  assigns a timestamp \(t'\) to the receive event where \(t' > t\).
-  </li>
-</ol>
-
-<P class="w3-text-teal">Proof</p>
-The proof of correctness --- i.e. the algorithm assigns consistent
-timestamps --- is straightforward.
-
-
-<h2 class="w3-text-teal">Usig Logical Clocks for Global Snapshots</h2>
-  Each agent records its state when its logical time is at
-  a specified value \(T\). The state of a
-  channel is recorded by the receiver as the sequence of messages
-  received with timestamps less than \(T\) that are
-  received after the receiver's logical clock is at \(T\).
-  <p>
-  An agent's logical time is at \(T\) at
-  points on its timeline at or after an event with timestamp \(T\) and
-  before an event with timestamp greater than \(T\).
-
-  
-
-<h2 class="w3-text-teal">Summary</h2>
-This module extends the concepts of global snapshots and logical
-clocks to distributed systems. The module gives two algorithms for
-obtaining global snapshots: (1) Using markers and (2) using logical
-clocks. The module presents a necessary and sufficient condition for a
-cut to be consistent; this condition is based on counts of numbers of
-messages sent and received along a channel.
-
-
-    
-    <h3 style="color:red;">Example of an Inconsistent Cut</h3>
-    Figure 1 shows an inconsistent cut.
-    The point at which agents record their states are the points at
-    which the curvy purple line (the cut)
-    crosses the agent timelines; these points are marked as yellow
-    circles. Events that an agent executes after it records its
-    state are in the future with respect to the cut. So, for example,
-    event \(10\) is in the future 
-    because agent \(B\) records its state before event \(10\), and
-    event \(11\) is in the past because agent
-    \(C\) records its state after event \(11\).
-    <figure>
-    <img src="ChannelSnapshots_1.jpg" alt="Fig1" style="width:80%">
-    <figcaption>Fig.1: An inconsistent cut</figcaption>
-    </figure>
-
-    <p>
-    This cut is inconsistent because there is an edge \((10, 11)\)
-    from the future to the past. Next we give
-an algorithm that avoids this situation.
-
-
-
-
-<h3 class="w3-text-teal">Condition for Cut Consistency</h3>
-
-<hr class="new2">
-<h4 style="color:blue;">
-For a cut, let \(x_{s}\) and \(x_{r}\) be the numbers of messages sent
-and received along channel \(x\) before the cut.
-The cut is consistent
-if and only, for all channels \(x\): \(x_{s} \geq x_{r}\).
-</h4>
-<hr class="new2">
-
-
-This result follows because a message sent along channel \(x\) after
-the cut is sent after \(x_{s}\) messages are sent along the channel,
-and are therefore received only after \(x_{s}\) messages are received
-along the channel, and is therefore received after the cut.
+<h4 class="w3-text-teal">Logical Time and Causality</h4>
+Lamport proposed logical clocks originally so that if an event \(e\)
+could have an impact on an event \(e'\) --- if there is a path from
+\(e\) to \(e'\) in the timeline diagram --- then \(t(e') > t(e)\). We
+will use logical time for its relevance to timeline diagrams,
+causality and global snapshots.
