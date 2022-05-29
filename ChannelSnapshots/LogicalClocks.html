@@ -241,6 +241,88 @@ timestamp greater than 2. The diagram doesn't have any message from
 \(A\) is continuing to record the state of this channel at the end of
 this trajectory.
 
+
+<h3 class="w3-text-teal">Vector Clocks</h3>
+The logical clock algorithm ensures that if there is a path from an
+event \(e\) to an event \(e'\) in the timeline diagram then \(t(e') >
+t(e)\); however, the converse isn't necessarily true. The vector clock
+algorithm ensures that \(t(e') > t(e)\) if and <i>only if</i> there is 
+a path from \(e\) to \(e'\).
+
+<p>
+A vector timestamp is a vector with an element for each agent in the
+system, and for vectors \(v, v'\): \(v \geq v'\) if and only if
+\(v_{i} \geq v'_{i}\), for all \(i\).
+The algorithm is the same as for logical clocks except that
+timestamps are vectors.
+
+<p>
+Let there be \(N\) agents in the system indexed \(0 \leq j <
+N\). Let \(I_{j}\) be unit vector in direction \(j\), a vector of
+zeroes except that \(I_{j}[j] = 1\). A timestamp for an event \(e'\)
+on agent \(j\) is computed in the following way. Initial timestamps
+are zero vectors.
+<ol>
+  <li>
+  For an internal event: \(t(e') = t(e) + I_{j}\)
+  </li>
+  <li>
+  For an event in which a message with timestamp \(T\) is received:
+  \(t(e') = max(t(e), t(M)) + I_{j}\)
+  </li>
+</ol>
+
+<h4 style="color:red;">Example of Vector Clocks</h4>
+<figure>
+    <img src="../ChannelSnapshots/Timelines/Timelines.012.jpeg" alt="Fig2" style="width:100%">
+    <figcaption>Fig. 2: Example of Vector Clocks</figcaption>
+</figure>
+The figure shows both scalar and vector timestamps. Scalar
+timestamps are shown inside the circles representing events while
+vector timestamps are shown just outside the circles.
+<p>
+For example, there is a path from the event with timestamp \([1, 0,
+1]\) to the event with timestamp \([2, 0, 1]\) whereas there is no
+path between events with timestamps \([2, 0, 1]\) and \([1, 1, 2]\).
+
+<h4 class="w3-text-teal">Proof of Correctness of Vector Clocks</h4>
+We will prove that for all events \(e, e'\) if \(t'(e) \leq t(e)\) then there is a path from \(e'\) to
+\(e\). (If \(t'(e) = t(e)\) then \(e' = e\) and there is a
+zero-length path from \(e\) to itself.)
+The proof is based on the following observations that are easily
+proved.
+<ol>
+  <li>
+  For all events \(e\) and all agents \(j\): There exists a path to
+  \(e\) from the \(i\)-th event on agent \(j\) for all \(i \leq
+  t(e)_{j}\).
+  </li>
+  <li>
+  For all events \(e\), there exists a \(j\) such that \(e\) is the
+  \(t(e)_{j}\)-th event on agent \(j\).
+  </li>
+</ol>
+<p>
+From observation 2, \(e'\) is the \(t(e')_{j}\)-th on an agent \(j\).
+From observation 1, there is a path to \(e\) from the \(i\)-th event on
+agent \(j\) for \(i \leq t(e)_{j}\).
+So, there is a path from \(e'\) to \(e\) because \(t(e')_{j} \leq t(e)_{j}\).
+
+<p style="color:red;">Example of Proof Steps</p>
+As an example of observation 1, consider the 5-th event in figure 2; this event has
+timestamp \([3, 1, 1]\). 
+There are paths to this event from the zeroth, first, second, and third
+events on agent 0, and from the zero-th and first events on agent
+\(1\), and from the zero-th and first
+events on agent \(2\).
+<p>
+As an example of observation 2, the event with timestamp \([1, 1, 2]\) is one of the
+following: the first event
+on agent \(0\) or the first event on agent \(1\) or the second event
+on agent \(2\).
+Verify that it is the second event on agent \(2\).
+
+
 <h4 class="w3-text-teal">Logical Time and Causality</h4>
 Lamport proposed logical clocks originally so that if an event \(e\)
 could have an impact on an event \(e'\) --- if there is a path from
