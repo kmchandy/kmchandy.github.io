@@ -56,13 +56,17 @@ The algorithm follows directly from this requirement.
 The timestamp of an initial event is arbitrary.
 For any event \(e'\) on an agent, let \(e\) be the event
 that immediately precedes \(e\) on that agent.
-For an internal event \(e'\) (i.e. an event in which no message is
-received), set \(t(e')\) to any value greater than
-\(t(e)\). 
-For an event \(e'\) in which 
-message with timestamp \(T\) is received, set \(t(e')\) to any value
-greater than
-\(\textrm{max}(t(e), T)\).
+<ol>
+  <li>
+  For an internal event \(e'\) (i.e. an event in which no message is
+  received), set \(t(e')\) to any value greater than \(t(e)\).
+  </li>
+  <li>
+  For an event \(e'\) in which message with timestamp \(T\) is
+  received, set \(t(e')\) to any value greater than
+  \(\textrm{max}(t(e), T)\).
+ </li>
+</ol>
 
 <h4 class="w3-text-teal">Using Logical Clocks to Determine Global
 Snapshots</h4>
@@ -153,7 +157,8 @@ For example, there is a path from the event with timestamp \([1, 0,
 path between events with timestamps \([2, 0, 1]\) and \([1, 1, 2]\).
 
 <h4 class="w3-text-teal">Proof of Correctness of Vector Clocks</h4>
-We will prove that for all events \(e, e'\) if \(t'(e) \leq t(e)\) then there is a path from \(e'\) to
+We will prove that for all events \(e, e'\) if \(t'(e) \leq t(e)\)
+then there is a path from \(e'\) to 
 \(e\). (If \(t'(e) = t(e)\) then \(e' = e\) and there is a
 zero-length path from \(e\) to itself.)
 The proof is based on the following observations that are easily
@@ -165,7 +170,7 @@ proved.
   t(e)_{j}\).
   </li>
   <li>
-  For all events \(e\), there exists a \(j\) such that \(e\) is the
+  If \(e\) is at agent \(j\) then \(e\) is the
   \(t(e)_{j}\)-th event on agent \(j\).
   </li>
 </ol>
@@ -183,11 +188,8 @@ events on agent 0, and from the zero-th and first events on agent
 \(1\), and from the zero-th and first
 events on agent \(2\).
 <p>
-As an example of observation 2, the event with timestamp \([1, 1, 2]\) is one of the
-following: the first event
-on agent \(0\) or the first event on agent \(1\) or the second event
-on agent \(2\).
-Verify that it is the second event on agent \(2\).
+As an example of observation 2, the event with timestamp \([1, 1, 2]\)
+is the second event on agent \(2\).
 
 
 <h4 class="w3-text-teal">Logical Time and Causality</h4>
