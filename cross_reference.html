@@ -1,173 +1,247 @@
-
+<title>table_of_contents.html</title>
+<!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
+
 <html lang="en">
-<title>index</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <style>
 html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 .w3-sidebar {
   z-index: 3;
-  width: 150px;
+  width: 250px;
   top: 43px;
   bottom: 0;
   height: inherit;
 }
 /* Thick blue border */
-hr.new5 {
-  border: 5px solid blue;
-}
-/* Thick blue border */
 hr.new2 {
   border: 2px solid blue;
 }
-
 </style>
 
+
 <body>
-
-<!-- Navbar -->
 <div class="w3-top">
-  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
-    <a class="w3-bar-item w3-button w3-right w3-hide-large
-    w3-hover-white w3-large w3-theme-l1"
-    href="javascript:void(0)" onclick="w3_open()"><i class="fa
-    fa-bars"></i>
-    </a>
-    <a href="index.html" class="w3-bar-item w3-button w3-hide-small
-    w3-hover-white">About
-    </a>
-    <a href="index.html" class="w3-bar-item w3-button w3-hide-small
-    w3-hover-white">Contents
-    </a>
-    <a href="../cross_reference.html"
-    class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index
-    </a>
-  </div>
-  </div>
- 
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
 
-<!-- Sidebar -->
-<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
-  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
-    <i class="fa fa-remove"></i>
+  <a href="index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+
+<nav
+class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5
+w3-animate-left" 
+id="mySidebar">
+
+<a href="javascript:void(0)"
+onclick="w3_close()"
+class="w3-right w3-xlarge w3-padding-large w3-hover-black
+w3-hide-large"
+title="Close Menu">
+<i class="fa fa-remove"></i>
+</a>
+
+<!--END Heading  ---------------------------->
+ 
+<!-- Start Sidebar----------> 
+
+<a class="w3-bar-item w3-button w3-hover-black "
+  href="DistributedSystemsEverywhere/DistributedSystemsEverywhere.html">
+  Distributed Systems Everywhere
   </a>
   
-  <h4 class="w3-bar-item"><b> Distributed
-  Algorithms</h3>
-  
+<a class="w3-bar-item w3-button w3-hover-black "
+href="ReviewOfBasics/Introduction/Introduction.html" > 
+Review Sequential Programs
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="FoundationsOfDistributedSystems/Introduction/Introduction.html" > 
+Foundations
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="Timelines/Introduction/Introduction.html" > 
+Snapshots and Clocks
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="GlobalSnapshotApplications/GlobalSnapshotApplications.html" > 
+Detection Algorithms
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="DiffusingComputations/DiffusingComputations.html" > 
+Diffusion and Gossip Algorithms
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="SelfStabilization/SelfStabilization.html" > 
+Self Stabilization
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="Knowledge/Knowledge.html" > 
+What Agents Know
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="ConsensusImpossible/ConsensusImpossible.html" > 
+Consensus
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="Byzantine/Byzantine.html" > 
+Byzantine Faults
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="CryptoCurrencyIntroduction/CryptoCurrencyIntroduction.html" > 
+Cryptocurrency
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="DiningPhilosophers/DiningPhilosophers.html" > 
+Distributed Collaboration
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="ClockSynchronization/Introduction/Introduction.html" > 
+Clock Synchronization
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="CloudComputing/Introduction/Introduction.html" > 
+Cloud Computing Algorithms
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="Streams/Introduction/Introduction.html" > 
+Stream Algorithms
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="DistributedData/Introduction/Introduction.html" > 
+Distributed Data
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="ContinuousSystems/Introduction/Introduction.html" > 
+Continuous Systems
+</a>
+
 </nav>
+<!-- End Sidebar---------->
+ 
+<!-- Start overlay ---------------------------------->
 
 <!-- Overlay effect when opening sidebar on small screens -->
-<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+<div class="w3-overlay w3-hide-large"
+  onclick="w3_close()"
+  style="cursor:pointer"
+  title="close side menu"
+  id="myOverlay"></div>
 
-<!-- Main content: shift it to the right by 150 pixels when the sidebar is visible -->
-<div class="w3-main" style="margin-left:150px">
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
   
 <script id="MathJax-script" async
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
 </script>
   
-  <div class="w3-row w3-padding-64">
-  <div class="w3-twothird w3-container">
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
 
-    <h2 class="w3-text-teal">Table of Contents</h2>
+<!-- End overlay ---------------------------------->
+ 
+    <h2 class="w3-text-teal">Index</h2>
 
     <h4 class="w3-text-teal">Review of Basics</h4>
-    <ol>
+  <ul>
+    <li>
+    <i>D</i>
+    </li>
       <li>
-      <a href="Loops/Loops.html">
-      Nondeterministic iteration: do-od loops
-      </a> 
-      </li>
-      <li>
-      <a href="Predicates/Predicates.html">
-      Predicates
+      <a href="DistributedSystemsEverywhere/DistributedSystemsEverywhere.html">
+      Distributed Systems: Introduction
       </a>
       </li>
-      <li>
-      <a href="HoareTriples/HoareTriples.html">
+    <li>
+      <a href="ReviewOfBasics/NondeterministicIteration/NondeterministicIteration.html">
+      do-od loops
+      </a> 
+     </li>
+    
+     <li>
+     <i>H</i>
+     </li>
+     <li>
+      <a href="ReviewOfBasics/HoareTriples/HoareTriples.html">
       Hoare triples
       </a>
       </li>
       <li>
-      <a href="LoopTermination/LoopTermination.html">
-      Proving termination of loops: variant functions.
+      <i>L</i>
+      </li>
+      <li>
+      <a href="ReviewOfBasics/NondeterministicIteration/NondeterministicIteration.html">
+      Loops: do-od 
+      </a> 
+      </li>
+      <li>
+      <a href="ReviewOfBasics/LoopTermination/LoopTermination.html">
+      Loop termination
       </a>
       </li>
       <li>
-      <a
-      href=
-      "DistributedSystemsIntroduction/DistributedSystemsIntroduction.html">
-      Distributed Systems: Introduction
-      </a>
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Foundations of Distributed Systems</h4>
-    <ol>
-      <li>
-      <a href="Safety/Safety.html">
-      State-transition systems and safety
+      <a href="ReviewOfBasics/LoopTermination/LoopTermination.html">
+      Loop variants
       </a>
       </li>
       <li>
-      <a
-      href="Channels/Channels.html">
-      Agent timelines
+      <i>N</i>
+      </li>
+      <li>
+      <a href="ReviewOfBasics/NondeterministicIteration/NondeterministicIteration.html">
+      Nondeterministic iteration
+      </a> 
+      </li>
+      <li>
+      <i>P</i>
+      </li>
+      <li>
+      <a href="ReviewOfBasics/Predicates/Predicates.html">
+      Predicates
       </a>
       </li>
       <li>
-      <a href="Progress/Progress.html">
-      Progress: Introduction
-      </a>
+      <i>S</i>
       </li>
       <li>
-      <a href="ProgressProperties/ProgressProperties.html">
-      Progress: Proofs
-      </a>
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Global Snapshots and Logical Clocks</h4>
-    <ol>
-      <li>
-      <a href="TimelineDiagrams/TimelineDiagrams.html">
-      Timelines
-      </a>
+      <i>V</i>
       </li>
       <li>
-      <a href="SnapshotIntroduction/SnapshotIntroduction.html">
-      Introduction to snapshots in shared-memory systems.
-      </a>
-      </li>
-      <li>
-      <a href="SnapshotIntroduction/VectorClocks.html">
-      Vector clocks
-      </a>
-      </li>
-      <li>
-      <a href="SnapshotIntroduction/SnapshotIntroductionExample.html">
-      Snapshots of shared-memory systems
-      </a>
-      </li>
-      <li>
-      <a href="Channels/Channels.html">
-      Consistent cuts across timelines of distributed systems
-      </a>
-      </li>
-      <li>
-      <a href="ChannelSnapshots/ChannelSnapshots.html">
-      Global snapshots
-      </a>
-      </li>
-      <li>
-      <a href="SnapshotIntroduction/SnapshotIntroduction.html">
-      Logical clocks
+      <a href="ReviewOfBasics/NondeterministicIteration/NondeterministicIteration.html">
+      Variant functions
       </a>
       </li>
     </ol>

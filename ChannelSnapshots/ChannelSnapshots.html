@@ -48,17 +48,17 @@ hr.new1 {
   onclick="w3_open()">
   <i class="fa fa-bars"></i></a>
 
-  <a href="../index.html"
+  <a href="../../index.html"
   class="w3-bar-item w3-button w3-hide-small w3-hover-white">
   Distributed Algorithms
   </a>
 
-  <a href="../table_of_contents.html"
+  <a href="../../table_of_contents.html"
   class="w3-bar-item w3-button w3-hide-small w3-hover-white">
   Contents
   </a>
 
-  <a href="../cross_reference.html"
+  <a href="../../cross_reference.html"
   class="w3-bar-item w3-button w3-hide-small w3-hover-white">
   Index
   </a>
@@ -83,6 +83,10 @@ title="Close Menu">
  
 <!-- Start Sidebar----------> 
  
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../ChannelSnapshots/Timelines.html" > 
+Timelines
+</a>
 <a class="w3-bar-item w3-button w3-hover-black "
 href="../ChannelSnapshots/ChannelSnapshots.html" > 
 Global Snapshots
@@ -138,15 +142,25 @@ Snapshots: Solution
 
     <!--------------------------------------------------------->
 The global snapshot algorithm determines a global state of a
-system. The algorithm cannot be instantaneous because it requires collaboration among multiple agents.
+system. The algorithm cannot be instantaneous because it requires
+collaboration among multiple agents. 
 Let the states in which the algorithm starts and ends be
 \(s_{init}\) and \(s_{fini}\), respectively, and let \(s_{snap}\) be
-the snapshot determined by the algorithm. The specification of the
-snapshot algorithm is that \(s_{snap}\) must be the
+the snapshot determined by the algorithm.
+
+<h4 class="w3-text-teal">Specification of the Global Snapshot</h4>
+\(s_{snap}\) must be the
 <a href="">state of a consistent cut.</a>
-From the <a href="">theorem and corollary on consistent cuts</a>,
-there exists a trajectory from \(s_{init}\) through \(s_{snap}\) to
-\(s_{fini}\). 
+
+<p>
+An important property that follows the <a href="">theorem and
+corollary on consistent cuts</a> and from the specification is:
+<hr class="new2">
+    <h5 style="color:blue;">
+There exists a trajectory from \(s_{init}\) through \(s_{snap}\) to
+\(s_{fini}\).
+<h5>
+<hr class="new2">
 
 <h4 class="w3-text-teal">A Brief Review of Consistent Cuts</h4>
 A consistent cut of a timeline diagram is a partition of the events in
