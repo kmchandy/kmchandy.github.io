@@ -1,0 +1,120 @@
+
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Termination Detection</h1>
+
+    This module shows how the concepts of consistent cuts
+    and global snapshots are used to detect termination of a
+    computation.
+    
+<h4 class="w3-text-teal">The Problem</h4>
+
+    <p class="w3-text-teal">Active and Idle States of Agents</p>
+    An agent is either <i>idle</i> or <i>active</i>. An idle agent
+    remains idle until it receives a message at which point it becomes
+active.
+An idle agent does not
+send messages.
+
+<p>An active agent may send messages. An active agent
+may become idle at any point.
+
+<p>
+    Initially all agents are active and all channels are empty.
+
+    <p class="w3-text-teal">System in Terminated State</p>
+    A <i>terminated</i> state of the system is one in which all agents
+    are idle and all channels are empty. <i>terminated</i> is stable:
+    a system in a terminated state remains terminated thereafter. A
+    system may or may not enter a terminated state.
+    <p>
+    The problem is to develop an algorithm that detects that the system has
+entered a terminated state.
+The algorithm may use messages and agents that are not part of the
+underlying computation.
+The algorithm is part of the distributed operating system whereas the
+    underlying computation is part of a user application which isn't
+modified by the operating system.
+
+<p>
+The algorithm returns a Boolean variable where:
+<ol>
+  <li>
+  If the algorithm starts after the system has terminated then
+  the algorithm returns True.
+  </li>
+  <li>
+  If the algorithm returns True then the system has terminated when
+    the algorithm terminates
+  </li>
+</ol>
+  
+
+    <p class="w3-text-teal">Channel Counts</p>
+
+    <p>
+    For each channel \(C\), let  \(C_{s}\) and \(C_{r}\), be the numbers of
+    messages sent and received along \(C\), respectively.
+    Initially \(C_{s} = C_{r} = 0\)
+
+    The number of messages in transit along \(C\) is \(C_{s} -
+    C_{r}\).
+    
+    <p>
+    The system is in a terminated state exactly when the following
+      All agents are idle, and
+      for each channel \(C\): \(C_{s} = C_{r}\)
+
+
+
+    <h2 class="w3-text-teal">The Detector</h2>
+    The algorithm uses an agent, which is not part of the system, to
+    carry out the detection. We call this agent <i>the
+    detector</i>. 
+
+    <p>
+    When an agent transits from active to idle it sends a message to
+    the detector containing copies of its local variables, \(C_{s}\)
+    for every outgoing channel of the agent, and \(C_{r}\) for every
+    incoming channel of the agent. 
+
+<p class="w3-text-teal">The Detector's Local Variables</p>
+The detector has its own local variables \(C'_{s}\) and \(C'_{r}\) for every
+channel \(C\) in the system.
+Initially the values of these local variables are 0.
+When a detector gets a message from an
+agent it sets the values of its local variables \(C'_{s}\) and \(C'_{r}\) to the
+values of \(C_{s}\) and \(C_{r}\) in the message.
+
+<p class="w3-text-teal">Initial Condition for the Detector's Local Variables</p>
+Initially, for all channels \(C\), \(C'_{s} = 0\).
+We will assume \(C'_{r} = -1\) so that \(C'_{s} > C'_{r}\). The
+negative one for \(C'_{r}\) is merely a technical trick to simplify
+the termination detection condition.
+
+<hr class="new2">
+<h4 style="color:blue;">The Detector detects termination when
+for all channels \(C\): 
+\(
+C'_{s} = C'_{r}
+\)
+<h4>
+    <hr class="new2">
+
+
+
+<h2 class="w3-text-teal">Proof</h2>
+The values of the detector's local variables, \(C'_{s}, C'_{r}\) for
+each channel \(C\) are the values \(C_{s}, C_{r}\) sent by the agents
+at some cut. From the theorem on consistent cuts, this cut
+is consistent if and only if, for all channels \(C\): 
+<p>
+\(C'_{s} \geq C'_{r} \geq 0\)
+<p>
+Therefore the detector detects termination based on a consistent
+cut. The result follows because termination is stable.
+
+<h2 class="w3-text-teal">Summary</h2>
+This module showed how to apply the concepts of consistent cuts and
+global snapshots to solve detection problems. The module describes an
+algorithm for detecting termination of distributed computations.

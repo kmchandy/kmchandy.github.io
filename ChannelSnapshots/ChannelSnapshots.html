@@ -48,17 +48,17 @@ hr.new1 {
   onclick="w3_open()">
   <i class="fa fa-bars"></i></a>
 
-  <a href="../../index.html"
+  <a href="../index.html"
   class="w3-bar-item w3-button w3-hide-small w3-hover-white">
   Distributed Algorithms
   </a>
 
-  <a href="../../table_of_contents.html"
+  <a href="../table_of_contents.html"
   class="w3-bar-item w3-button w3-hide-small w3-hover-white">
   Contents
   </a>
 
-  <a href="../../cross_reference.html"
+  <a href="../cross_reference.html"
   class="w3-bar-item w3-button w3-hide-small w3-hover-white">
   Index
   </a>
@@ -208,7 +208,34 @@ figure 3, that result in consistent cuts. And the algorithm must
 disallow local snapshots, such as in figure 4, that result in
 inconsistent cuts.
 
-    <h3 class="w3-text-teal">Global snapshot algorithm</h3>
+<h3 class="w3-text-teal">Theorem: Channel Counts and Consistent
+Cuts</h3>
+When an agent takes its local snapshot, for each outgoing channel
+\(C\) of the agent let \(C_{s}\) be the number of
+messages that the agent has sent along \(C\), and for each incoming channel
+\(C\) let \(C_{r}\) be the number of
+messages that it has received along \(C\).
+<hr class="new2">
+<h5 style="color:blue;">
+The points at which local snapshots are taken forms a
+<i>consistent</i> cut if and only if, for all channels \(C\):
+<p>
+\(C_{s} \geq C_{r}\)
+</h5>
+<hr class="new2">
+The proof follows directly from the definition of consistent cuts. We
+will show that a
+message sent in the future is received in the future.
+<p>
+A message received along a channel \(C\) in the future is a message received after
+\(C_{r}\) messages have been received along the channel.
+A message sent along a channel \(C\) in the future is sent after
+\(C_{s}\) messages have been sent along the channel.
+Because channels are first-in-first-out this message is received after 
+\(C_{s}\) messages have been received along the channel, and therefore
+the receive event is also in the future.
+
+    <h3 class="w3-text-teal">Global Snapshot Algorithm</h3>
 The algorithm employs a special kind of message called a <i>marker</i>
 which is distinct from all other messages in the system.
 Each agent takes its local snapshot exactly once and exactly one

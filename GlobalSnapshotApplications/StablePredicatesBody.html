@@ -1,0 +1,61 @@
+    <!--------------------------------------------------------->
+<h1 class="w3-text-teal">Applications of Global Snapshots</h1>
+Timelines, consistent cuts and global snapshots have many
+applications, some of which are described below.
+<p>
+The applications are based on the following theorem.
+Let the states in which a global snapshot algorithm starts and ends be
+\(s_{init}\) and \(s_{fini}\), respectively, and let \(s_{snap}\) be
+the snapshot determined by the algorithm.
+A key theorem is 
+<hr class="new2">
+    <h5 style="color:blue;">
+There exists a trajectory from \(s_{init}\) through \(s_{snap}\) to
+\(s_{fini}\).
+<h5>
+<hr class="new2">
+
+
+<h4 class="w3-text-teal">Rollback and Recovery</h4>
+When a rollback and recovery algorithm detects an error it rolls the computation back
+and restarts it from the most recent saved state.
+In a distributed system the saved state is a global snapshot.
+There is a trajectory that starts in \(s_{init}\) visits the global
+snapshot \(s_{snap}\) and then continues execution.
+So, if an error is detected, the computation is rolled
+back to \(s_{snap}\) rather than to \(s_{init}\).
+
+<h4 class="w3-text-teal">Detecting Stable Predicates</h4>
+A stable predicate is a predicate with the following property: If the
+predicate holds at any point in any trajectory then it continues to
+hold forever thereafter in that trajectory. Equivalently, if a stable
+predicate holds in a state \(s\) then it holds in all states reachable
+from \(s\).
+<p>
+An example of a stable predicate is: The computation has terminated.
+If a computation has terminated at some point then it remains
+terminated thereafter.
+
+<p>
+The Boolean --- "predicate \(P\) holds in state \(s\)" --- is written
+as \(P(s)\). If \(P\) is stable and it holds in \(s_{init}\) then it
+continues to hold thereafter, and therefore holds in \(s_{snap}\) and
+in \(s_{fini}\). Likewise, if \(P\) is stable and it holds in
+\(s_{snap}\) then it holds in \(s_{fini}\).
+
+<hr class="new2">
+<h5 style="color:blue;">
+For a stable property \(P\):
+<br>
+\(
+   P(s_{init}) \Rightarrow P(s_{snap})
+\)
+<br>
+\(
+   P(s_{snap}) \Rightarrow P(s_{fini})
+\)
+<h5>
+<hr class="new2">
+Modules in this chapter give examples of algorithms that detect stable
+predicates. 
+

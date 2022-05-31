@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>DeadlockDetectionAnd</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+<body>
+
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+    <a href="../index.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">About the Course</a>
+    <a href="../table_of_contents.html" class="w3-bar-item w3-button w3-hide-small
+    w3-hover-white">Table of Contents</a>
+    <a href="../cross_reference.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Index</a>
+  </div>
+  </div>
+ 
+
+<!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+    <i class="fa fa-remove"></i>
+  </a>
+
+  <!-------------------------->
+  <h3 class="w3-bar-item"><b>An Introduction to Distributed
+  Algorithms</h3>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="DeadlockDetection_And.html">Applications of Global
+  Snapshots</a>
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../Knowledge/Knowledge.html">
+  Next: What an Agent Knows</a> 
+  
+  <a class="w3-bar-item w3-button w3-hover-black"
+  href="../GlobalSnapshotApplications/GlobalSnapshotApplications.html">Previous:
+  Termination Detection
+  </a>
+  
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+  <div class="w3-row w3-padding-64">
+  <div class="w3-twothird w3-container">
+
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Detecting And-type Deadlocks</h1>
+
+    <h1 class="w3-text-teal">Key Ideas</h1>
+    This module shows how the concept of
+    consistent cuts help to develop algorithms that detect stable
+    properties.
+
+    <p>
+    An example of a stable property is a deadlock in which a set of
+    agents continues to wait for messages for ever. Distributed
+    operating systems detect and then break deadlocks. This module
+    describes algorithms for "and" deadlocks which are also called
+    database deadlocks. Later we discuss algorithms for
+    "or" deadlocks, also called communication deadlocks.
+
+    <h2 class="w3-text-teal">The Problem</h3>
+    The problem of deadlock detection is similar to that of
+    <a
+    href="../GlobalSnapshotApplications/GlobalSnapshotApplications.html">
+    termination detection discussed in an earlier module</a>.
+    A system consists of
+    <a href="../Channels/Channels.html">a set of agents and a set of message-passing
+    channels.</a>
+
+    <p>
+    Agents in the system share a set of files.
+    Each shared file is represented as an
+    indivisible colored token, with each file having its own
+    unique color. The system has at most one token of a given color.
+
+    Tokens can be sent from agent to agent. Tokens are
+    not duplicated or destroyed. 
+
+    <p>
+    An agent \(u\) is in one of the following states:
+    <ol>
+      <li>
+      Executing without holding shared files.
+      </li>
+      <li>
+      Waiting to acquire a set \(u_{waits}\) of
+      shared files. 
+      </li>
+      <li>
+      Executing while holding all files in
+      \(u_{waits}\).
+      </li>
+    </ol>
+    <p>
+
+    
+    
+    <figure>
+    <img src="DeadlockDetectionAnd/Slide1.jpg" alt="Fig1" style="width:100%">
+    <figcaption>Fig.1 - The Life Cycle of an Agent</figcaption>
+    </figure>
+    An agent executes while holding files for only a finite
+    time. However, agents may wait forever to acquire files if they
+    form a deadlock cycle.
+
+<h3 class="w3-text-teal">Deadlock</h3>
+A cycle of waiting agents is in a deadlock if each agent is waiting to
+acquire a token held by the next agent in the cycle. Our task is to
+design an algorithm by which an agent detects if is part of a
+deadlocked cycle.
+
+<h3  style="color:red;">Example</h3>
+A system has one red, one blue and one green token.
+Agents \(x\), \(y\) and \(z\) are deadlocked in the following state.
+Agent \(x\) holds the red token and is waiting
+to acquire a blue token; agent \(y\) holds the blue token and is waiting
+to acquire the green token; and agent \(z\) holds the green token and is waiting
+    to acquire the red token.
+    
+    <figure>
+  <img src="DeadlockDetectionAnd/Slide2.jpg" alt="Fig1" style="width:100%">
+  <figcaption>Fig.1 - An Example of a Deadlock</figcaption>
+</figure>
+
+    <h2 class="w3-text-teal">An Algorithm</h2>
+    A general approach to detecting stable properties has two phases
+    (1) obtain a global snapshot, and (2) analyze the global
+    snapshot. The 
+    first phase reduces analysis of a dynamic system
+    into the analysis of static snapshot. The second step
+    analyzes <i>static</i> date structures such as graphs.
+
+    <p>This module describes an algorithm consisting of a single phase
+    that is an optimization of the two-phase algorithm.
+
+    <p>
+The definition of a deadlocked cycle depends only on the local states
+of agents and is independent of the states of message channels.
+So, we use a simpler version of the global snapshot algorithm which
+does not record states of channels.
+
+<h4 class="w3-text-teal">Initiating the Algorithm</h4>
+A waiting agent \(x\) initiates the algorithm by sending a message, called a
+<i>marker</i> on each outgoing channel. We call \(x\) <i>the
+initiator</i>. Assume that there is only one initiator. (Multiple
+initiators can be handled by tagging messages with the identity of the
+initiator.)
+<p>
+The marker \(m\)
+has a field \(m_{waits}\) that identifies the set
+of tokens for which the sender needs to start executing, i.e.,
+<p>
+\(m_{waits} = x_{waits} - x_{holds}\)
+<p>
+where \(x\) is the initiator, and for sets \(S\) and \(S'\), \(S -
+S'\) is the set consisting of elements that are in \(S\) and not in \(S'\).
+
+<h4 class="w3-text-teal">Propagating Markers</h4>
+When \(y\) receives a marker \(m\), if there is a token common to all
+three sets,
+\(m_{waits}\), \(y_{holds}\), \(y_{waits}\), then
+\(y\) sends a marker \(m'\) on each of its outgoing channels where 
+\(m'_{waits} = y_{waits} - y_{holds}\) if \(y\) hasn't already sent markers.
+
+<p>
+So, \(y\) sends markers if it receives a marker and the sender of that
+marker is waiting to acquire a token that \(y\) holds and needs, and \(y\) is
+waiting to receive additional tokens.
+
+<h4 class="w3-text-teal">Termination Detection</h4>
+When the initiator \(x\) receives a marker \(m\), the initiator
+detects that it is in a deadlocked cycle if there is a token common to 
+\(m_{waits}\), \(x_{holds}\), and \(x_{waits}\).
+
+<h3  style="color:red;">Example</h3>
+Let's look at the steps of the algorithm for the example given
+earlier.
+<p style="color:red;">Initiation</p>
+Agent \(x\) initiates the algorithm by sending markers
+requesting the blue token.
+
+<p style="color:red;">Marker Propagation</p>
+When agent \(y\) receives the marker, it
+holds the blue token, and it needs the blue token as well as
+the green token; so, it sends markers requesting the green token. When
+agent \(z\) receives the marker, it
+holds the green token, and it needs the green token as well as
+the red token; so, it sends markers requesting the green token.
+
+<p style="color:red;">Termination Detection</p>
+At the point the initiator \(x\) gets the marker, it holds the red
+token, and and it needs the red token as well as
+additional tokens; so, it detects termination.
+
+<h3 class="w3-text-teal">Correctnes of the Algorithm</h3>
+The algorithm is the global snapshot algorithm, and we
+proved the correctness of the algorithm earlier.
+
+
+
+  <footer id="myFooter">
+
+    <div class="w3-container w3-theme-l1">
+      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
+      <br>
+      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
+    </div>
+  </footer>
+
+
+      
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+
