@@ -50,20 +50,21 @@ The algorithm returns a Boolean variable where:
 </ol>
   
 
-    <p class="w3-text-teal">Channel Counts</p>
+    <p class="w3-text-teal">Counts of Messages in Channels</p>
 
-    <p>
-    For each channel \(C\), let  \(C_{s}\) and \(C_{r}\), be the numbers of
-    messages sent and received along \(C\), respectively.
-    Initially \(C_{s} = C_{r} = 0\)
+<p>
+Each agent has a local variable \(C_{nsent}\) for each outgoing
+channel \(C\), and a local variable \(C_{nrcvd}\) for each incoming
+channel \(C\).
+Initially, for all channels \(C\):  \(C_{nsent} = C_{nrcvd} = 0\)
 
-    The number of messages in transit along \(C\) is \(C_{s} -
-    C_{r}\).
+At each point in a computation, the number of messages in transit
+along a channel \(C\) is \(C_{nsent} - C_{nrcvd}\).
     
     <p>
-    The system is in a terminated state exactly when the following
+    The system has terminated if and only if:
       All agents are idle, and
-      for each channel \(C\): \(C_{s} = C_{r}\)
+      for each channel \(C\): \(C_{nsent} = C_{nrcvd}\)
 
 
 
@@ -74,29 +75,30 @@ The algorithm returns a Boolean variable where:
 
     <p>
     When an agent transits from active to idle it sends a message to
-    the detector containing copies of its local variables, \(C_{s}\)
-    for every outgoing channel of the agent, and \(C_{r}\) for every
+    the detector containing copies of its local variables, \(C_{nsent}\)
+    for every outgoing channel of the agent, and \(C_{nrcvd}\) for every
     incoming channel of the agent. 
 
 <p class="w3-text-teal">The Detector's Local Variables</p>
-The detector has its own local variables \(C'_{s}\) and \(C'_{r}\) for every
+The detector has its own local variables \(C_{s}\) and \(C_{r}\) for every
 channel \(C\) in the system.
 Initially the values of these local variables are 0.
 When a detector gets a message from an
-agent it sets the values of its local variables \(C'_{s}\) and \(C'_{r}\) to the
-values of \(C_{s}\) and \(C_{r}\) in the message.
+agent it sets the values of its local variables \(C_{s}\) and \(C_{r}\) to the
+values of \(C_{nsent}\) and \(C_{nrcvd}\) in the message for the
+corresponding channels \(C\).
 
 <p class="w3-text-teal">Initial Condition for the Detector's Local Variables</p>
-Initially, for all channels \(C\), \(C'_{s} = 0\).
-We will assume \(C'_{r} = -1\) so that \(C'_{s} > C'_{r}\). The
-negative one for \(C'_{r}\) is merely a technical trick to simplify
+Initially, for all channels \(C\), we set \(C_{s} = 0\) and \(C_{r} =
+-1\) so that \(C_{s} \neq C_{r}\) initially. The
+negative one for \(C_{r}\) is merely a technical trick to simplify
 the termination detection condition.
 
 <hr class="new2">
 <h4 style="color:blue;">The Detector detects termination when
 for all channels \(C\): 
 \(
-C'_{s} = C'_{r}
+C_{s} = C_{r}
 \)
 <h4>
     <hr class="new2">
@@ -104,12 +106,12 @@ C'_{s} = C'_{r}
 
 
 <h2 class="w3-text-teal">Proof</h2>
-The values of the detector's local variables, \(C'_{s}, C'_{r}\) for
-each channel \(C\) are the values \(C_{s}, C_{r}\) sent by the agents
+The values of the detector's local variables, \(C_{s}, C_{r}\) for
+each channel \(C\) are the values \(C_{nsent}, C_{nrcvd}\) sent by the agents
 at some cut. From the theorem on consistent cuts, this cut
 is consistent if and only if, for all channels \(C\): 
 <p>
-\(C'_{s} \geq C'_{r} \geq 0\)
+\(C_{s} \geq C_{r} \geq 0\)
 <p>
 Therefore the detector detects termination based on a consistent
 cut. The result follows because termination is stable.

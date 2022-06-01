@@ -23,16 +23,20 @@ In a distributed system the saved state is a global snapshot.
 There is a trajectory that starts in \(s_{init}\) visits the global
 snapshot \(s_{snap}\) and then continues execution.
 So, if an error is detected, the computation is rolled
-back to \(s_{snap}\) rather than to \(s_{init}\).
+back to \(s_{snap}\) rather than all the way back to \(s_{init}\).
 
 <h4 class="w3-text-teal">Detecting Stable Predicates</h4>
-A stable predicate is a predicate with the following property: If the
+<hr class="new2">
+<h6 style="color:blue;">
+A <i>stable predicate</i> is a predicate with the following property: If the
 predicate holds at any point in any trajectory then it continues to
 hold forever thereafter in that trajectory. Equivalently, if a stable
 predicate holds in a state \(s\) then it holds in all states reachable
 from \(s\).
+</h6>
+<hr class="new2">
 <p>
-An example of a stable predicate is: The computation has terminated.
+An example of a stable predicate is: "<i>The computation has terminated.</i>"
 If a computation has terminated at some point then it remains
 terminated thereafter.
 
@@ -43,19 +47,15 @@ continues to hold thereafter, and therefore holds in \(s_{snap}\) and
 in \(s_{fini}\). Likewise, if \(P\) is stable and it holds in
 \(s_{snap}\) then it holds in \(s_{fini}\).
 
-<hr class="new2">
-<h5 style="color:blue;">
+
+<h6 style="color:blue;">
 For a stable property \(P\):
-<br>
 \(
-   P(s_{init}) \Rightarrow P(s_{snap})
+   (P(s_{init}) \Rightarrow P(s_{snap})) \wedge 
+   (P(s_{snap}) \Rightarrow P(s_{fini}))
 \)
-<br>
-\(
-   P(s_{snap}) \Rightarrow P(s_{fini})
-\)
-<h5>
-<hr class="new2">
-Modules in this chapter give examples of algorithms that detect stable
+<h6>
+
+The modules in this chapter describe examples of algorithms that detect stable
 predicates. 
 
