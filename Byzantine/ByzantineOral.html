@@ -1,0 +1,721 @@
+<title>Byzantine/ByzantineOral.html</title>
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+
+<nav
+class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5
+w3-animate-left" 
+id="mySidebar">
+
+<a href="javascript:void(0)"
+onclick="w3_close()"
+class="w3-right w3-xlarge w3-padding-large w3-hover-black
+w3-hide-large"
+title="Close Menu">
+<i class="fa fa-remove"></i>
+</a>
+
+<!--END Heading  ---------------------------->
+ 
+<!-- Start Sidebar----------> 
+ 
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../Byzantine/ByzantineWritten.html" > 
+Byzantine Consensus: Written Messages
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../Byzantine/ByzantineOral.html" > 
+Byzantine Consensus: Oral Messages
+</a>
+
+</nav>
+<!-- End Sidebar---------->
+ 
+<!-- Start overlay ---------------------------------->
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large"
+  onclick="w3_close()"
+  style="cursor:pointer"
+  title="close side menu"
+  id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+<!-- End overlay ---------------------------------->
+<!----------------------------------------------------------------->
+    <h1 class="w3-text-teal">Byzantine Consensus: Oral Messages</h1>
+    This module is a continuation of the previous module. This module
+    describes solutions to the Byzantine problem with oral messages
+    whereas the previous problem studied the problem with written
+    messages.
+    
+    <p>
+    Let \(t\) be an upper bound on the number of disloyal agents.
+    We will
+show later that there is no solution for the case where the number of loyal
+agents is less than or equal to \(2.t\). We will
+describe an algorithm in which there are at
+least \(3.t + 1\) total agents.  The algorithm also solves the problem
+where there are more than \(t\) disloyal agents provided that the
+general is loyal. We illustrate the algorithm with examples and then
+prove that the algorithm is correct.
+
+<p>
+Messages in the algorithm are either <i>attack</i> or <i>retreat</i>
+messages. The absence of a message in a round is treated the same as
+way as receiving a <i>retreat</i> message.
+
+<p>
+Let the general be
+agent \(g\), and let \(L\) be the set of lieutenants. The general is
+not a lieutenant: \(g \notin L\). The general sends a
+message \(m(g,l)\) to each lieutenant \(l\). Then, the
+lieutenants communicate among themselves so that each lieutenant
+determines a consensus value.
+
+
+<p>
+A Byzantine problem is defined by
+  \(g\), the index of the general;
+
+  the set \(L\) of lieutenants; and
+
+    \(t\) the upper bound on the number of disloyal agents.
+
+    Let
+    \(Byz(g,L,t)\) be the algorithm that solves problem \((g, L,
+    t)\) and
+let
+\(c_{l}(g, L, t)\) be the consensus value computed by lieutenant
+\(l\) for the problem. The specification is:
+
+
+<ol>
+  <li>
+  <i>Validity</i>: Loyal lieutenants obey a loyal general.
+  <p>
+  If a general \(g\) is loyal then it broadcasts the same message to
+  all lieutenants.
+  So, for all lieutenants, \(j,
+  k \): \(\; m(g,j) = m(g,k)\).
+  In this case, the consensus value \(c_{l}\)
+  of a loyal 
+  lieutenant \(l\) is the message \(m(g,l)\) that the general sent to 
+  \(l\). 
+  <p>
+  \(
+  c_{l}(g, L, t) = m(g,l)
+  \)
+  </li>
+  <li>
+  <i>Consensus</i>: All loyal lieutenants \(j,k\) have the same
+  consensus value.
+  <p>
+  \(
+  c_{j}(g, L, t) = c_{k}(g, L, t)
+  \)
+</ol>
+ 
+The algorithm is recursive. The algorithm for \(t = k > 0\) calls the
+algorithm for \(t = k-1\).
+
+<h4 class="w3-text-teal">Base Case: \(Byz(g,L,t)\), when \(t = 0\)
+</h4>
+Algorithm: All agents obey the general.
+
+
+<h3 class="w3-text-teal">\(Byz(g,L,t)\) when \(t > 0\)</h3>
+The algorithm has 3 steps.
+
+<h4 class="w3-text-teal">Step 1. Initialize: General sends messages</h4>
+The general, \(g\), sends a message to each 
+lieutenant. Thereafter the general remains idle.
+
+<p>
+Let \(m(g, j)\) be the message that the general, \(g\), sends to
+lieutenant \(j\). A
+loyal general broadcasts the same message to all 
+lieutenants, and so \(m(g, j) = m(g, k)\) for all lieutenants
+\(j, k\).
+A disloyal general may send different messages to different 
+lieutenants.
+
+
+<h4 class="w3-text-teal">Step 2. Recursion: Run 
+\(Byz(j, L-j, t-1)\) for \(j \in L\) </h4> 
+
+For each \(j \in L\), run the algorithm with agent \(j\) as the general and
+the remaining set \(L-j\) of lieutenants continuing to play the role
+of lieutenants, and at most \(t-1\) faulty agents.
+
+<p>
+Let \(m(g, j, k)\) be the message that agent \(j\) sends to
+lieutenant \(k\) in the algorithm \(Byz(j, L-j, t-1)\). If agent \(j\) is
+loyal then it broadcasts the message that it received from \(g\).
+<p>
+\(m(g, j, k) = m(g, j)\)
+<p>
+If \(j\) is disloyal then \(m(g, j, k)\) is arbitrary.
+
+<p>
+Think of \(m(g, j, k)\) in the following way. Agent \(j\) tells agent
+\(k\) that agent \(j\) received message \(m(g, j, k)\) from agent
+\(g\). A loyal \(j\) is truthful, and so \(m(g, j, k) = m(g, j)\). A
+disloyal agent \(j\) may lie, and so \(m(g, j, k)\) may be different
+from \(m(g, j)\).
+
+<h4 class="w3-text-teal">Step 3. Aggregate results of the
+recursions</h4>
+We will discussing step 3 after giving examples of steps 1 and 2.
+
+
+
+<h2  style="color:red;">Example</h2>
+Let's look at the messages in a problem with \(g = 0\),
+\(L = \{1, \ldots, 6\}\), and \(t = 2\)
+The general - agent \(0\) - sends messages \(m(0,j)\) to each lieutenant
+\(j\). This is shown in the rooted tree in the diagram below 
+with \(0\) as the root and the edges labeled with the messages that
+are sent.
+
+<p>
+A loyal general broadcasts the same message to every lieutenant. If
+agent \(0\) 
+is loyal, let \(m(0)\) be the message that the general broadcasts.
+So, if agent \(0\) is loyal then \(m(0,j) = m(0)\) for all \(j\).
+If, however, agent \(0\) is disloyal then \(m(0,j)\) is arbitrary.
+
+<figure>
+    <img src="Slide08.jpg" alt="Fig8" style="width:100%">
+    <figcaption>Fig.6: Messages Sent</figcaption>
+</figure>
+
+<p>
+Let \(m(0,1,j)\) be the message that agent \(1\) sends to agent \(j\),
+for \(j \in \{2 \ldots, 6\}\) for the problem in which \(g = 1\),
+\(L=\{2 \ldots, 6\}\), 
+and \(t=1\).
+If agent \(1\) is loyal, then \(m(0,1,j) = m(0,1)\)
+
+<p>
+The diagram 
+also shows the messages \(m(0,1,2,j)\) that agent \(2\) sends to agent \(j\),
+in the algorithm when \(g=2\), \(L=\{3 \ldots, 6\}\), and \(t=0\).
+If
+agent \(2\) is loyal, then
+\(m(0,1,2,j) = m(0,1,2)\), for all \(j\).
+
+<h4  style="color:red;">Example: Agents 5, 6 are disloyal</h2>
+Let \(m(0)\)  be the message that the loyal general -- agent \(0\) --
+broadcasts.Then:
+<ol>
+  <li>
+\(m(0,i) = m(0)\)
+  </li>
+  <li>
+  \(m(0,i,j) = m(0)\) for loyal \(i\), i.e., for
+  \(1 \leq i \leq 4\)
+  </li>
+  
+  <li>
+\(m(0,i,j) \;\) is arbitrary for disloyal \(i\), i.e. \(i = 5, 6\)
+  </li>
+  <li>
+  \(m(0,i,j,k) = m(0)\) for loyal \(i, j\), i.e. for \(1
+  \leq i,j \leq 4\). 
+  </li>
+  <li>
+  \(m(0,i,j,k) \;\) is arbitrary for for disloyal \(i\) or \(j\), i.e. \(5
+  \leq i \leq 6\) or \(5 \leq j \leq 6\)
+  </li>
+</ol>
+Note: These messages are defined only when the subscripts, \(0, i, j,
+k\) are distinct. 
+
+
+<h4  style="color:red;">Example: Agents 0, 1 are disloyal</h2>
+<ol>
+  <li>
+\(m(0,i) = \;\)  is arbitrary.
+  </li>
+  <li>
+  \(m(0,i,j) = m(0,i)\) for loyal \(i\), i.e., for
+  \(2 \leq i \leq 6\)
+  </li>
+  <li>
+\(m(0,1,j) = \;\)  is arbitrary.
+  </li>
+  <li>
+  \(m(0,i,j,k) = m(0,i,j) \) for loyal \(j\), i.e. for \(2
+  \leq j \leq 6\). 
+  </li>
+  <li>
+  \(m(0,i,1,k) \;\) is arbitrary because agent \(1\) is disloyal.
+  </li>
+</ol>
+<p>
+
+
+
+<h2 class="w3-text-teal">Step 3. Aggregate results of recursive calls</h2>
+
+<p>
+Each node of the tree in the diagram represents messages sent in a Byanztine generals
+problem. Let 
+\(P(0,i_{1}, i_{2}, \ldots, i_{r})\) be the problem in
+which agent \(i_{r}\) sends messages \(m(0,i_{1}, i_{2}, \ldots,
+i_{r},j)\) to agents \(j\).
+
+<h5  style="color:red;">Example</h5>
+In the diagram with \(N=7\) agents in total, with at most \(t=2\) of the 7 being
+faulty, there is:
+<ol>
+  <li>
+  A single problem \(P(0)\). For this problem \(t=2\). In this
+  problem, agent \(0\) sends message \(m(0,i)\) to agent \(i\) for
+  \(i = 1, \ldots 6\).
+  </li>
+  <li>
+  \(N-1 = 6\) problems \(P(0,i)\). For these problems \(t=1\). In
+  problem \(P(0,i)\), agent \(i\) sends message  \(m(0,i,j)\) to
+  agent \(j\), where \(j\) is different from \(0\) and \(i\).
+  </li>
+  <li>
+  \((N-1) \times (N-2) = 30\) problems \(P(0,i,j)\). For these problems \(t=0\). In
+  problem \(P(0,i,j)\), agent \(j\) sends message  \(m(0,i,j,k)\) to
+  agent \(k\), where \(k\) is different from \(0\), \(i\) and \(j\).
+  </li>
+</ol>
+
+<h3 class="w3-text-teal">Aggregating results</h3>
+Let 
+\(c_{l}(0, i_{1}, \ldots, i_{r})\)
+be the consensus value
+reached by a loyal agent \(l\) for the problem \(P(0, i_{1}, \ldots,
+i_{r})\) where
+\(l\) is different from \(0, i_{1}, \ldots, i_{r}\).
+We will show that the \(c_{l}\) satisfy the specification:
+<ol>
+  <li>
+  <i>Validity</i>:
+  If agent \(i_{r}\) is loyal then this value is the message that
+\(i_{r}\) sent to \(l\),
+  <p>
+  \(c_{l}(0, i_{1}, \ldots, i_{r}) = m(0, i_{1}, \ldots, i_{r}, l) \)
+  </li>
+  <li>
+  <i>Consensus</i>:
+  All loyal agents determine the same
+  consensus value even if \(i_{r}\) is disloyal.
+  <p>
+  For loyal \(j,k\):
+  <br>
+  \(c_{j}(0, i_{1}, \ldots, i_{r}) = c_{k}(0, i_{1}, \ldots, i_{r})
+  \)
+  </li>
+</ol>
+
+<h4 class="w3-text-teal">Base Case \(t = 0\):</h4>
+<p>
+\(
+c_{l}(0, i_{1}, \ldots, i_{r}) = m(0, i_{1}, \ldots, i_{r},l)
+\)
+<p>
+i.e., the consensus value computed by loyal agent \(l\) is the message
+that \(l\) received from agent \(i_{r}\) in this problem.
+
+<h4 class="w3-text-teal">For the case \(t > 0\):</h4>
+<p>
+\(
+c_{l}(0, i_{1}, \ldots, i_{r}) = \textrm{majority of}
+\)
+<br>
+\(
+\quad ( \; c_{l}(0, i_{1}, \ldots, i_{r},j) \; \textrm{all} \; j \notin
+\{0, i_{1}, \ldots, i_{r}, l\},
+\)
+<br>
+\(
+\quad \; \; m(0, i_{1}, \ldots, i_{r},l) \; )
+\)
+
+<p>
+The majority is taken over the message \(m(0, i_{1}, \ldots,
+i_{r},l)\) that agent \(l\) received from agent \(i_{r}\) and the
+consensus values \(c_{l}(P(0, i_{1}, \ldots, i_{r},j))\) that agent
+\(l\) computes for problem \(P(0, i_{1}, \ldots, i_{r},j)\).
+
+<h3  style="color:red;">Example</h3>
+Let's compute consensus values for the case of 7 agents indexed \(0,
+\ldots, 6\), where agents \(0, \ldots, 4\) are loyal and agents \(5,
+6\) are disloyal. Let \(m(0)\) be the message that agent \(0\)
+broadcasts. Then for all loyal \(i, j, k\):
+<p>
+\(
+m(0) = m(0,i) = m(0,i,j) = m(0,i,j, k)
+\)
+
+<p style="color:red;">Let's compute \(c_{3}(0,1,2)\)</p>
+\(c_{3}(0,1,2)\)  is the consensus value that agent \(3\) computes for
+the problem in which 
+agent \(2\) sends message \(m(0,1,2,j)\) to agent \(j\) for \(j = 3,
+4, 5, 6\). This corresponds to the problem at the top right in the
+diagram. 
+
+<p>
+\(t = 0\) for this problem. So
+\(c_{3}(0,1,2) = m(0,1,2,3)\).
+<p>
+By the same argument, for loyal 
+\(i, j, k\):
+<p>
+\(c_{k}(0,i,j) = m(0, i, j, k)\)
+<p>
+Because \(m(0, i, j, k) = m(0, i, j)\), for all loyal \(k\):
+<p>
+\(
+c_{k}(0,i,j) = m(0, i, j)
+\)
+<p>
+and so the
+\(c_{k}(0,i,j)\) satisfies the validity and consensus requirements of
+the specification for problem \(P(0,i,j)\).
+
+<p style="color:red;">Let's compute \(c_{2}(0,1)\).</p>
+<p>
+Because \(t > 0\):
+<p>
+\(
+c_{2}(0,1) = 
+\)
+<br>
+\(
+\; \textrm{majority}(
+c_{2}(0,1,3), c_{2}(0,1,4), c_{2}(0,1,5),
+c_{2}(0,1,6), m(0,1,2)) \; = 
+\) 
+<br>
+\(
+\textrm{majority}(
+m(0,1,3), m(0,1,4), c_{2}(0,1,5),
+c_{2}(0,1,6),  m(0,1,2)) \; = 
+\) 
+<br>
+\(
+\textrm{majority}(m(0,1), m(0,1), c_{2}(0,1,5),
+c_{2}(0,1,6),  m(0,1)) \; = 
+\) 
+<br>
+\(
+\quad m(0,1)
+\)
+<p>
+By similar arguments, for all loyal \(i, j\):
+<p>
+\(
+c_{j}(0, i) = m(0,i)
+\) and 
+\(
+c_{i}(0) = m(0)
+\)
+
+<p style="color:red;">Does the solution satisfy the specification for
+all problems \(P(i_{0}, \ldots, i_{r})\)</p>
+To satisfy consensus for problem \(P(0, 1, 5)\), we must have \(c_{2}(0,
+1, 5) = c_{3}(0, 1, 5)\); but that may false because \(m(0, 1, 5, 2)\) may be
+different from \(m(0, 1, 5, 3)\) because agent \(5\) is disloyal.
+
+<p>
+So, <i>the algorithm does not satisfy the specification for all problems
+\(P(i_{0}, \ldots, i_{r})\)</i>. It does, however, satisfy the
+specification for problems in which the number of loyal agents exceeds
+twice the number of disloyal ones.
+
+<p>
+The problem \(P(0, 1, 5)\) has 2 disloyal agents (5 and 6) -- and 3
+loyal agents (2, 3, 4); and so this problem does not satisfy the
+criterion that the number of loyal agents exceeds twice the number of
+disloyal ones.
+
+<h3  style="color:red;">Example</h3>
+Let's look at an example in which agents \(0\), \(1\) are disloyal and
+agents \(2, \ldots, 6\) are loyal. From the arguments in the previous
+example, for loyal \(j,k\), i.e., for \(j, k \in 2, \ldots, 6\):
+<p>
+\(c_{k}(0, 1, j) = m(0, 1, j)
+\)
+
+<p>
+Next let's compute \(c_{2}(0, 1)\).
+
+<p>
+\(
+c_{2}(0, 1) = \textrm{majority} \;
+c_{2}(0, 1, 3), \ldots, c_{2}(0, 1, 6), m(0, 1, 2)
+\)
+
+<p>
+\(
+c_{2}(0, 1) = \textrm{majority} \;
+m(0, 1, 3), \ldots, m(0, 1, 6), m(0, 1, 2)
+\)
+
+<p>
+By the same argument, for all loyal \(j\): 
+\(
+c_{j}(0, 1) = \textrm{majority} \;
+m(0, 1, 2), \ldots, m(0, 1, 6)
+\)
+
+<p>
+So, the \(c_{j}(0, 1)\) all \(j\) satisfy the specification for
+problem \(P(0,1)\). By the same argument we can show that 
+\(c_{i}(0)\) all \(i\) satisfy the specification for
+problem \(P(0)\).
+
+
+<h2 class="w3-text-teal">Proof of Correctness</h2>
+We set \(i_{0} = 0\) and 
+first prove that the algorithm is correct for problem
+\(P(i_{0}, i_{1}, \ldots, i_{r})\) when agent \(i_{r}\) is loyal, and
+later consider the case when \(i_{r}\) is disloyal. We will show that
+when \(i_{r}\) is loyal, the consensus computed by all loyal agents
+\(l\) is the message \(m(i_{0}, \ldots, i_{r})\) that 
+that \(i_{r}\) broadcast.
+<p>
+\(
+c_{l}(i_{0}, \ldots, i_{r}) = m(i_{0}, \ldots, i_{r})
+\)
+
+<p>
+The proof is by induction.
+Base case: We prove the
+algorithm for problems at the leaves of the tree, i.e. for problems:
+\(P(0, i_{1}, \ldots, i_{t})\).
+For the induction step, we assume that the algorithm is correct
+for problems at depth \(k\) in the tree, and then prove that the
+algorithm is correct for problems at depth \(k-1\), i.e.,
+we assume that the solution is correct for all
+problems \(P(i_{0}\), for \(i_{k}\) and prove that the 
+algorithm is correct for problems \(P(i_{0}, i_{1}, \ldots,
+i_{k-1})\).
+
+<h4 class="w3-text-teal"> Base case: Leaf of the Tree:
+Problems \(P(i_{0}, i_{1}, \ldots, i_{t})\)</h4> 
+There are at least \(2.t  + 1\) loyal agents in the system. So,
+there are at least \(t\)
+loyal lieutenants and at most \(t\)
+disloyal lieutenants
+in problem \(P(i_{0}, \ldots, i_{t})\).
+
+<p>
+\(c_{j}(i_{0}, \ldots, i_{t})\) is the majority of messages \(m
+(i_{0}, \ldots, i_{t}, k, j)\) for all \(k\) not in \(i_{0},
+\ldots, i_{t}, j\), and the message \(m(i_{0}, \ldots,
+i_{t}, j)\).
+
+<p>
+Because \(i_{t}\) is loyal, \(m(i_{0}, \ldots, i_{t}, j) = m(i_{0},
+\ldots, i_{t})\) for all loyal \(j\). Therefore the majority is taken
+over at least \(t+1\) messages with value \(m(i_{0}, \ldots, i_{t})\).
+These \(t+1\) or more messages form a majority regardless of the
+values of the \(t\) disloyal agents. So, for loyal \(i_{t}, j\):
+<p>
+\(
+c_{j}(i_{0}, \ldots, i_{t}) = m(i_{0}, \ldots, i_{t})
+\)
+
+<h4 class="w3-text-teal"> Induction Step</h4>
+<p>
+\(c_{j}(i_{0}, \ldots, i_{k})\) is the majority of messages \(c_{j}
+(i_{0}, \ldots, i_{k}, l)\) for all \(l\) not in \(i_{0},
+\ldots, i_{k}, j\), and the message \(m(i_{0}, \ldots,
+i_{k}, j\).
+<p>
+From the assumption of the induction step, for loyal \(j\):
+<p>
+\(
+c_{j}(i_{0}, \ldots, i_{k}, l) =
+m(i_{0}, \ldots, i_{k}, l)
+\)
+<p>
+Because \(i_{k}\) is loyal: 
+\(
+m(i_{0}, \ldots, i_{k}, l) =
+m(i_{0}, \ldots, i_{k})
+\)
+<p>
+Therefore the majority is taken over at least \(t+1\) loyal agents
+\(j\) each of which computes the common consensus value of
+\(m(i_{0}, \ldots, i_{k})\), and these values out-votes values of disloyal
+agents. Therefore, for loyal \(i_{k}, j\):
+<p>
+\(
+c_{j}(i_{0}, \ldots, i_{k}) = m(i_{0}, \ldots, i_{k})
+\)
+
+<h4 class="w3-text-teal">Disloyal general</h4>
+We will prove that all loyal lieutenants come to the same consensus
+when the general is disloyal.
+
+<p>
+In every problem \(P(i_{0}, \ldots, i_{t})\), at least one of the
+agents \(i_{k}\) is loyal because there are at most \(t\) disloyal agents.
+Let's consider the truncated
+tree in which leaves represent problems \(P(i_{0}, \ldots, i_{r})\) where
+agents \(i_{0}, \ldots, i_{r-1}\) are disloyal and agent \(i_{r}\) is
+loyal.
+
+<p>
+We showed that the algorithm is correct for problem \(P(i_{0}, \ldots,
+i_{r})\) if agent \(i_{r}\) is loyal.
+Therefore the algorithm is correct for every leaf of the truncated
+tree. We will now prove by induction on the depth of the truncated
+tree that the algorithm is correct for all nodes at all depths, i.e.,
+consensus holds: For all loyal agents \(k, l\): 
+<p>
+\(
+c_{k}(i_{0}, \ldots i_{r}) = c_{l}(i_{0}, \ldots i_{r})
+\)
+<p>
+From the algorithm, the terms on both sides of the above equation are
+majorities of the following sets:
+<p>
+\(
+\{c_{k}(i_{0}, \ldots i_{r}, j), \; j \notin \{i_{0}, \ldots, i_{r}, k\},
+m(i_{0}, \ldots i_{r}, k)\}
+\)
+<br>
+\(
+\{c_{l}(i_{0}, \ldots i_{r}, j), \; j \notin \{i_{0}, \ldots, i_{r}, l\},
+m(i_{0}, \ldots i_{r}, l)\}
+\)
+<p>
+The two sets are identical because:
+<p>
+
+\(
+c_{k}(i_{0}, \ldots i_{r}, j) = c_{l}(i_{0}, \ldots i_{r}, j)
+\), for \(j \notin \{k, l\}\). Follows from the induction hypothesis.
+<p>
+\(
+c_{k}(i_{0}, \ldots i_{r}, l) = m(i_{0}, \ldots i_{r}, l)
+\) and
+\(
+c_{l}(i_{0}, \ldots i_{r}, k) = m(i_{0}, \ldots i_{r}, k)
+\)
+because agents \(k, l\) are loyal.
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
