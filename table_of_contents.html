@@ -31,6 +31,10 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 hr.new2 {
   border: 2px solid blue;
 }
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
 </style>
 
 
@@ -44,17 +48,17 @@ hr.new2 {
   onclick="w3_open()">
   <i class="fa fa-bars"></i></a>
 
-  <a href="index.html"
+  <a href="../index.html"
   class="w3-bar-item w3-button w3-hide-small w3-hover-white">
   Distributed Algorithms
   </a>
 
-  <a href="table_of_contents.html"
+  <a href="../table_of_contents.html"
   class="w3-bar-item w3-button w3-hide-small w3-hover-white">
   Contents
   </a>
 
-  <a href="cross_reference.html"
+  <a href="../cross_reference.html"
   class="w3-bar-item w3-button w3-hide-small w3-hover-white">
   Index
   </a>
@@ -78,19 +82,14 @@ title="Close Menu">
 <!--END Heading  ---------------------------->
  
 <!-- Start Sidebar----------> 
-
-<a class="w3-bar-item w3-button w3-hover-black "
-  href="DistributedSystemsEverywhere/DistributedSystemsEverywhere.html">
-  Distributed Systems Everywhere
-  </a>
-  
+ 
 <a class="w3-bar-item w3-button w3-hover-black "
 href="ReviewOfBasics/Introduction/Introduction.html" > 
 Review Sequential Programs
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="FoundationsOfDistributedSystems/Introduction/Introduction.html" > 
-Foundations
+href="FoundationsOfDistributedSystems/DistributedSystemsIntroduction/DistributedSystemsIntroduction.html" > 
+Foundations of Distributed Systems
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
 href="Timelines/Introduction/Introduction.html" > 
@@ -172,25 +171,10 @@ Continuous Systems
 <div class="w3-twothird w3-container">
 
 <!-- End overlay ---------------------------------->
-  <h3 class="w3-text-teal">Contents</h3>
+    <h3 class="w3-text-teal">Contents</h3>
 
-  <h4 class="w3-text-teal">Distributed Systems are Everywhere</h4>
-    Why study distributed algorithms>
-    <ol>
-      <li>
-      <a href="DistributedSystemsEverywhere/DistributedSystemsEverywhere.html">
-      Text: Why study distributed systems? They are everywhere.
-      </a> 
-      </li>
-      <li>
-      <a href="DistributedSystemsEverywhere/DistributedSystemsEverywhereVideo.mp4">
-      Video: Distributed systems are everywhere.
-      </a>
-    </ol>
-
-    <h4 class="w3-text-teal">Review of Sequential Programming</h4>
-    Review of sequential programming concepts that we
-    use in designing distributed algorithms. 
+    <h4 class="w3-text-teal">Review: Sequential Programming Basics</h4>
+    Review of basic concepts from sequential algorithms.
     <ol>
       <li>
       <a href="ReviewOfBasics/Introduction/Introduction.html">
@@ -214,18 +198,18 @@ Continuous Systems
       </li>
       <li>
       <a href="ReviewOfBasics/Invariant/Invariant.html">
-      Invariants
+      States & Invariant
       </a>
       </li>
       <li>
       <a href="ReviewOfBasics/LoopTermination/LoopTermination.html">
-      Loop Termination
+      Proving termination.
       </a>
       </li>
       <li>
       <a href=
       "ReviewOfBasics/ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html">
-      Examples of proving correctness.
+      Examples: correctness.
       </a>
       
     <ol>
@@ -275,21 +259,18 @@ Continuous Systems
       </li>
       <li>
       <a
-      href="FoundationsOfDistributedSystems/DistributedSystemsIntroduction/Example/Example.html">
-      Distributed Systems: Example
-      </a
-      </li>
-      <li>
-      <a
-      href="FoundationsOfDistributedSystems/DistributedSystemsIntroduction/DistributedSystemsIntroductionVideo.mp4">
-      Distributed Systems: Video
+      href="FoundationsOfDistributedSystems/Channels/Channels.html">
+      Agent timelines
       </a>
       </li>
       <li>
-      <a
-      href=
-      "FoundationsOfDistributedSystems/DistributedSystemsIntroduction/DistributedSystemsIntroductionSelfTest.html">
-      Distributed Systems: Self Test
+      <a href="FoundationsOfDistributedSystems/Progress/Progress.html">
+      Progress: Introduction
+      </a>
+      </li>
+      <li>
+      <a href="FoundationsOfDistributedSystems/ProgressProperties/ProgressProperties.html">
+      Progress: Proofs
       </a>
       </li>
     </ol>
@@ -297,42 +278,61 @@ Continuous Systems
     <h4 class="w3-text-teal">Global Snapshots and Logical Clocks</h4>
     <ol>
       <li>
-      <a
-      href=
-      "ChannelSnapshots/Timelines.html">
+      <a href="TimelineDiagrams/TimelineDiagrams.html">
       Timelines
       </a>
       </li>
       <li>
-      <a href="ChannelSnapshots/ChannelSnapshots.html">
-      Global snapshots of distributed systems
+      <a href="SnapshotIntroduction/SnapshotIntroduction.html">
+      Introduction to snapshots in shared-memory systems.
       </a>
       </li>
       <li>
-      <a href="ChannelSnapshots/LogicalClocks.html">
-      Logical clocks and vector clocks.
+      <a href="SnapshotIntroduction/VectorClocks.html">
+      Vector clocks
+      </a>
+      </li>
+      <li>
+      <a href="SnapshotIntroduction/SnapshotIntroductionExample.html">
+      Snapshots of shared-memory systems
+      </a>
+      </li>
+      <li>
+      <a href="Channels/Channels.html">
+      Consistent cuts across timelines of distributed systems
+      </a>
+      </li>
+      <li>
+      <a href="ChannelSnapshots/ChannelSnapshots.html">
+      Global snapshots
+      </a>
+      </li>
+      <li>
+      <a href="SnapshotIntroduction/SnapshotIntroduction.html">
+      Logical clocks
       </a>
       </li>
     </ol>
 
-    <h4 class="w3-text-teal">Snapshot Applications: Detection Algorithms</h4>
+    <h4 class="w3-text-teal">Detection Algorithms</h4>
     <ol>
       <li>
       <a
-      href="GlobalSnapshotApplications/StablePredicates.html"> 
-      Detecting Stable Predicates
-      </a>
-      </li>
-      <li>
-      <a
-      href="GlobalSnapshotApplications/TerminationDetection.html"> 
+      href="GlobalSnapshotApplications/GlobalSnapshotApplications.html"> 
       Detecting Termination
       </a>
       </li>
       <li>
       <a
-      href="GlobalSnapshotApplications/DatabaseDeadlockDetection.html"> 
-      Detecting Database Deadlock
+      href="DeadlockDetection_And/DeadlockDetection_And.html"> 
+      Detecting database deadlock
+      </a>
+      </li>
+      <li>
+      <a
+      href=
+      "ApplicationsDiffusingComputation/ApplicationsDiffusingComputation.html"> 
+      Detecting communication deadlock
       </a>
       </li>
     </ol>
@@ -371,7 +371,7 @@ Continuous Systems
     <ol>
       <li>
       <a
-      href="Paxos/ConsensusImpossible.html">
+      href="ConsensusImpossible/ConsensusImpossible.html">
       Impossibility of asynchronous consensus with faulty agents
       </a>
       </li>
@@ -391,14 +391,14 @@ Continuous Systems
     <ol>
       <li>
       <a
-      href="Byzantine/ByzantineWritten.html">
-      Byzantine consensus with written messages
+      href="Byzantine/Byzantine.html">
+      Byzantine algorithms with written messages
       </a>
       </li>
       <li>
       <a
-      href="Byzantine/ByzantineOral.html">
-      Byzantine consensus with oral messages
+      href="Byzantine/Byzantine.html">
+      Byzantine algorithms with oral messages
       </a>
       </li>
     </ol>
@@ -490,16 +490,11 @@ Continuous Systems
     </ol>
 <!--Start Footer--------------------------------------->
 
-
-</h5>
-
-    <div class="w3-container w3-theme-l1">
+    <hr class="new1">
       <p>K. Mani Chandy,
-      <br>
-      Simon Ramo Professor, Emeritus,
-      <br>
+      Emeritus Simon Ramo Professor,
       California Institute of Technology</p>
-    </div>
+    
 </footer>
     
 
