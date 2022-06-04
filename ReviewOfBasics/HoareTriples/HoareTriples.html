@@ -132,12 +132,14 @@ Self Test
 
 <!-- End overlay ---------------------------------->
     <!------------------------------------------------------->
-    <h1 class="w3-text-teal">Hoare Triples</h1>
-    This module is a review of Hoare triples.
+<h1 class="w3-text-teal">Hoare Triples</h1>
 
-    
-    <hr class="new2">
-    <p style="color:blue;">
+<h4 class="w3-text-teal">
+This module is a review of Hoare triples.
+</h4>
+
+<hr class="new2">
+    <h5 style="color:blue;">
     A <a
     href="https://en.wikipedia.org/wiki/Hoare_logic">Hoare triple</a>
     has the form \(\{P\} c \{Q\}\) where \(P\) and \(Q\) are predicates on
@@ -145,12 +147,11 @@ Self Test
     triple is that if \(P\) holds when the command \(c\) is initiated
     then execution of the command terminates and \(Q\) holds upon
     termination.
-    </p>
-    </h5>
-    <hr class="new2">
+</h5>
+<hr class="new2">
 
-    \(P\) is called the precondition and \(Q\) the
-    postcondition of the triple
+\(P\) is called the <i>precondition</i> and \(Q\) the
+    <i>postcondition</i> of the triple.
 
 We assume
 <a
@@ -203,6 +204,12 @@ rather than partial correctness.
 While designing a program we may specify a command in terms of its
 pre- and post-conditions and later implement the command in a
 programming language.
+
+<h4 style="color:blue;">Review</h4>
+<ol>
+  <li>What is a Hoare triple?</li>
+  <li>What are preconditions and postconditions of a command?</li>
+</ol>
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
