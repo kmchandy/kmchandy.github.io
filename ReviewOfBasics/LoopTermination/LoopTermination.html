@@ -128,10 +128,17 @@ Loop Termination: Self Test
 
 <!-- End overlay ---------------------------------->
 <h1 class="w3-text-teal">Loop Termination: Variant Functions</h1>
-We prove that most algorithms terminate by using loop variants.
-We use the term variant function, rather than loop variant,
-because we will use the concept to prove termination of loops as well as
-termination of systems that are not loops.
+<h4 class="w3-text-teal">
+This module is a review of methods used to prove that executions of
+loops terminate.
+</h4>
+
+
+We will prove that executions of loops terminate by using
+<a href="https://en.wikipedia.org/wiki/Loop_variant">loop variants</a>.
+We also use the term <i>variant function</i> for loop variant.
+We will use variant functions to prove termination of distributed
+systems. 
 
 <p>
 <i>A variant function is a function
@@ -165,8 +172,7 @@ lexicographically</a>. For example \((0, 2) < (1, 0)\).
     \(f\) then every iteration
     reduces 
 \(f\). Since \(f\) is bounded below, it cannot decrease forever.
-Therefore, the computation terminates, and when it does
-all guards are False.
+Therefore, the computation terminates.
 
 
 
@@ -210,20 +216,21 @@ reached from an initial state in a finite number of state transitions.
 </figure>
 
 
-<h3 class="w3-text-teal">
+<h4 class="w3-text-teal">
 Self tests
-</h3>
+</h4>
 are given in
     <a href =
     "../ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html">
 Examples of Correctness Proofs.
 </a>
 
-<h3 class="w3-text-teal">Summary</h3>
-We will use variant functions to prove that distributed algorithms
-progress towards their goals.
-The concept of variant functions in sequential programming is a
-central concept in reasoning about progress of distributed systems.
+<h4 style="color:blue;">Review</h4>
+<ol>
+  <li>What is a variant function? What does lexicographical comparison
+  of vectors of integers mean?</li>
+  <li>Can a loop that executes forever have a variant function? Why not?</li>
+</ol>.
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
