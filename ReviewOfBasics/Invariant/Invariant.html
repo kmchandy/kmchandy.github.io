@@ -142,55 +142,10 @@ Correctness Proofs: Examples
 
     
 <h2 class="w3-text-teal">Invariant and Stable Predicates</h2>
-<hr class="new2">
-<h5 style="color:blue;">
+<h5 class="w3-text-teal">
 This module reviews invariant and stable predicates in
 nondeterministic loops.
 </h5>
-<hr class="new2">
-
-    The state of a <i>do-od</i> loop is given by the values of its
-    variables.
-    The execution of a guarded command, whose guard evaluates to true,
-    may change values of variables, and thus cause a transition from
-    one state to another.
-    There are no transitions from a state in which the guards of all
-    commands are false.
-    If the guards of multiple commands are true in a state \(s\) then
-    there can be transitions from \(s\) to multiple different states;
-    any of these transitions from \(s\) could be taken.
-
-    <p style="color:red;">Example</p>
-    Consider a do-od loop that sorts an array \(x[0, 1, 2,
-    3]\) in increasing order by flipping adjacent out-of-order
-    pairs. The loop has a guarded command for each adjacent pair of
-    elements; the guard evaluates to true when the pair is out
-    of order, and the command switches the pair.
-    <p>
-    If \(x =[10, 5, 1]\) then one of two commands can be executed:
-    either flip \(x[0], x[1]\) or flip \(x[1], x[2]\).
-    The state-transition graph has edges from state \(x =[10, 5, 1]\)
-    to state \(x =[5, 10, 1]\) and to state \(x =[10, 1, 5]\).
-
-    <h4 class="w3-text-teal">States and Graphs</h4>
-    The states and state transitions of a system are represented by a
-    <a href="https://en.wikipedia.org/wiki/Directed_graph">
-    directed graph
-    </a>
-    in which vertices represent states and edges represent
-    transitions.
-    We call this graph the state-transition graph.
-
-    <h4 class="w3-text-teal">Computations and Paths</h4>
-    A <i>computation</i> is a sequence of states where there exists a
-    transition from each state in the sequence to the next state of
-    the sequence.
-    A computation is represented by a path through the
-    state-transition graph. 
-    <p>
-    In this module, we treat the following as equivalent: vertex and
-    state, edge and state transition, computation and path.
-
 <h4 class="w3-text-teal">Stable</h4>
 <hr class="new2">
 <h5 style="color:blue;">
@@ -292,6 +247,13 @@ set of set of states.
     Proofs of safety for distributed and sequential algorithms are
 identical.
 We will review the material in this module when we discuss safety.
+
+<h4 style="color:blue;">Review</h4>
+<ol>
+  <li>What is a stable predicate? What is an invariant?</li>
+  <li>How can you prove that all paths from an initial set of states
+  remain in a given set, <i>safe</i>, of states?</li>
+</ol>
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
