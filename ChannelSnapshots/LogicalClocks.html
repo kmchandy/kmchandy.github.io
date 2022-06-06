@@ -141,6 +141,13 @@ Snapshots: Solution
 <!-- End overlay ---------------------------------->
     <!--------------------------------------------------------->
 <h1 class="w3-text-teal">Logical Clocks</h1>
+
+<h4 class="w3-text-teal">
+This module describes the logical clock algorithm which assigns a
+timestamp to each event in a trajectory where the state for any value
+a timestamp is a global snapshot.
+</h4>
+
 A logical clock algorithm is one in which each agent assigns a
 number \(t(e)\), called
 a timestamp, to each event \(e\) in its trajectory.
@@ -257,9 +264,15 @@ this trajectory.
 <h3 class="w3-text-teal">Vector Clocks</h3>
 The logical clock algorithm ensures that if there is a path from an
 event \(e\) to an event \(e'\) in the timeline diagram then \(t(e') >
-t(e)\); however, the converse isn't necessarily true. The vector clock
+t(e)\); however, the converse isn't necessarily true.
+
+<hr class="new2">
+<h4 style="color:blue;">
+The vector clock
 algorithm ensures that \(t(e') > t(e)\) if and <i>only if</i> there is 
 a path from \(e\) to \(e'\).
+</h4>
+<hr class="new2">
 
 <p>
 A vector timestamp is a vector with an element for each agent in the
@@ -339,6 +352,26 @@ could have an impact on an event \(e'\) --- if there is a path from
 \(e\) to \(e'\) in the timeline diagram --- then \(t(e') > t(e)\). We
 will use logical time for its relevance to timeline diagrams,
 causality and global snapshots.
+
+<h4 style="color:blue;">Review</h4>
+<ol>
+  <li>
+  In the logical clock algorithm, how is a timestamp assigned to an internal event?
+  </li>
+  <li>
+  How is a timestamp assigned to an event in which a message is received?
+  </li>
+  <li>
+  How can timestamps from the logical clock algorithm be used to obtain global snapshots?
+  </li>
+  <li>
+  How are vector clock values assigned?
+  </li>
+  <li>
+  The vector clock algorithm ensures that \(t(e') > t(e)\) if and <i>only if</i> there is 
+  a path from \(e\) to \(e'\). What are the central ideas in the proof?
+  </li>
+</ol>
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">

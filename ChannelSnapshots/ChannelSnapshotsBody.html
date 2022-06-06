@@ -1,9 +1,14 @@
 
 
-    <!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Snapshots of Distributed Systems</h2>
+<!--------------------------------------------------------->
+<h1 class="w3-text-teal">Snapshots of Distributed Systems</h1>
+<!--------------------------------------------------------->
 
-    <!--------------------------------------------------------->
+<h4 class="w3-text-teal">
+This module describes the global snapshot algorithm which can be used
+to determine a global state of a system
+</h4>
+
 The global snapshot algorithm determines a global state of a
 system. The algorithm cannot be instantaneous because it requires
 collaboration among multiple agents. 
@@ -252,3 +257,27 @@ channels and then form global snapshots are presented later.
 One of many applications of global snapshots is to checkpoint a
 distributed computation so that the computation can be restarted from
 the checkpoint if a transient event occurs.
+
+<h4 style="color:blue;">Review</h4>
+<ol>
+  <li>
+  The specification of the global snapshot algorithm is that the state
+  \(s_{snap}\) obtained by the algorithm must be the state of a
+  consistent cut. Why is this specification useful?
+  </li>
+  <li>
+  Related question. A consequent property is:
+  There exists a trajectory from \(s_{init}\) through \(s_{snap}\) to
+  \(s_{fini}\). How do you think this property can be used?
+  </li>
+  <li>
+  Prove the theorem on channel counts to yourself:
+  The points at which local snapshots are taken forms a
+  <i>consistent</i> cut if and only if, for all channels \(C\):
+  \(C_{s} \geq C_{r}\).
+  </li>
+  <li>
+  How does the global snapshot algorithm record states of channels?
+  </li>
+</ol>
+  
