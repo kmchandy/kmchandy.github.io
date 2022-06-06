@@ -1,8 +1,13 @@
 <!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Timelines</h2>
+    <h1 class="w3-text-teal">Timelines</h1>
 <!--------------------------------------------------------->
+
+<h4 class="w3-text-teal">
+This module introduces timelines.
 A timeline is a graphical representation of the sequence of state
 transitions of a trajectory.
+</h4>
+
 
 <p>
 A state transition which changes the state of an agent is called an
@@ -255,12 +260,14 @@ conditions of the theorem are always satisfied.
 
 <h3 class="w3-text-teal">Theorem about Consistent Cuts</h3>
 For any cut, \([past, future]\), of a timeline diagram of a trajectory
-\(\tau\) there exists a trajectory \(\tau'\) with the same events as
-\(\tau\) in which all \(past\) events occur before all \(future\) events.
+\(\tau\) there exists a trajectory \(\tau'\) where the sequence of
+events in \(\tau'\) is a permutation of the sequence of
+events in \(\tau\) and where <i>all \(past\) events occur before all
+\(future\) events in \(\tau'\)</i>.
 <p>
 The proof follows directly from the theorem on trajectories.
 
-<p style="color:red;">Example</p>
+<h4 style="color:red;">Example</h4>
 The cut in the diagram on the top of figure 5 is consistent.
 Therefore, there exists a timeline diagram, shown at the bottom of the
 figure, in which all past events occur before all
@@ -288,3 +295,21 @@ from \(s_{init}\) to \(s_{snap}\) and then to \(s_{fini}\).
 Timelines are a familiar concept, helpful in
 understanding distributed systems and other multi-agent
 systems.
+
+<h4 style="color:blue;">Review</h4>
+<ol>
+  <li>What is timeline? Why is the graph of a timeline acyclic?</li>
+  <li>How is the state of a channel determined from the timeline
+  diagram?</li>
+  <li>
+  Let \(X\) be a timeline diagram of a trajectory of a system. Let
+  \(Y\) be a timeline diagram with the same graph. Show that \(Y\) is
+  also a timeline diagram of the system if and only if all edges in
+  \(Y\) are directed forward in time.
+  </li>
+  <li>
+  What is a cut in a timeline? Draw a timeline diagram and give
+  examples of consistent and inconsistent cuts. Given a timeline
+  diagram and a consistent cut, draw a timeline diagram with the same
+  graph, but in which past events occur before future events.
+</ol>.
