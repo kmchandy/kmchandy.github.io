@@ -125,13 +125,20 @@ Distributed Systems Self Test
 <!-- End overlay ---------------------------------->
 
 <!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Distributed Systems: Introduction</h2>
+    <h1 class="w3-text-teal">Distributed Systems: Introduction</h1>
 <!----------------------------------------------------------------->
+<h4 class="w3-text-teal">
+This module is an introduction to the model of distributed systems
+    used in this course.
+</h4>
+
 A distributed system consists of a set of agents and a set of message-passing
 channels. It is represented by a labeled directed graph in which vertices
   represent agents and labeled directed edges represent named
-  channels.
-  <p style="color:red;">Example</p>
+channels.
+Each channel is directed from one agent to one agent.
+
+  <h4 style="color:red;">Example</h4>
     The figure below shows a distributed system with agents A, B, C.
 
     <figure>
@@ -145,7 +152,7 @@ represents a channel \(z\) directed from agent \(A\) to agent \(B\).
 A channel  \(z\) from an agent \(A\) to an agent \(B\) is called an
 <i>outgoing</i> channel of \(A\) and an <i>incoming</i> channel of \(B\).
 
-  <p class="w3-text-teal">Agent State</p>
+  <h4 class="w3-text-teal">Agent State</h4>
   Each agent has a set of variables that are <i>local</i> to the agent;
 other agents and channels cannot access these variables.
 The state of an agent is given by the values of its variables.
@@ -156,7 +163,7 @@ Agent's may have local clocks; however, clocks are not perfectly
 reads 1200.
 We will discuss clock synchronization in later modules.
 
-<p class="w3-text-teal">Channels</p>
+<h4 class="w3-text-teal">Channels</h4>
   We will study different types of channels in this course.
   Messages may get lost, or messages may overtake
   earlier messages, in some channel types.
@@ -171,7 +178,7 @@ All messages sent are delivered; messages are delivered in the order
 sent; and message delays are arbitrary (but finite).
 
   
-<p class="w3-text-teal">Channel State</p>
+<h4 class="w3-text-teal">Channel State</h4>
 The state of a channel is a sequence of messages; these are
 the messages in the channel.
 <p>
@@ -185,7 +192,7 @@ A message at the head of the sequence of messages in a nonempty
 channel is removed from the sequence and delivered to the receiving
 agent. 
 
-  <h4 class="w3-text-teal">System States and Transitions</h4>
+  <h3 class="w3-text-teal">System States and Transitions</h3>
   The state of a system is given by the states of its agents and
 channels. The system makes state transitions in two ways:
 <ol>
@@ -203,7 +210,7 @@ When an agent changes state it may send messages on its outgoing
 channels. State transitions are specified by guarded commands as
 described next.
 
-<h4 class="w3-text-teal">Guarded Command: Message Delivery</h4>
+<h3 class="w3-text-teal">Guarded Command: Message Delivery</h3>
 
 <p class="w3-text-teal">Guard for Message Delivery</p>
 
@@ -221,7 +228,7 @@ the agent receives, (2) the identity of the
 channel \(c\) from which the message is delivered, and (3) the agent's state
 when it receives the message.
 
-<h4 class="w3-text-teal">Guarded Command: Internal Transition</h4>
+<h3 class="w3-text-teal">Guarded Command: Internal Transition</h3>
 <p class="w3-text-teal">Guard for Internal Transition</p>
 The guard for an internal transition of an agent \(B\) is a predicate
 on the state of \(B\).
@@ -234,7 +241,7 @@ The command may change the state of the
 \(B\)'s next state and the messages sent by the
 agent depend only on \(B\)'s state prior to the transition.
 
-<h4 class="w3-text-teal">Model of Computation</h4>
+<h3 class="w3-text-teal">Model of Computation</h3>
 We begin by using the familiar model of computation of nondeterministic
 iteration: the
 <a href="../../ReviewOfBasics/NondeterministicIteration/NondeterministicIteration.html ">do-od loop</a> from
@@ -243,7 +250,7 @@ True. Later we will introduce the concept of fairness and also allow
 for the possibility that some commands are not executed even
 though their guards remain true forever.
 
-<h4 class="w3-text-teal">Examples</h4>
+<h4 style="color:red;">Examples</h4>
 An agent has incoming channels \(temperature\) and
 \(pressure\). It has outgoing channels \(alarm\) and \(boiler\). The
 agent has variables \(last\_temperature\) and \(last\_pressure\).
@@ -271,6 +278,24 @@ Look at a
 <a href="DistributedSystemsIntroductionVideo.mp4">a video of this material</a>, or
 move on to new material, <a href="Timelines.html">timelines</a>:
 a graphical representation of system trajectories.
+
+<h4 style="color:blue;">Review</h4>
+<ol>
+  <li>What is a distributed system? How are agents and channels
+  represented in directed labeled graphs?</li>
+  <li>What is an agent state? Can one agent access the state of
+  another?</li>
+  <li>What is a channel state? Can an agent access the state of
+  any channel?</li>
+  <li>Are messages delivered in the order sent?</li>
+  <li>What is the guarded command representation of an event in which
+  a message is delivered? Of an internal event?</li>
+  <li>If an agent sends a message \(m\) on a channel \(c\) and then
+  sends a message \(m'\) on a channel \(c'\), can \(m'\) be delivered
+  before \(m\)?</li>
+  
+  
+</ol>.
 
 
 <!--Start Footer--------------------------------------->
