@@ -84,27 +84,35 @@ title="Close Menu">
 <!-- Start Sidebar----------> 
  
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../ChannelSnapshots/ChannelSnapshots.html" > 
+href="./SnapshotsChapterIntroduction.html" > 
+Introduction: Timelines, Snapshots, Logical Clocks
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="./Timelines.html" > 
+Timelines
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="./ChannelSnapshots.html" > 
 Global Snapshots
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../ChannelSnapshots/LogicalClocks.html" > 
+href="./LogicalClocks.html" > 
 Logical Clocks
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../ChannelSnapshots/GlobalSnapshotAlgorithmVideo.mp4" > 
+href="./GlobalSnapshotAlgorithmVideo.mp4" > 
 Snapshots: Video
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../ChannelSnapshots/ChannelSnapshotsSelfTest.html" > 
+href="./ChannelSnapshotsSelfTest.html" > 
 Snapshots: Self Test
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../ChannelSnapshots/ChannelSnapshotsAssignment/ChannelSnapshotsAssignment.html" > 
+href="./ChannelSnapshotsAssignment/ChannelSnapshotsAssignment.html" > 
 Snapshots: Assignment
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../ChannelSnapshots/ChannelSnapshotsAssignment/ChannelSnapshotsAssignmentSolution.html" > 
+href="./ChannelSnapshotsAssignment/ChannelSnapshotsAssignmentSolution.html" > 
 Snapshots: Solution
 </a>
 
@@ -134,208 +142,258 @@ Snapshots: Solution
 
 
     <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Global Snapshots: Self Test</h1>
-    <!--------------------------------------------------------->   
+    <h2 class="w3-text-teal">Snapshots of Distributed Systems</h2>
 
     <!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Question 1</h2>
-    <!--------------------------------------------------------->
-    A system has two agents \(A\) and \(B\) and a channel \(x\) from
-    \(A\) to \(B\) and a channel \(y\) from \(B\) to \(A\). Initially
-    both channels are empty.
-    <p>
-    Let \(T\) be a point on \(A\)'s timeline
-    after \(A\) has sent exactly 2 messages on channel \(x\) and has
-    received exactly 3 messages on channel \(y\).
-    <p>
-    Let \(T'\) be a point on \(B\)'s timeline
-    after \(B\) has sent exactly 4 messages on channel \(y\) and has
-    received exactly 3 messages on channel \(x\).
-    <p>
-    True or False? The cut through the points \(T\) and \(T'\) is a
-    consistent cut.
+The global snapshot algorithm determines a global state of a
+system. The algorithm cannot be instantaneous because it requires
+collaboration among multiple agents. 
+Let the states in which the algorithm starts and ends be
+\(s_{init}\) and \(s_{fini}\), respectively, and let \(s_{snap}\) be
+the snapshot determined by the algorithm.
 
-    <!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Question 2</h2>
-    <!--------------------------------------------------------->
-    The figure below has two diagrams. Both diagrams show timelines
-    for agents \(A\) and \(B\), with message lines shown in red, with
-    the marker lines shown in green. The top diagram showns a point in
-    which agent \(B\) records its local state and and sends a marker
-    on its only outgoing channel which is to agent \(B\).
-    <figure>
-    <img src="ChannelSnapshotsSelfTest/Slide1.jpg" alt="Fig1" style="width:80%">
-    <figcaption>Fig.1: Question 2</figcaption>
-    </figure>
-    The diagram at the bottom shows a later point. When agent \(A\)
-    gets the marker, it records its state because it hasn't done so
-    already, and it sends a marker out on its only outgoing channel.
-    <p>
-    In this diagram, what are the states of the channels from \(A\) to
-    \(B\) and from \(B\) to \(A\)?
-
-    <!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Question 3</h2>
-    <!--------------------------------------------------------->
-    The figure below has two diagrams. Both diagrams show timelines
-    for agents \(A\) and \(B\), with message lines shown in red, with
-    the marker lines shown in green. The top diagram showns a point in
-    which agent \(B\) records its local state and and sends a marker
-    on its only outgoing channel which is to agent \(B\).
-    <figure>
-    <img src="ChannelSnapshotsSelfTest/Slide2.jpg" alt="Fig2" style="width:80%">
-    <figcaption>Fig.2: Question 3</figcaption>
-    </figure>
-    The diagram at the bottom shows a later point. Does the diagram
-    show a correct execution of the marker algorithm to detect global
-snapshots or an incorrect execution?
-
-    <!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Question 4</h2>
-<!--------------------------------------------------------->
-The agents in a system are connected as a directed tree with agent
-    \(0\) as the root. There is a unique directed path from agent
-\(0\) to every agent where the edges represent channels.
+<h4 class="w3-text-teal">Specification of the Global Snapshot</h4>
+\(s_{snap}\) must be the
+<a href="">state of a consistent cut.</a>
 
 <p>
-Agent \(0\) initiates the marker algorithm to compute a global
-snapshot. All other agents record their states when they receive a
-marker. 
-<p>
-True or False? The global state recorded by this algorithm shows that
-all channels are empty.
+An important property that follows the <a href="">theorem and
+corollary on consistent cuts</a> and from the specification is:
+<hr class="new2">
+    <h5 style="color:blue;">
+There exists a trajectory from \(s_{init}\) through \(s_{snap}\) to
+\(s_{fini}\).
+<h5>
+<hr class="new2">
 
-    <!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Question 5</h2>
-<!--------------------------------------------------------->
-The agents in a system are indexed \(j\) for \(0 \leq j \leq N\),
-    where \(N > 1\). The only channels are from agent \(j\) to agent
-\((j+1) \; \textrm{mod} \; N\).
-<p>
-Agent \(0\) initiates the marker algorithm to compute global
-    snapshots. All other agents record their local states when they
-receive a marker.
-<p>
-True or False? The global state recorded by this algorithm shows that
-all channels are empty.
+<h4 class="w3-text-teal">A Brief Review of Consistent Cuts</h4>
+A consistent cut of a timeline diagram is a partition of the events in
+the diagram into two subsets called <i>past</i> and <i>future</i>, and
+in which there is no message from a future event
+to a past event.
 
-    <!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Question 6</h2>
-<!--------------------------------------------------------->
-The figure shows two diagrams. Timestamps are shown for events.
-    <figure>
-    <img src="ChannelSnapshotsSelfTest/Slide6.jpg" alt="Fig3" style="width:80%">
-    <figcaption>Fig.3: Question 6</figcaption>
+<h4 style="color:red;">Review: Examples of Cuts</h4>
+<figure>
+    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.001.jpeg"
+alt="Fig1" style="width:80%"> 
+    <figcaption>Fig.1: A consistent cut</figcaption>
 </figure>
-<p>Part A</p>
-True or False?
-The timestamps for the top diagram satisfy the logical clock
-requirement.
+Figure 1 shows a consistent cut, and figure 2 shows an inconsistent one.
 
-<p>Part B</p>
-True or False?
-The timestamps for the bottom diagram satisfy the logical clock
-requirement.
+<figure>
+    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.002.jpeg" alt="Fig2" style="width:80%">
+    <figcaption>Fig.2: An inconsistent cut</figcaption>
+</figure>
 
-<!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Question 7</h2>
-<!--------------------------------------------------------->
-The figure shows two diagrams. Timestamps are shown for events.
+    <p>
+    We use the phrase "an agent B takes its local snapshot" for "an
+agent B records B's state."
+A key question is <i>when</i> should an agent take
+its own local snapshot to ensure that the collection of local
+snapshots form a consistent cut? 
+
+<h4 style="color:red;">Examples of Local Snapshots</h4>
+In the next two figures, the points at which each agent takes its
+local snapshot are shown as yellow circles. Past events are those
+earlier than the points at which agents take their local
+snapshots. Figure 3 shows agent snapshot points corresponding to a
+consistent cut, and figure 4 shows inconsistent snapshot points. 
+<figure>
+    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.003.jpeg"
+alt="Fig3" style="width:80%"> 
+    <figcaption>Fig.3: Consistent Local Snapshots</figcaption>
+</figure>
+<figure>
+    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.004.jpeg" alt="Fig4" style="width:80%">
+    <figcaption>Fig.4: Inconsistent Local Snapshots</figcaption>
+</figure>
+The global snapshot algorithm can have local snapshots, such as those in
+figure 3, that result in consistent cuts. And the algorithm must
+disallow local snapshots, such as in figure 4, that result in
+inconsistent cuts.
+
+<h3 class="w3-text-teal">Theorem: Channel Counts and Consistent
+Cuts</h3>
+When an agent takes its local snapshot, for each outgoing channel
+\(C\) of the agent let \(C_{s}\) be the number of
+messages that the agent has sent along \(C\), and for each incoming channel
+\(C\) let \(C_{r}\) be the number of
+messages that it has received along \(C\).
+<hr class="new2">
+<h5 style="color:blue;">
+The points at which local snapshots are taken forms a
+<i>consistent</i> cut if and only if, for all channels \(C\):
+<p>
+\(C_{s} \geq C_{r}\)
+</h5>
+<hr class="new2">
+The proof follows directly from the definition of consistent cuts. We
+will show that a
+message sent in the future is received in the future.
+<p>
+A message received along a channel \(C\) in the future is a message received after
+\(C_{r}\) messages have been received along the channel.
+A message sent along a channel \(C\) in the future is sent after
+\(C_{s}\) messages have been sent along the channel.
+Because channels are first-in-first-out this message is received after 
+\(C_{s}\) messages have been received along the channel, and therefore
+the receive event is also in the future.
+
+    <h3 class="w3-text-teal">Global Snapshot Algorithm</h3>
+The algorithm employs a special kind of message called a <i>marker</i>
+which is distinct from all other messages in the system.
+Each agent takes its local snapshot exactly once and exactly one
+marker is sent along each channel.
+
+<p>
+The steps are:
+<ol>
+  <li>
+  The algorithm begins by one or more agents taking their local snapshots.
+  </li>
+  <li>
+  When an agent takes its local snapshot it sends a <i>marker</i> on each
+  of its outgoing channels.
+  </li>
+  <li>
+  When an agent receives a marker, the agent takes its local snapshot
+  if it has not already done so.
+  </li>
+</ol>
+We assume that there is a path of directed channels from each agent to every
+other agent so that all agents receive markers eventually.
+
+<h3 style="color:red;">Example</h3>
+Figure 5 illustrates the algorithm. In this example, there is exactly one channel
+between from each agent to each different agent. When B takes its
+snapshot it sends markers
+to A and C. Markers are shown as green edges.
+Agent C takes its snapshot when it receives the marker
+which ensures that C's snapshot is before event 11.
+
     <figure>
-    <img src="ChannelSnapshotsSelfTest/Slide7.jpg" alt="Fig4" style="width:80%">
-    <figcaption>Fig.4: Question 7</figcaption>
-The figure also shows cuts at logical time 22 and 35.
-<p>
-True or False? There is a trajectory from the (global) state
-    corresponding to the cut at logical time 22 to 
-the cut at logical time 35.
+    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.005.jpeg" alt="Fig5" style="width:80%">
+    <figcaption>Fig.5: Markers ensure cuts are consistent</figcaption>
+</figure>
+When agents B and C receive markers they take their snapshots if they
+    haven't done so already, and send markers in their turn. These
+markers are shown in the next figure.
 
 
-
-<!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Answers</h1>
-<!--------------------------------------------------------->
-
-<!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Question 1</h2>
-<!--------------------------------------------------------->
-False
-<p>
-A cut is consistent if and only if the number of messages sent along a
-    channel before the sender records its state is at least the number
-    of messages received along the channel before the receiver records
-    its state. This condition is violated for channel \(x\).
-
-<!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Question 2</h2>
-<!--------------------------------------------------------->
-The state of a channel is the sequence of messages received after the
-    receiver takes its snapshot and before the receiver receives a
-marker along that channel.
-
-<p>
-Agent \(A\) takes its snapshot when it receives a marker from agent
-\(B\). So, the state of the channel from \(B\) to \(A\) in the global
-snapshot is the empty sequence.
 
     <figure>
-    <img src="ChannelSnapshotsSelfTest/Slide8.jpg" alt="Fig5" style="width:80%">
-    <figcaption>Fig.5: Answer 2</figcaption>
+    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.006.jpeg" alt="Fig6" style="width:80%">
+    <figcaption>Fig.6: Showing all Markers</figcaption>
+
+<h4 class="w3-text-teal">Proof of correctness</h4>
+The points at which agents take their snapshots form a cut where
+events on an agent's timeline before the agent takes its snapshot are
+past events.  A cut is consistent exactly when all messages sent in
+the future are received in the future.
+<p>
+Let \(m\) be a message sent in a future event. We will prove that
+\(m\) is received in a future event.
 
 <p>
-The state of the channel from \(A\) to \(B\) is illustrated in the
-diagram. It is the sequence of messages received after \(B\) records
-its local state to the point at which \(B\) receives the marker from
-\(A\). There are 3 such messages.
+Because \(m\) is sent in a future event, \(m\) is sent after the
+sender takes its snapshot.  When an agent takes its snapshot it sends
+markers on all its outgoing channels.  So, \(m\) is sent along a
+channel after the sender sends a marker on that channel.
 
-<!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Question 3</h2>
-<!--------------------------------------------------------->
-False
 <p>
-An agent sends markers on all its outgoing channels when it records
-    its state. In this case, agent \(A\) records its state, then sends
-    a message, and only then sends a marker on an outgoing channel.
+Channels are first-in-first-out.  So the receiver gets \(m\) after
+receiving a marker.  And so the receiver gets \(m\) after the receiver
+takes its snapshot.  Events after an agent takes its snapshot are
+future events.  Therefore \(m\) is received in the future.
 
-<!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Question 4</h2>
-<!--------------------------------------------------------->
-True
-<p>
-Each agent records its state when it receives a marker from its only
-    incoming channel. So, the state of that channel is recorded as the
-    empty state.
+<h3 class="w3-text-teal">Snapshots of Channels</h3>
+Next we look at how the algorithm records snapshots of channels.  From
+the timeline theorem, the sequence of messages in the channel in a
+global snapshot are the messages sent on the channel in the past and
+received on the channel in the future.
 
-<!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Question 5</h2>
-<!--------------------------------------------------------->
-False.
 <p>
-The state of the channel in to agent \(j\), for all \(j \neq 0\), will be
-    recorded as empty. The state of the channel from agent \(N-1\) to
-    agent \(0\) is the sequence of messages that agent \(0\) receives
-    after recording its local state and before receiving the marker
-    from agent \(N-1\), and this sequence may not be empty.
+Messages sent in the past are messages sent before the sender takes
+its snapshot.  Messages received in the future are messages received
+after the receiver takes its snapshot.  So, the messages in the
+channel in a snapshot are the messages sent before the sender takes
+its snapshot and received after the receiver takes its snapshot.
 
-<!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Question 6</h2>
-<!--------------------------------------------------------->
-Part A: False
-<p>There is an edge from a higher-timestamp (20) event to a
-lower-timestamp (15) event.
 <p>
-Part B: False
-<p>There is an edge from a higher-timestamp (15) event to a
-    lower-timestamp (14) event.
+When an agent takes its local snapshot it sends a marker on each of
+its outgoing channels.  So, messages sent along a channel in the past
+are messages sent before a marker is sent along that channel.
 
-<!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Question 7</h2>
-<!--------------------------------------------------------->
-True
 <p>
-There always exists a path in the state-transition diagram from the
-    state corresponding to a logical time \(T\) to the state at a
-    logical time \(T'\) for \(T' \geq T\).
+Because channels are first-in-first-out, messages sent along a channel
+in the past are messages received along the channel before a marker is
+received along that channel. Therefore, the messages in a channel in
+a snapshot are the messages that the receiver receives along the
+channel after the receiver takes its local snapshot and before the
+receiver receives a marker on that channel.
+
+<h4 class="w3-text-teal">Algorithm to Record Channel States</h4>
+Let \(c\) be a channel, and let \(c\) be directed towards an agent
+\(B\).
+The snapshot of \(c\) is determined by \(B\) as the sequence of
+messages that \(B\) receives after \(B\) takes its local snapshot and
+before \(B\) gets a marker along \(c\).
+
+<p>
+Note: If \(B\) takes its local snapshot when it receives a marker
+along \(c\), then the snapshot of \(c\) is the empty sequence.
+
+<h3 style="color:red;">Example: Channel Snapshot</h3>
+A diagram that illustrates the process by which an agent gets a
+snapshot of an incoming channel is shown below. The diagram shows the
+timelines for two agents, \(A\) and \(B\).
+
+<p>
+Agent \(A\) sends messages \(m_{0}, m_{1}, m_{2}\), then sends a
+marker (colored green), and then message \(m_{3}\), to agent \(B\) on a
+channel \(x\). All the messages in the diagram are sent on the same
+channel.
+
+<p>
+The events shown as blue circles on \(A\)'s timeline are
+events in which \(A\) sends messages \(m_{0}, m_{1}, m_{2}\) before
+\(A\) takes its local snapshot.  The event shown as a black circle
+shows \(A\) sending messages \(m_{3}\) after \(A\) takes its local
+snapshot. The point at which \(A\) takes its local snapshot is the
+point at which the purple wavy line (the cut) crosses \(A\)'s timeline.
+
+    <figure>
+    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.007.jpeg" alt="Fig7" style="width:100%">
+    <figcaption>Fig.7: Snapshot of a channel</figcaption>
+    </figure>
+
+The event shown as a yellow circle on \(B\)'s timeline represents the
+event in which \(B\) receives messages \(m_{0}\) before \(B\) takes its
+own snapshot. The events shown as orange circles represent events in
+which \(B\) receives messages \(m_{1}, m_{2}\) after \(B\) takes its
+own snapshot and before \(B\) receives the marker. The black event
+represents \(B\) receiving message \(m_{3}\) after \(B\) takes its
+snapshot.
+
+<p>
+The messages that \(A\) sent in the past are \(m_{0}, m_{1}, m_{2}\).
+The messages that \(B\) receives in the future are \(m_{1}, m_{2},
+m_{3}, \ldots\).
+The state of the channel, at the cut, is the sequence of messages \([m_{1},
+m_{2}]\) that \(A\) sent in the past and that \(B\) receives in the
+future.
+This is shown as the sequence of red message lines that
+cross the wavy purple line which represents the global snapshot.
+These are the messages that \(B\) receives after it takes its local
+snapshot and before it receives the marker.
+
+<p class="w3-text-teal">Collecting Local Agent and Channel Snapshots</p>
+Algorithms by which agents collect local snapshots of agents and
+channels and then form global snapshots are presented later.
+One of many applications of global snapshots is to checkpoint a
+distributed computation so that the computation can be restarted from
+the checkpoint if a transient event occurs.
+
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">

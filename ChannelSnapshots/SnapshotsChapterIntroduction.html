@@ -1,4 +1,4 @@
-<title>ChannelSnapshots/ChannelSnapshotsAssignment/ChannelSnapshotsAssignment.html</title>
+<title>ChannelSnapshots/SnapshotsChapterIntroduction.html</title>
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
 
@@ -48,17 +48,17 @@ hr.new1 {
   onclick="w3_open()">
   <i class="fa fa-bars"></i></a>
 
-  <a href="../../index.html"
+  <a href="../index.html"
   class="w3-bar-item w3-button w3-hide-small w3-hover-white">
   Distributed Algorithms
   </a>
 
-  <a href="../../table_of_contents.html"
+  <a href="../table_of_contents.html"
   class="w3-bar-item w3-button w3-hide-small w3-hover-white">
   Contents
   </a>
 
-  <a href="../../cross_reference.html"
+  <a href="../cross_reference.html"
   class="w3-bar-item w3-button w3-hide-small w3-hover-white">
   Index
   </a>
@@ -84,31 +84,35 @@ title="Close Menu">
 <!-- Start Sidebar----------> 
  
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../SnapshotsChapterIntroduction.html" > 
+href="./SnapshotsChapterIntroduction.html" > 
 Introduction: Timelines, Snapshots, Logical Clocks
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../ChannelSnapshots.html" > 
+href="./Timelines.html" > 
+Timelines
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="./ChannelSnapshots.html" > 
 Global Snapshots
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../LogicalClocks.html" > 
+href="./LogicalClocks.html" > 
 Logical Clocks
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../GlobalSnapshotAlgorithmVideo.mp4" > 
+href="./GlobalSnapshotAlgorithmVideo.mp4" > 
 Snapshots: Video
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../ChannelSnapshotsSelfTest.html" > 
+href="./ChannelSnapshotsSelfTest.html" > 
 Snapshots: Self Test
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../ChannelSnapshotsAssignment/ChannelSnapshotsAssignment.html" > 
+href="./ChannelSnapshotsAssignment/ChannelSnapshotsAssignment.html" > 
 Snapshots: Assignment
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="../ChannelSnapshotsAssignment/ChannelSnapshotsAssignmentSolution.html" > 
+href="./ChannelSnapshotsAssignment/ChannelSnapshotsAssignmentSolution.html" > 
 Snapshots: Solution
 </a>
 
@@ -135,40 +139,45 @@ Snapshots: Solution
 <div class="w3-twothird w3-container">
 
 <!-- End overlay ---------------------------------->
+<!----------------------------------------------------------------->
+<h2 class="w3-text-teal">Timelines, Snapshots, Logical Clocks</h2>
+<!----------------------------------------------------------------->
+This chapter introduces concepts ---
+<a href="./Timelines.html">timelines</a>,
+<a href="./ChannelSnapshots.html">global snapshots</a>, and 
+<a href="./LogicalClocks.html">logical clocks</a>,
+that are helpful in developing several algorithms.
 
-
-    <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Global Snapshots: Assignment</h1>
-    <!--------------------------------------------------------->
-
-
-
-The graph of agents has the following structure. (Recall that vertices
-represent agents, and directed edges represent channels.) All cycles
-in the graph pass through agent 0. There is a path from agent 0 to
-every agent, and there is path from every agent to agent 0.
-
-    <p>
-The system has a set of indivisible indestructible tokens; however,
-agents can create tokens. So, the number of tokens in the system may
-increase but does not decrease.
-
-    <p class="w3-text-teal">Part 1<p>
-
-Design an algorithm by which agent 0 gets a count \(N_{snap}\) of the
-number of tokens in the system which satisfies the following
-condition:
-    <p>
-    \(
-    N_{init} \leq N_{snap} \leq N_{init}
-    \)
 <p>
-where \(N_{init}, N_{fini}\) are the numbers of tokens in the system
-when the algorithm starts and finishes (respectively).
+A timeline is a graphical representation of a trajectory; it shows the
+sequence of states and transitions of each agent in time order.
+These timelines are similar to timelines in history which show
+significant events of countries over time.
+Timelines are simple and useful in thinking about distributed
+algorithms.
+Cuts of timelines and <i>consistent cuts</i> are concepts that are
+often used to design distributed algorithms.
 
-    <p class="w3-text-teal">Part 2<p>
+<p>
+Each agent has access to its own state but not the states of other
+agents. An agent does not have access to the states of channels. Many
+algorithms, however, require an agent to detect properties of
+<i>global states</i>, states of all agents and all channels. The
+global snapshot algorithm is a general way by which agents can detect
+properties of states of other agents.
 
-    Give a short proof of the correctness of your algorithm.
+
+<p>
+A logical clock algorithm is one in which each agent assigns a number,
+called a <i>timestamp</i>, to each event  in its trajectory.
+The global state obtained by collating the state of each agent and
+each channel for any timestamp \(T\) must be valid.
+Timestamps based on logical clocks can be used instead of real clocks
+for many algorithms.
+
+<p>Timelines, consistent cuts, global snapshots, and logical clocks
+are closely related. These concepts will help us understand several
+other algorithms.
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">

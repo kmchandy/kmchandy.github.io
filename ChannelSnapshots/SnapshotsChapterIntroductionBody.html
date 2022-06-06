@@ -1,0 +1,39 @@
+<!----------------------------------------------------------------->
+<h2 class="w3-text-teal">Timelines, Snapshots, Logical Clocks</h2>
+<!----------------------------------------------------------------->
+This chapter introduces concepts ---
+<a href="./Timelines.html">timelines</a>,
+<a href="./ChannelSnapshots.html">global snapshots</a>, and 
+<a href="./LogicalClocks.html">logical clocks</a>,
+that are helpful in developing several algorithms.
+
+<p>
+A timeline is a graphical representation of a trajectory; it shows the
+sequence of states and transitions of each agent in time order.
+These timelines are similar to timelines in history which show
+significant events of countries over time.
+Timelines are simple and useful in thinking about distributed
+algorithms.
+Cuts of timelines and <i>consistent cuts</i> are concepts that are
+often used to design distributed algorithms.
+
+<p>
+Each agent has access to its own state but not the states of other
+agents. An agent does not have access to the states of channels. Many
+algorithms, however, require an agent to detect properties of
+<i>global states</i>, states of all agents and all channels. The
+global snapshot algorithm is a general way by which agents can detect
+properties of states of other agents.
+
+
+<p>
+A logical clock algorithm is one in which each agent assigns a number,
+called a <i>timestamp</i>, to each event  in its trajectory.
+The global state obtained by collating the state of each agent and
+each channel for any timestamp \(T\) must be valid.
+Timestamps based on logical clocks can be used instead of real clocks
+for many algorithms.
+
+<p>Timelines, consistent cuts, global snapshots, and logical clocks
+are closely related. These concepts will help us understand several
+other algorithms.
