@@ -1,5 +1,16 @@
     <!--------------------------------------------------------->
 <h1 class="w3-text-teal">Applications of Global Snapshots</h1>
+
+<h4 class="w3-text-teal">
+This module shows how global snapshots can be used to detect when
+a <i>stable predicate</i> holds.
+If a stable
+predicate holds at a point in any trajectory then it continues to
+hold forever thereafter in that trajectory.
+An example of a stable predicate is "computation has terminated."
+</h4>
+
+<p>
 Timelines, consistent cuts and global snapshots have many
 applications, some of which are described below.
 <p>
@@ -25,7 +36,7 @@ snapshot \(s_{snap}\) and then continues execution.
 So, if an error is detected, the computation is rolled
 back to \(s_{snap}\) rather than all the way back to \(s_{init}\).
 
-<h4 class="w3-text-teal">Detecting Stable Predicates</h4>
+<h3 class="w3-text-teal">Detecting Stable Predicates</h3>
 <hr class="new2">
 <h6 style="color:blue;">
 A <i>stable predicate</i> is a predicate with the following property: If the
@@ -40,14 +51,24 @@ An example of a stable predicate is: "<i>The computation has terminated.</i>"
 If a computation has terminated at some point then it remains
 terminated thereafter.
 
+<h4 class="w3-text-teal">Algorithm to Detect a Stable Predicate</h4>
+Take a global snapshot and claim that the stable predicate holds if it
+holds for the snapshot state.
+
+<p class="w3-text-teal">Paths to and from a Global Snapshot</p>
+Because there is a path from \(s_{init}\) to \(s_{snap}\) and then to
+\(s_{fini}\) if a stable predicate \(P\) holds in \(s_{init}\) then it
+continues to hold in \(s_{snap}\) and \(s_{fini}\).
+
+Likewise, because there is a path from \(s_{snap}\) to \(s_{fini}\),
+if a stable predicate \(P\) holds in \(s_{snap}\) then it holds in \(s_{fini}\).
+
 <p>
 The Boolean --- "predicate \(P\) holds in state \(s\)" --- is written
-as \(P(s)\). If \(P\) is stable and it holds in \(s_{init}\) then it
-continues to hold thereafter, and therefore holds in \(s_{snap}\) and
-in \(s_{fini}\). Likewise, if \(P\) is stable and it holds in
-\(s_{snap}\) then it holds in \(s_{fini}\).
+as \(P(s)\).
 
 
+<hr class="new2">
 <h6 style="color:blue;">
 For a stable property \(P\):
 \(
@@ -55,7 +76,53 @@ For a stable property \(P\):
    (P(s_{snap}) \Rightarrow P(s_{fini}))
 \)
 <h6>
+<hr class="new2">
 
-The modules in this chapter describe examples of algorithms that detect stable
-predicates. 
+<h4 class="w3-text-teal">False Positives and Negatives</h4>
+<ol>
+  <li>
+  <i>No false negatives</i>: if a stable property holds when the
+  algorithm is <i>initiated</i> then the property is detected.
+  </li>
+  <li>
+  <i>No false positives</i>: if the algorithm detects a stable
+  property then the property holds when the algorithm <i>terminates</i>.
+  </li>
+</ol>
+The property of "no false negatives" is with respect to the
+<i>initial</i> state of the algorithm whereas the 
+property of "no false positives" is with respect to its
+<i>final</i> state.
 
+<p>
+What does the specification say about the following situation? The
+stable predicate does not hold in the initial state of the algorithm
+but does hold in its final state.
+In this case, the algorithm may, or may not, detect the stable
+property.
+Check that in this case both properties, "no false negatives" and "no false
+positives" hold whether the algorithm detects or does not detect a
+stable property.
+
+<p>
+The modules in this chapter describe two examples of algorithms that detect stable
+predicates: detecting termination and detecting database deadlock.
+
+<h4 style="color:blue;">Review</h4>
+<ol>
+  <li>
+  What is a stable predicate?
+  </li>
+  <li>
+  Show that the "no false negatives" and "no false positives" follow
+  from the fact that there exists a trajectory from the initial state,
+  \(s_{init}\), of the detection algorithm, to the snapshot state,
+  \(s_{snap}\), to the final state, \(s_{fini}\), of the detection
+  algorithm.
+  </li>
+  <li>
+  If a stable predicate begins to hold afte the initial state and
+  before the final state of the detection algorithm then the algorithm
+  may not detect the predicate. What can be done in this case?
+  </li>
+</ol>
