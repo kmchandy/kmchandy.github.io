@@ -1,20 +1,20 @@
 
 
     <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Termination Detection</h1>
+<h1 class="w3-text-teal">Termination Detection</h1>
 
-    This module shows how the concepts of consistent cuts
-    and global snapshots are used to detect termination of a
-    computation.
-    
-<h4 class="w3-text-teal">The Problem</h4>
+<h4 class="w3-text-teal">
+This module shows how consistent cuts and the
+general algorithm to detect stable properties are used to
+develop an algorithm to detect termination of a computation.
+</h4>
 
-    <p class="w3-text-teal">Active and Idle States of Agents</p>
+<h2 class="w3-text-teal">The Problem</h2>
+
+    <h4 class="w3-text-teal">Active and Idle States of Agents</h4>
     An agent is either <i>idle</i> or <i>active</i>. An idle agent
     remains idle until it receives a message at which point it becomes
-active.
-An idle agent does not
-send messages.
+active. An idle agent does not send messages.
 
 <p>An active agent may send messages. An active agent
 may become idle at any point.
@@ -22,21 +22,25 @@ may become idle at any point.
 <p>
     Initially all agents are active and all channels are empty.
 
-    <p class="w3-text-teal">System in Terminated State</p>
+    <h4 class="w3-text-teal">Terminated State</h4>
     A <i>terminated</i> state of the system is one in which all agents
-    are idle and all channels are empty. <i>terminated</i> is stable:
-    a system in a terminated state remains terminated thereafter. A
+are idle and all channels are empty. A
     system may or may not enter a terminated state.
-    <p>
-    The problem is to develop an algorithm that detects that the system has
-entered a terminated state.
-The algorithm may use messages and agents that are not part of the
-underlying computation.
-The algorithm is part of the distributed operating system whereas the
-    underlying computation is part of a user application which isn't
-modified by the operating system.
 
 <p>
+<i>terminated</i> is stable:
+    a system in a terminated state remains terminated thereafter. 
+
+<p>
+    The problem is to develop an algorithm that detects that the system has
+entered a terminated state.
+The detection algorithm may use messages and agents that are not part of the
+underlying computation.
+The detection algorithm is part of the distributed operating system whereas the
+    underlying computation is part of a user application which isn't
+affected by the execution of the operating system.
+
+<h4 class="w3-text-teal">Specification of the Algorithm</h4>
 The algorithm returns a Boolean variable where:
 <ol>
   <li>
@@ -50,7 +54,7 @@ The algorithm returns a Boolean variable where:
 </ol>
   
 
-    <p class="w3-text-teal">Counts of Messages in Channels</p>
+    <h4 class="w3-text-teal">Agent's Local Variables: Counts of Messages in Channels</h4>
 
 <p>
 Each agent has a local variable \(C_{nsent}\) for each outgoing
@@ -61,16 +65,19 @@ Initially, for all channels \(C\):  \(C_{nsent} = C_{nrcvd} = 0\)
 At each point in a computation, the number of messages in transit
 along a channel \(C\) is \(C_{nsent} - C_{nrcvd}\).
     
-    <p>
+
+<hr class="new2">
+<h4 style="color:blue;">
     The system has terminated if and only if:
       All agents are idle, and
       for each channel \(C\): \(C_{nsent} = C_{nrcvd}\)
+</h4>
+<hr class="new2">
 
 
-
-    <h2 class="w3-text-teal">The Detector</h2>
-    The algorithm uses an agent, which is not part of the system, to
-    carry out the detection. We call this agent <i>the
+    <h2 class="w3-text-teal">The Detector Agent</h2>
+    The detection algorithm uses an agent, which is part of the
+    operating system and is not part of the underlying computation. We call this agent <i>the
     detector</i>. 
 
     <p>
@@ -79,44 +86,57 @@ along a channel \(C\) is \(C_{nsent} - C_{nrcvd}\).
     for every outgoing channel of the agent, and \(C_{nrcvd}\) for every
     incoming channel of the agent. 
 
-<p class="w3-text-teal">The Detector's Local Variables</p>
+<h4 class="w3-text-teal">The Detector's Local Variables</h4>
 The detector has its own local variables \(C_{s}\) and \(C_{r}\) for every
 channel \(C\) in the system.
-Initially the values of these local variables are 0.
+The initial values of these local variables are arbitrary.
 When a detector gets a message from an
 agent it sets the values of its local variables \(C_{s}\) and \(C_{r}\) to the
-values of \(C_{nsent}\) and \(C_{nrcvd}\) in the message for the
+values of \(C_{nsent}\) and \(C_{nrcvd}\), respectively, in the message for the
 corresponding channels \(C\).
 
-<p class="w3-text-teal">Initial Condition for the Detector's Local Variables</p>
-Initially, for all channels \(C\), we set \(C_{s} = 0\) and \(C_{r} =
--1\) so that \(C_{s} \neq C_{r}\) initially. The
-negative one for \(C_{r}\) is merely a technical trick to simplify
-the termination detection condition.
-
 <hr class="new2">
-<h4 style="color:blue;">The Detector detects termination when
+<h4 style="color:blue;">The detector detects termination when the
+detector has received a message from each agent in the
+computation, and
 for all channels \(C\): 
 \(
 C_{s} = C_{r}
 \)
-<h4>
-    <hr class="new2">
+</h4>
+<hr class="new2">
 
 
 
-<h2 class="w3-text-teal">Proof</h2>
-The values of the detector's local variables, \(C_{s}, C_{r}\) for
-each channel \(C\) are the values \(C_{nsent}, C_{nrcvd}\) sent by the agents
+<h4 class="w3-text-teal">Proof</h4>
+When the detector detects termination it has received a message from
+each agent. An agent sends a message only when it transits to idle.
+So, 
+the values of the detector's local variables, \(C_{s}, C_{r}\) for
+each channel \(C\) are the values \(C_{nsent}, C_{nrcvd}\) sent by idle agents
 at some cut. From the theorem on consistent cuts, this cut
 is consistent if and only if, for all channels \(C\): 
 <p>
-\(C_{s} \geq C_{r} \geq 0\)
+\(C_{s} \geq C_{r}\)
 <p>
 Therefore the detector detects termination based on a consistent
 cut. The result follows because termination is stable.
 
-<h2 class="w3-text-teal">Summary</h2>
-This module showed how to apply the concepts of consistent cuts and
-global snapshots to solve detection problems. The module describes an
-algorithm for detecting termination of distributed computations.
+
+<h4 style="color:blue;">Review</h4>
+<ol>
+  <li>
+  The messages that the detector gets are sent in the past: \(C_{s}\)
+  may be less than \(C_{nsent}\), and \(C_{r}\) may be less than
+  \(C_{nrcvd}\). We know that computation has terminated and the
+  <i>instantaneous</i> counts match, i.e., \(C_{nsent} = C_{nrcvd}\)
+  for all channels \(C\). But the <i>detector uses out-of-date
+  counts</i>. Assume that you are explaining the algorithm to somebody
+  who hasn't taken the course. Explain why the algorithm works with
+  out-of-data information.
+  </li>
+  <li>
+  Can detector agents for all other detection applications use out-of-date
+  information? Why or why not?
+  </li>
+</ol>
