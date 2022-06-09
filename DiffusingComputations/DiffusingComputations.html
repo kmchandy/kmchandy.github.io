@@ -126,9 +126,15 @@ Diffusing Computation: Self Test
     <!--------------------------------------------------------->
     <h1 class="w3-text-teal">Diffusing Computations</h1>
 
-    <!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Key Ideas</h2>
-    <p  class="w3-text-teal">Diffusing Computations</p>
+<!--------------------------------------------------------->
+
+<h4 class="w3-text-teal">
+This module describes diffusing computation algorithms by which an
+agent can learn about the
+    structure of the  network in which the agent operates.
+</h4>
+
+
     This module describes diffusing computations.
     An agent can use diffusing computations to learn about the
     structure of the  network
@@ -136,22 +142,21 @@ Diffusing Computation: Self Test
     diffusing computations to determine the number of agents in the
     network or to determine if the system is deadlocked.
     
-    <p  class="w3-text-teal">Data Structures Modified by Multiple
-    Agents Concurrently</p>
-    The module shows how data structures --- in this case a tree ---
+<p class="w3-text-teal">Data Structures in Distributed Algorithms</p>
+    <i>The module shows how data structures
     play critical roles in distributed algorithms just as they do in
-    sequential algorithms.
+    sequential algorithms.</i>
     The algorithm maintains the invariants that
-    define the data structure even though the structure is modified
-    concurrently by multiple agents.
+    define the data structure --- in this case a tree --- even though the structure is modified
+concurrently by multiple agents.
 
-    <p  class="w3-text-teal">An Application of Agent Knowledge</p>
-    We use the concept of
-    <a href="../Knowledge/Knowledge.html"><i>what an
-    agent knows</i></a> to ensure that an agent modifies the data
-    structure only when
-    it know that it can do so while maintaining the invariants that
-    define the structure.
+<p class="w3-text-teal">Nondeterministic Iteration in Sequential and
+Distributed Algorithms</p>
+<i>This module shows how nondeterministic iteration is used in exactly
+the same way for reasoning about sequential and distributed
+algorithms.</i> Whether the algorithm operates across multiple agents and
+channels or is a sequential program is immaterial to reasoning about
+its correctness.
 
     <h3 class="w3-text-teal">The Problem</h3>
     In this module we deal with systems in which an agent is either
@@ -170,7 +175,7 @@ Diffusing Computation: Self Test
     <p>
     The computation may never
     terminate. Our first problem is to design an algorithm that
-    enables the initiator to know 
+    enables the initiator to determine 
     that the computation has terminated if it terminates. Later, we
     will extend this algorithm to enable the initiator to learn about
     the network.
@@ -192,13 +197,13 @@ Let
     \(x.num\_unacked\) be the number of \(x\)'s unacknowledge
     messages, i.e, the number of messages that \(x\) has sent
     minus the number of acks that \(x\) has received. 
-<a href="../Knowledge/Knowledge.html">Agent \(x\) knows</a>
-that there are no messages in any of its outgoing channels when
+We can prove the invariant
+that there are no messages in any of \(x\)'s outgoing channels when
 \(x.num\_unacked = 0\).
 
 <!------------------------------------------------------>
 <h3 class="w3-text-teal">A Rooted Tree</h3>
-The theorems on knowledge tell us that for an agent to become active there
+For an agent to become active there
  must be a chain of messages from the initiator to the
 agent.
 A data structure
@@ -248,7 +253,7 @@ computation has terminated when
 initiator.idle \wedge (initiator.num\_unacked = 0)
 \)
 <p>
-So, the initiator knows that the computation has terminated when the
+So, the initiator detects that the computation has terminated when the
 initiator is idle and no unacknowledged messages.
 Next we give an algorithm that maintains the above invariants.
 
@@ -321,7 +326,7 @@ If all agents are idle and there are no messages in channels then
 the underlying computation has terminated.
 We will prove that if the underlying computation does terminate then
 the detection algorithm terminates as well, i.e. the tree
-vanishes, and at that point the initiator knows that the computation has
+vanishes, and at that point the initiator detects that the computation has
 terminated.
 After the underlying computation terminates, the only action that
 executes is action 3: receiving an ack. 
@@ -342,6 +347,27 @@ So while the tree is not empty there is an ack in some channel.
 When \(y\) receives an ack from \(x\), the edge \((x, y)\) is
 deleted from the tree. Therefore every
 execution of action 3 reduces the variant function.
+
+<h4 style="color:blue;">Review</h4>
+<ol>
+  <li>
+  Show that when an idle agent becomes active the agent is added to
+  the rooted tree if it is not already part of it.
+  </li>
+  <li>
+  The variant function used to prove progress in this module is a
+  graph. Every action (execution of a guarded command with a true
+  guard) must reduce the variant function. What does reducing the
+  graph mean?
+  </li>
+  <li>
+  This module says that if the underlying computation has terminated
+  and the tree hasn't vanished then there exists some channel that has
+  an ack in it. Why is that true?
+  </li>
+</ol>
+  
+  
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">

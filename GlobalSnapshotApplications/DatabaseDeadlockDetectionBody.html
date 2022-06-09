@@ -1,21 +1,19 @@
     <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Detecting And-type Deadlocks</h1>
+    <h1 class="w3-text-teal">Detecting Database Deadlocks</h1>
 
-    <h1 class="w3-text-teal">Key Ideas</h1>
-    This module shows how the concept of
-    consistent cuts help to develop algorithms that detect stable
-    properties.
-
-    <p>
-    An example of a stable property is a deadlock in which a set of
-    agents continues to wait for messages for ever. Distributed
-    operating systems detect and then break deadlocks. This module
-    describes algorithms for "and" deadlocks which are also called
-    database deadlocks. Later we discuss algorithms for
-    "or" deadlocks, also called communication deadlocks.
+    <h4 class="w3-text-teal">
+This module shows how consistent cuts of timelines are
+used to develop algorithms to detect deadlocks that can arise
+in databases.
+</h4>
+"Computation is deadlocked" is an example of a stable property; a
+deadlocked computation remains deadlocked. A generalization of the
+deadlock detection problem is to break a deadlock after it is detected
+by aborting or rolling back the computation of some agents; the
+generalization is straightforward and we don't discuss it here.
 
     <h2 class="w3-text-teal">The Problem</h3>
-    The problem of deadlock detection is similar to that of
+    The problem of database deadlock detection is similar to that of
     <a
     href="../GlobalSnapshotApplications/GlobalSnapshotApplications.html">
     termination detection discussed in an earlier module</a>.
@@ -52,7 +50,7 @@
     
     
     <figure>
-    <img src="DeadlockDetectionAnd/Slide1.jpg" alt="Fig1" style="width:100%">
+    <img src="DeadlockDetection_And_1.jpg" alt="Fig1" style="width:100%">
     <figcaption>Fig.1 - The Life Cycle of an Agent</figcaption>
     </figure>
     An agent executes while holding files for only a finite
@@ -74,7 +72,7 @@ to acquire the green token; and agent \(z\) holds the green token and is waiting
     to acquire the red token.
     
     <figure>
-  <img src="DeadlockDetectionAnd/Slide2.jpg" alt="Fig1" style="width:100%">
+  <img src="DeadlockDetection_And_2.jpg" alt="Fig1" style="width:100%">
   <figcaption>Fig.1 - An Example of a Deadlock</figcaption>
 </figure>
 
@@ -151,3 +149,17 @@ additional tokens; so, it detects termination.
 <h3 class="w3-text-teal">Correctnes of the Algorithm</h3>
 The algorithm is the global snapshot algorithm, and we
 proved the correctness of the algorithm earlier.
+
+<h4 style="color:blue;">Review</h4>
+<ol>
+  <li>
+  Give an example of database deadlock with two agents and two files.
+  </li>
+  <li>
+  Describe how the algorithm detects deadlock in your example.
+  </li>
+  <li>
+  How is the algorithm related to the global snapshot algorithm?
+  </li>
+</ol>
+  

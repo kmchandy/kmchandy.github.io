@@ -1,13 +1,17 @@
-
-
-    <!--------------------------------------------------------->
+<!--------------------------------------------------------->
 <h1 class="w3-text-teal">Termination Detection</h1>
 
 <h4 class="w3-text-teal">
-This module shows how consistent cuts and the
-general algorithm to detect stable properties are used to
-develop an algorithm to detect termination of a computation.
+This module shows how the
+algorithm to detect stable properties is specialized to detect termination of a computation.
 </h4>
+Consistent cuts and global snapshots are used to
+<a href="./StablePredicates.html"> detect when stable
+predicates hold.</a>
+"Computation has terminated" is a stable predicate: computation has
+terminated then it remains terminated.
+This module shows how the general algorithm for detecting stable
+properties is specialized to obtain a simple algorithm to detect termination.
 
 <h2 class="w3-text-teal">The Problem</h2>
 
@@ -122,6 +126,11 @@ is consistent if and only if, for all channels \(C\):
 Therefore the detector detects termination based on a consistent
 cut. The result follows because termination is stable.
 
+<h4  class="w3-text-teal">Next</h4>
+Look at
+<a href="./TerminationDetectionExample.html">the detailed example</a>
+and
+<a href="./TerminationDetectionVideo.mp4">the video</a>.
 
 <h4 style="color:blue;">Review</h4>
 <ol>
