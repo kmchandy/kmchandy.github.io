@@ -112,7 +112,13 @@ Self Stabilization: Mutual Exclusion in a Ring
 
 <!-- End overlay ---------------------------------->
     <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Self Stabilization</h1>
+<h1 class="w3-text-teal">Self Stabilization</h1>
+
+<h4 class="w3-text-teal">
+This module describes one example of a self-stabilization system --- a
+system that recovers automatically from transient errors.
+</h4>
+
     A <i>self stabilizing</i> system
     recovers automatically from transient errors.
     If a self-stabilizing system enters an unsafe state then the
@@ -315,6 +321,25 @@ If \(C\) has fewer than \(N\) colors then the color of each agent
 remains a color in \(C\) until agent 0 gets a color that is not in
 \(C\). At this point agent 0's color is different from that of the
 other agents and the result follows.
+
+<h4 style="color:blue;">Review</h4>
+<ol>
+  <li>
+  In this algorithm, does any agent detect that the system is in an
+  unsafe state? Can we determine that the system is in an unsafe state
+  based solely on the state of any one agent and the state of its
+  predecessor? Why?
+  </li>
+  <li>
+  Will this algorithm work if the number of colors is arbitrarily
+  large, and more than the number of agents? Why?
+  </li>
+  <li>
+  Will this algorithm work if the number of colors is less than the
+  number of agents? Why?
+  </li>
+</ol>
+  
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
