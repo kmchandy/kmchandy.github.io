@@ -116,7 +116,16 @@ Byzantine Consensus: Oral Messages
 
 <!-- End overlay ---------------------------------->
     <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Byzantine Consensus: Written Messages</h1>
+    <h1 class="w3-text-teal">Byzantine Consensus: Written
+Messages</h1>
+
+<h4 class="w3-text-teal">
+This module introduces Byzantine consensus algorithms in which agents
+reach consensus in a sequence of synchronized rounds <i>even though some
+agents don't follow the protocol</i>.
+</h4>
+
+
     In this module we study algorithms by which a collection of agents
     reach a consensus among alternative values.
     <a href="../Paxos/Paxos.html">The Paxos algorithm</a> is
@@ -446,6 +455,23 @@ attack.
 The algorithm terminates at the end of round \(t\) because subsequent
 rounds don't change the outcome of all loyal
 lieutenants.
+
+<h4 style="color:blue;">Review</h4>
+<ol>
+  <li>
+  Assume that you are explaining the algorithm to someone who hasn't
+  taken a course on distributed computing. How would you explain to
+  this person that even if the general and 999 lieutenants are
+  disloyal, and only 2 lieutenants are loyal, the loyal lieutenants
+  reach a consensus after round 100? 
+  (Remember the first round is round 0.)
+  <li>
+  Will the algorithm work if at most one lieutenant could modify
+  written messages, and all the other lieutenants followed the
+  protocol, i.e. these lieutenants could copy but not modify
+  messages. 
+  </li>
+</ol>
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">

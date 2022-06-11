@@ -1,7 +1,12 @@
     <!--------------------------------------------------------->
     <h1 class="w3-text-teal">Reaching Consensus in a Finite Number of
     Steps is Impossible</h1>
-    
+
+<h4 class="w3-text-teal">
+This module describes the central ideas of the proof that achieving
+consensus among agents, one of which may be faulty, is impossible.
+</h4>
+
     <h2 class="w3-text-teal">Key Ideas</h1>
     There are many problems in which a collection of agents have to
     come to a <i>consensus</i> about something.
@@ -77,3 +82,24 @@ We'll see that we can use the idea of time, even though clocks aren't
 synchronized. We've done that before with logical clocks. The Paxos
 algorithm shows how the idea of increasing values of timestamps (or
 ids) are used for best-effort consensus.
+
+<h4 style="color:blue;">Review</h4>
+<ol>
+  <li>
+  The proof considers messages with arbitrary delay. Suppose you had a
+  system in which a message was either lost or delivered with a delay
+  of at most T seconds. If all agents had accurate real-time (as
+  opposed to logical) clocks, could the agents reach a consensus? What
+  algorithms would you use?
+  </li>
+  <li>
+  If there were an algorithm that enabled a collection of agents to
+  come to a consensus, then could the algorithm be used to construct a
+  distributed ledger? The ledger would contain a sequence of
+  transactions such as deposits and withdrawals. Agents would propose
+  transactions and the algorithm would create a total order (a
+  sequence) of these transactions. Would that work? Could the idea be
+  used to create a cryptocurrency without a bank or other single
+  trusted agent?
+  </li>
+</ol>

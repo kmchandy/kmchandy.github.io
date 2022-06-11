@@ -116,7 +116,14 @@ Byzantine Consensus: Oral Messages
 
 <!-- End overlay ---------------------------------->
 <!----------------------------------------------------------------->
-    <h1 class="w3-text-teal">Byzantine Consensus: Oral Messages</h1>
+<h1 class="w3-text-teal">Byzantine Consensus: Oral Messages</h1>
+
+<h4 class="w3-text-teal">
+This module introduces Byzantine consensus algorithms in which
+messages are not encrypted. An agent that receives a signed message
+does not know whether the signer sent the message.
+</h4>
+
     This module is a continuation of the previous module. This module
     describes solutions to the Byzantine problem with oral messages
     whereas the previous problem studied the problem with written
@@ -678,6 +685,28 @@ c_{k}(i_{0}, \ldots i_{r}, l) = m(i_{0}, \ldots i_{r}, l)
 c_{l}(i_{0}, \ldots i_{r}, k) = m(i_{0}, \ldots i_{r}, k)
 \)
 because agents \(k, l\) are loyal.
+
+<h4 style="color:blue;">Review</h4>
+<ol>
+  <li>
+  Assume that you are explaining the algorithm to someone who hasn't
+  taken a course on distributed computing. The Byzantine consensus
+  algorithm with written messages works with any number of loyal and
+  disloyal officers; however, the algorithm with oral messages works
+  only if the number of loyal officers exceeds twice the number of
+  disloyal ones. Explain why this is.
+  </li>
+  <li>
+  Draw a tree of messages for the case where the general is faulty,
+  and one lieutenant is faulty, and there are 5 loyal lieutenants. See
+  how the correctness of the algorithm is reflected in the tree.
+  </li>
+  <li>
+  Draw a tree of messages for the case where the general is faulty,
+  and one lieutenant is faulty, and there are only 4 loyal
+  lieutenants. Show what can go wrong.
+  </li>
+</ol>
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
