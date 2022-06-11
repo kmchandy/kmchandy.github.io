@@ -115,28 +115,28 @@ BitCoin
 <div class="w3-twothird w3-container">
 
 <!-- End overlay ---------------------------------->
-    <h2 class="w3-text-teal">Introduction to Cryptography for
-    Cryptocurrency</h3>
+    <h1 class="w3-text-teal">Introduction to Cryptography for
+Cryptocurrency</h1>
+
+<h4 class="w3-text-teal">
+This module contains a review of elementary cryptographic operations
+and introduces a simple cryptocurrency managed by a trusted agent.
+</h4>
+
+The next module discusses the algorithm underlying BitCoin; the
+BitCoin algorithm doesn't require agents to be trusted.
     
     <a href="https://www.lopp.net/pdf/princeton_bitcoin_book.pdf">
     This Princeton University book is a superb description of
-    Bitcoin.</a> If you have the time, read the book and skip this
-    module. 
-
-    <p>
-    This module contains a review of elementary cryptographic
-    operations. It also introduces a simple
-    cryptocurrency managed by a trusted agent. The next module
-    discusses the algorithm underlying BitCoin; the BitCoin algorithm doesn't
-    require agents to be trusted.
+Bitcoin.</a>
 
 
     
-    <h1 class="w3-text-teal">Review: Cryptographic Hash Function</h1>
+    <h2 class="w3-text-teal">Review: Cryptographic Hash Function</h2>
     A  hash function, \(H\), maps input strings of
     arbitrary size to outputs of fixed size.
 
-    <h2 class="w3-text-teal">Collision Resistance</h2>
+    <h3 class="w3-text-teal">Collision Resistance</h3>
     Input values \(x, y\) of a hash function \(H\)
     are said to <i>collide</i> when \(H(x) = H(y)\).
 
@@ -181,7 +181,7 @@ executing even \(2^{128}\) steps is still intractable.
     SHA-256 hash function. 
     
 
-    <h2 class="w3-text-teal">Commitment using Hashes</h2>
+    <h3 class="w3-text-teal">Commitment using Hashes</h3>
     You bet that your soccer friend, Megan, cannot predict the winner
     of the 2022 World Cup. Megan puts the name of the predicted
     winner, \(W\), in an envelope and
@@ -263,7 +263,7 @@ her secret \(r_{j}\).
 In summary, we can use a hash function that is hiding and binding to
 play the role of a trusted third party in a commitment.
 
-    <h2 class="w3-text-teal">Puzzle Friendly</h2>
+    <h3 class="w3-text-teal">Puzzle Friendly</h3>
 Let \(r\) be a value picked from a spread-out distribution. Let
 \(H\) map arbitrary length string to \(n\)-bit strings.
 Consider the following problem:
@@ -714,6 +714,42 @@ of failure.
 <p>
 Next we'll look at BitCoin's algorithms for
 implementing a cryptocurrency without trusted agents.
+
+<h4 style="color:blue;">Review</h4>
+<ol>
+  <li>
+  What is <i>collision resistance</i>? Why is it relevant to
+  cryptocurrencies?
+  </li>
+  <li>
+  Consider the example of <i>hiding</i> in which Megan hides her
+  predictions for the winner of the World Cup. Suppose you could
+  choose two different random number generators for creating the
+  secret \(r\); in one case the bits of \(r\) are uncorrelated, and in
+  the other they are highly correlated. Which generator would you use
+  and why?
+  </li>
+  <li>
+  What is <i>binding</i>? Why is it relevant to hiding information?
+  </li>
+  <li>
+  What is <i>puzzle friendly</i>?
+  </li>
+  <li>
+  What is a <i>tamper-evident data structure</i>? How would you
+  implement a tamper-evident linear list? A tamper-evident tree?
+  </li>
+  <li>
+  Describe the algorithm for cryptocurrency with a trusted agent to
+  someone who knows absolutely nothing about cryptocurrency.
+  </li>
+  <li>
+  How could the algorithm for cryptocurrency be used for a collection
+  of distributed agents to keep track of a sequence of events, other
+  than buying/selling currency?
+  </li>
+</ol>
+  
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
