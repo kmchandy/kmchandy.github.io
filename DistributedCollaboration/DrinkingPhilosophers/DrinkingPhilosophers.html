@@ -121,7 +121,14 @@ Multi Agent Rendezvous: Committee Coordination
 <!-- End overlay ---------------------------------->
 <!---------------------------------------------------->
 <h1 class="w3-text-teal">Resource Management: Drinking
-    Philosophers</h1>
+Philosophers</h1>
+
+<h4 class="w3-text-teal">
+This module describes algorithms for "The Distributed Drinking
+Philosophers Problem," by which distributed agents share indivisible
+resources, such as exclusive access to files. 
+</h4>
+
 
     <h2 class="w3-text-teal">Key Ideas</h2>
     <ol>
@@ -459,6 +466,21 @@ The next part of the proof is to show that if clocks of all
 philosophers exceed \(T\) then \(v\) drinks. A variant function that
 we use here is the number of pending requests with timestamps less
 than or equal to \(T\).
+
+<h4 style="color:blue;">Review</h4>
+<ol>
+  <li>
+  In the algorithm, each manager of a resource maintains a
+  <i>priority</i> queue of requests for the resource. Is the algorithm
+  correct if managers maintain first-come-first-served queues rather
+  than priority queues?
+  </li>
+  <li>
+  Show that the proposed variant function is correct: show that it
+  does not increase while an agent remains thirsty, and show that it
+  decreases eventually.
+  </li>
+</ol>
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">

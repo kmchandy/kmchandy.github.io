@@ -123,6 +123,13 @@ Multi Agent Rendezvous: Committee Coordination
 <h1 class="w3-text-teal">Dining Philosophers</h1>
 <!---------------------------------------------------->
 
+<h4 class="w3-text-teal">
+This module describes algorithms for "The Distributed Dining
+Philosophers Problem," a problem that exemplifies mutual exclusion of
+critical operations among agents in a distributed setting.
+</h4>
+
+
 This and following modules describe algorithms by which agents manage
 conflicts among themselves. This module describes an
     algorithm for a distributed mutual exclusion problem called
@@ -734,6 +741,31 @@ priority to be lower than all the agents that it competes with --
 solves this conflict resolution problem; introduced tokens and what
 agents know about other agents holding tokens; and showed a proof
 pattern that is one of the most common patterns for proving progress.
+
+<h4 style="color:blue;">Review</h4>
+<ol>
+  <li>
+  What is the meaning of mutual exclusion among neighboring
+  philosophers?
+  </li>
+  <li>
+  An invariant of the algorithm is that each token is in exactly one
+  place: an agent or a channel. How does this invariant help in
+  designing the algorithm?
+  </li>
+  <li>
+  An invariant of the algorithm is that the relative priorities among
+  agents forms a partial order --- the priority graph is acyclic. What
+  can go wrong if the priority graph has cycles?
+  </li>
+  <li>
+  An agent that has a request for a fork releases the fork if the fork
+  is dirty, and holds on to the fork if the fork is clean. What could
+  go wrong if an agent releases a fork when it gets a request,
+  regardless of whether the fork is clean or dirty?
+  </li>
+</ol>
+
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
