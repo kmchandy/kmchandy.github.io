@@ -458,8 +458,23 @@ clocks for philosophers with clock readings less than \(T\) are from \(T\):
 f = \sum\nolimits_{i : t[i] < T} \quad (T - t[i])
 \)
 <p>
-It is straightforward to show that \(v\) drinks or \(f\) decreases to
-\(0\).
+Next, we show that \(v\) drinks or \(f\) decreases to
+\(0\). Just as in the proof of the dining philosophers problem we show
+that the following two properties hold.
+<ol>
+  <li>
+  <i>Safety</i>: The variant function does not increase while \(v\)
+  remains thirsty.
+  </li>
+  <li>
+  <i>Progress</i>: The following predicate does not hold forever: The
+  variant function remains unchanged and \(v\) remains thirsty.
+  </li>
+</ol>
+The proof of the safety part follows from the fact that \(T\) remains
+unchanged while the philosopher remains thirsty, and \(t[i]\) does not
+decrease for all \(i\). The proof of the progress part follows from
+\(t[i]\) increasing eventually, for all \(i\).
 
 <p>
 The next part of the proof is to show that if clocks of all

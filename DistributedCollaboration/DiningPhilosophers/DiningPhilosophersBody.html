@@ -520,9 +520,19 @@ hungry and \(v.e\) holds exactly when \(v\) is
 eating.
 
 <h3 class="w3-text-teal">Variant Function</h3>
-To prove this progress property we find a variant function that:(1)
-<i>safety</i>: does not increase , and (2)
-<i>progress</i>: does not remain unchanged, while \(v\) remains hungry.
+To prove this progress property we find a variant function that
+satisfies the following two conditions:
+<ol>
+  <li>
+  <i>Safety</i>: The variant function does not increase while \(v\)
+  remains hungry. 
+  </li>
+  <li>
+  <i>progress</i>: The following predicate does not hold forever: The
+  variant function remains unchanged and \(v\) remains hungry.
+  </li>
+</ol>
+
 <p>
 We propose a variant function which is a pair of integers
  \(nT, nH\),  which are the number of thinking and hungry philosophers,
@@ -590,10 +600,9 @@ If a philosopher of higher priority than \(v\) transits from hungry
 to eating then \(nH\) decreases,  and so the variant function \((nT,
 nH)\) decreases.
 
-<h4 class="w3-text-teal">Proof that
-the variant function cannot remain unchanged forever while
-\(v\) remains hungry
-and 
+<h4 class="w3-text-teal">Proof that the following predicate does not
+hold forever: The variant function remains unchanged and
+\(v\) remains hungry.
 </h4>
 
 <p>
