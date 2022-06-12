@@ -1,0 +1,49 @@
+    <!--------------------------------------------------------->
+    <h1 class="w3-text-teal">Self Test</h1>
+<!--------------------------------------------------------->
+<p>
+    This problem is to apply the
+    <a href="ApplicationsDiffusingComputationExample.html">algorithm in which the initiator takes a
+global snapshot and then acquires the global snapshot.</a>
+
+    <p class="w3-text-teal">The Problem</p>
+    The system has a set of indivisible indestructible tokens. Tokens
+    are not created. So the number of tokens in the system is a
+    constant.
+
+    <p>
+    Agents may hold tokens and agents may send tokens. So, at any
+    point tokens may be at agents or in transit in
+    channels.
+
+    <p>
+    Design an algorithm by which the initiator detects the number of
+    tokens in the system.
+
+    <!--------------------------------------------------------->
+    <h4 class="w3-text-teal">Solution</h4>
+<!--------------------------------------------------------->
+Use the algorithm in which the initiator takes a
+global snapshot and then acquires the global snapshot.
+The state of an agent is the number of tokens it holds.
+The state of a channel is the number of tokens in transit along the
+    channel. The local information \(x.v\) that agent \(x\) sends to the
+    initiator is the total number of tokens in agent \(x\) and in
+incoming channels of agent \(x\).
+
+<p>
+We don't need to prove the correctness of this algorithm because it is
+a special case of the algorithm in which the initiator takes and then
+acquires a global snapshot.
+
+    <!--------------------------------------------------------->
+    <h4 class="w3-text-teal">Optimization</h4>
+<!--------------------------------------------------------->
+The algorithm in which the initiator takes a
+global snapshot and then acquires the global snapshot can be optimized
+    by merging the two phases. Instead of first waiting for the
+    initiator to determine that the global snapshot is complete and
+    only then
+    initiating the algorithm to acquire all the local information, the
+    two phases can operate concurrently. The algorithm with the merged
+    phases is straightforward and is not given here.
