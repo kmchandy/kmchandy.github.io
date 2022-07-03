@@ -1,6 +1,7 @@
 ../Introduction/Introduction.html#CHAPTER: Review Sequential Programming
-../HoareTriples/HoareTriples.html#MODULES:
 ../HoareTriples/HoareTriples.html#Hoare Triples
 ../HoareTriples/HoareTriplesExamples.html#Examples
 ../HoareTriples/HoareTriplesVideo.mp4#Video
-../HoareTriples/HoareTriplesSelfTest.html#Self Test
+../HoareTriples/HoareTriplesSelfTest.html#Quiz
+../Invariant/Invariant.html#Next
+../Predicates/Predicates.html#Previous

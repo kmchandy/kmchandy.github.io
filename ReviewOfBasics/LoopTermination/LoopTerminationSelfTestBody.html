@@ -1,5 +1,5 @@
 
-    <h1 class="w3-text-teal">Loop Termination: Self Test</h1>
+    <h1 class="w3-text-teal">Loop Termination: Quiz</h1>
 
     <!---------------------------------------------------------->
     <h2 class="w3-text-teal">Question 1</h2>
@@ -58,11 +58,20 @@ all commands maintains this predicate.
 <p>
 Let \(f = \sum_{j} x[j]\)
 <p>
-\(f\) is bounded below by \(N\) because of the invariant.
-\(f\) has an integer value.
-<p>
-Verify that execution of any command with a True guard reduces
-    \(f\). Therefore \(f\) is a variant function, and the algorithm
+<ol>
+  <li>
+  \(f\) has an integer value.
+  </li>
+  <li>
+  \(f\) is bounded below. A lower bound is \(N\) because the elements
+  of \(x\) are positive integers.
+  </li>
+  <li>
+  Execution of any command with a True guard reduces
+  \(f\).
+  </li>
+</ol>
+Therefore \(f\) is a variant function, and the algorithm
 terminates.
 
 <p class="w3-text-teal">Termination Condition</p>

@@ -1,0 +1,67 @@
+
+    <h1 class="w3-text-teal">Quiz</h1>
+
+    <h3 class="w3-text-teal">Question</h3>
+    If the <i>do-od</i> loop, below, solves a problem then does the
+<i>while</i> loop, below, also solve the same problem? Why?
+
+<h4 class="w3-text-teal">do-od loop</h4>
+<pre>
+do
+   g0 -> c0
+   g1 -> c1
+od
+</pre>
+
+<h4 class="w3-text-teal">while loop</h4>
+<pre>
+while (g0 OR g1):
+   if g0 then c0
+   if g1 then c1
+</pre>
+or in Python notation:
+<pre>
+while (g0 OR g1):
+   if g0: c0
+   if g1: c1
+</pre>
+
+<h3 class="w3-text-teal">Answer</h3>
+Yes, the while loop also solves the problem. Let the
+statements in the while loop be s0 and s1. The sequence of
+statements executed in the while loop are
+<p>
+s0; s1; s0; s1; s0; s1; ....
+</p>
+until not(g0 or g1).
+<p>
+In this sequence, drop the statements for which the <i>if</i> clause
+is False; the resulting sequence is a possible sequence of statement
+executions for the do-od loop. Since all possible statement executions
+of the do-od loop solves the problem, the while loop also solve the
+problem.
+
+<h3 class="w3-text-teal">Question</h3>
+Does the following loop always, sometimes, or never terminate? Explain.
+<p>
+<pre>
+x = 2
+do
+   x >= 1   ->  x = x - 1
+   x == 1   ->  x = x + 1
+od
+</pre>
+
+<h3 class="w3-text-teal">Answer</h3>
+The loop terminates for some, but not all, executions.
+<p>
+Let the statements in the loop be s0 and s1, in order. Here is a
+sequence that does not terminate: repeat s0;s1 forever.
+<p>
+{x = 2} s0 {x = 1} s1 {x = 2} s0 {x = 1} s1 {x = 2}..
+</p>
+<p>
+And here is a sequence that does terminate: s0; s0
+<p>
+{x = 2} s0 {x = 1} s0 {x = -1}
+</p>

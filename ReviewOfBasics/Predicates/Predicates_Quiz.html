@@ -1,4 +1,4 @@
-<title>ReviewOfBasics/HoareTriples/HoareTriplesExamples.html</title>
+<title>ReviewOfBasics/Predicates/Predicates_Quiz.html</title>
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
 
@@ -85,30 +85,30 @@ title="Close Menu">
  
 <a class="w3-bar-item w3-button w3-hover-black "
 href="../Introduction/Introduction.html" > 
-CHAPTER: Review Sequential Programming
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../HoareTriples/HoareTriples.html" > 
-Hoare Triples
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../HoareTriples/HoareTriplesExamples.html" > 
-Examples
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../HoareTriples/HoareTriplesVideo.mp4" > 
-Video
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../HoareTriples/HoareTriplesSelfTest.html" > 
-Quiz
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../Invariant/Invariant.html" > 
-Next
+CHAPTER: Review of Sequential Programming
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
 href="../Predicates/Predicates.html" > 
+Predicates
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../Predicates/Predicates_Examples.html" > 
+Example
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../Predicates/PredicatesVideo.mp4" > 
+Video
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../Predicates/Predicates_Quiz.html" > 
+Quiz
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../HoareTriples/HoareTriples.html" > 
+Next
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../NondeterministicIteration/NondeterministicIteration.html" > 
 Previous
 </a>
 
@@ -135,100 +135,168 @@ Previous
 <div class="w3-twothird w3-container">
 
 <!-- End overlay ---------------------------------->
-<h2 style="color:red;">Examples</h2>
-Consider the following Hoare triples.
-
-    <ol>
-      <li>
-\(
-\{x < 0\} \; c \; \{(x = 1) \vee (x = 2)\}
-\)
-</li>
-<li>
-\(
-\{x > 0\} \; c \; \{(x = 0) \vee (x = -1)\}
-\)
-</li>
-<li>
-\(
-\{x > 1\} \; c \; \{x < 0\}
-\)
-</li>
-</ol>
-
-
-
-What transitions
-are possible from a state in which \(x = -1\) by a command \(c\) that
-    satisfies <i>all</i> the above three Hoare triples?
-</p>
-
-<p>Since the state satisfies the
-    first precondition, \(x < 0\), the state after the transition must
-    satisfy the first postcondition, \((x = 1) \vee (x = 2)\). The
-    other two Hoare triples don't address the precondition \(x =
--1\), and so the postconditions of these Hoare triples are irrelevant
-    for this question. Therefore, the transitions from \(x = -1\) are to 
-states \(x = 1\) or \(x = 2\).
-
-<p style="color:red;">Example</p>
-    What transitions
-are possible from a state in which \(x = 2\) that satisfy all of the
-    above Hoare triples?
-</p>
-
-<p>
-The first Hoare triple doesn't address the precondition \(x = 2\).
-<p>
-The precondition \(x > 0\) of the second triple holds when \(x = 2\)
-and therefore its postcondition, \((x = 0) \vee (x = -1)\), must hold in the
-next state.
-<p>
-The precondition \(x > 1\) of the third triple holds when \(x = 2\)
-and therefore its postcondition, \(x < 0\), must hold in the
-next state.
-<p>
-Both postconditions, \((x = 0) \vee (x = -1)\) and \(x <
-0\) must hold in the next state. So the only transition from \(x = 2\)
-is to state \(x = -1\).
-
-
-<p style="color:red;">Example</p>
-<p>
-    What transitions
-are possible from a state in which \(x = 0\)?
-</p>
-
-<p>
-None of the three preconditions hold when \(x = 0\), and therefore the
-next state can be <i>any</i> state. 
-
-
-<p style="color:red;">Example: Unimplementable Commands</p>
-What transitions satisfy all the following Hoare triples?
+ <!------------------------------------------------------------>
+<h1 class="w3-text-teal">Quiz</h>
+<!------------------------------------------------------------>
+<h3 class="w3-text-teal">Question</h3>
+True or False? Explain your answer.
 <p>
 \(
-\{x = 0\} \; c \; \{x > 0\}, \quad \{x = 0\} \; c \; \{x < 0\}
+\forall P, Q: \;  (P \Rightarrow Q)  \; \equiv \;  ((P \wedge Q)
+\equiv   P)
 \)
-</p>
 <p>
-This command cannot be initiated in a state in which \(x = 0\) because
-both postconditions \(x > 0\) and \(x < 0\) must hold when the command
-terminates.
+The English version of the question, in case you are not familiar with
+the notation:
+<br>
+for all \(P, Q\):
 
+\(P\) IMPLIES \(Q\) is equivalent to
+
+\(P\) AND \(Q\) is equivalent to \(P\)
+
+<h3 class="w3-text-teal">Answer</h3>
+True
 <p>
-In this course we will ensure that the commands specified in our
-algorithms can be executed in every state.
-</p>
+Here are three different ways of answering they quesion.
 
-<h3 class="w3-text-teal">Summary</h3>
-We may specify a command by sets of pre- and post-conditions that the
-command must specify.
-There may be many commands that satisfy these conditions, and we can
-use any command that satisfies these conditions in an
-implementation. Specifying commands in this way allows us to describe
-algorithms in terms of predicates rather than by using statements in a
-specific programming language.
+<h3 class="w3-text-teal">1. Compute Formula</h3>
+\(
+P \wedge Q \; \equiv \; P
+\)
+<br>
+=
+<br>
+both sides of \(\equiv\) are True or both sides are False
+<br>
+\(
+((P \wedge Q) \wedge P) \vee (\neg(P \wedge Q) \wedge \neg P)
+\)
+<br>
+=
+<br>
+\(
+(P \wedge Q) \vee ((\neg P \vee \neg Q) \wedge \neg P)
+\)
+<br>
+=
+<br>
+\(
+(P \wedge Q) \vee \neg P
+\)
+<br>
+=
+<br>
+\(
+Q \vee \neg P
+\)
+<br>
+=
+<br>
+\(
+P \Rightarrow Q
+\)
+
+<h3 class="w3-text-teal">2. Truth Table</h3>
+Check the formula for all possible values of the predicates.
+<p>
+Case: \(P, Q = True, True\):
+<br>
+\(
+P \Rightarrow Q  \quad \equiv \quad (P \wedge Q \; \equiv \; P)
+\)
+<br>
+\(
+T \Rightarrow T  \quad \equiv \quad (T \wedge T \; \equiv \; T)
+\)
+<br>
+\(
+T  \quad \equiv \quad (T \; \equiv \; T)
+\)
+<br>
+\(
+T  \quad \equiv \quad T
+\)
+<br>
+\(
+T
+\)
+<p>
+Case: \(P, Q = True, False\):
+<br>
+\(
+P \Rightarrow Q  \quad \equiv \quad (P \wedge Q \; \equiv \; P)
+\)
+<br>
+\(
+T \Rightarrow F  \quad \equiv \quad (T \wedge F \; \equiv \; T)
+\)
+<br>
+\(
+F  \quad \equiv \quad (F \; \equiv \; T)
+\)
+<br>
+\(
+F  \quad \equiv \quad F
+\)
+<br>
+\(
+T
+\)
+<p>
+
+Case: \(P, Q = False, True\):
+<br>
+\(
+P \Rightarrow Q  \quad \equiv \quad (P \wedge Q \; \equiv \; P)
+\)
+<br>
+\(
+F \Rightarrow Q  \quad \equiv \quad (F \wedge T \; \equiv \; F)
+\)
+<br>
+\(
+T  \quad \equiv \quad (F \; \equiv \; F)
+\)
+<br>
+\(
+T  \quad \equiv \quad T
+\)
+<br>
+\(
+T
+\)
+<p>
+
+Case: \(P, Q = False, False\):
+<br>
+\(
+P \Rightarrow Q  \quad \equiv \quad (P \wedge Q \; \equiv \; P)
+\)
+<br>
+\(
+F \Rightarrow F  \quad \equiv \quad (F \wedge F \; \equiv \; F)
+\)
+<br>
+\(
+T  \quad \equiv \quad (F \; \equiv \; F)
+\)
+<br>
+\(
+T  \quad \equiv \quad T
+\)
+<br>
+\(
+T
+\)
+
+<h3 class="w3-text-teal">3. Venn Diagram</h3>
+This is the diagrammatic version of the truth table. Draw a Venn
+diagram with arbitrary sets representing predicates \(P, Q\). Identify
+the region in which the predicate \(P \Rightarrow Q\) holds. Also,
+identify
+the region in which the predicate \((P \wedge Q) \equiv Q\) holds.
+Show that the regions are the same.
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">

@@ -1,0 +1,68 @@
+ <!------------------------------------------------------------>
+<h1 class="w3-text-teal">Quiz</h>
+<!------------------------------------------------------------>
+
+<h3 class="w3-text-teal">Question</h3>
+True or False? Explain your answer.
+<p>
+\(
+stable(P) \wedge stable(Q) \quad \Rightarrow \quad stable(P \wedge Q)
+\)
+
+<h3 class="w3-text-teal">Answer</h3>
+True
+<p>
+All transitions from states in which \(P\) holds are to states in
+which \(P\) holds.
+All transitions from states in which \(Q\) holds are to states in
+which \(Q\) holds.
+Therefore
+all transitions from states in which \(P \wedge Q\) holds are to states in
+which \(P \wedge Q\) holds.
+
+<h3 class="w3-text-teal">Question</h3>
+True or False? Explain your answer.
+<p>
+\(
+stable(P \wedge Q) \quad \Rightarrow \quad stable(P) \wedge stable(Q)
+\)
+
+<h3 class="w3-text-teal">Answer</h3>
+False
+<p>
+Suppose \(P\) holds in  \(\{v, w\}\), and \(Q\) in  \(\{w\}\),
+and therefore \(P \wedge Q\) holds  in
+\(\{w\}\).
+<p>
+Assume transitions from \(w\) are to \(w\), and so
+\(stable(P \wedge Q)\).
+<p>
+The transition from \(v\) could be to a state other than \(v, w\).
+in which case \(\{v, w\}\) is not stable.
+<p>
+For example:
+<pre>
+do
+  x = 0 -> x = 0
+  x = 1 -> x = 2
+od
+</pre>
+\(x = 0\), i.e., \(Q\) is stable but \((x = 0) \vee (x = 1)\),
+i.e. \(P\) is not stable. The left-hand side --- "\(stable(P \wedge
+Q)\) --- of the implication is true but the right-hand side
+--- \(stable(P) \wedge stable(Q)\) --- is false. 
+
+<h3 class="w3-text-teal">Question</h3>
+A predicate \(I\) is an invariant for a program where the initial
+condition is \((x = 0) \vee (x = 1)\). Is \(I\) also an invariant for
+the same program if the initial condition is tightened to \(x = 0\)?
+Explain
+
+<h3 class="w3-text-teal">Answer</h3>
+Yes, \(I\) is an invariant with the tighter initial condition.
+<p>
+All states in all paths from states in which \((x = 0) \vee (x = 1)\)
+satisfy the invariant.
+Therefore
+all states in all paths from states in which \((x = 0)\) also
+satisfy the invariant.

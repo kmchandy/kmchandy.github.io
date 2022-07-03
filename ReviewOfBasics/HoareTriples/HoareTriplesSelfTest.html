@@ -31,6 +31,10 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 hr.new2 {
   border: 2px solid blue;
 }
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
 </style>
 
 
@@ -85,10 +89,6 @@ CHAPTER: Review Sequential Programming
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
 href="../HoareTriples/HoareTriples.html" > 
-MODULES:
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../HoareTriples/HoareTriples.html" > 
 Hoare Triples
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
@@ -101,7 +101,15 @@ Video
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
 href="../HoareTriples/HoareTriplesSelfTest.html" > 
-Self Test
+Quiz
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../Invariant/Invariant.html" > 
+Next
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../Predicates/Predicates.html" > 
+Previous
 </a>
 
 </nav>
@@ -128,7 +136,7 @@ Self Test
 
 <!-- End overlay ---------------------------------->
     <!------------------------------------------------------->
-    <h1 class="w3-text-teal">Hoare Triples: Self Test</h1>
+    <h1 class="w3-text-teal">Hoare Triples: Quiz</h1>
 
     <h3 class="w3-text-teal">Question 1</h3>
     Which of the following are True?
@@ -216,16 +224,23 @@ Self Test
       \Rightarrow \quad \{P'\} \;  c \; \{Q\}
       \)
       <p>
-      False. Here's an example:
+      False.
       <p>
       \(
-      (\{x = 0\} \;  x = 2*x \; \{x = 0\}) \wedge ([x = 0 \Rightarrow
-    x \geq 0]) \quad
-      \Rightarrow \quad \{x \geq 0\} \;  c \; \{x = 0\}
+      [P \Rightarrow True]
       \)
       <p>
-      is False. Both terms in the antecedent (the left-hand side of
-    the implication) are True but the consequent is False.
+      Substituting True for \(P'\), the right-hand side of the
+      implication becomes \(\{True\} \;  c \; \{Q\}\) which states
+      that \(\{Q\}\) holds when \(c\) terminates regardless of the
+    state of when \(c\) is initiated. This is obviously false. For
+    example check that 
+      <p>
+      \(
+      \{x = 1\} \;  x = 2*x \; \{x = 0\}
+      \)
+      <p>
+      is False.
       
       </li>
       <li>
@@ -359,7 +374,7 @@ Self Test
     \)
 <!--Start Footer--------------------------------------->
 
-    <hr class="new2">
+    <hr class="new1">
       <p>K. Mani Chandy,
       Emeritus Simon Ramo Professor,
       California Institute of Technology</p>
