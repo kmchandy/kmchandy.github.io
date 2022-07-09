@@ -100,12 +100,16 @@ href="./LogicalClocks.html" >
 Logical Clocks
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="./GlobalSnapshotAlgorithmVideo.mp4" > 
-Snapshots: Video
+href="./VectorClocks.html" > 
+Vector Clocks
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="./SnapshotIntroductionSelfTest.html" > 
+Timelines: Quiz
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
 href="./ChannelSnapshotsSelfTest.html" > 
-Snapshots: Self Test
+Snapshots: Quiz
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
 href="./ChannelSnapshotsAssignment/ChannelSnapshotsAssignment.html" > 
@@ -150,6 +154,10 @@ This module describes the global snapshot algorithm which can be used
 to determine a global state of a system
 </h4>
 
+<a href="GlobalSnapshotAlgorithmVideo.mp4">
+<h3 class="w3-text-teal">Video</h3>
+</a>
+
 The global snapshot algorithm determines a global state of a
 system. The algorithm cannot be instantaneous because it requires
 collaboration among multiple agents. 
@@ -168,8 +176,67 @@ corollary on consistent cuts</a> and from the specification is:
     <h5 style="color:blue;">
 There exists a trajectory from \(s_{init}\) through \(s_{snap}\) to
 \(s_{fini}\).
-<h5>
+</h5>
 <hr class="new2">
+
+The diagram below illustrates this property. 
+\(s_{init}\) is obtained
+from the timeline diagram at points crossed by the vertical line representing the
+instant at which the snapshot is initiated, and 
+\(s_{fini}\) by the vertical line at the
+instant at which the snapshot algorithm completes. The snapshot state,
+\(s_{snap}\), is the state at a consistent cut where the events before
+the snapshot algorithm is initiated are a subset of the events before the cut,
+and the events after the snapshot algorithm terminates are a subset of
+the events after the cut.
+
+<figure>
+    <img src="PropertiesOfGlobalSnapshots_1.jpg"
+alt="Fig1" style="width:80%"> 
+    <figcaption>Fig.1: Initial, snapshot and final states</figcaption>
+</figure>
+
+<h4 class="w3-text-teal">Stable Predicates and Snapshots</h4>
+If a
+<a href="../ReviewOfBasics/Invariant/Invariant.html">
+stable predicate \(P\)</a>
+holds at any point in a trajectory then it continues to hold
+therafter. So, if \(P\) holds in \(s_{init}\) then \(P\) holds in
+\(s_{snap}\), and if \(P\) holds in \(s_{snap}\) then \(P\) holds in
+\(s_{fini}\). To summarize, for any stable predicate \(P\):
+<ol>
+  <li>
+  If \(P\) holds in the snapshot state then \(P\) holds when the snapshot
+  algorithm terminates.
+  <br>
+  \(
+  P(s_{snap}) \; \Rightarrow \; P(s_{fini})
+  \)
+  </li>
+  <li>
+  If \(\neg P\) holds in the snapshot state then \(\neg P\) holds when the snapshot
+  algorithm is initiated.
+  <br>
+  \(
+  \neg P(s_{snap}) \; \Rightarrow \; \neg P(s_{init})
+  \)
+  </li>
+</ol>
+The above two rules are asymmetric: the first relates the snapshot
+and final state; while the second relates the snapshot
+and initial state.
+
+<p>
+The snapshot algorithm can be used to detect a stable property such as:
+"computation has terminated."
+
+If the snapshot shows that computation has terminated
+then computation has indeed terminated. If, however, computation has
+not terminated in the snapshot state then we can only conclude that the
+computation had not terminated when the algorithm was
+<i>initiated</i>. It is possible that computation terminated after
+the snapshot algorithm was initiated and before it terminated. So to
+detect termination we have to run the snapshot algorithm repeatedly.
 
 <h4 class="w3-text-teal">A Brief Review of Consistent Cuts</h4>
 A consistent cut of a timeline diagram is a partition of the events in
