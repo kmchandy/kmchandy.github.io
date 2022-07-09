@@ -206,6 +206,47 @@ a trajectory.
 the number of out-of-order pairs of events. The proof follows by repeatedly
 flipping out-of-order adjacent pairs until \(Y\) is obtained.
 
+<!--------------------------------------------------------->
+<h2 class="w3-text-teal">Constructing System Trajectories from Agent Trajectories</h2>
+<!--------------------------------------------------------->
+Let's look at the problem of reconstructing a log of events of the
+global system given logs recorded by each agent of that agent's own
+events.  Each agent logs the sequence of events at that agent, and its
+own local state before each event, and the messages sent and received
+(if any) in each of its events.  In terms of a timeline diagram, each
+agent records the labeled edges directed towards and away from each of
+the agent's events (see figure below).  We want to determine the
+global system log from the agent logs.  Equivalently, we want to
+construct the system trajectory from the set of agent trajectories.
+
+
+
+<h4 style="color:red;">Example</h4>
+The figure below shows logs of each of the three agents in the example
+given in the Timelines module.
+<figure>
+    <img src="Timelines/Timelines.015.jpeg" alt="Fig1" style="width:100%">
+    <figcaption>Fig.6: Agent Trajectories</figcaption>
+</figure>
+
+Given this set of agent trajectories what is the global trajectory?
+What happened in the system as a whole?
+
+<p>
+We don't know what happened. This is because <i>any global trajectory,
+with these agent trajectories <str>could</str> have happened if all
+messages that are received are sent before they are received.</i> In
+our example, given the agent trajectories of the global trajectories
+of figures 3 and 4 could have occurred given the agent trajectories of
+figure 6; for convenience these global trajectories are shown again
+below.
+<figure>
+    <img src="Timelines/Timelines.016.jpeg" alt="Fig1" style="width:100%">
+    <figcaption>Fig.7: Global Trajectories that Share Agent Trajectories</figcaption>
+</figure>
+
+
+
 
 <h3 class="w3-text-teal">Cuts of Trajectories</h3>
 A cut of a trajectory is a partition of the events in
