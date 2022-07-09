@@ -1,0 +1,188 @@
+<!---------------------------------------------------->
+<h1 class="w3-text-teal">Vector Clocks: Introduction</h1>
+<!---------------------------------------------------->
+
+    <h2 class="w3-text-teal">Key Ideas</h2>
+
+This module introduces  <i>vector clocks</i>.
+
+<a href="VectorClocksVideo.mp4">
+<h3 class="w3-text-teal">Video</h3>
+</a>
+
+    <p> The key idea of logical
+    time is that if event e' occurs after event e in a trajectory, and
+    events e and e' are dependent, then e' has a higher timestamp than
+    e does. Equivalently, if there is path in the timeline diagram
+    from e to e' then e' has a higher timestamp than e does.
+    <p>
+    The converse isn't necessarily True. The timestamp for e' may be
+    higher than the timestamp for e even though there is no path from
+    e to e'.
+    <p>
+    Vector timestamps ensure that the timestamp for an event
+    e' in a trajectory is greater than that for an event e in the
+    trajectory <i>if and only if</i> there is a path from e to e' in
+    the timeline diagram.
+    
+
+    <h2 class="w3-text-teal">Logical Clocks</h2>
+    <figure>
+    <img src="./VectorTimestamps/Slide01.jpg" alt="Fig1" style="width:75%">
+    <figcaption>Fig.1: Logical Scalar Clocks</figcaption> 
+    </figure>
+    Fig. 1 shows a timeline diagram with agents A0, A1, A2, and A3,
+    and four events with the logical timestamp for each event shown
+    inside the circle representing the event. Look at the two events
+    that are colored green. The event on the timeline for agent A3 has
+    a timestamp of 3 while the event on the timeline for agent A0 has
+    a timestamp of 2; however, the graph has no path from the event on
+    A0's timeline to the event on A3's timeline. This figure
+    illustrates that an event e' may have a higher timestamp than an
+    event e though there is no path from e to e'. 
+
+    <h2 class="w3-text-teal">Logical Vector Clocks</h2>
+    A vector timestamp is a vector with one element for each agent in
+    the system. Vector and scalar timestamps are computed in the same
+    way. The maximum of vectors is computed lexicographically. Instead
+    of adding a positive scalar (to the maximum of the input timestamps)
+we add a positive vector with zeroes everywhere
+    except in the j-th position where the event modifies the state of
+only agent j.
+
+<h2 style="color:red;">Example 1</h2>
+    <figure>
+    <img src="./VectorTimestamps/Slide11.jpg" alt="Fig1" style="width:75%">
+    <figcaption>Fig.2: What is a Vector Timestamp of Event D?</figcaption> 
+</figure>
+Fig. 2 shows a timeline diagram for agents 0, 1, 2, 3 with events
+    A,.., F. Let's compute the vector timestamp for event D, shown in
+    red. The timestamps for events A, B, and C are [3, 8, 2, 1], [10,
+    5, 3, 2], and [6, 3, 4, 1], respectively. The timestamp of an
+event is also the timestamp of outgoing edges from the event.
+<p>
+The maximum of the timestamps of the input edges of event D, taken
+    lexicographically, takes the maximum of each element of the vector
+to get [10, 8, 4, 2].
+<p>
+Event D is on the timeline for agent 1. So, the timestamp assigned to
+    D is [0, k, 0, 0] where k is a positive value. Throughout the
+    course, we assume k =
+    1. So, the timestamp assigned to D is [10, 8, 4, 2] + [0, 1, 0, 0]
+    = [10, 9, 4, 2], as shown in Fig. 3.
+    <figure>
+    <img src="./VectorTimestamps/Slide12.jpg" alt="Fig1" style="width:75%">
+    <figcaption>Fig.3: Assigning Vector Timestamps to Event D</figcaption> 
+</figure>
+
+
+
+
+<h2 style="color:red;">Example 2</h2>
+The figures below illustrate the assignment of vector
+    timestamps to events in a timeline diagram.
+
+Initially, the timestamps along the timelines of
+all agents is [0, 0, 0, 0].
+    <figure>
+    <img src="./VectorTimestamps/Slide02.jpg" alt="Fig4" style="width:75%">
+    <figcaption>Fig.4: Vector Timestamps: Initial Values</figcaption> 
+</figure>
+The figures show vector timestamps computed by the algorithm for all
+events, in order from the earliest to the latest, or from left to right.
+    <figure>
+    <img src="./VectorTimestamps/Slide03.jpg" alt="Fig5" style="width:75%">
+    <figcaption>Fig.5: Vector Timestamps: Example</figcaption> 
+</figure>
+
+    <figure>
+    <img src="./VectorTimestamps/Slide04.jpg" alt="Fig6" style="width:75%">
+    <figcaption>Fig.6: Vector Timestamps: Example</figcaption> 
+</figure>
+
+    <figure>
+    <img src="./VectorTimestamps/Slide05.jpg" alt="Fig7" style="width:75%">
+    <figcaption>Fig.7: Vector Timestamps: Example</figcaption> 
+</figure>
+
+    <figure>
+    <img src="./VectorTimestamps/Slide06.jpg" alt="Fig8" style="width:75%">
+    <figcaption>Fig.8: Vector Timestamps: Example</figcaption> 
+</figure>
+The next figure shows vector timestamps for all events.
+    <figure>
+    <img src="./VectorTimestamps/Slide07.jpg" alt="Fig9" style="width:75%">
+    <figcaption>Fig.9: Vector Timestamps: Example</figcaption> 
+</figure>
+
+
+<!---------------------------------------------------->
+<h2 class="w3-text-teal">Proof of Correctness</h2>
+<!---------------------------------------------------->
+<p  class="w3-text-teal">Theorem</p>
+For events \(e\) and \(e'\) in a timeline diagram, and vector
+timestamps \(T(e)\) and \(T(e')\), for \(e\) and \(e'\) respectively: 
+<hr class="new2">
+<h5 style="color:blue;">
+\(T(e') > T(e)\) if and only if there is a path in the timeline
+diagram from \(e\) to \(e'\).
+</h5>
+<hr class="new2">
+
+<p  class="w3-text-teal">Proof</p>
+Consider a trajectory consisting of the sequence of events \(e_{0},
+e_{1}, \ldots\). It is straightforward to prove by induction on \(j\) that the
+following stronger result
+holds for the sequence \(e_{0}, \ldots, e_{j}\).
+<p>
+Let the vector timestamp, \(T(e)\), of event \(e\) be \([T(e)_{0},
+T(e)_{1}, \ldots ]\). 
+Then for all \(j \),  there is
+a path from the \(i\)-th event on the timeline for agent j to event
+\(e\) if and only if \(i \leq T(e)_{j}\).
+
+<h2 style="color:red;">Example 3</h2>
+The two figures below illustrate the idea underlying the stronger result, proved
+by induction.
+Let's call the rightmost event \(e\).
+Look at the timestamp \(T(e)\), [1, 3, 1, 1], of \(e\).
+
+The result says that there is a path from the
+\(T(e)_{0}\)-th or first event on timeline of agent 0 to event \(e\). The first event of
+agent 0 is colored red, and the path from that event to \(e\) is shown
+in a heavy black line.
+
+    <figure>
+    <img src="./VectorTimestamps/Slide08.jpg" alt="Fig10" style="width:75%">
+    <figcaption>Fig.10: Idea underlying Proof</figcaption> 
+</figure>
+
+The result says that there is a path from the
+\(T(e)_{1}\)-th or third event on timeline of agent 1 to event \(e\).
+
+
+    <figure>
+    <img src="./VectorTimestamps/Slide09.jpg" alt="Fig11" style="width:75%">
+    <figcaption>Fig.11: Idea underlying Proof</figcaption> 
+</figure>
+
+And we see that \(e\) is the third event of agent 1. These events are
+colored red
+
+    <figure>
+    <img src="./VectorTimestamps/Slide10.jpg" alt="Fig12" style="width:75%">
+    <figcaption>Fig.12: Idea underlying Proof</figcaption> 
+</figure>
+
+<!---------------------------------------------------->
+<h2 class="w3-text-teal">Summary</h2>
+<!---------------------------------------------------->
+The central idea that runs through all the modules on snapshots and
+timelines is this: the order of adjacent <i>independent</i> events in
+a trajectory can be permuted without changing the final state of the
+trajectory. Logical clocks is a simple mechanism that ensures that if
+event \(e'\) occurs after event \(e\) in a trajectory, and the two
+events are dependent, then the timestamp for \(e'\) is greater than
+that of \(e\). Vector clocks ensures that the timestamp for \(e'\) is
+greater than that of \(e\) if and <i>only if</i> events \(e\) and \(e'\) are
+dependent.
