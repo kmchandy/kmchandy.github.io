@@ -84,40 +84,48 @@ title="Close Menu">
 <!-- Start Sidebar----------> 
  
 <a class="w3-bar-item w3-button w3-hover-black "
-href="./SnapshotsChapterIntroduction.html" > 
+href="SnapshotsChapterIntroduction.html" > 
 Introduction: Timelines, Snapshots, Logical Clocks
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="./Timelines.html" > 
+href="Timelines.html" > 
 Timelines
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="./ChannelSnapshots.html" > 
+href="ChannelSnapshots.html" > 
 Global Snapshots
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="./LogicalClocks.html" > 
+href="LogicalClocks.html" > 
 Logical Clocks
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="./VectorClocks.html" > 
+href="VectorClocks.html" > 
 Vector Clocks
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="./SnapshotIntroductionSelfTest.html" > 
+href="SnapshotIntroductionSelfTest.html" > 
 Timelines: Quiz
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="./ChannelSnapshotsSelfTest.html" > 
+href="ChannelSnapshotsSelfTest.html" > 
 Snapshots: Quiz
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="./ChannelSnapshotsAssignment/ChannelSnapshotsAssignment.html" > 
+href="ChannelSnapshotsAssignment/ChannelSnapshotsAssignment.html" > 
 Snapshots: Assignment
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
-href="./ChannelSnapshotsAssignment/ChannelSnapshotsAssignmentSolution.html" > 
-Snapshots: Solution
+href="ChannelSnapshotsAssignment/ChannelSnapshotsAssignmentSolution.html" > 
+Snapshots:Solution
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../GlobalSnapshotApplications/StablePredicates.html" > 
+ Next
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../FoundationsOfDistributedSystems/DistributedSystemsIntroduction.html" > 
+ Previous
 </a>
 
 </nav>
@@ -149,27 +157,36 @@ Snapshots: Solution
 
 <h4 class="w3-text-teal">
 This module introduces timelines.
-A timeline is a graphical representation of the sequence of state
-transitions of a trajectory.
+A timeline is a graphical representation of a sequence of state
+transitions.
 </h4>
 
 
 <p>
-A state transition which changes the state of an agent is called an
+We call a state transition of an agent an
 <i>event</i> at that agent.  The graph of a trajectory is an acyclic
     labeled directed graph in which each vertex represents an event,
-    and the edges are as follows: There is an edge directed from an
+and the edges are as follows:
+<ul>
+  <li>
+  <i>Agent timeline edges</i>:
+  There is an edge directed from an
     event at an agent to the next event at that agent; the edge is
-    labeled with the state of the agent between the two events.  A
-    message \(m\) sent at an event \(e\) and received at an event
+  labeled with the state of the agent between the two events.
+  </li>
+  <li>
+  <i>Message edges</i>
+  A message \(m\) sent at an event \(e\) and received at an event
     \(e'\) is represented by an edge directed from \(e\) to \(e'\),
-    and the edge is labeled \(m\).
+  and the edge is labeled \(m\).
+  </li>
+</ul>
 
 <p>
 The graph is acyclic because each edge is directed from an event
 towards a later event.
 
-A <i>timeline diagram</i> of a trajectory is a graph of the trajectory where
+A <i>system timeline</i> of a trajectory is a graph of the trajectory where
 the graph is laid out in the following way.
 The horizontal axis represents time.  
 
@@ -191,9 +208,9 @@ from left to right.
 <h4 style="color:red;">Example</h4>
 <figure>
     <img src="Timelines/Timelines.001.jpeg" alt="Fig1" style="width:100%">
-    <figcaption>Fig.1: A Timeline Diagram</figcaption>
+    <figcaption>Fig.1: A System Timeline</figcaption>
 </figure>
-This example shows a timeline diagram with two agents, \(A\) and
+This example shows a system timeline with two agents, \(A\) and
 \(B\).  The vertices  A0, A1, A2, A3 represent events at agent \(A\);
 likewise vertices B0, B1 B2,represent \(B\)'s events.
 
@@ -214,21 +231,21 @@ The diagram shows that
 agent \(A\) sends message \(m_{0}\) in event A1 and this message is
 received by agent \(B\) in event B1.
 
-<h4 class="w3-text-teal">Channel States in Timeline Diagrams</h4>
+<h4 class="w3-text-teal">Channel States in System Timelines</h4>
 The state of a channel \(c\) at time \(T\) is the sequence (in time
 order) of messages that are sent along \(c\) before \(T\) and that are
 received after \(T\). The state of \(c\) at \(T\) can be obtained from
-the timeline diagram as the sequence of labels of edges representing
+the system timeline as the sequence of labels of edges representing
 messages along \(c\) that are cut by the \(T\)-line, the vertical line
 at \(T\).
 
 <h4 style="color:red;">Example</h4>
 <figure>
     <img src="Timelines/Timelines.002.jpeg" alt="Fig2" style="width:100%">
-    <figcaption>Fig.2: Global State from a Timeline Diagram</figcaption>
+    <figcaption>Fig.2: Global State from a System Timeline</figcaption>
 </figure>
-Figure 2 shows 
-timeline diagram with agents \(A, B, D\). Agent \(A\) sends messages
+Figure 2 shows a system
+timeline with agents \(A, B, D\). Agent \(A\) sends messages
 \(m_{0}\) along a channel \(x\) and sends \(m_{1}\) along a different
 channel \(c\) at event A1.  When agent \(D\) receives \(m_{0}\) at
 event D1 it sends message \(r_{0}\) to \(A\) along a channel \(y\).
@@ -248,7 +265,7 @@ of the system at T can be obtained from labels of edges cut by the
 
 <h4 class="w3-text-teal">Sequence of Global States</h4>
 The sequence of <i>global</i> states in a trajectory can be 
-obtained from the timeline diagram from the labels of edges cut by the
+obtained from the system timeline from the labels of edges cut by the
 sequence of vertical lines before each event.
 The starting and ending states of the trajectory are obtained from the
 earliest (leftmost) and latest (rightmost) vertical
@@ -284,30 +301,27 @@ The following theorem captures the idea illustrated by figures 3 and
 4.
 
 
-<h4 class="w3-text-teal">Theorem</h4>
-Let \(X\) be a trajectory specified by a sequence of events, and
-let \(Y\) be a permutation of this sequence with the following
-property. For any pair of events \(e, e'\) where  \(e\)
-appears before \(e'\) in \(X\):
-\(e\) also appears before \(e'\) in \(Y\) if
-<ol>
-  <li>
-  \(e\) and \(e'\) are events on the same agent, or
-  </li>
-  <li>
-  a message sent in \(e\) is received in \(e'\).
-  </li>
-</ol>
-Before we prove the theorem, let's see what the theorem means in terms
-of timelines.
-The first condition says that the local timelines for each agent ---
-the horizontal lines --- are
-the same in  \(X\) and \(Y\).
-The second condition says that a message is received only after it is
-sent. Together the conditions are that the graph of \(Y\) is the same
-as that of \(X\), and all edges in \(Y\) are directed forwards in
-time. Figures 3 and 4 illustrate the theorem with \(X, Y\) as the
-trajectores in figures 3 and 4, respectively.
+<h4 class="w3-text-teal">Theorem about Permutation of Event Sequences</h4>
+
+<hr class="new2">
+    <h5 style="color:blue;">
+Let \(X\) be a trajectory of a system. Any permutation \(Y\)
+of the sequence of events in \(X\), where agents have the same
+timelines in \(X\) and \(Y\),
+is also a trajectory of the system
+if:
+<br>
+<i>a message is received only after it is sent in \(Y\).</i>
+</h5>
+<hr class="new2">
+
+The conditions imply that the graph of \(Y\) is the same
+as that of \(X\), and all edges in \(Y\) are <i>directed forwards in
+time.</i>
+
+<p>
+The theorem is illustrated with \(X, Y\) as the
+system timelines in figures 3 and 4.
 
 
 <h4 class="w3-text-teal">Proof</h4>
@@ -352,54 +366,57 @@ the number of out-of-order pairs of events. The proof follows by repeatedly
 flipping out-of-order adjacent pairs until \(Y\) is obtained.
 
 <!--------------------------------------------------------->
-<h2 class="w3-text-teal">Constructing System Trajectories from Agent Trajectories</h2>
+<h2 class="w3-text-teal">Constructing System Timelines from Agent Timelines</h2>
 <!--------------------------------------------------------->
 Let's look at the problem of reconstructing a log of events of the
-global system given logs recorded by each agent of that agent's own
-events.  Each agent logs the sequence of events at that agent, and its
-own local state before each event, and the messages sent and received
-(if any) in each of its events.  In terms of a timeline diagram, each
-agent records the labeled edges directed towards and away from each of
-the agent's events (see figure below).  We want to determine the
-global system log from the agent logs.  Equivalently, we want to
-construct the system trajectory from the set of agent trajectories.
-
+global system (i.e. the system timeline) given logs each agent's own
+events (i.e. agent timelines).
 
 
 <h4 style="color:red;">Example</h4>
-The figure below shows logs of each of the three agents in the example
+The figure below shows timelines of each of the three agents in the example
 given in the Timelines module.
 <figure>
     <img src="Timelines/Timelines.015.jpeg" alt="Fig1" style="width:100%">
-    <figcaption>Fig.6: Agent Trajectories</figcaption>
+    <figcaption>Fig.6: Agent Timelines</figcaption>
 </figure>
 
-Given this set of agent trajectories what is the global trajectory?
-What happened in the system as a whole?
+Given these agent timelines what sequence of events occurred?
 
 <p>
-We don't know what happened. This is because <i>any global trajectory,
-with these agent trajectories <str>could</str> have happened if all
-messages that are received are sent before they are received.</i> In
-our example, given the agent trajectories of the global trajectories
-of figures 3 and 4 could have occurred given the agent trajectories of
-figure 6; for convenience these global trajectories are shown again
+We don't know what happened. This is because <i>any</i> system timeline,
+with these agent timelines <str>could</str> have happened provided
+<i>each message is received only after it is sent.</i>
+
+<p>
+In
+our example, the system timelines
+of figures 3 and 4 could have occurred given the agent timelines of
+figure 6. For convenience these system timelines are shown again
 below.
 <figure>
     <img src="Timelines/Timelines.016.jpeg" alt="Fig1" style="width:100%">
-    <figcaption>Fig.7: Global Trajectories that Share Agent Trajectories</figcaption>
+    <figcaption>Fig.7: System Timelines with identical Agent Timelines</figcaption>
 </figure>
 
 
 
 
-<h3 class="w3-text-teal">Cuts of Trajectories</h3>
-A cut of a trajectory is a partition of the events in
-the trajectory into two subsets called <i>past</i> and <i>future</i>.
+<h3 class="w3-text-teal">Cuts of System Timelines</h3>
+A cut of a a system timeline is a partition of the events in
+the timeline into two subsets called <i>past</i> and <i>future</i>.
+
+
+<hr class="new2">
+    <h5 style="color:blue;">
 A <i>consistent cut</i> is one
 in which there is no edge in the graph from a <i>future</i> event
 to a <i>past</i> event.
+</h5>
+<hr class="new2">
 
+
+<p class="w3-text-teal">Equivalent Definitions of Consistent Cuts</p>
 <p>The following are equivalent definitions of a consistent cut:
 <ol>
   <li>
@@ -412,7 +429,7 @@ to a <i>past</i> event.
   
 
 <h4 style="color:red;">Example</h4>
-The figure below shows cuts across timeline diagrams of two different trajectories
+The figure below shows cuts across two system timelines
 where past events are colored black and future events are green.
 <figure>
     <img src="Timelines/Timelines.010.jpeg" alt="Fig6" style="width:100%">
@@ -431,11 +448,13 @@ diagram. There is no vertical line that separates past from future in
 the upper diagram because a past event (B1) appears after a future
 event (A2).
 
-<p>
+<p class="w3-text-teal">Intuition for Permuting Past before Future</p>
 Given the upper diagram, in which past and future are separated by a
 curved line,
 we can use the following intuitive method to obtain the trajectory of the lower
 diagram in which past and future are separated by a vertical line.
+
+<p>
 Treat the purple curved separating line in the upper diagram as a
 string, and pull the string taut. Doing so may push some events, such as
 A2, to the right, and other events, such as B1, to the left.
@@ -445,34 +464,62 @@ crosses the string from the right to the left. Therefore the
 conditions of the theorem are always satisfied.
 
 <h3 class="w3-text-teal">Theorem about Consistent Cuts</h3>
-For any cut, \([past, future]\), of a timeline diagram of a trajectory
-\(\tau\) there exists a trajectory \(\tau'\) where the sequence of
-events in \(\tau'\) is a permutation of the sequence of
-events in \(\tau\) and where <i>all \(past\) events occur before all
-\(future\) events in \(\tau'\)</i>.
+<hr class="new2">
+    <h5 style="color:blue;">
+For any consistent cut, \([past, future]\), of a system timeline \(X\)
+there exists a system timeline \(Y\) in which the sequence of events is a
+permuation of of the sequence of events in \(X\), and
+where <i>all \(past\) events occur <str>before</str> all
+\(future\) events</i>.
+</h5>
+<hr class="new2">
 <p>
-The proof follows directly from the theorem on trajectories.
+The proof follows directly from the theorem on the permutation of
+event sequences.
+We create a system  timeline \(Y\) with the same agent
+timelines as system timeline \(X\).
+The theorem tells us that \(Y\)
+also represents a trajectory if the event timelines are the same in
+\(X\) and \(Y\) and <i>each message is received only
+after it is sent</i> in \(Y\).
+We can create a system timeline \(Y\) in which all \(past\) events occur
+before all \(future\) events because there are no messages from
+\(future\) to \(past\).
+<p>
+We permute events to get \(Y\) as follows: if there is a pair of adjacent events
+in which a \(future\) event occurs before the \(past\) event
+then flip the order of this pair of events. The theorem on the permutation of
+event sequences says that the sequence of events
+after flipping the order of events is also a valid timeline because
+there is no message from a \(future\) event to a \(past\) event in a
+consistent cut. Repeatedly flip out-of-order adjacent events until all 
+\(future\) events occur after all \(past\) events.
 
 <h4 style="color:red;">Example</h4>
 The cut in the diagram on the top of figure 5 is consistent.
-Therefore, there exists a timeline diagram, shown at the bottom of the
+Therefore, there exists a system timeline diagram, shown at the bottom of the
 figure, in which all past events occur before all
 future events.
 
 
-<h3 class="w3-text-teal">Corollary</h3>
+<h4 class="w3-text-teal">Corollary: Trajectory from Initial to Snapshot to Final State</h4>
 Consider an algorithm that computes the state at a consistent
 cut. Let \(s_{init}\) and \(s_{fini}\) be the states in which the
 algorithm starts and finishes (respectively), and let \(s_{snap}\) be
-the state at the consistent cut. Then there exists a trajectory from
+the state at the consistent cut.
+<hr class="new2">
+<h5 style="color:blue;">
+There exists a trajectory from
 \(s_{init}\) that visits \(s_{snap}\) and later visits \(s_{fini}\).
+</h5>
+<hr class="new2">
 
 <p>
 For example, an algorithm in the top diagram of figure 5 determines
 the global state \(s_{snap}\) along the curved consistent cut during a
 trajectory. Let \(s_{init}\) and \(s_{fini}\) be the states before the
 algorithm starts and after it finishes, i.e. at the left and
-right-hand ends of the timeline diagram. Then, the diagram in the
+right-hand ends of the system timeline diagram. Then, the diagram in the
 lower diagram of figure 5 also represents a trajectory 
 from \(s_{init}\) to \(s_{snap}\) and then to \(s_{fini}\).
 
@@ -485,18 +532,17 @@ systems.
 <h4 style="color:blue;">Review</h4>
 <ol>
   <li>What is timeline? Why is the graph of a timeline acyclic?</li>
-  <li>How is the state of a channel determined from the timeline
-  diagram?</li>
+  <li>How is the state of a channel determined from the system timeline?</li>
   <li>
-  Let \(X\) be a timeline diagram of a trajectory of a system. Let
-  \(Y\) be a timeline diagram with the same graph. Show that \(Y\) is
-  also a timeline diagram of the system if and only if all edges in
+  Let \(X\) be a system timeline of a trajectory of a system. Let
+  \(Y\) be a system timeline with the same graph. Show that \(Y\) is
+  also a system timeline if and only if all edges in
   \(Y\) are directed forward in time.
   </li>
   <li>
-  What is a cut in a timeline? Draw a timeline diagram and give
-  examples of consistent and inconsistent cuts. Given a timeline
-  diagram and a consistent cut, draw a timeline diagram with the same
+  What is a cut in a timeline? Draw a system timeline and give
+  examples of consistent and inconsistent cuts. Given a system timeline
+  and a consistent cut, draw a system timeline with the same
   graph, but in which past events occur before future events.
 </ol>.
 <!--Start Footer--------------------------------------->
