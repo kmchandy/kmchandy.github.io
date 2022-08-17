@@ -118,146 +118,652 @@ Byzantine Consensus: Oral Messages
 <!----------------------------------------------------------------->
 <h1 class="w3-text-teal">Byzantine Consensus: Oral Messages</h1>
 
-<h4 class="w3-text-teal">
-This module introduces Byzantine consensus algorithms in which
-messages are not encrypted. An agent that receives a signed message
-does not know whether the signer sent the message.
-</h4>
+<p class="w3-text-teal">
 
-    This module is a continuation of the previous module. This module
-    describes solutions to the Byzantine problem with oral messages
-    whereas the previous problem studied the problem with written
-    messages.
-    
-    <p>
-    Let \(t\) be an upper bound on the number of disloyal agents.
-    We will
-show later that there is no solution for the case where the number of loyal
-agents is less than or equal to \(2.t\). We will
-describe an algorithm in which there are at
-least \(3.t + 1\) total agents.  The algorithm also solves the problem
-where there are more than \(t\) disloyal agents provided that the
-general is loyal. We illustrate the algorithm with examples and then
-prove that the algorithm is correct.
+This module describes a Byzantine consensus algorithm in which
+messages are not encrypted. An agent <i>x</i> that receives a message signed by
+an agent <i>y</i> cannot tell whether <i>y</i> signed the message or
+whether some other agent forged <i>y</i>'s signature and corrupted the message.
+</p>
 
 <p>
-Messages in the algorithm are either <i>attack</i> or <i>retreat</i>
-messages. The absence of a message in a round is treated the same as
-way as receiving a <i>retreat</i> message.
+This module describes solutions to the Byzantine problem with oral
+messages whereas the previous module studied the problem with written
+messages.  For convenience we repeat the problem specification next.
 
 <p>
-Let the general be
-agent \(g\), and let \(L\) be the set of lieutenants. The general is
-not a lieutenant: \(g \notin L\). The general sends a
-message \(m(g,l)\) to each lieutenant \(l\). Then, the
-lieutenants communicate among themselves so that each lieutenant
-determines a consensus value.
-
+A general has \(N\) army units each of which is led by a lieutenant
+who may be either loyal or disloyal.
+The general may, likewise, be loyal or disloyal.
+The general sends a command to
+each lieutenant where the command is either attack or retreat.
+A loyal general sends the same message to all lieutenants whereas a
+disloyal general may send different messages to different lieutenants.
+Each
+lieutenant decides to attack or retreat at the end of the
+algorithm.
+If the general is loyal then the decision made by each loyal
+lieutenant is the message that the general sent to that
+lieutenant. Even if the general is disloyal, all loyal lieutenants
+must make the same the decision.
 
 <p>
-A Byzantine problem is defined by
-  \(g\), the index of the general;
+Let \(m[i]\) be the message that the general sends
+lieutenant \(i\), and let \(a[i]\) be the decision the lieutenant
+\(i\) makes. Let \(m*\) be the message that a loyal general sends to
+all lieutenants; so if the general is loyal \(m[i] = m*\) for all
+\(i\).
 
-  the set \(L\) of lieutenants; and
+<h4 class="w3-text-teal">Specification</h4>
+The specification has two parts:
+    <ol>
+      <li>
+      <i>Validity</i>: Loyal lieutenants must obey a loyal
+      general.
+      <p>
+      \(
+      (\forall i: m[i] = m*) \; \Rightarrow \;
+      (\forall \; \textrm{loyal lieutenants} \; j: a[j] = m*)
+      \)
+      
+      </li>
+      <li><i>Consensus</i>: Loyal lieutenants must make the same
+      decision.
+      <p>
+      \(
+      (\forall \; \textrm{loyal lieutenants} \; j, k: a[j] = a[k])
+      \)
+      
+      </li>
+  </ol>
 
-    \(t\) the upper bound on the number of disloyal agents.
-
-    Let
-    \(Byz(g,L,t)\) be the algorithm that solves problem \((g, L,
-    t)\) and
-let
-\(c_{l}(g, L, t)\) be the consensus value computed by lieutenant
-\(l\) for the problem. The specification is:
-
-
+<h4 class="w3-text-teal">Assumptions</h4>
+The oral Byzantine version makes fewer assumptions than the written
+  version. The assumptions made are as follows: 
 <ol>
   <li>
-  <i>Validity</i>: Loyal lieutenants obey a loyal general.
-  <p>
-  If a general \(g\) is loyal then it broadcasts the same message to
-  all lieutenants.
-  So, for all lieutenants, \(j,
-  k \): \(\; m(g,j) = m(g,k)\).
-  In this case, the consensus value \(c_{l}\)
-  of a loyal 
-  lieutenant \(l\) is the message \(m(g,l)\) that the general sent to 
-  \(l\). 
-  <p>
-  \(
-  c_{l}(g, L, t) = m(g,l)
-  \)
+  <i>Synchrony:</i> The algorithm operates in a synchronous fashion in a sequence of
+  rounds or synchronous steps. If an agent \(x\) does not send
+  a message to an agent \(y\) in a given round then \(y\) can detect
+  that \(x\) did not send a message to it in that round.
   </li>
   <li>
-  <i>Consensus</i>: All loyal lieutenants \(j,k\) have the same
-  consensus value.
-  <p>
-  \(
-  c_{j}(g, L, t) = c_{k}(g, L, t)
-  \)
+  <i>Reliability:</i> If an agent \(y\) sends a message \(m\) to an agent \(y\) in a given
+  round then \(z\) receives \(m\) in that round.
+  </li>
+  <li>
+  <i>Receiver knows sender:</i> An agent that receives a message knows which agent sent it. If an
+  agent \(z\) receives a message \(m\) from an agent \(y\) in a round
+  then \(z\) knows that \(y\) sent \(m\) in that round.
+  </li>
 </ol>
- 
-The algorithm is recursive. The algorithm for \(t = k > 0\) calls the
-algorithm for \(t = k-1\).
-
-<h4 class="w3-text-teal">Base Case: \(Byz(g,L,t)\), when \(t = 0\)
-</h4>
-Algorithm: All agents obey the general.
 
 
-<h3 class="w3-text-teal">\(Byz(g,L,t)\) when \(t > 0\)</h3>
-The algorithm has 3 steps.
+<h4 class="w3-text-teal">Why oral messages are harder</h4>
 
-<h4 class="w3-text-teal">Step 1. Initialize: General sends messages</h4>
-The general, \(g\), sends a message to each 
-lieutenant. Thereafter the general remains idle.
+In the written version of the problem, if an agent
+\(z\) receives a message \(m\) from any agent where \(m\) is signed by the
+general then \(z\) knows that the general did send \(m\).
+An agent cannot forge the general's signature and send a false
+message.
+By contrast, in the oral, or unencrypted version, any agent can
+forge any agent's signature and send corrupted messages.
 
-<p>
-Let \(m(g, j)\) be the message that the general, \(g\), sends to
-lieutenant \(j\). A
-loyal general broadcasts the same message to all 
-lieutenants, and so \(m(g, j) = m(g, k)\) for all lieutenants
-\(j, k\).
-A disloyal general may send different messages to different 
-lieutenants.
+<h4 class="w3-text-teal">Bounds</h4>
+Throughout this module \(t\) is an upper bound on the number of
+disloyal agents.  We will show later that there is no solution when
+the the number of loyal agents is less than or equal to \(2t\). Next
+we describe an algorithm in which there are more than \(2t\)
+non-faulty agents. So the total number of agents is at least \(3t +
+1\) agents.
 
+<h2 class="w3-text-teal">Algorithm</h2>
 
-<h4 class="w3-text-teal">Step 2. Recursion: Run 
-\(Byz(j, L-j, t-1)\) for \(j \in L\) </h4> 
-
-For each \(j \in L\), run the algorithm with agent \(j\) as the general and
-the remaining set \(L-j\) of lieutenants continuing to play the role
-of lieutenants, and at most \(t-1\) faulty agents.
+Messages in the algorithm are either <i>attack</i> or <i>retreat</i>
+messages.  If an agent \(x\) does not receive a message from an agent
+\(y\) on a round then \(x\) treats the absence of the message from
+\(y\) in the same way as if \(x\) received a <i>retreat</i> message
+from \(y\). So, the algorithm only deals with <i>attack</i> and
+<i>retreat</i> messages and does not deal with steps that an agent
+takes if it does not receive a message.
 
 <p>
-Let \(m(g, j, k)\) be the message that agent \(j\) sends to
-lieutenant \(k\) in the algorithm \(Byz(j, L-j, t-1)\). If agent \(j\) is
-loyal then it broadcasts the message that it received from \(g\).
-<p>
-\(m(g, j, k) = m(g, j)\)
-<p>
-If \(j\) is disloyal then \(m(g, j, k)\) is arbitrary.
+We describe the flow of data in the algorithm after defining the
+algorithm. Studying dataflow is very helpful in understanding this
+tricky algorithm.
 
 <p>
-Think of \(m(g, j, k)\) in the following way. Agent \(j\) tells agent
-\(k\) that agent \(j\) received message \(m(g, j, k)\) from agent
-\(g\). A loyal \(j\) is truthful, and so \(m(g, j, k) = m(g, j)\). A
-disloyal agent \(j\) may lie, and so \(m(g, j, k)\) may be different
-from \(m(g, j)\).
+The algorithm is defined recursively. We define an algorithm \(B(k)\)
+for nonnegative integers \(k\) as follows.
 
-<h4 class="w3-text-teal">Step 3. Aggregate results of the
-recursions</h4>
-We will discussing step 3 after giving examples of steps 1 and 2.
+<p class="w3-text-teal">Base Case. \(k = 0\)</p>
+Each lieutenant sets its value to the message that the lieutenant
+receives from the general.
+
+<p class="w3-text-teal">Inductive Step</p>
+For \(k > 0\), we define algorithm \(B(k)\) as follows. The algorithm
+computes a decision \(a[j]\) for each loyal lieutenant \(j\).
+<ol>
+  <li>
+  Step 0: The general sends command \(m[i]\) to lieutenant \(i\), for each
+  lieutenant. If the general is loyal, then the general sends the same
+  message, \(m*\), to all agents, and therefore \(m[i] = m*\) for all
+  \(i\).  If the general is disloyal then the messages, \(m[i]\), are
+  arbitrary.
+  <p>
+  The general plays no further part in the algorithm.
+  </li>
+  <li>
+  Step 1 - Messaging: Each lieutenant \(i\) acts as a general for a new Byzantine generals
+  (oral version) problem. The lieutenants in this new problem (with
+  \(i\) as general) are the
+  lieutenants in the original problem other than \(i\) itself. 
+  Lieutenant \(i\), acting as a general, sends command \(m[i,j]\) to
+  lieutenant \(j\).
+  <p>
+  If lieutenant \(i\) is loyal then \(m[i, j] = m[i]\), for all \(j
+  \neq i\). If \(i\) is disloyal then \(m[i,j]\) are arbitrary.
+  </li>
+  <li>
+  Step 2 - Aggregation:
+  Let \(a[i, j]\) be the value that agent \(j\) decides on step 1 of
+  the algorithm in which agent \(i\) acts as the general, and \(j\) is
+  a lieutenant. 
+  <p>
+  A loyal agent \(i\)'s
+  decision, \(a[i]\), for the original problem is the
+  majority of \(a[j, i]\), all \(j\), with \(a[i, i]\) set to
+  \(m[i]\).
+  A disloyal agent \(i\) sets \(a[i]\) to an arbitrary value.
+  </li>
+</ol>
+
+Looking at the flow of data in the algorithm is helpful, and we do so next.
+
+
+<h2 class="w3-text-teal">Data Flow Graph</h4>
+
+Referring to the following example of a data flow graph can be helpful
+as you read the next paragraphs.
+
+
+<figure>
+    <img src="Byzantine_4/Byzantine_4.001.jpeg" alt="Fig1" style="width:100%">
+    <figcaption>Fig.1: A Data Flow Graph</figcaption>
+</figure>
+
+<h4 class="w3-text-teal">Vertices</h4>
+We assume that the \(N\) agents have ids \(0, \ldots N-1\), where
+agent \(0\) is the general. The data flow graph has two parts:
+<i>messaging</i> and <i>aggregation</i>.
+In the diagram, messaging vertices and edges are black, aggregation
+vertices and edges are red, and edges from messaging to aggregation
+vertices are blue.
+
+<p>
+Both the messaging and aggregation parts are structured in
+layers where there is a vertex in layer \(k\) for every sequence of
+\(k\) lieutenant ids, and where in each sequence each lieutenant appears at
+most once. For example, when there are \(3\)
+lieutenants, layer \(2\) has vertices corresponding to all sequences
+of 2 distinct values chosen from \(\{1, 2, 3\}\), i.e.
+\([1, 2], [1, 3], [2, 1], [2, 3], [3, 1], [3, 2]\) 
+
+<p>
+The messaging and aggregation parts have the same number of layers. To
+disambiguate the parts
+the vertices in the messaging and aggregation parts are identified
+with prefixes <i>msg</i> and <i>agr</i>, respectively. For instance,
+\(msg[1, 2]\) and \(agr[1, 2]\) are vertices at level 2 in the
+messaging and aggregation phases, respectively.
+
+<p>
+The lowest or sink vertex, \(agr[]\) plays no part in the algorithm
+and is included merely for symmetry.
 
 
 
-<h2  style="color:red;">Example</h2>
+
+<h4 class="w3-text-teal">Edges</h4>
+
+<p><i>Message Edges:</i>
+Let \(x_{i}\) be the id of a lieutenant for all \(i\).
+There is exactly one edge to a vertex \(msg[x_{0}, \ldots, x_{k}]\)
+for \(k > 0\),
+and that edge is from vertex \(msg[x_{0}, \ldots, x_{k-1}]\).
+For example, there is exactly one edge to \(msg[1, 2, 3]\), and that
+edge is from \(msg[1, 2]\).
+
+<p><i>Aggregation Edges:</i>
+There is exactly one edge from a vertex \(agr[x_{0}, \ldots, x_{k}]\)
+for \(k > 1\), 
+and that edge is to vertex \(agr[x_{0}, \ldots, x_{k-2}, x_{k}]\).
+There is exactly one edge from \(agr[x_{0}, x_{1}]\) and that edge is
+to \(agr[x_{1}]\).
+For instance there is exactly one edge from \(agr[1, 2, 3]\), and that
+edge is to \(agr[1, 3]\). And there is exactly one edge from \(agr[1, 3]\), and that
+edge is to \(agr[3]\).
+<p>
+
+<p><i>Edges from Messaging to Aggregation:</i>
+There is an edge from each vertex \(msg[x_{0}, \ldots, x_{k}]\) to
+\(agr[x_{0}, \ldots, x_{k}]\).
+For example, there is an edge from \(msg[1, 2, 3]\) to \(agr[1, 2, 3]\).
+
+
+
+
+
+<p>
+Let's look at data flow for the case of 1 disloyal and 3 loyal
+agents. In the first example lieutenant 3 is disloyal and in the
+second example the general is disloyal.
+
+<h5 style="color:red;">Example: Non-Faulty General, 1 Faulty
+Lieutenant</h5>
+This example has a non-faulty general, 1 faulty lieutenant (agent \(3\)) and 2
+non-faulty lieutenants (agents \(1\) and \(2\)). The diagram below
+shows the data flow where data equal to the the message, \(m*\), sent by the general is
+shown as green lines and unknown data is shown in black dotted lines.
+<figure>
+    <img src="Byzantine_4/Byzantine_4.002.jpeg" alt="Fig2" style="width:100%">
+    <figcaption>Fig.2: Dataflow graph with 4 agents, non-faulty
+general</figcaption>
+</figure>
+<p>
+The output of node \(a[0, 1]\) is the majority of \(m[0,1], a[2,1],
+a[3,1]\), which is the majority of \(m*, m*, a[3,1]\), which is
+\(m*\). By the same argument \(a[0, 2] = m*\). So, the loyal
+lieutenants obey the loyal general.
+
+
+<h5 style="color:red;">Example: Faulty General, No Faulty
+Lieutenants</h5>
+The faulty general may send different messages to different
+lieutenants. Here we show the messages that the general sends to
+lieutenants 1, 2, and 3 as edges colored black, blue and green, where
+these colors signify unknown values.
+<figure>
+    <img src="Byzantine_4/Byzantine_4.003.jpeg" alt="Fig3" style="width:100%">
+    <figcaption>Fig.3: Dataflow graph with 4 agents, Faulty
+general
+</figcaption>
+</figure>
+
+<p>
+The aggregation steps at each of the nodes \(a[0,1], a[0,2], a[0,3]\)
+computes the majority of identical input edges --- one black, one
+blue, and one green edge. So, the outputs of these nodes are identical,
+and therefore all three lieutenants decide identical actions (shown
+as magenta-colored edges).
+
+
+<h5  style="color:red;">Example: Dataflow with 7 agents</h5>
+Skip this example if the dataflow graph is clear.
+The next diagrams show dataflow of the messaging tree, edges from
+messaging to aggregation trees, and edges of the aggregation
+tree. There are too many vertices to show all of them. So, we show
+only some of the vertices, and we show three diagrams with separate
+edges for messaging, aggregation, and messaging to aggregation.
+<figure>
+    <img src="Byzantine_4/Byzantine_4.004.jpeg" alt="Fig4" style="width:100%">
+<figcaption>Fig.4: Messaging Dataflow Tree
+</figcaption>
+</figure>
+
+
+<figure>
+    <img src="Byzantine_4/Byzantine_4.005.jpeg" alt="Fig5" style="width:100%">
+    <figcaption>Fig.5: Edges in Aggregation Dataflow Trees
+</figcaption>
+</figure>
+
+
+<figure>
+    <img src="Byzantine_4/Byzantine_4.006.jpeg" alt="Fig6" style="width:100%">
+    <figcaption>Fig.6: Edges Messaging to Aggregation Dataflow
+</figcaption>
+</figure>
+
+<h5  style="color:red;">Exercise</h5>
+As an exercise, determine the data flowing along the edges of the
+dataflow graph for two cases:
+<ol>
+  <li>
+  Non-faulty general: agents 0, 1, 2, 3, 4 are non-faulty and
+  agents 5, 6 are faulty.
+  </li>
+  <li>
+  Faulty general: agents 1, 2, 3, 4, 5 are non-faulty and
+  agents 0, 6 are faulty.
+  </li>
+</ol>
+
+  
+<h3 class="w3-text-teal">Specification in Terms of Dataflow</h3>
+
+<p class="w3-text-teal">Validity</p>
+We use the following equivalent definition of validity.
+<p>
+\(
+(\forall j, k > 0: \; m[j] = m[k])
+\quad \Rightarrow \quad
+(\forall \; \textrm{nonfaulty} \; i: \; a[i] = m[i])
+\)
+
+
+<p class="w3-text-teal">Consensus</p>
+<p>
+\(
+(\forall  \; \textrm{nonfaulty}  \; j, k > 0: \; a[j] = a[k])
+\)
+
+
+
+<h2 class="w3-text-teal">Proof of Correctness</h2>
+The proof that the algorithm is correct has two parts. The first part
+deals only with validity, i.e., assume that the general is loyal. The
+second part deals with consensus as well as validity.
+
+We define the <i>degree</i> of a dataflow graph as one less than the number of
+layers in the messaging part. (Equivalently, the degree is one less
+than the number of layers in the aggregation part.) For instance, the
+degree of the graph of figure 1 is 1. 
+
+<h5 class="w3-text-teal">Lemma: Validity</h5>
+Algorithm \(B(d)\) satisfies validity if there are more than \(d + t\)
+loyal agents and at most \(t\) disloyal agents.
+
+<p>
+In terms of dataflow, the lemma states that
+a dataflow graph of degree \(d\) satisfies <i>validity</i> if the number of
+non-faulty agents exceeds \(t + d\) and the number of faulty agents is
+at most \(t\).
+<p>
+The idea of the lemma is shown in the diagram in which loyal agents
+are shown in green and disloyal agents in red. The illustration has
+loyal agents to the left and disloyal ones to the right. The general
+sends the same message \(m*\) to all lieutenants.
+If the condition of the lemma are satisfied then the outputs of the
+loyal agents are also \(m*\). The edges between level 1
+message vertices and level 1 aggregation vertices are in the box
+labeled "dataflow".
+
+<figure>
+    <img src="Byzantine_4/Byzantine_4.007.jpeg" alt="Fig7" style="width:100%">
+    <figcaption>Fig.7: Lemma about non-faulty general
+</figcaption>
+</figure>
+
+
+<h4 class="w3-text-teal">Proof</h4>
+The proof is by induction.
+
+<p class="w3-text-teal">Base Case</p>
+In a degree
+\(0\) graph, each aggregation vertex is connected directly to its
+corresponding message vertex. There are no connections between vertices
+of loyal and disloyal agents. 
+<figure>
+    <img src="Byzantine_4/Byzantine_4.008.jpeg" alt="Fig8" style="width:100%">
+    <figcaption>Fig.8: Base Case - degree 0 graph
+</figcaption>
+</figure>
+Therefore:
+<p>
+\(
+(\forall \; \textrm{loyal} \; i : \; a[i] = m[i] = m*)
+\)
+
+
+<p class="w3-text-teal">Induction Step</p>
+Assume that the lemma holds for dataflow graphs of degree less than \(d\) and
+prove that the lemma holds for graphs of degree \(d \). 
+<figure>
+    <img src="Byzantine_4/Byzantine_4.009.jpeg" alt="Fig9" style="width:100%">
+    <figcaption>Fig.9: Lemma - induction step
+</figcaption>
+</figure>
+
+We first show that
+\(a[i,j] = m*\) for all loyal \(i, j\).
+Consider any loyal lieutenant \(i\) in the graph of degree \(d\).
+Let \(G\) be the subgraph consisting of all edges and vertices
+from message vertex \([i]\) up to aggregation vertices \([i, j]\) for
+all \(j\). Then,
+<ol>
+  <li>
+\(G\) has degree \(d-1\).
+  </li>
+  <li>
+The number of loyal agents in \(G\) exceeds \(t + d - 1\)
+because the number of loyal agents in the degree-\(d\) graph exceeds
+  \(t + d\).
+  </li>
+  <li>
+  Because \(i\) is loyal, \(m[i,j] = m*\) for all \(j\).
+  </li>
+  <li>
+  Because \(G\) has degree \(d-1\), and the number of loyal agents in
+  \(G\) exceeds \(t + d - 1\), and \(i\) is loyal, 
+  the induction hypothesis holds for \(G\).
+  From the induction hypothesis
+  \(a[i, j] = m[i, j] = m*\) for all loyal \(j\). 
+  </li>
+</ol>
+
+Next, we show that \(a[i] = m*\) for all loyal \(i\).
+<p>
+For a loyal \(i\):
+<p>
+\(
+a[i] = \textrm{majority}(m[i], \forall j \neq i : a[j, i])
+\)
+<p>
+Because \(i\) is loyal, \(m[i] = m*\).
+We proved that \(a[j, i] = m*\) for all loyal \(i, j\). Therefore the
+majority is taken over more than \(t + d - 1\) values which are equal
+to \(m*\). There are at most \(t\) disloyal agents and therefore the
+majority is taken over at
+most \(t\) values other than \(m*\). Because \(d \geq 1\), the
+majority is taken over more \(m*\) values than non-\(m*\) values.
+Therefore, \(a[i] = m*\).
+
+<h5 class="w3-text-teal">Theorem</h5>
+The algorithm satisfies its specifications if the number of loyal
+agents exceeds twice the number of disloyal agents.
+Equivalantly, the algorithm satisfies its specifications if the total
+number of agents is at least \(3.t + 1\).
+
+<h5 class="w3-text-teal">Proof</h5>
+The proof is by induction.
+
+<p class="w3-text-teal">Base Case \(t = 0\)</p>
+The base case has no faulty agents, and so the algorithm obviously satisfies its
+specification. 
+
+
+
+<p class="w3-text-teal">Induction Step</p>
+Assume that the theorem holds for \(t < d\) and prove that theorem
+holds when \(t = d\). 
+
+<p class="w3-text-teal">Validity</p>
+The dataflow graph has degree \(d\), and there are more than \(2d\)
+loyal agents and at most \(d\) disloyal agents. Therefore the conditions
+of the lemma are satisfied and the result follows.
+
+<p class="w3-text-teal">Consensus</p>
+Let \(i\) be an agent which may be loyal or disloyal.
+From the induction hypothesis, the problem with \(i\) as the general satisfies
+the specification and so satisfies consensus. Therefore
+<p>
+For all loyal \(j, k\) and \(i \notin \{j, k\}\):
+\(
+a[i, j] = a[i, k]
+\)
+<p>
+Next, we will show that \(a[j] = a[k]\).
+<p>
+\(
+a[j] = \; \textrm{majority}(m[j], (\forall i \neq  j: a[i, j]))
+\)
+<p>
+\(
+a[k] = \; \textrm{majority}(m[k], (\forall i \neq  k: a[i, k]))
+\)
+<p>
+Because \(j, k\) are loyal \(a[j, k] = m[j]\), and \(a[k, j] = m[k]\).
+Therefore, the majorities are taken over identical values and are
+therefore identical.
+So \(a[j] = a[k]\).
+
+
+
+
+
+
+
+
+
+
+<h1>OLD</h1>
+<h1>OLD</h1>
+<h1>OLD</h1>
+
+
+
+and there are more than \(t + d - 2\)
+non-faulty \(i\) different from \(0, j\), the majority is taken over
+more than \(t + d - 1\) values equal to \(m*\). There are at most
+\(t\) faulty values. Therefore, the majority is taken over more \(m*\) values
+than non \(m*\) values, and the result follows:
+<p>
+\(
+\forall j  \in good: a[0, j] = m*
+\)
+
+
+
+<h1>OLD</h1>
+  
+<p  style="color:red;">Phase 2: Aggregation</p>
+Each agent carries out steps in the aggregation phase; these steps are
+also represented as a tree. The figure below shows which messages, sent
+in the message-sending phase, are used by agent 1 in the aggregation
+phase. The diagrams for the other agents are identical.
+<p>
+<figure>
+    <img src="Slide08.jpg" alt="Fig8" style="width:100%">
+    <figcaption>Fig.7: Messages used by Agent 1 in Aggregation Phase</figcaption>
+</figure>
+
+  Agent \(j\), where \(j \neq 0\) receives 2 messages \(m[0, i, j]\)
+  for \(j \neq i\) and \(j \neq 0\). Agent \(j\) also receives 
+  \(m[0, j]\) on round 0.  For example, agent 1 receives
+  \(m[0, 2, 1]\) and \(m[0, 3, 1]\) on round 1 and \(m[0, 1]\) on
+round 1.
+<p>
+Agent \(j\)'s sets its value to the majority of the 3 messages that it
+receives. For example, agent 1's sets its value to the majority of
+\(m[0, 1], m[0, 2, 1], m[0, 3, 1]\).
+<p>
+We will show that (1) if agent 0 is non-faulty then non-faulty agents set
+their values to the messages that agent 0 sends, and (2) all
+non-faulty agents set identical values even if agent 0 is faulty.
+
+
+<h4 class="w3-text-teal">Case: Faulty General</h4>
+The general sends arbitrary messages, and so \(m[0, i]\) is
+arbitrary. Because the lieutenants are non-faulty they transmit the
+messages in round 1 that they received from the general in round 0.
+<p>
+\( \forall i \notin \{0\}, j \notin \{0, i\}: \quad m[0, i, j] = m[0, i]\)
+<p>
+For example, agent 1 receives \(m[0, 2, 1]\) and \(m[0, 3, 1]\) in
+round 1. These messages 
+are the same as \(m[0, 2]\) and \(m[0, 3]\), respectively. So, agent 1
+takes the majority of
+<br>
+\(
+m[0, 1], m[0, 2], m[0, 3]
+\)
+<br>
+and agents 2 and 3 take the majority of an identical set of messages. Thus,
+agents 1, 2, 3 determine identical values.
+
+<h4 class="w3-text-teal">Case: Non-Faulty General</h4>
+Assume, without loss of generality, that agent 3 is faulty and that
+agents 0, 1 and 2 are non-faulty. Let the message that the general
+(agent 0) sends be v*. Then:
+<p>
+\(
+m[0, 1] = m[0, 2] = m[0, 3] = v*
+\)
+<p>
+
+Agent 1 takes the majority of
+<p>
+\(
+m[0, 1], m[0, 2, 1], m[0, 3, 1]
+\)
+<br>
+which is the same as:
+<p>
+\(
+m[0, 1], m[0, 2], m[0, 3, 1] = v*, v*, m[0, 3, 1]
+\)
+<p>
+and the majority is \(v*\) independent of the value of \(m[0, 3, 1]\).
+<p>
+Likewise, agent 2 determines value v*, and so non-faulty lieutenants
+obey the general.
+
+
+<h2 class="w3-text-teal">Two faulty agents</h2>
+The system must have at least 5 non-faulty agents for the algorithm to
+work.
+<p class="w3-text-teal">Message-Sending Phase</p>
+The algorithm has 3 rounds of message-sending. 
+<ol>
+  <li>
+  <i>Round 0</i>: Agent 0 sends \(m[0, i]\) to all \(i \notin \{0\} \)
+  </li>
+  <li>
+  <i>Round 1</i>: Agent \(i\), for \(i \notin \{0\} \), sends \(m[0, i, j ]\) to all \(j \notin \{0, i\}\) 
+  </li>
+  <li>
+  <i>Round 2</i>: Agent \(j\), for \(j \notin \{0, i\} \), sends \(m[0, i, j,
+  k]\) to all \(k \notin \{0, i, j\}\) 
+  </li>
+</ol>
+Messages are shown in a tree in the diagram below.
+<figure>
+    <img src="Slide08.jpg" alt="Fig8" style="width:100%">
+    <figcaption>Fig.6: Messages Sent</figcaption>
+</figure>
+
+<p class="w3-text-teal">Aggregation Phase</p>
+Aggregation steps are also represented by a tree, with agent \(i\)
+determining values at node \(0, i\) in level 1, \(0, j, i\) in level
+2, 
+Aggregation proceeds from the leaves of the tree towards the root.
+
+
+
+<h2  style="color:red;">Example of Phase 1</h2>
 Let's look at the messages in a problem with \(g = 0\),
 \(L = \{1, \ldots, 6\}\), and \(t = 2\)
 The general - agent \(0\) - sends messages \(m(0,j)\) to each lieutenant
 \(j\). This is shown in the rooted tree in the diagram below 
 with \(0\) as the root and the edges labeled with the messages that
 are sent.
+<figure>
+    <img src="Slide08.jpg" alt="Fig8" style="width:100%">
+    <figcaption>Fig.6: Messages Sent</figcaption>
+</figure>
 
+  
 <p>
 A loyal general broadcasts the same message to every lieutenant. If
 agent \(0\) 

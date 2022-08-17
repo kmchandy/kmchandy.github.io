@@ -48,17 +48,17 @@ hr.new1 {
   onclick="w3_open()">
   <i class="fa fa-bars"></i></a>
 
-  <a href="../index.html"
+  <a href="../../index.html"
   class="w3-bar-item w3-button w3-hide-small w3-hover-white">
   Distributed Algorithms
   </a>
 
-  <a href="../table_of_contents.html"
+  <a href="../../table_of_contents.html"
   class="w3-bar-item w3-button w3-hide-small w3-hover-white">
   Contents
   </a>
 
-  <a href="../cross_reference.html"
+  <a href="../../cross_reference.html"
   class="w3-bar-item w3-button w3-hide-small w3-hover-white">
   Index
   </a>
@@ -248,7 +248,7 @@ between agents is shown in the figure below.
 
 <p>
 <figure>
-    <img src="PaxosFigures/Slide02.jpg" alt="Fig1" style="width:80%">
+    <img src="PaxosFigures/PaxosFigures.002.jpeg" alt="Fig1" style="width:80%">
     <figcaption>Fig.1: Proposers, Acceptors and Learners</figcaption>
 </figure>
 
@@ -269,10 +269,10 @@ ties.
 <code>P</code>.</p>
 <ul>
   <li>
-  Variable <code>P.t</code> (a timestamp), and
+  Variable: <code>P.t</code>, timestamp)
   </li>
   <li>
-  Constant, <code>P.VALUE</code> (a value).
+  Constant: <code>P.VALUE</code>, value
   </li>
 </ul>
 
@@ -280,13 +280,13 @@ ties.
 <code>A</code>.</p>
 <ul>
   <li>
-  <code>A.t</code> (a timestamp),
+  <code>A.t</code>, timestamp
   </li>
   <li>
-  <code>A.accept_v</code> (a value), and
+  <code>A.accept_v</code>, value
   </li>
   <li>
-  <code>A.accept_t</code> (a timestamp).
+  <code>A.accept_t</code>, timestamp
   </li>
 </ul>
 
@@ -325,32 +325,32 @@ For all acceptors A:
 For all proposers P:
      P.t = 0
   
-// Proposer P. Step P.1
+// Proposer P. Step P.1. Send new_time to acceptors
 P.t = P.t + any positive value
 send new_time(P.t) to all acceptors
 
-// Acceptor A. Step A.1
+// Acceptor A. Step A.1. Send updated_time to proposers
 upon receiving new_time(t) from any proposer P:
    if t > A.t:
       A.t = t
       send updated_time(A.t, A.accept_v, A.accept_t) to P
 
-// Proposer P. Step P.2
+// Proposer P. Step P.2. Send proposal to acceptors
 wait to receive updated_time(t, accept_v, accept_t) messages from a
      majority of acceptors where t == P.t:
      if accept_v is null for all of these messages:
          send proposal(P.t, P.VALUE) to all acceptors
      else:
-         v_max_acceptT =  the accept_v field of the updated_time message
+         v_max_accept_t =  the accept_v field of the updated_time message
                           with the largest accept_t field
-         send proposal(P.t, v_max_acceptT) to all acceptors
+         send proposal(P.t, v_max_accept_t) to all acceptors
       
-// Acceptor A. Step A.2
+// Acceptor A. Step A.2. Send accept to learners
 upon receiving proposal(t, v) from P:
     if t >= A.t:
        A.t = t
-       A.accept_v, A.accept_t = v, t
-       send accept(A.accept_v, A.accept_t) to all learners
+       A.accept_t, A.accept_v = t, v
+       send accept(A.accept_t, A.accept_v) to all learners
 </pre>
 
 <h4 class="w3-text-teal">Algorithm Steps</h4>
@@ -366,6 +366,13 @@ A proposer repeatedly executes a loop consisting of steps P.1 and P.2.
 For the time being assume that the loop never terminates; we will
 discuss termination later.
 Acceptors respond to messages that they receive from proposers.
+
+<p>
+In the discussion, we refer to <code>P.t</code> and <code>A.t</code> as <code>P</code>'s
+timestamp and <code>A</code>'s timestamp, respectively. And we refer
+to <code>A.accept_v</code> as the value accepted by <code>A</code>,
+and we call <code>A.accept_t</code> as the timestamp of the value
+accepted by <code>A</code>.
 
 <h4 class="w3-text-teal">Observations about the Algorithm</h4>
 The following observations are helpful in understanding the algorithm.
@@ -383,7 +390,7 @@ The following observations are helpful in understanding the algorithm.
   variables or messages.
   </li>
   <li>
-  <p class="w3-text-teal"><code>P.t</code> never decreases</p>
+  <p class="w3-text-teal">A proposer's timestamp never decreases</p>
   The only change to <code>P.t</code> is in step P.1, and this change
   increases <code>P.t</code>. So, <code>P.t</code> never decreases:
   <p>
@@ -392,7 +399,7 @@ The following observations are helpful in understanding the algorithm.
   </code>
   </li>
   <li>
-  <p class="w3-text-teal"><code>A.t</code> never decreases</p>
+  <p class="w3-text-teal">An acceptor's timestamp never decreases</p>
   The changes to <code>A.t</code> in steps A.1 and A.2
   increase <code>A.t</code>. So, <code>A.t</code> never decreases:
   <p>
@@ -402,7 +409,7 @@ The following observations are helpful in understanding the algorithm.
   </li>
   <li>
   <p class="w3-text-teal"><code>A.accept_t <= A.t</code></p>
-  The only step at which <code>A.accept_v, A.accept_t</code> is
+  The only step at which <code>A.accept_t, A.accept_v</code> is
   modified is step
   A.2 where
   <br><code>A.t = A.accept_t</code>.
@@ -415,339 +422,228 @@ The following observations are helpful in understanding the algorithm.
   </code>
   </li>
   <li>
-  The next assertion deals only with messages that are received and
-  processed. It does not deal with messages that are lost or ignored.
-  <p>
-  <i>Upon receiving a message with timestamp T the acceptor sets
-  its timestamp to T or greater.</i> (See steps A.1, A.2).
-  <p>
-  <i>Upon receiving a message with timestamp T the proposer's
-  timestamp is T.</i> (See steps P.2).
+  The next assertion deals only with messages that are received.
+  It does not deal with messages that are lost or ignored.
+  <i>
+  Upon receiving a message with timestamp T an acceptor or proposer
+  sets its timestamp to T or greater.</i>
   </li>
 </ol>
-  
-<h3 class="w3-text-teal">Consistent Cuts Based on Timestamps</h3>
-Given any system timeline for the Paxos algorithm there exists a
-system timeline with identical agent timelines and in which messages
-are received only after they are sent and in which
-<br>
-<i>
-events with smaller timestamps appear before events with larger
-timestamps.
-</i>
-  
 
 <h3 style="color:red;">Example</h3>
-Consider a system with 5 acceptors. In step P.2 the proposer
-implicitly starts a timer. The
-proposer waits to
-receive <code>promise(t, v, acceptT)</code> with 
-<code>t == P.t</code> from at least 3 acceptors. Suppose it gets 
-<code>promise(t, v, acceptT)</code> messages from 3 acceptors, but for some of the
-messages <code>t != P.t</code>. In this case the proposer continues to
-wait for more messages. If the timer goes off while the proposer is
-waiting then the proposer aborts step P.2 and initiates the next
-iteration of the loop by executing step P.1.
+The figure below shows a system timeline with 3 acceptors and 2
+proposers. Timelines for learners are not shown. The events on the
+timeline are: 
+<ol>
+  <li>
+  <i>N(t)</i>: A proposer sends <code>new_time(t)</code> message, and
+  the proposer's timestamp when it sends the message is
+  <code>t</code>.
+  </li>
+  <li>
+  <i>U(t)</i>: An acceptor replies to the proposer with a
+  <code>updated_time(t, accept_v, accept_t)</code> message, and 
+  the acceptor's timestamp when it sends the message is
+  <code>t</code>.
+  </li>
+  <li>
+  <i>P(t)</i>: A proposer responds with a
+  <code>proposal(t, v)</code> message, and the proposer's timestamp at
+  this event is <code>t</code>.
+  </li>
+  <li>
+  <i>A(t)</i>: An acceptor accepts a proposer's
+  <code>proposal(t, v)</code> by 
+  sending a
+  <code>accept(accept_v, accept_t)</code> message to learners, and 
+  the acceptor's timestamp when it sends the message is
+  <code>t</code>. The accept messages to learners are not shown.
+  </li>
+</ol>
 
-<h3 style="color:red;">Example</h3>
 <p>
+In the diagram, <code>new_time</code> messages are grey,
+<code>updated_time</code> messages are purple, and
+<code>proposals</code> are black. The <code>new_time(t)</code> message
+sent by proposer P0 to acceptor A2 is lost, and the the <code>proposal</code> sent
+by P0 to acceptor A1 is lost.
+
 <figure>
-    <img src="PaxosFigures/Slide07.jpg" alt="Fig2" style="width:100%">
+    <img src="PaxosFigures/PaxosFigures.012.jpeg" alt="Fig2" style="width:100%">
     <figcaption>Fig.2: Timelines</figcaption>
 </figure>
-
-Assume that proposers propose colors and all learners come to a
-consensus on a single proposed color. Assume that the color of
-proposer <code>Z</code> is 'red'.
-
-<p>
-The diagram shows the timeline for a proposer <code>Z</code>, acceptor
-<code>A</code> and learner <code>L</code>. The diagram doesn't show
-multiple proposers, acceptors and learners to prevent the diagram from
-getting too crowded.
-
-<p>
-The first event in the timeline is a prepare message sent by proposer
-<code>Z</code> when <code>Z.t = 10</code>. The message,
-<code>prepare(10)</code> sent by <code>Z</code> is received by acceptor
-<code>A</code>.
-
-
-When acceptor <code>A</code> gets the prepare message it replies with
-<code>promise(10, A.v, A.acceptT)</code>.
-
-<p>
-Assume that proposer <code>Z</code> gets <code>promise(t, A.v,
-A.acceptT)</code> messages from a
-majority of acceptors where <code>t = 10</code> before step P.2 times
-out.
-
-<p style="color:red;">Example: Proposer proposes its own value</p>
-If <code>A.v = null</code> for <i>all</i> these messages, then the
-proposer proposes its own value, i.e., 
-<code>Z</code> sends <code>propose(10, 'red')</code> to all acceptors
-where <code>'red'</code> is <code>Z</code>'s color.
-
-<p style="color:red;">Example: Proposer proposes value from acceptor</p>
-If <code>A.v != null</code> for at least one of these messages then 
-<code>Z</code>
-inspects these messages to find the <code>A.v</code> in the message with the
-largest value of <code>A.acceptT</code>.
-Assume that <code>Z</code> receives
-<code>promise(10, null, 0)</code>,
-<code>promise(10, 'green', 4)</code>, and
-<code>promise(10, 'blue', 6)</code>.
-The promise message with the highest <code>A.acceptT</code> is
-<code>promise(10, 'blue', 6)</code>.
-So, <code>Z</code> sends
-<code>propose(10, 'blue')</code> to all acceptors. 
-
-<p>
-If in step P.2, proposer <code>Z</code> sends
-<code>propose(10, 'blue')</code> to all acceptors, and
-<code>A</code> receives this message,  then <code>A</code>
-sends <code>accept(10, 'blue')</code> to all learners.
-
-<p style="color:red;">Example: Next Round</p>
-In this example proposer <code>Z</code> starts a new round by sending
-<code>prepare(11)</code>. It's possible that in this round
-<code>Z</code> gets <code>promise(11, A.v, A.acceptT)</code> messages
-from at least a majority of acceptors where <code>A.v = null</code> for
-<i>all</i> the message that <code>Z</code> receives. In this example 
-<code>Z</code> sends <code>propose(11, 'red')</code> to all
-acceptors. Note that in this case <code>Z</code> sends 
-<code>propose(10, 'blue')</code> and later sends
-<code>propose(11, 'red')</code>. This example shows that <code>Z</code> may change the
-value that it proposes.
-
-<h3 style="color:red;">Example</h3>
-The next two figures illustrate the meaning of <code>A.t</code> for an
-acceptor <code>A</code>. 
-
-<figure>
-    <img src="PaxosFigures/Slide03.jpg" alt="Fig3" style="width:100%">
-    <figcaption>Fig.3: Meaning of A.t for Acceptor A</figcaption>
-</figure>
-
-Acceptor <code>A</code> ignores all
-<code>prepare(t)</code> and code>propose(t, v)</code> messages for
-which <code>t < A.t</code>.
-
-<figure>
-    <img src="PaxosFigures/Slide04.jpg" alt="Fig4" style="width:100%">
-    <figcaption>Fig.4: Meaning of A.t for Acceptor </figcaption>
-</figure>
-
-<!-------------------------------------------------------->
-<p class="w3-text-teal">Timeline Diagram for Paxos</p>
-In the Paxos algorithm an agent may discard a message without
-taking action. For example, in step A.2 an acceptor <code>A</code> discards messages
-with timestamps equal to or earlier than <code>A.t</code> without
-taking action. 
-In timeline diagrams for Paxos we show only messages that are
-accepted. A message that is lost or discarded is not shown.
-
-
-<h2 class="w3-text-teal">Correctenss</h2>
-In the following the symbol "-" denotes any arbitrary value.
-
-<!-------------------------------------------------------->
-<h3  class="w3-text-teal">Theorem 1: Learners only learn values
-proposed by proposers</h3>
-The proof of part 1 --
-learners only learn values of proposers --- follows from
-the following invariant which has a straightforward proof.
-
-<p  class="w3-text-teal">Invariant</p>
-For every proposer, acceptor, and message,
-the <code>v</code> field is either <code>null</code> or
-<code>P.value</code> for some proposer
-<code>P</code>.
-
-<!-------------------------------------------------------->
-<h4  class="w3-text-teal">Theorem 2</h4>
-Let \(T_{0}\) be the smallest value of \(T\) such that a majority of
-acceptors \(accept(T, -)\). Let \(V_{0}\) be the value accepted;
-so a majority accepts \((T_{0}, V_{0})\). Let \(P\) be the earliest
-time at which any acceptor accepts \((T_{0}, V_{0})\).
-<p>
-Then \(R.acceptT < T_{0}\) for all acceptors \(R\) at time \(P\).
-<!-------------------------------------------------------->
-<h4  class="w3-text-teal">Theorem 3</h4>
-If a majority of acceptors
-accepts \((T, V)\) and any acceptor accepts \((T', V')\) where \(T' \geq T\) then \(V'
-= V\).
-
   
-<h2 style="color:red;">Example: Illustration of Proof</h2>
-We give the idea underlying the proof before giving the proof itself. 
-The next sequence of diagrams illustrates the idea.
-<p>
-In the following we refer to the \(j\)-th acceptor either as acceptor
-\(j\) or as \(R_{j}\).
-
-<h4 style="color:red;">Example: Illustration of Proof of Theorem
-2</h4>
-The figure below shows a timeline diagram for proposers A, B, C
-and acceptors 1 - 5. Acceptors 3, 4, 5 have accepted \((T_{0}, V_{0})\). No
-majority of acceptors have accepted (T, V) for \(T < T_{0}\).
-<p>
-The acceptors that accept \((T_{0}, V_{0})\) may do so at different
-points in time. Let \(P\) be the earliest time at which any acceptor
-accepts \((T_{0}, V_{0})\). In the diagram acceptor 3 is the first to
-accept \((T_{0}, V_{0})\) and point \(P\) is marked.
-<p>
-Consider an acceptor that does not accept  \((T_{0}, V_{0})\).
-In the diagram, acceptors 1 and 2 do not accept 
-\((T_{0}, V_{0})\). Let \(T'\) be the value of \(acceptT\)
-for acceptor 1 at point \(P\). (The same argument holds for acceptor
-2.)
-<p>
-The theorem says: \(T' < T_{0}\).
+<h3 style="color:red;">Example</h3>
+Events with larger timestamps can appear earlier than events with
+smaller timestamps in a timeline, as shown in the figure below.
 
 <figure>
-    <img src="PaxosFigures/Slide08.jpg" alt="Fig5" style="width:100%">
-    <figcaption>Fig.5: Illustration of Theorem </figcaption>
+    <img src="PaxosFigures/PaxosFigures.013.jpeg" alt="Fig2" style="width:100%">
+    <figcaption>Fig.3: Timestamps appearing out of order</figcaption>
 </figure>
 
 <p>
-What sequence of events must occur for \(R1.acceptT\) at point \(P\)
-to be \(T'\)?
-
+The proof of the algorithm is based on the
+<a href="../ChannelSnapshots/Timelines.html">
+<i>Theorem about Permutation of Event Sequences</i>
+in timelines.
+</a>
+  
+<h2 class="w3-text-teal">Theorem: Permutation of Event Sequences</h2>
+Given any system timeline \(X\) for the Paxos algorithm there exists a
+system timeline \(Y\) where (1) agent timelines and messages in \(X\) and \(Y\) are
+identical and (2) messages
+are received only after they are sent and (3)
+<br>
+<i>
+events in \(Y\) appear in order of their timestamps.
+</i>
+<p class="w3-text-teal">Proof</p>
+(Same proof as in <a
+href="../ChannelSnapshots/Timelines.html">timelines.</a>)
 <p>
-Acceptor R1 must have received \(propose(T', -)\) from some
-proposer. In the diagram this proposer is \(B\).
+If events are not in order of timestamps in a timeline then there exist consecutive
+events \(e, e'\) in the timeline where \(e\) has a larger timestamp
+than \(e'\) does. We will prove that flipping the order of events
+gives a timeline for the same system.
+<p>
+From observation 5, if there is a path in the timeline diagram from \(e\) to \(e'\) then
+the timestamp for \(e'\) is greater than or equal to the timestamp fo
+\(e\). Because \(e\) has a larger timestamp than \(e'\) does, there is
+no path in timeline diagram from \(e\) to \(e'\).
+<p>
+There is no path in timeline diagram from \(e'\) to \(e\) because
+\(e'\) appears after \(e\).
+Because there are no paths between \(e\) and \(e'\), they are
+independent, and flipping their order does not change messages or
+variables in the timeline.
+
+<h2 class="w3-text-teal">Timestamp-Ordered Events</h2>
+We will reason about values of messages and variables in any timeline
+by reasoning about an equivalent timeline (same agent timelines, same
+messages) in which events appear in order of timestamps.
 
 <figure>
-    <img src="PaxosFigures/Slide09.jpg" alt="Fig5" style="width:100%">
-    <figcaption>Fig.5: Illustration of Theorem </figcaption>
+    <img src="PaxosFigures/PaxosFigures.014.jpeg" alt="Fig2" style="width:100%">
+    <figcaption>Fig.4: Timestamp-Ordered Events</figcaption>
 </figure>
 
+The figure above shows timeline with events ordered by timestamps. The
+timeline can be partitioned into a sequence of intervals where all
+events in an interval have identical timestamps. We call an
+interval in which all events have timestamp \(t\) a <i>\(t\)-epoch</i>.
 <p>
-Proposer \(B\) sent \(propose(T', _)\) only because it received
-\(promise(T', -, -)\) from a majority of acceptors. Any two
-majorities have at least one element in common. So, at least one of
-the acceptors that sent \(promise(T', -, -)\) also accepted \((T_{0},
-V_{0})\). In the diagram this acceptor is R3.
-
-<figure>
-    <img src="PaxosFigures/Slide10.jpg" alt="Fig5" style="width:100%">
-    <figcaption>Fig.5: Illustration of Theorem </figcaption>
-</figure>
+In the diagram, the circles represent events. Reddish brown circles
+represent events with timestamp \(t^{0}\), blue circles
+represent events with timestamp \(t^{1}\), and green circles
+represent events with timestamp \(t^{2}\) where:
+<br>
+\(t^{0} < t^{1} < t^{2} < \ldots \)
 <p>
-Because an acceptor sends \(promise(T', -, -)\) and later accepts \((T_{0},
-V_{0})\) it follows that \(T' < T_{0}\).
-
-<h4 style="color:red;">Example: Illustration of Proof of Theorem
-3</h4>
-
-Theorem 3 says: If a majority of acceptors accepts \((T_{0}, V_{0})\)  and any acceptor accepts \((T_{1}, V_{1})\) where \(T_{1} \geq T_{0}\), then \(V_{1} = V_{0}\).
-
-
-The figure below shows a timeline diagram for proposers A, B, C
-and acceptors 1 - 5. Acceptors 3, 4, 5 have accepted \((T_{0}, V_{0})\). No
-majority of acceptors have accepted (T, V) for \(T < T_{0}\).
-
-
-<figure>
-    <img src="PaxosFigures/Slide05.jpg" alt="Fig5" style="width:100%">
-    <figcaption>Fig.5: Illustration of Theorem </figcaption>
-</figure>
-In this figure, acceptor 1 has accepted \((T_{1}, V_{1})\). The diagram
-    illustrates the first step of the induction. No acceptor has
-    accepted \((T, V)\) where \(T_{0} < T < T_{1}\)
+This timeline shows three epochs with timestamps \(t^{0}, t^{1}, t^{2}\).
 
 <p>
-The next figure shows the steps that must precede acceptor 1 accepting
-\((T_{1}, V_{1})\). Acceptor 1 must have received a \(propose(T_{1},
-V_{1})\) message from some proposer before acceptor 1 accepted
-\((T_{1}, V_{1})\). In the diagram this proposer is C. 
-
-
-<figure>
-    <img src="PaxosFigures/Slide06.jpg" alt="Fig6" style="width:100%">
-    <figcaption>Fig.6: Illustration of Theorem </figcaption>
-</figure>
+The event in which an acceptor sends an <code>accept(t,
+v)</code> message is called an <code>accepts (t, v)</code> event.
+Likewise, the event in which a proposer sends a <code>proposal(v,
+t)</code> message is called a <code>proposes(t, v)</code> event.
+Working with events ordered in timestamps makes understanding the
+algorithm much clearer.
 
 <p>
-Proposer C sends \(propose(T_{1}, V_{1})\) only after receiving
-\(promise(T_{1}, -, -)\) messages from a majority of acceptors.
-In the figure, proposer C
-receives \(promise(T_{1}, -, -)\) messages from acceptors 1, 2, and
-3. Let's analyze the promise messages received by proposer C.
+In the following theorems, we consider timelines in which events occur in the order of
+timestamps. From the theorem on permutations of event sequences the
+values of variables and messages are the same as in any timeline.
+
+
+<h2  class="w3-text-teal">Theorem</h2>
+If a majority of acceptors accepts a value v* in any epoch then all
+proposed and accepted values in that and subsequent epochs remains v*.
+
+<h4 class="w3-text-teal">Proof</h4>
+We prove the theorem by induction on the sequence of epochs that
+follow the epoch in which a a majority of acceptors accept value
+v*. Let this epoch be the t*-epoch.
+
+<h4 class="w3-text-teal">Base Case: Epoch t*</h4>
+An acceptor accepts \((t*, v*)\) only if a proposer P proposes \((t*,
+v*)\) --- see step A.2. Proposer P sends the <i>same proposal</i> to all
+acceptors in an epoch --- see step P.2. Therefore if P
+proposes \((t*, v*)\) and also proposes (t*, v')\) then \(v' =
+v*\). So, every value proposed in epoch \(t*\) is the same --- \(v*\) --- and
+therefore every value accepted in this epoch is also \(v*\).
+
+<h4 class="w3-text-teal">Induction Step</h4>
+Let \(t^{0}\) be \(t*\) and let the timestamps of subsequent epochs in
+increasing order be \(t^{1}, t^{2}, t^{3}, \ldots \).
+Assume that the theorem holds for epochs \(t^{i}\) where \(0 \leq i <
+k\) and prove the theorem for \(i = k\).
+So, every value proposed or accepted in epochs \(t^{0} \ldots,
+t^{k-1}\) is the same --- \(v*\).
 <p>
-The majority that accepts \((T_{0}, V_{0})\) and the majority that
-sends \(promise(T_{1}, -, -)\) must have at least one acceptor in
-common. In the figure acceptor 3 is common to both majorities.
+A proposer P proposes a value in epoch \(t^{k}\) only after receiving 
+<code>updated_time</code> messages from a majority of acceptors in that
+epoch. Any two majorities have at least one element in
+common. Therefore, at least one of the <code>updated_time</code>
+messages received by P have <code>accept_t</code> = \(t^{k}\), and
+<code>accept_v</code> = \(v*\). P executes step P.2 of the algorithm
+and sets <code>v_max_accept_t</code> to \(v*\); so, the value it
+proposes is \(v*\).
 <p>
-Acceptor 3 sends \(promise(T_{1}, V_{0}, T_{0})\). 
+Since every value proposed in epochs after \(t^{0}\) is \(v*\), it
+follows that every value accepted in these epochs is also \(v*\).
 
-Acceptor 1 sends \(promise(T_{1}, R_{1}.V, R_{1}.acceptT)\) and we
-have shown that \(R_{1}.acceptT < T_{0}\) at point \(P\).
-The same argument holds for acceptor 2.
+<h2  class="w3-text-teal">Theorem: Paxos is Correct</h2>
+The specification of the algorithm is repeated here for convenience.
+<ol>
+  <li>
+  <i>Learners learn only proposed values.</i>
+  </li>
+  <li>
+  <i>All learners learn the same value.</i>
+  \)
+  </li>
+  <li>
+  <i>After a learner learns a value it doesn't later learn a different
+  value.</i>
+  </li>
+</ol>
 
+<p  class="w3-text-teal">Proof</p>
+We prove that part 1 is invariant by observing that the value of
+<code>v</code> in every message is either null or <code>P.VALUE</code>
+for some proposer P.
 <p>
-Proposer C inspects the promise messages that it receives from acceptors
-1, 2 and 3 and picks the message with the largest
-value of accepT. This message is \(promise(T_{1}, V_{0}, T_{0})\) sent
-by acceptor 3. Therefore, proposer C sends \(propose(T_{1}, V_{1})\) where
-\(V_{1} = V_{0}\).
-
-
-
-<h3 class="w3-text-teal">Proof</h3>
-Next we give the outline of the proof.
+After a majority of acceptors accept a value <code>v*</code>, every
+value that is accepted is the same: <code>v*</code>. Therefore, <i>every</i>
+majority of acceptors that accepts <code>(t, v)</code> has <code>v =
+v*</code>. So, all learners learn <code>v*</code>.
 <p>
-The proof is by induction. Let \(T_{0}\) be the smallest value of
-\(T\) such that a majority of acceptors accepts \((T, V)\). Let the
-sequence of accepts with \(T\)-value greater than \(T_{0}\) be
-\(T_{1}, T_{2}, \ldots\) where \(T_{j} < T_{(j+1)}\). Assume that the
-theorem holds for the first \(k\) accepts in the sequence,
-i.e., assume \(V_{j} = V_{0}\) for \(0 \leq j \leq k\)
-and prove that
-\(V_{(k+1)} = V_{0}\).
-
-<p class="w3-text-teal">Base Case</p>
-The base case is \(k = 0\)
-
-<p class="w3-text-teal">Induction Step</p>
-Let acceptor \(A\) accept \((T_{(k+1)}, V_{(k+1)})\). From step A.2,
-acceptor  \(A\) received \(propose(T_{(k+1)}, V_{(k+1)})\) from a
-proposer; let this proposer be proposer \(P\).
-
+The proof of part 3 is the same as that of part 2. Since the value
+accepted by all majorities of acceptors is the same, the value learned
+does not change.
 <p>
-From step P.2, proposer \(P\) sends \(propose(T_{(k+1)}, V_{(k+1)})\)
-only if it receives \(promise(T_{(k+1)}, -, -)\) from a majority of
-acceptors. 
+Our proof is for timelines with events ordered by timestamps. What if
+events are not in timestamp order? The theorem on permutation of event
+sequences tells us that the values of variables and messages for
+unordered timelines are the same as for ordered timelines. The
+correctness of Paxos depends only on the values learned, and not on
+when they were learned.
 
-<p>
-Because any two majorities have at least one element in common, there
-is at least one acceptor that sent \(promise(T_{(k+1)}, -, -)\) and
-also accepts \((T_{0}, V_{0})\).
 
+<h4  class="w3-text-teal">Paxos may not Terminate</h4>
+There are many scenarios in which the algorithm does not
+terminate. For example, suppose proposer P0 generates even timestamps,
+0, 2, 4, ... and proposer P1 generates odd timestamps, 1, 3, 5,...
+The two proposers may interfere so that no epoch runs to
+completion. Before a majority of acceptors respond to a timestamp, a
+message with a higher timestamp arrives.
 <p>
-By the induction assumption any
-acceptor \(B\) that accepts \((T_{j}, V_{j})\) for any  \(0 \leq j \leq k\) sends
-<p>
-\(
-promise(T_{(k+1)},V_{0}, B.acceptT)
-\)
-<p>
-where \(T_{0} \leq B.acceptT \leq T_{k}\).
-
-<p>
-Any acceptor \(C\) that did not accept \((T_{j}, V_{j})\) for any
-\(0 \leq j \leq k\)
-sends
-\(promise(T, V, C.acceptT)\) where \(C.acceptT < T_{0}\).
-
-<p>
-From step P.2 the promise message with the largest value of acceptT
-has \(V = V_{0}\). So, proposer \(P\) sends
-\(
-propose(T_{(k+1)}, V_{0})
-\)
-and the theorem follows.
+To obtain rapid termination, with high probability, we need an epoch
+to run all the way to completion --- a majority of acceptors accept a
+value. One way to reduce the likelihood that an epoch will start
+before an earlier one completes is to use probability and exponential
+backoff. 
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
