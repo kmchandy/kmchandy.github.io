@@ -19,9 +19,17 @@ Bitcoin.</a>
     A  hash function, \(H\), maps input strings of
     arbitrary size to outputs of fixed size.
 
-    <h3 class="w3-text-teal">Collision Resistance</h3>
+<h3 class="w3-text-teal">Collision Resistance</h3>
+<hr class="new2">
+    <h5 style="color:blue;">
     Input values \(x, y\) of a hash function \(H\)
-    are said to <i>collide</i> when \(H(x) = H(y)\).
+are said to <i>collide</i> when \(H(x) = H(y)\).
+A hash function \(H\) is said to be <i>collision resistant</i> if 
+    the only known ways of
+finding collisions using the hash are intractable.
+</h5>
+
+<hr class="new2">
 
     <p>
     Let's look at the following problem: Given \(H\), find any
@@ -36,12 +44,9 @@ Bitcoin.</a>
     Let \(D\) be an
     array of size \(2^{n} = 16\). Initially \(D\) contains null values. Repeat the following
     iteration until a collision is found.
-    <p>
 Pick a random input \(x\).
-If \(D[H(x)]\) is null then set \(D[H(x)] =
-    x\).
-    If \(D[H(x)]\) is not null then there is a collision between
-    \(H(x)\) and \(x\). 
+If \(D[H(x)]\) is null then set \(D[H(x)] = x\) else there is a collision between
+\(H(x)\) and \(x\). 
 
     <p>
     By the pigeon-hole principle, we will find a collision in at most
@@ -58,9 +63,7 @@ will be found with high probability in \(2^{128}\) iterations;
 however, executing \(2^{128}\) steps is still intractable.
 
 <p>
-    A hash function \(H\) is said to be <i>collision resistant</i> if 
-    the only known ways of
-    finding collisions with the hash are intractable. For \(H\) to be
+For \(H\) to be
     collision resistant the output of \(H\) 
     must be \(n\)-bits for large \(n\). For example \(n = 256\) in the
     SHA-256 hash function. 
@@ -110,13 +113,20 @@ Let's try another algorithm.  Megan selects a secret value \(r\) which
 she keeps to herself. Instead
 of giving you \(H(W)\), she gives you \(y\) where \(y = H(r + W)\) and
 where \(+\) indicates concatenation of strings. Can
-you discover \(W\) from \(H\) and \(H(r + W)\) without knowing \(r\)?
+you discover \(W\) from \(H\) and \(y\) without knowing \(r\)?
 
 <p>
 A brute-force solution is to try every combination of \(r\) and
 \(W\). If \(r\) is obtained from a distribution that is spread out,
 then finding \(W\) without knowing \(r\)  take so
 much time that it is practically impossible.
+
+<hr class="new2">
+<h5 style="color:blue;">
+Hiding: Given \(H, y\), where \(y = H(r + W)\) and \(r\) is a secret,
+discovering \(W\) is intractable.
+</h5>
+<hr class="new2">
 
 <h3 class="w3-text-teal">Binding</h3>
 <p>
@@ -131,10 +141,15 @@ H(r' + 'Italy'). After the World Cup is over, she can announce that
 her secret is \(r\) if Brazil wins, and announce that it is \(r'\) if
 Italy wins.
 
-<p>
-A hash function is <i>binding</i> if there is no known tractable algorithm that finds
+<hr class="new2">
+<h5 style="color:blue;">
+A hash function \(H\) is <i>binding</i> if  finding
   pairs \(x, y\) and \(x', y'\) where \(x \neq x'\) such that \(H(x + y)
-= H(x' + y')\).
+= H(x' + y')\) is intractable.
+</h5>
+<hr class="new2">
+
+
 <p>
 Suppose you give Megan a hash function that is binding. Then she cannot find
   (in reasonable time) values \(r_{j}\) to match country \(C_{j}\)
@@ -148,12 +163,16 @@ her secret \(r_{j}\).
 In summary, we can use a hash function that is hiding and binding to
 play the role of a trusted third party in a commitment.
 
-    <h3 class="w3-text-teal">Puzzle Friendly</h3>
+<h3 class="w3-text-teal">Puzzle Friendly</h3>
+The concept of <i>puzzle friendly</i> is related to
+<i>hiding</i>.
 Let \(r\) be a value picked from a spread-out distribution. Let
 \(H\) map arbitrary length strings to \(n\)-bit strings.
 Consider the following problem:
     Given \(H\), \(r\), and an \(n\)-bit value \(y\), compute any \(x\) such that
 \(H(r+x) = y\).
+<p>
+In this problem, as opposed to the <i>hiding</i> problem, we are given \(r\) and not \(x\),
 <p>
 The hash function \(H\) is said to be <i>puzzle friendly</i>
     exactly when any algorithm to solve this problem is about as slow
@@ -171,13 +190,26 @@ this problem is the same as that in the previous paragraph.  If \(Y\)
 is a set of all \(n\)-bit strings then this problem is trivial because
 any \(x\) solves the problem.  The probability that a random value
 hashes to an element of \(Y\) is proportional to the cardinality of
-\(Y\).  So, the cardinality of \(Y\) controls the expected time to
+\(Y\).  The cardinality of \(Y\) controls the expected time to
 solve the puzzle.
 
+<hr class="new2">
+<h5 style="color:blue;">
+The hash function \(H\) is <i>puzzle friendly</i> when
+given \(H\), \(r\), and a set \(Y\) of \(n\)-bit values, the time
+required to compute any \(x\) such that \(H(r+x) \in Y\) is
+not significantly lower than \(2^{n} / |Y|\), where \(|Y|\) is the
+cardinality of \(Y\).
+</h5>
+<hr class="new2">
+
 <h3 class="w3-text-teal">A Cryptographic Hash Function</h3>
-<i>A cryptographic hash function is one that is collision resistant,
+<hr class="new2">
+<h5 style="color:blue;">
+A cryptographic hash function is one that is collision resistant,
 hiding and puzzle-friendly.
-</i>
+</h5>
+<hr class="new2">
 
 <h3 class="w3-text-teal">Hashing Inputs of Arbitrary Length</h3>
 Let \(f\) be a function that operates on input strings
@@ -211,13 +243,20 @@ def g(y):
 </pre>
 
 <h3 class="w3-text-teal">Hash Pointers</h3>
-A hash pointer to an item \(D\) of data is a pair \((ptr, H(D))\) where \(ptr\) is a pointer that
+<hr class="new2">
+<h5 style="color:blue;">
+A hash pointer to an item \(D\) of data is a pair \((ptr, H(D))\)
+where \(ptr\) is a pointer that 
 points to \(D\), and \(H\) is a cryptographic hash function.
+</h5>
+<hr class="new2">
+
+
 Any data structure with pointers can be converted into a
 data structure with hash pointers: merely replace a pointer \(ptr\) to
 \(D\) by \((ptr, H(D))\).
 
-<h2 class="w3-text-teal">Tamper-Evident Data Structures</h2>
+<h1 class="w3-text-teal">Tamper-Evident Data Structures</h1>
 <p  class="w3-text-teal">Single Block</p>
 A simple example of a tamper-evident structure is a single block of
 data D which is pointed to by a hash pointer consisting of a regular
@@ -235,7 +274,7 @@ agent
     hash pointer won't match the data that it is pointing to:
     \(H(D') \neq H(D)\).
 
-<p  class="w3-text-teal">Linked List</p>
+<h4 class="w3-text-teal">Tamper-Evident Linked List</h4>
 Let's look at linear linked list to which elements can be appended but
 not deleted. The \(i\)-th element appended to the list points to the
 \((i-1)\)-th element. 
@@ -249,24 +288,25 @@ pointers.
     </figure>
 
 <p>
-An element of the list consists of a block of data and a hash pointer
-to the previous block. The hash pointer consists of a regular pointer
-and the value obtained by hashing the previous element of the list.
-For the \(j\)-th element let's call the data block, the regular
-pointer, and the hashed value, \(D_{j}\), \(ptr_{j}\) and \(HA_{j}\)
-respectively.
-<p>
-Note that
-\(HA_{j}\) is not \(H(D_{j-1})\); it is
-the value obtained by applying the hash function \(H\)
-to the entire  \(j-1\)th element of the list which consists of
-\(D_{j-1}\), \(ptr_{j-1}\) and \(HA_{j-1}\).
-The \(0\)-th
-element is called the <i>genesis</i> element and has default values.
+The \(j\)-th element of the list, \(j > 0\), consists of data,
+\(D_{j}\), and a hash pointer that points to the \(j - 1\)-th
+  element of the list. The hash pointer in the \(j\)-th element
+consists of a regular pointer, \(ptr_{j}\), which points to the \(j - 1\)-th
+  element of the list, and a hashed value, \(HA_{j}\), which is a cryptographic hash of the
+  <i>entire</i> \(j-1\)th element consisting  of \(D_{j-1}\), \(ptr_{j-1}\)
+  and \(HA_{j-1}\).
+
+The \(0\)-th element is called the <i>genesis</i> element and has
+default values. The list is accessed by a hash pointer that points to
+the last element of the list; let this pointer be \(ptr_{n}, HA_{n}\).
 
 <p>
-Suppose a malicious agent modifies \(D[j]\), \(ptr[j]\) or
-\(HA[j]\). Any agent can detect this tampering because the
+Assume that agents cannot modify \(ptr_{n}, HA_{n}\). Then,
+can any agent determine whether the list has been tampered with?
+
+<p>
+Suppose the agent modifies \(D[j]\), \(ptr[j]\) or
+\(HA[j]\) for any \(j < n\). Any agent can detect this tampering because the
 hash value \(HA[j+1]\) will no longer match the \(j\)-th element of
 the list. If
 the malicious agent also modifies \(HA[j+1]\) then 
@@ -319,20 +359,26 @@ and sends the pair <i>(M, M')</i> securely to Joe. When Joe receives
 <i>M</i> because only an agent with Kamala's private signature could
 have sent that message.
 
+
+
 <h2 class="w3-text-teal">Cryptocurrency Managed by a Trusted
 Agent</h2>
 Let's start with a digital currency managed by a trusted agent that we will
 call a bank. Later, we will
 look at a consensus algorithm --- very different from Paxos and Byzantine
-Generals --- which will allow us to do without a trusted
-agent. Cryptocurrencies use consensus algorithms without trusted agents.
+Generals --- which will allow cryptocurrencies without trusted
+agent.
 
 
-<p>
+<hr class="new2">
+<h5 style="color:blue;">
 The bank maintains a tamper-resistant linear list
-<code>L</code> of transactions. Let's call this list a
+<code>L</code> of transactions that we call a
 tamper-resistant <i>ledger</i>. 
 Any agent can get a copy of the ledger.
+This tamper-resistant ledger is the foundation of the currency.
+</h5>
+<hr class="new2">
 
 <p>
 A transaction is one of
@@ -340,13 +386,17 @@ two types: <i>create</i> or <i>pay</i>.
 In a pay transaction, <i>payers</i> give coins that they possess to
 <i>payees</i>. An agent can be both a 
 payer and payee of the same transaction.
-In a create transaction the bank creates coins that it gives to
+In a <i>create</i> transaction the bank creates coins that it gives to
 agents --- the payees of the transaction; the bank acts as the payer.
-We won't discuss the permissions that a bank needs to create coins.
 
 <p>
-A pay transaction is signed by all payers of the transaction.
-A create transaction is signed by the bank.
+For this system to be trusted the bank must follow some protocol that determines
+how and when the bank creates coins. We won't discuss these protocols.
+
+<p>
+A <i>pay</i> transaction is signed by all payers of the transaction.
+A <i>create</i> transaction is signed by the bank.
+We discussed digital signatures and keys earlier.
 
 <p>
 Each element of the tamper-resistant ledger has:
@@ -371,7 +421,7 @@ Each element of the tamper-resistant ledger has:
 </ol>
 
 <h3 style="color:red;">Example of a create transaction</h3>
- An example of the specification of a create transaction is:
+ An example of a <i>create</i> transaction is:
 <pre>
 (3146, create,  [(2.1, 7xxxx...), (3.2, 8xxxx)]).
 </pre>
@@ -394,23 +444,26 @@ uniquely identifies a (value, payee) tuple.
 <p>
 For example (3146, 0) --- 
 transaction id 3146, and array index 0 --- identifies value-payee[0] of
-transaction 3146 which is specified by the 2-tuple (2.1, 7xxxx...). So, the
+transaction 3146 which is specified by the 2-tuple: (2.1, 7xxxx...). So, the
 transaction id and index, (3146, 0), tells everybody that the agent
-with public key 7xxxx received 2.1 units of coin. When this
+with public key 7xxxx received 2.1 units of coin in transaction 3146.
+
+<p>
+When this
 transaction is in a tamper-resistant ledger, every agent from that point
-onwards knows that agent 7xxxx received 2.1 coins. This information is
-in a permanent record. 
+onwards knows that agent 7xxxx received 2.1 coins. Any modifications of this
+record can be detected.
+
 <p>
 Likewise, (3146, 1) --- 
 transaction id 3146, and array index 1 --- identifies value-payee[1] which
 is the 2-tuple (3.2, 8xxxx...).
-<p>
-(Strictly speaking, the transactions aren't in a 
-permanent record --- they are in a tamper-evident data structure. But, we'll see
-that tamper-evidence is sufficient for many practical purposes.)
+
 
 <h3 class="w3-text-teal">Pay transaction</h3>
 Coins are transferred from payers to payees in a pay transaction.
+
+<h3 class="w3-text-teal">Coins flowing into a pay transaction from payers</h3>
 The payers are identified by a list of 2-tuples, where each 2-tuple is
 
 <pre>
@@ -425,17 +478,36 @@ identifies the 2-tuple (2.1, 7xxxx...); this 2-tuple asserts
 that the agent
 with public key 7xxxx received 2.1 units of coin in 
 transaction 3146. The <i>entire amount</i> specified in the 2-tuple (2.1 in our
-example) is value that flows into the transaction.
+example) is value that flows into this <i>pay</i> transaction from the agent
+with public key 7xxxx.
+
+<p>
+Suppose the payers in a pay transaction are identified by the list:
+<pre>
+[(3146, 0), (7359, 3)]
+</pre>
+and suppose pair 3 in transaction 7359 is (3.2, 8xxxx). Then the total
+amount of coins flowing into this pay transaction is 2.1 + 3.2, and
+this amount is disbursed to payees.
 
 
     <figure>
     <img src="CryptoCurrencyIntroduction/Slide3.jpg" alt="Fig1" style="width:100%">
-    <figcaption>Fig.3: Hash Pointer points to a Tamper-Evident Ledger
-    of Data</figcaption>
+    <figcaption>Fig.3: Coins flowing into and out of a pay transaction.
+</figcaption>
 </figure>
 
+
+<h3 class="w3-text-teal">Coins flowing out of a pay transaction to payees</h3>
 The outflow of coins is specified by an array of value-payee pairs,
-exactly as in a create transaction. 
+exactly as in a create transaction.
+The transaction clears all coins: the total inflow from payers is
+equal to the total outflow to payees in a transaction.
+
+<p>
+The system may provide incentives, such as payment of coins, to
+managers (e.g. banks) of cryptocurrencies. In this case, one of the
+payees is the bank itself.
 
 <h5 class="w3-text-teal">Managing amounts spent in a transaction</h5>
 A transaction-id, index pair --- such as (3146, 0)
@@ -468,20 +540,33 @@ index pair (3146, 0) which asserts that the agent received 2.1 coins
 and the same agent is a payee that withdraws 0.2 coins.
 
 
-<h5 class="w3-text-teal">Preventing Double Spending</h5>
+<h3 class="w3-text-teal">Preventing Double Spending</h3>
 How does the system prevent an agent from using the
-same coin twice? 
+same coin twice?
 
-The bank checks that the agent hasn't already spent the coin that it
-is putting into a transaction. For example, the transaction id, index pair
+<p>
+For example, the transaction id, index pair
 (3146, 0) identifies the 2-tuple (2.1, 7xxxx...); this tuple
 asserts that the agent
 with public key 7xxxx received 2.1 units of coin in 
-transaction 3146. The bank inspects the tamper-resistant ledger
-for all transactions after transaction 3146 and before the current
-transaction to ensure that the agent (7xxxx) hasn't already spent the
-2.1 coins that it got in transaction 3146.
+transaction 3146. Why can't the agent with public key 7xxxx use the
+2.1 coins that it received to buy items from Amazon and later use
+the same 2.1 coins to buy more items from Walmart?
 
+<p>
+The bank checks that the agent hasn't already spent the coin that it
+is putting into a transaction.
+
+<p>
+Before permitting the transaction that double-spends the 2.1 coins
+with Walmart, the bank inspects the tamper-resistant ledger
+for all transactions after transaction 3146 and before the Walmart
+transaction to ensure that the agent (7xxxx) hasn't already spent the
+2.1 coins that it got in transaction 3146. The transaction that spends
+the coins at Amazon will show up in the ledger, and so the transaction
+with Walmart will not be allowed.
+
+<p>
 Every agent that has the bank's hash pointer to the end of the
 tamper-evident ledger can inspect the ledger to check that
 double-spending hasn't occurred.
@@ -538,12 +623,17 @@ following steps:
 
 <h3 class="w3-text-teal">Optimizations: Blocks and Block Chain</h3>
 Verifying large numbers of small transactions requires more
-computation than verify smaller numbers of blocks of transactions.
+computation than verifying small numbers of blocks of many transactions.
 A <i>block chain</i> is a tamper-evident ledger in which
-each element of the ledger is a block of transactions.
+each element of the ledger is a block consisting of many transactions.
 A block of transactions can be aggregated into a single large
 transaction by aggregating all the payers and payees of the smaller
-transactions. 
+transactions.
+
+<p>
+The amount of computation decreases as the number of transactions in a
+block increases. The time required to fill a block with transactions
+is larger when the number of transactions to fill the block increases.
 
 <h3 class="w3-text-teal">Checking the Trusted Agent</h3>
 Consider a system in which the trusted agent broadcasts its current
