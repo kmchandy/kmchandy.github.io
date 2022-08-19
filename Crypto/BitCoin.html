@@ -124,8 +124,8 @@ This module introduces the algorithm underlying BitCoin.
     Bitcoin is based on cryptography and distributed consensus. We
     discussed aspects of cryptography required for Bitcoin in an
     <a
-    href="../CryptoCurrencyIntroduction/CryptoCurrencyIntroduction.html">
-    earlier module.</a> Now we focus on the distributed consensus
+    href="./CryptoCurrencyIntroduction.html">
+    earlier module.</a> Next, we study the distributed consensus
     algorithm used by BitCoin.
     
     <a href="https://www.lopp.net/pdf/princeton_bitcoin_book.pdf">
@@ -135,28 +135,41 @@ This module introduces the algorithm underlying BitCoin.
     <p>
     We discussed distributed consensus in the modules on
     <a href="../Paxos/Paxos.html">Paxos</a> and
-    <a href="../Byzantine/Byzantine.html">Byzantine Generals with
+    <a href="../Byzantine/ByzantineOral.html">Byzantine Generals with
     written</a> and
-    <a href="../Byzantine_Oral/Byzantine.html">oral messages.</a>
+    <a href="../Byzantine/ByzantineWritten.html">oral messages.</a>
     The specification of consensus is weaker in
     Bitcoin and the algorithm used to obtain consensus is different
     from those used in Paxos and Byzantine Generals written and oral
-    algorithms. 
+    algorithms. The Byzantine Generals algorithms assumes that the
+    algorithm operates in rounds, whereas the Bitcoin algorithm
+    doesn't require synchronous rounds in which all agents
+    participate. The Paxos algorithm does not guarantee progress
+    whereas Bitcoin requires progress with high
+    probability; you wouldn't want to use coins if you had to wait
+    a long time to buy anything with it.
 
     <h3 class="w3-text-teal">No trusted agent</h3>
-    In an earlier module we described an algorithm for a
-    cryptocurrency that had many of the features that we expect froma
+    In an earlier module we described an algorithm that had many of
+    the features that we expect from a
     cryptocurrency. That algorithm had, however, a
     characteristic which is problematic to some: It relies on a
-    trusted agent.
+trusted agent.
+The trusted agent could be the
+<a href="https://www.federalreserve.gov/">Federal Reserve</a> in the
+US or a <a href="https://www.ecb.europa.eu/home/html/index.en.html">
+central bank </a> that manages a currency.
+Two of many reasons given for mistrusting banks are that (1) people may
+    want to execute transactions in secret giving only their public
+    keys, and (2) and central banks may be able to print money whereas
+    some cryptocurrencies, such as Bitcoin, limit the total amount of
+    coins that can ever exist.
     The BitCoin algorithm is a modification that eliminates the
-    trusted agent from the previous algorithm.
+    trusted agent from the algorithm given in the previous module.
 
     <h3 class="w3-text-teal">No assumptions about numbers of agents</h3>
     The Byzantine Generals algorithm uses an upper bound on the number
-    of faulty agents. The oral version of the problem uses a lower
-    bound on the number of non-faulty 
-    agents. Paxos assumes that the total number of agents is known. 
+    of faulty agents. Paxos assumes that the total number of agents is known. 
     The BitCoin algorithm makes no assumptions about numbers of faulty and
     non-faulty agents other than that there are a large number of agents.
 
@@ -164,10 +177,10 @@ This module introduces the algorithm underlying BitCoin.
 <h3 class="w3-text-teal">Incentives and transaction fees</h3>
 When a currency is managed by a single trusted agent, such as a
 bank, we assume that the bank gets some reward for its
-service.
-A bank may be paid by the government to carry out this service.
+service or is paid by a government to carry out this service.
 The BitCoin algorithm pays agents with Bitcoins for checking the validity of
-transactions. This payment either consists of new coins
+transactions. This payment consists of new coins that are
+"mined". More about mining later
 
 
 <h2 class="w3-text-teal">A First Proposal for an Algorithm</h2>
@@ -216,13 +229,19 @@ This algorithm has several challenges.
   to the ledger at a later point t''. If C's copy is still [x],
   because it has not as yet been updated to [x, y], then after C
   appends z to the ledger, C's copy becomes [x, z].
-  <p>
-  A nice property of the algorithm with the trusted agent is that two
+
+  <hr class="new2">
+    <h5 style="color:blue;">
+  A key property of the algorithm with the trusted agent is that two
   copies of the ledger are either identical or the longer copy
   consists of additional transactions appended to the
-  shorter copy. With this property, two copies of the ledger are
+  shorter copy.
+  </h5>
+  <hr class="new2">
+   With this property, two copies of the ledger are
   either identical or the shorter copy can eventually "catch up" to the longer copy by
   merely by appending more values.
+
   <p>
   In the example, B may receive
   information about transaction z after receiving information about
@@ -237,11 +256,14 @@ This algorithm has several challenges.
   <li>
   <i>Incentives</i>: 
   Why should an agent chosen to play the role of trusted agent agree
-  to play that role? What's the incentive?
+  to play that role? What's the incentive? Why wouldn't the trusted
+  agent do nothing at all or do execute its step slowly?
   </li>
   <li>
   <i>Untrustworthy Agents</i>:
-  The randomly-chosen trusted manager may not be trustworthy.
+  The randomly-chosen trusted manager may not be trustworthy. You can
+  imagine what may go wrong in the previous algorithm if the bank was
+  dishonest.
   </li>
 </ol>
 Next, let's look at how the Bitcoin algorithm addresses challenges 1
@@ -253,56 +275,143 @@ and 2. We'll look at challenges 3 and 4 later.
 How can an arbitrary set of agents, some of whom may be
 malicious, and where the size of the set is unknown, pick a random
 agent?
-The BitCoin algorithm does so by using the <i>puzzle-friendly property</i> of cryptographic hash
-functions discussed in the previous module.
+
+
+<h4 class="w3-text-teal">Using Puzzles to Select a Single Agent</h4>
+Let's look at a simple situation:
+several people solve puzzles in the same room. When a
+person solves her puzzle, she yells "I won!". When a
+person hears that somebody else has won she stops solving her puzzle.
 
 <p>
+If everybody starts at the same instant and take the same time
+then there will be collisions --- many will claim to win at the same time.
+If, however, the time to solve
+a puzzle is a random variable with a flat distribution then collisions
+are unlikely. Bitcoin uses the <i>puzzle-friendly property</i> of cryptographic hash
+functions discussed in the
+<a href="./Crypto/CryptoCurrencyIntroduction.html">previous module</a>.
+
+<p>
+Now, instead of people being all in the same room, assume that they
+are competing across a network. When a person solves a puzzle,
+she broadcasts a "I won" message. When a person working on a puzzle
+gets a "I won" message from somebody else, she stops working on her
+puzzle.
+
+<p>
+Collisions are likely if the expected time to solve the puzzle
+is small (say a millisecond) compared with the expected time (say a
+minute) for a message broadcast by one person to reach others. Message
+delays may cause multiple people to solve their puzzles before
+receiving "I won" messages.
+Collisions are unlikely when times to solve puzzles are much greater
+than message delays.
+
+<p>
+We could attempt to use timestamps: When a person solves her puzzle
+she broadcasts a "I won" message and the time at which she finished
+solving the puzzle. If a person gets a "I won" message with an earlier
+timestamp then she concedes. This approach is problematic because a
+devious agent may not solve the puzzle, or may set her timestamp to an
+earlier value.
+
+
+<h4 class="w3-text-teal"> Puzzles in Bitcoin</h4>
+Next let's look at the puzzles used in Bitcoin.
 Each agent has its own copy of the block chain.
-An agent \(A\) collects a set of transactions that haven't as yet been added
-to \(A\)'s copy of the block chain, and proposes to add a block consisting
-of this set of transactions to the block chain. It proposes to add the block in the
+An agent \(A\) collects a set \(trans\) of transactions that haven't as yet been added
+to \(A\)'s copy of the block chain.
+Agent \(A\) proposes
+to append a block to the chain where the block
+consists
+of the set \(trans\) in the
 following way.
 
 <p>
-Let \(ptr\) be the pointer to agent \(A\)'s copy of the block chain, and let
-\(trans\) be the list of transactions that \(A\) proposes to make into a
-block in the chain. 
+Let \(ptr\) be the pointer to agent \(A\)'s copy of the block chain. 
 Agent \(A\) can add a block containing \(trans\) to the chain only if it
 proves that it has solved the following problem --- the "puzzle."
+
+<p>
 Find a number, called \(nonce\), such that:
 <p>
 \(H(nonce + ptr + trans) < target \)
 <p>
 where \(+\) is the concatenation operator , and <i>target</i> is a
-given value. For the time being
+given value.
+
+<p>
+For the time being
 assume that target is a constant; later, we'll see that it decreases very
 slowly over time.
 The smaller the value of <i>target</i> the
 greater the expected time to solve the puzzle.
 
-<p>
-The value of <i>target</i> is set so that the time to solve a puzzle
-is usually greater than the time required for a message broadcast
-by an agent to reach most agents.
-So, often most agents will
-receive an update to the block chain proposed by one agent before an
-update proposed by another agent.
 
 <p>
-The first challenge is: How can the collection of agents select a
-<i>single</i> agent to add a block to the block chain?
+The time to solve a <a
+href="./CryptoCurrencyIntroduction.html">Bitcoin puzzle</a> is a
+random variable with a flat distribution. Each proposer 
+of a block is probably solving a different puzzle because the block of
+transactions that it is aggregating is likely to be different from
+that of other proposers. Agents have different amounts of
+computing capacity, and the time to solve a puzzle decreases with
+capacity.
+Agents are unlikely to start solving their puzzles
+at the same instant. For these reasons, it is possible, but unlikely, that many agents
+will solve their puzzles at the same time.
 
-The BitCoin algorithm overcomes this challenge most of the time. This is because
-the time taken to solve a puzzle is a random variable. Each proposer
-of a block is probably solving a different puzzle because its value of the
-transaction list \(L\) is likely to be different from that of another
-proposer of a block. Agents solving puzzles have different amounts of
-computing capacity.
-It is unlikely that
-multiple proposers will solve their puzzles at about the same time.
+
+
+<p>
+Using puzzles to identify a single random agent leaves us with at least three challenges: (1) Collisions
+will occur; (2) agents may be devious --- they may claim to have
+solved puzzles when they haven't; and (3) agents with computing power
+that far exceeds those of others will solve their puzzles faster than
+others do --- and so though agents are selected randomly, those with
+large computing power are likely to be selected more often.
 
 
 <h3 class="w3-text-teal">Attempts at Synchronization</h3>
+When an agent \(A\) appends a new block \(B\) to a block chain \([L]\) it broadcasts
+the new chain \([L; B]\). This is analogous to a person shouting "I won" in the
+example given earlier.
+
+<p>
+When a (non-devious) agent \(A'\) proposing to extend
+\([L]\) gets a message saying that \([L]\) has already been extended to
+\([L; B]\) then \(A'\)
+stops attempting to append a block to \([L]\) and starts again with a
+new set of transactions that it proposes to append to the
+extended chain \([L; B]\).
+
+<p>
+If the message delay between agents \(A\) and \(A'\) is small compared
+to the time to solve puzzles, then a collision
+between \(A\) and \(A'\) is unlikely, but still possible. So, \(A\)
+may broadcast \([L; B]\) while \(A'\) broadcasts \([L; B']\) at the
+same time.
+
+<p>
+The Bitcoin algorithm does not use synchrony. The problem of different copies of the block chain
+extant at the same time is handled in an ingenious way that we
+describe later.
+
+another agent's copy may
+be \(L; B'\), where \(B\) and \(B'\) are different.
+
+<p>
+One way in which we may try to deal with this problem is to have
+agents wait long enough to update their copies of the chain to ensure
+that 
+<p>
+It is possible that multiple agents will extend the
+same block chain at about the same time. Also, devious agents could claim
+to extend a block chain that they know have already been extended by
+others. How does the Blockchain algorithm deal with these situations?
+
+
 The second challenge is:
 How can the collection of agents wait long enough to ensure that all
   agents have updated their copies of the ledger to the most recent version before
@@ -318,6 +427,7 @@ next update.
 
 <p>
 But "much of the time" isn't enough. 
+
 
 <h3 class="w3-text-teal">Managing Concurrent Updates</h3>
 How does the algorithm deal with the following situation? One agent
