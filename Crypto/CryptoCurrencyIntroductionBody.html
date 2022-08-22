@@ -6,8 +6,8 @@ This module contains a review of elementary cryptographic operations
 and introduces a simple cryptocurrency managed by a trusted agent.
 </h4>
 
-The next module discusses the algorithm underlying BitCoin; the
-BitCoin algorithm doesn't require agents to be trusted.
+The next module discusses the algorithm underlying Bitcoin; the
+Bitcoin algorithm doesn't require agents to be trusted.
     
     <a href="https://www.lopp.net/pdf/princeton_bitcoin_book.pdf">
     This Princeton University book is a superb description of
@@ -25,7 +25,7 @@ Bitcoin.</a>
     Input values \(x, y\) of a hash function \(H\)
 are said to <i>collide</i> when \(H(x) = H(y)\).
 A hash function \(H\) is said to be <i>collision resistant</i> if 
-    the only known ways of
+the only known ways of
 finding collisions using the hash are intractable.
 </h5>
 
@@ -143,9 +143,10 @@ Italy wins.
 
 <hr class="new2">
 <h5 style="color:blue;">
-A hash function \(H\) is <i>binding</i> if  finding
-  pairs \(x, y\) and \(x', y'\) where \(x \neq x'\) such that \(H(x + y)
-= H(x' + y')\) is intractable.
+A hash function \(H\) is <i>binding</i> if finding pairs \((x,y)\) and \((x',y')\)
+where \(y \neq y'\) such that:
+\(H(x + y) = H(x' + y')\)
+is intractable.
 </h5>
 <hr class="new2">
 
@@ -305,12 +306,12 @@ Assume that agents cannot modify \(ptr_{n}, HA_{n}\). Then,
 can any agent determine whether the list has been tampered with?
 
 <p>
-Suppose the agent modifies \(D[j]\), \(ptr[j]\) or
-\(HA[j]\) for any \(j < n\). Any agent can detect this tampering because the
-hash value \(HA[j+1]\) will no longer match the \(j\)-th element of
+Suppose the agent modifies \(D_{j}\), \(ptr_{j}\) or
+\(HA_{j}\) for any \(j < n\). Any agent can detect this tampering because the
+hash value \(HA_{j+1}\) will no longer match the \(j\)-th element of
 the list. If
-the malicious agent also modifies \(HA[j+1]\) then 
-hash value \(HA[j+2]\) will no longer match the \(j+1\)-th element.
+the malicious agent also modifies \(HA_{j+1}\) then 
+hash value \(HA_{j+2}\) will no longer match the \(j+1\)-th element.
 
 <p>By induction on \(j\), any agent can detect tampering with the list
 provided malicious agents do not also modify the hash pointer to the
@@ -352,8 +353,10 @@ An agent cannot decrypt the encrypted message without Joe's private key.
 Suppose Kamala needs to send a signed message to Joe while
 ensuring that nobody can forge her signature. She encrypts the message
 <i>M</i> with her private key to get an encrypted message <i>M'</i>,
-and sends the pair <i>(M, M')</i> securely to Joe. When Joe receives
-<i>(M, M')</i>, Joe decrypts
+and sends the pair <i>(M, M')</i> securely to Joe, i.e., she encrypts
+<i>(M, M')</i> with Joe's public key, and sends the resulting
+encrypted message to Joe.  When Joe receives the message, Joe decrypts
+it using his private key to get <i>(M, M')</i>. Then Joe decrypts
 <i>M'</i> using Kamala's public key to get the decrypted message
 <i>M''</i>. If <i>M'' = M</i> then Joe knows that Kamala sent
 <i>M</i> because only an agent with Kamala's private signature could
@@ -372,11 +375,11 @@ agent.
 
 <hr class="new2">
 <h5 style="color:blue;">
-The bank maintains a tamper-resistant linear list
+The bank maintains a tamper-evident linear list
 <code>L</code> of transactions that we call a
-tamper-resistant <i>ledger</i>. 
+tamper-evident <i>ledger</i>. 
 Any agent can get a copy of the ledger.
-This tamper-resistant ledger is the foundation of the currency.
+This tamper-evident ledger is the foundation of the currency.
 </h5>
 <hr class="new2">
 
@@ -399,7 +402,7 @@ A <i>create</i> transaction is signed by the bank.
 We discussed digital signatures and keys earlier.
 
 <p>
-Each element of the tamper-resistant ledger has:
+Each element of the tamper-evident ledger has:
 <ol>
   <li>
   a unique id;
@@ -450,7 +453,7 @@ with public key 7xxxx received 2.1 units of coin in transaction 3146.
 
 <p>
 When this
-transaction is in a tamper-resistant ledger, every agent from that point
+transaction is in a tamper-evident ledger, every agent from that point
 onwards knows that agent 7xxxx received 2.1 coins. Any modifications of this
 record can be detected.
 
@@ -471,7 +474,7 @@ The payers are identified by a list of 2-tuples, where each 2-tuple is
 </pre>
 
 where <code>transaction id</code> is the id of the transaction in the
-tamper-resistant ledger. As we said earlier, this pair uniquely identifies an agent and a
+tamper-evident ledger. As we said earlier, this pair uniquely identifies an agent and a
 value that this agent acquired in this transaction.
 For example the pair --- transaction id, index --- such as (3146, 0)
 identifies the 2-tuple (2.1, 7xxxx...); this 2-tuple asserts
@@ -559,7 +562,7 @@ is putting into a transaction.
 
 <p>
 Before permitting the transaction that double-spends the 2.1 coins
-with Walmart, the bank inspects the tamper-resistant ledger
+with Walmart, the bank inspects the tamper-evident ledger
 for all transactions after transaction 3146 and before the Walmart
 transaction to ensure that the agent (7xxxx) hasn't already spent the
 2.1 coins that it got in transaction 3146. The transaction that spends
@@ -573,9 +576,9 @@ double-spending hasn't occurred.
 
 <p>
 The bank signs a valid transaction and appends it to the
-tamper-resistant ledger. All agents can see the bank's signature and
+tamper-evident ledger. All agents can see the bank's signature and
 verify that nobody (not even the bank) has tampered with the
-tamper-resistant ledger.
+tamper-evident ledger.
 
 <h4 style="color:red;">Example of a pay transaction</h4>
  An example of the specification of a pay transaction is:
@@ -661,13 +664,13 @@ as the master copy because the agent may not have the transactions
 added most recently to the ledger.
 
 <p>
-In the next module we will see how the BitCoin algorithm addresses
+In the next module we will see how the Bitcoin algorithm addresses
 this problem.
 
 
 
 <h3 class="w3-text-teal">Advantages of this cryptocurrency</h3>
-Any agent can get a copy of the tamper-resistant ledger and verify that all
+Any agent can get a copy of the tamper-evident ledger and verify that all
 transactions in the ledger are valid. Any agent can verify that
 the only way in which the ledger is modified is that elements are
 append to its tail; all that the agent needs to do is to check that
@@ -689,7 +692,7 @@ bank has a record of all transactions. And the bank is a single point
 of failure.
 
 <p>
-Next we'll look at BitCoin's algorithms for
+Next we'll look at Bitcoin's algorithms for
 implementing a cryptocurrency without trusted agents.
 
 <h4 style="color:blue;">Review</h4>

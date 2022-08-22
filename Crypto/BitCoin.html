@@ -89,7 +89,7 @@ Cryptography: Introduction
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
 href="../Crypto/BitCoin.html" > 
-BitCoin
+Bitcoin
 </a>
 
 </nav>
@@ -147,7 +147,7 @@ This module introduces the algorithm underlying BitCoin.
     participate. The Paxos algorithm does not guarantee progress
     whereas Bitcoin requires progress with high
     probability; you wouldn't want to use coins if you had to wait
-    a long time to buy anything with it.
+    a long time to buy anything.
 
     <h3 class="w3-text-teal">No trusted agent</h3>
     In an earlier module we described an algorithm that had many of
@@ -161,16 +161,16 @@ US or a <a href="https://www.ecb.europa.eu/home/html/index.en.html">
 central bank </a> that manages a currency.
 Two of many reasons given for mistrusting banks are that (1) people may
     want to execute transactions in secret giving only their public
-    keys, and (2) and central banks may be able to print money whereas
+    keys, and (2) central banks may be able to print money whereas
     some cryptocurrencies, such as Bitcoin, limit the total amount of
     coins that can ever exist.
-    The BitCoin algorithm is a modification that eliminates the
+    The Bitcoin algorithm is a modification that eliminates the
     trusted agent from the algorithm given in the previous module.
 
     <h3 class="w3-text-teal">No assumptions about numbers of agents</h3>
     The Byzantine Generals algorithm uses an upper bound on the number
     of faulty agents. Paxos assumes that the total number of agents is known. 
-    The BitCoin algorithm makes no assumptions about numbers of faulty and
+    The Bitcoin algorithm makes no assumptions about numbers of faulty and
     non-faulty agents other than that there are a large number of agents.
 
 
@@ -178,7 +178,7 @@ Two of many reasons given for mistrusting banks are that (1) people may
 When a currency is managed by a single trusted agent, such as a
 bank, we assume that the bank gets some reward for its
 service or is paid by a government to carry out this service.
-The BitCoin algorithm pays agents with Bitcoins for checking the validity of
+The Bitcoin algorithm pays agents with Bitcoins for checking the validity of
 transactions. This payment consists of new coins that are
 "mined". More about mining later
 
@@ -208,9 +208,8 @@ This algorithm has several challenges.
   How can the collection of agents select a <i>single</i> agent to add
   a block to the block chain? The selection of a single agent requires
   all agents to reach a consensus about which agent to 
-  select. So, the solution to problem of agents coming to a consensus
-  about the block chain requires the
-  solution to another consensus problem. The BitCoin algorithm does
+  select. So solving the problem this way would require solving
+  another consensus problem. The Bitcoin algorithm does
   not select a unique agent to add a block to the block chain;
   however, it uses an ingenious mechanism to ensure that multiple agents
   don't attempt to add blocks at about the same time.
@@ -249,7 +248,7 @@ This algorithm has several challenges.
   order, which leaves B's copy as [x, y, z] and C's copy as [x, z,
   y]. In this case, the copies remain different forever.
   <p>
-  The BitCoin algorithm <i>does not guarantee synchronization</i>; however,
+  The Bitcoin algorithm <i>does not guarantee synchronization</i>; however,
   its mechanism helps to make many agents append blocks in the same
   order. 
   </li>
@@ -257,7 +256,7 @@ This algorithm has several challenges.
   <i>Incentives</i>: 
   Why should an agent chosen to play the role of trusted agent agree
   to play that role? What's the incentive? Why wouldn't the trusted
-  agent do nothing at all or do execute its step slowly?
+  agent do nothing at all execute its step slowly?
   </li>
   <li>
   <i>Untrustworthy Agents</i>:
@@ -391,7 +390,7 @@ extended chain \(L + B\).
 If the message delay between agents \(A\) and \(A'\) is small compared
 to the time to solve puzzles, then a collision
 between \(A\) and \(A'\) is unlikely, but still possible. So, it is
-possible that \(A\) broadcasts \(L + B) while \(A'\) broadcasts
+possible that \(A\) broadcasts \(L + B\) while \(A'\) broadcasts
 \(L + B'\) at about the same time. So different agents may have
 different copies of the block chain.
 What is the equivalent of the "true" system-wide
@@ -406,7 +405,7 @@ describe later.
 
 <h3 class="w3-text-teal">Managing Concurrent Updates</h3>
 
-A key step of the BitCoin algorithm that updates local copies of block
+A key step of the Bitcoin algorithm that updates local copies of block
 chains is as follows. After an agent creates a block and appends the
 newly created block to its local copy it broadcasts its copy of
 the block chain.
@@ -422,7 +421,9 @@ block chain in the message exceeds the length of \(A\)'s local copy.
 
 
 <p>
-Let's look at a scenario. Assume that agent \(A\)'s copy of the block chain
+Let's look at a scenario.
+For this scenario, \(X\) and \(Y\) are single blocks.
+Assume that agent \(A\)'s copy of the block chain
 is \(L\) when \(A\) receives a message containing the block chain \(L
 + X\). Because the length of the block chain \(L + X\) is bigger than \(A\)'s
 copy, \(A\) sets its copy to \(L + X\).
@@ -430,8 +431,8 @@ copy, \(A\) sets its copy to \(L + X\).
 <p>
 Now suppose agent \(A\) gets a
 message containing the block chain \(L + Y\); what does \(A\) do?
-Agent \(A\) ignores the message because the length of \(L + Y\) is not
-greater than \(A\)'s current copy which is now \(L + X\).
+Agent \(A\) ignores the message because the length of \(L + Y\) does not exceed
+that of \(A\)'s current copy, \(L + X\).
 
 <h4 class="w3-text-teal">Continuing Collisions</h4>
 Let's continue the above scenario.
@@ -505,19 +506,18 @@ most agents' block chains.
 <a href="https://www.lopp.net/pdf/princeton_bitcoin_book.pdf
 ">See the Princeton Bitcoin book.</a>
 
-
-    <figure>
-    <img src="BitCoin/Slide1.jpg" alt="Fig1" style="width:100%">
-    <figcaption>Fig.1: More Confidence in Older Blocks in the
-    Chain</figcaption>
-</figure>
-
 <p>
-Suppose agent \(A\) gets \(N\) BitCoins in transaction \(X\). If \(K =
+Suppose agent \(A\) gets \(N\) Bitcoins in transaction \(X\). If \(K =
 0\) then an agent can't be confident that \(A\) ever received these coins
 because this transaction may not persist in the block chain. As \(K\)
 increases agents become more confident that the transaction is in the
 block chain and that \(A\) did, indeed, receive these coins.
+
+
+    <figure>
+    <img src="Bitcoin/Slide1.jpg" alt="Fig1" style="width:100%">
+    <figcaption>Fig.1: More Confidence in Older Blocks in the
+    Chain</figcaption>
 
 
 <h4 class="w3-text-teal">What happens to Orphan Transactions?</h4>
@@ -566,19 +566,21 @@ about 21 million.
 
 <p>
 (Bitcoins can be lost. An agent may lose the hash pointer to the
-transaction that gave the agent ownership of the coin.)
+transaction that gave the agent ownership of the coin, or an agent may
+lose its private key.)
 
 <p>
-When block rewards vanish, miners will get paid transaction fees. A
+Even when block rewards vanish, miners will continue to
+mine provided that they get paid transaction fees. A
 transaction fee is a payment by payers and payees to
-miners. Transaction fees may be voluntary. A high-fee for a
+miners. Transaction fees are voluntary. A high-fee for a
 transaction is an incentive to miners to put this transaction into a
 block quickly. So, it's possible that agents that offer no fee or low
-fees may have to wait a long time before their transactions enter the
-block chain.
+fees may have to wait longer for their transactions to enter the
+block chain. 
 
 <p>
-Incentives are critical for BitCoin. Miners get paid to
+Incentives are critical for Bitcoin. Miners get paid to
 get their blocks into the long-term "consensus" block chain.
 Miners have an incentive to police the block chain because 
 they don't get paid for appending erroneous blocks. If a miner appends
@@ -619,10 +621,10 @@ ensure that the transaction concludes correctly or is aborted correctly.
 
 <p>
 Next, let's look at a transaction in which a person buys a video
-online by paying the seller BitCoins. The buyer and seller know each
+online by paying the seller Bitcoins. The buyer and seller know each
 other by their public keys and by their online addresses. 
 The buyer broadcasts the transaction in which the buyer gives the seller
-the payment in BitCoins.
+the payment in Bitcoins.
 The amount is specified as
 a pair (transaction id, array index) described in the section <i>pay
 transactions</i> in 
@@ -642,7 +644,7 @@ the video to the buyer.
 
 <p>
 The buyer cheats. The buyer creates a transaction in which the buyer
-transfers the same BitCoins  to the buyer itself.
+transfers the same Bitcoins  to the buyer itself.
 A miner creates a block \(Y\) that includes this transaction.
 A miner who has only received block
 chain \(L\) (and hasn't yet received chain \(L + X\)) appends \(Y\) to
@@ -652,10 +654,11 @@ chain \(L\) (and hasn't yet received chain \(L + X\)) appends \(Y\) to
 Now we have a situation in which one
 miner broadcasts a legitimate block chain \(L + X\) and a different
 miner broadcasts a legitimate block chain \(L + Y\). Both chains have
-the same length; so, miners have no preference about which chain to
-extend further and they have no way of knowing which of the
-transactions is genuine and which is fraudulent. (Note that the
-algorithm will not permit chains \(L + X + Y\) or \(L + Y + X\).)
+the same length.
+A miner with chain \(L + X\) does not know at this point that another
+minder has chain \(L + Y\). So, miners will extend both block chains.
+(Note that the algorithm will not permit chains \(L + X + Y\) or \(L +
+Y + X\).) 
 
 <p>
 We've seen this situation before:  look at <i>block collisions</i> described
@@ -702,6 +705,26 @@ it. Other miners won't append their blocks to an invalid one. The
 invalid blocks will become permanent orphans, and so the fraudulent
 miner won't be able to spend the coins in these blocks.
 
+<h3 class="w3-text-teal">Fifty One Percent Attacks</h3>
+A 51% attack can be carried out by an agent that has more mining
+power (e.g. 51% or more) than all other agents combined. The higher
+the proportion of mining power of a single agent, the greater the
+chances that attacks by that agent will succeed. You can see the
+danger of a single agent having predominant mining power by thinking
+about an agent with say, 99% of the total mining power. This agent
+can mine so much faster than others that it can manipulate the block
+chain in many ways. It can create double-spend transactions and deny
+services to some transactions.
+
+<p>
+A group of miners can collude to gain predominant mining power. Also,
+miners can <i>rent</i> Cloud-based systems for mining --- as opposed to having to <i>own</i>
+huge data centers. An attacker can rent a large system for the specific purpose and
+duration of an attack. The public may not know if and when such
+attacks are successful because
+<a href="https://dci.mit.edu/51-attacks">cryptocurrencies do not have an
+incentive to publish such attacks.</a>
+
 <h3 class="w3-text-teal">Denial of service</h3>
 Can agents collude so that an agent \(X\)'s transactions never get
 into blocks and so never get processed?
@@ -746,7 +769,7 @@ receives a message to extend its copy of the block chain with a block
   </li>
   <li>
   What is mining for cryptocurrency? Suppose only a small number (say
-  two organizations) mined most (say 99%) of BitCoins. Would that be a
+  two organizations) mined most (say 99%) of Bitcoins. Would that be a
   problem?
   </li>
   <li>
