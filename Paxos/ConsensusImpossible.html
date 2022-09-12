@@ -85,7 +85,7 @@ title="Close Menu">
  
 <a class="w3-bar-item w3-button w3-hover-black "
 href="../Paxos/ConsensusImpossible.html" > 
-Impossibility of Consensus with Faults
+Consensus
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
 href="../Paxos/Paxos.html" > 
@@ -120,27 +120,42 @@ Paxos Example
 
 <!-- End overlay ---------------------------------->
     <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Reaching Consensus in a Finite Number of
-    Steps is Impossible</h1>
+    <h1 class="w3-text-teal">Consensus</h1>
 
 <h4 class="w3-text-teal">
-This module describes the central ideas of the proof that achieving
+This module discusses the importance of achieving consensus among
+distributed agents and describes the central ideas of a proof that achieving
 consensus among agents, one of which may be faulty, is impossible.
 </h4>
 
-    <h2 class="w3-text-teal">Key Ideas</h1>
-    There are many problems in which a collection of agents have to
-    come to a <i>consensus</i> about something.
-    In a control system with multiple
-    and actuators, the actuators have to come to a consensus about the
-    state of the environment so that they can operate in concert. A
-    vehicle would crash
-    if some actuators caused the vehicle to accelerate while other
-    actuators applied brakes.
-    In some applications, multiple agents have to elect a single
-    leader.
-    This module describes an important algorithm by which agents in
-    distributed systems come to a consensus.
+<h3 class="w3-text-teal">Importance of Consensus</h3>
+
+<p>
+Algorithms by which groups of agents <a
+href="https://en.wikipedia.org/wiki/Consensus_(computer_science)">
+come to a consensus </a> are among the most fundamental problems in
+distributed computing.
+
+<p>
+Why is consensus important? There are many
+problems in which messages are sent to groups of agents who
+collectively maintain a common <i>consensus</i> state. A bank may use
+a group of agents, rather than a single agent, to maintain bank
+balances. Multiple agents reduce the possibility of system-wide
+failure due to the failure of a single agent.  Managing replicated
+databases requires the replications to come to a consensus on the
+sequence of transactions that is applied to the
+database. Cryptocurrency transactions also require collections of
+agents to come to a consensus about sequences of the transactions.
+
+<p>
+In a control system with multiple and actuators, the actuators have to
+come to a consensus about the state of the environment so that they
+can operate in concert. A vehicle would crash if some actuators caused
+the vehicle to accelerate while other actuators applied brakes.  In
+some applications, multiple agents have to elect a single leader.
+There are many problems in which a collection of agents have to come
+to a <i>consensus</i> about something.
 
     <h3 class="w3-text-teal">Consensus: Impossible with a
     faulty agent</h3>
@@ -161,7 +176,7 @@ consensus among agents, one of which may be faulty, is impossible.
 
 <p>
 <figure>
-    <img src="../Paxos/PaxosFigures/Slide01.jpg" alt="Fig1" style="width:80%">
+    <img src="./Slide01.jpg" alt="Fig1" style="width:80%">
     <figcaption>Fig.1: Problem with a slow agent</figcaption>
 </figure>
 
