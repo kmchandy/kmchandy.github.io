@@ -22,12 +22,11 @@ agents don't follow the protocol</i>.
     do not follow the protocol.</i>
 
     <p>
-    The
-    algorithm operates in a sequence of steps called <i>rounds</i>.
-    All messages sent in a round are delivered in the same round, and
-    all agents execute actions in each round after receiving
-    messages sent in that round. So, the Byzantine algorithm that we
-    describe next is synchronous.
+    The algorithm operates in a sequence of steps called <i>rounds</i>.
+    All messages sent in a round are delivered in the next round.
+    Agents execute actions in each round after receiving
+    messages sent in the previous round; these actions may include
+    sending messages. So, the Byzantine algorithm is synchronous.
 
     <p>
     The Byzantine generals problem is an important problem with
@@ -46,7 +45,23 @@ agents don't follow the protocol</i>.
     is led by a lieutenant general, herafter referred to merely as
     lieutenant. We refer to the general and the lieutenants,
     collectively, as agents. An agent may be either loyal or
-    disloyal. 
+    disloyal. A loyal general gives the same
+    command to all lieutenants. A disloyal general may give
+    different commands to different lieutenants and may give no
+    commands to some. Then the lieutenants communicate among
+    themselves and reach a consensus after a specified number of
+    rounds. Loyal lieutenants obey the protocol that is specified in
+    the algorithm while disloyal lieutenants may not.
+    <p>
+    The figure below illustrates the difference between loyal and
+    disloyal generals.
+
+    <figure>
+    <img src="Slide01.jpg" alt="Fig1" style="width:100%">
+    <figcaption>Fig.1: Loyal and disloyal general behavior</figcaption>
+    </figure>
+
+ 
 
     <h4 class="w3-text-teal">Byzantine Generals Problem: Specification</h4>
     The general gives a command which is either
@@ -62,39 +77,10 @@ agents don't follow the protocol</i>.
   </ol>
 
   <p>
-  If the general is loyal then consensus follows because all
-  lieutenants obey the general. The challenge is to ensure consensus
-  when the general is disloyal.
-
-  <p>
   
     The specification does not require that traitors be
     discovered. For example, the algorithm doesn't have to determine
-    whether the general or a lieutenant is loyal or disloyal. 
-
-    <p>
-    The algorithm proceeds as follows. A loyal general gives the same
-    command to all lieutenants. A disloyal general may give
-    different commands to different lieutenants and may give no
-    commands to some. Then the lieutenants communicate among
-    themselves and reach a consensus after a specified number of
-    rounds.
-
-    <p>
-    The figure below illustrates the difference between loyal and
-    disloyal generals.
-
-    <figure>
-    <img src="Slide01.jpg" alt="Fig1" style="width:100%">
-    <figcaption>Fig.1: Loyal and disloyal general behavior</figcaption>
-    </figure>
-
-    <p>
-    A loyal lieutenant sends the same message to all
-    lieutenants in a round. A traitor may send different messages to
-    different lieutenants and may send no messages to some.
-    A lieutenant who receives a message knows which lieutenant sent
-    it.
+    whether the general or a lieutenant is loyal or disloyal.
 
     <p>
     If the only requirement is validity, and consensus isn't
@@ -269,11 +255,11 @@ attack on round \(j+1\) if they haven't done so.
 <h3 style="color:red;">Example</h3>
 
 The figure below illustrates a situation in which a loyal lieutenant C commits to
-attack on round 2, if it hasn't already committed to attack by then.
-The figure shows C
-getting attack messages (red boxes) signed by the general and lieutenants A and B on
-round 2. The general and lieutenants A and B may be disloyal or
-loyal.
+attack on round 3, if it hasn't already committed to attack on rounds
+1 and 2.
+The figure shows C getting attack messages (red boxes) signed by the
+general and lieutenants A and B on round 2. The general and
+lieutenants A and B may be disloyal or loyal.
 
     <figure>
     <img src="Slide02.jpg" alt="Fig2" style="width:100%">
@@ -284,58 +270,74 @@ loyal.
 
 <p>
  Because C is loyal it follows the algorithm, and C
-commits to attack at the end of round 2 because C receives a signed attack
+commits to attack at the end of round 3 because C receives a signed attack
  message from the general and signed attack messages from two
  different lieutenants.
-So, at the end of round 2, C broadcasts attack messages
-signed by the general and (copies of) attack
-messages signed by A and B and attack messages signed by C. All loyal
-lieutenants commit to attack by the end round 3 because they receive
+So, in round 3, C broadcasts copies of attack messages
+signed by the general and attack
+messages signed by A and B and attack messages, and also an attack
+ message signed by C itself. All loyal
+lieutenants commit to attack in round 4 because they receive attack
 messages signed by the general and 3 different lieutenants (A, B, C).
 
 <p>
 The algorithm works because messages cannot be forged. Loyal
 lieutenant C doesn't know whether the general and lieutenants A and B
-are loyal. But C has proof that they send attack messages to C because
+are loyal. But C has evidence that they send attack messages to C because
 C got signed messages from them, and these messages couldn't have come
-from anybody else. And C passes on that proof to other lieutenants
+from anybody else. And C passes on that evidence to other lieutenants
 by copying and forwarding the messages that it received.
 
 <p>
 A loyal
 lieutenant D receives messages from the general and A, B, and C on
-round 3. Again, lieutenant D doesn't know whether the senders of the
+round 4. Again, lieutenant D doesn't know whether the senders of the
 messages that it received are loyal; but, it doesn't matter because D
-has proof that they sent those messages. So, D commits to attack on
-round 3.
+has evidence that they sent those messages. So, D commits to attack on
+round 4. So, all loyal lieutenants will commit to attack by round 4.
 
 <h4  class="w3-text-teal">Theorem: if no loyal lieutenant commits to
-  attack by the start of round \(t\) then all loyal lieutenants never commit to
+  attack in round \(t+1\) then all loyal lieutenants never commit to
 attack.</h4>
 Consider the case where the general is disloyal because we have
 already dealt with the case of a loyal general.
 
 <p>
 Since the general is disloyal and the system has a maximum of \(t\)
-disloyal officers, there are at most \(t-1\) disloyal lieutenants. On
-round \(t\) these disloyal lieutenants can send attack messages from
-at most \(t-1\) lieutenants. But, a loyal lieutenant commits to
-attack for the first time on round \(t\), only if it receives at least
-\(t\) messages. So, no loyal lieutenant commits to attack on round
-\(t\).
+disloyal officers, there are at most \(t-1\) disloyal lieutenants.
+If no loyal lieutenant has committed to attack on rounds \(1, \ldots,
+t\) then the only attack messages that can be received on round
+\(t+1\) are sent by disloyal lieutenants, and there can be at most
+\(t-1\) of those.
+
+<p>
+A loyal lieutenant commits to attack for the first time on round
+\(t+1\), only if it receives attack messages from at least \(t\)
+lieutenants.
+So, if no loyal lieutenant has committed to attack on rounds \(1, \ldots,
+t\) then no loyal lieutenant commits to attack on round \(t+1\).
 
 
 <h3 style="color:red;">Example</h3>
 Consider a system with a general and four lieutenants, A, B, C,
-D. Assume that the general and lieutenant D are disloyal. If none of
-A, B, C have committed to attack at the start of round 2, then none of
-them will commit to attack during round 2. This is because D can send
+D. Assume that the general and lieutenant D are disloyal. If 
+A, B, C have not committed to attack in rounds 1 and 2, then they
+will not commit to attack on round 3. This is because D can send
 signed attack messages from the general and from D, but that's not
-enough evidence on round 2 to cause loyal lieutenants to commit to
-attack. 
+enough evidence on round 3 to cause loyal lieutenants to commit to
+attack because they need attack messages from at least 2 different
+agents.
+
+<p>
+Now consider the case where A, B are loyal and the general and C, D
+are disloyal. If A and B have not committed to attack in rounds 1, 2,
+3 then they won't commit to attack on round 4 because they need attack
+messages from 3 different lieutenants. They may get attack messages
+from C and D, but that's not enough evidence to make A and B commit
+for the first time on round 4.
 
 <h4  class="w3-text-teal">Termination</h4>
-The algorithm terminates at the end of round \(t\) because subsequent
+The algorithm terminates after round \(t\) because subsequent
 rounds don't change the outcome of all loyal
 lieutenants.
 
