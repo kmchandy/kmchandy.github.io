@@ -194,8 +194,8 @@ towards professor \(T_{j}^{0}\). The command associated with
 delivering this message is:
 <pre>
 if t > T[j]:
-   T[j] = t
-   send T[j] on both outgoing channels of j
+   T[j] = f(t)
+   send T[j] on all outgoing channels of j
 else:
    pass
 </pre>
@@ -249,7 +249,8 @@ channel \(c_{0, 2}\). This message is 2 because that's the message at
 the head of the sequence of messages in transit along the
 channel. Delivery of this message removes the message from the
 channel, and the execution of the command does not change the state of
-professor \(2\). The state of channel \(c_{0, 2}\) now consists of a
+professor \(2\) because
+\(\not (t > T[2]\). The state of channel \(c_{0, 2}\) now consists of a
 single message \(4\).
 
 
@@ -260,10 +261,10 @@ single message \(4\).
   </figure>
 
 <p class="w3-text-teal">A Third Step</p>
-At the end of the first step, all the channels other than \(c_{2, 0}\) are nonempty, and so a
+At the end of the second step, all the channels other than \(c_{2, 0}\) are nonempty, and so a
 message can be delivered from any of them. Suppose the next message
 delivered is the message \(4\) in channel \(c_{0, 2}\). The
-delivery of this message does not change the state of professor \(4\),
+delivery of this message does not change the state of professor \(2\),
 and channel \(c_{0, 2}\) becomes empty.
 
 
@@ -275,13 +276,16 @@ and channel \(c_{0, 2}\) becomes empty.
 
 
 <p class="w3-text-teal">Following Steps</p>
-At the end of the second step the only nonempty channels are those to and from professor
-\(1\). You can identify a third step in the trajectory. The trajectory
+At the end of the third step the only nonempty channels are those to and from professor
+\(1\). Write down a possible third step in the trajectory.
+
+<p>
+The trajectory
 proceeds in this manner until all guards evaluate to false, i.e., all
 channels are empty.
 
 <p>
-You can check that all trajectories end in a state in which all
+Verify that all trajectories end in a state in which all
 channels are empty and \(T_{j} = 12\) for all \(j\).
 
 <!--Start Footer--------------------------------------->
