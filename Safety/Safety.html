@@ -93,7 +93,7 @@ Safety Example
 </a>
 <a class="w3-bar-item w3-button w3-hover-black "
 href="./SafetySelfTest.html" > 
-Safety Self Text
+Safety Self Test
 </a>
 
 </nav>
@@ -122,7 +122,8 @@ Safety Self Text
 
     
 
-  
+  <!---------------------------------------------------------->
+    <h1 class="w3-text-teal">Safety & Graph Representation of State Transitions</h2>
 
     <p>
     This module introduces all the concepts that we use in this
@@ -452,7 +453,7 @@ a vertex in \(Y\).
 
 <figure>
   <img src="N.jpg" alt="Fig7" style="width:80%">>
-  <figcaption>Fig.7 - Illustration of Next</figcaption>
+  <figcaption>Fig.6 - Illustration of Next</figcaption>
 </figure>
 
 <p>
@@ -472,16 +473,27 @@ edge from \(A\) to \(C\) which is outside \(Y\).
 
 <p style="color:red;"><b>Example of Next</b></p>
 \(
-  N(\{0, 1, 2, 3\}) = \{0\}
+  N(\{0, 1, 2, 3, 7\}) = \{0\}
   \)
   <br>
   Explanation: Every edge from \(0\) terminates at vertices in \(\{0,
-  1, 2, 3\}\), and so \(0\) is in \(N(\{0, 1, 2, 3\})\).
+1, 2, 3, 7\}\), and so \(0\) is in \(N(\{0, 1, 2, 3\})\).
+Likewise, every edge from \(1\) terminates at vertices in \(\{0,
+1, 2, 3, 7\}\), and so \(1\) is in \(N(\{0, 1, 2, 3\})\).
   Every vertex \(v\)
-  other than \(0\) has an outgoing edge that terminates at a vertex outside \(\{0,
-  1, 2, 3\}\), 
+  other than \(0\) and \(1\) has an outgoing edge that terminates at a vertex outside \(\{0,
+  1, 2, 3, 7\}\), 
   and so these vertices are not 
-in \(N(\{0, 1, 2, 3\}\).
+in \(N(\{0, 1, 2, 3, 7\}\).
+
+<p style="color:red;"><b>Example of Next</b></p>
+\(
+  N(\{3, 5\}) = \{\}
+  \)
+<br>
+Explanation: Vertex \(0\) is not in \(N(\{3, 5\})\) because there is
+an edge from \(0\) to \(2\) which is not in \(\{3, 5\}\). Likewise, we
+see that every vertex has an edge to a vertex outside \(\{3, 5\}\).
 
 <h5 class="w3-text-teal">Diagram Illustrating Always</h3>
 
