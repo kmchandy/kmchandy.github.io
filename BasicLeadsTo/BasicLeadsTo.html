@@ -1,4 +1,4 @@
-<title>BasicLeadsTo/BasicLeadsTo.html</title>
+<title>BasicLeadsTo/BasicLeads.html</title>
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
 
@@ -115,6 +115,7 @@ Safety
 <div class="w3-twothird w3-container">
 
 <!-- End overlay ---------------------------------->
+<h1 class="w3-text-teal">Leads-To: Introduction</h2>
 <p>
     This module introduces the temporal logic concept of
     <i>leads-to</i> and its basic properties.
@@ -171,7 +172,12 @@ while true:
     
 <h3 style="color:red;">Example</h3>
 A system has agents \(x\), \(y\) and \(z\). There are channels from
-\(x\) and \(y\) to \(z\). Agent \(z\) has a variable \(v\) which is
+\(x\) and \(y\) to \(z\).
+Execution of actions on channels are fair: If a channel has a message
+then that message will be delivered eventually.
+
+<p>
+Agent \(z\) has a variable \(v\) which is
 initially 0. If \(z\) receives a message from \(x\) before receiving a
 message from \(y\) it sets \(v\) to 1.
 If \(z\) receives a message from \(y\) before receiving a
@@ -558,6 +564,36 @@ This formula says that \(R\) does not hold forever.
 The variant function theorem
 follows from the two parts.
 
+
+<!-------------------------------------------------------->
+<h2 class="w3-text-teal">Summary of Proof Rules for \(\leadsto\)</h2>
+<!-------------------------------------------------------->
+<ol>
+  <li>
+  To prove \(P \leadsto \neg P\), identify an action \(a\) which is
+  executed infinitely often and for which the following Hoare triple
+  holds: \(\{P\} \; a \; \{\neg P\}\).
+  </li>
+  <li>
+  Transitivity: If \(P \leadsto Q\) and \(Q \leadsto R\) then
+  <br>
+  \(P \leadsto R\)
+  </li>
+  <li>
+  Disjunction: If \(P \leadsto Q\) and \(P' \leadsto Q\) then
+  <br>
+  \((P \vee P') \leadsto Q\)
+  </li>
+  <li>
+  Basic Property: If \([\forall a: \; \{P\} \; a \; \{P \vee Q\}]\)
+  and
+  \(P \leadsto \neg P\) then
+  <br>
+  \(P \leadsto Q\)
+  </li>
+</ol>
+The use of the variant function uses all of these proof rules.
+  
 <!-------------------------------------------------------->
 <h2 class="w3-text-teal">Eventually and CTL</h2>
 <!-------------------------------------------------------->
