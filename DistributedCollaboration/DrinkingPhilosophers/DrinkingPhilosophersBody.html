@@ -94,6 +94,12 @@ which it waits does it start drinking. It continues to drinking all these
 beverages until it becomes tranquil again. Philosophers drink for only
 finite time.
 
+<p>
+A philosopher that enters the tranquil state remains in that state for
+at least a constant \(\gamma\) amount of time. So, a philosopher can't
+go from drinking to thirsty instantaneously or in an arbitrarily small
+amount of time.
+
 
     <figure>
     <img src="Slide2.jpg" alt="Fig2" style="width:100%">
@@ -312,15 +318,28 @@ What are the requirement's of agents' local
 clocks that ensure that all thirsty philosophers drink eventually?
 
 <p class="w3-text-teal">A Minimum Requirement on Clocks</p>
-<i>Clocks must tick forward.</i> If the clock remained stuck at the same
-value for ever then the agent reading that clock may get the highest
-priority for ever.
+<i>An agent's clock must tick forward</i> between successive requests
+by the agent. If the agent's clock remained stuck at the same
+value for ever then the agent using that clock may get the highest
+priority for ever, and go through tranquil, thirsty, drinking cycles
+infinitely which makes other agents remain tranquil for ever.
 
 <p>
 Assume that each clock reading is an integer: for example, the number of
 picoseconds since January 1, 1900. (NTP units are \(2^{-32}\) of a
-second.) Assume also that the clock ticks forward by at least one unit
-between successive requests by the same philosopher. Even if the
+second.) The clock ticks forward
+between successive requests by the same philosopher because the
+philosopher remains in tranquil state for at least \(\gamma\) units of
+time where \(\gamma\) is a positive constant. Treat each agent's clock
+tick as an event.
+
+<p>
+Local clocks of agents may drift apart, but let's assume that the
+magnitude of the difference between clock readings of different agents
+is bounded.
+
+<p>
+Even if the
 philosopher makes a new request when its clock ticks forward by one
 unit, eventually the timestamp of a request from that philosopher will
 exceed \(T\) for any value of \(T\). This ensures that while a
@@ -328,38 +347,91 @@ philosopher is thirsty, another philosopher cannot overtake it for
 ever.
 
 <h4 class="w3-text-teal">Proof of Correctness</h4>
-Let's prove that a thirsty philosopher \(v\) with a request with timestamp
-\(T\) drinks eventually. Let \(t[i]\) be the reading of philosopher
-\(i\)'s clock. Consider a variant function that measures how far
-clocks for philosophers with clock readings less than \(T\) are from \(T\):
-<p>
-\(
-f = \sum\nolimits_{i : t[i] < T} \quad (T - t[i])
-\)
-<p>
-Next, we show that \(v\) drinks or \(f\) decreases to
-\(0\). Just as in the proof of the dining philosophers problem we show
-that the following two properties hold.
-<ol>
-  <li>
-  <i>Safety</i>: The variant function does not increase while \(v\)
-  remains thirsty.
-  </li>
-  <li>
-  <i>Progress</i>: The following predicate does not hold forever: The
-  variant function remains unchanged and \(v\) remains thirsty.
-  </li>
-</ol>
-The proof of the safety part follows from the fact that \(T\) remains
-unchanged while the philosopher remains thirsty, and \(t[i]\) does not
-decrease for all \(i\). The proof of the progress part follows from
-\(t[i]\) increasing eventually, for all \(i\).
+The proof of safety --- multiple philosophers don't hold the same
+beverage at the same time --- is straightforward. It follows
+because a token is at exactly one agent or in exactly one channel.
 
 <p>
-The next part of the proof is to show that if clocks of all
-philosophers exceed \(T\) then \(v\) drinks. A variant function that
-we use here is the number of pending requests with timestamps less
-than or equal to \(T\).
+Let's prove that a thirsty philosopher \(v\) with a request with timestamp
+\(T\) drinks eventually. Let \(t[i]\) be the reading of philosopher
+\(i\)'s clock.
+
+<p class="w3-text-teal">Each agent's clock reading eventually exceeds \(T\)</p>
+
+We observe that each agent's clock ticks forward:
+<p>
+\(
+\forall i, \tau: (t[i] = \tau) \leadsto (t[i] \geq \tau + 1)
+\)
+<p>
+Therefore, each \(i\)'s clock eventually reads a
+value greater than \(T\), using transitivity of \(\leadsto\).
+<p>
+\(
+\forall i, \tau: (t[i] = \tau) \leadsto (t[i] > T)
+\)
+<p>
+From the previous formula, and taking disjunction over all values of
+\(\tau\): 
+<p>
+\(
+\forall i:  \quad true \leadsto (t[i] > T)
+\)
+<p>
+Because clock readings never go back in time, \(t[i] > T\) is stable,
+and therefore:
+<p>
+\(
+\forall i:  \quad true \leadsto always(t[i] > T)
+\)
+<p>
+Let \(Q\) be the predicate that all clocks read values that
+exceed \(T\):
+<p>
+\(Q = \forall i: t[i] > T\).
+<p>
+From the above formula and because \(X \leadsto always(Y)\) and \(X
+\leadsto always(Y')\) allows us to deduce \(X \leadsto always(Y \vee Y')\)
+<p>
+\(
+ true \leadsto always(Q)
+\)
+
+<p class="w3-text-teal">The number of pending requests with timestamps
+less than \(T\) decreases</p>
+
+<p>
+From the above formula:
+<p>
+\(
+v.thirsty \; \leadsto \; (v.drinking \wedge Q) \vee (v.thirsty \wedge Q)
+\)
+<p>
+Next we will prove that if \(v\) is thirsty and all clocks read values
+that exceed \(T\), then \(v\) will drink eventually:
+<p>
+\(
+ (v.thirsty \wedge Q) \leadsto v.drinking
+\)
+<p>
+Let \(req\) be the number of pending requests with timestamps less than
+\(T\). We will prove 
+<p>
+\(
+(v.thirsty \wedge Q \wedge (req = k) \; \leadsto \;
+v.drinking \vee (v.thirsty \wedge Q \wedge (req < k))
+\)
+<p>
+This proof is straightforward: The request with the lowest timestamp
+gets all the resources it needs.
+<p>
+\(
+(v.thirsty \wedge Q \wedge (req = 0) \; \leadsto \;
+v.drinking 
+\)
+<p>
+The result follows using the rules
+for variant functions.
 
 <h4 style="color:blue;">Review</h4>
 <ol>
