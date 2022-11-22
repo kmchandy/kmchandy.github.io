@@ -21,8 +21,8 @@ channels."
     algorithms.
 
     <p>
-    This module presents several theorems. The proofs follow in a
-    straightforward way from the definition of
+    This module presents theorems about what agents know. The proofs
+    of these theorems follow from the definition of
     <a href="../ChannelSnapshots/ChannelSnapshots.html">consistent
     cuts </a>.
 
@@ -30,11 +30,14 @@ channels."
     Let \(x\) be an agent, \(P\) a predicate on system states, and
     \(Q\) a predicate on states of \(x\).
     <p>
-    \(P\) is a <i>global predicate</i> because it is a predicate on
-    states of the entire system. \(Q\) is a <i>local
+    \(P\) can be a <i>global predicate</i>, i.e., a predicate on
+    states of all agents and channels. \(Q\) is a <i>local
     predicate</i> of \(x\) because it is a predicate only on the states of
-    agent \(x\) and is independent of the states of channels and the
-    states of other agents.
+    agent \(x\) and is independent of other agents and only channels.
+
+<p>
+Let \(init\) be the predicate that defines the initial condition of
+the system. 
 
     <p>
     We
@@ -42,9 +45,8 @@ channels."
     <hr class="new2">
     <h5 style="color:blue;">
     <p>
-    \(x\) knows \(P\) is the weakest predicate \(Q\) on the states of
+    \(x\) knows \(P\) is the weakest local predicate \(Q\) of
     \(x\) such that:
-    
     <p>
     \(
     [init \; \Rightarrow \; always([Q \;
@@ -54,67 +56,79 @@ channels."
     </h5>
     <hr class="new2">
     <p>
-    If the system is in a state where \(x\) knows \(P\) then we can
-    deduce that
-    the entire system satisfies a global predicate
-    \(P\) merely from the local state of agent \(x\).
+    \(x\) knows \(P\) holds in a local state \(s_{x}\) of agent \(x\)
+exactly when \(P\) holds in all states of all trajectories
+    (that start from an initial state) when the
+local state of agent \(x\) is \(s_{x}\).
+
+<h4 class="w3-text-teal">Explanation</h4>
+For any predicate \(R\):
+<p>
+\(
+[init  \; \Rightarrow \; always(R)]
+\)
+<p>
+means that \(R\) holds in every state of every trajectory that starts
+in an initial state. So, 
+<p>
+\(
+[init  \; \Rightarrow \; always([Q \Rightarrow P])]
+\)
+<p>
+means that in \([Q \Rightarrow P]\) holds in every state of every
+trajectory that starts in an initial state.
+So, if local predicate \(Q\) of agent \(x\) holds in any
+state of any trajectory that starts from an initial state then global predicate \(P\)
+also holds in that state.
+
+
+<p>
 
     <h3  style="color:red;">Example</h3>
     A system consisting of agents \(0, \ldots,  N\) has two indivisible
-    tokens which are not created or destroyed. Let \(P\) be the
-    predicate: "all channels and agents \(1, \ldots, N\) have
-no tokens." 
+    tokens which are not created or destroyed. 
 
 <p>
-"Agent \(0\) knows P" is a predicate on the states of agent
-\(0\). This predicate holds in those states of agent \(0\) which
-guarantee that \(P\) holds.
-
+"Agent \(0\) knows no other agent holds a token" is a predicate on the states of agent
+\(0\); this predicate holds for a local state \(s_{0}\) of agent \(0\)
+if and only if no other agent holds a token when agent \(0\) is in
+state \(s_{0}\).
 <p>
-"Agent \(0\) knows P" holds exactly when agent \(0\)
-holds both tokens. We can deduce properties of all channels and all
-agents solely from the state of agent \(0\).
-
-<p  style="color:red;">Example</p>
-Let \(P\) be the predicate: "all channels and agents \(1, \ldots, N\)
-collectively hold exactly one token." 
-"Agent \(0\) knows P" holds exactly when agent \(0\)
-holds one token.
+So, "agent \(0\) knows P" holds exactly when agent \(0\)
+holds both tokens. 
 
 <p  style="color:red;">Example</p>
 This example deals with a system consisting of two agents \(x\) and
 \(y\) and channels in both directions between the agents. The system
-has a single indivisible token that is not created or destroyed. Let
+has a single indivisible token that is not created or destroyed.
+Let
 \(P\) be the predicate: "\(y\) does <i>not</i> hold the token."
 Agent \(x\) knows \(P\) when \(x\) holds the token. 
 <p>
-\(\neg\) (\(x\) knows \(P\)) is a predicate too. In this
-example, this predicate
-holds when \(x\) does not hold the token.
+\(\neg\) (\(x\) knows \(P\)) is a predicate too, and sometimes
+programmers refer to this predicate as "\(x\) does not know \(P\)."
 
 <p  style="color:red;">Example</p>
-Let \(P\) be the predicate: "\(y\) holds the token."
-Agent \(x\) knows \(P\) is universally False because this predicate holds in no
-state. Why is that?
+In the previous example, let \(Q\) be the predicate: "\(y\) holds the token."
+In what local states of agent \(x\) does \(x\) know that "\(y\) holds the token?"
 <p>
-It's because the token could be in a channel; so, we can only deduce
-that the token is in a channel or at \(y\). We cannot deduce from the
-state of agent \(x\) that \(y\) holds the token.
-Agent \(x\) can never know that \(y\) holds the token.
+There are no local states of agent \(x\) in which \(x\) knows that
+"\(y\) holds the token." Even when \(x\) does not hold the token,
+\(x\) does not know that \(y\) holds the token because
+the token could be in a channel.
 <p>
-Note, however, that \(x\) knows that \(y\) does <i>not</i> hold the
-token when \(x\) holds the token. Agent \(x\)'s knowledge of the
-predicates "\(y\) holds the token" and "\(y\) does <i>not</i> hold the
-token" are not symmetric.
+When \(x\) does not hold the token, \(x\) does not know that \(y\) holds
+the token and \(x\) does not know that \(y\) does not hold the token.
+<p>
+"NOT(x knows Q)" AND "NOT(x knows NOT Q)"
+<br>
+is a predicate which holds in the
+state which \(x\) does not hold the token.
 
 <h5 class="w3-text-teal">Notation</h5>
     "\(x\) knows \(P\) at a point \(T\)" in a timeline means that at
     point \(T\) agent \(x\) is in a state where the predicate "\(x\)
 knows \(P\)" holds.
-
-<p>
-"\(x\) knows \(P\) when \(x\) is in state \(s\)" means that the
-predicate "\(x\) knows \(P\)" holds in \(s\).
 
 
 <h3 class="w3-text-teal">Theorem: Knowledge and Consistent Cuts</h3>
@@ -144,7 +158,15 @@ point T. The lower figures in the diagrams show consistent cuts which
 passes point T on A's timeline; the theorem says that P holds for the
 state at these cuts too. 
 
-<h3 class="w3-text-teal">Theorem: A Silent Agent retains Knowledge</h3>
+<h3 class="w3-text-teal">Theorem: A Silent Agent retains
+Knowledge</h3>
+<hr class="new2">
+<h5 style="color:blue;">
+An agent that sends no information between a point \(T\) and a later
+point \(T'\) retains all the knowledge it has at \(T\) at \(T'\).
+</h5>
+<hr class="new2">
+
 Let \(x\) be an agent in a system, and let \(P\) be a
 predicate on a subsystem that does not include \(x\).
 Let \(T\) and \(T'\) be points on \(x\)'s timeline with \(T < T'\). If
@@ -182,7 +204,14 @@ An agent can only lose knowledge by sending information to
 other agents. This seems counterintuitive; we'll look at the reasoning
 underlying this in a later theorem.
 
-<h3 class="w3-text-teal">Theorem: Agents who don't listen remain Ignorant</h3>
+<h3 class="w3-text-teal">Theorem: Agents who don't listen remain
+Ignorant</h3> 
+<hr class="new2">
+<h5 style="color:blue;">
+An agent that receives no information between a point \(T\) and a later
+point \(T'\) learns no new knowledge between \(T\) and \(T'\).
+</h5>
+<hr class="new2">
 Let \(x\) be an agent in a system, and let \(P\) be a
 predicate on a subsystem that does not include \(x\).
 Let \(T\) and \(T'\) be points on \(x\)'s timeline with \(T < T'\). If
@@ -364,7 +393,7 @@ straightforward and are all based on consistent cuts of timelines.
   Is the following true? Why?
   <p>
   (\(z\) knows \(P\)) or (\(z\) knows \(Q\)) \(\equiv\) \(z\) knows
-  \(\(P \vee Q\))
+  \(\( P \vee Q\))
   </li>
   <li>
   Suppose you and your friend communicate only using messages sent in
