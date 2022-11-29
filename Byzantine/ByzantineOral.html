@@ -807,23 +807,18 @@ unkown messages to the lieutenants.
 </figcaption>
 </figure>
 
-The message to the leftmost lieutenant is colored green. This message
-is either attack or retreat --- we don't know which. Because this
-lieutenant is loyal it broadcasts the message that it receives to its
-lieutenants in the lower step. So, the messages received by loyal
-lieutenants in this lower step are also colored green. We don't know
-what the disloyal lieutenant will have received.
-
 <p>
 Assume that the index of the leftmost lieutenant is 1.
-This lieutenant gets a green message (which is either attack
-or retreat), and because the lieutenant is loyal, from theorem 1:
+This lieutenant gets a message \(m[1]\). The message (either attack
+or retreat) is shown colored green.
+Because the lieutenant is loyal, from theorem 1 on validity:
 \(a[1,j] = m[1]\) for all loyal lieutenants \(j\). This is illustrated
 by the green vertices output by step \(k-1\).
 
 <p>
 The same argument applies to the other loyal lieutenants; their
-decisions are shown in blue and yellow which represent the messages
+decisions are shown as blue and yellow output vertices of step \(k-1\)
+where the colors represent the messages
 that they received from the general.
 
 <p>
@@ -834,9 +829,126 @@ consensus. The consensus value is shown as brown output vertices of
 step \(k-1\).
 
 <p>
-The input to \(a[j]\) for every loyal lieutenant \(j) is the same: one
+The input to \(a[j]\) for every loyal lieutenant \(j\) is the same: one
 green, one blue, one yellow, and one brown edge. So for all loyal
 lieutenants \(i, j\): \(a[i] = a[j]\).
+
+<h4  style="color:red;">Example: Disloyal general, 1 disloyal
+lieutenant</h4>
+The algorithm requires the number of loyal agents to be twice the
+number of disloyal ones, and so the number of loyal agents is at least
+5. Assume that lieutenant 1 is disloyal, and
+lieutenants with index greater than 1 are loyal. We will show that for
+loyal lieutenants 2, 3:
+/(
+a[2] = a[3]
+\)
+and the same argument can be used to show that all loyal agents come
+to a consensus decision.
+<p>
+\(
+a[2] = \textrm{maj}(m[2], a[1, 2], a[3, 2], a[4, 2], \ldots)
+\)
+<p>
+\(
+a[3] = \textrm{maj}(m[3], a[1, 3], a[2, 3], a[4, 3], \ldots)
+\)
+<p>
+We will see that \(a[2] = a[3]\) by observing that for \(i \notin \{2, 3\}\):
+<p>
+\(
+a[i, 2] = a[i, 3]
+\)
+<p>
+and
+\(m[2] = a[2, 3]\), and \(m[3] = a[3, 2]\)
+
+<p  style="color:red;">Proof step</p>
+We first show that for \(i \notin \{2, 3\}: a[i, 2] = a[i, 3] \).
+<p>
+\(
+a[i,2]  =  \textrm{maj}(m[i, 2], a[i, 1, 2], a[i, 3, 2], a[i, 4, 2],
+\ldots)
+\)
+<p>
+\(
+a[i,3]  =  \textrm{maj}(m[i, 3], a[i, 1, 3], a[i, 2, 3], a[i, 4, 3],
+\ldots)
+\)
+<p>
+We will see that \(m[i, 2] = a[i, 2, 3]\) and \(m[i, 3] = a[i, 3, 2]\)
+and for \(i \notin \{2, 3\}\), all \(j\): \(a[i, j, 2] = a[i, j, 3]\).
+<p>
+\(
+a[i, b, c] = \textrm{maj}(m[i, b, c], a[i, b, x, c], \forall d \notin
+\{b, c\}: a[i, b, d, c]) =
+\)
+
+<p>
+\(
+\textrm{maj}(m[i, b, c], a[i, b, x, c], \forall d \notin
+\{b, c\}: m[i, b, d, c]) =
+\)
+
+<p>
+\(
+m[i]
+\)
+
+<p>
+\(
+m[i, c, d, e] = m[i, c]
+\)
+
+<p>
+\(
+m[b, c, d, e] = m[b, c, d] = m[b, c] = m[b]
+\)
+
+<p>
+\(
+m[b, c, x, e] = m[x, e]
+\)
+
+<p>
+\(
+m[b, x, d, e] = m[x, d]
+\)
+
+<p>
+\(
+m[x, c, d, e] = m[x, c]
+\)
+
+<p>
+\(
+a[b, c, d] = \textrm{maj}(m[b, c, d], a[b, c, x, d], \forall e \notin
+\{b, c, d\}: a[b, c, e, d]) =
+\)
+
+<p>
+\(
+a[b, c, d] = \textrm{maj}(m[b], m[b, c, x, d], \forall e \notin
+\{b, c, d\}: m[b, c, e, d]) =
+\)
+
+<p>
+\(
+a[b, c, d] = \textrm{maj}(m[b], m[x, d], \forall d \notin
+\{b, c\}: m[b]) =
+\)
+
+<p>
+\(
+m[b])
+\)
+
+<p>
+\(
+a[b, x, d] = \textrm{maj}(m[b, x, d], \forall e \notin
+\{b, d\}: a[b, x, e, d]) = 
+\)
+
 
 
 
