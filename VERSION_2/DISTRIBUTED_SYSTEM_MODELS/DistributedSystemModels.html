@@ -1,0 +1,255 @@
+<title>FoundationsOfDistributedSystems/DistributedSystemsIntroduction.html</title>
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+
+<!--------------------------------------------------------->
+    <h2 class="w3-text-teal">Models of Distributed Systems</h2>
+<!----------------------------------------------------------------->
+This page introduces models of distributed systems that we use in
+these notes. A model is an abstraction that is helpful in designing
+algorithms.
+
+<p>
+A distributed system consists of a set of agents and a set of
+message-passing channels.  Each channel has a name and is directed
+from one agent to one agent.  A system is represented by a labeled
+directed graph in which vertices represent agents and labeled directed
+edges represent named channels.
+
+
+<h4 style="color:red;">Example</h4>
+The figure below shows a distributed system with agents A, B, C.
+
+    <figure>
+    <img src="Fig_1.jpg" alt="Fig1" style="width:50%">
+    <figcaption>Fig.1: Graph Representation of a Distributed Systems</figcaption>
+  </figure>
+  An edge labeled \(z\) directed from a vertex \(A\) to
+    a vertex \(B\)
+represents a channel named \(z\) directed from agent \(A\) to agent \(B\).
+
+A channel  \(z\) from an agent \(A\) to an agent \(B\) is called an
+<i>outgoing</i> channel of \(A\) and an <i>incoming</i> channel of
+  \(B\);
+  only \(A\) can send messages and only \(B\) can receive messages
+  along this channel.
+
+  <h4 class="w3-text-teal">Agents</h4>
+  Each agent has a set of variables that are <i>local</i> to the agent;
+other agents and channels cannot access these variables.
+The state of an agent is given by the values of its variables.
+<p>
+An agent may have a local clock; however, clocks are not
+  synchronized across agents. At a point in a trajectory, a clock in
+  one agent may be ahead, identical to, or behind the clock of another
+  agent. 
+  We will discuss clock synchronization later.
+
+<h4 class="w3-text-teal">Channels</h4>
+  We will look at systems with different types of channels.
+  Let's begin with a model of first-in-first-out (FIFO) channels. 
+
+<p class="w3-text-teal">State of a FIFO Channel</p>
+The state of a FIFO channel is a sequence of messages; these are
+the messages that have been sent along
+that channel and that have not been received.
+The only way in which the sequence of messages in a channel can be
+altered is that the agent sending messages along the channel can
+append messages to the tail of the sequence, 
+and a message can be removed from the head of the sequence and
+delivered to the agent receiving messages along the channel.
+
+<p>
+Unless stated otherwise, the initial state of a channel is the empty
+sequence. Then the \(n\)-th message received on a channel is the 
+\(n\)-th message sent on that channel, for all \(n\). Furthermore, the 
+\(n\)-th message is received on a channel only after the
+\(n\)-th message is sent on that channel.
+
+
+
+  <h4 class="w3-text-teal">State Transitions</h4>
+  The state of a system is given by the states of its agents and
+channels. The system changes state only when a message is
+delivered. 
+
+<p>
+When a message at the head of a nonempty channel is delivered the
+receiver's state may change, and the receiver may send messages on its
+outgoing channels. The states of all agents other than the receiver
+remain unchanged in the transition.  Likewise, the states of all
+channels other than channel on which the message was delivered and the
+receivers's outgoing channels remain unchanged in the transition.
+
+<p>
+The receiver's state after the transition and
+the messages that the receiver sends in the transition depend only on
+the message that is received in the transition, the channel along
+which the message is received, and the receiver's state before the
+transition.
+
+<h4 style="color:red;">Example</h4>
+Consider a system state \(S\) of the system shown in Fig 1 in which
+all channels other than \(x\) and \(y\) are empty.
+There are multiple transitions from \(S\) to other states because
+transitions can occur due to the delivery of the message at the head of
+channel \(x\), and transitions can also occur due to the delivery of the message at the head of
+channel \(y\).
+The <i>only</i> transitions from \(S\) are those that occur when the
+messages at the heads of channels \(x\) or \(y\) are delivered.
+
+<p>
+Next, consider state transitions when the message in \(x\) is delivered.
+Let \(S'\) be the system state
+after a transition from \(S\) due to the delivery of a message in
+channel \(x\).
+The states of agents \(A, C\) are the same in \(S\) and \(S'\), while
+the state of \(B\) may be different in \(S\) and \(S'\).
+
+<p>
+The states of channels \(u, v, t, z\) are the same in \(S\) and \(S'\).
+The state of channel \(x\) in \(S'\) is the same as its state in \(S\)
+except that the head element is deleted.
+The states of channel \(y\) and \(r\) in \(S'\) consists of messages
+appended to their corresponding states in \(S\).
+
+<h4 class="w3-text-teal">Different Types of Channels</h4>
+Most of the algorithms in these notes use FIFO channels; however, we
+also describe algorithms that use other types of channels. Models for
+a couple of them are described next.
+
+<p class="w3-text-teal">Out of order messages</p>
+Messages may be delivered out of order in some types of channels,
+though each message is delivered once. We represent the state of such
+a channel as a bag or multiset. A message is sent by adding the
+message to the bag and a message is delivered by removing the message
+from the bag.
+
+<p class="w3-text-teal">Lossy, multiple delivery channels</p>
+In some channels the same message may be delivered multiple times and
+messages may be delivered out of order.
+The same message may be delivered repeatedly, and a message sent later
+may be received before a message sent earlier.
+We represent the state of such a
+channel by a set which is initially empty.
+A message is sent by adding the message to the set,
+and a message is delivered by delivering a copy of any element in the
+set without modifying the set.
+
+
+
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
