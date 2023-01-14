@@ -164,13 +164,13 @@ transition.
 
 <h4 style="color:red;">Example</h4>
 Consider a system state \(S\) of the system shown in Fig 1 in which
-all channels other than \(x\) and \(y\) are empty.
-There are multiple transitions from \(S\) to other states because
-transitions can occur due to the delivery of the message at the head of
-channel \(x\), and transitions can also occur due to the delivery of the message at the head of
-channel \(y\).
-The <i>only</i> transitions from \(S\) are those that occur when the
-messages at the heads of channels \(x\) or \(y\) are delivered.
+all channels other than \(x\) and \(y\) are empty.  There are multiple
+transitions from \(S\) to other states because transitions can occur
+due to the delivery of the message at the head of channel \(x\), and
+transitions can also occur due to the delivery of the message at the
+head of channel \(y\).  The <i>only</i> transitions from \(S\) are
+those that occur when the messages at the heads of channels \(x\) or
+\(y\) are delivered.
 
 <p>
 Next, consider state transitions when the message in \(x\) is delivered.
@@ -181,11 +181,11 @@ The states of agents \(A, C\) are the same in \(S\) and \(S'\), while
 the state of \(B\) may be different in \(S\) and \(S'\).
 
 <p>
-The states of channels \(u, v, t, z\) are the same in \(S\) and \(S'\).
-The state of channel \(x\) in \(S'\) is the same as its state in \(S\)
-except that the head element is deleted.
-The states of channel \(y\) and \(r\) in \(S'\) consists of messages
-appended to their corresponding states in \(S\).
+The states of channels \(u, v, t, z\) are the same in \(S\) and
+\(S'\).  The state of channel \(x\) in \(S'\) is the same as its state
+in \(S\) except that the head element is deleted.  The states of
+channel \(y\) and \(r\) in \(S'\) consists of messages appended to
+their corresponding states in \(S\).
 
 <h4 class="w3-text-teal">Different Types of Channels</h4>
 Most of the algorithms in these notes use FIFO channels; however, we
@@ -200,15 +200,11 @@ message to the bag and a message is delivered by removing the message
 from the bag.
 
 <p class="w3-text-teal">Lossy, multiple delivery channels</p>
-In some channels the same message may be delivered multiple times and
-messages may be delivered out of order.
-The same message may be delivered repeatedly, and a message sent later
-may be received before a message sent earlier.
-We represent the state of such a
-channel by a set which is initially empty.
-A message is sent by adding the message to the set,
-and a message is delivered by delivering a copy of any element in the
-set without modifying the set.
+In some channels the same message may be delivered repeatedly, and a
+message sent later may be received before a message sent earlier.  We
+represent the state of such a channel by a set.  A message is sent by
+adding it to the set, and a message is delivered by delivering a copy
+of any element in the set without modifying the set.
 
 
 
