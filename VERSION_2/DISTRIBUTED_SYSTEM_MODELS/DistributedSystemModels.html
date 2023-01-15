@@ -144,57 +144,31 @@ sequence. Then the \(n\)-th message received on a channel is the
 
 <h4 class="w3-text-teal">State Transitions</h4>
 The state of a system is given by the states of its agents and
-channels.
-A system can change state in two ways: (1) A message is delivered from
-a channel to an agent, or (2) an agent changes state without receiving
-messages. 
+channels.  A system can change state in two ways: (1) A message is
+delivered from a channel to an agent and the receiver changes state,
+or (2) an agent changes state without receiving messages.
 
 <p class="w3-text-teal">State Transition due to Message Delivery</p>
-When a message at the head of a nonempty channel is delivered the
+When a message is delivered the
 receiver's state may change, and the receiver may send messages on its
 outgoing channels. The states of all agents, other than the receiver,
 remain unchanged in the transition.  Likewise, the states of all
-channels other than channel on which the message is delivered and the
+channels other than the channel on which the message is delivered and the
 receivers's outgoing channels remain unchanged in the transition.
-
-<p>
-The receiver's state after the transition and
-the messages that the receiver sends in the transition depend only on
-(1) the message that is received in the transition, (2) the channel along
-which the message is received, and (3) the receiver's state before the
-transition.
-
 <p>
 The state transition is specified by the identity \(A\) of the agent that
-changes state, the states \(s\) and \(s'\) of the agent before and after the event, the
-channel \(c\) on which the message is delivered, the 
-message \(m\) delivered, and the messages (if any) sent on each
-outgoing channel of the agent. 
+changes state, the states \(s\) and \(s'\) of \(A\) before and after the event, the
+channel \(c\) on which the message is delivered to \(A\), the 
+message \(m\) delivered, and the message (if any) sent on each
+outgoing channel of \(A\). 
 
 <p class="w3-text-teal">State Transition without Message Delivery</p>
 This state transition changes the state of <i>one</i> agent and may send
-messages on that agent's outgoing channels.
-The next state of the agent and the
-messages sent depend only on the agent's state before the transition.
-
-<p>
+messages on that agent's outgoing channels without messages being delivered.
 The state transition is specified by the identity \(A\) of the agent that
-changes state, the states \(s\) and \(s'\) of the agent before and
-after the event, and the messages (if any) sent on each
-outgoing channel of the agent.
-
-<h4 class="w3-text-teal">Locality</h4>
-A state transition changes the state of one agent and messages may be sent on that agent's
-outgoing channels and one of the agent's incoming channels.
-The transition leaves the states of all other agents and channels
-unchanged.
-State transitions are local to <i>one</i> agent and its incident channels.
-We call a transition that changes the state of an agent
-\(A\) <i>an event at \(A\)</i>.
-
-
-
-
+changes state, the states \(s\) and \(s'\) of \(A\) before and
+after the event, and the message (if any) sent on each
+outgoing channel of \(A\).
 
 <h4 style="color:red;">Example</h4>
 Consider a system state \(S\) of the system shown in Fig 1 in which
@@ -221,10 +195,20 @@ their corresponding states in \(S\).
 
 <h4 class="w3-text-teal">System: States and Transitions</h4>
 A system is a set of initial states and a set of state transitions.
-Each state transition is an event. An
+ An
 <i>execution</i> is a sequence of states, starting in an
 initial state, where there exists a transition from each state in the
 sequence to the next state in the sequence.
+
+
+<p class="w3-text-teal">Locality and Events</p>
+A state transition is local to one agent and its incident channels in
+the sense that it leaves the states of all other agents and channels
+unchanged.
+We call a transition that changes the state of an agent
+\(A\) <i>an event at \(A\)</i>.
+An execution is a sequence of events.
+
 
  
 <p>
