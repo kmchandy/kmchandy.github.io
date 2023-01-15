@@ -142,35 +142,67 @@ sequence. Then the \(n\)-th message received on a channel is the
 
 
 
-  <h4 class="w3-text-teal">State Transitions</h4>
-  The state of a system is given by the states of its agents and
-channels. The system changes state only when a message is
-delivered. 
+<h4 class="w3-text-teal">State Transitions</h4>
+The state of a system is given by the states of its agents and
+channels.
+A system can change state in two ways: (1) A message is delivered from
+a channel to an agent, or (2) an agent changes state without receiving
+messages. 
 
-<p>
+<p class="w3-text-teal">State Transition due to Message Delivery</p>
 When a message at the head of a nonempty channel is delivered the
 receiver's state may change, and the receiver may send messages on its
-outgoing channels. The states of all agents other than the receiver
+outgoing channels. The states of all agents, other than the receiver,
 remain unchanged in the transition.  Likewise, the states of all
-channels other than channel on which the message was delivered and the
+channels other than channel on which the message is delivered and the
 receivers's outgoing channels remain unchanged in the transition.
 
 <p>
 The receiver's state after the transition and
 the messages that the receiver sends in the transition depend only on
-the message that is received in the transition, the channel along
-which the message is received, and the receiver's state before the
+(1) the message that is received in the transition, (2) the channel along
+which the message is received, and (3) the receiver's state before the
 transition.
+
+<p>
+The state transition is specified by the identity \(A\) of the agent that
+changes state, the states \(s\) and \(s'\) of the agent before and after the event, the
+channel \(c\) on which the message is delivered, the 
+message \(m\) delivered, and the messages (if any) sent on each
+outgoing channel of the agent. 
+
+<p class="w3-text-teal">State Transition without Message Delivery</p>
+This state transition changes the state of <i>one</i> agent and may send
+messages on that agent's outgoing channels.
+The next state of the agent and the
+messages sent depend only on the agent's state before the transition.
+
+<p>
+The state transition is specified by the identity \(A\) of the agent that
+changes state, the states \(s\) and \(s'\) of the agent before and
+after the event, and the messages (if any) sent on each
+outgoing channel of the agent.
+
+<h4 class="w3-text-teal">Locality</h4>
+A state transition changes the state of one agent and messages may be sent on that agent's
+outgoing channels and one of the agent's incoming channels.
+The transition leaves the states of all other agents and channels
+unchanged.
+State transitions are local to <i>one</i> agent and its incident channels.
+We call a transition that changes the state of an agent
+\(A\) <i>an event at \(A\)</i>.
+
+
+
+
 
 <h4 style="color:red;">Example</h4>
 Consider a system state \(S\) of the system shown in Fig 1 in which
 all channels other than \(x\) and \(y\) are empty.  There are multiple
 transitions from \(S\) to other states because transitions can occur
-due to the delivery of the message at the head of channel \(x\), and
-transitions can also occur due to the delivery of the message at the
-head of channel \(y\).  The <i>only</i> transitions from \(S\) are
-those that occur when the messages at the heads of channels \(x\) or
-\(y\) are delivered.
+due to the delivery of the message at the head of channel \(x\), or
+channel \(y\), or because an agent changes state without receiving
+messages.
 
 <p>
 Next, consider state transitions when the message in \(x\) is delivered.
@@ -186,6 +218,18 @@ The states of channels \(u, v, t, z\) are the same in \(S\) and
 in \(S\) except that the head element is deleted.  The states of
 channel \(y\) and \(r\) in \(S'\) consists of messages appended to
 their corresponding states in \(S\).
+
+<h4 class="w3-text-teal">System: States and Transitions</h4>
+A system is a set of initial states and a set of state transitions.
+Each state transition is an event. An
+<i>execution</i> is a sequence of states, starting in an
+initial state, where there exists a transition from each state in the
+sequence to the next state in the sequence.
+
+ 
+<p>
+We also use the terms <i>trajectory</i> and <i>computation</i> for an
+execution. 
 
 <h4 class="w3-text-teal">Different Types of Channels</h4>
 Most of the algorithms in these notes use FIFO channels; however, we
