@@ -1,4 +1,4 @@
-<title>FoundationsOfDistributedSystems/DistributedSystemsIntroduction.html</title>
+<title>DistributedSystemModels/DistributedSystemModels.html</title>
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
 
@@ -95,7 +95,7 @@ edges represent named channels.
 The figure below shows a distributed system with agents A, B, C.
 
     <figure>
-    <img src="Fig_1.jpg" alt="Fig1" style="width:50%">
+    <img src="DistributedSystemModels.001.jpeg" alt="Fig1" style="width:50%">
     <figcaption>Fig.1: Graph Representation of a Distributed Systems</figcaption>
   </figure>
   An edge labeled \(z\) directed from a vertex \(A\) to
@@ -199,7 +199,9 @@ A system is a set of initial states and a set of state transitions.
 <i>execution</i> is a sequence of states, starting in an
 initial state, where there exists a transition from each state in the
 sequence to the next state in the sequence.
-
+<p>
+We also use the terms <i>trajectory</i> and <i>computation</i> for an
+execution.
 
 <p class="w3-text-teal">Locality and Events</p>
 A state transition is local to one agent and its incident channels in
@@ -207,13 +209,7 @@ the sense that it leaves the states of all other agents and channels
 unchanged.
 We call a transition that changes the state of an agent
 \(A\) <i>an event at \(A\)</i>.
-An execution is a sequence of events.
 
-
- 
-<p>
-We also use the terms <i>trajectory</i> and <i>computation</i> for an
-execution. 
 
 <h4 class="w3-text-teal">Different Types of Channels</h4>
 Most of the algorithms in these notes use FIFO channels; however, we
