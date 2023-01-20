@@ -20,13 +20,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome
 
 <style>
 html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
-.w3-sidebar {
-  z-index: 3;
-  width: 250px;
-  top: 43px;
-  bottom: 0;
-  height: inherit;
-}
+
 /* Thick blue border */
 hr.new2 {
   border: 2px solid blue;
@@ -65,63 +59,11 @@ hr.new1 {
     
   </div>
   </div>
-
-<nav
-class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5
-w3-animate-left" 
-id="mySidebar">
-
-<a href="javascript:void(0)"
-onclick="w3_close()"
-class="w3-right w3-xlarge w3-padding-large w3-hover-black
-w3-hide-large"
-title="Close Menu">
-<i class="fa fa-remove"></i>
-</a>
-
 <!--END Heading  ---------------------------->
  
-<!-- Start Sidebar----------> 
- 
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../BasicLeadsTo/BasicLeadsTo.html" > 
-Leads-To: Introduction
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../Safety/Safety.html" > 
-Safety
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../Progress/Progress.html" > 
-Progress
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../BasicLeadsTo/BasicLeadsToExamples.html" > 
-Leads-To: Examples
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../DistributedCollaboration/DiningPhilosophers/DiningPhilosophers.html" > 
-Dining Philosophers
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../DistributedCollaboration/DrinkingPhilosophers/DrinkingPhilosophers.html" > 
-Drinking Philosophers
-</a>
 
-</nav>
-<!-- End Sidebar---------->
  
 <!-- Start overlay ---------------------------------->
-
-<!-- Overlay effect when opening sidebar on small screens -->
-<div class="w3-overlay w3-hide-large"
-  onclick="w3_close()"
-  style="cursor:pointer"
-  title="close side menu"
-  id="myOverlay"></div>
-
-<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
-<div class="w3-main" style="margin-left:250px">
   
 <script id="MathJax-script" async
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
@@ -132,10 +74,30 @@ Drinking Philosophers
 
 <!-- End overlay ---------------------------------->
 
-    
-
+<!-- BODY OF TEXT ---------------------------------->
   <!---------------------------------------------------------->
-    <h1 class="w3-text-teal">Safety & Graph Representation of State Transitions</h2>
+  <h1 class="w3-text-teal">Model of Computation</h2>
+
+  A system is a set \(S\) of states, a set \(init\) of initial states,
+  a set \(actions\) of
+  actions and a state-transition relation \(\rightarrow\) which is a
+  subset of \(S \times actions \times S\). The notation \(s
+  \stackrel{a}{\rightarrow} s'\) means that the execution of action
+  \(a\) can cause a transtion from state \(s\) to state \(s'\).
+
+  <p>
+  Every action can be executed in every state: For all actions \(a\)
+  and all states \(s\) there is at least one state \(s'\) such that
+  \(s \stackrel{a}{\rightarrow} s'\). A transition can be a state back
+  to itself. When a transition \(s \stackrel{a}{\rightarrow} s'\)
+  exists in a system we shall say that execution of action \(a\) in
+  state \(s\) can take the system to state \(s'\).
+
+  <p>
+  There can be more than one transition from a state \(s\) when an
+  action \(a\) is executed. For example a system may have transitions
+  \(s \stackrel{a}{\rightarrow} s'\) and \(s \stackrel{a}{\rightarrow}
+  s''\) where \(s'\) and \(s''\) are different.
 
     <p>
     This module introduces all the concepts that we use in this

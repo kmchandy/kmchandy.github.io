@@ -166,7 +166,7 @@ at \(T\).
 </figure>
 Figure 2 shows a system
 timeline with agents \(A, B, D\). Agent \(A\) sends messages
-\(m_{0}\) along a channel \(x\) and sends \(m_{1}\) along a different
+\(m_{0}\) along a channel \(x\) and sends \(m_{1}\) along\(e\) is before \(e'\) in \(X\) a different
 channel \(c\) at event A1.  When agent \(D\) receives \(m_{0}\) at
 event D1 it sends message \(r_{0}\) to \(A\) along a channel \(y\).
 When agent \(A\) receives \(r_{0}\) at event A2 it sends message
@@ -220,71 +220,52 @@ However, figures 3 and 4 have the same starting and ending states.
 The following theorem captures the idea illustrated by figures 3 and
 4.
 
-
-<h4 class="w3-text-teal">Theorem about Permutation of Event Sequences</h4>
-
+<h4 class="w3-text-teal">Event Dependence</h4>
+The output labels of an event \(e\) depend only its input labels, and
+so the outputs of \(e\) depend only on vertices from which there are
+paths to \(e\). We shall say that \(e\) depends on \(e'\) in \(X\) if
+and only if there is a path from \(e'\) to \(e\) in the timeline graph
+of \(X\).
 <hr class="new2">
-    <h5 style="color:blue;">
-Let \(X\) be a trajectory of a system that starts in a state \(S\) and
-    ends in a state \(S'\). Any permutation \(Y\)
-of the sequence of events in \(X\), where agents have the same
-timelines in \(X\) and \(Y\),
-is also a trajectory of the system that starts in \(S\) and ends in \(S'\)
-if and only if:
+<p style="color:blue;">
+Theorem about Event Dependence</p>
+<p style="color:blue;">
+Any permutation \(Y\) of the sequence of events
+\(X\) is also a trajectory of the system if in \(Y\)
 <br>
-<i>every message in \(Y\) is received only after it is sent.</i>
-</h5>
+<i>each event \(e\) appears
+only after all events on which \(e\) depends in \(X\)</i>.
+</p>
 <hr class="new2">
-
-The conditions imply that the graphs of \(X\) and \(Y\) are identical.
-Moreover all edges in the permutation \(Y\) are directed forwards in
-time, i.e. from left to right.
-The theorem is illustrated in figures 3 and 4 with \(X, Y\) as the
-timelines.
-
-
-<h4 class="w3-text-teal">Proof</h4>
-
-The theorem holds trivially if \(X\) and \(Y\) are identical. If \(X\)
-and \(Y\) are different then there exists a pair of consecutive events
-\(e\) and \(e'\) in \(X\) where  \(e'\) appears after \(e\) in \(X\)
-but \(e'\) appears before \(e\) in \(Y\).
+The labels of edges in \(X\) and \(Y\) are identical. So if \(X\)
+starts in a state \(S\) and ends in a state \(S'\) then so does \(Y\).
 
 <p>
-Events \(e\) and \(e'\) are at different agents because agent
-timelines are identical in \(X\) and \(Y\).
-There is no edge from \(e'\) to \(e\)
-because \(e'\) occurs after \(e\) in \(X\), and a message sent in
-event \(e'\) is not received at an earlier event \(e\). Likewise, there is no edge
-from \(e\) to \(e'\) because \(e\) occurs after \(e'\) in \(Y\).
-Therefore, the inputs to \(e\) and the inputs to \(e'\)  remain unchanged whether \(e'\) appears
-before or after \(e\).
-So, the outputs to \(e\) and the outputs to \(e'\)  remain unchanged whether \(e'\) appears
-before or after \(e\).
-
-
-
-<p>
-Let \(Z\) be the
-permutation obtained from \(X\) by flipping the order of \(e\) and
-\(e'\). Then \(Z\) is also a trajectory of the system that starts in
-\(S\) and ends in \(S'\).
-
-<h4 style="color:red;">Example</h4>
-The diagram to the left
-in the figure below shows the events before their order is switched, while
-the diagram to the right shows the events after their order is switched.
-<figure>
-    <img src="Timelines.005.jpeg" alt="Fig5" style="width:100%">
-    <figcaption>Fig.5: Switching order of consecutive independent events</figcaption>
-</figure>
-
-We can obtain \(Y\) from \(X\) by repeatedly flipping the order of
-independent adjacent events.
-
-<p>
+An informal rendering of the theorem is that an event in
+a trajectory cannot depend on later events in the trajectory.
 This theorem is instance of the <i>diamond property</i> from functional
 programming.
+
+<hr class="new2">
+<p style="color:blue;">
+Theorem about Messages Received in Order
+</p>
+<p style="color:blue;">
+Let \(X\) be a trajectory of a system that starts in a state \(S\) and
+    ends in a state \(S'\). Any permutation \(Y\)
+of the sequence of events in \(X\), 
+is also a trajectory of the system that starts in \(S\) and ends in \(S'\)
+if:
+<br>
+<i>
+agents have the same timelines in \(X\) and \(Y\), and
+every message in \(Y\) is received only after it is sent.
+</i>
+</p>
+<hr class="new2">
+
+<h4 class="w3-text-teal">Proof</h4>
+Follows from the theorem on event dependence.
 
 <h3 class="w3-text-teal">Cuts of System Timelines</h3>
 A cut of a a system timeline is a partition of the events in
@@ -353,7 +334,7 @@ conditions of the theorem are satisfied.
     <h5 style="color:blue;">
 For any consistent cut, \([past, future]\), of a system timeline \(X\)
 there exists a system timeline \(Y\) in which the sequence of events is a
-permuation of of the sequence of events in \(X\), and
+permutation of of the sequence of events in \(X\), and
 where <i>all \(past\) events occur <str>before</str> all
 \(future\) events</i>.
 </h5>

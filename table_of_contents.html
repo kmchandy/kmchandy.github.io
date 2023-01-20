@@ -20,13 +20,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome
 
 <style>
 html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
-.w3-sidebar {
-  z-index: 3;
-  width: 250px;
-  top: 43px;
-  bottom: 0;
-  height: inherit;
-}
+
 /* Thick blue border */
 hr.new2 {
   border: 2px solid blue;
@@ -65,105 +59,11 @@ hr.new1 {
     
   </div>
   </div>
-
-<nav
-class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5
-w3-animate-left" 
-id="mySidebar">
-
-<a href="javascript:void(0)"
-onclick="w3_close()"
-class="w3-right w3-xlarge w3-padding-large w3-hover-black
-w3-hide-large"
-title="Close Menu">
-<i class="fa fa-remove"></i>
-</a>
-
 <!--END Heading  ---------------------------->
  
-<!-- Start Sidebar----------> 
 
-<a class="w3-bar-item w3-button w3-hover-black "
-  href="DistributedSystemsEverywhere/DistributedSystemsEverywhere.html">
-  Distributed Systems Everywhere
-  </a>
-  
-<a class="w3-bar-item w3-button w3-hover-black "
-href="ReviewOfBasics/Introduction/Introduction.html" > 
-Review Sequential Programs
-  </a>
-  
-<a class="w3-bar-item w3-button w3-hover-black "
-href="FoundationsOfDistributedSystems/DistributedSystemsIntroduction.html" > 
-Foundations of Distributed Systems
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="ChannelSnapshots/SnapshotsChapterIntroduction.html" > 
-Global Snapshots and Logical Clocks
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="GlobalSnapshotApplications/StablePredicates.html" > 
-Detection Algorithms
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="SelfStabilization/SelfStabilization.html" > 
-Self Stabilization
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="Knowledge/Knowledge.html" > 
-What Agents Know
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="Paxos/ConsensusImpossible.html" > 
-Consensus
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="Byzantine/ByzantineWritten.html" > 
-Byzantine Faults
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="Crypto/CryptoCurrencyIntroduction.html" > 
-Cryptocurrency
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="DistributedCollaboration/DiningPhilosophers/DiningPhilosophers.html" > 
-Distributed Collaboration
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="ClockSynchronization/Introduction/Introduction.html" > 
-Clock Synchronization: Future
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="CloudComputing/Introduction/Introduction.html" > 
-Cloud Computing Algorithms: Future
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="Streams/Introduction/Introduction.html" > 
-Stream Algorithms: Future
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="DistributedData/Introduction/Introduction.html" > 
-Distributed Data: Future
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="ContinuousSystems/Introduction/Introduction.html" > 
-Continuous Systems: Future
-</a>
-
-</nav>
-<!-- End Sidebar---------->
  
 <!-- Start overlay ---------------------------------->
-
-<!-- Overlay effect when opening sidebar on small screens -->
-<div class="w3-overlay w3-hide-large"
-  onclick="w3_close()"
-  style="cursor:pointer"
-  title="close side menu"
-  id="myOverlay"></div>
-
-<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
-<div class="w3-main" style="margin-left:250px">
   
 <script id="MathJax-script" async
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
@@ -173,13 +73,16 @@ Continuous Systems: Future
 <div class="w3-twothird w3-container">
 
 <!-- End overlay ---------------------------------->
+
+<!-- BODY OF TEXT ---------------------------------->
+
 <h3 class="w3-text-teal">Contents</h3>
 
 <h4 class="w3-text-teal">Introduction</h4>
   <ol>
     <li>
     <a href="index.html">
-    Introduction to this Website
+    This Website
     </a>
     </li>
     <li>
@@ -188,6 +91,198 @@ Continuous Systems: Future
     </a>
     </li>
  </ol>
+
+
+    <h4 class="w3-text-teal">Distributed Systems: Models and Timelines</h4>
+    <ol>
+      <li>
+      <a
+      href=
+      "DISTRIBUTED_SYSTEM_MODELS/DistributedSystemModels.html">
+      Distributed System Models
+      </a>
+      </li>
+      <li>
+      <a href="DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+      Timelines
+      </a>
+      </li>
+      <li>
+      <a href="ChannelSnapshots/ChannelSnapshots.html">
+      Global snapshots
+      </a>
+      </li>
+      <li>
+      <a href="ChannelSnapshots/LogicalClocks.html">
+      Logical clocks
+      </a>
+      </li>
+      <li>
+      <a href="ChannelSnapshots/VectorClocks.html">
+      Vector clocks
+      </a>
+      </li>
+    </ol>
+
+    <h4 class="w3-text-teal">Detection Algorithms</h4>
+    <ol>
+      <li>
+      <a
+      href="GlobalSnapshotApplications/StablePredicates.html"> 
+      Detecting algorithms: Introduction
+      </a>
+      </li>
+      <li>
+      <a
+      href="GlobalSnapshotApplications/TerminationDetection.html"> 
+      Detecting termination
+      </a>
+      </li>
+      <li>
+      <a
+      href="GlobalSnapshotApplications/DatabaseDeadlockDetection.html"> 
+      Database deadlock detection
+      </a>
+      </li>
+    </ol>
+
+    <h4 class="w3-text-teal">Consensus Algorithms</h4>
+    <ol>
+      <li>
+      <a
+      href="Paxos/ConsensusImpossible.html">
+      Impossibility of asynchronous consensus with faulty agents
+      </a>
+      </li>
+      <li>
+      <a
+      href="Paxos/Paxos.html">
+      The Paxos algorithm
+      </a>
+      </li>
+      <li>
+      The Raft algorithm
+      </li>
+    </ol>
+    
+
+    <h4 class="w3-text-teal">Self stabilization</h4>
+    <ol>
+      <li>
+      <a
+      href="SelfStabilization/SelfStabilization.html">
+      Self stabilization of a token ring
+      </a>
+      </li>
+    </ol>
+
+    <h4 class="w3-text-teal">Agent knowledge</h4>
+    <ol>
+      <li>
+      <a href="Knowledge/Knowledge.html">
+      How processes learn
+      </a>
+      </li>
+    </ol>
+
+    <h4 class="w3-text-teal">Byzantine faults</h4>
+    Algorithms dealing with Byzantine faults
+    <ol>
+      <li>
+      <a
+      href="Byzantine/ByzantineWritten.html">
+      Byzantine algorithms with written messages
+      </a>
+      </li>
+      <li>
+      <a
+      href="Byzantine/ByzantineOral.html">
+      Byzantine algorithms with oral messages
+      </a>
+      </li>
+    </ol>
+
+
+    <h4 class="w3-text-teal">Cryptocurrency</h4>
+    <ol>
+      <li> 
+      <a
+      href="Crypto/CryptoCurrencyIntroduction.html">
+      Introduction to cryptographic hash functions.
+      </a>
+      </li>
+      <li>
+      <a href="Crypto/BitCoin.html">
+      BitCoin algorithm
+      </a>
+      </li>
+      <li>
+      Etherium algorithm
+      </li>
+    </ol>
+
+
+
+    <h4 class="w3-text-teal">Clock synchronization</h4>
+    <ol>
+      <li>
+      Network and Precision Time Protocols
+      </li>
+      <li>
+      Clock synchronization in distributed systems
+      </li>
+    </ol>
+
+    
+
+    <h4 class="w3-text-teal">Cloud-computing algorithms</h4>
+    <ol>
+      <li>
+      Map-reduce
+      </li>
+      <li>
+      Millwheel
+      </li>
+    </ol>
+
+    <h4 class="w3-text-teal">Stream algorithms</h4>
+    <ol>
+      <li>
+      Finding repeated elements in streams: Misra & Gries
+      </li>
+      <li>
+      Finding repeated elements in streams: Approximate algorithms
+      </li>
+    </ol>
+
+    <h4 class="w3-text-teal">Distributed data structures</h4>
+    <ol>
+      <li>
+      Distributed tables: hashing
+      </li>
+      <li>
+      Distributed data: BigTable
+      </li>
+    </ol>
+
+    <h4 class="w3-text-teal">Diffusing and gossip computations</h4>
+    <ol>
+      <li>
+      <a
+      href=
+      "DiffusingComputations/DiffusingComputations.html"> 
+      The Dijkstra-Scholten diffusing computation algorithm
+      </a>
+      </li>
+    </ol>
+
+    <h4 class="w3-text-teal">Continuous distributed systems</h4>
+    <ol>
+      <li>
+      Asynchronous averaging
+      </li>
+    </ol>
+    
 
     <h4 class="w3-text-teal">Review: Sequential Programming Basics</h4>
     Review of basic concepts from sequential algorithms.
@@ -257,153 +352,6 @@ Continuous Systems: Future
     </ol>
     </ol>
 
-    <h4 class="w3-text-teal">Foundations of Distributed Systems</h4>
-    <ol>
-      <li>
-      <a
-      href=
-      "FoundationsOfDistributedSystems/DistributedSystemsIntroduction.html">
-      Distributed Systems: Introduction
-      </a>
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Global Snapshots and Logical Clocks</h4>
-    <ol>
-      <li>
-      <a href="ChannelSnapshots/SnapshotsChapterIntroduction.html">
-      Introduction: Timelines, anapshots, logical clocks
-      </a>
-      </li>
-      <li>
-      <a href="ChannelSnapshots/Timelines.html">
-      Timelines
-      </a>
-      </li>
-      <li>
-      <a href="ChannelSnapshots/ChannelSnapshots.html">
-      Global snapshots
-      </a>
-      </li>
-      <li>
-      <a href="ChannelSnapshots/LogicalClocks.html">
-      Logical clocks
-      </a>
-      </li>
-      <li>
-      <a href="ChannelSnapshots/VectorClocks.html">
-      Vector clocks
-      </a>
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Detection Algorithms</h4>
-    <ol>
-      <li>
-      <a
-      href="GlobalSnapshotApplications/StablePredicates.html"> 
-      Detecting algorithms: Introduction
-      </a>
-      </li>
-      <li>
-      <a
-      href="GlobalSnapshotApplications/TerminationDetection.html"> 
-      Detecting termination
-      </a>
-      </li>
-      <li>
-      <a
-      href="GlobalSnapshotApplications/DatabaseDeadlockDetection.html"> 
-      Database deadlock detection
-      </a>
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Consensus Algorithms</h4>
-    <ol>
-      <li>
-      <a
-      href="Paxos/ConsensusImpossible.html">
-      Impossibility of asynchronous consensus with faulty agents
-      </a>
-      </li>
-      <li>
-      <a
-      href="Paxos/Paxos.html">
-      The Paxos algorithm
-      </a>
-      </li>
-      <li>
-      The Raft algorithm
-      </li>
-    </ol>
-    
-    <h4 class="w3-text-teal">Diffusing and gossip computations</h4>
-    <ol>
-      <li>
-      <a
-      href=
-      "DiffusingComputations/DiffusingComputations.html"> 
-      The Dijkstra-Scholten diffusing computation algorithm
-      </a>
-      </li>
-    </ol>
-    
-    <h4 class="w3-text-teal">Self stabilization</h4>
-    <ol>
-      <li>
-      <a
-      href="SelfStabilization/SelfStabilization.html">
-      Self stabilization of a token ring
-      </a>
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Agent knowledge</h4>
-    <ol>
-      <li>
-      <a href="Knowledge/Knowledge.html">
-      How processes learn
-      </a>
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Byzantine faults</h4>
-    Algorithms dealing with Byzantine faults
-    <ol>
-      <li>
-      <a
-      href="Byzantine/ByzantineWritten.html">
-      Byzantine algorithms with written messages
-      </a>
-      </li>
-      <li>
-      <a
-      href="Byzantine/ByzantineOral.html">
-      Byzantine algorithms with oral messages
-      </a>
-      </li>
-    </ol>
-
-
-    <h4 class="w3-text-teal">Cryptocurrency</h4>
-    <ol>
-      <li> 
-      <a
-      href="Crypto/CryptoCurrencyIntroduction.html">
-      Introduction to cryptographic hash functions.
-      </a>
-      </li>
-      <li>
-      <a href="Crypto/BitCoin.html">
-      BitCoin algorithm
-      </a>
-      </li>
-      <li>
-      Etherium algorithm
-      </li>
-    </ol>
-
 
     <h4 class="w3-text-teal">Distributed collaboration</h4>
     <ol>
@@ -442,54 +390,7 @@ Continuous Systems: Future
       </li>
     </ol>
 
-    <h4 class="w3-text-teal">Clock synchronization</h4>
-    <ol>
-      <li>
-      Network and Precision Time Protocols
-      </li>
-      <li>
-      Clock synchronization in distributed systems
-      </li>
-    </ol>
-
-    
-
-    <h4 class="w3-text-teal">Cloud-computing algorithms</h4>
-    <ol>
-      <li>
-      Map-reduce
-      </li>
-      <li>
-      Millwheel
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Stream algorithms</h4>
-    <ol>
-      <li>
-      Finding repeated elements in streams: Misra & Gries
-      </li>
-      <li>
-      Finding repeated elements in streams: Approximate algorithms
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Continuous distributed systems</h4>
-    <ol>
-      <li>
-      Asynchronous averaging
-      </li>
-    </ol>
-
-    <h4 class="w3-text-teal">Distributed data structures</h4>
-    <ol>
-      <li>
-      Distributed tables: hashing
-      </li>
-      <li>
-      Distributed data: BigTable
-      </li>
-    </ol>
+ 
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
