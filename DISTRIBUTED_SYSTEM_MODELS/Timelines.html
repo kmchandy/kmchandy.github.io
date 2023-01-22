@@ -1,4 +1,5 @@
 <title>Timelines.html</title>
+<title>Timelines</title>
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
 
@@ -82,13 +83,12 @@ hr.new1 {
 <!--------------------------------------------------------->
 
 <p>
-A timeline is a labeled directed graph that represents a system
+A <i>timeline</i> is a labeled directed graph that represents a system
   execution.
-  An execution is also called a computation or a trajectory of a
-  system.
+  An execution is also called a computation or a trajectory.
 
   <p>
-  There is a vertex corresponding to each event (i.e. state
+  There is a vertex in the timeline graph corresponding to each event (i.e. state
   transition) in the execution, and there are
   initial and final vertices representing the beginning and
   ending of the execution.
@@ -223,28 +223,56 @@ The following theorem captures the idea illustrated by figures 3 and
 <h4 class="w3-text-teal">Event Dependence</h4>
 The output labels of an event \(e\) depend only its input labels, and
 so the outputs of \(e\) depend only on vertices from which there are
-paths to \(e\). We shall say that \(e\) depends on \(e'\) in \(X\) if
+paths to \(e\). We shall say that <i>\(e\) depends on \(e'\)</i> in \(X\) if
 and only if there is a path from \(e'\) to \(e\) in the timeline graph
-of \(X\).
+of \(X\). We may drop the phrase  "in \(X\)" when 
+we fix a particular trajectory \(X\) in the description.
+
+<p>
+In the following theorem we consider a specific trajectory \(X\) and
+define dependence in terms of \(X\).
+Because the timeline graph is acyclic, for any distinct pair \(e, e'\) of
+events, either \(e\) and \(e'\) are independent of each other (i.e. no
+paths from either event to the other), or \(e\) depends on \(e'\), or
+\(e'\) depends on \(e\)
+
+<h4 style="color:red;">Example</h4>
+In the timeline graphs of both figures 3 and 4, event B1 depends on A1, A0, and B0,
+and is independent of all other events. Event A2 depends on A1, A0,
+D1, and D0, and is independent of all other events. One can verify
+that the dependence among events is identical in both figures.
+
 <hr class="new2">
 <p style="color:blue;">
 Theorem about Event Dependence</p>
 <p style="color:blue;">
 Any permutation \(Y\) of the sequence of events
-\(X\) is also a trajectory of the system if in \(Y\)
+\(X\) is also a trajectory of the system if
 <br>
-<i>each event \(e\) appears
-only after all events on which \(e\) depends in \(X\)</i>.
+<center>
+<p style="color:blue;">
+<i>each event appears
+ after all events on which it depends</i>.
+</center>
 </p>
 <hr class="new2">
-The labels of edges in \(X\) and \(Y\) are identical. So if \(X\)
-starts in a state \(S\) and ends in a state \(S'\) then so does \(Y\).
+The proof follows from the fact that the outputs of an event depend
+only on its inputs and thus depend only on events that have paths to it.
+
+
+<p style="color:blue;">
+<p  style="color:blue;">Corollarly about starting and ending states:
+If \(X\)
+starts in a state \(S\) and ends in a state \(S'\) then so does any
+permutation \(Y\) of \(X\) in which each event \(e\) in \(Y\) appears
+after all events on which \(e\) depends
+</p>
+
 
 <p>
-An informal rendering of the theorem is that an event in
-a trajectory cannot depend on later events in the trajectory.
-This theorem is instance of the <i>diamond property</i> from functional
-programming.
+Proof: The labels of edges in \(X\) and \(Y\) are identical, and so
+the states of channels and agents at the end of the trajectories are
+identical.
 
 <hr class="new2">
 <p style="color:blue;">
@@ -255,17 +283,18 @@ Let \(X\) be a trajectory of a system that starts in a state \(S\) and
     ends in a state \(S'\). Any permutation \(Y\)
 of the sequence of events in \(X\), 
 is also a trajectory of the system that starts in \(S\) and ends in \(S'\)
-if:
+if timelines of agents in \(X\) and \(Y\) are identical, and
 <br>
+<center>
+<p style="color:blue;">
 <i>
-agents have the same timelines in \(X\) and \(Y\), and
 every message in \(Y\) is received only after it is sent.
 </i>
+</center>
 </p>
 <hr class="new2">
 
-<h4 class="w3-text-teal">Proof</h4>
-Follows from the theorem on event dependence.
+Proof: Follows from the theorem on event dependence.
 
 <h3 class="w3-text-teal">Cuts of System Timelines</h3>
 A cut of a a system timeline is a partition of the events in
@@ -275,10 +304,11 @@ the timeline into two subsets called <i>past</i> and <i>future</i>.
 <hr class="new2">
     <h5 style="color:blue;">
 A <i>consistent cut</i> is one
-in which there is no edge in the graph from a <i>future</i> event
-to a <i>past</i> event.
+in which past events do not depend on future events.
 </h5>
 <hr class="new2">
+In terms of the graph, there are no edges from future events to past
+    events in a consistent cut.
 
 
 <p class="w3-text-teal">Equivalent Definitions of Consistent Cuts</p>
@@ -309,57 +339,31 @@ green to black.
 A purple vertical line, representing an instant in time, separates past from
 future in the lower diagram.
 By contrast, a curved line separates past from future in the upper
-diagram. There is no vertical line that separates past from future in
+diagram. There is no vertical line that separates past (defined as A0,
+A1, B0, D0, D1) from future in
 the upper diagram because a past event (B1) appears after a future
 event (A2).
-
-<p class="w3-text-teal">Intuition for Permuting Past before Future</p>
-Given the upper diagram, in which past and future are separated by a
-curved line,
-we can use the following intuitive method to obtain the trajectory of the lower
-diagram in which past and future are separated by a vertical line.
-
-<p>
-Treat the purple curved separating line in the upper diagram as a
-string, and pull the string taut. Doing so may push some events, such
-as A2, to the right, and other events, such as B1, to the left.  As
-events move, while the string is tautened, all edges always remain
-directed from past to future. This is because there is no edge that
-crosses the string from the right to the left. Therefore the the
-events that are permuted are independent of each other and the
-conditions of the theorem are satisfied.
 
 <h3 class="w3-text-teal">Theorem about Consistent Cuts</h3>
 <hr class="new2">
     <h5 style="color:blue;">
-For any consistent cut, \([past, future]\), of a system timeline \(X\)
-there exists a system timeline \(Y\) in which the sequence of events is a
+For any consistent cut, \([past, future]\), of a timeline \(X\)
+there exists a timeline \(Y\) in which the sequence of events is a
 permutation of of the sequence of events in \(X\), and
 where <i>all \(past\) events occur <str>before</str> all
 \(future\) events</i>.
 </h5>
 <hr class="new2">
 <p>
-The proof follows directly from the theorem on the permutation of
-event sequences.
-We create a system  timeline \(Y\) with the same agent
-timelines as system timeline \(X\).
-The theorem tells us that \(Y\)
-also represents a trajectory if the event timelines are the same in
-\(X\) and \(Y\) and <i>each message is received only
-after it is sent</i> in \(Y\).
-We can create a system timeline \(Y\) in which all \(past\) events occur
-before all \(future\) events because there are no messages from
-\(future\) to \(past\).
-<p>
-We permute events to get \(Y\) as follows: if there is a pair of adjacent events
-in which a \(future\) event occurs before the \(past\) event
-then flip the order of this pair of events. The theorem on the permutation of
-event sequences says that the sequence of events
-after flipping the order of events is also a valid timeline because
-there is no message from a \(future\) event to a \(past\) event in a
-consistent cut. Repeatedly flip out-of-order adjacent events until all 
-\(future\) events occur after all \(past\) events.
+The proof follows directly from the theorem on event dependence.
+Consider any pair of events \(e\) followed by \(e'\) in a
+trajectory,
+where \(e\) is in the future and \(e'\) is in the past.
+Then \(e\) and \(e'\) are independent of each other, and so flipping
+the order in which they appear doesn't change the inputs and outputs
+of the event. By repeatedly flipping adjacent events in which a future
+event precedes a past event we get a trajectory in which all future
+events appear after all past events.
 
 <h4 style="color:red;">Example</h4>
 The cut in the diagram on the top of figure 7 is consistent.
@@ -367,6 +371,19 @@ Therefore, there exists a system timeline diagram, shown at the bottom of the
 figure, in which all past events occur before all
 future events.
 
+
+
+<p class="w3-text-teal">Intuition for Permuting Past before Future</p>
+
+<p>
+In figure 7, treat the purple curved separating line in the upper diagram as a
+string, and pull the string taut. Doing so may push some events, such
+as A2, to the right, and other events, such as B1, to the left.  As
+events move, while the string is tautened, all edges always remain
+directed from past to future. This is because there is no edge that
+crosses the string from the right to the left. Therefore the the
+events that are permuted are independent of each other and the
+conditions of the theorem are satisfied.
 
 <h4 class="w3-text-teal">Corollary: Trajectory from Initial to Snapshot to Final State</h4>
 Consider an algorithm that computes the state at a consistent
