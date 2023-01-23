@@ -82,6 +82,12 @@ hr.new1 {
 <h2 class="w3-text-teal">Timelines</h2>
 <!--------------------------------------------------------->
 
+  <p class="w3-text-green">
+  This page uses material from
+  <a
+  href="https://kmchandy.github.io/DISTRIBUTED_SYSTEM_MODELS/DistributedSystemModels.html">
+  Distributed System Models.</a>
+  </p>
 <p>
 A <i>timeline</i> is a labeled directed graph that represents a system
   execution.
@@ -294,7 +300,19 @@ every message in \(Y\) is received only after it is sent.
 </p>
 <hr class="new2">
 
-Proof: Follows from the theorem on event dependence.
+Proof: By induction -- assume that the theorem holds for the first
+\(n\) events in \(Y\) and prove that it holds for the \(n+1\)-th
+event, with \(n = 0\) as the base case. We will prove that each event
+in \(Y\) appears only after all events on which it depends, and then
+the result follows from the theorem on event dependence.
+<p>
+If the \(n+1\)-th event is an internal event on an agent then because
+the agent timeline for \(Y\) is the same as that of \(X\), this event
+appears only after all events on which it depends.
+<p>
+If the \(n+1\)-th event is an event that receives a message then from
+the assumption of the theorem the message was sent at an earlier
+event, and so this event appears only after all events on which it depends.
 
 <h3 class="w3-text-teal">Cuts of System Timelines</h3>
 A cut of a a system timeline is a partition of the events in
@@ -307,7 +325,7 @@ A <i>consistent cut</i> is one
 in which past events do not depend on future events.
 </h5>
 <hr class="new2">
-In terms of the graph, there are no edges from future events to past
+In terms of the graph, there are no edges directed from future events to past
     events in a consistent cut.
 
 

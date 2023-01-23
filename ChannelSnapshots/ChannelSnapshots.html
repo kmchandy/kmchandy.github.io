@@ -79,29 +79,30 @@ hr.new1 {
 
 
 <!--------------------------------------------------------->
-<h1 class="w3-text-teal">Snapshots of Distributed Systems</h1>
+<h2 class="w3-text-teal">Snapshots of Distributed Systems</h2>
 <!--------------------------------------------------------->
 
-<h4 class="w3-text-teal">
-This module describes the global snapshot algorithm which can be used
-to determine a global state of a system
-</h4>
+<p class="w3-text-green">
+  This page uses material from
+  <a
+  href="https://kmchandy.github.io/DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+  Timelines.
+</p4>
 
 <a href="GlobalSnapshotAlgorithmVideo.mp4">
 <h3 class="w3-text-teal">Video</h3>
 </a>
 
 The global snapshot algorithm determines a global state of a
-system. The algorithm cannot be instantaneous because it requires
-collaboration among multiple agents. 
+system. The algorithm requires
+collaboration among multiple agents and so the snapshot cannot be
+  taken instantaneously.
+
+<h4 class="w3-text-teal">Specification of the Global Snapshot</h4>
 Let the states in which the algorithm starts and ends be
 \(s_{init}\) and \(s_{fini}\), respectively, and let \(s_{snap}\) be
 the snapshot determined by the algorithm.
 
-<h4 class="w3-text-teal">Specification of the Global Snapshot</h4>
-\(s_{snap}\) must be the
-<a href="Timelines.html">state of a consistent cut.</a>
-A property of  consistent cuts zais:
 <hr class="new2">
     <h5 style="color:blue;">
 There exists a trajectory from \(s_{init}\) through \(s_{snap}\) to
@@ -168,24 +169,64 @@ computation had not terminated when the algorithm was
 the snapshot algorithm was initiated and before it terminated. So to
 detect termination we have to run the snapshot algorithm repeatedly.
 
-<h4 class="w3-text-teal">A Brief Review of Consistent Cuts</h4>
-A consistent cut of a timeline diagram is a partition of the events in
-the diagram into two subsets called <i>past</i> and <i>future</i>, and
-in which there is no message from a future event
-to a past event.
 
-<h4 style="color:red;">Review: Examples of Cuts</h4>
+<h4 class="w3-text-teal">Collaborating to obtain a Global
+Snapshot</h4>
+Each agent records its own local state at some point in the
+trajectory. The step in which agent records its local state is called
+taking a local snapshot. All the events at the agent before the agent
+takes its local snapshot are <i>past</i> events, and all events after
+the agent takes its local snapshot are <i>future</i> events. Thus the
+points at which agents take their local snapshots forms a cut.
+
+<h4 style="color:red;">Cuts at Agents' Local Snapshots</h4>
+
+Figure 1 shows a timeline diagram with agents A, B, and C, and events
+\(0, \ldots, 13\).
+Assume that there is one channel in each direction between every pair
+of agents.
+Events 4 and 5 are internal events at agents A and
+C, respectively. The other events occur when messages are received as
+shown by the red arrows. For example, event 2 is the arrival of a
+message at agent B due to the message sent by agent A at event 0.
 <figure>
-    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.001.jpeg"
-alt="Fig1" style="width:80%"> 
-    <figcaption>Fig.1: A consistent cut</figcaption>
+    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.003.jpeg"
+alt="Fig3" style="width:80%"> 
+    <figcaption>Fig.3: Local Snapshots form Consistent Cut</figcaption>
 </figure>
-Figure 1 shows a consistent cut, and figure 2 shows an inconsistent one.
+<p>
+The figure shows a cut defined by the points at which agents take
+their local snapshots; these points are shown as yellow circles.
+Agent A takes its local snapshot after event 6 and
+before the next event (13) at A; B takes its local snapshot
+after event 3 and before the next event (7) at B; and C takes
+its local snapshot after event 8 and before the next event (11) at C.
+<p>
+The cut is shown as the wavy purple line in the graph. The past events
+in the cut are \(0, \ldots 6, 8\) and the remaining events are
+in the future. This cut is consistent because
+each past event depends only on past events; you can
+see this in the diagram because no edge crosses the purple line from
+the future to the past. The lines that cross the purple line from past
+events to future events are the messages in transit at the cut.
+
+<p>
+The next diagram shows points at which agents take local snapshots
+that do not collectively form a global snapshot.
 
 <figure>
-    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.002.jpeg" alt="Fig2" style="width:80%">
-    <figcaption>Fig.2: An inconsistent cut</figcaption>
+    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.004.jpeg" alt="Fig4" style="width:80%">
+    <figcaption>Fig.4: Inconsistent Local Snapshots</figcaption>
 </figure>
+
+Agents A and B take their local snapshots at the same points in their
+trajectories as in the previous figure.
+Agent C, however, takes its local snapshot at a different point: C
+    takes its local snapshot after event 11. Past events are \(0, \ldots 6, 8,
+11\) and the remaining events are future events.
+This cut is not consistent because a message sent in the future (event
+10) is received in the past (event 11).
+This message is shown as a black edge in the figure.
 
     <p>
     We use the phrase "an agent B takes its local snapshot" for "an
@@ -194,25 +235,6 @@ A key question is <i>when</i> should an agent take
 its own local snapshot to ensure that the collection of local
 snapshots form a consistent cut? 
 
-<h4 style="color:red;">Examples of Local Snapshots</h4>
-In the next two figures, the points at which each agent takes its
-local snapshot are shown as yellow circles. Past events are those
-earlier than the points at which agents take their local
-snapshots. Figure 3 shows agent snapshot points corresponding to a
-consistent cut, and figure 4 shows inconsistent snapshot points. 
-<figure>
-    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.003.jpeg"
-alt="Fig3" style="width:80%"> 
-    <figcaption>Fig.3: Consistent Local Snapshots</figcaption>
-</figure>
-<figure>
-    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.004.jpeg" alt="Fig4" style="width:80%">
-    <figcaption>Fig.4: Inconsistent Local Snapshots</figcaption>
-</figure>
-The global snapshot algorithm can have local snapshots, such as those in
-figure 3, that result in consistent cuts. And the algorithm must
-disallow local snapshots, such as in figure 4, that result in
-inconsistent cuts.
 
 <h3 class="w3-text-teal">Theorem: Channel Counts and Consistent
 Cuts</h3>
@@ -221,6 +243,8 @@ When an agent takes its local snapshot, for each outgoing channel
 messages that the agent has sent along \(C\), and for each incoming channel
 \(C\) let \(C_{r}\) be the number of
 messages that it has received along \(C\).
+Assume that initially all channels are empty, and so \(C_{s}\) and
+\(C_{r}\) are \(0\).
 <hr class="new2">
 <h5 style="color:blue;">
 The points at which local snapshots are taken forms a
@@ -230,21 +254,15 @@ The points at which local snapshots are taken forms a
 </h5>
 <hr class="new2">
 The proof follows directly from the definition of consistent cuts.
-If \(C_{s} \geq C_{r}\) then each message is received only after it is
-sent. We will show that a message sent in the future is received in
-the future.
-<p>
-A message received along a channel \(C\) in the future is a message received after
-\(C_{r}\) messages have been received along the channel.
-A message sent along a channel \(C\) in the future is sent after
-\(C_{s}\) messages have been sent along the channel.
-Because channels are first-in-first-out this message is received after 
-\(C_{s}\) messages have been received along the channel, and therefore
-the receive event is also in the future.
 
-    <h3 class="w3-text-teal">Global Snapshot Algorithm</h3>
-The algorithm employs a special kind of message called a <i>marker</i>
-which is distinct from all other messages in the system.
+<h3 class="w3-text-teal">Global Snapshot Algorithm</h3>
+We must design an algorithm such that every message sent in the future
+is received in the future. Each agent must take its local snapshot so
+that no message sent in the future is received in the past.
+<p>
+The algorithm employs a special kind of message called a <i>marker</i>,
+distinct from all other messages in the system, to separate future and
+past. 
 Each agent takes its local snapshot exactly once and exactly one
 marker is sent along each channel.
 
