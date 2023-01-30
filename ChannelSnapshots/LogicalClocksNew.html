@@ -94,9 +94,9 @@ If every agent had a perfect clock, then a global state of the system
 
   <p>
   Local clocks are not perfect; they drift
-  apart from each other. We will look at algorithms to reduce the
-  drifts among local clocks. The algorithms do not, however, guarantee
-  that local clocks are perfectly synchronized with zero drift.
+  apart from each other. Later we will describe algorithms that reduce
+  drift among local clocks. The algorithms do not, however, guarantee
+  that local clocks are perfectly synchronized.
 
   <p>
 A logical clock algorithm is one in which each agent assigns a
@@ -106,9 +106,10 @@ The timestamp of an event is
   called the logical time at the event.
   The logical time of an event can be used as though it is the real
   time for some problems.
+
+ <h3 class="w3-text-teal">Specification of Logical Clocks</h3>
 The specification of the algorithm is as follows.
 
-<p>
 For all
 \(t\), let <i>past(t)</i> be the set of events with timestamps of \(t\) or
 less, and let <i>future(t)</i> be the set of events with timestamps
@@ -125,12 +126,7 @@ must be a consistent cut.
   An equivalent definition is that if an event \(e\) depends on an
   event \(e'\) in the trajectory (i.e., there is a path from \(e'\) to
   \(e\)) then \(t(e) > t(e')\).
-  <p>
-  A global state can be obtained using logical clocks in exactly the
-  same way as when using perfect clocks: each agent records its local
-  state when its logical clocks is at some prespecified value \(T\).
-  The points at which each agent records its local state form a
-  consistent cut. 
+  
 
 <h4 style="color:red;">Examples of Consistent Cut based on
 Timestamps</h4>
@@ -167,11 +163,14 @@ edges are directed from lower- to higher-numbered timestamps, there is
 no edge from <i>future(2)</i> to <i>past(2)</i>. And so the cut is
 consistent.
 
-<p>
-It is obvious that logical times satisfy the specification if and only
+
+Logical times satisfy the specification if and only
 if:
 <hr class="new2">
 <h4 style="color:blue;">
+Logical times satisfy the specification if and only
+if:
+<br>
 For all edges \((e, e')\) in the timeline diagram:
 \(t(e') > t(e)\).
 </h4>
@@ -266,6 +265,9 @@ the message that crosses the cut.
 The logical clock algorithm ensures that if there is a path from an
 event \(e\) to an event \(e'\) in the timeline diagram then \(t(e') >
 t(e)\); however, the converse isn't necessarily true.
+The vector clock algorithm assigns a timestamp to each event where the
+timestamp is a vector with an element for each agent in the
+system.
 
 <hr class="new2">
 <h4 style="color:blue;">
@@ -275,16 +277,11 @@ a path from \(e\) to \(e'\).
 </h4>
 <hr class="new2">
 
-<p>
-A vector timestamp is a vector with an element for each agent in the
-system, and for vectors \(v, v'\): \(v \geq v'\) if and only if
-\(v_{i} \geq v'_{i}\), for all \(i\).
-The algorithm is the same as for logical clocks except that
-timestamps are vectors.
 
 <p>
 Let there be \(N\) agents in the system indexed \(0 \leq j <
-N\). Let \(I_{j}\) be unit vector in direction \(j\), a vector of
+N\). Let \(I_{j}\) be unit vector in direction \(j\), i.e. \(I_{j}\)
+is  a vector of 
 zeroes except that \(I_{j}[j] = 1\). A timestamp for an event \(e'\)
 on agent \(j\) is computed in the following way. Initial timestamps
 are zero vectors.
