@@ -104,9 +104,11 @@ Let the states in which the algorithm starts and ends be
 the snapshot determined by the algorithm.
 
 <hr class="new2">
-    <h5 style="color:blue;">
-There exists a trajectory from \(s_{init}\) through \(s_{snap}\) to
-\(s_{fini}\).
+  <h5 style="color:blue;">
+  Specification
+  <br>
+Determine \(s_{snap}\) so that there exists a trajectory from
+  \(s_{init}\) through \(s_{snap}\) to \(s_{fini}\).
 </h5>
 <hr class="new2">
 
@@ -170,7 +172,7 @@ the snapshot algorithm was initiated and before it terminated. So to
 detect termination we have to run the snapshot algorithm repeatedly.
 
 
-<h4 class="w3-text-teal">Collaborating to obtain a Global
+<h4 class="w3-text-teal">When Local Agent Snapshots form a Global
 Snapshot</h4>
 Each agent records its own local state at some point in the
 trajectory. The step in which agent records its local state is called
