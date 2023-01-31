@@ -78,7 +78,7 @@ hr.new1 {
   
 
 <!--------------------------------------------------------->
-  <h1 class="w3-text-teal">Termination Detection</h1>
+  <h2 class="w3-text-teal">Termination Detection</h2>
 
   <p class="w3-text-green">
   This page uses material from
@@ -86,18 +86,22 @@ hr.new1 {
   href="https://kmchandy.github.io/ChannelSnapshots/ChannelSnapshots.html">
   Snapshots.
   </a>
-</p>
+  and
+  <a
+  href="https://kmchandy.github.io/ChannelSnapshots/Applications.html">
+  Applications of Timelines and Snapshots.
+  </a>
+  </p>
 
-  <p>
-Consistent cuts and global snapshots are used to
-<a href="./StablePredicates.html"> detect when stable
-predicates hold.</a>
-"Computation has terminated" is a stable predicate: if computation has
-terminated then it remains terminated.
-This page shows how the algorithm for detecting stable
-properties is specialized to obtain a simple algorithm to detect termination.
+  <p class="w3-text-red">
+  We use our heuristic to solve this problem: Design an
+  algorithm assuming that all agents can record a global state at the
+  same instant; then check whether that algorithm is correct
+  using global snapshots instead of true global states.
+  </p>
+  
 
-<h2 class="w3-text-teal">The Problem</h2>
+<h3 class="w3-text-teal">The Problem</h3>
 
     <h4 class="w3-text-teal">Active and Idle States of Agents</h4>
     An agent is either <i>idle</i> or <i>active</i>. An idle agent
@@ -137,14 +141,14 @@ The detection algorithm is part of the distributed operating system whereas the
   The detection algorithm must not modify the underlying computation.
 
 <h4 class="w3-text-teal">Specification of the Algorithm</h4>
-The algorithm returns a Boolean variable where:
+The detection algorithm returns a Boolean variable where:
 <ol>
   <li>
-  If the algorithm starts after the system has terminated then
+  If the detection algorithm starts after the system has terminated then
   the algorithm returns True.
   </li>
   <li>
-  If the algorithm returns True then the system has terminated when
+  If the detection algorithm returns True then the system has terminated when
     the algorithm terminates
   </li>
 </ol>

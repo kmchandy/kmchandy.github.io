@@ -101,12 +101,14 @@ hr.new1 {
   </p>
 
   <h3 class="w3-text-teal">Rollback and Recovery</h3>
+  <h4 class="w3-text-teal">Specification of the Algorithm</h4>
   The specification of a rollback and recovery algorithm is as follows.
 When an error is detected in a computation,
   restart the computation from a recent saved (global) state
   instead of executing the entire computation again.
 
-  <p>
+  <h4 class="w3-text-teal">Algorithm for Rollback and Recovery</h4>
+  <p class="w3-text-teal">Using the Heuristic</p>
   If agents could collectively determine the global state at the same
   instant then the algorithm is simple: repeatedly save the
   instantaneous true global state and restart the computation from the
@@ -127,7 +129,7 @@ If an error is detected, the computation is restarted
 
   
 
-  <p>
+  <p class="w3-text-teal">Outline of Proof of Correctness</p>
   From the theorem of
   <a
   href="https://kmchandy.github.io/ChannelSnapshots/ChannelSnapshots.html">
@@ -173,6 +175,8 @@ the algorithm may return either true or false.
   
 
 <h4 class="w3-text-teal">Algorithm to Detect a Stable Predicate</h4>
+
+<p class="w3-text-teal">Using the Heuristic</p>
 If agents could collectively determine the global state at the same
   instant then the algorithm is simple: agents determine a global
 state and check whether the stable predicate holds in that state.
