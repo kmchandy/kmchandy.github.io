@@ -93,33 +93,51 @@ hr.new1 {
   </a>
 </p>
 
-<p class="w3-text-red">
-Timelines, consistent cuts and global snapshots are the foundations of
-  rollback and recovery and a variety of detection algorithms.
+  <p class="w3-text-red">
+  We use the following heuristic to solve many problems: Design an
+  algorithm assuming that all agents can record a global state at the
+  same instant; then check whether that algorithm is correct
+  using global snapshots instead of true global states.
   </p>
 
-  
+  <h3 class="w3-text-teal">Rollback and Recovery</h3>
+  The specification of a rollback and recovery algorithm is as follows.
+When an error is detected in a computation,
+  restart the computation from a recent saved (global) state
+  instead of executing the entire computation again.
+
+  <p>
+  If agents could collectively determine the global state at the same
+  instant then the algorithm is simple: repeatedly save the
+  instantaneous true global state and restart the computation from the
+  most recent one.
+
+  In a distributed system, agents cannot collectively determine the
+  global state at the same instant.
+  Let's use our heuristic: let's see
+  whether global snapshots can be used instead of the true
+  instantaneous global states.
+
 <p>
-The applications are based on the following theorem.
-Let the states in which a global snapshot algorithm starts and ends be
-\(s_{init}\) and \(s_{fini}\), respectively, and let \(s_{snap}\) be
-the snapshot determined by the algorithm.
-<hr class="new2">
-    <h5 style="color:blue;">
-There exists a trajectory from \(s_{init}\) through \(s_{snap}\) to
-\(s_{fini}\).
-<h5>
-<hr class="new2">
+The heuristic suggests the following algorithm. Agents
+  take global snapshots repeatedly.
+If an error is detected, the computation is restarted
+  from the most recent global snapshot.
+  Let's check whether this algorithm is correct
 
+  
 
-<h3 class="w3-text-teal">Rollback and Recovery</h3>
-When a rollback and recovery algorithm detects an error it rolls the computation back
-and restarts it from the most recent saved state.
-In a distributed system the saved state is a global snapshot.
-There is a trajectory that starts in \(s_{init}\) visits the global
-snapshot \(s_{snap}\) and then continues execution.
-So, if an error is detected, the computation is rolled
-back to \(s_{snap}\) rather than all the way back to \(s_{init}\).
+  <p>
+  From the theorem of
+  <a
+  href="https://kmchandy.github.io/ChannelSnapshots/ChannelSnapshots.html">
+  global snapshots, </a> there exists a computation from the initial state
+  to a snapshot state. Therefore there exists a computation that
+  starts at the initial state, then visits the most recent snapshot
+state, and then continues with the restarted computation.
+So, we can use snapshots instead of a global state that occurred in
+  the computation.
+
 
 <h3 class="w3-text-teal">Detecting Stable Predicates</h3>
 <hr class="new2">
@@ -136,64 +154,55 @@ An example of a stable predicate is: "<i>The computation has terminated.</i>"
 If a computation has terminated at some point then it remains
 terminated thereafter.
 
+<h4 class="w3-text-teal">Specification of the Algorithm</h4>
+The specification of an algorithm to detect a stable property is as
+follows. The algorithm returns a Boolean value where
+<ol>
+  <li>
+  If the stable property holds when the algorithm is started
+  then the algorithm returns true.
+  </li>
+  <li>
+  If the algorithm returns true, then the stable property holds when
+  the algorithm terminates.
+  </li>
+</ol>
+If the stable property does not hold when the detection algorithm
+starts, but does hold when the algorithm terminates, then
+the algorithm may return either true or false.
+  
+
 <h4 class="w3-text-teal">Algorithm to Detect a Stable Predicate</h4>
+If agents could collectively determine the global state at the same
+  instant then the algorithm is simple: agents determine a global
+state and check whether the stable predicate holds in that state.
+In a distributed system, agents cannot collectively determine the
+  global state at the same instant.
+  Let's use our heuristic: let's see
+  whether global snapshots can be used instead of the true
+  instantaneous global states.
+<p>
+The heuristic suggests the following algorithm:
 Take a global snapshot and claim that the stable predicate holds if it
 holds in the snapshot state.
+Next, let's see if this algorithm is correct.
 
-<p class="w3-text-teal">Paths to and from a Global Snapshot</p>
-Because there is a path from \(s_{init}\) to \(s_{snap}\) and then to
-\(s_{fini}\) if a stable predicate \(P\) holds in \(s_{init}\) then it
-continues to hold in \(s_{snap}\) and \(s_{fini}\).
-
-Likewise, because there is a path from \(s_{snap}\) to \(s_{fini}\),
-if a stable predicate \(P\) holds in \(s_{snap}\) then it holds in \(s_{fini}\).
-
-<p>
-The Boolean --- "predicate \(P\) holds in state \(s\)" --- is written
-as \(P(s)\).
-
-
-<hr class="new2">
-<h6 style="color:blue;">
-For a stable property \(P\):
-<ol>
-  <li>
-\(
-  P(s_{init}) \Rightarrow P(s_{snap})
-  \) and
-  </li>
-  <li>
-\(
-   P(s_{snap}) \Rightarrow P(s_{fini})
-  \)
-  </li>
-</ol>
-<h6>
-<hr class="new2">
-
-<p class="w3-text-teal">False Positives and Negatives</p>
-<ol>
-  <li>
-  <i>No false negatives</i>: if a stable property holds when the
-  algorithm is <i>initiated</i> then the property is detected.
-  </li>
-  <li>
-  <i>No false positives</i>: if the algorithm detects a stable
-  property then the property holds when the algorithm <i>terminates</i>.
-  </li>
-</ol>
-The property of "no false negatives" is with respect to the
-<i>initial</i> state of the algorithm whereas the 
-property of "no false positives" is with respect to its
-<i>final</i> state.
-Predicate \(P\) may hold when the snapshot algorithm terminates even
-though the algorithm returns \(P(s_{snap})\) with value false; in this
-case the algorithm is run again at a later point.
+<p class="w3-text-teal">Outline of Proof of Correctness</p>
+Let \(s_{init}\) and \(s_{fini}\) be the states in which the snapshot
+algorithm starts and finishes, respectively.
+Let \(s_{snap}\) be the global snapshot.
+Then from the theorem of global snapshots
+ there is a path from \(s_{init}\) to \(s_{snap}\) and then to
+\(s_{fini}\). So, if a stable predicate  holds in \(s_{init}\) then it
+also holds in \(s_{snap}\).
+Likewise,
+if a stable predicate holds in \(s_{snap}\) then it also holds in
+\(s_{fini}\). Therefore the algorithm satisfies the specification.
 
 <p>
-The pages in this chapter describe two examples of algorithms that detect stable
-predicates: detecting termination and detecting database deadlock.
-Later pages describe other detection algorithms.
+The pages in this section describe algorithms that detect termination and database deadlock.
+Other detection algorithms are described later.
+
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
