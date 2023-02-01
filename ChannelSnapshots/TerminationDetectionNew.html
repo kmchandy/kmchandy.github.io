@@ -1,4 +1,3 @@
-<title>Applications</title>
 <title>TerminationDetection</title>
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
@@ -83,21 +82,18 @@ hr.new1 {
   <p class="w3-text-green">
   This page uses material from
   <a
-  href="https://kmchandy.github.io/ChannelSnapshots/ChannelSnapshots.html">
-  Snapshots.
-  </a>
-  and
-  <a
   href="https://kmchandy.github.io/ChannelSnapshots/Applications.html">
   Applications of Timelines and Snapshots.
   </a>
   </p>
 
   <p class="w3-text-red">
-  We use our heuristic to solve this problem: Design an
-  algorithm assuming that all agents can record a global state at the
-  same instant; then check whether that algorithm is correct
-  using global snapshots instead of true global states.
+  "Computation has terminated" is a stable predicate: After a
+  computation has terminated it remains terminated. A general way of
+  detecting a stable predicate is to check whether the predicate holds
+  in a global snapshot state.
+  We use this strategy to design an algorithm for termination
+  detection. 
   </p>
   
 
@@ -114,137 +110,86 @@ may become idle at any point.
 <p>
     Initially all agents are active and all channels are empty.
 
-    <h4 class="w3-text-teal">Terminated State</h4>
-    A <i>terminated</i> state of the system is one in which all agents
-  are idle and all channels are empty. For a channel \(C\), let
-  \(C_{ns}, C_{nr}\) be the number of messages sent and received
-    (respectively) on the channel. A terminated state is
-  one in which all agents are idle, and for every channel \(C\):
-  <p>
-  \(
-  C_{ns} = C_{nr}
-  \)
-
-  <p>
-  A computation may or may not enter a terminated state.
- After a computation enters a
-    terminated state it remains forever in a terminated state.
+  <h4 class="w3-text-teal">Terminated State</h4>
+  A computation has
+  terminated exactly when all agents
+  are idle and all channels are empty. 
+  A computation may or may terminate.
+ After a computation terminates it remains terminated.
  
 
 <p>
-    The problem is to develop an algorithm that detects that the system has
-entered a terminated state.
+    The problem is to develop an algorithm that detects that a computation
+has terminated.
 The detection algorithm may use messages and agents that are not part of the
-underlying computation.
-The detection algorithm is part of the distributed operating system whereas the
-  underlying computation is part of a user application.
+  underlying computation.
   The detection algorithm must not modify the underlying computation.
 
+  
 <h4 class="w3-text-teal">Specification of the Algorithm</h4>
 The detection algorithm returns a Boolean variable where:
 <ol>
   <li>
   If the detection algorithm starts after the system has terminated then
-  the algorithm returns True.
+  the detection algorithm returns True.
   </li>
   <li>
   If the detection algorithm returns True then the system has terminated when
-    the algorithm terminates
+    the detection algorithm terminates.
   </li>
 </ol>
-  
 
-    <h4 class="w3-text-teal">Agent's Local Variables: Counts of Messages in Channels</h4>
+<h3 class="w3-text-teal">Algorithms for Termination Detection</h3>
+
+A general algorithm for detecting stable properties is to repeatedly take
+global snapshots and determine if the predicate holds in any
+ snapshot.
+Let's specialize this algorithm to detect termination.
 
 <p>
-Each agent has a local variable \(C_{nsent}\) for each outgoing
-channel \(C\), and a local variable \(C_{nrcvd}\) for each incoming
-channel \(C\).
-Initially, for all channels \(C\):  \(C_{nsent} = C_{nrcvd} = 0\)
-
-At each point in a computation, the number of messages in transit
-along a channel \(C\) is \(C_{nsent} - C_{nrcvd}\).
-    
-
+Global snapshots are obtained in the following way.
+Each agent records its local state (active or idle) and for each incident channel
+  \(C\), the number of messages sent \(C_{s}\) and the number of
+  messages received \(C_{r}\) along that channel at the point.
+From the theory of global snapshots, the local agent recordings form a
+global snapshot if for all channels \(C\), \(C_{s} \geq C_{r}\).
+So:
 <hr class="new2">
-<h4 style="color:blue;">
-    The system has terminated if and only if:
-      All agents are idle, and
-      for each channel \(C\): \(C_{nsent} = C_{nrcvd}\)
-</h4>
+<p style="color:blue;">
+Any collection of local recordings forms a global snapshot if
+\(C_{s} = C_{r}\) for all channels \(C\).
+</p>
 <hr class="new2">
+This suggests the following algorithm.
 
-
-    <h2 class="w3-text-teal">The Detector Agent</h2>
-    The detection algorithm uses an agent, which is part of the
-    operating system and is not part of the underlying computation. We call this agent <i>the
-    detector</i>. 
-
-    <p>
-    When an agent transits from active to idle it sends a message to
-    the detector containing copies of its local variables, \(C_{nsent}\)
-    for every outgoing channel of the agent, and \(C_{nrcvd}\) for every
-    incoming channel of the agent. 
-
-<h4 class="w3-text-teal">The Detector's Local Variables</h4>
-The detector has its own local variables \(C_{s}\) and \(C_{r}\) for every
-channel \(C\) in the system.
-The initial values of these local variables are arbitrary.
-When a detector gets a message from an
-agent it sets the values of its local variables \(C_{s}\) and \(C_{r}\) to the
-values of \(C_{nsent}\) and \(C_{nrcvd}\), respectively, in the message for the
-corresponding channels \(C\).
-
-<hr class="new2">
-<h4 style="color:blue;">The detector detects termination when the
-detector has received a message from each agent in the
-computation, and
-for all channels \(C\): 
-\(
-C_{s} = C_{r}
-\)
-</h4>
-<hr class="new2">
-
-
-
-<h4 class="w3-text-teal">Proof</h4>
-When the detector detects termination it has received a message from
-each agent. An agent sends a message only when it transits to idle.
-So, 
-the values of the detector's local variables, \(C_{s}, C_{r}\) for
-each channel \(C\) are the values \(C_{nsent}, C_{nrcvd}\) sent by idle agents
-at some cut. From the theorem on consistent cuts, this cut
-is consistent if and only if, for all channels \(C\): 
 <p>
-\(C_{s} \geq C_{r}\)
+Each time that an agent transits from active to idle it records \(C_{s}\)
+the number of messages that it sent along each outgoing channel \(C\),  and \(C_{r}\) the number of
+messages that it received along each incoming channel \(C\), at that point.
+Assume, for the time being, that these records are stored somewhere.
+<hr class="new2">
+<p style="color:blue;">
+If there exists a set of records, one for each agent, such that for
+all channels \(C\): \(C_{s} = C_{r}\), where \(C_{s}, C_{r}\) are the
+values in the records, then computation has terminated.
+</p>
+<hr class="new2">
 <p>
-Therefore the detector detects termination based on a consistent
-cut. The result follows because termination is stable.
+This is because the set of records forms a global snapshot in which
+all agents are idle and all channels are empty.
 
-<h4  class="w3-text-teal">Next</h4>
-Look at
-<a href="./TerminationDetectionExample.html">the detailed example</a>
-and
-<a href="./TerminationDetectionVideo.mp4">the video</a>.
+<p class="w3-text-teal">Collecting Local Snapshots to Form a Global Snapshot</p>
+One way to collect local snapshots is to send them to an agent that is
+not part of the underlying computation. Let's call this agent the
+<i>detector</i>. The detector keeps the last message that it has
+received from each agent.
+The detector detects that computation has terminated when the detector
+has received at least one message from each agent, and for all
+channels \(C\): \(C_{s} = C_{r}\) where \(C_{s}, C_{r}\) are the
+counts in the latest messages that the detector has received.
 
-<h4 style="color:blue;">Review</h4>
-<ol>
-  <li>
-  The messages that the detector gets are sent in the past: \(C_{s}\)
-  may be less than \(C_{nsent}\), and \(C_{r}\) may be less than
-  \(C_{nrcvd}\). We know that computation has terminated and the
-  <i>instantaneous</i> counts match, i.e., \(C_{nsent} = C_{nrcvd}\)
-  for all channels \(C\). But the <i>detector uses out-of-date
-  counts</i>. Assume that you are explaining the algorithm to somebody
-  who hasn't taken the course. Explain why the algorithm works with
-  out-of-data information.
-  </li>
-  <li>
-  Can detector agents for all other detection applications use out-of-date
-  information? Why or why not?
-  </li>
-</ol>
+
+
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
