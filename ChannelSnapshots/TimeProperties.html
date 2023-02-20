@@ -1,0 +1,220 @@
+<title>ChannelSnapshots/PartiallySynchronousAlgorithms.html</title>
+
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+
+    <!--------------------------------------------------------->
+    <h2 class="w3-text-teal">Partially Synchronous Algorithms</h2>
+    
+  In this section we develop a method that allows us to design
+  some distributed algorithms so that we can reason about the
+  correctness of the algorithms assuming that
+  messages are delivered instantaneously and agents operate
+  synchronously.
+  Reasoning about algorithms in which agents operate in lock
+  step is often easier than designing asynchronous algorithms.
+  The central idea is assigning a <i>sync-time</i> to each event so
+  that events in which a message is sent and received have the same
+  sync-times. So, in terms of sync-times, messages are instantaneous.
+  
+  <p class="w3-text-teal">Synch-Times</p>
+  Associated with each agent <code>P</code> is a local variable
+  <code>P.t</code> which is called <code>P</code>'s synchronous time
+  or <i>synch time</i>.
+  We associate a sync-time <code>e.t</code> with each event
+  <code>e</code>.
+  If event <code>e</code> occurs at agent
+  <code>P</code> then <code>e.t</code> is the value of
+  <code>P.t</code> at the point at which <code>e</code> occurs.
+  With each message <code>M</code> we associate a field
+  <code>M.t</code> called the message's sync-time, where 
+  <code>M.t</code> is the sync-time of the event in which
+  <code>M</code> is sent.
+  <p>
+  As a trajectory grows, an agent's sync-time may remain unchanged
+  or increase, but never decreases.
+  Therefore, in a trajectory, earlier events at an
+  agent have sync-times that are less than or equal to sync-times
+  of later events at the <i>same</i> agent.
+  It is possible, however, for 
+  earlier events in a trajectory at one
+  agent to have sync-times that are greater than sync-times
+  of later events at a <i>different</i> agent.
+
+  <p>
+  The action of receiving a message occurs in two steps:
+  <ol>
+    <li><i>Message Delivery</i>: A message is delivered to the
+  receiver which inspects the message but takes no action other than
+  to modify the receiver's sync-time.
+    </li>
+    <li><i>Message Processing</i>: The receiver executes the event due
+  to the arrival of the message. The receiver may change its state and
+    send messages in this event.
+    </li>
+   </ol>
+    
+  
+  We design algorithms in which sync-times have the following property.
+  <p>
+  <hr class="new2">
+  <p style="color:blue;">
+  Key property of sync-times:
+   The sync-time of an event in which a message <code>M</code> is sent
+   is the 
+   the sync-time of the event in which <code>M</code> is processed.
+  </p>
+  <hr class="new2">
+  
+  <p class="w3-text-teal">Rules that ensure the sync-times
+   property</p>
+   Let <code>d</code> be the event in which a message <code>M</code>
+   is sent, and let <code>e</code> be the event in which
+   <code>M</code> is received. Let
+   <code>P</code> and <code>Q</code> be the agents that send and
+   receive <code>M</code>, respectively.
+  <ol>
+    <li>
+    When <code>P</code> sends <code>M</code>, it
+    sets <code>M.t</code> to <code>P.t</code>, which is also the
+    sync-time <code>d.t</code> of this event. So
+    <code>d.t = M.t</code>
+    </li>
+    <li>
+    If <code>Q</code> receives
+    <code>M</code> where <code>M.t < Q.t</code>, it
+    does not process the message.
+    So <code>Q</code>'s state does not change when <code>M</code> is
+   received and there is no event associated with processing
+   <code>M</code>. 
+    </li>
+    <li>
+    When <code>Q</code> receives <code>M</code>
+    where <code>M.t</code> \(\geq\) <code>Q.t</code>, it may or may
+    not process the message, depending on the specific algorithm.
+    If <code>Q</code> does process the message,
+    <code>Q</code> first
+    sets <code>Q.t </code> to <code>M.t</code> and 
+    next
+    executes event <code>e</code> that processes <code>M</code>.
+    So <code>e.t = M.t</code>.
+    </li>
+  </ol>
+  The proof that the key property of sync times, <code>d.t = M.t =
+   e.t</code>, is straightforward. 
+
+
+
+    
+<h4 class="w3-text-teal">Theorem: Synchronous Versions of Asynchronous
+Computations</h4>
+Let <code>X</code> be a trajectory of a system in which agents have
+sync-times that satisfy the above rules. 
+Let <code>Y</code> be a permutation of <code>X</code> where
+  the timelines of each agent are the same in <code>X</code> and
+  <code>Y</code>, and events
+  appear in increasing order of sync-times in <code>Y</code>.
+  Then <code>Y</code> is also a trajectory of the system.
+
+  <p  class="w3-text-teal">Proof</p>
+  An event <code>e</code>
+  depends on an event <code>e'</code> only if <code>e'.t</code>
+  \(\leq\) 
+  <code>e.t</code>. A sequence of events in which each event occurs
+  after all events on which it depends is also a trajectory.
+
+
+
+
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+
+
+
+
+</body>
+</html>
