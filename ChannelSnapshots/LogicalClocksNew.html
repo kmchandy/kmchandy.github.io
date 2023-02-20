@@ -123,9 +123,17 @@ The timestamp of an event is
   The logical time of an event can be used as though it is the real
   time for some problems.
 
+<p>
+  <i>Logical clocks don't change the underlying computation.</i> For example,
+  we can add logical clocks to an algorithm that manages how files are
+  shared in a distributed system. The algorithm for file-sharing
+  remains unchanged when we superpose logical clocks on top of the
+  algorithm. We can, however, use logical clocks for monitoring the
+  underlying computation. For instance, logical clocks can be used to
+  determine if the file-sharing algorithm is deadlocked.
+
  <h3 class="w3-text-teal">Specification of Logical Clocks</h3>
 The specification of the algorithm is as follows.
-
 For all
 \(t\), let <i>past(t)</i> be the set of events with timestamps of \(t\) or
 less, and let <i>future(t)</i> be the set of events with timestamps
