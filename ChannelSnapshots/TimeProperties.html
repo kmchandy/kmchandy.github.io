@@ -80,126 +80,186 @@ hr.new1 {
     <!--------------------------------------------------------->
     <h2 class="w3-text-teal">Partially Synchronous Algorithms</h2>
     
-  In this section we develop a method that allows us to design
-  some distributed algorithms so that we can reason about the
-  correctness of the algorithms assuming that
-  messages are delivered instantaneously and agents operate
-  synchronously.
-  Reasoning about algorithms in which agents operate in lock
-  step is often easier than designing asynchronous algorithms.
-  The central idea is assigning a <i>sync-time</i> to each event so
-  that events in which a message is sent and received have the same
-  sync-times. So, in terms of sync-times, messages are instantaneous.
-  
-  <p class="w3-text-teal">Synch-Times</p>
-  Associated with each agent <code>P</code> is a local variable
-  <code>P.t</code> which is called <code>P</code>'s synchronous time
-  or <i>synch time</i>.
-  We associate a sync-time <code>e.t</code> with each event
-  <code>e</code>.
-  If event <code>e</code> occurs at agent
-  <code>P</code> then <code>e.t</code> is the value of
-  <code>P.t</code> at the point at which <code>e</code> occurs.
-  With each message <code>M</code> we associate a field
-  <code>M.t</code> called the message's sync-time, where 
-  <code>M.t</code> is the sync-time of the event in which
-  <code>M</code> is sent.
-  <p>
-  As a trajectory grows, an agent's sync-time may remain unchanged
-  or increase, but never decreases.
-  Therefore, in a trajectory, earlier events at an
-  agent have sync-times that are less than or equal to sync-times
-  of later events at the <i>same</i> agent.
-  It is possible, however, for 
-  earlier events in a trajectory at one
-  agent to have sync-times that are greater than sync-times
-  of later events at a <i>different</i> agent.
+  In this section we describe a framework that allows us
+  to reason about the
+  correctness of distributed algorithms assuming that
+  agents operate in lock step.
+  Synchronous algorithms can have simpler proofs than asynchronous
+  algorithms.
 
   <p>
-  The action of receiving a message occurs in two steps:
-  <ol>
-    <li><i>Message Delivery</i>: A message is delivered to the
-  receiver which inspects the message but takes no action other than
-  to modify the receiver's sync-time.
-    </li>
-    <li><i>Message Processing</i>: The receiver executes the event due
-  to the arrival of the message. The receiver may change its state and
-    send messages in this event.
-    </li>
-   </ol>
-    
-  
-  We design algorithms in which sync-times have the following property.
+  The central idea is a <i>sync clock</i>, which is a modification of a
+  logical clock.
+  Sync and logical clocks assign timestamps to events in the same
+  way: the timestamp of an event is the value of 
+  the clock when the event occurs.
+  Timestamps are a total order; we use integers or pairs (integer,
+  process id) as timestamps, where process ids are used to break
+  ties.
+
   <p>
+  Sync clocks do not tick backwards; so, the timestamp of a later event at
+  an agent is greater than or equal to the timestamp of an earlier
+  event at the same agent.
+  With logical clocks, the timestamp of a later event at an agent is
+  strictly greater than the timestamp of an earlier event at the same
+  agent.
+  
+
+
+  <p>
+  We use logical and sync clocks to partition the set of
+  events in a trajectory 
+  into <i>a future</i> and <i>a past</i> at a time \(T\).
+  Future events at  \(T\) are
+  events with
+  timestamps greater than \(T\). Past events at 
+  \(T\) are events with timestamp \(T\) or less.
+  <h4 class="w3-text-teal">
+  No message from future to past. 
+  </h4>
+  Sync and logical clocks share the following property: 
+  For all \(T\), there is no message sent in an event with timestamp
+  greater than \(T\) that is received in an event with timestamp of
+  \(T\) or less.
+  
+  <p class="w3-text-teal">
+  Consequence of no message from future to past. 
+  </p>
+  A key consequence of this property is as follows.
+  Let \(X\) be a trajectory of a system that starts in a state \(S\)
+  and ends in a state \(S'\). Any permutation \(Y\) of the sequence of
+  events in \(X\) where each agent's timeline is the same in \(X\) and
+  \(Y\), and events in \(Y\) appear in increasing
+  order of timestamps, is also a trajectory of the system that starts in
+  \(S\) and ends in \(S'\).
+
+
+  <h4 class="w3-text-teal">
+  Additional sync clock property:
+  No message from past to future
+  </h4>
   <hr class="new2">
   <p style="color:blue;">
-  Key property of sync-times:
-   The sync-time of an event in which a message <code>M</code> is sent
-   is the 
-   the sync-time of the event in which <code>M</code> is processed.
+  A sync clock has the
+  additional property: for all \(T\)  there is no message sent in an
+  event with a 
+  timestamp \(T\) or less that is received in an event with
+  timestamp greater than \(T\). 
   </p>
   <hr class="new2">
+
+<p>
+Let \(Y\) be a permutation  of the sequence of events \(X\) in a
+trajectory where events in \(Y\) are in increasing order of
+timestamps. We partition the set of events in \(Y\) into subsets
+called <i>epochs</i> where all events in an epoch have the same
+timestamp. The sync clock property that there are no messages from the
+past to the future implies that:
+
+<p>
+<i>All messages sent in an epoch are received in the same
+epoch.</i>
+</p>
+<p>
+So, we can analyze a trajectory as a sequence of epochs where
+all channels are empty at the start and end of each epoch.
+We can prove properties of a trajectory by analyzing state transitions
+where a transition is from the state at the start of an epoch to the
+state at the start of the next epoch.
+<p>
+<i>
+Transitions between the starts of successive epochs deal
+only with states of agents because channels are empty at these points.
+</i>
+
+
   
-  <p class="w3-text-teal">Rules that ensure the sync-times
-   property</p>
+<h4 class="w3-text-teal">Algorithm that Implements Sync Clocks</h4>
+Next we describe an algorithm that implements sync clocks and later
+discuss the similarities and differences between sync and logical
+clocks.
+
+<p>
+We associate
+<ol>
+  <li>
+  a local variable <code>P.t</code> with each agent
+  <code>P</code>,
+  </li>
+  <li>
+  a field <code>M.t</code> with each message <code>M</code>, and 
+  </li>
+  <li>
+  a value <code>e.t</code> with each event
+  <code>e</code>
+  </li>
+</ol>
+where <code>P.t, M.t, e.t</code> are timestamps.
+
+
+<p>
    Let <code>d</code> be the event in which a message <code>M</code>
    is sent, and let <code>e</code> be the event in which
    <code>M</code> is received. Let
    <code>P</code> and <code>Q</code> be the agents that send and
-   receive <code>M</code>, respectively.
-  <ol>
-    <li>
-    When <code>P</code> sends <code>M</code>, it
-    sets <code>M.t</code> to <code>P.t</code>, which is also the
-    sync-time <code>d.t</code> of this event. So
-    <code>d.t = M.t</code>
-    </li>
-    <li>
-    If <code>Q</code> receives
-    <code>M</code> where <code>M.t < Q.t</code>, it
-    does not process the message.
-    So <code>Q</code>'s state does not change when <code>M</code> is
-   received and there is no event associated with processing
-   <code>M</code>. 
-    </li>
-    <li>
-    When <code>Q</code> receives <code>M</code>
-    where <code>M.t</code> \(\geq\) <code>Q.t</code>, it may or may
-    not process the message, depending on the specific algorithm.
-    If <code>Q</code> does process the message,
-    <code>Q</code> first
-    sets <code>Q.t </code> to <code>M.t</code> and 
-    next
-    executes event <code>e</code> that processes <code>M</code>.
-    So <code>e.t = M.t</code>.
-    </li>
-  </ol>
-  The proof that the key property of sync times, <code>d.t = M.t =
-   e.t</code>, is straightforward. 
+receive <code>M</code>, respectively.
 
+<p class="w3-text-teal">Sending a Message</p>
+    When <code>P</code> sends <code>M</code>, it
+    sets <code>M.t</code> and <code>d.t</code> to <code>P.t</code>.
+So:
+<br>
+<code>d.t = M.t</code>
+</p>
+
+<p class="w3-text-teal">Message Arrival</p>
+When message <code>M</code> arrives at agent <code>Q</code>:
+<ol>
+  <li>
+  if <code>M.t</code> \(<\) <code>Q.t</code> then <code>Q</code>
+   discards the message without processing it. The arrival of this
+   message has no effect on the system other than the deletion of this
+  message.
+  </li>
+  <li>
+    If <code>M.t</code> \(\geq\) <code>Q.t</code> then <code>Q</code>
+   may discard or receive <code>M</code> depending on the specific
+  algorithm. 
+    If <code>Q</code> receives <code>M</code> then
+    <code>Q</code> sets <code>Q.t </code> to <code>M.t</code>
+   and then
+    executes event <code>e</code> that receives <code>M</code>.
+  So:
+  <br>
+  <code>e.t = M.t</code>.
+    </li>  
+  </ol>
+  From these rules, <code>d.t = M.t = e.t</code>. Therefore
+   messages sent in an epoch are received in the same epoch.
 
 
     
-<h4 class="w3-text-teal">Theorem: Synchronous Versions of Asynchronous
-Computations</h4>
-Let <code>X</code> be a trajectory of a system in which agents have
-sync-times that satisfy the above rules. 
-Let <code>Y</code> be a permutation of <code>X</code> where
-  the timelines of each agent are the same in <code>X</code> and
-  <code>Y</code>, and events
-  appear in increasing order of sync-times in <code>Y</code>.
-  Then <code>Y</code> is also a trajectory of the system.
+<h3 class="w3-text-teal">Differences between Sync and Logical
+  Clocks</h3>
+Logical clocks do not change the underlying computation; events in the
+  underlying computation remain unchanged. By contrast, sync clocks
+  are an integral part of the underlying computation. When a message 
+  <code>M</code> arrives at an agent <code>Q</code> the message is
+  ignored if \(<code>M.t</code> < <code>Q.t</code>\) --- ignoring a
+  message is a change in the underlying computation.
 
-  <p  class="w3-text-teal">Proof</p>
-  An event <code>e</code>
-  depends on an event <code>e'</code> only if <code>e'.t</code>
-  \(\leq\) 
-  <code>e.t</code>. A sequence of events in which each event occurs
-  after all events on which it depends is also a trajectory.
+  <p>
+  With logical clocks a message received in an event with timestamp
+  <code>T</code> is sent in an event with timestamp less than <code>T</code>.
+  By contrast, with sync clocks,  a message received in an event with
+  timestamp <code>T</code> is sent in an event with the same timestamp
+  <code>T</code>.
 
-
-
-
+  <p>
+  Logical and sync clocks are used for different purposes as we will
+  see when study the Paxos algorithm.
+  
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
