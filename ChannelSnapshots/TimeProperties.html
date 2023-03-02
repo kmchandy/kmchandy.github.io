@@ -240,21 +240,21 @@ When message <code>M</code> arrives at agent <code>Q</code>:
 
 
     
-<h3 class="w3-text-teal">Differences between Sync and Logical
+<h3 class="w3-text-teal">Key Difference between Sync and Logical
   Clocks</h3>
 Logical clocks do not change the underlying computation; events in the
   underlying computation remain unchanged. By contrast, sync clocks
   are an integral part of the underlying computation. When a message 
   <code>M</code> arrives at an agent <code>Q</code> the message is
-  ignored if \(<code>M.t</code> < <code>Q.t</code>\) --- ignoring a
+  ignored if <code>M.t</code> \(<\) <code>Q.t</code> --- ignoring a
   message is a change in the underlying computation.
 
   <p>
-  With logical clocks a message received in an event with timestamp
-  <code>T</code> is sent in an event with timestamp less than <code>T</code>.
-  By contrast, with sync clocks,  a message received in an event with
-  timestamp <code>T</code> is sent in an event with the same timestamp
-  <code>T</code>.
+  With logical clocks a message sent in an event with timestamp
+  <code>T</code> is received in an event with timestamp greater than
+  <code>T</code>. 
+  By contrast, with sync clocks, a message sent in an event with
+  is received in an event with the same timestamp.
 
   <p>
   Logical and sync clocks are used for different purposes as we will

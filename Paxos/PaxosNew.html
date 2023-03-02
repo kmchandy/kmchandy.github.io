@@ -238,79 +238,79 @@ P.t = [P.n, P.id]
 send prepare(P.t) to all acceptors
 
 // Acceptor A. Step A.1: 
-upon receiving prepare(t) from a proposer P:
-   if t >= A.t:
+upon arrival of prepare(t) at A from a proposer P:
+   if t > A.t:
       A.t = t
+      // receive arriving message
       send promise(t, A.v, A.v_t) to P
 
-// Proposer P. Step P.2. 
+// Proposer P. Step P.2.
+// only receive promise(t, -, -) messages where t = P.t
+
 wait until timeout or:
-     receive promise(t, A.v, A.v_t) from majority of
+     arrival of promise(t, A.v, A.v_t) from majority of
      acceptors where t = P.t
 If timeout: return to step P.1
 else:
      let promise(t, v*, v_t*) be the promise with
-     the largest v_t
+     the largest v_t where t = P.t
      if v* == NULL: send accept(t, P.V) to acceptors
      else: send accept(t, v*) to acceptors
       
 // Acceptor A. Step A.2. 
-upon receiving accept(t, v):
-    if t >= A.t:  A.t, A.v = t, v
+upon arrival of accept(t, v):
+    if t > A.t:
+      A.t = t
+      // receive the arriving message
+      A.v = v
+      send accepted(t, v) to all learners
 </pre>
+
+
 <h4 class="w3-text-teal">Algorithm Steps</h4>
 The algorithm has only one point where an agent waits: step P.2
-In this step a proposer waits for a bounded time
-to receive promise messages from a majority of acceptors. If these
+In this step a proposer <code>P</code> waits for a bounded time
+to receive promise messages from a majority of acceptors
+where the timestamp of each of these messages is <code>P.t</code>.
+If these
 messages don't arrive within this time then the proposer aborts this
 iteration and starts the next iteration, i.e. back to step P.1,
 without completing step P.2.
-Acceptors respond immediately to messages that they receive.
+Note that the value of <code>P.t</code> in step P.2
+is the same as its value at the end of step P.1.
 
 <p>
 A proposer repeatedly executes a loop consisting of steps P.1 and P.2.
-For the time being assume that the loop never terminates; we will
-discuss termination later.
-
-<p>
-In the discussion, we refer to <code>P.t</code> and <code>A.t</code>
-as <code>P</code>'s sync-time and <code>A</code>'s sync-time,
-respectively. We refer to <code>A.accept_v</code> as the value
-accepted by <code>A</code>, and <code>A.accept_t</code> as the
-sync-time of the value accepted by <code>A</code>. Notice that
-<code>A.accept_t</code> and <code>A.accept_v</code> are always
-modified together; moreover, they are modified only in step A.2 when
-an acceptor receives an <code>accept</code> message.
+For the time being assume that the loop never terminates.
 
 
 <h3 style="color:red;">Example</h3>
-The figure below shows a system timeline with 3 acceptors and 2
-proposers. Timelines for learners are not shown. The events on the
-timeline are: 
+The figure below shows events in a single epoch in a system timeline with 3 acceptors and 2
+proposers. Timelines for learners are not shown. All events in the
+same epoch have the same timestamps. We use T for this timestamp
+common to all events in the epoch.
+
+<p>
+The legends for events in the diagram are: 
 <ol>
   <li>
-  <i>N(t)</i>: A proposer sends <code>prepare(t)</code> message, and
-  the proposer's sync-time when it sends the message is
-  <code>t</code>.
+  <i>prep(t)</i>: A proposer <code>P</code> sends <code>prepare(T)</code> message, where
+  <code>t</code> is the proposer's timestamp <code>P.t</code> at the
+  point at which <code>P</code> sends the message, and <code>T =
+  P.t</code>.
   </li>
   <li>
-  <i>U(t)</i>: An acceptor replies to the proposer with a
-  <code>updated_time(t, accept_v, accept_t)</code> message, and 
-  the acceptor's sync-time when it sends the message is
-  <code>t</code>.
+  <i>prom(T, -, -)</i>: An acceptor <code>A</code> replies to the proposer with a
+  <code>promise(T, accept_v, accept_t)</code> message, where
+  <code>T</code> is the timestamp that <code>A</code> received in the
+  <code>prepare(T)</code> message.
   </li>
   <li>
-  <i>P(t)</i>: A proposer responds with a
-  <code>proposal(t, v)</code> message, and the proposer's sync-time at
-  this event is <code>t</code>.
+  <i>accept(T, _)</i>: A proposer sends <code>accept(T, v)</code>.
   </li>
   <li>
-  <i>A(t)</i>: An acceptor accepts a proposer's
-  <code>proposal(t, v)</code> by 
-  sending a
-  <code>accept(accept_v, accept_t)</code> message to learners, and 
-  the acceptor's sync-time when it sends the message is
-  <code>t</code>. The accept messages to learners are not shown.
+  <i>A(t)</i>: An acceptor accepts
+  <code>accept(T, v)</code> message in step A.2
   </li>
 </ol>
 
@@ -326,233 +326,61 @@ by P0 to acceptor A1 is lost.
     <figcaption>Fig.2: Timelines</figcaption>
 </figure>
 
-<h4 class="w3-text-teal">Sync-times in Paxos satisfy rules for partial synchrony</h4>
 
-Below is a copy of the description of partial synchrony that was given earlier.
-The key property of sync-times:
-   The sync-time of an event in which a message <code>M</code> is sent
-   is the 
-   the sync-time of the event in which <code>M</code> is processed.
-  </p>
-  
-  <p class="w3-text-teal">Rules that ensure the sync-times
-   property</p>
-   Let <code>d</code> be the event in which a message <code>M</code>
-   is sent, and let <code>e</code> be the event in which
-   <code>M</code> is received. Let
-   <code>P</code> and <code>Q</code> be the agents that send and
-   receive <code>M</code>, respectively.
-  <ol>
-    <li>
-    When <code>P</code> sends <code>M</code>, it
-    sets <code>M.t</code> to <code>P.t</code>, which is also the
-    sync-time <code>d.t</code> of this event. So
-    <code>d.t = M.t</code>
-    </li>
-    <li>
-    If <code>Q</code> receives <code>M</code> it processes
-    <code>M</code> only if <code>M.t</code> \(\geq\) <code>Q.t</code>.
-    If <code>Q</code> does process the message,
-    <code>Q</code> first sets <code>Q.t </code> to <code>M.t</code>
-   and next
-    executes event <code>e</code> that processes <code>M</code>.
-    So <code>e.t = M.t</code>.
-  </ol>
-  From these rules, <code>d.t = M.t = e.t</code>, and the key property
-   of sync times follows.
-
-
-<h1>=========================================</h1>
-
-<h3 class="w3-text-teal">Observations about the Algorithm</h3>
-Proposers execute steps P.1 and P.2. Acceptors execute steps A.1 and
-A.2. 
-<ol>
-  <li>
-  A proposer changes its sync-time only in step P.1. A proposer's
-  sync-time never decreases.
-  A proposer only processes messages with sync-times equal to the
-  proposer's sync-time; all other messages are ignored (see step
-  P.2).
-  </li>
-  <li>
-  An acceptor only processes a message that has a sync-time that is greater
-  than or equal to the acceptors's sync-time.
-  When an acceptor processes a message, the acceptor sets its
-  sync-time to the message's sync-time.
-  </li>
-  <li>
-  The sync-time of a message sent by an agent (either an acceptor or a
-  proposer) is the sync-time of the agent when the message is
-  sent. So, the sync-time of a message is the sync-time of the event
-  in which the message is sent.
-  </li>
-</ol>
-So, the sync-time of a message is the sync-time of the event that
-sends the message and is also  the sync-time of the event that
-receives the message
-
-
-<h5 class="w3-text-teal">Acceptor's Timeline</h5>
-The figure below illustrates the timeline of an acceptor
-<code>A</code> which receives messages from proposers <code>Y</code>
-and <code>Z</code>.
-<p>
-<figure>
-    <img src="./PaxosLecture/PaxosLecture.003.jpeg" alt="Fig2" style="width:80%">
-    <figcaption>Fig.3: Acceptor's Timeline</figcaption>
-</figure>
-The arrows from the proposors' timelines to <code>A</code>'s timeline
-represent messages sent by the proposer and accepted by
-<code>A</code>. Lost messages are not shown.
-
-<p>
-The number next to the message is the sync-time of the message. A
-sync-time is a pair (integer, proposer id); however, the proposer id
-is not shown.
-
-<p>
-<code>A</code>'s sync-time is initially 0. When <code>A</code>
-receives a message with sync-time 4 it increases its
-sync-time to 4. Then <code>A</code> receives a message with sync-time
-3 which it ignores because the message sync-time is lower
-than its time. When <code>A</code> gets a message with
-sync-time 6, <code>A</code> increases its sync-time to 6.
-
-<p>
-An acceptor's timeline can be partitioned into intervals where the
-acceptor's time within each interval remains constant and increases
-from an interval to the following one.
-</p>
-
-
-
-
- 
-
-<p> In step A.1 if <code>t < A.t</code>, and in step A.2 if <code>t <=
-A.t</code>, the message received by the acceptor is ignored. In step
-P.2, an <code>updated_time</code> message received by a proposer
-<code>P</code> is ignored if the <code>time</code> component of the
-message is different from <code>P.t</code> Hereafter, we won't
-consider messages that are ignored by agents. A diagram showing acceptor
-<code>A</code>'s timeline without ignored or lost messages is shown
-below where the blue arrows are messages from proposers.
-
-<figure>
-    <img src="./PaxosLecture/PaxosLecture.023.jpeg" alt="Fig3" style="width:80%">
-    <figcaption>Fig.4: Acceptor's Timeline without Ignored Messages</figcaption>
-</figure>
+<p class="w3-text-teal">Sync Times</p>
+<code>P.t</code> and <code>A.t</code> are the <i>sync times of agents
+<code>P</code> and <code>A</code></i>, respectively.
+We call <code>A.accept_v</code> and <code>A.accept_t</code> the 
+<i>value accepted</i> and the <i>sync time of the value accepted</i> by
+<code>A</code>, respectively.
+In messages <code>prepare(t)</code>, <code>promise(t, -, -)</code>, and 
+<code>accept(t, -)</code>, <code>t</code> is the <i>sync time
+of the message</i>.
 
 <hr class="new2">
 <p style="color:blue;">
-  Ignored messages are treated as lost messages.
-</p>
-<hr class="new2">
-Hereafter, a <i>received message</i> is one that is not lost and is not ignored by the
-receiver: it is a message in which the receiver takes some action upon
-receiving the message.
-
-
-<h5 class="w3-text-teal">Proposer's Timeline</h5>
-An example of a proposer's timeline is shown in the figure below.
-
-<figure>
-    <img src="./PaxosLecture/PaxosLecture.024.jpeg" alt="Fig4" style="width:80%">
-    <figcaption>Fig.5: Proposer's Timeline</figcaption>
-</figure>
-The proposer's timeline can also be partitioned into intervals within
-    which the proposer's time remains constant. In this diagram,
-    proposer <code>p</code>'s time is initially 0, and the proposer
-    increases its time in step P.1. Let the new time be 10. Then the
-    proposer sends <code>new_time(10)</code> to all acceptors. The
-    proposer ignores all messages it gets next except for
-    <code>updated_time(10, ..,)</code> messages with the same
-    sync-time, 10. If it gets a majority of such messages, it sends 
-<code>proposal(10, ..)</code> to all acceptors.
-<p>
-Likewise, in the next interval, while the proposer's time is 35, all
-    the messages that the proposer sends and receives have the same
-    sync-time: 35. (Recall that ignored messages are treated as lost
-messages, and are treated as having been not received.)
-
-<p>
-  From the algorithm, the only new values of time are created by
-  proposers in step P.1. Message sync-times and agent times in all
-  other steps of the algorithm are obtained from messages received by
-  agents.
-  
-<p>
-As you can see: 
-<hr class="new2">
-<p style="color:blue;">
-While a proposer's time is <code>t</code>, the sync-times of 
-all messages that the proposer sends and receives is
-<code>t</code>.
+Sync time property: The sync-time of a sender of a message
+is the same as the sync-time of a receiver of that message.
 </p>
 <hr class="new2">
 
-
-The algorithm has the following easily-checked properties, for all acceptors \(A\) and
-proposers \(P\):
-<p>
-invariant: \( \; A.accept\_t \leq A.t \)
-<p>
-invariant: \( \; (A.accept\_t = 0) \; \equiv \; (A.accept\_v = null) \)
-<p>
-\(A.t\), \(A.accept\_t\) and \(P.t\) never decrease.
-
-<h4 class="w3-text-teal">Ignored messages</h4>
-Messages that are lost or ignored do not change the states of
-agents. <i>Processed</i> messages are messages that an agent receives
-and then carries out an action such as sending a message. Processed
-messages are:
-<ol>
-  <li>
-    \(new\_time(T)\) messages received by an
-    acceptor \(A\) when \(T > A.t\). See step A.1.
-			     </li>
-<li>
-  \(proposal(T)\) messages received by an
-    acceptor \(A\) when \(T \geq A.t\). See step A.2.
-  </li>
-<li>
-  \(updated\_time(T)\) messages received by a proposer \(P\) when
-  \(T = P.t\). See step P.2.
-  </li>
-</ol>
-
-
-Because ignored messages don't change states of agents: 
-<hr class="new2">
-<p style="color:blue;">
-  We only consider processed messages in trajectories.
-</p>
-<hr class="new2">
-
-Every event in the algorithm sends a  \(new_time\),
-\(updated_time\), \(proposal\), or \(accept\) message. Define the time
-of the event as the sync-time of the messages sent in the event. This
-is also the sync-time of the agent when it sends the message.
-
-<h4 class="w3-text-teal">Semi-synchronous trajectories</h4>
-We begin by proving that the Paxos algorithm satisfies its
-specifications for semi-synchronous trajectories and later carry out
-the proof for all trajectories.
-<hr class="new2">
-<p style="color:blue;">
-A semi-synchronous trajectory is one that can be partitioned
-into epochs where all events with the same sync-time are in the same
-epoch. 
-</p>
-<hr class="new2">
+<p>Proof</p>
+For every step of the algorithm:
+the sync time of a message sent is the same as the sync time of the
+sender at the point at which the message is sent, and
+the sync time of a receiver of a message is the
+same as the sync time of the message.
 
 <p>
-  An epoch in which events have sync-time \(t\) is called epoch
-  \(t\). Because sync-times are pairs (integer, process id), and all
-  sync-times are created by proposers when they <i>send new_time</i>
-  messages, it follows that exactly one proposer sends messages within
-  an epoch.
+A consequence of the sync time property is the following.
+Let \(X\) be the sequence of events in a given trajectory of the Paxos
+algorithm. Let \(Y\) be a permutation of \(X\) where the timeline of
+each agent is the same in \(X\) and \(Y\) and events in \(Y\) are executed in
+increasing order of sync time. For all \(T\), the state of an agent when its sync
+time is \(T\) is the same in \(X\) and \(Y\). Therefore we can reason
+about agent states in \(X\) by reasoning about them in \(Y\).
+
+<p>Partition the timeline of \(Y\) into
+epochs where all events in an epoch have the same sync time.
+We can analyze \(Y\) as a sequence of state transitions from the start
+of an epoch to the start of the next epoch. Channels are empty at the
+start of each epoch. So, these epoch-level state
+transitions deal only with agent states.
+
+
+
+
+<h4 class="w3-text-teal">Synchronous trajectories</h4>
+We prove that the synchronous trajectory Y satisfies the Paxos
+specifications. 
+
+<p>
+Sync times are pairs (integer, process id). So, identical sync times
+have the same process id. Therefore all sync times in an epoch
+also have the same process id. From the algorithm, this process id is
+the id of the proposer that sends the <code>prepare</code> message.
+Therefore, all events in an epoch are a consequence of
+<code>prepare</code> messages sent by the same proposer.
 
   
 <h5 style="color:red;">Example</h5>
@@ -563,38 +391,39 @@ epoch.
 The diagram shows a semi-synchronous trajectory with three epochs with
 times \(t^{0}\), \(t^{1}\), and \(t^{2}\), shown
 in brown, blue and green, respectively. All the events and messages in epoch
-\(t^{i}\) have sync-time \(t^{i}\). In epochs \(t^{0}\) and \(t^{2}\)
+\(t^{i}\) have timestamp \(t^{i}\). In epochs \(t^{0}\) and \(t^{2}\)
 the only proposer that sends and receives messages is P1, while in
 epoch \(t^{1}\) the only proposer that sends and receives messages is P0.
 
 <p>
   In epoch \(t^{0}\), proposer P1 increases its time (see step P.1) to  \(t^{0}\)
-  and sends \(new\_time(t^{0})\) messages --- shown as brown arrows ---
+  and sends \(prepare(t^{0})\) messages --- shown as brown arrows ---
   to acceptors. The message to acceptor A0 is lost. An acceptor \(A\)
-  that gets the message replies with \(updated\_time(t^{0},
+  that gets the message replies with \(promise(t^{0},
   A.accept\_v, A.accept\_t)\). Proposer P1 waits to receive at least 2
-  \(updated\_time\) messages because 2 is a majority for a set of 3
-  agents. When it receives the 2 messages, P1 sends  \(proposal(t^{0},
-  P1.v)\) messages to acceptors. In this diagram, the \(proposal\)
+  \(promise\) messages because 2 is a majority for a set of 3
+  agents. When it receives the 2 messages, P1 sends  \(accept(t^{0},
+  P1.v)\) messages to acceptors. In this diagram, the \(accept\)
   messages sent to A0 and A1 are lost while A2 receives the
-  message which, in turn, sends \(accept\) messages. In this epoch, a
-  majority of acceptors do not send \(accept\) messages.
+  message which, in turn, sends \(accepted\) messages. In this epoch, a
+  majority of acceptors do not send \(accepted\) messages.
 
 <p>
-  In epoch \(t^{1}\), proposer P0 increases its time, and sends
-  \(new\_time(t^{1})\) messages. P0 timesout waiting to receive
-  \(updated\_time\) messages from a majority of acceptors, and so it
-  sends no \(proposal\) messages.
+  In epoch \(t^{1}\), proposer P0 increases its time to  \(t^{1}\)
+  and sends \(prepare(t^{1})\) messages
+  to acceptors. P0 timesout waiting to receive
+  \(promise\) messages from a majority of acceptors, and so it
+  sends no \(accept\) messages.
 
 <p>
-  In epoch \(t^{2}\), proposer P1 increases its time, and sends
-  \(new\_time(t^{2})\) messages. P1 receives
-  \(updated\_time\) messages from a majority of acceptors; sends
+  In epoch \(t^{2}\), proposer P1 increases its time to  \(t^{2}\), and sends
+  \(prepare(t^{2})\) messages. P1 receives
+  \(promise\) messages from a majority of acceptors; sends
   proposals to acceptors; receives replies from a majority of
-  acceptors, and then sends \(proposal\) messages. The
-  \(proposal\) messages are received by a majority of acceptors, each
-  of which sends \(accept\) messages. So, learners that receive
-  \(accept\) messages from a majority of acceptors, set the values
+  acceptors, and then sends \(accept\) messages. The
+  \(accept\) messages are received by a majority of acceptors, each
+  of which sends \(accepted\) messages. So, learners that receive
+  \(accepted\) messages from a majority of acceptors, set the values
   that they learned to the value in the \(accept\) messages.
   
   
@@ -622,7 +451,7 @@ epochs that follows epoch \(T^{*}\). Let \(T^{i}\) be the time of the
 
 <p class="w3-text-teal">Base Case: epoch \(T^{*}\)</p>
 <i>Part 1</i>: All proposals are sent by the
-same proposer in an epoch, and all proposals have the same sync-time
+same proposer in an epoch, and all proposals have the same timestamp
 and value. Therefore, the value in all proposal and accept messages in
 epoch \(T^{*}\) is \(V^{*}\).
 
@@ -662,7 +491,7 @@ The result is vacuously true if no proposals are sent in
      This example illustrates the idea underlying the proof. In the
      next diagram, proposer P0 sends a \(new\_time(T^{*})\)
      message which is received by acceptors A0 and A1 which respond
-     with updated time messages with sync-time \(T^{*}\). Proposer P0
+     with updated time messages with timestamp \(T^{*}\). Proposer P0
      receives both messages, and sends proposals to all acceptors. In
      this case the proposals are received by A0 and A2 which then send
      accept messages. When A0 and A2 receive the proposals they set
@@ -676,7 +505,7 @@ The result is vacuously true if no proposals are sent in
 The diagram below shows an epoch T1 that follows epoch T0. In this
 epoch, proposer P1 sends \(new\_time(T^{1})\) messages which are
 received by acceptors A0 and A1 which respond with updated time
-messages with sync-time \(T^{1}\).
+messages with timestamp \(T^{1}\).
 When P1 gets both messages it sends proposals to all acceptors.
 Let's use the argument of the proof
 to determine the value of proposals and the accept message sent by A1 in this
@@ -691,8 +520,8 @@ epoch.
 
 When P1 gets both updated time messages it
 identifies the message with the largest value of \(A.accept\_t\). The
-message sent by A0 has sync-time \(T^{*}\) whereas the message sent by
-A1 has an earlier sync-time. So, the updated time message with the
+message sent by A0 has timestamp \(T^{*}\) whereas the message sent by
+A1 has an earlier timestamp. So, the updated time message with the
 largest \(A.accept\_t\) is the message sent by A0. 
 
 P1 sends proposals with a value of
@@ -751,12 +580,12 @@ There is no message from an event in \(future(T)\)
 to an event in \(past(T)\).
 
 <p>
-  If a proposer sends a message in the future, i.e., with a sync-time
+  If a proposer sends a message in the future, i.e., with a timestamp
   \(T' > T\) then the event in which an acceptor processes the message also
-      has sync-time \(T'\), and is also in the future.
-      Likewise, if a proposer sends a message with a sync-time
+      has timestamp \(T'\), and is also in the future.
+      Likewise, if a proposer sends a message with a timestamp
   \(T' > T\) then the event in which an acceptor receives the message also
-      has sync-time \(T'\).
+      has timestamp \(T'\).
 
 <h5 style="color:red;">Example</h5>
 <figure>
