@@ -155,7 +155,7 @@ timeline at which the logical time is \(n\) for all \(n\).
 So we assume that there is a point on on \(A\)'s timeline,  at which \(A\)'s
 logical time increases from 1 to 2t.
 
-<h2 class="w3-text-teal">Events in Logical Time Order</h2>
+<h2 class="w3-text-teal">Synchronous Trajectory: Events in Logical Time Order</h2>
 A consequence of the
 <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
 theorem about event dependence</a>
@@ -172,7 +172,8 @@ logical times.</i> </center>
 </h5>
 <hr class="new2">
 
-<h4 style="color:red;">Example: Events in Logical Time Order</h4>
+<h4 style="color:red;">Example of Synchrony Trajectory: Events in
+Logical Time Order</h4> 
 
 The diagram below shows the events in the trajectory of figure 1 with
 the events appearing in increasing order of timeline. The sequence of states of an
@@ -192,6 +193,8 @@ agent \(B\) increments its local clock to 1 without taking an action.
     <img src="../ChannelSnapshots/Timelines/Timelines.002.jpeg" alt="Fig1" style="width:100%">
     <figcaption>Fig. 2: Events Logical Time Order</figcaption>
 </figure>
+
+<h4 class="w3-text-teal">Epochs</h4>
 We partition trajectories in which events are ordered in logical time
 into <i>epochs</i> 
 where all agents have the same logical time in an epoch.
@@ -201,7 +204,7 @@ Events occur at the border of one epoch and the next.
 In the diagram, events are shown as colored circles while increments
 of logical time without events are shown in white.
 
-<p>
+<h4 class="w3-text-teal">Analyzing Asynchronous Trajectories Using aSynchronous Trajectory</h4>
 We can reason about the behavior of a given trajectory (figure 1) by
 analyzing a synchronous trajectory (figure 2) with the same timeline
 graph as the given trajectory.
@@ -272,7 +275,7 @@ colored green.
 <h2 class="w3-text-teal">Algorithm for Logical Clocks</h2>
 The algorithm assigns logical times to events so that 
 if there is an edge from \(e'\) to
-\(e\) in the timeline graph then \(t(e') < t(e)\).x
+\(e\) in the timeline graph then \(t(e') < t(e)\).
 
 <h4 class="w3-text-teal">Timestamps of Messages</h4>
 Agents assign timestamps to messages that they send.
