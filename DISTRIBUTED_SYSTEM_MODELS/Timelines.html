@@ -236,9 +236,18 @@ The following theorem captures the idea illustrated by figures 3 and
 <h4 class="w3-text-teal">Event Dependence</h4>
 The output labels of an event \(e\) depend only its input labels, and
 so the outputs of \(e\) depend only on vertices from which there are
-paths to \(e\). We shall say that <i>\(e\) depends on \(e'\)</i> in \(X\) if
+paths to \(e\).
+
+We define the relation, "depends on" between events as follows:
+<hr class="new2">
+<p style="color:blue;">
+<i>\(e\) depends on \(e'\)</i> in a trajectory \(X\) if
 and only if there is a path from \(e'\) to \(e\) in the timeline graph
-of \(X\). We may drop the phrase  "in \(X\)" when 
+of \(X\).
+</p>
+<hr class="new2">
+
+We may drop the phrase  "in \(X\)" when 
 we fix a particular trajectory \(X\) in the description.
 
 <p>
@@ -260,11 +269,12 @@ that the dependence among events is identical in both figures.
 Theorem about Event Dependence</p>
 <p style="color:blue;">
 Any permutation \(Y\) of the sequence of events
-\(X\) is also a trajectory of the system if
+of a trajectory \(X\) is also a trajectory that starts in the same
+state as \(X\) does and ends in the same state as \(X\) does if
 <br>
 <center>
 <p style="color:blue;">
-<i>each event appears
+<i>each event in \(Y\) appears
  after all events on which it depends</i>.
 </center>
 </p>

@@ -84,21 +84,54 @@ hr.new1 {
   href="https://kmchandy.github.io/ChannelSnapshots/ChannelSnapshots.html">
   GlobalSnapshots.
   </a>
+  </p>
+  <h4 class="w3-text-teal">Local clocks</h4>
+  Many algorithms use agents' local clocks.
+  Later, we will discuss methods that limit the drift of local clocks from
+  each other; these methods, however, do not guarantee that local clocks are
+  perfectly synchronized.
+
+  <p>
+  <i>Determining global state with synchronized clocks</i>:
+  Determining a global 
+  state is straightforward when local clocks are  
+  synchronized: each agent records its state when its clock reads
+  time \(T\). A message sent when the sender's clock reads \(T\) is
+  received by the receiver when the receiver's clock reads a value
+  that exceeds \(T\).
+
+  <p>
+  <i>Determining global state with clocks that drift</i>:
+  When clocks drift apart a message sent when the sender's clock
+  reads \(T\) may be received when the receiver's clock reads a
+  value earlier than \(T\). In this case, a cut of the timeline at
+  points where local clocks read \(T\) is not consistent --- a
+  message from the future (clock reads \(T\)) is received in the past
+  (clock reads less than \(T\)). So, agent states when local clocks
+  read \(T\) may not represent a global state.
+
+
+  <p>
+  What steps can prevent a message sent when the sender's clock reads
+  \(T\) from being received when the receiver's clock reads a value
+  less than \(T\)? One way is for the receiver to move its clock forward to a
+  value greater than \(T\) when it receives a message sent when the
+  sender's clock reads \(T\). This idea underlies logical clocks.
+
   
 
-
   <p class="w3-text-red">
-   Logical clocks are local clocks that can be used in many algorithms
-  as though local clocks are synchronized.
+  Logical clocks are local clocks maintained by agents. Local clocks
+  are not synchronized across agents and do not 
+
+  that we use in many
+   algorithms where we treat the logical clocks as though they are
+   synchronized across agents even though the local clocks
   </p>
   <p>
 A logical clock algorithm is one in which each agent assigns a
-number \(t(e)\), called
-a timestamp, to each event \(e\) in its trajectory.
-The timestamp of an event is
-  called the logical time at the event.
-  The logical time of an event can be used as though it is the real
-  time for some problems.
+  number \(t(e)\) to each event \(e\) in its trajectory, and
+   \(t(e)\) is called the logical time or event \(e\).
   Logical clocks are not synchronized: different agents may have
   different logical times at the same instant.
 
@@ -111,8 +144,6 @@ The timestamp of an event is
   determine if the file-sharing algorithm is deadlocked.
 
  <h2 class="w3-text-teal">Specification of Logical Clocks</h2>
-The specification of the algorithm is as follows.
-
 
 <hr class="new2">
   <h5 style="color:blue;">
@@ -143,109 +174,165 @@ from left to right.
 <p>
 Logical times are shown as integers inside the circles
 representing events.
-The logical times satisfy the property that for every edge from 
+For example, events 0, 1, and 2 on the timeline for agent B have
+logical times 0, 2 and 4.
+<p>
+The logical times in this example satisfy the property that for every
+    edge from  
 \(e'\) to \(e\): \(t(e') < t(e)\).
 
-<p>
-We see that the \(n\)-th event on an agent's timeline does not have
-logical time \(n\). For example the events on \(A\)'s timeline have
-logical times 0, 1, 3. We  assume that logical times increase
-continuously --- i.e. there is a point on each agent's
-timeline at which the logical time is \(n\) for all \(n\).
-So we assume that there is a point on on \(A\)'s timeline,  at which \(A\)'s
-logical time increases from 1 to 2t.
+<p class="w3-text-teal">Logical times are not unique</p>
+There are many ways that each event \(e\) can be assigned a number
+\(t(e)\) such that these numbers satisfy the logical time
+specification. For example, in figure 1, the logical time for the last
+event on agent \(A\) could be 10 while the logical times of other
+agents are left unchanged. 
 
-<h2 class="w3-text-teal">Synchronous Trajectory: Events in Logical Time Order</h2>
-A consequence of the
+
+<h2 class="w3-text-teal">Algorithm for Logical Clocks</h2>
+Algorithms that use following rules satisfy the specification for
+logical time.
+
+<hr class="new2">
+<h5 style="color:blue;">
+<ol>
+  <li>
+  <i>Message timestamps</i>: 
+Agents assign timestamps to messages that they send.
+A message's timestamp is the logical time of the event in which the
+  message is sent.
+  </li>
+  <li>
+<i>The logical time of an event</i> is any value that is greater than the
+timestamps of messages (if any) received in the event and greater than
+  the logical time of the previous event on that agent.
+  </li>
+</ol>
+</h5>
+<hr class="new2">
+A proof that these rules satisfy the specification for logical time is
+straightforward.
+
+<h3 style="color:red;">Example</h3>
+The next two figures illustrate the two rules of the logical clock
+algorithm.
+<figure>
+    <img src="../ChannelSnapshots/Timelines/Timelines.002.jpeg" alt="Fig2" style="width:100%">
+    <figcaption>Fig. 2: Message Timestamps</figcaption>
+</figure>
+
+<figure>
+    <img src="../ChannelSnapshots/Timelines/Timelines.003.jpeg" alt="Fig3" style="width:100%">
+    <figcaption>Fig. 3: Logical Times of Events</figcaption>
+</figure>
+
+
+<h2 class="w3-text-teal">Events in Logical Time Order</h2>
+A direct consequence of the
 <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
 theorem about event dependence</a>
-is the following important property of logical times.
+is the following theorem.
+
+<h5 class="w3-text-teal">Theorem about Events in Logical Time Order</h5>
 <hr class="new2">
 <h5 style="color:blue;">
 Any permutation \(Y\) of the sequence of events of a given trajectory
-\(X\) is also a trajectory that starts and ends in the same states as
-\(X\) does provided
+\(X\) is also a trajectory if
 <br>
 <center>
 <i>events in \(Y\) are in increasing order of
-logical times.</i> </center>
+logical times.</i>
+</center>
 </h5>
 <hr class="new2">
 
-<h4 style="color:red;">Example of Synchrony Trajectory: Events in
-Logical Time Order</h4> 
+<h4 class="w3-text-teal">Proof</h4>
+The theorem about event dependence is: Any permutation \(Y\) of the
+sequence of events of a trajectory \(X\) is also a trajectory if <i>each
+event \(e\) appears in \(Y\) after all events on which \(e\)
+depends.</i> From the definition of logical times: all events that
+event \(e\) depends on have lower logical times than \(e\) does.
 
-The diagram below shows the events in the trajectory of figure 1 with
-the events appearing in increasing order of timeline. The sequence of states of an
-agent is the same in the
-trajectories of figures 1 and 2.
-<p>
-We can think of the timeline in figure 2 as synchronous where local
-clocks of agents are synchronized. 
-Each agent takes a step that increments its local clock from \(t\) to
-\(t+1\) at the same point in the trajectory.
-A step either changes the system state state (an event) or 
-merely increments the agent's local clock without changing state.  For
-example, agents \(A\) and \(D\) execute actions that increment their
-local clocks from 0 to 1, while
-agent \(B\) increments its local clock to 1 without taking an action.
+<h3 style="color:red;">Example</h3>
+The next figure shows a trajectory with the same events as in figure 1
+but with events appearing in increasing order of logical time.
+
 <figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.002.jpeg" alt="Fig1" style="width:100%">
-    <figcaption>Fig. 2: Events Logical Time Order</figcaption>
+    <img src="../ChannelSnapshots/Timelines/Timelines.004.jpeg" alt="Fig4" style="width:100%">
+    <figcaption>Fig. 4: A Trajectory with Events in Increasing Order
+    of Logical Time</figcaption>
 </figure>
+The trajectory of figure 4 has the same graph as that of figure 1.
 
-<h4 class="w3-text-teal">Epochs</h4>
-We partition trajectories in which events are ordered in logical time
-into <i>epochs</i> 
-where all agents have the same logical time in an epoch.
-In the diagram, epoch 0 (agents have logical time 0) is shown in
-green, epoch 1 in blue, and epoch 2 in brown.
-Events occur at the border of one epoch and the next.
-In the diagram, events are shown as colored circles while increments
-of logical time without events are shown in white.
+<h2 class="w3-text-teal">Using Time to Reason about Distributed Systems</h3>
 
-<h4 class="w3-text-teal">Analyzing Asynchronous Trajectories Using aSynchronous Trajectory</h4>
-We can reason about the behavior of a given trajectory (figure 1) by
-analyzing a synchronous trajectory (figure 2) with the same timeline
-graph as the given trajectory.
-We can design algorithm for a synchronous system and then
-map the algorithm to an
-asynchronous system by replacing <i>time</i> in the synchronous system
-by <i>logical time</i> in the asynchronous system.
+<h5 class="w3-text-teal">Continuous Logical Time of an Agent </h5>
+It can be helpful to assume that an agent's logical clock
+moves forward continuously rather than in jumps.
+Let \(e'\) be the event immediately preceding event \(e\) at an agent
+\(A\). Before \(A\) assigns a logical time \(t(e)\) to \(e\), we
+assume that \(A\)'s logical clock increases continuously taking on all values
+between \(t(e')\) and \(t(e)\).
 
 <p>
-Let's use this methodology to develop a global snapshot algorithm.
+In the example of figure 1, we assume that as agent \(A\)'s logical clock
+increases it takes on all values from 1 to 3, though there is no
+event with logical time 2.
+
+
+<h5 class="w3-text-teal">Treat Logical Times as Real Times</h5>
+It can be helpful to reason about a given trajectory
+\(X\) by reasoning about a synchronous trajectory \(Y\) in which <i>real
+and logical times are identical</i>.
+In a synchronous trajectory event \(e\) occurs at <i>real
+time</i> \(t(e)\).
+
+<p>
+Synchronous trajectories are merely artifices that can be helpful in
+designing distributed algorithms.
+A strategy for designing a distributed algorithm is to
+first design an algorithm for a synchronous system and then map the
+algorithm to the distributed system by replacing <i>time</i> in the
+synchronous system with <i>logical time</i> in the distributed
+system.
+Let's use this strategy to develop a global snapshot algorithm.
 
 
 <h2 class="w3-text-teal">Global Snapshots using Logical Times</h2>
+The steps of the strategy are: (1) Design a global snapshot algorithm
+for a synchronous system, and then (2) map the synchronous algorithm
+to a distributed system.
 
-<h4 class="w3-text-teal">First step: global snapshot algorithm for a
-synchronous system</h4>
-A snapshot algorithm in a system in which local clocks are
-synchronized is straightforward.
-Each agent records its state when its local clock is at \(T\).
-A message is timestamped with the sender's time as determined by the
-sender's clock.
-An records the state of an
+<p class="w3-text-teal">First step: global snapshot algorithm for a
+synchronous system</p>
+Determining a synchronous system's global state at time \(T\)
+is straightforward.
+Each agent records its state at \(T\).
+The timestamp of a message is the sender's time when the message is
+sent.
+An agent records the state of an
 incoming channel as the sequence of messages that the agent receives with
 timestamps of \(T\) or less that the agent receives when the agent's
 time is greater than \(T\). 
 
+
 <h4 style="color:red;">Example: Global snapshot in a synchronous system</h4>
 
-The figure below illustrates the global state taken at time 2 in a
+The figure below illustrates the global state taken at time 2.8 in a
 synchronous system.
-The vertical line represents a point in the trajectory at time 2.
+The vertical line represents a point in the trajectory at time 2.8.
+The time of 2.8 is a helpful fiction --- no event occurred at logical
+time 2.8.
 
 <figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.003.jpeg"
-    alt="Fig3" style="width:100%"> 
-    <figcaption>Fig. 3: Global Snapshot at Time 2 in a Synchronous System</figcaption>
+    <img src="../ChannelSnapshots/Timelines/Timelines.005.jpeg"
+    alt="Fig5" style="width:100%"> 
+    <figcaption>Fig. 5: Global Snapshot at Time 2.8 in a Synchronous System</figcaption>
 </figure>
 
 
-<h4 class="w3-text-teal">Second step: global snapshot for an
-asynchronous system</h4> 
+<p class="w3-text-teal">Second step: transform synchronous algorithm
+for a distributed system</p> 
 We get a general global snapshot algorithm by substituting <i>time</i> in the
 algorithm for the synchronous system with <i>logical time</i>. Here is
 the algorithm obtained by this substitution.
@@ -255,9 +342,9 @@ incoming channel as the sequence of messages that the agent receives with
 timestamps of \(T\) or less that the agent receives at time greater
 than logical time \(T\).
 
-<h4 style="color:red;">Example of Global Snapshot at Logical Time 2
+<h4 style="color:red;">Example of Global Snapshot at Logical Time 2.8
 </h4>
-The vertical line at time 2 in the synchronous case is equivalent to a
+The vertical line at time 2.8 in the synchronous case is equivalent to a
 curvilinear line in the asynchronous case.
 The consistent cut separates the past (events with logical times of 2
 or less) from the future (events with logical times greater than 2).
@@ -265,44 +352,11 @@ In the diagram, past events are colored black and future events are
 colored green.
 
 <figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.004.jpeg"
-    alt="Fig4" style="width:100%"> 
-    <figcaption>Fig. 4: Consistent Cut based on Timestamps</figcaption>
+    <img src="../ChannelSnapshots/Timelines/Timelines.006.jpeg"
+    alt="Fig6" style="width:100%"> 
+    <figcaption>Fig. 6: Consistent Cut based on Timestamps</figcaption>
 </figure>
 
-
-
-<h2 class="w3-text-teal">Algorithm for Logical Clocks</h2>
-The algorithm assigns logical times to events so that 
-if there is an edge from \(e'\) to
-\(e\) in the timeline graph then \(t(e') < t(e)\).
-
-<h4 class="w3-text-teal">Timestamps of Messages</h4>
-Agents assign timestamps to messages that they send.
-A message's timestamp is the logical time of the sender at the point
-at which the message is sent, which is also
-the logical time of the event in which the message is sent.
-
-<figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.005.jpeg" alt="Fig2" style="width:100%">
-    <figcaption>Fig. 5: Message Timestamps</figcaption>
-</figure>
-
-<h4 class="w3-text-teal">Logical Times of Events</h4>
-The logical time of an event is a value greater than the
-timestamps of messages (if any) received in the event and also greater than
-the logical time of the previous event on that agent.
-<p>
-The timestamp of an initial event is arbitrary. In the examples we
-assume that it is 0.
-
-<figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.006.jpeg" alt="Fig2" style="width:100%">
-    <figcaption>Fig. 6: Logical Times of Events</figcaption>
-</figure>
-
-The proof that this algorithm satisfies the specification is
-straightforward.
 
 
 <h3 class="w3-text-teal">Vector Clocks</h3>
@@ -348,8 +402,8 @@ event immediately preceding \(e\) at agent \(j\).
 
 <h4 style="color:red;">Example of Vector Clocks</h4>
 <figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.008.jpeg" alt="Fig8" style="width:100%">
-    <figcaption>Fig. 8: Example of Vector Clocks</figcaption>
+    <img src="../ChannelSnapshots/Timelines/Timelines.007.jpeg" alt="Fig7" style="width:100%">
+    <figcaption>Fig. 7: Example of Vector Clocks</figcaption>
 </figure>
 The figure shows both scalar and vector timestamps. Scalar
 timestamps are shown inside the circles representing events while
@@ -390,7 +444,93 @@ As an example, look at the event \(e\) with vector time \(T = [2, 2,
 The latest event on agent 0 with a path to \(e\) is the second
 (\(T_{0} = 2\)) event at agent 0. 
 The latest event on agent 2 with a path to \(e\) is the first
-(\(T_{2} = 1\)) event at agent 2. 
+(\(T_{2} = 1\)) event at agent 2.
+
+
+
+<h5 class="w3-text-teal">Rounds</h5>
+We can think of a synchronous trajectory as operating in a series of
+rounds where in round \(T\) all agents take steps that increment their
+ times from \(T\) to the next higher value. In a step, an agent
+may receive messages sent in previous rounds, and 
+may send messages that will be received in later rounds, and may change
+the agent's state, or an agent can merely increase its time
+without changing state or sending or receiving messages.
+
+
+<h4 style="color:red;">Example of a Synchronous Trajectory</h4> 
+
+The diagram below shows a synchronous equivalent of the trajectory of
+figure 1. Events are shown as colored vertices and steps that merely
+increase logical time without otherwise changing the system's state
+are shown as white vertices. For example, events that increase logical
+times to 2 on agents B and D are shown as brown vertices, and the step
+that merely increases A's logical time is shown as a white vertex.
+
+<p>
+The synchronous trajectory is a sequence of rounds numbered 0, 1, 2,
+3, ... where times are incremented at the start of each
+round. Events in rounds 0, 1, 2, 3, 4 are shown as green, brown,
+orange and blue vertices, respectively.
+
+<figure>
+    <img src="../ChannelSnapshots/Timelines/Timelines.005.jpeg" alt="Fig5" style="width:100%">
+    <figcaption>Fig. 5: Synchronous Trajectory: Sequence of Rounds</figcaption>
+</figure>
+
+
+
+
+<h2 class="w3-text-teal">Equivalent Synchronous Trajectories</h2>
+Reasoning about synchronous systems can be easier than reasoning about
+asynchronous systems.
+For the purpose of reasoning about states we can treat logical times
+in \(X\) as though they are real times in \(Y\). 
+
+<p>
+Given a trajectory \(X\) of a system, we define an equivalent
+synchronous trajectory \(Y\) as follows.
+Let \(t(e)\) be the logical time of event \(e\) in \(X\).
+In trajectory \(Y\), each event \(e\) occurs at real time \(t(e)\).
+
+
+<h5 class="w3-text-teal">Theorem about Equivalent Synchronous Trajectory</h5>
+<hr class="new2">
+<h5 style="color:blue;">
+Any synchronous equivalent \(Y\) of a trajectory \(X\) is also a
+trajectory of the system.
+</h5>
+<hr class="new2">
+
+<p class="w3-text-teal">Proof</p>
+The proof follows directly from the theorem on events in logical time
+order.
+
+
+<h3 class="w3-text-teal">Analyzing Asynchronous Trajectories Using
+Synchrony</h3>
+We may find it helpful to reason about a given trajectory
+\(X\) by determining logical times for events in \(X\)
+and then reasoning about a synchronous trajectory \(Y\) in which <i>real
+ and logical times are identical</i>. In \(Y\), at real time T all agents
+have logical time T. Therefore, in \(Y\) event \(e\) occurs at <i>real
+time</i> \(t(e)\).
+
+<p>
+The synchronous trajectory is merely used as an aid when it helps
+to do so.
+
+<p>
+
+reasoning about its synchronous equivalent (figure 5).
+The trajectory \(X\) and its synchronous equivalent \(Y\) are shown in
+figure 6.
+
+<figure>
+    <img src="../ChannelSnapshots/Timelines/Timelines.006.jpeg" alt="Fig6" style="width:100%">
+    <figcaption>Fig. 6: Synchronous Equivalent of a Trajectory</figcaption>
+</figure>
+
 
 <!--Start Footer--------------------------------------->
 

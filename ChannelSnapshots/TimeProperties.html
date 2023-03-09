@@ -78,25 +78,89 @@ hr.new1 {
 
 
     <!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Partially Synchronous Algorithms</h2>
+    <h2 class="w3-text-teal">Trajectories as Sequences of Rounds</h2>
     
   In this section we describe a framework that allows us
   to reason about the
-  correctness of distributed algorithms assuming that
-  agents operate in lock step.
-  Synchronous algorithms can have simpler proofs than asynchronous
-  algorithms.
+  correctness of a trajectory of a distributed system by analyzing a
+   trajectory consisting of a sequence of rounds where
+  agents operate in lock step in each round. We consider systems in
+  which messages can get lost --- any message in any channel channel can
+  be deleted at any point.
 
   <p>
-  The central idea is a <i>sync clock</i>, which is a modification of a
+  The central idea is a <i>sync clock</i>, which is similar to a
   logical clock.
-  Sync and logical clocks assign timestamps to events in the same
-  way: the timestamp of an event is the value of 
-  the clock when the event occurs.
-  Timestamps are a total order; we use integers or pairs (integer,
-  process id) as timestamps, where process ids are used to break
-  ties.
+  Timestamps, called sync times, are assigned to events.
+  Sync times are a total order. In the examples a sync time 
+  is a pair (integer, process id) where comparisons are made
+  lexicographically. So, \([0, 10] < [1, 0]\).
 
+  
+   <h2 class="w3-text-teal">Specification of Sync Clocks</h2>
+Let \(t(e)\) be the sync time of event \(e\).
+<hr class="new2">
+  <h5 style="color:blue;">
+<ol>
+  <li>
+If an event \(e\) depends on an
+  event \(e'\) in the trajectory --- i.e. if there is a path from
+  \(e'\) to \(e\) --- then \(t(e') \leq t(e)\), and
+  </li>
+  <li>
+  The event \(e\) in which a message is sent and the event \(e'\) in
+  which that message is received have the same sync times:
+  \(t(e) = t(e')\).
+  </li>
+</ol>
+</h5>
+<hr class="new2">
+The first part of the specification is the same as that for logical
+clocks except that the strict inequality (\(<\)) for logical clocks is weakened to
+(\(\leq\)) for sync clocks. The second part of the specification
+allows us to use rounds.
+
+  <p>
+  <i>Sync times are an integral part of the computation</i> in
+  contrast to logical times 
+  that are a superposition on an underlying computation without
+modifying the underlying computation.
+Logical clocks merely add timestamps to events without changing the
+  sequence of events. Sync clocks are used to add timestamps to events
+  and doing so may change a trajectory.
+
+  
+<h4 class="w3-text-teal">Algorithm for Sync Clocks</h4>
+As with logical clocks, we define the sync time \(A.t\) of an agent
+\(A\) at a point in a
+trajectory as the sync time of the latest event at \(A\) before that
+point.
+An agent's sync time changes when an event occurs at that agent.
+
+<p>
+Each
+message \(M\) has a timestamp \(M.t\) which is the sync
+time of the event in which the message is sent.
+
+<p>
+When a message \(M\) is received by an agent \(A\):
+<ol>
+  <li>
+  If \(M.t < A.t\) then \(M\) is discarded, without \(A\) taking an
+  action.
+  A discarded message has the same effect as a lost message: The only
+  change in the system state is that the message is deleted.
+  </li>
+  <li>
+  If \(M.t \geq A.t\) then either \(A\) discards \(M\) or executes an
+  event \(e\) where \(e.t = M.t\). Whether \(M\) is discarded or not
+  depends on the particular algorithm.
+  </li>
+</ol>
+
+<p>
+
+<h1>============OLD=================</h1>
   <p>
   Sync clocks do not tick backwards; so, the timestamp of a later event at
   an agent is greater than or equal to the timestamp of an earlier
