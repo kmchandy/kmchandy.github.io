@@ -80,21 +80,48 @@ hr.new1 {
     <!--------------------------------------------------------->
     <h2 class="w3-text-teal">Trajectories as Sequences of Rounds</h2>
     
-  In this section we describe a framework that allows us
-  to reason about the
-  correctness of a trajectory of a distributed system by analyzing a
-   trajectory consisting of a sequence of rounds where
-  agents operate in lock step in each round. We consider systems in
-  which messages can get lost --- any message in any channel channel can
-  be deleted at any point.
+  In this section we consider distributed systems in
+  which messages can get lost.
+  We describe a framework that allows us
+  to reason about distributed algorithms by analyzing
+   trajectories consisting of sequences of rounds where all messages sent
+  in a round are received in the same round.
 
   <p>
-  The central idea is a <i>sync clock</i>, which is similar to a
-  logical clock.
-  Timestamps, called sync times, are assigned to events.
-  Sync times are a total order. In the examples a sync time 
-  is a pair (integer, process id) where comparisons are made
-  lexicographically. So, \([0, 10] < [1, 0]\).
+  The central idea is a <i>sync clock</i>, which is an extension of a
+  logical clock. The time on a sync clock is called a sync time. A
+  sync time is a tuple [<i>round number, t</i>] where round number and t
+  are total orders, which are integers in the following examples.
+
+  <p>
+  A sync clock is a logical clock with the following additional
+  requirement.
+  <hr class="new2">
+  <h5 style="color:blue;">
+  A message sent in a round that arrives at the receiver in a later
+  round is discarded.
+  </h5>
+  <hr class="new2">
+  A discarded message has exactly
+  the same effect as a lost message.
+  A lost message does not change the state of the system; a lost
+  message is merely deleted from its channel.
+
+
+
+  <h4 style="color:red;">Example: Trajectory as a sequence of rounds</h4>
+
+The figure below illustrates a trajectory with agents A and B where
+  the trajectory is partitioned into a sequence of rounds. Messages
+  sent in a round are received in the same round.
+
+<figure>
+    <img src="../ChannelSnapshots/Timelines/Timelines.008.jpeg"
+    alt="Fig8" style="width:100%"> 
+    <figcaption>Fig. 8: Global Snapshot at Time 2.8 in a Synchronous System</figcaption>
+</figure>
+
+  <h1>============OLD=================</h1>
 
   
    <h2 class="w3-text-teal">Specification of Sync Clocks</h2>
@@ -133,9 +160,9 @@ Logical clocks merely add timestamps to events without changing the
 <h4 class="w3-text-teal">Algorithm for Sync Clocks</h4>
 As with logical clocks, we define the sync time \(A.t\) of an agent
 \(A\) at a point in a
-trajectory as the sync time of the latest event at \(A\) before that
+trajectory as the sync time of the last event at \(A\) before that
 point.
-An agent's sync time changes when an event occurs at that agent.
+An agent's sync time remains constant between events
 
 <p>
 Each
@@ -143,7 +170,7 @@ message \(M\) has a timestamp \(M.t\) which is the sync
 time of the event in which the message is sent.
 
 <p>
-When a message \(M\) is received by an agent \(A\):
+When a message \(M\) is received by an agent \(A\), let 
 <ol>
   <li>
   If \(M.t < A.t\) then \(M\) is discarded, without \(A\) taking an
@@ -159,8 +186,15 @@ When a message \(M\) is received by an agent \(A\):
 </ol>
 
 <p>
+<h5 class="w3-text-teal">Key Difference between Sync and Logical
+  Clocks</h5>
+Logical clocks do not change the underlying computation. Events in the
+  underlying computation are not changed when logical times are
+assigned to them. By contrast, sync times may
+ change the underlying computation because messages are lost when they don't arrive
+in the same round that they are sent.
 
-<h1>============OLD=================</h1>
+
   <p>
   Sync clocks do not tick backwards; so, the timestamp of a later event at
   an agent is greater than or equal to the timestamp of an earlier
