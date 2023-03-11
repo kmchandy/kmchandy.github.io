@@ -116,15 +116,17 @@ hr.new1 {
 
 The figure below illustrates a trajectory with agents A and B.
   The two horizontal lines show the trajectories for agents A and
-  B. The dark circles represent events. The red arrows indicate
+  B. The dark circles represent events. The red arrows represent
   messages that are sent and received, while blue dashed arrows
-  indicate messages that are sent but not received.
+  represent messages that are sent but not received.
 
   <p>
   The tuple of numbers adjacent to an event
   is the sync time of the event.
   The number inside the circle representing an event is the round
   number of the event.
+  For example, the third event (not counting the initial event) on
+  agent A has sync time \([1, 2]\) and its round number is 1.
 
 <figure>
     <img src="../ChannelSnapshots/Timelines/Timelines.008.jpeg"
@@ -142,7 +144,7 @@ B's sync time is [1, 0]; this message is discarded because
 <p>
 Events do not necessarily occur in a trajectory in increasing
 order of sync times. For example, the event with sync time \([1, 0]\)
-on agent B is earlier that the event with sync time \([0, 3]\) on
+on agent B occurs earlier that the event with sync time \([0, 3]\) on
 agent A.
 
 

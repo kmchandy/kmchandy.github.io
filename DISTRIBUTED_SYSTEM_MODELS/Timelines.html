@@ -90,27 +90,25 @@ hr.new1 {
   </p>
 
   <p class="w3-text-red">
-  A timeline is a familiar concept because of its use in
-  history. Timelines are used in the
-  design of a number of distributed algorithms.
+  A timeline is a familiar concept in
+  history. Timelines also help in
+  designing distributed algorithms.
   </p>
   
 <p>
 A <i>timeline</i> is a labeled directed graph that represents a system
   execution.
-  An execution is also called a computation or a trajectory.
-
-  <p>
-  There is a vertex in the timeline graph corresponding to each event (i.e. state
-  transition) in the execution, and there are
-  initial and final vertices representing the beginning and
-  ending of the execution.
+  An execution is also called a <i>computation</i> or a <i>trajectory</i>.
+  We use the word "trajectory" in this section.
+  Vertices in the graph represent events (i.e. state
+  transitions) in a trajectory.
   The edges in the graph are as follows:
 <ul>
   <li>
   <i>Agent timeline edges</i>:
   There is an edge directed from an
-    event \(e\) at an agent \(A\) to the next event \(e'\) at \(A\); the edge is
+  event \(e\) at an agent \(A\) to the next event \(e'\) at \(A\).
+  The edge is
   labeled with \(A\)'s state immediately after \(e\).
   </li>
   <li>
@@ -121,17 +119,22 @@ A <i>timeline</i> is a labeled directed graph that represents a system
   </li>
 </ul>
 
+<p>
+The timeline graph is acyclic
+because all edges are directed from earlier to later events.
+
   <p>
 The events in the timeline are shown in the order in which they occur with earlier events
 appearing to the left of later events. 
 All the events on the same agent are shown on the same horizontal
 line which we call the agent's timeline.
 A timeline has a vertex for each agent representing the initiation of
-the execution, and a vertex representing the end of the execution.
+the execution.
 
 <p>
-The timeline graph is acyclic
-because all edges are directed from earlier to later events.
+A timeline, represented as a graph, has no concept of time. We will,
+however, find that it's helpful to think of a timeline as showing a
+trajectory as time progresses.
 
 <h4 style="color:red;">Example</h4>
 <figure>
