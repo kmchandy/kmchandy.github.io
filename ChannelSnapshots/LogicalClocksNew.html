@@ -264,9 +264,9 @@ but with events appearing in increasing order of logical time.
 </figure>
 The trajectory of figure 4 has the same graph as that of figure 1.
 
-<h2 class="w3-text-teal">Using Time to Reason about Distributed Systems</h3>
+<h2 class="w3-text-teal">Using Time to Design Distributed Systems</h3>
 
-<h5 class="w3-text-teal">Continuous Logical Time of an Agent </h5>
+<h3 class="w3-text-teal">Continuous Logical Time</h3>
 It can be helpful to assume that an agent's logical clock
 moves forward continuously rather than in jumps.
 Let \(e'\) be the event immediately preceding event \(e\) at an agent
@@ -280,7 +280,7 @@ increases it takes on all values from 1 to 3, though there is no
 event with logical time 2.
 
 
-<h5 class="w3-text-teal">Treat Logical Times as Real Times</h5>
+<h3 class="w3-text-teal">Treat Logical Time as Real Time</h3>
 It can be helpful to reason about a given trajectory
 \(X\) by reasoning about a synchronous trajectory \(Y\) in which <i>real
 and logical times are identical</i>.
@@ -298,7 +298,7 @@ system.
 Let's use this strategy to develop a global snapshot algorithm.
 
 
-<h2 class="w3-text-teal">Global Snapshots using Logical Times</h2>
+<h2 class="w3-text-teal">Global Snapshots using Logical Time</h2>
 The steps of the strategy are: (1) Design a global snapshot algorithm
 for a synchronous system, and then (2) map the synchronous algorithm
 to a distributed system.
