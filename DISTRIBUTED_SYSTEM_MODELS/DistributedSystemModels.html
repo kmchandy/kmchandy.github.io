@@ -111,7 +111,7 @@ A channel  \(z\) from an agent \(A\) to an agent \(B\) is called an
   <h3 class="w3-text-teal">Agents</h3>
   Each agent has a set of variables that are <i>local</i> to the agent;
 other agents and channels cannot access these variables.
-The state of an agent is given by the values of its variables.
+  An agent's state is given by the values of its variables.
 <p>
 An agent may have a local clock; however, clocks are not
   synchronized across agents. At a point in a trajectory, a clock in
@@ -140,89 +140,134 @@ sequence. Then the \(n\)-th message received on a channel is the
 \(n\)-th message is received on a channel only after the
 \(n\)-th message is sent on that channel.
 
+<p>
+The set of states of a channel is the set of all message
+sequences. Any message can be sent on a channel.
+
 
 
 <h3 class="w3-text-teal">State Transitions</h3>
 The state of a system is given by the states of its agents and
-channels.  A system can change state in two ways: (1) A message is
-delivered from a channel to an agent and the receiver changes state,
+channels. We refer to the state of the entire system as the <i>global
+state</i> or <i>system state</i> to distinguish it from the
+states of its component agents and channels.
+A system state is a tuple with an element for each agent and each
+channel.  
+
+<p>
+A system state can change in two ways: (1) A message is
+delivered from a channel to an agent and the receiver's state changes,
 or (2) an agent changes state without receiving messages.
 
 <h4 class="w3-text-teal">State Transition due to Message Delivery</h4>
 When a message is delivered the
-receiver's state may change, and the receiver may send messages on its
+receiver's state changes, and the receiver may send messages on its
 outgoing channels. The states of all agents, other than the receiver,
 remain unchanged in the transition.  Likewise, the states of all
 channels other than the channel on which the message is delivered and the
 receivers's outgoing channels remain unchanged in the transition.
-<p>
-The state transition is specified by the  agent \(A\) that
-changes state, the states \(s\) and \(s'\) of \(A\) before and after the event, the
-channel \(c\) on which the message is delivered to \(A\), the 
-message \(m\) delivered, and the message (if any) sent on each
-outgoing channel of \(A\). 
 
 <h4 class="w3-text-teal">State Transition without Message Delivery</h4>
-This state transition changes the state of <i>one</i> agent and may send
-messages on that agent's outgoing channels without messages being delivered.
-The state transition is specified by the identity \(A\) of the agent that
-changes state, the states \(s\) and \(s'\) of \(A\) before and
-after the event, and the message (if any) sent on each
-outgoing channel of \(A\).
+This state transition changes the state of <i>one</i> agent
+without messages being delivered. This transition may send
+messages on that agent's outgoing channels. We call such state
+transitions <i>internal</i> to the agent 
+that changes state. An example of such a transaction is an agent
+stepping its local clock forward without receiving messages.
 
 <h4 style="color:red;">Example</h4>
-Consider a system state \(S\) of the system shown in Fig 1 in which
+Consider a state \(S\) of the system shown in Fig 1 in which
 all channels other than \(x\) and \(y\) are empty.  There are multiple
-transitions from \(S\) to other states because transitions can occur
-due to the delivery of the message at the head of channel \(x\), or
-channel \(y\), or because an agent changes state without receiving
-messages.
+transitions from \(S\) to other states. An example of a transition from
+\(S\) is
+  the delivery of the message \(M\) at the head of channel \(x\) to agent
+\(B\).
 
 <p>
-Next, consider state transitions when the message in \(x\) is delivered.
-Let \(S'\) be the system state
+Let \(S'\) be the state
 after a transition from \(S\) due to the delivery of a message in
 channel \(x\).
-The states of agents \(A, C\) are the same in \(S\) and \(S'\), while
-the state of \(B\) may be different in \(S\) and \(S'\).
-
-<p>
-The states of channels \(u, v, t, z\) are the same in \(S\) and
+The states of agents \(A, C\) and channels \(u, v, t, z\) are the same
+in \(S\) and 
 \(S'\).  The state of channel \(x\) in \(S'\) is the same as its state
-in \(S\) except that the head element is deleted.  The states of
+in \(S\) except that the message at the head of \(x\)'s state in \(S\)
+is deleted.  The states of 
 channel \(y\) and \(r\) in \(S'\) consists of messages appended to
-their corresponding states in \(S\).
-
-<h3 class="w3-text-teal">States, Events and Trajectories</h3>
-<p class="w3-text-teal">System</p>
-A system is a set of initial states and a set of state transitions.
-
-
-<p class="w3-text-teal">Trajectory, Execution, Computation</p>
-A <i>trajectory</i> is a sequence \([S_{0}, S_{1}, S_{2}, \ldots]\) of
-states, where \(S_{0}\) is  
-initial state, and where there exists a transition from \(S_{i}\) to
-\(S_{i+1}\) for all \(i\). A trajectory can be finite or infinite.
+the rear of their states in \(S\).
 <p>
-We also use the terms <i>execution</i> and <i>computation</i> for a
-trajectory.
+Transitions from \(S\) can be due to:
+<ol>
+  <li>
+  the delivery of the message at the head of channel \(x\) to agent
+  \(B\)
+  </li>
+  <li>
+  the delivery of the message at the head of channel \(y\) to agent
+  \(C\)
+  </li>
+  <li>
+  a transition of the states any one of agents \(A, B, C\) without
+  messages being delivered.
+  </li>
+</ol>
 
-<p class="w3-text-teal">Events</p>
-An <i>event</i> \(e\) is a state transition and is specified by an
-ordered pair of states 
-\((S, S')\) where \(S\) and \(S'\) are the states before and after the
-transition. The trajectory \([S_{0}, S_{1}, S_{2}, \ldots]\) can also
-be specified by the initial state \(S_{0}\) and
+<p>
+
+
+<h3 class="w3-text-teal">Specification of State Transitions</h3>
+A state transition is specified by:
+<ol>
+  <li>
+  the agent \(A\) that changes state,
+  </li>
+  <li>
+  the states \(s\) and \(s'\) of \(A\) before and after the
+  transition,
+  </li>
+  <li>
+  for a message delivery: 
+  the channel \(c\) on which the message is delivered to \(A\), and the 
+message \(m\) delivered on \(c\) to \(A\), and 
+  </li>
+  <li>
+  for each outgoing channel \(c'\) of \(A\), the message (if any) sent
+  on \(c'\). 
+  </li>
+</ol>  
+The states of agents other than \(A\) remain unchanged by the
+transition.
+Likewise the states of all channels other than \(c\) and \(A\)'s
+outgoing channels remain unchanged by the transition.
+
+<p>
+A state transition is called an <i>event</i>,
+and a transition that changes the state of an agent \(A\) is called
+<i>an event at \(A\).</i>
+
+
+<h3 class="w3-text-teal">States and Computations</h3>
+
+<p class="w3-text-teal">Distributed System</p>
+A distributed system is a set of agents and channels. Associated with
+each agent is a set of its local variables and a set of events at that
+agent. The state of an agent is
+given by the values of its variables. An event at an agent specifies
+ transitions of the states of that agent and the messages (if any)
+that the agent sends and receives in that event.
+
+<p class="w3-text-teal">Computation</p>
+A <i>computation</i> is a sequence \([S_{0}, S_{1}, S_{2}, \ldots]\) of
+system states, where there exists a transition from \(S_{i}\) to
+ \(S_{i+1}\) for all \(i\).
+The computation \([S_{0}, S_{1}, S_{2}, \ldots]\) can also
+be specified by \(S_{0}\) and
 a sequence of events \([e_{0}, e_{1}, e_{2}, \ldots] \)where
-\(e_{i}\) is a transition from \(S_{i}\) to \(S_{i+1}\), for all \(i\).
+\(e_{i}\) specifies the transition from \(S_{i}\) to \(S_{i+1}\), for all \(i\).
 
-
-<p class="w3-text-teal">Locality of Events</p>
-An event is local to one agent and its incident channels in
-the sense that it leaves the states of all other agents and channels
-unchanged.
-We call an event that changes the state of an agent
-\(A\) <i>an event at \(A\)</i>.
+<p>
+A computation can be finite or infinite.
+We also use the terms <i>execution</i> and <i>trajectory</i> for a
+computation.
 
 
 
