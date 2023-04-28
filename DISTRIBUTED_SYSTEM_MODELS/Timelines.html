@@ -91,18 +91,20 @@ hr.new1 {
 
   <p class="w3-text-red">
   A timeline is a familiar concept in
-  history. Timelines also help in
-  designing distributed algorithms.
+  history. Timelines of computations help us 
+  understand distributed algorithms.
   </p>
   
-<p>
-A <i>timeline</i> is a labeled directed graph that represents a system
-  execution.
-  An execution is also called a <i>computation</i> or a <i>trajectory</i>.
-  We use the word "trajectory" in this section.
-  Vertices in the graph represent events (i.e. state
-  transitions) in a trajectory.
-  The edges in the graph are as follows:
+  <p>
+  A computation is specified by
+  an initial state and a
+  sequence of events.
+  A <i>timeline</i> is a graph representation of a computation.
+  A timeline of a computation is a labeled
+  directed acyclic graph, called a <i>causality graph</i>, and an ordering
+  of vertices.  The vertices of the causality graph represent events,
+  and the vertices are ordered in the order in which events occur in the computation.
+  The edges of the graph are as follows:
 <ul>
   <li>
   <i>Agent timeline edges</i>:
@@ -113,37 +115,22 @@ A <i>timeline</i> is a labeled directed graph that represents a system
   </li>
   <li>
   <i>Message edges</i>
-  A message \(m\) sent at an event \(e\) and received at an event
+  A message \(m\) sent along a channel \(c\) at an event \(e\) and received at an event
     \(e'\) is represented by an edge directed from \(e\) to \(e'\),
-  and the edge is labeled \(m\).
+  and the edge is labeled \(m, c\). In the examples, there is at most
+  one channel from an agent \(A\) to an agent \(A'\), and so we drop
+  the channel \(c\) from the label, and use just \(m\) as the label.
   </li>
 </ul>
-
-<p>
-The timeline graph is acyclic
-because all edges are directed from earlier to later events.
-
-  <p>
-The events in the timeline are shown in the order in which they occur with earlier events
-appearing to the left of later events. 
-All the events on the same agent are shown on the same horizontal
-line which we call the agent's timeline.
-A timeline has a vertex for each agent representing the initiation of
-the execution.
-
-<p>
-A timeline, represented as a graph, has no concept of time. We will,
-however, find that it's helpful to think of a timeline as showing a
-trajectory as time progresses.
 
 <h4 style="color:red;">Example</h4>
 <figure>
     <img src="Timelines.001.jpeg" alt="Fig1" style="width:100%">
-    <figcaption>Fig.1: A System Timeline</figcaption>
+    <figcaption>Fig.1: A Timeline</figcaption>
 </figure>
-This example shows a system timeline with two agents, \(A\) and
+This example shows a timeline with two agents, \(A\) and
 \(B\).  The vertices  A1, A2, A3 represent events at agent \(A\);
-likewise vertices B1 B2,represent \(B\)'s events. Vertices A0 and B0
+likewise vertices B1 B2, represent \(B\)'s events. Vertices A0 and B0
 represent the start of the execution. The vertices representing the
 end of the execution are not shown; instead edges from the last events
 (A3, B2) on agents \(A, B\) are shown as dangling edges with no
@@ -152,8 +139,8 @@ terminal vertex.
 <p>
 An edge along an agent's timeline is labeled with the state of that
 agent at the point. For example, the edge from event A1 to event A2 is
-labeled \(S[A1]\) which is agent \(A\)'s state immediately after event
-A1. 
+labeled \(S[A1]\) which is agent \(A\)'s state after event
+A1 and before event A2.
 
 <p>
 Event A1 is an example of an internal event in which an agent changes
@@ -167,13 +154,42 @@ agent \(A\) sends message \(m_{0}\) in event A1 and this message is
 received by agent \(B\) in event B1.
 
 
+<h4 class="w3-text-teal">Initial state of the computation</h4>
+For each agent \(A\), there is an initial event that represents the
+  initiation of the computation. The initial state of agent \(A\) in
+  the computation is
+its state immediately after its initial event.
+
+<p>
+Let \(c\) be an outgoing channel of agent \(A\).
+The initial state of \(c\)  is the sequence of messages
+in transit along \(c\) when the computation starts.
+This sequence of messages can be obtained from the timeline: It is the
+sequence of outgoing messages along channel \(c\) from the initial
+event at \(A\).
+
+<p>
+So, the initial global state of the system --- the initial states of
+all agents and 
+channels --- can be determined by the labels of edges from the initial
+events.
+
+<h4 class="w3-text-teal">Convention</h4>
+We adopt the convention that time increases from left to right with
+earlier events appearing to the left of later events.
+Events at the same agent are shown on the same horizontal
+line which we call the <i>agent's timeline.</i>
+An instant in time
+is represented by a vertical line that cuts through the
+timeline at that instant. 
+
 <h4 class="w3-text-teal">Channel States in System Timelines</h4>
-The state of a channel \(c\) at time \(T\) is the sequence (in time
+The state of a channel \(c\) at point \(T\) in a computation is the sequence (in time
 order) of messages that are sent along \(c\) before \(T\) and that are
 received after \(T\). The state of \(c\) at \(T\) can be obtained from
-the system timeline as the sequence of labels of edges representing
-messages along \(c\) that are cut by the \(T\)-line, the vertical line
-at \(T\).
+the timeline as follows. Let \(T\)-line be the vertical line
+at \(T\). The state of \(c\) at \(T\) is the sequence of labels of edges representing
+messages along \(c\) cut by the \(T\)-line. 
 
 <h4 style="color:red;">Example</h4>
 <figure>
@@ -199,142 +215,178 @@ of the system at T can be obtained from labels of edges cut by the
 \(T\)-line.
 
 
-<h4 class="w3-text-teal">Sequence of Global States</h4>
-The sequence of <i>global</i> states in a trajectory can be 
+<p class="w3-text-teal">Sequence of Global States</p>
+The sequence of <i>global</i> states in a computation can be 
 obtained from the system timeline from the labels of edges cut by the
-sequence of vertical lines before each event.
-The starting and ending states of the trajectory are obtained from the
-earliest (leftmost) and latest (rightmost) vertical
-lines in the diagram.
+sequence of vertical lines between successive events.
 
 <h4 style="color:red;">Example</h4>
 <figure>
     <img src="Timelines.003.jpeg" alt="Fig3" style="width:100%">
-    <figcaption>Fig.3: Global States in the Trajectory</figcaption>
+    <figcaption>Fig.3: Global States in the Computation</figcaption>
 </figure>
+The sequence of global states in this computation correspond to the
+states at the vertical lines in the figure. There are vertical lines
+between successive events, and the states of agents and channels are
+determined by the labels intersected by the vertical lines.
+The initial global state of the computation corresponds to the agent
+and channel states at the vertical line immediately after the initial
+events A0, B0, D0.
 
 
-<h4 class="w3-text-teal">Different Trajectories with Identical Graphs</h4>
-Are there different trajectories with identical graphs?
-Look at the next figure.
+<h3 class="w3-text-teal">Timelines with Identical Causality Graphs</h3>
+A timeline represents a computation: the initial global state is specified by
+the initial events, and the sequence of events is specified by the
+timeline.
+The edges of the graph are directed forwards in time, i.e. event \(e\)
+appears before event \(e'\) in the computation if there is an
+edge from \(e\) to \(e'\) in the causality graph.
+<p>
+What timelines have the same causality graph? Let's look at an example.
 
+<h4 style="color:red;">Example: Different Timeline with the same
+Causality Graph</h4>
+Figure 4 is a timeline for a computation that
+has the same events as the one in figure 3.
+The causality graphs are identical in figures 3 and 4; the difference in the
+figures is the ordering of vertices. 
 <figure>
     <img src="Timelines.004.jpeg" alt="Fig5" style="width:100%">
-    <figcaption>Fig.4: A Different Trajectory with Same Graph</figcaption>
+    <figcaption>Fig.4: Different Computations with Same Set of
+Events</figcaption> 
 </figure>
-The trajectory in this diagram is specified by the sequence of events:
-Initial events (A0, B0, D0) followed by the sequence A1, D1, B1,
-A2, A3, B2.
+The computations start in the same state (represented by initial events
+(A0, B0, D0)). The sequences of events in the figures are
+[A1, D1, A2, B1, A3, B2] and
+[A1, D1, B1, A2, A3, B2].
+The sequence of global states are different in the two computations.
+The global state after B1 and before A2 in the computation represented by
+figure 4 is not visited in the computation represented by figure 3.
 
+
+<h3  class="w3-text-teal"">Topological Sorts of Causality Graphs
+ are Computations</h3>
+A topological sort of a directed acyclic graph is a sequence of
+vertices of the graph where for every edge from \(v'\) to \(v\) in the
+graph, \(v'\) appears before \(v\) in the sequence.
 <p>
-The graphs of figures 3 and 4 are the same but the trajectories that
-the figures represent are different.  In figure 4 event B1 occurs
-before event A2 whereas in figure 3, B1 occurs after A2.  So, the
-global state after B1 and before A2 in figure 4 is never
-visited in figure 3;
-However, figures 3 and 4 have the same starting and ending states.
-The following theorem captures the idea illustrated by figures 3 and
-4.
+In a topological sort, all edges of the graph are directed forwards
+--- from a vertex to a later vertex in the sort.
+For example, [A1, D1, A2, B1, A3, B2] and [A1, D1, B1, A2, A3, B2] are
+topological sorts of the causality graph shown in figures 3 and 4.
+The sequence [D1, A1, A2, B1, A3, B2] is not a topological sort
+ because the edge from A1 to D1 goes backwards --- D1 occurs before A1
+ in the sequence.
 
-<h4 class="w3-text-teal">Event Dependence</h4>
-The output labels of an event \(e\) depend only its input labels, and
-so the outputs of \(e\) depend only on vertices from which there are
-paths to \(e\).
-
-We define the relation, "depends on" between events as follows:
 <hr class="new2">
 <p style="color:blue;">
-<i>\(e\) depends on \(e'\)</i> in a trajectory \(X\) if
-and only if there is a path from \(e'\) to \(e\) in the timeline graph
-of \(X\).
+Theorem: Let \(G\) be the causality graph of a computation \(X\). Let \(Y\) be any
+topological sort of \(G\). The initial global state specified by
+\(G\) and the event sequence corresponding to the vertex sequence in
+\(Y\) is a computation.
 </p>
 <hr class="new2">
 
-We may drop the phrase  "in \(X\)" when 
-we fix a particular trajectory \(X\) in the description.
+<p class="w3-text-teal">Proof</p>
+We will prove by induction on \(k\) that there exists a computation
+with the same initial state as \(X\) and the event sequence consisting
+of the first \(k\) events of \(Y\).
+The base case is \(k = 0\).
+We assume that the result holds for \(k < n\) and prove that it holds for
+\(k = n\).
 
 <p>
-In the following theorem we consider a specific trajectory \(X\) and
-define dependence in terms of \(X\).
-Because the timeline graph is acyclic, for any distinct pair \(e, e'\) of
-events, either \(e\) and \(e'\) are independent of each other (i.e. no
-paths from either event to the other), or \(e\) depends on \(e'\), or
-\(e'\) depends on \(e\)
-
-<h4 style="color:red;">Example</h4>
-In the timeline graphs of both figures 3 and 4, event B1 depends on A1, A0, and B0,
-and is independent of all other events. Event A2 depends on A1, A0,
-D1, and D0, and is independent of all other events. One can verify
-that the dependence among events is identical in both figures.
-
-<hr class="new2">
-<p style="color:blue;">
-Theorem about Event Dependence</p>
-<p style="color:blue;">
-Any permutation \(Y\) of the sequence of events
-of a trajectory \(X\) is also a trajectory that starts in the same
-state as \(X\) does and ends in the same state as \(X\) does if
-<br>
-<center>
-<p style="color:blue;">
-<i>each event in \(Y\) appears
- after all events on which it depends</i>.
-</center>
-</p>
-<hr class="new2">
-The proof follows from the fact that the outputs of an event depend
-only on its inputs and thus depend only on events that have paths to it.
-
-
-<p style="color:blue;">
-<p  style="color:blue;">Corollarly about starting and ending states:
-If \(X\)
-starts in a state \(S\) and ends in a state \(S'\) then so does any
-permutation \(Y\) of \(X\) in which each event \(e\) in \(Y\) appears
-after all events on which \(e\) depends
-</p>
-
+<p>
+Let the \(n\)-th event of \(Y\) be event \(e\) at an agent
+\(A\)
+and let \(e'\) be the event immediately preceding \(e\) at agent \(A\).
+Because \(Y\) is a topological sort of \(G\), event \(e'\) occurs
+before \(e\) in \(Y\), and \(e'\) is the event 
+immediately preceding \(e\) at \(A\) in \(X\).
+Therefore the state of \(A\) immediately preceding \(e\) is the same
+in \(X\) and \(Y\).
 
 <p>
-Proof: The labels of edges in \(X\) and \(Y\) are identical, and so
-the states of channels and agents at the end of the trajectories are
-identical.
+Consider the case where a message \(m\) along a
+channel \(c\) is received in event \(e\) in \(X\).
+Let \(m\) be the \(i\)-th message received along \(c\) in \(X\). 
+Because \(Y\) is a topological sort of \(G\), in \(Y\) the event that sends the \(j\)-th
+message along channel \(c\) appears before the event that receives the
+\(j\)-th message along \(c\), for all \(j\).
+Therefore, at least \(i\) messages are sent along \(c\) and exactly \(i-1\)
+messages are received before \(e\) in \(Y\).
+So, the state of channel \(c\) before event \(e\) in \(Y\) has the \(i\)-th
+message, i.e., \(m\), at its head.
+Therefore the messages, if any, received in \(e\) are the same in
+\(X\) and \(Y\).
+
+<p>
+Because the state of the agent on which \(e\) occurs is the same in
+\(X\) and \(Y\), and the messages received in \(e\) are the same in
+\(X\) and \(Y\), it follows that \(e\) can be the \(n\)-th event in \(Y\).
+
+
+<h3 class="w3-text-teal">System Timelines with Identical Agent
+Timelines</h3>
+<p class="w3-text-teal">Messages must be sent before they are received</p>
+The timeline of an agent \(A\) in a computation is 
+the initial state of \(A\) and the sequence of events at \(A\)
+in the computation.
+An agent's timeline is represented by the horizontal line
+corresponding to that agent in a system timeline.
+In figures 3 and 4, the timelines of agents \(A, B, D\) are given by 
+[A0, A1, A2, A3, A3], [B0, B1, B2], and [D0, D1] respectively.
+Though the agent timelines are identical in both figures the system
+timelines are different because the sequences of events (after the
+initial events) in figures 3 and 4 are, respectively:
+[A1, D1, A2, B1, A3, B2] and [A1, D1, B1, A2, A3, B2].
+The ordering of events on different agents is different in these
+system timelines: A2 appears before B1 in figure 3 whereas A2 appears
+after B1 in figure 4.
+Are there even more system timelines with the same agent timelines?
+
 
 <hr class="new2">
+<p style="color:blue;">Theorem</p>
 <p style="color:blue;">
-Theorem about Messages Received in Order
-</p>
-<p style="color:blue;">
-Let \(X\) be a trajectory of a system that starts in a state \(S\) and
-    ends in a state \(S'\). Any permutation \(Y\)
-of the sequence of events in \(X\), 
-is also a trajectory of the system that starts in \(S\) and ends in \(S'\)
-if timelines of agents in \(X\) and \(Y\) are identical, and
-<br>
-<center>
-<p style="color:blue;">
-<i>
-every message in \(Y\) is received only after it is sent.
-</i>
-</center>
-</p>
+Given a computation specified by an initial state \(S\) and event
+sequence \(X\),
+let \(Y\) be a permutation of \(X\) where the computation of each
+agent is the same in \(X\) and \(Y\).
+There exists a computation with initial state \(S\) and event
+sequence \(Y\) if
+<i>Every message is sent before it is received in \(Y\).</i>
 <hr class="new2">
+<h5 class="w3-text-teal">Proof</h5>
+System timelines with identical agent
+computations have identical causality graphs. If messages are
+received only after they are sent in \(Y\) then \(Y\) is a topological
+sort of the causality graph, and therefore is a computation.
 
-Proof: By induction -- assume that the theorem holds for the first
-\(n\) events in \(Y\) and prove that it holds for the \(n+1\)-th
-event, with \(n = 0\) as the base case. We will prove that each event
-in \(Y\) appears only after all events on which it depends, and then
-the result follows from the theorem on event dependence.
-<p>
-If the \(n+1\)-th event is an internal event on an agent then because
-the agent timeline for \(Y\) is the same as that of \(X\), this event
-appears only after all events on which it depends.
-<p>
-If the \(n+1\)-th event is an event that receives a message then from
-the assumption of the theorem the message was sent at an earlier
-event, and so this event appears only after all events on which it depends.
+<h3 class="w3-text-teal">Cuts of Timelines</h3>
+An instant \(T\) in a timeline separates events
+executed before \(T\) from events executed after \(T\).
+Let's call these sets of events, <i>past</i> and <i>future</i> events
+at \(T\).
 
-<h3 class="w3-text-teal">Cuts of System Timelines</h3>
+<p>
+The figure below shows two timelines. An instant \(T\) in the
+lower timeline is represented by the vertical purple line which separates
+past events shown in black (A0, A1, B0, B1, D0, D1) from future events
+shown in green.  The states of agents A, B, D are their states
+immediately after events A1, B1, and D1, respectively. The states of
+channels are the sequences of message lines from the past to the
+future. For example, at \(T\), message \(u_{0}\) has been sent in past
+event B1, and has yet to be received.
+
+<p>
+The upper timeline shows the same sets of past and future events in
+black and green, respectively. The vertical line representing \(T\) in
+the lower timeline is curvilinear in the upper timeline --- both these
+lines partition the set of events into a past and future, where edges
+that cross the lines are from the past to the future.
+
+
 A cut of a a system timeline is a partition of the events in
 the timeline into two subsets called <i>past</i> and <i>future</i>.
 
@@ -395,12 +447,12 @@ where <i>all \(past\) events occur <str>before</str> all
 <p>
 The proof follows directly from the theorem on event dependence.
 Consider any pair of events \(e\) followed by \(e'\) in a
-trajectory,
+computation,
 where \(e\) is in the future and \(e'\) is in the past.
 Then \(e\) and \(e'\) are independent of each other, and so flipping
 the order in which they appear doesn't change the inputs and outputs
 of the event. By repeatedly flipping adjacent events in which a future
-event precedes a past event we get a trajectory in which all future
+event precedes a past event we get a computation in which all future
 events appear after all past events.
 
 <h4 style="color:red;">Example</h4>
@@ -423,14 +475,14 @@ crosses the string from the right to the left. Therefore the the
 events that are permuted are independent of each other and the
 conditions of the theorem are satisfied.
 
-<h4 class="w3-text-teal">Corollary: Trajectory from Initial to Cut to Final State</h4>
+<h4 class="w3-text-teal">Corollary: Computation from Initial to Cut to Final State</h4>
 Consider an algorithm that computes the state at a consistent
 cut. Let \(s_{init}\) and \(s_{fini}\) be the states in which the
 algorithm starts and finishes (respectively), and let \(s_{snap}\) be
 the state at the consistent cut.
 <hr class="new2">
 <h5 style="color:blue;">
-There exists a trajectory from
+There exists a computation from
 \(s_{init}\) that visits \(s_{snap}\) and later visits \(s_{fini}\).
 </h5>
 <hr class="new2">
@@ -438,10 +490,10 @@ There exists a trajectory from
 <p>
 For example, an algorithm in the top diagram of figure 7 determines
 the global state \(s_{snap}\) along the curved consistent cut during a
-trajectory. Let \(s_{init}\) and \(s_{fini}\) be the states before the
+computation. Let \(s_{init}\) and \(s_{fini}\) be the states before the
 algorithm starts and after it finishes, i.e. at the left and
 right-hand ends of the system timeline diagram. Then, the diagram in the
-lower diagram of figure 7 also represents a trajectory 
+lower diagram of figure 7 also represents a computation 
 from \(s_{init}\) to \(s_{snap}\) and then to \(s_{fini}\).
 
 

@@ -77,11 +77,16 @@ hr.new1 {
 
 
 <!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Models of Distributed Systems</h2>
+    <h1 class="w3-text-teal">Models of Distributed Systems</h1>
 <!----------------------------------------------------------------->
-This page introduces models of distributed systems that we use in
-these notes. A model is an abstraction that is helpful in designing
-algorithms.
+  
+  A model of a system is an abstraction.
+  There are many models of distributed systems.
+  This section introduces a simple model of distributed systems that
+  we use in designing algorithms that ensure that
+  systems remain safe --- nothing bad happens.
+  Later, we will discuss models that also ensure progress --- goals
+  will be achieved eventually.
 
 <p>
 A distributed system consists of a set of agents and a set of
@@ -108,7 +113,7 @@ A channel  \(z\) from an agent \(A\) to an agent \(B\) is called an
   only \(A\) can send messages and only \(B\) can receive messages
   along this channel.
 
-  <h3 class="w3-text-teal">Agents</h3>
+  <h2 class="w3-text-teal">Agents</h2>
   Each agent has a set of variables that are <i>local</i> to the agent;
 other agents and channels cannot access these variables.
   An agent's state is given by the values of its variables.
@@ -119,34 +124,32 @@ An agent may have a local clock; however, clocks are not
   agent. 
   We will discuss clock synchronization later.
 
-<h3 class="w3-text-teal">Channels</h3>
+<h2 class="w3-text-teal">Channels</h2>
   We will look at systems with different types of channels.
   Let's begin with a model of first-in-first-out (FIFO) channels. 
 
-<h4 class="w3-text-teal">State of a FIFO Channel</h4>
+<h3 class="w3-text-teal">State of a FIFO Channel</h3>
 The state of a FIFO channel is a sequence of messages; these are
 the messages that have been sent along
 that channel and that have not been received.
-The only way in which the sequence of messages in a channel can be
-altered is that the agent sending messages along the channel can
-append messages to the tail of the sequence, 
-and a message can be removed from the head of the sequence and
-delivered to the agent receiving messages along the channel.
-
-<p>
-Unless stated otherwise, the initial state of a channel is the empty
-sequence. Then the \(n\)-th message received on a channel is the 
-\(n\)-th message sent on that channel, for all \(n\). Furthermore, the 
-\(n\)-th message is received on a channel only after the
-\(n\)-th message is sent on that channel.
-
-<p>
-The set of states of a channel is the set of all message
-sequences. Any message can be sent on a channel.
+A channel state can be modified in two ways.
+<ol>
+  <li>
+  <i>Send message</i>: A sender along a channel appends a message to
+  the rear of sequence of messages which is the
+  channel state.
+  </li>
+  <li>
+  <i>Receive message</i>: A message is removed from the head of the
+  non-empty sequence which is the channel state, and this message is
+  delivered to the receiver along the channel. A message cannot be
+  received from an empty channel.
+  </li>
+</ol>
 
 
 
-<h3 class="w3-text-teal">State Transitions</h3>
+<h2 class="w3-text-teal">State Transitions</h2>
 The state of a system is given by the states of its agents and
 channels. We refer to the state of the entire system as the <i>global
 state</i> or <i>system state</i> to distinguish it from the
@@ -159,7 +162,7 @@ A system state can change in two ways: (1) A message is
 delivered from a channel to an agent and the receiver's state changes,
 or (2) an agent changes state without receiving messages.
 
-<h4 class="w3-text-teal">State Transition due to Message Delivery</h4>
+<h3 class="w3-text-teal">State Transition due to Message Delivery</h3>
 When a message is delivered the
 receiver's state changes, and the receiver may send messages on its
 outgoing channels. The states of all agents, other than the receiver,
@@ -167,15 +170,17 @@ remain unchanged in the transition.  Likewise, the states of all
 channels other than the channel on which the message is delivered and the
 receivers's outgoing channels remain unchanged in the transition.
 
-<h4 class="w3-text-teal">State Transition without Message Delivery</h4>
+<h3 class="w3-text-teal">State Transition without Message Delivery</h3>
 This state transition changes the state of <i>one</i> agent
 without messages being delivered. This transition may send
-messages on that agent's outgoing channels. We call such state
+messages on that agent's outgoing channels.
+The states of all other channels remain unchanged.
+We call such state
 transitions <i>internal</i> to the agent 
 that changes state. An example of such a transaction is an agent
 stepping its local clock forward without receiving messages.
 
-<h4 style="color:red;">Example</h4>
+<h3 style="color:red;">Example of State Transitions</h3>
 Consider a state \(S\) of the system shown in Fig 1 in which
 all channels other than \(x\) and \(y\) are empty.  There are multiple
 transitions from \(S\) to other states. An example of a transition from
@@ -225,13 +230,13 @@ A state transition is specified by:
   transition,
   </li>
   <li>
-  for a message delivery: 
-  the channel \(c\) on which the message is delivered to \(A\), and the 
-message \(m\) delivered on \(c\) to \(A\), and 
+  for a message delivery event: 
+  the non-empty channel \(c\) on which the message is delivered to \(A\), and the 
+message \(m\) at the head of \(c\) which is delivered from \(c\) to \(A\), and 
   </li>
   <li>
   for each outgoing channel \(c'\) of \(A\), the message (if any) sent
-  on \(c'\). 
+  on \(c'\) which is appended to the tail of \(c'\).
   </li>
 </ol>  
 The states of agents other than \(A\) remain unchanged by the
@@ -245,31 +250,158 @@ and a transition that changes the state of an agent \(A\) is called
 <i>an event at \(A\).</i>
 
 
-<h3 class="w3-text-teal">States and Computations</h3>
+<h3 class="w3-text-teal">Computations</h3>
 
-<p class="w3-text-teal">Distributed System</p>
-A distributed system is a set of agents and channels. Associated with
-each agent is a set of its local variables and a set of events at that
-agent. The state of an agent is
-given by the values of its variables. An event at an agent specifies
- transitions of the states of that agent and the messages (if any)
-that the agent sends and receives in that event.
-
-<p class="w3-text-teal">Computation</p>
 A <i>computation</i> is a sequence \([S_{0}, S_{1}, S_{2}, \ldots]\) of
 system states, where there exists a transition from \(S_{i}\) to
  \(S_{i+1}\) for all \(i\).
-The computation \([S_{0}, S_{1}, S_{2}, \ldots]\) can also
-be specified by \(S_{0}\) and
+The computation can also
+be specified by  the initial state \(S_{0}\) and
 a sequence of events \([e_{0}, e_{1}, e_{2}, \ldots] \)where
-\(e_{i}\) specifies the transition from \(S_{i}\) to \(S_{i+1}\), for all \(i\).
+\(e_{i}\) specifies the transition from \(S_{i}\) to \(S_{i+1}\), for
+all \(i\).
+We call \(S_{i}\) and \(S_{i+1}\) the <i>pre</i> and <i>post</i>
+states of event \(e_{i}\).
+
+<h3 style="color:red;">Example of a Computation</h3>
+The figure below shows a distributed system with agents <code>A, B</code> and
+channels <code>w, x, y, z</code>.
+The channel <code>w</code> is from agent <code>A</code> back to
+itself.
+Likewise, the channel <code>z</code> is from agent <code>B</code> back to
+itself.
+Channels <code>x, y</code> are (respectively) from <code>A</code> to
+<code>B</code>, and from <code>B</code> to <code>A</code>.
+<p>
+The agents have identical behavior.
+
+    <figure>
+    <img src="../ChannelSnapshots/Timelines/Timelines.011.jpeg"
+    alt="Fig2" style="width:60%"> 
+    <figcaption>Fig.2: Example</figcaption>
+</figure>
+The state of each agent is given by the value of a single local
+Boolean variable, <code>run</code>. Let <code>A.run, B.run</code> be
+    the values of <code>run</code> in <code>A, B</code> respectively.
 
 <p>
-A computation can be finite or infinite.
-We also use the terms <i>execution</i> and <i>trajectory</i> for a
-computation.
+When an agent receives a message from
+itself the agent sets its local variable <code>run</code> to <code>False</code>.
+For example, when <code>A</code> receives a message along channel
+<code>w</code>, the agent sets
+<code>A.run = False</code>.
+
+<p>
+When an agent receives a message from the other agent, the receiver
+sends the same message back to the sender if the receiver's local
+variable <code>run</code> is <code>True</code>, and takes
+no action otherwise.
+For example, when <code>A</code> receives a message along channel
+<code>y</code> when <code>A.run = True</code> then <code>A</code>
+sends the same message along channel <code>x</code>.
+When <code>A</code> receives a message while <code>A.run = False</code>
+it takes no action.
+<p>
+Next, we describe the events at agent <code>A</code>; the
+events at <code>B</code> follow by symmetry.
+
+<h4 style="color:red;">Example Events</h4>
+<p style="color:red;">Event 0</p>
+When an agent receives a message from itself it sets <code>run</code>
+to <code>False</code>.
+<p>
+Let <code>run', w'</code> be the values of
+<code>run, w</code>, respectively, before the event.
+The event delivers a message on channel <code>w</code>, and so
+<code>w'</code> must be nonempty.
+This event occurs independent of the value of <code>run</code> before
+the event.
+
+<pre>
+For all nonempty sequences w' and all boolean values run'
+pre:  run = run',   w = w'
+post: run = False,  w = tail(w')
+</pre>
 
 
+<h5 style="color:red;">Event 1</h5>
+When an agent with <code>run = True</code>, receives a message from
+the other agent it sends the message back to the other agent.
+
+<pre>
+For all nonempty sequences y' and all sequences x'
+pre:  run = True,  y = y',        x = x'
+post: run = True,  y = tail(y'),  x = x' + head(y')
+</pre>
+
+<h5 style="color:red;">Event 2</h5>
+When an agent with <code>run = False</code>, receives a message from
+the other agent it takes no action.
+
+<pre>
+For all nonempty sequences y' and all sequences x'
+pre:  run = False,   y = y',        x = x'
+post: run = False,   y = tail(y'),  x = x'
+</pre>
+
+<h4 style="color:red;">Example Computations</h4>
+Actions of agents in this simple example
+do not depend on the contents of messages.
+So, the state of a channel can be represented by the number of
+messages in the channel rather than the sequence of messages in the
+channel. 
+<p>
+Let \(e_{0,A}, e_{1,A}, e_{2,A}\) be Event 0, 1, 2 (respectively)
+executed at agent <code>A</code>. Likewise, 
+let \(e_{0,B}, e_{1,B}, e_{2,B}\) be Event 0, 1, 2 (respectively)
+executed at agent <code>B</code>.
+<p>
+Consider computations that start in a state \(S_{0}\) in which <code>run</code>
+is <code>True</code> for both agents, and where there is one message
+in each channel. The states of agents and channels are as follows:
+<p>
+<code>[A, B, w, x, y, z]: [T, T, 1, 1, 1, 1]</code>
+<p>
+There are many transitions from \(S_{0}\). Events 0 or 1 could be executed
+on either agent. Event 2 cannot be executed in \(S_{0}\) because the
+precondition for the event is not satisfied in \(S_{0}\).
+
+<p>
+If Event 1 is executed at agent <code>A</code> in this state then the
+event removes a message from channel <code>y</code> and adds that
+message to channel <code>x</code>. So, the
+next state is:
+<p>
+<code>[A, B, w, x, y, z]: [T, T, 1, 2, 0, 1]</code>.
+<p>
+An example computation is \(S_{0}, [e_{1,A}, e_{1,B}, e_{0,A},
+e_{2,A}]\).
+The intermediate states in the computation are shown below.
+<p>
+<code>[T, T, 1, 1, 1, 1]</code>
+<br>
+\(\stackrel{e_{1,A}} {\longrightarrow}\)
+<br>
+<code>[T, T, 1, 2, 0, 1]</code>
+<br>
+\(\stackrel{e_{1,B}} {\longrightarrow}\)
+<br>
+<code>[T, T, 1, 1, 1, 1]</code>
+<br>
+\(\stackrel{e_{0,A}} {\longrightarrow}\)
+<br>
+<code>[F, T, 0, 1, 1, 1]</code>
+<br>
+\(\stackrel{e_{2,A}} {\longrightarrow}\)
+<br>
+<code>[F, T, 0, 1, 0, 1]</code>
+<p>
+An example of a state and event sequence that is <i>not a
+computation</i> is \(S_{0}, [e_{1,A}, e_{2,A}]\).
+<code>A.run = True</code> in the state after event \(e_{1,A}\)
+is executed in the above computation
+But, Event 2 can be executed at agent <code>A</code> only when <code>A.run
+= False</code>.
 
 <h3 class="w3-text-teal">Different Types of Channels</h3>
 Most of the algorithms in these notes use FIFO channels; however, we
