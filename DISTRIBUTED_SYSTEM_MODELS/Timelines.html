@@ -79,7 +79,7 @@ hr.new1 {
 
   
 <!--------------------------------------------------------->
-<h2 class="w3-text-teal">Timelines</h2>
+<h1 class="w3-text-teal">Timelines</h1>
 <!--------------------------------------------------------->
 
   <p class="w3-text-green">
@@ -94,7 +94,10 @@ hr.new1 {
   history. Timelines of computations help us 
   understand distributed algorithms.
   </p>
-  
+
+  <!--------------------------------------------------------->
+  <h3 class="w3-text-teal">Timelines and Causality Graphs</h3>
+  <!--------------------------------------------------------->
   <p>
   A computation is specified by
   an initial state and a
@@ -215,7 +218,7 @@ of the system at T can be obtained from labels of edges cut by the
 \(T\)-line.
 
 
-<p class="w3-text-teal">Sequence of Global States</p>
+<p class="w3-text-teal">Sequence of Global States in Timelines</p>
 The sequence of <i>global</i> states in a computation can be 
 obtained from the system timeline from the labels of edges cut by the
 sequence of vertical lines between successive events.
@@ -363,11 +366,16 @@ computations have identical causality graphs. If messages are
 received only after they are sent in \(Y\) then \(Y\) is a topological
 sort of the causality graph, and therefore is a computation.
 
-<h3 class="w3-text-teal">Cuts of Timelines</h3>
+
+
+
+<h2 class="w3-text-teal">Cuts of Timelines</h2>
 An instant \(T\) in a timeline separates events
-executed before \(T\) from events executed after \(T\).
-Let's call these sets of events, <i>past</i> and <i>future</i> events
-at \(T\).
+executed at or before \(T\) from events executed after \(T\).
+We call events executed before \(T\), <i>past</i> events
+at \(T\), and we call events executed after \(T\),  <i>future</i> events
+at \(T\). We will not consider instances \(T\) where an event occurs
+exactly at \(T\).
 
 <p>
 The figure below shows two timelines. An instant \(T\) in the
@@ -386,32 +394,24 @@ the lower timeline is curvilinear in the upper timeline --- both these
 lines partition the set of events into a past and future, where edges
 that cross the lines are from the past to the future.
 
-
-A cut of a a system timeline is a partition of the events in
+<p>
+<i>A cut of a timeline</i> is a partition of the events in
 the timeline into two subsets called <i>past</i> and <i>future</i>.
 
 
 <hr class="new2">
     <h5 style="color:blue;">
-A <i>consistent cut</i> is one
-in which past events do not depend on future events.
+A <i>consistent cut</i> is a cut in which there are no edges in the
+    causality graph from
+    future events to past events. 
 </h5>
+Equivalently a consistent cut is a cut in which all edges in the
+    causality graph to past
+    events are from past events, or equivalently all edges
+    from future events are
+    to future events.
 <hr class="new2">
-In terms of the graph, there are no edges directed from future events to past
-    events in a consistent cut.
 
-
-<p class="w3-text-teal">Equivalent Definitions of Consistent Cuts</p>
-<p>The following are equivalent definitions of a consistent cut:
-<ol>
-  <li>
-  All edges <i>to past</i> events are <i>from past</i> events.
-  </li>
-  <li>
-  All edges <i>from future</i> events are <i>to future</i> events.
-  </li>
-</ol>
-  
 
 <h4 style="color:red;">Example</h4>
 The figure below shows cuts across two system timelines
@@ -422,9 +422,9 @@ where past events are colored black and future events are green.
 </figure>
 
 The cuts in both diagrams are identical: past events are A0, A1, B0,
-D0, D1. 
-The cuts are consistent because there is no edge from
-green to black.
+D0, D1, and future events are A2, A3, B2.
+The cuts are consistent because there is no edge from the
+future to the past.
 <p>
 A purple vertical line, representing an instant in time, separates past from
 future in the lower diagram.
@@ -445,15 +445,9 @@ where <i>all \(past\) events occur <str>before</str> all
 </h5>
 <hr class="new2">
 <p>
-The proof follows directly from the theorem on event dependence.
-Consider any pair of events \(e\) followed by \(e'\) in a
-computation,
-where \(e\) is in the future and \(e'\) is in the past.
-Then \(e\) and \(e'\) are independent of each other, and so flipping
-the order in which they appear doesn't change the inputs and outputs
-of the event. By repeatedly flipping adjacent events in which a future
-event precedes a past event we get a computation in which all future
-events appear after all past events.
+The proof follows from the theorem that all topological sorts of the
+causality graph are computations. There is a topological sort in which
+all events in the past appear before all events in the future.
 
 <h4 style="color:red;">Example</h4>
 The cut in the diagram on the top of figure 7 is consistent.
@@ -462,24 +456,13 @@ figure, in which all past events occur before all
 future events.
 
 
-
-<p class="w3-text-teal">Intuition for Permuting Past before Future</p>
-
-<p>
-In figure 7, treat the purple curved separating line in the upper diagram as a
-string, and pull the string taut. Doing so may push some events, such
-as A2, to the right, and other events, such as B1, to the left.  As
-events move, while the string is tautened, all edges always remain
-directed from past to future. This is because there is no edge that
-crosses the string from the right to the left. Therefore the the
-events that are permuted are independent of each other and the
-conditions of the theorem are satisfied.
-
-<h4 class="w3-text-teal">Corollary: Computation from Initial to Cut to Final State</h4>
+<h4 class="w3-text-teal">Corollary: Computation from Initial State to
+Consistent Cut to Final State</h4> 
 Consider an algorithm that computes the state at a consistent
 cut. Let \(s_{init}\) and \(s_{fini}\) be the states in which the
 algorithm starts and finishes (respectively), and let \(s_{snap}\) be
-the state at the consistent cut.
+the state at the consistent cut. The following result follows from the
+theorem that all topological sorts of causality graphs are computations.
 <hr class="new2">
 <h5 style="color:blue;">
 There exists a computation from
@@ -495,6 +478,10 @@ algorithm starts and after it finishes, i.e. at the left and
 right-hand ends of the system timeline diagram. Then, the diagram in the
 lower diagram of figure 7 also represents a computation 
 from \(s_{init}\) to \(s_{snap}\) and then to \(s_{fini}\).
+
+<p>
+This result is helpful in developing algorithms that detect properties
+of the states of computations.
 
 
 <!--Start Footer--------------------------------------->
