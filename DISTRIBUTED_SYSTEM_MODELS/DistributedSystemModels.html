@@ -77,130 +77,192 @@ hr.new1 {
 
 
 <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Models of Distributed Systems</h1>
+    <h1 class="w3-text-teal">Computations of Distributed Systems</h1>
 <!----------------------------------------------------------------->
   
-  A model of a system is an abstraction.
-  There are many models of distributed systems.
-  This section introduces a simple model of distributed systems that
-  we use in designing algorithms that ensure that
-  systems remain safe --- nothing bad happens.
-  Later, we will discuss models that also ensure progress --- goals
-  will be achieved eventually.
 
 <p>
 A distributed system consists of a set of agents and a set of
-message-passing channels.  Each channel has a name and is directed
-from one agent to one agent.  A system is represented by a labeled
+  communication channels.
+  Agents have local variables that cannot be accessed by other agents.
+  Agents communicate with other agents only by
+  sending and receiving messages along channels.
+
+  <p>
+  Each channel has a name and is directed
+from one agent to one agent.  Agents and channels are represented by a labeled
 directed graph in which vertices represent agents and labeled directed
 edges represent named channels.
+  A channel from an agent \(A\) to an agent \(B\) is an
+  <i>outgoing</i> channel of \(A\) and an <i>incoming</i> channel
+  \(B\). An agent can send messages on its outgoing channels and
+  receive messages on its incoming channels.
 
-
-<h3 style="color:red;">Example</h3>
-The figure below shows a distributed system with agents A, B, C.
+<h4 style="color:red;">Example Graph of Agents and Channels</h4>
+The figure below shows connections in a system with agents A, B, C.
 
     <figure>
     <img src="DistributedSystemModels.001.jpeg" alt="Fig1" style="width:50%">
     <figcaption>Fig.1: Graph Representation of a Distributed Systems</figcaption>
   </figure>
-  An edge labeled \(z\) directed from a vertex \(A\) to
-    a vertex \(B\)
-represents a channel named \(z\) directed from agent \(A\) to agent \(B\).
+  Here are a few examples of channels: channels \(t\) and \(x\) from
+  agent \(C\) to agent \(B\); channel \(z\) from agent \(A\) to agent
+  \(B\); and channel \(r\) from agent \(B\) to agent \(A\).
 
-A channel  \(z\) from an agent \(A\) to an agent \(B\) is called an
-<i>outgoing</i> channel of \(A\) and an <i>incoming</i> channel of
-  \(B\);
-  only \(A\) can send messages and only \(B\) can receive messages
-  along this channel.
+  <h2 class="w3-text-teal">States and Transitions</h2>
+  The components of a system are its agents and channels.
+  The state of a system is given by the states of its
+  components. Next, we describe channel states and then agent states.
 
-  <h2 class="w3-text-teal">Agents</h2>
+  
+  <h3 class="w3-text-teal">Channel States and Transitions</h3>
+  The state of a channel depends on the type of the channel.
+  We begin with first-in-first-out (FIFO) channels and discuss other
+  types later.
+  
+  <h4 class="w3-text-teal">Channel states</h4>
+  The state of a FIFO channel is the
+  <a href="https://en.wikipedia.org/wiki/Queue_(abstract_data_type)">
+  queue</a> of messages in transit along
+  the channel and that have not been received.
+
+  
+  <h5 class="w3-text-teal">Channel state transitions</h5>
+A channel state can change in two ways.
+<ol>
+  <li>
+  <i>Agent sends a message</i>: When sender sends a message along a
+  channel the message is appended to the tail of the queue (the state).
+  </li>
+  <li>
+  <i>A channel delivers a message</i>: When a non-empty channel delivers a
+  message, the message at the head of the queue is deleted.
+  </li>
+</ol>
+
+
+<h3 class="w3-text-teal">Agent States and Transitions</h3>
+
+<h4 class="w3-text-teal">Agent states</h4>
   Each agent has a set of variables that are <i>local</i> to the agent;
 other agents and channels cannot access these variables.
   An agent's state is given by the values of its variables.
 <p>
 An agent may have a local clock; however, clocks are not
   synchronized across agents. At a point in a trajectory, a clock in
-  one agent may be ahead, identical to, or behind the clock of another
+  one agent may be ahead, identical to, or behind, the clock of another
   agent. 
-  We will discuss clock synchronization later.
+We discuss clock synchronization later.
 
-<h2 class="w3-text-teal">Channels</h2>
-  We will look at systems with different types of channels.
-  Let's begin with a model of first-in-first-out (FIFO) channels. 
+<h4 class="w3-text-teal">Agent state transitions</h4>
+<h5 class="w3-text-teal">State transition when an agent receives a message</h5>
+The message at the head of a nonempty channel may be delivered to the
+receiver at any point.
+Any message may be
+delivered to any agent. Agents do not refuse to receive messages. Think of
+messages as mail delivered by the traditional postal system; people
+may discard mail after it is delivered in their mailboxes but they
+don't guard mailboxes and prevent postal workers from delivering
+mail.
+<p>
+When a message is delivered to an agent the agent may modify its local
+variables and send messages. The new values of the agent's
+variables and the messages it sends depend on the
+message that the agent receives and the channel on which
+the message is delivered.
 
-<h3 class="w3-text-teal">State of a FIFO Channel</h3>
-The state of a FIFO channel is a sequence of messages; these are
-the messages that have been sent along
-that channel and that have not been received.
-A channel state can be modified in two ways.
-<ol>
-  <li>
-  <i>Send message</i>: A sender along a channel appends a message to
-  the rear of sequence of messages which is the
-  channel state.
-  </li>
-  <li>
-  <i>Receive message</i>: A message is removed from the head of the
-  non-empty sequence which is the channel state, and this message is
-  delivered to the receiver along the channel. A message cannot be
-  received from an empty channel.
-  </li>
-</ol>
+<p style="color:red;">Example: Agent state transition upon receiving a message</p>
+This example is of an agent \(A\) with an input channel \(x\) and
+output channel \(y\). The agent has a local variable \(sum\). When the
+agent receives a message it adds the content of the message (assumed
+to be a number) to \(sum\) and send the resulting value of \(sum\) on
+its output channel.
+<pre>
+upon receiving m on x:
+    sum = sum + x
+    send sum on y
+</pre>
+The agent takes some action if the message it receives is an
+unexpected type. We will assume that in such cases the agent changes
+to an \(error\) state.
 
-
-
-<h2 class="w3-text-teal">State Transitions</h2>
-The state of a system is given by the states of its agents and
-channels. We refer to the state of the entire system as the <i>global
-state</i> or <i>system state</i> to distinguish it from the
-states of its component agents and channels.
-A system state is a tuple with an element for each agent and each
-channel.  
+<h5 class="w3-text-teal">Transition specification</h5>
+For all agents \(A\), all states \(s\) of the agent, all incoming
+channels \(c\) of \(A\), and all messages \(m\), there exists a state
+transition of \(A\) from \(s\); this transition is specified by the
+next state, \(s'\) of  \(A\), and for each outgoing channel the
+message (if any) sent on the channel.
 
 <p>
-A system state can change in two ways: (1) A message is
-delivered from a channel to an agent and the receiver's state changes,
-or (2) an agent changes state without receiving messages.
+In the example, the state of the agent is given by the value of its
+only local variable \(sum\). The transition is specified by the values
+of \(sum\) before and after the transition and the message sent in the
+transition.
 
-<h3 class="w3-text-teal">State Transition due to Message Delivery</h3>
-When a message is delivered the
-receiver's state changes, and the receiver may send messages on its
-outgoing channels. The states of all agents, other than the receiver,
-remain unchanged in the transition.  Likewise, the states of all
-channels other than the channel on which the message is delivered and the
-receivers's outgoing channels remain unchanged in the transition.
+<p>
+An agent may ignore a message; in this case the transition is from a
+state back to the same state, and the agent sends no messages in the
+transition. 
 
-<h3 class="w3-text-teal">State Transition without Message Delivery</h3>
-This state transition changes the state of <i>one</i> agent
-without messages being delivered. This transition may send
-messages on that agent's outgoing channels.
-The states of all other channels remain unchanged.
-We call such state
-transitions <i>internal</i> to the agent 
-that changes state. An example of such a transaction is an agent
-stepping its local clock forward without receiving messages.
 
-<h3 style="color:red;">Example of State Transitions</h3>
+<h4 class="w3-text-teal">Agent's internal state transition</h4>
+For example, an agent may move its local clock forwards without
+receiving a message.
+A state transition by an agent without receiving a message is called
+an <i>internal</i> or autonomous state transtion.
+
+<p>
+There may be agent states from which there are no internal
+transitions; the only transitions from these states occur when an
+agent receives a message.
+
+<p style="color:red;">Example: Internal State Transition of an
+Agent</p>
+In this example, an agent has a local variable \(my\_clock\) and an
+output channel \(y\). An
+internal state transition increments this variable and also sends a
+message when this variable equals 10.
+<p>
+Internal state transition
+<pre>
+my_clock = my_clock + 1
+if my_clock = 10:
+   send my_clock on y
+</pre>
+
+
+<p class="w3-text-teal">Transition specification</p>
+An agent's internal transition from a state \(s\) is 
+specified by the next state \(s'\)  of the agent and
+for each outgoing channel the message (if any) sent on the
+channel.
+
+<p>
+In the example, the transition is specified by the values of
+\(my\_clock\) before and after the transition and the message (if any)
+sent in the transition.
+
+
+<h3 class="w3-text-teal">System States and Transitions</h3>
+At most <i>one</i> agent changes state in a state transition.
+The state of a system is a tuple with an
+element of the tuple for the state of each component.
+The states of one agent and its output channels and one of its input
+channels can change in a transition; the states of all other agents
+and channels remains unchanged.
+<p>
+A state transition is called an <i>event</i>,
+and a transition that changes the state of an agent \(A\) is called
+<i>an event at \(A\).</i>
+There may be an arbitrary nonnegative number of transitions from a
+state. 
+
+
+<h4 style="color:red;">Example of System State Transitions</h4>
 Consider a state \(S\) of the system shown in Fig 1 in which
-all channels other than \(x\) and \(y\) are empty.  There are multiple
-transitions from \(S\) to other states. An example of a transition from
-\(S\) is
-  the delivery of the message \(M\) at the head of channel \(x\) to agent
-\(B\).
-
+all channels other than \(x\) and \(y\) are empty.  
 <p>
-Let \(S'\) be the state
-after a transition from \(S\) due to the delivery of a message in
-channel \(x\).
-The states of agents \(A, C\) and channels \(u, v, t, z\) are the same
-in \(S\) and 
-\(S'\).  The state of channel \(x\) in \(S'\) is the same as its state
-in \(S\) except that the message at the head of \(x\)'s state in \(S\)
-is deleted.  The states of 
-channel \(y\) and \(r\) in \(S'\) consists of messages appended to
-the rear of their states in \(S\).
-<p>
-Transitions from \(S\) can be due to:
+There exist transitions from \(S\) due to:
 <ol>
   <li>
   the delivery of the message at the head of channel \(x\) to agent
@@ -211,50 +273,67 @@ Transitions from \(S\) can be due to:
   \(C\)
   </li>
   <li>
-  a transition of the states any one of agents \(A, B, C\) without
-  messages being delivered.
+  internal transitions of the agents.
   </li>
 </ol>
 
 <p>
-
-
-<h3 class="w3-text-teal">Specification of State Transitions</h3>
-A state transition is specified by:
-<ol>
-  <li>
-  the agent \(A\) that changes state,
-  </li>
-  <li>
-  the states \(s\) and \(s'\) of \(A\) before and after the
-  transition,
-  </li>
-  <li>
-  for a message delivery event: 
-  the non-empty channel \(c\) on which the message is delivered to \(A\), and the 
-message \(m\) at the head of \(c\) which is delivered from \(c\) to \(A\), and 
-  </li>
-  <li>
-  for each outgoing channel \(c'\) of \(A\), the message (if any) sent
-  on \(c'\) which is appended to the tail of \(c'\).
-  </li>
-</ol>  
-The states of agents other than \(A\) remain unchanged by the
-transition.
-Likewise the states of all channels other than \(c\) and \(A\)'s
-outgoing channels remain unchanged by the transition.
+Let \(S'\) be the state
+after a transition from \(S\) due to the delivery of a message in
+channel \(x\).
+The states of agents \(A, C\) and channels \(u, v, t, z\) are the same
+in \(S\) and 
+\(S'\).  The state of channel \(x\) in \(S'\) is the same as its state
+in \(S\) except that the message at the head of \(x\)'s state in \(S\)
+is deleted.  The state of 
+channel \(y\) in \(S'\) is the same as its
+state in \(S\) except that messages sent in this
+transition along \(y\)  are appended to the rear.
 
 <p>
-A state transition is called an <i>event</i>,
-and a transition that changes the state of an agent \(A\) is called
-<i>an event at \(A\).</i>
+An example of an internal state transition is one in which agent \(A\)
+increments a local variable and sends messages with the new
+value of the variable on its output channels \(u\) and \(z\). In this
+transition, the states of all agents other than \(A\), and the states
+of all channels other than \(u\) or \(z\) remain unchanged.
+
+<p>
+The system may transit from \(S\) to any of the possible next
+states. The relative speed of agents and channels is unknown.
+Channel \(x\) may deliver its message, or channel
+\(y\) may deliver its message, or one of the agents may execute
+an internal transition next.
+
+
+
+<h3 class="w3-text-teal">The State Transition Graph</h3>
+The states and transitions of a system are represented by a directed
+multigraph, called the state-transition graph in which each vertex
+represents a state and each edge represents a state transition.
+
+
+<p>
+The figure below shows transitions from a system state \(S\) to system
+states \(U, V, W\). 
+<figure>
+    <img src="../ChannelSnapshots/Timelines/Timelines.013.jpeg"
+    alt="Fig2" style="width:60%"> 
+    <figcaption>Fig.2: Example</figcaption>
+</figure>
+
+The transition due to the
+delivery of a message from channel B, in the previous example, may be
+represented by edge \((S, U)\) --- i.e., the transition from \(S\) to
+\(U\) --- while \((S, V)\) and \((S, W)\) represent
+transitions due to a message delivery from channel \(C\), and an internal
+transition of an agent.
 
 
 <h3 class="w3-text-teal">Computations</h3>
 
-A <i>computation</i> is a sequence \([S_{0}, S_{1}, S_{2}, \ldots]\) of
-system states, where there exists a transition from \(S_{i}\) to
- \(S_{i+1}\) for all \(i\).
+A <i>computation</i> is a sequence \([S_{0}, S_{1}, S_{2}, \ldots]\)
+of one or more system states, where there exists a transition from
+\(S_{i}\) to \(S_{i+1}\) for all \(i\).
 The computation can also
 be specified by  the initial state \(S_{0}\) and
 a sequence of events \([e_{0}, e_{1}, e_{2}, \ldots] \)where
@@ -263,145 +342,11 @@ all \(i\).
 We call \(S_{i}\) and \(S_{i+1}\) the <i>pre</i> and <i>post</i>
 states of event \(e_{i}\).
 
-<h3 style="color:red;">Example of a Computation</h3>
-The figure below shows a distributed system with agents <code>A, B</code> and
-channels <code>w, x, y, z</code>.
-The channel <code>w</code> is from agent <code>A</code> back to
-itself.
-Likewise, the channel <code>z</code> is from agent <code>B</code> back to
-itself.
-Channels <code>x, y</code> are (respectively) from <code>A</code> to
-<code>B</code>, and from <code>B</code> to <code>A</code>.
 <p>
-The agents have identical behavior.
-
-    <figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.011.jpeg"
-    alt="Fig2" style="width:60%"> 
-    <figcaption>Fig.2: Example</figcaption>
-</figure>
-The state of each agent is given by the value of a single local
-Boolean variable, <code>run</code>. Let <code>A.run, B.run</code> be
-    the values of <code>run</code> in <code>A, B</code> respectively.
-
-<p>
-When an agent receives a message from
-itself the agent sets its local variable <code>run</code> to <code>False</code>.
-For example, when <code>A</code> receives a message along channel
-<code>w</code>, the agent sets
-<code>A.run = False</code>.
-
-<p>
-When an agent receives a message from the other agent, the receiver
-sends the same message back to the sender if the receiver's local
-variable <code>run</code> is <code>True</code>, and takes
-no action otherwise.
-For example, when <code>A</code> receives a message along channel
-<code>y</code> when <code>A.run = True</code> then <code>A</code>
-sends the same message along channel <code>x</code>.
-When <code>A</code> receives a message while <code>A.run = False</code>
-it takes no action.
-<p>
-Next, we describe the events at agent <code>A</code>; the
-events at <code>B</code> follow by symmetry.
-
-<h4 style="color:red;">Example Events</h4>
-<p style="color:red;">Event 0</p>
-When an agent receives a message from itself it sets <code>run</code>
-to <code>False</code>.
-<p>
-Let <code>run', w'</code> be the values of
-<code>run, w</code>, respectively, before the event.
-The event delivers a message on channel <code>w</code>, and so
-<code>w'</code> must be nonempty.
-This event occurs independent of the value of <code>run</code> before
-the event.
-
-<pre>
-For all nonempty sequences w' and all boolean values run'
-pre:  run = run',   w = w'
-post: run = False,  w = tail(w')
-</pre>
-
-
-<h5 style="color:red;">Event 1</h5>
-When an agent with <code>run = True</code>, receives a message from
-the other agent it sends the message back to the other agent.
-
-<pre>
-For all nonempty sequences y' and all sequences x'
-pre:  run = True,  y = y',        x = x'
-post: run = True,  y = tail(y'),  x = x' + head(y')
-</pre>
-
-<h5 style="color:red;">Event 2</h5>
-When an agent with <code>run = False</code>, receives a message from
-the other agent it takes no action.
-
-<pre>
-For all nonempty sequences y' and all sequences x'
-pre:  run = False,   y = y',        x = x'
-post: run = False,   y = tail(y'),  x = x'
-</pre>
-
-<h4 style="color:red;">Example Computations</h4>
-Actions of agents in this simple example
-do not depend on the contents of messages.
-So, the state of a channel can be represented by the number of
-messages in the channel rather than the sequence of messages in the
-channel. 
-<p>
-Let \(e_{0,A}, e_{1,A}, e_{2,A}\) be Event 0, 1, 2 (respectively)
-executed at agent <code>A</code>. Likewise, 
-let \(e_{0,B}, e_{1,B}, e_{2,B}\) be Event 0, 1, 2 (respectively)
-executed at agent <code>B</code>.
-<p>
-Consider computations that start in a state \(S_{0}\) in which <code>run</code>
-is <code>True</code> for both agents, and where there is one message
-in each channel. The states of agents and channels are as follows:
-<p>
-<code>[A, B, w, x, y, z]: [T, T, 1, 1, 1, 1]</code>
-<p>
-There are many transitions from \(S_{0}\). Events 0 or 1 could be executed
-on either agent. Event 2 cannot be executed in \(S_{0}\) because the
-precondition for the event is not satisfied in \(S_{0}\).
-
-<p>
-If Event 1 is executed at agent <code>A</code> in this state then the
-event removes a message from channel <code>y</code> and adds that
-message to channel <code>x</code>. So, the
-next state is:
-<p>
-<code>[A, B, w, x, y, z]: [T, T, 1, 2, 0, 1]</code>.
-<p>
-An example computation is \(S_{0}, [e_{1,A}, e_{1,B}, e_{0,A},
-e_{2,A}]\).
-The intermediate states in the computation are shown below.
-<p>
-<code>[T, T, 1, 1, 1, 1]</code>
-<br>
-\(\stackrel{e_{1,A}} {\longrightarrow}\)
-<br>
-<code>[T, T, 1, 2, 0, 1]</code>
-<br>
-\(\stackrel{e_{1,B}} {\longrightarrow}\)
-<br>
-<code>[T, T, 1, 1, 1, 1]</code>
-<br>
-\(\stackrel{e_{0,A}} {\longrightarrow}\)
-<br>
-<code>[F, T, 0, 1, 1, 1]</code>
-<br>
-\(\stackrel{e_{2,A}} {\longrightarrow}\)
-<br>
-<code>[F, T, 0, 1, 0, 1]</code>
-<p>
-An example of a state and event sequence that is <i>not a
-computation</i> is \(S_{0}, [e_{1,A}, e_{2,A}]\).
-<code>A.run = True</code> in the state after event \(e_{1,A}\)
-is executed in the above computation
-But, Event 2 can be executed at agent <code>A</code> only when <code>A.run
-= False</code>.
+A computation is represented by a path in the state transition
+graph. A path may start at any vertex of the graph and traverse an
+arbitrary number of edges. We discuss computations in the
+<a href="Timelines.html">pages on timelines.</a>
 
 <h3 class="w3-text-teal">Different Types of Channels</h3>
 Most of the algorithms in these notes use FIFO channels; however, we
