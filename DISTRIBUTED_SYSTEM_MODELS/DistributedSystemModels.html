@@ -144,18 +144,27 @@ A channel state can change in two ways.
 <h3 class="w3-text-teal">Agent States and Transitions</h3>
 
 <h4 class="w3-text-teal">Agent states</h4>
-  Each agent has a set of variables that are <i>local</i> to the agent;
-other agents and channels cannot access these variables.
-  An agent's state is given by the values of its variables.
+Each agent has a set of variables that are <i>local</i> to the agent;
+other agents and channels cannot access these variables.  An agent's
+state is given by the values of its variables.
+
 <p>
-An agent may have a local clock; however, clocks are not
-  synchronized across agents. At a point in a trajectory, a clock in
-  one agent may be ahead, identical to, or behind, the clock of another
-  agent. 
-We discuss clock synchronization later.
+An agent may have a local clock; however, clocks are not synchronized
+across agents. At a point in a trajectory, a clock in one agent may be
+ahead, identical to, or behind, the clock of another agent.  We
+discuss clock synchronization later.
 
 <h4 class="w3-text-teal">Agent state transitions</h4>
-<h5 class="w3-text-teal">State transition when an agent receives a message</h5>
+
+An agent may change its state when it receives a message or it may
+change state without receiving a message. Next, we describe an agent's
+state transition when it receives a message. Later, we describe
+<i>internal state transitions</i> in which an agent changes state
+without receiving messages.
+
+
+<h5 class="w3-text-teal">State transition when an agent receives a
+message</h5> 
 The message at the head of a nonempty channel may be delivered to the
 receiver at any point.
 Any message may be
@@ -250,12 +259,22 @@ element of the tuple for the state of each component.
 The states of one agent and its output channels and one of its input
 channels can change in a transition; the states of all other agents
 and channels remains unchanged.
+
 <p>
-A state transition is called an <i>event</i>,
-and a transition that changes the state of an agent \(A\) is called
-<i>an event at \(A\).</i>
-There may be an arbitrary nonnegative number of transitions from a
-state. 
+A state transition is called an <i>event</i>, and a transition that
+changes the state of an agent \(A\) is called <i>an event at
+\(A\).</i> There may be an arbitrary number of transitions from a
+state.
+
+<p>
+In the examples we specify an event at an agent by a program that
+modifies the agent's local variables and the channels incident on
+the agent. A state transition due to an agent receiving a message
+<i>m</i> on a channel <i>x</i> has the preamble:
+<pre>
+upon receiving m on x:
+</pre>
+See the example given earlier.
 
 
 <h4 style="color:red;">Example of System State Transitions</h4>
@@ -341,6 +360,8 @@ a sequence of events \([e_{0}, e_{1}, e_{2}, \ldots] \)where
 all \(i\).
 We call \(S_{i}\) and \(S_{i+1}\) the <i>pre</i> and <i>post</i>
 states of event \(e_{i}\).
+A computation is also an initial state and an execution of a sequence
+of programs that cause the state transitions.
 
 <p>
 A computation is represented by a path in the state transition
