@@ -90,24 +90,65 @@ hr.new1 {
   </p>
 
   <p class="w3-text-red">
-  A timeline is a familiar concept in
-  history. Timelines of computations help us 
-  understand distributed algorithms.
+  A <a href="https://en.wikipedia.org/wiki/Timeline"> timeline</a> is
+  a familiar concept. The timeline of a computation is a simple
+  concept that is a
+  distributed algorithms.
+
+  <!---------------------------------------------------------------->
+  <h3 class="w3-text-teal">Historical and Computation Timelines</h3>
+  <!---------------------------------------------------------------->
+  
+A <a href="https://en.wikipedia.org/wiki/Timeline">timeline</a> in
+history and archaeology is a
+display of a sequence of events at the times at which they occurred.
+The length of the interval between events represents the time elapsed
+between them.
+You may find it helpful to think of a computation timeline in the same
+way, with events displayed at the times at which they occur.  When we
+work with systems in which message delays are arbitrary, the absolute
+(i.e. "real" or "true") time is irrelevant --- only the
+interdependence of events matters.
+
+  <h4 style="color:red;">Example</h4>
+  <figure>
+    <img src="HistoricalTimeline.001.jpeg" alt="Fig001" style="width:100%">
+    <figcaption>Fig.1: A Partial Historical Timeline of Microsoft and IBM</figcaption>
+  </figure>
+
+  The example shows an incomplete and selective timeline of IBM and
+  Microsoft over a short interval.
   </p>
 
+<p class="w3-text-teal">Agent Clocks</p>
+Agents in many distributed systems have local clocks that are are
+synchronized (though imperfectly) with the local clocks of
+other agents. Later, we will describe algorithms that use protocols such as
+<a href="https://en.wikipedia.org/wiki/Network_Time_Protocol"> the
+Network Time Protocol (NTP)</a> and <a
+href="https://en.wikipedia.org/wiki/Precision_Time_Protocol"> the
+Precision Time Protocol (PTP)</a> to synchronize agent clocks.  The
+timeline displays events at their true times; however, the time of an
+event, as determined by an agent's local clock, may deviate from the
+true time.
+
+<p>
+For the remainder of this section, the points at which events appear
+in the timeline is irrelevant. All that matters is the order of
+events. 
+
+  
   <!--------------------------------------------------------->
   <h3 class="w3-text-teal">Timelines and Causality Graphs</h3>
   <!--------------------------------------------------------->
   <p>
-  A computation is specified by
-  an initial state and a
-  sequence of events.
-  A <i>timeline</i> is a graph representation of a computation.
-  A timeline of a computation is a labeled
-  directed acyclic graph, called a <i>causality graph</i>, and an ordering
-  of vertices.  The vertices of the causality graph represent events,
-  and the vertices are ordered in the order in which events occur in the computation.
-  The edges of the graph are as follows:
+  A computation is specified by an initial state and a sequence of
+  events.  A <i>timeline</i> is a graph representation of a
+  computation.  A timeline of a computation is a labeled directed
+  acyclic graph, called a <i>causality graph</i>, and an ordering of
+  vertices.  The vertices of the causality graph represent events, and
+  the vertices are ordered in the order in which events occur in the
+  computation.  The edges of the graph are as follows:
 <ul>
   <li>
   <i>Agent timeline edges</i>:
@@ -237,7 +278,8 @@ and channel states at the vertical line immediately after the initial
 events A0, B0, D0.
 
 
-<h3 class="w3-text-teal">Timelines with Identical Causality Graphs</h3>
+
+<h3 class="w3-text-teal">Different Timelines with Identical Causality Graphs</h3>
 A timeline represents a computation: the initial global state is specified by
 the initial events, and the sequence of events is specified by the
 timeline.
@@ -247,7 +289,7 @@ edge from \(e\) to \(e'\) in the causality graph.
 <p>
 What timelines have the same causality graph? Let's look at an example.
 
-<h4 style="color:red;">Example: Different Timeline with the same
+<h4 style="color:red;">Example: Different Timelines with Identical
 Causality Graph</h4>
 Figure 4 is a timeline for a computation that
 has the same events as the one in figure 3.
@@ -267,12 +309,13 @@ The global state after B1 and before A2 in the computation represented by
 figure 4 is not visited in the computation represented by figure 3.
 
 
-<h3  class="w3-text-teal"">Topological Sorts of Causality Graphs
+<h3  class="w3-text-teal"">All Topological Sorts of Causality Graphs
  are Computations</h3>
 A topological sort of a directed acyclic graph is a sequence of
 vertices of the graph where for every edge from \(v'\) to \(v\) in the
 graph, \(v'\) appears before \(v\) in the sequence.
-<p>
+
+<p style="color:red;">Example of topological sorts</p>
 In a topological sort, all edges of the graph are directed forwards
 --- from a vertex to a later vertex in the sort.
 For example, [A1, D1, A2, B1, A3, B2] and [A1, D1, B1, A2, A3, B2] are
@@ -282,56 +325,37 @@ The sequence [D1, A1, A2, B1, A3, B2] is not a topological sort
  in the sequence.
 
 <hr class="new2">
-<p style="color:blue;">
-Theorem: Let \(G\) be the causality graph of a computation \(X\). Let \(Y\) be any
-topological sort of \(G\). The initial global state specified by
-\(G\) and the event sequence corresponding to the vertex sequence in
-\(Y\) is a computation.
-</p>
+<h5 style="color:blue;">
+Theorem: All topological sorts of the causality graph of a computation
+that starts in a state \(S\) and ends in a state \(T\) are also
+computations that start in \(S\) and end in \(T\).
+</h5>
 <hr class="new2">
 
 <p class="w3-text-teal">Proof</p>
-We will prove by induction on \(k\) that there exists a computation
-with the same initial state as \(X\) and the event sequence consisting
-of the first \(k\) events of \(Y\).
-The base case is \(k = 0\).
-We assume that the result holds for \(k < n\) and prove that it holds for
-\(k = n\).
+Let \(X\) be a computation that starts in state \(S\), and let \(Y\)
+be a topological sort of the causality graph of the computation. Prove
+by induction on \(k\) that for the first \(k\) events in \(Y\):
+<ol>
+  <li>
+  the \(i\)-th event at an agent in \(Y\) is the same as \(i\)-th
+  event at that agent in \(X\) , and
+  </li>
+  <li>
+  the \(j\)-th message sent on a channel in \(Y\) is the same as the
+  \(j\)-th message sent on that channel in \(X\), and
+  </li>
+  <li>
+  the \(k\)-th message received on a channel in \(Y\) is the same as
+  the \(k\)-th message received on that channel in \(X\), and
+  </li>
+  <li>
+  a message is received in \(Y\) only after it is sent.
+  </li>
+</ol>
+The induction step is straightforward.
 
-<p>
-<p>
-Let the \(n\)-th event of \(Y\) be event \(e\) at an agent
-\(A\)
-and let \(e'\) be the event immediately preceding \(e\) at agent \(A\).
-Because \(Y\) is a topological sort of \(G\), event \(e'\) occurs
-before \(e\) in \(Y\), and \(e'\) is the event 
-immediately preceding \(e\) at \(A\) in \(X\).
-Therefore the state of \(A\) immediately preceding \(e\) is the same
-in \(X\) and \(Y\).
-
-<p>
-Consider the case where a message \(m\) along a
-channel \(c\) is received in event \(e\) in \(X\).
-Let \(m\) be the \(i\)-th message received along \(c\) in \(X\). 
-Because \(Y\) is a topological sort of \(G\), in \(Y\) the event that sends the \(j\)-th
-message along channel \(c\) appears before the event that receives the
-\(j\)-th message along \(c\), for all \(j\).
-Therefore, at least \(i\) messages are sent along \(c\) and exactly \(i-1\)
-messages are received before \(e\) in \(Y\).
-So, the state of channel \(c\) before event \(e\) in \(Y\) has the \(i\)-th
-message, i.e., \(m\), at its head.
-Therefore the messages, if any, received in \(e\) are the same in
-\(X\) and \(Y\).
-
-<p>
-Because the state of the agent on which \(e\) occurs is the same in
-\(X\) and \(Y\), and the messages received in \(e\) are the same in
-\(X\) and \(Y\), it follows that \(e\) can be the \(n\)-th event in \(Y\).
-
-
-<h3 class="w3-text-teal">System Timelines with Identical Agent
-Timelines</h3>
-<p class="w3-text-teal">Messages must be sent before they are received</p>
+<h4 style="color:red;">Example: Topological Sorts of Causality Graphs</h4>
 The timeline of an agent \(A\) in a computation is 
 the initial state of \(A\) and the sequence of events at \(A\)
 in the computation.
@@ -343,42 +367,54 @@ Though the agent timelines are identical in both figures the system
 timelines are different because the sequences of events (after the
 initial events) in figures 3 and 4 are, respectively:
 [A1, D1, A2, B1, A3, B2] and [A1, D1, B1, A2, A3, B2].
-The ordering of events on different agents is different in these
-system timelines: A2 appears before B1 in figure 3 whereas A2 appears
-after B1 in figure 4.
-Are there even more system timelines with the same agent timelines?
+Both these sequences are topological sorts of the causality graph.
 
 
+<h3 class="w3-text-teal">System Timelines with Identical Agent
+Timelines</h3>
 <hr class="new2">
-<p style="color:blue;">Theorem</p>
-<p style="color:blue;">
-Given a computation specified by an initial state \(S\) and event
-sequence \(X\),
-let \(Y\) be a permutation of \(X\) where the computation of each
-agent is the same in \(X\) and \(Y\).
-There exists a computation with initial state \(S\) and event
-sequence \(Y\) if
-<i>Every message is sent before it is received in \(Y\).</i>
+<h5 style="color:blue;">
+Theorem: Let \(X\) be the event sequence in a computation that starts in a
+state \(S\) and ends in a state \(T\).
+Any permutation \(Y\) of \(X\) is also a 
+computation that starts at \(S\) and ends at \(T\) if:
+<ol>
+  <li>
+  agent computations in \(X\) and \(Y\) are identical, and
+  </li>
+  <li>
+  messages are received only after they are sent in \(Y\).
+  </li>
+</ol>
+</h5>
 <hr class="new2">
-<h5 class="w3-text-teal">Proof</h5>
+
+
+<p class="w3-text-teal">Proof</p>
 System timelines with identical agent
 computations have identical causality graphs. If messages are
-received only after they are sent in \(Y\) then \(Y\) is a topological
+received only after they are sent in the permutation then the
+permutation is a topological 
 sort of the causality graph, and therefore is a computation.
 
 
-
-
-<h2 class="w3-text-teal">Cuts of Timelines</h2>
-An instant \(T\) in a timeline separates events
-executed at or before \(T\) from events executed after \(T\).
-We call events executed before \(T\), <i>past</i> events
-at \(T\), and we call events executed after \(T\),  <i>future</i> events
-at \(T\). We will not consider instances \(T\) where an event occurs
-exactly at \(T\).
-
+<h2 class="w3-text-teal">Cuts of Computations</h2>
 <p>
-The figure below shows two timelines. An instant \(T\) in the
+A <i>cut of a computation</i> is a subset of events in the computation. We
+call this subset <i>the past</i>. The subset of events in the computation
+that are not in the past are called <i>the future</i>.  A
+<i>consistent cut of a computation</i> is a cut in which where there are
+no edges in the causality graph from events in the future to events in
+the past.
+
+<h4 style="color:red;">Example</h4>
+The figure below shows consistent cuts across two system computations
+where past events are colored black and future events are green.
+<figure>
+    <img src="Timelines.007.jpeg" alt="Fig7" style="width:100%">
+    <figcaption>Fig.7: Consistent Cuts of Computations</figcaption>
+</figure>
+An instant \(T\) in the
 lower timeline is represented by the vertical purple line which separates
 past events shown in black (A0, A1, B0, B1, D0, D1) from future events
 shown in green.  The states of agents A, B, D are their states
@@ -389,96 +425,38 @@ event B1, and has yet to be received.
 
 <p>
 The upper timeline shows the same sets of past and future events in
-black and green, respectively. The vertical line representing \(T\) in
-the lower timeline is curvilinear in the upper timeline --- both these
-lines partition the set of events into a past and future, where edges
-that cross the lines are from the past to the future.
+black and green, respectively. The vertical line representing the
+instant \(T\) in the lower timeline corresponds to a curvilinear line
+in the upper timeline. 
 
 <p>
-<i>A cut of a timeline</i> is a partition of the events in
-the timeline into two subsets called <i>past</i> and <i>future</i>.
-
+The proof of the following statement is straightforward. A cut is
+consistent if and only if all edges to past events are from past
+events; or equivalently, all edges from future events are to future
+events.  
 
 <hr class="new2">
-    <h5 style="color:blue;">
-A <i>consistent cut</i> is a cut in which there are no edges in the
-    causality graph from
-    future events to past events. 
-</h5>
-Equivalently a consistent cut is a cut in which all edges in the
-    causality graph to past
-    events are from past events, or equivalently all edges
-    from future events are
-    to future events.
-<hr class="new2">
-
-
-<h4 style="color:red;">Example</h4>
-The figure below shows cuts across two system timelines
-where past events are colored black and future events are green.
-<figure>
-    <img src="Timelines.007.jpeg" alt="Fig7" style="width:100%">
-    <figcaption>Fig.7: Cuts of Timelines</figcaption>
-</figure>
-
-The cuts in both diagrams are identical: past events are A0, A1, B0,
-D0, D1, and future events are A2, A3, B2.
-The cuts are consistent because there is no edge from the
-future to the past.
-<p>
-A purple vertical line, representing an instant in time, separates past from
-future in the lower diagram.
-By contrast, a curved line separates past from future in the upper
-diagram. There is no vertical line that separates past (defined as A0,
-A1, B0, D0, D1) from future in
-the upper diagram because a past event (B1) appears after a future
-event (A2).
-
-<h3 class="w3-text-teal">Theorem about Consistent Cuts</h3>
-<hr class="new2">
-    <h5 style="color:blue;">
-For any consistent cut, \([past, future]\), of a timeline \(X\)
-there exists a timeline \(Y\) in which the sequence of events is a
-permutation of of the sequence of events in \(X\), and
-where <i>all \(past\) events occur <str>before</str> all
-\(future\) events</i>.
+<h5 style="color:blue;">
+Theorem:
+A cut of a computation that starts in a state \(S\) and ends in a
+state \(T\) is consistent if and only if there exists a computation
+that also starts in \(S\) and ends in \(T\), and where
+<i>all past events occur before all future events.</i>
 </h5>
 <hr class="new2">
-<p>
-The proof follows from the theorem that all topological sorts of the
-causality graph are computations. There is a topological sort in which
+
+<p class="w3-text-teal">Proof</p>
+For all consistent cuts there exists
+a topological sort in which 
 all events in the past appear before all events in the future.
+And, all topological sorts of the
+causality graph are computations.
 
 <h4 style="color:red;">Example</h4>
 The cut in the diagram on the top of figure 7 is consistent.
 Therefore, there exists a system timeline diagram, shown at the bottom of the
 figure, in which all past events occur before all
 future events.
-
-
-<h4 class="w3-text-teal">Corollary: Computation from Initial State to
-Consistent Cut to Final State</h4> 
-Consider an algorithm that computes the state at a consistent
-cut. Let \(s_{init}\) and \(s_{fini}\) be the states in which the
-algorithm starts and finishes (respectively), and let \(s_{snap}\) be
-the state at the consistent cut. The following result follows from the
-theorem that all topological sorts of causality graphs are computations.
-<hr class="new2">
-<h5 style="color:blue;">
-There exists a computation from
-\(s_{init}\) that visits \(s_{snap}\) and later visits \(s_{fini}\).
-</h5>
-<hr class="new2">
-
-<p>
-For example, an algorithm in the top diagram of figure 7 determines
-the global state \(s_{snap}\) along the curved consistent cut during a
-computation. Let \(s_{init}\) and \(s_{fini}\) be the states before the
-algorithm starts and after it finishes, i.e. at the left and
-right-hand ends of the system timeline diagram. Then, the diagram in the
-lower diagram of figure 7 also represents a computation 
-from \(s_{init}\) to \(s_{snap}\) and then to \(s_{fini}\).
-
 <p>
 This result is helpful in developing algorithms that detect properties
 of the states of computations.
