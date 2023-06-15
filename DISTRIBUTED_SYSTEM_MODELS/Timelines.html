@@ -90,9 +90,11 @@ hr.new1 {
   </p>
 
   <p class="w3-text-red">
-  A <a href="https://en.wikipedia.org/wiki/Timeline"> timeline</a> is
-  a familiar concept. The timeline of a computation is a simple
-  concept that can be used to understand most distributed algorithms.
+  
+  The concepts of a timeline and a cut of a computation form the
+  foundation of a large number of distributed algorithms.
+  
+  </p>
 
   <!---------------------------------------------------------------->
   <h3 class="w3-text-teal">Historical and Computation Timelines</h3>
@@ -403,7 +405,7 @@ A <i>cut of a computation</i> is a subset of events in the computation. We
 call this subset <i>the past</i>. The subset of events in the computation
 that are not in the past are called <i>the future</i>.  A
 <i>consistent cut of a computation</i> is a cut in which where there are
-no edges in the causality graph from events in the future to events in
+all edges in the causality graph to events in the past are from events in
 the past.
 
 <h4 style="color:red;">Example</h4>
@@ -430,16 +432,16 @@ in the upper timeline.
 
 <p>
 The proof of the following statement is straightforward. A cut is
-consistent if and only if all edges to past events are from past
+consistent if and only if there are no edges to past events from future
 events; or equivalently, all edges from future events are to future
 events.  
 
 <hr class="new2">
 <h5 style="color:blue;">
-Theorem:
+Consistent Cuts Theorem:
 A cut of a computation that starts in a state \(S\) and ends in a
 state \(T\) is consistent if and only if there exists a computation
-that also starts in \(S\) and ends in \(T\), and where
+that also starts in \(S\) and ends in \(T\), and in which
 <i>all past events occur before all future events.</i>
 </h5>
 <hr class="new2">
