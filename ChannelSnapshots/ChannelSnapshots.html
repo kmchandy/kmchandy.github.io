@@ -295,7 +295,7 @@ computations on local snapshots.
 Algorithms that detect system properties by analyzing local snapshots
 are given later. 
 
-<h2 class="w3-text-teal">State Detection Algorithms</h2>
+<h2 class="w3-text-teal">State Detection</h2>
 Many applications repeat global snapshots to detect properties of
 computations such as "the computation has terminated."
 The obvious way of repeating snapshots is to modify the
@@ -332,17 +332,14 @@ termination will show that computation has terminated.
 And if a snapshot shows that computation has terminated, then
 computation has indeed terminated.
 
-<p class="w3-text-teal">Deadlock Detection and other Stable
+<p class="w3-text-teal">Detecting Deadlock and other Stable
 Properties</p>
-Many applications of distributed operating systems require the system
-to detect properties that continue to hold until the system detects
-the properties and changes the state of the computation. An example of
+Distributed operating systems detect properties that continue to hold
+until the operating system changes the state of a computation. An example of
 such a property is "computation has deadlocked." If such a property
-holds at some point then a later snapshot will show that property
+holds then a later snapshot will show that property
 holds. And if a snapshot shows that the property holds then the
-property indeed holds at that point. For example, if the computation
-is deadlocked in a snapshot state then computation is indeed
-deadlocked. 
+property indeed holds at that point.
 
   
 <!--Start Footer--------------------------------------->
