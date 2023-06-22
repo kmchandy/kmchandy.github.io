@@ -79,7 +79,7 @@ hr.new1 {
 
 
 <!--------------------------------------------------------->
-<h2 class="w3-text-teal">The Global Snapshot Algorithm.</h2>
+<h1 class="w3-text-teal">Global Snapshots and State Detection</h1>
 <!--------------------------------------------------------->
 
 <p class="w3-text-green">
@@ -99,7 +99,7 @@ hr.new1 {
   states are based on the concept of a consistent cut.
   </p>
 
-  <h4 class="w3-text-teal">Specification of the Global Snapshot</h4>
+  <h3 class="w3-text-teal">Specification of a Global Snapshot</h3>
   
   Algorithms by which agents collaborate to record the state of a
   system are not instantaneous. 
@@ -295,11 +295,11 @@ computations on local snapshots.
 Algorithms that detect system properties by analyzing local snapshots
 are given later. 
 
-<h3 class="w3-text-teal">Endless Sequences of Snapshots</h3>
-Many applications use repeated
-global snapshots. The obvious way of repeating snapshots is to modify the
-snapshot algorithm to associate
-timestamps with snapshots and markers.
+<h2 class="w3-text-teal">State Detection Algorithms</h2>
+Many applications repeat global snapshots to detect properties of
+computations such as "the computation has terminated."
+The obvious way of repeating snapshots is to modify the
+snapshot algorithm to associate timestamps with snapshots and markers.
 The algorithm to obtain the global snapshot associated
 with timestamp \(T\) is as follows.
 <ol>
@@ -317,9 +317,32 @@ with timestamp \(T\) is as follows.
   so.
   </li>
 </ol>
-Snapshots are taken periodically. Agents can get time/date for
+Snapshots are taken periodically. Agents can get accurate time/date for
 timestamps from reference clocks such as NTP servers.
 
+<h3 class="w3-text-teal">State Detection: Examples</h3>
+
+<p class="w3-text-teal">Rollback and Recovery</p>
+If an error occurs the computation is restarted from the most recent
+snapshot.
+
+<p class="w3-text-teal">Termination Detection</p>
+If a computation terminates at some point then a snapshot taken after
+termination will show that computation has terminated.
+And if a snapshot shows that computation has terminated, then
+computation has indeed terminated.
+
+<p class="w3-text-teal">Deadlock Detection and other Stable
+Properties</p>
+Many applications of distributed operating systems require the system
+to detect properties that continue to hold until the system detects
+the properties and changes the state of the computation. An example of
+such a property is "computation has deadlocked." If such a property
+holds at some point then a later snapshot will show that property
+holds. And if a snapshot shows that the property holds then the
+property indeed holds at that point. For example, if the computation
+is deadlocked in a snapshot state then computation is indeed
+deadlocked. 
 
   
 <!--Start Footer--------------------------------------->
