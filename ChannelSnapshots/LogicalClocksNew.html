@@ -85,96 +85,56 @@ hr.new1 {
   GlobalSnapshots.
   </a>
   </p>
-  <h3 class="w3-text-teal">Local clocks</h3>
-  Each agent can maintain its own local clock. If local clocks of
-  all agents are perfectly synchronized then all agents have access to
-  a <i>common global variable: the time</i>. With perfect synchrony, every
-  agent \(A\) has access to the values of the local clocks of every agent
-  because these values are the same as \(A\)'s clock.
-  Developing algorithms in which all agents have access to a common
-  time is easier than dealing with drifting clocks.
-  Later, we discuss methods that reduce the drift of local clocks from
-  each other; however these methods do not guarantee synchrony.
+  <h2 class="w3-text-teal">Local clocks</h2>
+  Each agent can maintain a local clock.
+  Later, we will describe algorithms that use protocols such as
+<a href="https://en.wikipedia.org/wiki/Network_Time_Protocol"> the
+Network Time Protocol (NTP)</a> and <a
+href="https://en.wikipedia.org/wiki/Precision_Time_Protocol"> the
+Precision Time Protocol (PTP)</a> to synchronize agent clocks.
+  These algorithms do not, however, guarantee perfect synchrony.
+  If the times at which messages are sent and received are determined
+  by the sender's and receiver's clocks then a message may appear to
+  be received before it is sent. The logical clock algorithm fixes
+  this problem by assigning logical times to events so that the
+  sender's logical time when a message is sent is earlier than
+  the receiver's logical time when the message is received.
 
-  <h4 class="w3-text-teal">Determining global state with synchronized
-  clocks</h4>
-  Let's look
-  at an example of how access to a common time simplifies algorithm
-  development. How can agents cooperate to determine a global state of
-  the system?
+  <h3 class="w3-text-teal">Rules for Assigning Logical Times to Events</h3>
 
-  <p>
-  The global state at time \(T\) consists of the states of agents and
-  channels at \(T\).
-  The state of a channel at \(T\) is the sequence of messages in the
-  channel at \(T\).
-  The state at time \(T\) corresponds to
-  a vertical cut of the system timeline at \(T\).
-
-  <p>
-  The global state can be computed in the following way.
-  Each agent records its state at time \(T\).
-  Messages are timestamped with the times that the messages are sent.
-  A message with timestamp \(T\) that is received after time \(T\) is
-  in the channel at \(T\)
-
-  <h4 class="w3-text-teal">Determining a global state with clocks that
-  drift</h4>
-  Let's try to use the above algorithm with local clocks that may
-  drift apart.
-  A message sent when the sender's clock
-  reads \(T\) may be received when the receiver's clock reads a
-  value earlier than \(T\). In this case, a cut of the timeline at
-  points where local clocks read \(T\) is inconsistent --- a
-  message from the future (clock reads \(T\)) is received in the past
-  (clock reads less than \(T\)). So, agent and channel states obtained
-  in this way may not represent a global state.
-
-
-<p>
-The algorithm failed because a message sent in the future (as defined
-by local clocks) was received in the past.
-  What steps can prevent a message with timestamp
-  \(T\) from being received when the receiver's clock is at a value
-  less than \(T\)? The obvious way is for the receiver to move its clock forward to a
-  value greater than \(T\) when it receives a message timestamped
-\(T\). The rules of the algorithm are summarized next.
-
-
-<h3 class="w3-text-teal">The Logical Time Algorithm for setting Local Clocks</h3>
-Let \(t(e)\) be the value of the local clock at the agent on which
+  Let \(t(e)\) be the value of the local clock at the agent on which
 event \(e\) occurs.
 
 <ol>
   <li>
-  For events \(e'\) followed by \(e\) at an agent, the
-  agent sets \(t(e)\) to any value greater than \(t(e')\).
+  Each agent's clock ticks forward. So, if an event \(e'\) occurs
+  after an event \(e\) at an agent then \(t(e') < t(e)\).
   </li>
-  
   <li>
 When a message is sent in an event \(e\), the message is assigned
   timestamp \(t(e)\).
   </li>
   <li>
-  If an agent receives a message with timestamp \(T\) in an event
-  \(e\) then the agent sets \(t(e)\) to any value greater than \(T\).
+  When a message with timestamp \(T\) arrives at the receiver, if the
+  receiver's timestamp is less than \(T\) then the receiver
+  moves its local clock forward to a value greater than \(T\)
+  before it receives the message.
   </li>
 </ol>
 
-The algorithm satisfies the property:
-
+<h3 class="w3-text-teal">The Logical Time Property</h3>
+Times assigned to events using the above rules have the following property:
 <hr class="new2">
 <p style="color:blue;">
-Logical Time Property
-<p style="color:blue;">
-For every edge \((e', e)\) in the causality graph
-  of a computation:
+The Logical Time Property: For every edge \((e', e)\) in the causality graph, 
 \(t(e') < t(e)\).
 </p>
 <hr class="new2">
-The proof is straightforward
+Event times that satisfy the logical time property are called logical
+times. There are many ways of assigning times to events
+that satisfy the logical time property.
 
-<h4 style="color:red;">Example of Logical Time</h4>
+  <h4 style="color:red;">Example of Logical Time</h4>
 
 <figure>
     <img src="../ChannelSnapshots/Timelines/Timelines.001.jpeg" alt="Fig1" style="width:100%">
@@ -191,150 +151,152 @@ from left to right.
 Local clock values are shown as integers inside the circles
 representing events.
 For example, events 0, 1, and 2 on the timeline for agent B occur when
-    B's local clock has value 0, 2 and 4, respectively.
+B's local clock has value 0, 2 and 4, respectively.
 
-<h4 class="w3-text-teal">Events in Ascending Logical Time are
-Topological Sorts</h4>
+
+
+<h3 class="w3-text-teal">Events in Logical
+Time</h3>
+
+A sequence is defined to be in ascending order exactly when
+smaller values occur in the sequence before larger values.
+A sequence of events in ascending order of logical times is a
+topological sort of the causality graph, which gives the following result.
+
 <hr class="new2">
 <p style="color:blue;">
-Theorem: Given a computation specified by an initial state and event sequence
-\(X\) there exists computations with the same initial state and all
-permutations \(Y\) of \(X\) where
-<i>events in \(Y\) are in ascending order of
-logical times</i>,
-i.e., if \(t(e') < t(e)\) then \(e'\) appears before \(e\) in \(Y\)  .
+A permutation of a computation
+from a state \(S\) to a state \(T\) is also a computation from \(S\)
+to \(T\) if events in the permutation occur in ascending order
+of logical time.
 </p>
 <hr class="new2">
-This result follows from the property of topological sorts.
 
+<p>
+This result tells us that there is a computation in which
+the time-axis of a timeline can be treated as real time, and where the
+real time at which an event occurs is its logical time.
 
-<h4 style="color:red;">Example: Events Occurring in Logical Time</h4>
-The next figure shows a timeline with the same events as in figure 1
-but with events appearing at their logical times --- all events with
-logical time \(T\) appear at point \(T\) in the timeline.
+<h4 style="color:red;">Example: Events in Logical Time</h4>
+Given the computation and logical times of figure 1,  there exists a
+computation, shown in figure 2, in which events occur in logical
+time.
+The causality graphs of figures 1 and 2 are identical.
+In the computation shown in figure 2, we can think of the time 
+axis as real time, and treat logical times as real times.
 <figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.004.jpeg" alt="Fig4" style="width:100%">
-    <figcaption>Fig. 2: Events Occur at their Logical Times</figcaption>
-</figure>
-<p>
-A heuristic for designing distributed algorithms is to treat logical
-time as though it were real time, and to think of timelines such as
-those in the above figure.
-<p>
-Events in a computation occur in a sequence.
-We break ties in logical time by
-using lexicographic ordering with an order among agents.
-For example, agents are ordered \(A, B, D\), and logical
-times are pairs \(T, agent\_id\) where \(T\) is a real number.
-Then
-\((T, A) < (T, B) < (T, D)\).
-<p>
-In the diagram, the event with local time \(1\) on agent \(A\)
-occurs before the event with local time \(1\) on agent \(D\)
-in the event sequence.
-
-
-<h3 class="w3-text-teal">A Cut at a Logical Time is Consistent</h3>
-Assume that local clocks increase continuously. For
-events \(e'\) followed by \(e\) at an agent \(A\), assume that the
-\(A\)'s local clock increases continuously from \(t(e')\) at event
-\(e'\) to \(t(e)\) at event \(e\).
-A cut of the timeline at time \(t\) is the cut when each agent's local
-clock is at \(t\).
-Next we show that the cut at any time \(t\) is consistent.
-<p>
-We give two examples of timelines. In the first, local clock values
-match real time, and in the second they do not.
-
-
-
-<h4 style="color:red;">Examples: Instant when Events Occur in Logical Time</h4>
-<p>
-The figure below shows an event sequence in ascending order of logical
-time. The figure illustrates the global state at time 2.8 on this timeline.
-The vertical line represents a point in the trajectory at time 2.8.
-The time of 2.8 is a helpful fiction --- no event occurred at logical
-time 2.8.
-The point at which a local clock reads 2.8 is immaterial --- all that
-matters is that clocks move forward.
-
-<figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.005.jpeg"
-    alt="Fig5" style="width:100%"> 
-    <figcaption>Fig. 3: Global Snapshot at 2.8 when
-    Events occur in Logical Time </figcaption>
+    <img src="../ChannelSnapshots/Timelines/Timelines.002.jpeg"
+    alt="Fig2" style="width:100%"> 
+    <figcaption>Fig. 2: Events occurring in Logical Time </figcaption>
 </figure>
 
-<h4 style="color:red;">Examples: Cut when Events are not in Logical Time</h4>
-The next figure shows an event sequence that is not in ascending order
-of logical time, and it illustrates the global state at <i>logical
-time</i> 2.8.
+<h3 class="w3-text-teal">Cuts at Logical Times are Consistent</h3>
+For any \(t\), the cut with <i>past</i> as the set of events with
+logical time \(t\) or less is consistent. This follows from the
+logical time property: edges from events with logical time greater
+than \(t\) are directed to events with logical time greater than \(t\).
 
-<p>
-The vertical (upper figure) and curvilinear (lower figure) lines at time and
-logical time 2.8 represent the cases when events
-are, and are not, (respectively), in ascending order of logical time.
+<h5 class="w3-text-teal">Algorithm to obtain Global Snapshot at Logical Time \(t\)</h5>
+An algorithm to obtain the global snapshot for the cut at logical time \(t\) is as
+follows.
+<ol>
+  <li>
+  <i>Agent states</i>: Each agent records its local state at a point
+  after all events with logical time at most \(t\) and before all
+  events with logical time greater than \(t\).
+  </li>
+  <li>
+  <i>Message timestamps</i>: Each message is timestamped with the
+  logical time of the event in which the message is sent.
+  </li>
+  <li>
+  <i>Channel states</i>: Each agent records the state of an incoming
+  channel as the sequence of messages that have timestamp at most
+  \(t\) that are received along the channel at events with logical
+  time greater than \(t\).
+  </li>
+</ol>
+
+<h4 style="color:red;">Example: Cut and Global Snapshot at Logical Time \(t =
+2.8\)</h4> 
+
+Figure 3 shows a consistent cut and a global snapshot at logical time
+\(t = 2.8\). The <i>past</i> is the set of events with logical time
+\(2.8\) or less.
+
 
 <figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.006.jpeg"
-    alt="Fig6" style="width:100%"> 
-    <figcaption>Fig. 4: Cut at Logical Time 2.8</figcaption>
+    <img src="../ChannelSnapshots/Timelines/Timelines.003.jpeg"
+    alt="Fig3" style="width:100%"> 
+    <figcaption>Fig. 3: Global Snapshot at logical time t = 2.8</figcaption>
+</figure>
+
+<p>
+Let's look at the same cut and snapshot in a computation in which
+events occur in logical time. 
+
+<figure>
+    <img src="../ChannelSnapshots/Timelines/Timelines.004.jpeg"
+    alt="Fig4" style="width:100%"> 
+    <figcaption>Fig. 4: Cut at Logical Time 2.8 when Events occur in
+    Logical Time</figcaption>
 </figure>
 
 
-<h5 class="w3-text-teal">Theorem about Consistent Cuts and Logical
-Times</h5>
-For a computation, and for all \(T\), define \(past(T)\) as the set of
-events with logical clock values that are at most
-\(T\), and define \(future(T)\) as the set of
-events with logical clock values that exceed \(T\).
+
+<h3 class="w3-text-teal">Vector Clocks</h3>
+The logical clock
+algorithm ensures that if there  is 
+a path from event \(e'\) to event \(e\) in the causality graph then
+logical times have the property
+\(t(e') < t(e)\).
+Vector clocks ensure that the converse also holds.
+The specification for the vector time \(t(e)\) for an event \(e\)  is:
+
+<p style="color:blue;">
+\(t(e') < t(e)\) if and <i>only if</i> there is 
+a path in the causality graph from \(e'\) to \(e\).
+</p>
+
 
 <p>
-For all \(T: [past(T), future(T)]\) is a consistent cut.
-<p>
-
-<p class="w3-text-teal">Proof</p>
-There exists a topological sort of the causality graph in which events
-in \(past(T)\) appear before events in \(future(T)\).
-
-
-
-<h2 class="w3-text-teal">Heuristic: Use Time in Algorithms</h2>
-A heuristic that helps in designing distributed algorithms is to
-first design an algorithm for a system in which local clocks are
-perfectly accurate and then modify the algorithm by using
-<i>logical time</i> in place of real time to deal with clock
-inaccuracy. 
-<p>
-Let's use this strategy to develop a global snapshot algorithm.
-
-
-<h4 class="w3-text-teal">Global Snapshots using Logical Time</h4>
-
-<p class="w3-text-teal">First step: global snapshot algorithm assuming
-local clocks are perfect.</p>
-Each agent records its state at time \(T\).
-The timestamp of a message is the sender's time when the message is
-sent.
-An agent records the state of an
-incoming channel as the sequence of messages that the agent receives with
-timestamps of \(T\) or less that the agent receives when the agent's
-time is greater than \(T\). 
-
-
-<p class="w3-text-teal">Second step: Use logical time instead of real time</p> 
-<p>
-Each agent records its state at <i>logical</i> time \(T\). An agent records the state of an
-incoming channel as the sequence of messages that the agent receives with
-timestamps of \(T\) or less that the agent receives at time greater
-than <i>logical</i> time \(T\).
+A vector time for an event \(e\) is a vector \(V(e)\) of length \(N\)
+wher \(N\) is the number of agents in the system.
+Let \(V_{j}(e)\) be the \(j\)-th element of vector \(V(e)\).
+Let \(I^{(j)}\) be the unit vector along the \(j\)-th axes, i.e., the
+vector has 1 in the \(j\)-th position and 0 elsewhere. The algorithm
+for vector timestamps is as follows.
 
 <p>
-The recorded global state is a collection of the states of agents and
-channels that are recorded separately by each of the agents.
-There are many ways to collate local information; the simplest is to
-send all the local information to a central site.
-We postpone discussion of algorithms for collating local information.
+A message \(M\) is assigned a timestamp \(T(M)\) which is the vector time of the event in
+which the message is sent.
+Let \(e\) be an event at an agent \(j\) where message \(M\) is
+received in the event and let \(e'\) be the event immediately
+preceding \(e\) at agent \(j\). Set:
+<p>
+\(
+V(e) = \textrm{max}(V(e'), T(M)) + I^{(j)}
+\)
+<p>
+where the max is an element-wise maximum.
+If \(e\) is an event in which no message is received then:
+\(
+V(e) = V(e') + I^{(j)}
+\)
+<p>
+The proof that the algorithm gives vector times that satisfy the
+specification is straightforward.
+
+
+<h4 style="color:red;">Example of Vector Clocks</h4>
+<figure>
+    <img src="../ChannelSnapshots/Timelines/Timelines.005.jpeg" alt="Fig5" style="width:100%">
+    <figcaption>Fig. 5: Example of Vector Clocks</figcaption>
+</figure>
+The \(n\)-th event at an agent is shown as a circle containing the
+number \(n\). You can easily verify that the vector times shown in the
+diagram can be obtained by executing the given algorithm.
+
 
 <h3 class="w3-text-teal">Heartbeats, NTP and Sequences of
 Snapshots</h3>
@@ -426,77 +388,6 @@ check the snapshot at the next heartbeat.
 
 
 
-
-<h3 class="w3-text-teal">Vector Clocks</h3>
-The logical clock
-algorithm ensures that if there  is 
-a path from event \(e'\) to event \(e\) in the timeline then 
-\(t(e') < t(e)\);
-however, the converse is not necessarily true, and
-vector clocks address the converse.
-
-<hr class="new2">
-<h5 style="color:blue;">
-Vector time specification
-</h5>
-<p>
-<h5 style="color:blue;">
-\(t(e') < t(e)\) if and <i>only if</i> there is 
-a path from \(e'\) to \(e\).
-</h5>
-<hr class="new2">
-
-
-<p>
-A vector time for an event \(e\) is a vector \(V(e)\) of length \(N\)
-wher \(N\) is the number of agents in the system.
-Let \(V_{j}(e)\) be the \(j\)-th element of vector \(V(e)\).
-
-<p>
-Each agent has a local clock. For an event \(e\) on the \(j\)-th
-agent let \(t_{j}(e)\) be the time on the
-\(j\)-th agent's clock when \(e\) occurs.
-The only requirement of local clocks is that they tick forward. So
-for all events \(e', e\) at the \(j\)-th agent, where \(e\) occurs
-after \(e'\):
-\(t_{j}(e') < t_{j}(e)\).
-
-<p>
-\(V(e)\) is defined as follows. For all agents \(j\) and events \(e\):
-\(V_{j}(e) = t_{j}(e')\)
-<p>
-where \(e'\) be the latest event on the timeline of the \(j\)-th agent
-such that there is a path from \(e'\) to \(e\).
-If there is no path from events at the \(j\)-th agent to \(e\) then
-\(V_{j}(e) = 0\).
-
-<h4 style="color:red;">Example of Vector Clocks</h4>
-<figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.007.jpeg" alt="Fig7" style="width:100%">
-    <figcaption>Fig. 7: Example of Vector Clocks</figcaption>
-</figure>
-Local times are shown inside the circles representing events while
-vector timestamps are shown outside the circles.
-<p>
-There is a path (with zero hops) from the event on agent \(0\) with
-local time \(1\) to the same event with vector time \([1, 0, 0]\).
-there are no paths from events on agents 1 and 2 to this event.
-
-<p>
-Let's look at event \(e\) with vector timestamp \([2, 2, 1]\). There is a
-path to \(e\) from the event on agent 0 with local time \(2\).
-There is a path to \(e\) from the same event on agent 1 with local
-time \(2\).
-Likewise, there is a path to \(e\) from the event on agent 2 with local
-time \(1\).
-
-<h4 class="w3-text-teal">Algorithm for Vector Clocks</h4>
-The proof that vector times, as defined above, satisfies the vector
-time specification is straightforward. The algorithm for assigning
-vector times to events is the same as that for scalar times except
-that operations are on vectors. For example, the timestamp of a
-message is the vector time --- as opposed to the scalar time --- of
-the event in which the message is sent.
 
 <!--Start Footer--------------------------------------->
 

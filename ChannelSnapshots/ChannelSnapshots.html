@@ -289,15 +289,36 @@ snapshot and before it receives the marker.
 Snapshots</h4>
 Each agent takes its own local snapshot and the snapshots of its
 incoming channels.
-Some applications require the local information that is recorded by
-each agent to be collected by a single agent.
-Other applications carry out computations on the local
-information without collecting all of it at a single agent.
-Algorithms that analyze local snapshots of agents and
-channels are presented later.
-One of many applications of global snapshots is to checkpoint a
-distributed computation so that the computation can be restarted from
-the checkpoint if a transient event occurs.
+Some applications require a single agent to collect local
+snapshots to form a global snapshot while other applications carry out
+computations on local snapshots.
+Algorithms that detect system properties by analyzing local snapshots
+are given later. 
+
+<h3 class="w3-text-teal">Endless Sequences of Snapshots</h3>
+Many applications use repeated
+global snapshots. The obvious way of repeating snapshots is to modify the
+snapshot algorithm to associate
+timestamps with snapshots and markers.
+The algorithm to obtain the global snapshot associated
+with timestamp \(T\) is as follows.
+<ol>
+  <li>
+  When an agent's local clock is at time \(T\) the agent takes its
+  local snapshot with timestamp \(T\) if it has not already done so.
+  </li>
+  <li>
+  When an agent takes its local snapshot with timestamp \(T\) it sends
+  markers with timestamp \(T\) on all its outgoing channels.
+  </li>
+  <li>
+  When an agent receives a marker with timestamp \(T\) the agent takes
+  its local snapshot with timestamp \(T\) if it has not already done
+  so.
+  </li>
+</ol>
+Snapshots are taken periodically. Agents can get time/date for
+timestamps from reference clocks such as NTP servers.
 
 
   
