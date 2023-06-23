@@ -74,32 +74,31 @@ hr.new1 {
   
 <div class="w3-row w3-padding-64">
 <div class="w3-twothird w3-container">
-  
 
 <!--------------------------------------------------------->
-  <h2 class="w3-text-teal">Termination Detection</h2>
+<h1 class="w3-text-teal">Termination Detection</h1>
+<!--------------------------------------------------------->
 
   <p class="w3-text-green">
   This page uses material from
   <a
-  href="https://kmchandy.github.io/ChannelSnapshots/Applications.html">
-  Applications of Timelines and Snapshots.
-  </a>
+  href="../ChannelSnapshots/ChannelSnapshots.html">
+  Global Snapshots and State Detection.</a>
   </p>
 
   <p class="w3-text-red">
-  "Computation has terminated" is a stable predicate: After a
-  computation has terminated it remains terminated. A general way of
-  detecting a stable predicate is to check whether the predicate holds
-  in a global snapshot state.
-  We use this strategy to design an algorithm for termination
-  detection. 
+  This page describes algorithms to detect termination of
+  computations.
+
+  The general method of detecting states in computations is to take
+  repeated global snapshots. Here we review the general method applied to the
+  specific problem of termination detection. The concept of consistent
+  cuts is the foundation of detection algorithms. In this page we describe a
+  termination detection algorithm based on consistent cuts.
   </p>
-  
 
-<h3 class="w3-text-teal">The Problem</h3>
 
-    <h4 class="w3-text-teal">Active and Idle States of Agents</h4>
+    <h4 class="w3-text-teal">Problem Definition</h4>
     An agent is either <i>idle</i> or <i>active</i>. An idle agent
     remains idle until it receives a message at which point it becomes
 active. An idle agent does not send messages.
@@ -110,12 +109,10 @@ may become idle at any point.
 <p>
     Initially all agents are active and all channels are empty.
 
-  <h4 class="w3-text-teal">Terminated State</h4>
   A computation has
-  terminated exactly when all agents
+  terminated when all agents
   are idle and all channels are empty. 
   A computation may or may terminate.
- After a computation terminates it remains terminated.
  
 
 <p>
@@ -124,70 +121,62 @@ has terminated.
 The detection algorithm may use messages and agents that are not part of the
   underlying computation.
   The detection algorithm must not modify the underlying computation.
+  The specification of the algorithm in
+  <a
+  href="ChannelSnapshots.html">
+  Global Snapshots and State Detection.
+  </a>
+  is repeated below for convenience.
 
-  
-<h4 class="w3-text-teal">Specification of the Algorithm</h4>
-The detection algorithm returns a Boolean variable where:
+  <h4 class="w3-text-teal">Specification of the Algorithm</h4>
+  The algorithm has a boolean variable \(B\) where:
 <ol>
   <li>
-  If the detection algorithm starts after the system has terminated then
-  the detection algorithm returns True.
+  If the computation terminates then the
+  algorithm returns \(B = True\) when or after computation terminates.
   </li>
   <li>
-  If the detection algorithm returns True then the system has terminated when
-    the detection algorithm terminates.
+  If \(B = True\) at any point then computation has terminated at that
+  point. 
   </li>
 </ol>
 
-<h3 class="w3-text-teal">Algorithms for Termination Detection</h3>
+<h4 class="w3-text-teal">General Algorithm</h4>
+<a
+  href="ChannelSnapshots.html">
+  A general algorithm for detecting stable properties
+  </a> is for agents to repeatedly send local
+snapshots to an agent, called a <i>detector</i>
+that puts the local snapshots to get a global
+snapshot and then checks whether all agents are idle and all channels
+are empty in the global snapshot.
+Let's look at a variant of the general algorithm.
 
-A general algorithm for detecting stable properties is to repeatedly take
-global snapshots and determine if the predicate holds in any
- snapshot.
-Let's specialize this algorithm to detect termination.
+<h4 class="w3-text-teal">Specific Algorithm for Termination Detection</h4>
+Let \(C_{s}\) and \(C_{r}\) be the numbers of messages sent and
+received (respectively) along channel \(C\).
+Computation has terminated in a state in which all agents are idle and
+for all channels \(C\): \(C_{s} = C_{r}\).
 
 <p>
-Global snapshots are obtained in the following way.
-Each agent records its local state (active or idle) and for each incident channel
-  \(C\), the number of messages sent \(C_{s}\) and the number of
-  messages received \(C_{r}\) along that channel at the point.
-From the theory of global snapshots, the local agent recordings form a
-global snapshot if for all channels \(C\), \(C_{s} \geq C_{r}\).
-So:
-<hr class="new2">
+Each time an agent transits from active to idle it sends \(C_{s}\)
+for each of its outgoing channels \(C\),
+and \(C_{r}\) for each of its incoming channels \(C\), to the
+detector.
+The detector keeps the latest message that it receives from each
+agent.
+Let \(C_{s}^{*}\) be the last value of \(C_{s}\) that the detector has
+received, and
+let \(C_{r}^{*}\) be the last value of \(C_{r}\) that the detector has
+received.
+
 <p style="color:blue;">
-Any collection of local recordings forms a global snapshot if
-\(C_{s} = C_{r}\) for all channels \(C\).
-</p>
-<hr class="new2">
-This suggests the following algorithm.
-
+The detector detects that computation has terminated if for
+all channels \(C\): \(C_{s}^{*} = C_{r}^{*}\).
 <p>
-Each time that an agent transits from active to idle it records \(C_{s}\)
-the number of messages that it sent along each outgoing channel \(C\),  and \(C_{r}\) the number of
-messages that it received along each incoming channel \(C\), at that point.
-Assume, for the time being, that these records are stored somewhere.
-<hr class="new2">
-<p style="color:blue;">
-If there exists a set of records, one for each agent, such that for
-all channels \(C\): \(C_{s} = C_{r}\), where \(C_{s}, C_{r}\) are the
-values in the records, then computation has terminated.
-</p>
-<hr class="new2">
-<p>
-This is because the set of records forms a global snapshot in which
-all agents are idle and all channels are empty.
-
-<p class="w3-text-teal">Collecting Local Snapshots to Form a Global Snapshot</p>
-One way to collect local snapshots is to send them to an agent that is
-not part of the underlying computation. Let's call this agent the
-<i>detector</i>. The detector keeps the last message that it has
-received from each agent.
-The detector detects that computation has terminated when the detector
-has received at least one message from each agent, and for all
-channels \(C\): \(C_{s} = C_{r}\) where \(C_{s}, C_{r}\) are the
-counts in the latest messages that the detector has received.
-
+(Initially \(C_{s}^{*}\) is a negative value and \(C_{r}^{*}\) is 0 so
+that termination is detected only after the detector receives messages
+from all agents.)
 
 
 <!--Start Footer--------------------------------------->

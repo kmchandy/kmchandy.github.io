@@ -95,8 +95,10 @@ hr.new1 {
 
   <p class="w3-text-red">
   The global snapshot algorithm determines the system state at a
-   consistent cut of a computation. All algorithms that detect system
-  states are based on the concept of a consistent cut.
+   consistent cut of a computation. 
+  The consistent cut is the foundation of all state detection
+  algorithms. These algorithms include rollback and recovery,
+  termination detection, and deadlock detection.
   </p>
 
   <h3 class="w3-text-teal">Specification of a Global Snapshot</h3>
@@ -295,7 +297,7 @@ computations on local snapshots.
 Algorithms that detect system properties by analyzing local snapshots
 are given later. 
 
-<h2 class="w3-text-teal">State Detection</h2>
+<h1 class="w3-text-teal">State Detection</h1>
 Many applications repeat global snapshots to detect properties of
 computations such as "the computation has terminated."
 The obvious way of repeating snapshots is to modify the
@@ -317,29 +319,68 @@ with timestamp \(T\) is as follows.
   so.
   </li>
 </ol>
-Snapshots are taken periodically. Agents can get accurate time/date for
-timestamps from reference clocks such as NTP servers.
+Channel snapshots are taken in the standard way: The state of a
+channel \(c\) for a snapshot at \(T\) is the sequence of messages
+received along \(c\) after the receiver takes its snapshot at \(T\)
+and before receiving the marker timestamped \(T\).
+
+<p>
+Snapshots are taken periodically for increasing values of
+\(T\). Agents can get accurate time and date for \(T\) from reference
+clocks such as NTP servers.
 
 <h3 class="w3-text-teal">State Detection: Examples</h3>
+Next we give a few examples that illustrate applications of repeated
+snapshots.
 
-<p class="w3-text-teal">Rollback and Recovery</p>
-If an error occurs the computation is restarted from the most recent
-snapshot.
+<h4 class="w3-text-teal">Rollback and Recovery</h4>
+The goal is to develop an algorithm that recovers from an error in a
+computation by rolling the computation back to a saved state and
+restarting the computation from that point.
+Rollback and recovery can be more efficient than restarting long
+computations from their initial state.
 
-<p class="w3-text-teal">Termination Detection</p>
-If a computation terminates at some point then a snapshot taken after
-termination will show that computation has terminated.
-And if a snapshot shows that computation has terminated, then
-computation has indeed terminated.
+<p>
+Rollback and recovery can be implemented by taking repeated global
+snapshots. 
+If an error occurs in a computation then the computation is rolled
+back to the most recent snapshot and restarted from that point.
 
-<p class="w3-text-teal">Detecting Deadlock and other Stable
-Properties</p>
-Distributed operating systems detect properties that continue to hold
+
+<h4 class="w3-text-teal">Termination Detection</h4>
+The goal is to detect whether a computation has terminated. The
+specification of the algorithm is as follows. The algorithm has a
+boolean variable \(B\) where:
+<ol>
+  <li>
+  If the computation terminates then the
+  algorithm returns \(B = True\) when or after computation terminates.
+  </li>
+  <li>
+  If \(B = True\) at any point then computation has terminated at that
+  point. 
+  </li>
+</ol>
+An algorithm that satisfies this specification uses repeated
+snapshots. Initially \(B = False\). The algorithm sets \(B\) to
+\(True\) if a snapshot state shows that computation has terminated.
+
+<h4 class="w3-text-teal">Detecting Deadlock and other similar
+Properties</h4>
+Distributed operating systems may be required to detect properties that continue to hold
 until the operating system changes the state of a computation. An example of
-such a property is "computation has deadlocked." If such a property
-holds then a later snapshot will show that property
-holds. And if a snapshot shows that the property holds then the
-property indeed holds at that point.
+such a property is "computation has deadlocked." If a computation has
+deadlocked then it remains deadlocked until the operating system
+detects and then breaks deadlock.
+
+<p>The specification of the
+algorithm to detect such properties is identical to that of the algorithm for termination
+detection except that "computation has terminated" is replaced by
+"computation has deadlocked" or some other property of interest.
+An algorithm that satisfies the specification is the obvious
+modification of the termination detection algorithm.
+
+
 
   
 <!--Start Footer--------------------------------------->
