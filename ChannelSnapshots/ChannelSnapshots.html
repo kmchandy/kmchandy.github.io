@@ -94,67 +94,91 @@ hr.new1 {
   </a>
 
   <p class="w3-text-red">
-  The global snapshot algorithm determines the system state at a
-   consistent cut of a computation. 
-  The consistent cut is the foundation of all state detection
-  algorithms. These algorithms include rollback and recovery,
-  termination detection, and deadlock detection.
+  <i>Central Ideas</i>: Global snapshot algorithms that determine
+  system states at consistent cuts.
+  </p>
+  
   </p>
 
   <h3 class="w3-text-teal">Specification of a Global Snapshot</h3>
-  
-  Algorithms by which agents collaborate to record the state of a
-  system are not instantaneous. 
-Let the states in which the algorithm starts and ends be
-\(s_{init}\) and \(s_{fini}\), respectively, and let \(s_{snap}\) be
-the global state (the snapshot) recorded by the algorithm.
-
-<hr class="new2">
-  <h5 style="color:blue;">
-  Specification
-  <br>
-Determine \(s_{snap}\) so that there exists a trajectory from
-  \(s_{init}\) through \(s_{snap}\) to \(s_{fini}\).
-</h5>
   <hr class="new2">
+  <h5 style="color:blue;">
+  A global snapshot is any state \(S\) such that there exists a computation
+  that starts in the state in which the snapshot algorithm starts,
+  visits \(S\),
+  and later visits the state in which the snapshot algorithm ends.
+  </h5>
+  <hr class="new2">
+  
+  <p>
+  A global snapshot algorithm determines a global state of the
+  system during a computation, without stopping or modifying the
+  computation.
+  The algorithm cannot, for instance, stop the distributed
+  computation, record the state (i.e., the snapshot), and then restart
+  the computation.
+  <p>
+  Let the states in which the algorithm starts and ends be
+\(s_{init}\) and \(s_{fini}\), respectively, and let \(s_{snap}\) be
+  the global state (the snapshot) recorded by the algorithm.
+  The specification of \(s_{snap}\) is:
+
+  <h5 style="color:blue;">
+There exists a computation that starts in 
+  \(s_{init}\) and then visits \(s_{snap}\) and later visits
+  \(s_{fini}\).
+  </h5>
+  There may be an arbitary number of events between \(s_{init}\) and
+  \(s_{snap}\), and an arbitary number of events between \(s_{snap}\) and
+  \(s_{fini}\).
+
+  <p>
+  Though \(s_{snap}\) is determined while a computation
+  is running, \(s_{snap}\) may not have occurred in the computation. The
+  specification merely says that there <i>exists</i> a computation from
+  \(s_{init}\) through \(s_{snap}\) to \(s_{fini}\), and this
+  computation may not be the computation during which the snapshot is
+  taken.
+  What is the point of computing \(s_{snap}\) during a computation if
+  it never occurred in the computation? We will answer this question later.
+
+  <h4 class="w3-text-teal">Key Idea: The Consistent Cut Requirement</h4>
 
   <p>
   From the <a
   href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">theorem on
-  consistent cuts</a>, 
-  this specification is satisfied when \(s_{snap}\) is the state at a
-  consistent cut. Let's design an algorithm by which agents
-  collaborate to determine a consistent cut.
-
-  <p>
+consistent cuts</a>,
+<hr class="new2">
+<h5 style="color:blue;">
+A global snapshot is the state of a system at a consistent cut of a
+computation.
+</h5>
+<hr class="new2">
+  Let's design an algorithm by which agents
+collaborate to determine a consistent cut.
   Each agent takes its own local snapshot, i.e. records its own local
   state, at a point in the computation.
-  Define <i>past</i> events at an agent to be the events at that
+  Define <i>past</i> events to be the events at an
   agent before the agent takes its own local snapshot.
-  An event is in the future if the event occurs at an agent after that
-  agent takes its local snapshot.
-  The cut is consistent if all edges in the causality
-graph from the future are to the future.
 
   <p>
   Edges in an agent's timeline from events after the agent's snapshot
   are (obviously) to events after the agent's snapshot.
-Therefore the cut -- past events are events at an agent before the
-  agent takes its local snapshot -- is consistent if it satisfies the
+Therefore the cut is consistent if it satisfies the
   following condition:
 
 <hr class="new2">
 <h5 style="color:blue;">
-Consistent cut requirement: 
+Consistent cut requirement:
+<br>
 All messages sent after the sender takes its local snapshot
 are received after the receiver takes its local snapshot.
 </h5>
 <hr class="new2">
 
 <p>
-Next, we describe one of many algorithms that satisfy the consistent
-cut requirement.
-<p>
+Next, we use the consistent cut requirement to design a global
+snapshot algorithm. 
 The algorithm employs a special type of message called a <i>marker</i>,
 distinct from all other messages in the system.
 Exactly one
@@ -295,92 +319,154 @@ Some applications require a single agent to collect local
 snapshots to form a global snapshot while other applications carry out
 computations on local snapshots.
 Algorithms that detect system properties by analyzing local snapshots
-are given later. 
+are given later.
 
-<h1 class="w3-text-teal">State Detection</h1>
-Many applications repeat global snapshots to detect properties of
-computations such as "the computation has terminated."
-The obvious way of repeating snapshots is to modify the
-snapshot algorithm to associate timestamps with snapshots and markers.
-The algorithm to obtain the global snapshot associated
-with timestamp \(T\) is as follows.
+
+<!--------------------------------------------------------------->
+<!--------------------------------------------------------------->
+<!--------------------------------------------------------------->
+
+<h2 class="w3-text-teal">Monitoring Systems by Scheduling Snapshots</h2>
+Sequences of checkpoints taken repeatedly at scheduled times
+<a href="https://en.wikipedia.org/wiki/Cron">(cron jobs)</a>
+help in monitoring systems.
+A checkpoint of a distributed system is a global snapshot, and
+scheduling repeated snapshots helps in many applications including
+monitoring. 
+The global snapshot taken
+at time \(T\) is assigned timestamp \(T\) to
+distinguish it from snapshots taken at other times.
+The algorithm to get the snapshot at time
+\(T\) is identical to the marker algorithm except that markers and
+snapshots are assigned timestamp \(T\).
+
+
+<!--------------------------------------------------------------->
+<!--------------------------------------------------------------->
+<h3 class="w3-text-teal">Algorithm to get the Snapshot at time \(T\)</h3>
+All snapshots and markers in the algorithm below have timestamp
+\(T\). Agents can reduce error in their local clocks by synchronizing
+their local clocks with a standard time server such as NTP.
 <ol>
   <li>
-  When an agent's local clock is at time \(T\) the agent takes its
-  local snapshot with timestamp \(T\) if it has not already done so.
+  When an agent's clock reaches \(T\) the agent takes its local snapshot and sends
+  markers on all its output channels. 
   </li>
   <li>
-  When an agent takes its local snapshot with timestamp \(T\) it sends
-  markers with timestamp \(T\) on all its outgoing channels.
-  </li>
-  <li>
-  When an agent receives a marker with timestamp \(T\) the agent takes
-  its local snapshot with timestamp \(T\) if it has not already done
-  so.
+  When an agent receives a marker with timestamp \(T\), if the agent's
+  local clock is earlier than \(T\) then the agent moves its local
+  clock forward to \(T\), takes its local snapshot, and sends
+  markers on its output channels.
   </li>
 </ol>
-Channel snapshots are taken in the standard way: The state of a
-channel \(c\) for a snapshot at \(T\) is the sequence of messages
-received along \(c\) after the receiver takes its snapshot at \(T\)
-and before receiving the marker timestamped \(T\).
-
-<p>
-Snapshots are taken periodically for increasing values of
-\(T\). Agents can get accurate time and date for \(T\) from reference
-clocks such as NTP servers.
-
-<h3 class="w3-text-teal">State Detection: Examples</h3>
-Next we give a few examples that illustrate applications of repeated
-snapshots.
+Channel snapshots are computed as in the marker algorithm.
+<h2 class="w3-text-teal">Applications of Snapshots</h2>
+Next we give a few examples of snapshot applications.
 
 <h4 class="w3-text-teal">Rollback and Recovery</h4>
-The goal is to develop an algorithm that recovers from an error in a
-computation by rolling the computation back to a saved state and
-restarting the computation from that point.
-Rollback and recovery can be more efficient than restarting long
-computations from their initial state.
+If an error is detected during the execution of a computation then a
+rollback and recover algorithm rolls the computation back to the most
+recent checkpoint (global snapshot) and restarts the computation from
+that point. 
+
+
+<h4 class="w3-text-teal">The Detection Problem</h4>
+The detection problem is to design an algorithm that detects
+whether a computation is in a <i>stable</i> set of
+states.
+
+<p class="w3-text-teal">Stable set of States</p>
+A <i>stable</i> set of states is a set \(P\) such that every transition from a
+state in \(P\) is to a state in \(P\). There is no transition from
+inside \(P\) to outside \(P\), and so after a computation visits a
+state in \(P\) the computation remains forever in \(P\). The set of
+states in which agents are deadlocked is  an example of a stable set:
+there is no transition from a deadlocked state to a non-deadlocked
+state.
+
+
+<p class="w3-text-teal">Global Snapshots solve the Detection Problem</p>
+Let's look again at the specification of a global snapshot.
+Let \(S_{init}\) and \(S_{fini}\) be the states of the computation at
+which the snapshot algorithm starts and ends, respectively and let
+\(S_{snap}\) be snapshot obtained by the algorithm.  There exists a computation that
+visits \(S_{init}\), later visits \(S_{snap}\) and then later visits
+\(S_{fini}\). So, for any stable set \(P\), if \(S_{init}\) is in
+\(P\) then so is \(S_{snap}\).  Likewise, if \(S_{snap}\) is in \(P\)
+then so is \(S_{fini}\).
 
 <p>
-Rollback and recovery can be implemented by taking repeated global
-snapshots. 
-If an error occurs in a computation then the computation is rolled
-back to the most recent snapshot and restarted from that point.
-
-
-<h4 class="w3-text-teal">Termination Detection</h4>
-The goal is to detect whether a computation has terminated. The
-specification of the algorithm is as follows. The algorithm has a
-boolean variable \(B\) where:
+In summary, for any stable set \(P\)
 <ol>
   <li>
-  If the computation terminates then the
-  algorithm returns \(B = True\) when or after computation terminates.
+  If the snapshot algorithm starts when the system is in \(P\)
+  then the snapshot is in \(P\).
   </li>
   <li>
-  If \(B = True\) at any point then computation has terminated at that
-  point. 
+  If the snapshot is in \(P\) then system is in \(P\) when the
+  snapshot algorithm ends.
   </li>
 </ol>
-An algorithm that satisfies this specification uses repeated
-snapshots. Initially \(B = False\). The algorithm sets \(B\) to
-\(True\) if a snapshot state shows that computation has terminated.
 
-<h4 class="w3-text-teal">Detecting Deadlock and other similar
-Properties</h4>
-Distributed operating systems may be required to detect properties that continue to hold
-until the operating system changes the state of a computation. An example of
-such a property is "computation has deadlocked." If a computation has
-deadlocked then it remains deadlocked until the operating system
-detects and then breaks deadlock.
-
-<p>The specification of the
-algorithm to detect such properties is identical to that of the algorithm for termination
-detection except that "computation has terminated" is replaced by
-"computation has deadlocked" or some other property of interest.
-An algorithm that satisfies the specification is the obvious
-modification of the termination detection algorithm.
+<p>
+What do we know about the snapshot if the snapshot algorithm is
+initiated when the system is outside a stable set \(P\) and enters
+\(P\) while the snapshot algorithm is still running? In this case, the
+specification doesn't tell us whether the snapshot will be in \(P\) or
+not. So, it is possible that the snapshot is not in \(P\) though the
+system is in \(P\) when the snapshot algorithm ends. A method to
+detect whether a system is in a stable set of states is to monitor the
+system by scheduling repeated snapshots.
 
 
+<hr class="new2">
+<h5 style="color:blue;">
+All detection problems can by solved by scheduling repeated global snapshots.</h5>
+<hr class="new2">
+If a snapshot shows that that the system state is in a stable set
+\(P\) then the system state at that point is in \(P\).
+If the system state, at any point in a computation, is in \(P\)
+then the next snapshot will be in \(P\).
+
+<p>
+Monitoring systems is a general solution for detection problems;
+however there may be more efficient solutions for specific applications.
+Many applications detect whether a computation is in a stable set of
+states.
+Examples of such sets include states in which:
+<ol>
+  <li> computation has terminated, </li>
+  <li> computation has deadlocked, </li>
+  <li> amount of crypto coins exceeds a constant \(n\), assuming the
+  coins aren't destroyed </li>
+  <li> clocks of all agents exceed a constant \(t\), assuming that
+  clocks don't go backward.  </li>
+</ol>
+
+<h3 class="w3-text-teal">Summary</h3>
+<p class="w3-text-red">
+<i>Central Ideas</i>:
+Global snapshot specification; a global snapshot is a state at a
+consistent cut; marker algorithm and snapshot at \(T\); stable sets of states and detection algorithms.
+</p>
+
+<p>
+A global snapshot is a state of the system that can occur in a
+computation after the state in which the snapshot algorithm is started
+and before the state in which the algorithm ends.
+The marker algorithm and the algorithm to get the snapshot at \(T\)
+satisfy the consistent cut requirement -- every message sent after the
+sender takes its local snapshot is received after the receiver takes
+its local snapshot. Scheduling repeated snapshots is a way of solving
+all detection problems.
+<p>
+
+<h3 class="w3-text-teal">Next</h3>
+Next look at algorithms, based on consistent cuts and global snapshots
+<a href="TerminationDetectionNew.html">termination detection</a> and
+<a href="DatabaseDeadlockDetection.html">database deadlock detection</a>,
+based on consistent cuts and global snapshots or read about
+<a href="LogicalClocksNew.html">logical clocks</a>.
 
   
 <!--Start Footer--------------------------------------->

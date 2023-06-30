@@ -79,7 +79,7 @@ hr.new1 {
 
   
 <!--------------------------------------------------------->
-<h1 class="w3-text-teal">Timelines</h1>
+<h1 class="w3-text-teal">Timelines and Cuts of Computations</h1>
 <!--------------------------------------------------------->
 
   <p class="w3-text-green">
@@ -90,10 +90,17 @@ hr.new1 {
   </p>
 
   <p class="w3-text-red">
-  Timelines and cuts of computations are the
-  foundation of all algorithms that detect states that occur in
-  computations. These algorithms include rollback and recovery,
-  termination detection, and deadlock detection.
+  <i>Central Ideas</i>:
+  (1) Timelines. (2) Causality graphs. (3) Consistent cuts.
+  </p>
+  <p class="w3-text-red">
+  A consistent cut of a computation is the
+  foundation of algorithms that detect states that may have occurred
+  in a
+  computation. These algorithms include rollback and recovery,
+  termination detection, and deadlock detection. The concept of a
+  consistent cut is based on the ideas of timelines and causality
+  graphs. 
   </p>
 
   <!---------------------------------------------------------------->
@@ -403,10 +410,16 @@ sort of the causality graph, and therefore is a computation.
 <p>
 A <i>cut of a computation</i> is a subset of events in the computation. We
 call this subset <i>the past</i>. The subset of events in the computation
-that are not in the past are called <i>the future</i>.  A
-<i>consistent cut of a computation</i> is a cut in which where there are
+that are not in the past are called <i>the future</i>.
+
+<h5 class="w3-text-teal">Consistent Cuts of Computations</h5>
+A <i>consistent cut of a computation</i> is a cut such that
 all edges in the causality graph to events in the past are from events in
 the past.
+
+<p>
+Obviously, all edges to the past are from the past if and only if all
+edges from the future are to the future.
 
 <h4 style="color:red;">Example</h4>
 The figure below shows consistent cuts across two system computations
@@ -428,21 +441,25 @@ event B1, and has yet to be received.
 The upper timeline shows the same sets of past and future events in
 black and green, respectively. The vertical line representing the
 instant \(T\) in the lower timeline corresponds to a curvilinear line
-in the upper timeline. 
+in the upper timeline.
 
 <p>
-The proof of the following statement is straightforward. A cut is
-consistent if and only if there are no edges to past events from future
-events; or equivalently, all edges from future events are to future
-events.  
+An example of an inconsistent cut is the set <i>past</i> of events {A0, A1, A2,
+B0, D1}. This cut is inconsistent because there is an edge (D1, A2) of
+the causality graph from an event, D1, in the <i>future</i> to an
+event, A2, in the <i>past</i>.
 
 <hr class="new2">
+<h4 style="color:blue;">
+Consistent Cut Theorem
+</h4>
 <h5 style="color:blue;">
-Consistent Cuts Theorem:
 A cut of a computation that starts in a state \(S\) and ends in a
 state \(T\) is consistent if and only if there exists a computation
 that also starts in \(S\) and ends in \(T\), and in which
+<center>
 <i>all past events occur before all future events.</i>
+</center>
 </h5>
 <hr class="new2">
 
@@ -462,6 +479,25 @@ future events.
 This result is helpful in developing algorithms that detect properties
 of the states of computations.
 
+<h3 class="w3-text-teal">Summary</h3>
+<p class="w3-text-red">
+<i>Central Ideas</i>:
+Consistent cut of a computation, timeline, causality graph.
+</p>
+
+<p>
+The concept of a consistent cut of a computation is used in a large
+number of algorithms that detect properties of computations.
+These algorithms include rollback and recovery, termination detection,
+and deadlock detection. Consistent cuts are described in terms of
+timelines and causality graphs of computations.
+<p>
+
+<h3 class="w3-text-teal">Next</h3>
+Next read about
+<a href="../ChannelSnapshots/ChannelSnapshots.html">
+the global snapshot algorithm by which agents determine the state at a
+consistent cut.
 
 <!--Start Footer--------------------------------------->
 

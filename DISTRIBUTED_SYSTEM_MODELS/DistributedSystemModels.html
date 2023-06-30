@@ -77,9 +77,15 @@ hr.new1 {
 
 
 <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Computations of Distributed Systems</h1>
+    <h1 class="w3-text-teal">Models of Distributed Systems</h1>
 <!----------------------------------------------------------------->
-  
+
+<p class="w3-text-red">
+  <i>Central Ideas</i>:
+  This page describes the model of distributed systems used in this
+  website. The model is defined by the components, states, state
+  transitions, and computations of the system.
+  </p>
 
 <p>
 A distributed system consists of a set of agents and a set of
@@ -388,7 +394,26 @@ represent the state of such a channel by a set.  A message is sent by
 adding it to the set, and a message is delivered by delivering a copy
 of any element in the set without modifying the set.
 
+<h3 class="w3-text-teal">Summary</h3>
+<p class="w3-text-red">
+  <i>Central Ideas</i>:
+States and state transitions of a distributed systems.
+<p>
 
+A state of the system is given by the states of its components -- agents
+and communication channels. A
+state transition may change the state of at most one agent, and the
+state of at most one input channel of that agent, and the states of
+output channels of that agent. A computation is a sequence of states
+where there exists a transition from each state in the sequence to the
+next.
+
+<h3 class="w3-text-teal">Next</h3>
+Next look at a
+<a href="Example.html">simple example of a distributed system</a> or skip it to
+read about
+<a href="Timelines.html">key concepts -- timelines and cuts of
+computations</a> -- which are used in a large number of distributed algorithms.
 
 <!--Start Footer--------------------------------------->
 

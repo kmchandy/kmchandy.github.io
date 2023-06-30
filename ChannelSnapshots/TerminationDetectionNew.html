@@ -87,18 +87,17 @@ hr.new1 {
   </p>
 
   <p class="w3-text-red">
-  This page describes algorithms to detect termination of
-  computations.
-
-  The general method of detecting states in computations is to take
-  repeated global snapshots. Here we review the general method applied to the
-  specific problem of termination detection. The concept of consistent
-  cuts is the foundation of detection algorithms. In this page we describe a
-  termination detection algorithm based on consistent cuts.
+  <i>Central Ideas</i>:
+  The consistent cut is the foundation of all detection algorithms.
+  A general detection algorithm is to take repeated global snapshots
+  and check whether the specified property holds in any
+  snapshot. Here, we review the general method applied to the
+  specific problem of termination detection, and also describe
+  a simple termination detection algorithm based on consistent cuts.
   </p>
 
 
-    <h4 class="w3-text-teal">Problem Definition</h4>
+    <h3 class="w3-text-teal">Problem Definition</h3>
     An agent is either <i>idle</i> or <i>active</i>. An idle agent
     remains idle until it receives a message at which point it becomes
 active. An idle agent does not send messages.
@@ -121,6 +120,8 @@ has terminated.
 The detection algorithm may use messages and agents that are not part of the
   underlying computation.
   The detection algorithm must not modify the underlying computation.
+
+  <p>
   The specification of the algorithm in
   <a
   href="ChannelSnapshots.html">
@@ -128,7 +129,7 @@ The detection algorithm may use messages and agents that are not part of the
   </a>
   is repeated below for convenience.
 
-  <h4 class="w3-text-teal">Specification of the Algorithm</h4>
+  <h3 class="w3-text-teal">Specification of the Algorithm</h3>
   The algorithm has a boolean variable \(B\) where:
 <ol>
   <li>
@@ -141,18 +142,26 @@ The detection algorithm may use messages and agents that are not part of the
   </li>
 </ol>
 
-<h4 class="w3-text-teal">General Algorithm</h4>
+<h3 class="w3-text-teal">The General Method applied to Termination Detection</h3>
 <a
   href="ChannelSnapshots.html">
   A general algorithm for detecting stable properties
-  </a> is for agents to repeatedly send local
-snapshots to an agent, called a <i>detector</i>
-that puts the local snapshots to get a global
-snapshot and then checks whether all agents are idle and all channels
-are empty in the global snapshot.
-Let's look at a variant of the general algorithm.
+  </a> is for each agent to send its local
+snapshot to an agent, which we call a <i>detector</i>.
+The detector puts local snapshots together to get a global
+snapshot.
+Agents repeatedly send their local snapshots to the detector which
+computes an endless sequence of global snapshots.
+The detector claims that the specified stable property holds
+if it holds in any recent global snapshot.
+An algorithm for termination detection is obtained by checking whether
+computation has terminated -- all agents idle and all channels empty
+-- in a global snapshot.
 
-<h4 class="w3-text-teal">Specific Algorithm for Termination Detection</h4>
+<h3 class="w3-text-teal">Another Algorithm for Termination
+Detection</h3>
+Next, we use the concept of consistent cuts to obtain another
+algorithm for termination detection.
 Let \(C_{s}\) and \(C_{r}\) be the numbers of messages sent and
 received (respectively) along channel \(C\).
 Computation has terminated in a state in which all agents are idle and
@@ -171,12 +180,40 @@ let \(C_{r}^{*}\) be the last value of \(C_{r}\) that the detector has
 received.
 
 <p style="color:blue;">
-The detector detects that computation has terminated if for
+The detector detects that computation has terminated if it has
+received a message from each agent and for
 all channels \(C\): \(C_{s}^{*} = C_{r}^{*}\).
+
 <p>
-(Initially \(C_{s}^{*}\) is a negative value and \(C_{r}^{*}\) is 0 so
-that termination is detected only after the detector receives messages
-from all agents.)
+The key difference between this algorithm and the general method is as
+follows. In this algorithm an agent only sends channel counts (\(C_{s},
+C_{r}\)) to the detector and only when the agent transits from active to idle.
+In the general method an agent send its state (active or idle) and states of incoming
+channels to the detector periodically where the period is based on
+time rather than on whether the agent has become idle.
+
+<h4 class="w3-text-teal">Proof of Correctness</h4>
+We first prove part 1 of the specification:
+If the computation terminates then the
+ detection algorithm sets Boolean variable \(B\) to True when or after computation
+terminates.
+<p>
+We consider the case where computation has terminated.
+Let \(C_{s}^{*}\) be the number of messages sent by an agent with
+output channel \(C\) when the agent transits from active to idle for
+the very last time. Then \(C_{s}^{*}\) is the number of messages sent
+on \(C\) when computation terminates.
+By the same argument, \(C_{r}^{*}\) is the number of messages received
+on \(C\) when computation terminates.
+Therefore, \(C_{s}^{*} = C_{r}^{*}\)
+
+Next, we prove part 2 of the specification:
+If \(B = True\) at any point then computation has terminated at that
+  point. 
+<p>
+If the algorithm detects termination then define a cut as follows. An
+event is in the <i>past</i> exactly when that event is at an agent  
+
 
 
 <!--Start Footer--------------------------------------->
