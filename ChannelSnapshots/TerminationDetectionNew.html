@@ -130,7 +130,8 @@ The detection algorithm may use messages and agents that are not part of the
   is repeated below for convenience.
 
   <h3 class="w3-text-teal">Specification of the Algorithm</h3>
-  The algorithm has a boolean variable \(B\) where:
+  The algorithm has a boolean variable \(B\) which signals that the
+  detection algorithm has detected that computation has terminated.
 <ol>
   <li>
   If the computation terminates then the
@@ -153,15 +154,15 @@ snapshot.
 Agents repeatedly send their local snapshots to the detector which
 computes an endless sequence of global snapshots.
 The detector claims that the specified stable property holds
-if it holds in any recent global snapshot.
+if it holds in any global snapshot.
 An algorithm for termination detection is obtained by checking whether
 computation has terminated -- all agents idle and all channels empty
 -- in a global snapshot.
 
-<h3 class="w3-text-teal">Another Algorithm for Termination
-Detection</h3>
-Next, we use the concept of consistent cuts to obtain another
-algorithm for termination detection.
+<h3 class="w3-text-teal">Algorithm for Termination
+Detection without Scheduling Snapshots</h3>
+Next, we use the concept of consistent cuts to obtain an
+algorithm for termination detection without scheduling repeated snapshots.
 Let \(C_{s}\) and \(C_{r}\) be the numbers of messages sent and
 received (respectively) along channel \(C\).
 Computation has terminated in a state in which all agents are idle and
@@ -179,10 +180,12 @@ received, and
 let \(C_{r}^{*}\) be the last value of \(C_{r}\) that the detector has
 received.
 
-<p style="color:blue;">
+<h4 class="w3-text-teal">The Detection Condition</h4>
+<h5 style="color:blue;">
 The detector detects that computation has terminated if it has
 received a message from each agent and for
 all channels \(C\): \(C_{s}^{*} = C_{r}^{*}\).
+</h5>
 
 <p>
 The key difference between this algorithm and the general method is as
@@ -207,12 +210,22 @@ By the same argument, \(C_{r}^{*}\) is the number of messages received
 on \(C\) when computation terminates.
 Therefore, \(C_{s}^{*} = C_{r}^{*}\)
 
+<p>
 Next, we prove part 2 of the specification:
 If \(B = True\) at any point then computation has terminated at that
   point. 
 <p>
-If the algorithm detects termination then define a cut as follows. An
-event is in the <i>past</i> exactly when that event is at an agent  
+Define a cut as follows. An
+event is in the <i>past</i> exactly when that event occurs at an agent
+before that agent sends the counts \(C_{s}^{*}, C_{r}^{*}\) used by
+the detector to set \(B\) to \(True\). Because \(C_{s}^{*} =
+C_{r}^{*}\) the number of messages received in
+the past along each channel equals the number of messages sent in the
+past along that channel. So, every message received by an event in the past is
+sent by an event in the past. Therefore the cut is consistent. So, the
+state corresponding to the cut is a global snapshot, and computation
+has terminated since the
+snapshot shows that computation has terminated.
 
 
 

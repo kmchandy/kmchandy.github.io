@@ -93,13 +93,24 @@ hr.new1 {
 <h3 class="w3-text-teal">Video</h3>
   </a>
 
-  <p class="w3-text-red">
-  <i>Central Ideas</i>: Global snapshot algorithms that determine
-  system states at consistent cuts.
-  </p>
   
-  </p>
+  <!------------------------------------------------------------------->
+  <h3 class="w3-text-teal">Specification of a Global Snapshot</h3>
+  <h4 class="w3-text-red">
+  <i>Central Ideas</i></h4>
 
+  <p class="w3-text-red">
+  (1) Global snapshots: states at consistent cuts. (2) System
+  monitoring. (3) Detection algorithms.
+  
+  <p class="w3-text-red">
+  A global snapshot is the state at a consistent cut.  Systems can be
+  monitored by scheduling global snapshots at times \(t\) for
+  increasing \(t\).  System monitoring can be used to solve
+  all detection problems -- for example when agents deadlock or
+  when computations terminate.
+  
+  <!------------------------------------------------------------------->
   <h3 class="w3-text-teal">Specification of a Global Snapshot</h3>
   <hr class="new2">
   <h5 style="color:blue;">
@@ -142,20 +153,20 @@ There exists a computation that starts in
   What is the point of computing \(s_{snap}\) during a computation if
   it never occurred in the computation? We will answer this question later.
 
-  <h4 class="w3-text-teal">Key Idea: The Consistent Cut Requirement</h4>
+
+  <!-----------------------------------------------------------------------------> 
+  <h3 class="w3-text-teal">A Global Snapshot is the State at a
+  Consistent Cut</h3> 
 
   <p>
   From the <a
   href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">theorem on
-consistent cuts</a>,
-<hr class="new2">
-<h5 style="color:blue;">
+consistent cuts</a>:
 A global snapshot is the state of a system at a consistent cut of a
-computation.
-</h5>
-<hr class="new2">
-  Let's design an algorithm by which agents
+computation. So, let's design an algorithm by which agents
 collaborate to determine a consistent cut.
+
+</p>
   Each agent takes its own local snapshot, i.e. records its own local
   state, at a point in the computation.
   Define <i>past</i> events to be the events at an
@@ -345,8 +356,7 @@ snapshots are assigned timestamp \(T\).
 <!--------------------------------------------------------------->
 <h3 class="w3-text-teal">Algorithm to get the Snapshot at time \(T\)</h3>
 All snapshots and markers in the algorithm below have timestamp
-\(T\). Agents can reduce error in their local clocks by synchronizing
-their local clocks with a standard time server such as NTP.
+\(T\). 
 <ol>
   <li>
   When an agent's clock reaches \(T\) the agent takes its local snapshot and sends
@@ -360,6 +370,15 @@ their local clocks with a standard time server such as NTP.
   </li>
 </ol>
 Channel snapshots are computed as in the marker algorithm.
+
+<h5 class="w3-text-teal">System Monitoring</h5>
+Algorithms that schedule snapshots at \(T\) for increasing values of
+\(T\) are <i>system monitoring algorithms.</i>
+Agents clocks with a standard time server, such as
+NTP, to ensure that the times at which snapshots are taken are close
+to the true schedules times.
+
+
 <h2 class="w3-text-teal">Applications of Snapshots</h2>
 Next we give a few examples of snapshot applications.
 
@@ -421,19 +440,16 @@ system by scheduling repeated snapshots.
 
 <hr class="new2">
 <h5 style="color:blue;">
-All detection problems can by solved by scheduling repeated global snapshots.</h5>
+All detection problems can by solved by system monitoring.</h5>
 <hr class="new2">
 If a snapshot shows that that the system state is in a stable set
 \(P\) then the system state at that point is in \(P\).
 If the system state, at any point in a computation, is in \(P\)
 then the next snapshot will be in \(P\).
 
-<p>
-Monitoring systems is a general solution for detection problems;
-however there may be more efficient solutions for specific applications.
-Many applications detect whether a computation is in a stable set of
-states.
-Examples of such sets include states in which:
+<h5 class="w3-text-teal">Examples of Detection Problems</h5>
+System monitoring can be used to solve all detection problems
+including those that detect whether:
 <ol>
   <li> computation has terminated, </li>
   <li> computation has deadlocked, </li>
@@ -442,31 +458,39 @@ Examples of such sets include states in which:
   <li> clocks of all agents exceed a constant \(t\), assuming that
   clocks don't go backward.  </li>
 </ol>
+There may, however, be more efficient solutions for specific problems.
+We discuss some of these problems in the following pages.
 
 <h3 class="w3-text-teal">Summary</h3>
 <p class="w3-text-red">
 <i>Central Ideas</i>:
-Global snapshot specification; a global snapshot is a state at a
-consistent cut; marker algorithm and snapshot at \(T\); stable sets of states and detection algorithms.
-</p>
+Global snapshot; state at a consistent cut;
+marker algorithm; snapshot at time
+\(T\); system monitoring; detection
+algorithms; system monitoring solves all detection problems.
 
 <p>
 A global snapshot is a state of the system that can occur in a
 computation after the state in which the snapshot algorithm is started
 and before the state in which the algorithm ends.
-The marker algorithm and the algorithm to get the snapshot at \(T\)
-satisfy the consistent cut requirement -- every message sent after the
+A global snapshot is the state of the system at a consistent cut.
+We described two algorithms to obtain global snapshots. We designed
+the marker algorithm and the algorithm to get the snapshot at \(T\)
+to obey the consistent cut requirement -- every message sent after the
 sender takes its local snapshot is received after the receiver takes
-its local snapshot. Scheduling repeated snapshots is a way of solving
-all detection problems.
-<p>
+its local snapshot. System monitoring by
+scheduling snapshots to be taken at time \(T\), for increasing \(T\),
+is a way of solving  all detection problems.
+
 
 <h3 class="w3-text-teal">Next</h3>
-Next look at algorithms, based on consistent cuts and global snapshots
-<a href="TerminationDetectionNew.html">termination detection</a> and
-<a href="DatabaseDeadlockDetection.html">database deadlock detection</a>,
-based on consistent cuts and global snapshots or read about
-<a href="LogicalClocksNew.html">logical clocks</a>.
+Next either look at algorithms based on consistent cuts and global
+snapshots to detect
+<a href="TerminationDetectionNew.html">termination</a> and
+<a href="DatabaseDeadlockDetection.html">database deadlock</a>,
+or move to the next topic,
+<a href="LogicalClocksNew.html">logical clocks</a>, which we also
+describe in terms of consistent cuts.
 
   
 <!--Start Footer--------------------------------------->
