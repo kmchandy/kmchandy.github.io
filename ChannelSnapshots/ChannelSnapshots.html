@@ -100,7 +100,7 @@ hr.new1 {
   <i>Central Ideas</i></h4>
 
   <p class="w3-text-red">
-  (1) Global snapshots: states at consistent cuts. (2) System
+  (1) lobal snapshots: states at consistent cuts. (2) System
   monitoring. (3) Detection algorithms.
   
   <p class="w3-text-red">
@@ -113,12 +113,12 @@ hr.new1 {
   <!------------------------------------------------------------------->
   <h3 class="w3-text-teal">Specification of a Global Snapshot</h3>
   <hr class="new2">
-  <h5 style="color:blue;">
+  <h6 style="color:blue;">
   A global snapshot is any state \(S\) such that there exists a computation
   that starts in the state in which the snapshot algorithm starts,
   visits \(S\),
   and later visits the state in which the snapshot algorithm ends.
-  </h5>
+  </h6>
   <hr class="new2">
   
   <p>
@@ -179,12 +179,12 @@ Therefore the cut is consistent if it satisfies the
   following condition:
 
 <hr class="new2">
-<h5 style="color:blue;">
+<h6 style="color:blue;">
 Consistent cut requirement:
 <br>
 All messages sent after the sender takes its local snapshot
 are received after the receiver takes its local snapshot.
-</h5>
+</h6>
 <hr class="new2">
 
 <p>
@@ -267,11 +267,11 @@ Messages received in the future are the messages received after the
 receiver takes its local snapshot.
 Therefore:
 <hr class="new2">
-<h5 style="color:blue;">
+<h6 style="color:blue;">
 The state of a channel at a cut is the sequence of messages
 received along the channel after the receiver takes its local snapshot
 and before the receiver receives a marker along the channel.
-</h5>
+</h6>
 <hr class="new2">
 <p>
 Note: If an agent takes its local snapshot when it receives a marker
@@ -365,8 +365,8 @@ All snapshots and markers in the algorithm below have timestamp
   <li>
   When an agent receives a marker with timestamp \(T\), if the agent's
   local clock is earlier than \(T\) then the agent moves its local
-  clock forward to \(T\), takes its local snapshot, and sends
-  markers on its output channels.
+  clock forward to \(T\), and (rule 1) the agent takes its local
+  snapshot and sends markers on all its output channels.
   </li>
 </ol>
 Channel snapshots are computed as in the marker algorithm.
@@ -379,7 +379,7 @@ NTP, to ensure that the times at which snapshots are taken are close
 to the true schedules times.
 
 
-<h2 class="w3-text-teal">Applications of Snapshots</h2>
+<h1 class="w3-text-teal">Applications of Snapshots</h1>
 Next we give a few examples of snapshot applications.
 
 <h4 class="w3-text-teal">Rollback and Recovery</h4>
@@ -389,7 +389,7 @@ recent checkpoint (global snapshot) and restarts the computation from
 that point. 
 
 
-<h4 class="w3-text-teal">The Detection Problem</h4>
+<h3 class="w3-text-teal">The Detection Problem</h3>
 The detection problem is to design an algorithm that detects
 whether a computation is in a <i>stable</i> set of
 states.
@@ -404,7 +404,7 @@ there is no transition from a deadlocked state to a non-deadlocked
 state.
 
 
-<p class="w3-text-teal">Global Snapshots solve the Detection Problem</p>
+<h3 class="w3-text-teal">Global Snapshots and Detection Problems</h3>
 Let's look again at the specification of a global snapshot.
 Let \(S_{init}\) and \(S_{fini}\) be the states of the computation at
 which the snapshot algorithm starts and ends, respectively and let
@@ -414,7 +414,8 @@ visits \(S_{init}\), later visits \(S_{snap}\) and then later visits
 \(P\) then so is \(S_{snap}\).  Likewise, if \(S_{snap}\) is in \(P\)
 then so is \(S_{fini}\).
 
-<p>
+<hr class="new2">
+<h6 style="color:blue;">
 In summary, for any stable set \(P\)
 <ol>
   <li>
@@ -426,6 +427,8 @@ In summary, for any stable set \(P\)
   snapshot algorithm ends.
   </li>
 </ol>
+</h6>
+<hr class="new2">
 
 <p>
 What do we know about the snapshot if the snapshot algorithm is
@@ -438,14 +441,16 @@ detect whether a system is in a stable set of states is to monitor the
 system by scheduling repeated snapshots.
 
 
-<hr class="new2">
-<h5 style="color:blue;">
-All detection problems can by solved by system monitoring.</h5>
-<hr class="new2">
-If a snapshot shows that that the system state is in a stable set
+<h3 class="w3-text-teal">System Monitoring Solves All Detection
+Problems</h3>
+Sequences of global snapshot taken repeatedly at scheduled times, (cron jobs),
+can be used to solve all detection problems as well as for monitoring.
+The snapshot at time \(T\) doesn't have to be stored for all \(T\);
+only the most recent snapshot is required.
+If any snapshot shows that that the system state is in a stable set
 \(P\) then the system state at that point is in \(P\).
 If the system state, at any point in a computation, is in \(P\)
-then the next snapshot will be in \(P\).
+then the snapshot taken at a later \(T\) will be in \(P\).
 
 <h5 class="w3-text-teal">Examples of Detection Problems</h5>
 System monitoring can be used to solve all detection problems
@@ -484,13 +489,13 @@ is a way of solving  all detection problems.
 
 
 <h3 class="w3-text-teal">Next</h3>
-Next either look at algorithms based on consistent cuts and global
-snapshots to detect
-<a href="TerminationDetectionNew.html">termination</a> and
-<a href="DatabaseDeadlockDetection.html">database deadlock</a>,
-or move to the next topic,
-<a href="LogicalClocksNew.html">logical clocks</a>, which we also
-describe in terms of consistent cuts.
+Next either look at two examples
+ -- <a href="TerminationDetectionNew.html">termination</a> and
+<a href="DatabaseDeadlockDetection.html">database deadlock</a>
+detection --
+of snapshots or
+move to the next topic, 
+<a href="LogicalClocksNew.html">logical clocks</a>.
 
   
 <!--Start Footer--------------------------------------->

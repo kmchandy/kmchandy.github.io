@@ -89,11 +89,10 @@ hr.new1 {
   <p class="w3-text-red">
   <i>Central Ideas</i>:
   The consistent cut is the foundation of all detection algorithms.
-  A general detection algorithm is to take repeated global snapshots
-  and check whether the specified property holds in any
-  snapshot. Here, we review the general method applied to the
+  System monitoring by scheduling repeated snapshots can be used to
+  solve all detectiion problems. Here, we review system monitoring applied to the
   specific problem of termination detection, and also describe
-  a simple termination detection algorithm based on consistent cuts.
+  another simple termination detection algorithm based on consistent cuts.
   </p>
 
 
@@ -120,44 +119,38 @@ has terminated.
 The detection algorithm may use messages and agents that are not part of the
   underlying computation.
   The detection algorithm must not modify the underlying computation.
+  The algorithm has a boolean variable \(B\) which is \(True\) if and
+    exactly when the
+  detection algorithm has detected that computation has terminated.
 
   <p>
-  The specification of the algorithm in
-  <a
-  href="ChannelSnapshots.html">
-  Global Snapshots and State Detection.
-  </a>
-  is repeated below for convenience.
-
-  <h3 class="w3-text-teal">Specification of the Algorithm</h3>
-  The algorithm has a boolean variable \(B\) which signals that the
-  detection algorithm has detected that computation has terminated.
+  The specification of the detection algorithm is that it must
+  terminate, and: 
+  
 <ol>
   <li>
-  If the computation terminates then the
-  algorithm returns \(B = True\) when or after computation terminates.
+  If the underlying computation terminates then \(B\) becomes \(True\).
   </li>
   <li>
-  If \(B = True\) at any point then computation has terminated at that
+  If \(B = True\) at any point then the underlying computation has terminated at that
   point. 
   </li>
 </ol>
 
-<h3 class="w3-text-teal">The General Method applied to Termination Detection</h3>
+<h3 class="w3-text-teal">The General Method applied to Termination
+Detection</h3>
 <a
-  href="ChannelSnapshots.html">
-  A general algorithm for detecting stable properties
-  </a> is for each agent to send its local
-snapshot to an agent, which we call a <i>detector</i>.
-The detector puts local snapshots together to get a global
-snapshot.
-Agents repeatedly send their local snapshots to the detector which
-computes an endless sequence of global snapshots.
-The detector claims that the specified stable property holds
-if it holds in any global snapshot.
-An algorithm for termination detection is obtained by checking whether
-computation has terminated -- all agents idle and all channels empty
--- in a global snapshot.
+  href="ChannelSnapshots.html">System monitoring</a> can be used to
+detect every stable property including termination.
+Each agent send its local
+snapshot at time \(T\) to an agent, which we call a <i>detector</i>.
+The detector puts together local snapshots at \(T\) to get the global
+snapshot at \(T\).
+Agents and the detector obtain global snapshots at increasing values of \(T\).
+The detector claims that the underlying computation has terminated if
+the global snapshot at \(T\), for any \(T\), shows termination -- all
+agents idle and all channels empty. 
+
 
 <h3 class="w3-text-teal">Algorithm for Termination
 Detection without Scheduling Snapshots</h3>
@@ -188,44 +181,60 @@ all channels \(C\): \(C_{s}^{*} = C_{r}^{*}\).
 </h5>
 
 <p>
-The key difference between this algorithm and the general method is as
+The key difference between this algorithm and the system monitoring method is as
 follows. In this algorithm an agent only sends channel counts (\(C_{s},
 C_{r}\)) to the detector and only when the agent transits from active to idle.
-In the general method an agent send its state (active or idle) and states of incoming
-channels to the detector periodically where the period is based on
-time rather than on whether the agent has become idle.
+In the system monitoring method an agent sends its state (active or idle) and states of incoming
+channels to the detector repeatedly for increasing times \(T\),
+regardless of whether the agent is active or idle.
 
 <h4 class="w3-text-teal">Proof of Correctness</h4>
 We first prove part 1 of the specification:
-If the computation terminates then the
- detection algorithm sets Boolean variable \(B\) to True when or after computation
-terminates.
+If the underlying computation terminates then the
+ detection algorithm sets \(B\) to True.
 <p>
-We consider the case where computation has terminated.
+Assume that the underlying computation has terminated.
 Let \(C_{s}^{*}\) be the number of messages sent by an agent with
 output channel \(C\) when the agent transits from active to idle for
 the very last time. Then \(C_{s}^{*}\) is the number of messages sent
 on \(C\) when computation terminates.
 By the same argument, \(C_{r}^{*}\) is the number of messages received
 on \(C\) when computation terminates.
-Therefore, \(C_{s}^{*} = C_{r}^{*}\)
+Therefore, in the snapshot obtained by the detector, \(C_{s}^{*} =
+C_{r}^{*}\), and therefore the detector sets \(B\) to \(True\).
 
 <p>
 Next, we prove part 2 of the specification:
 If \(B = True\) at any point then computation has terminated at that
   point. 
 <p>
-Define a cut as follows. An
-event is in the <i>past</i> exactly when that event occurs at an agent
-before that agent sends the counts \(C_{s}^{*}, C_{r}^{*}\) used by
-the detector to set \(B\) to \(True\). Because \(C_{s}^{*} =
+At the point \(t\) at which the detector set \(B\) to \(True\), \(C_{s}^{*} =
+C_{r}^{*}\) for all channels \(C\). Therefore, for each agent \(A\),
+there is a point \(t'\) earlier than \(t\) at which \(A\) sent
+\(C_{s}^{*}\) for each of its output channels \(C\) and 
+\(C_{r}^{*}\) for each of its input channels \(C\), to the detector.
+
+
+
+
+output
+channel \(C\) of an agent \(A\), there is a point \(t'\) earlier than
+\(t\) at which \(A\) sent \(C_{s}^{*}\) to the detector.
+Likewise, for each input
+channel \(C\) of an agent \(A\), there is a point \(t'\) earlier than
+\(t\) at which \(A\) sent \(C_{r}^{*}\) to the detector.
+An event at \(A\) is in the <i>past</i> exactly when that event occurs
+before \(t'\).
+
+<p>
+Because \(C_{s}^{*} =
 C_{r}^{*}\) the number of messages received in
 the past along each channel equals the number of messages sent in the
-past along that channel. So, every message received by an event in the past is
-sent by an event in the past. Therefore the cut is consistent. So, the
-state corresponding to the cut is a global snapshot, and computation
-has terminated since the
-snapshot shows that computation has terminated.
+past along that channel. So, every message received in the past is
+sent in the past. Therefore the cut is consistent. So, the
+state corresponding to the cut is a global snapshot.
+Because the snapshot shows that the underlying computation
+has terminated the underlying computation has terminated.
 
 
 
