@@ -86,17 +86,31 @@ hr.new1 {
   Global Snapshots and State Detection.</a>
   </p>
 
-  <p class="w3-text-red">
-  <i>Central Ideas</i>:
+  <!------------------------------------------------------------------->
+  <h4 class="w3-text-red">
+  <i>Central Ideas</i></h4>
 
-  The set of states in which computation has
-  terminated is a stable set of states: if computation has terminated
-  then it remains terminated thereafter.
+  <p class="w3-text-red">
+  (1) Termination detection is an example of a detection
+  algorithm.
+
+  (2) Detection algorithms are based on the concepts of consistent cuts,
+  global snapshots and system monitoring.
   
-  Termination detection is an example of a detection algorithm.
+  <p class="w3-text-red">
+
+  The set of states in which computation has terminated is a stable
+  set of states: if computation has terminated then it remains
+  terminated thereafter.
   
-  Detection algorithms are based on consistent cuts, global snapshots
-  and system monitoring.
+  Detection algorithms detect whether the state of a computation is in
+  a stable set of states.
+
+  All detection algorithms, including termination detection, are based
+  on the same concepts: consistent cuts, global snapshots and system
+  monitoring. 
+  
+  
 
 
   <h3 class="w3-text-teal">Problem Definition</h3>
@@ -271,22 +285,37 @@ computation has terminated, it follows that the underlying computation
 has, indeed, terminated. This completes the proof of part 2 of the
 specification. 
 
-<h3 class="w3-text-teal">Summary</h3>
+<!---------------------------------------------->
+<!---------------------------------------------->
+<h4 class="w3-text-red">
+<i>Central Ideas: Review</i></h4>
 <p class="w3-text-red">
-<i>Central Ideas</i>: Termination detection is an example of a detection
-algorithm. 
-System monitoring is a general solution for detecting
-stable properties including termination.
-We also showed how consistent cuts can be used to design
-algorithms tailored to a specific problem.
+
+Termination detection is an example of a detection algorithm.
+
+All detection algorithms, including termination detection, are based
+  on the same concepts: consistent cuts, global snapshots and system
+  monitoring.
+
+System monitoring is a general solution for detecting stable
+properties including termination.
+
+Consistent cuts can be used to design algorithms tailored to detect
+specific conditions such as termination detection.
+
+<!---------------------------------------------->
+<p class="w3-text-red">
+<i>Concepts</i>:
+
+Timelines -> causality graphs -> consistent cuts -> global snapshot
+algorithms -> detection algorithms -> termination detection.
 
 
 <h3 class="w3-text-teal">Next</h3>
-Next either look at another example
- -- <a href="DatabaseDeadlockDetection.html">database deadlock detection</a>
---
-of system monitoring and consistent cuts or
-move to the next topic, 
+Next either look at
+<a href="DatabaseDeadlockDetection.html">database deadlock
+detection</a>,
+which is another detection algorithm, or move to the next topic, 
 <a href="LogicalClocksNew.html">logical clocks</a>.
 
 

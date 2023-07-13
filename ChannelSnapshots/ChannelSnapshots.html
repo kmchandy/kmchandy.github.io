@@ -95,7 +95,6 @@ hr.new1 {
 
   
   <!------------------------------------------------------------------->
-  <h3 class="w3-text-teal">Specification of a Global Snapshot</h3>
   <h4 class="w3-text-red">
   <i>Central Ideas</i></h4>
 
@@ -104,11 +103,16 @@ hr.new1 {
   monitoring. (3) Detection algorithms.
   
   <p class="w3-text-red">
-  A global snapshot is the state at a consistent cut.  Systems can be
-  monitored by scheduling global snapshots at times \(t\) for
-  increasing \(t\).  System monitoring can be used to solve
-  all detection problems -- for example when agents deadlock or
-  when computations terminate.
+  A global snapshot is the state at a consistent cut.
+
+  Algorithms for obtaining global snapshots use marker or timestamp
+  messages so that messages sent in the past are received in the past.
+
+  Systems can be monitored by scheduling global snapshots at times \(t\) for
+  increasing \(t\).
+
+  System monitoring can be used to solve all detection problems -- for
+  example to detect whether agents deadlock or computations terminate.
   
   <!------------------------------------------------------------------->
   <h3 class="w3-text-teal">Specification of a Global Snapshot</h3>
@@ -501,16 +505,27 @@ Next, we look at different detection algorithms that detect
 different stable sets. Detection algorithms, regardless
 of application, are similar.
 
-<h3 class="w3-text-teal">Summary</h3>
+
+<h4 class="w3-text-red">
+<i>Central Ideas: Review</i></h4>
 <p class="w3-text-red">
-<i>Central Ideas</i>:
-Global snapshot; state at a consistent cut;
-marker algorithm; snapshot at time
-\(T\); system monitoring; stable; detection
-algorithms; system monitoring solves all detection problems.)
+
+A global snapshot is the state at a consistent cut.
+Global snapshots can be obtained by 
+taking a snapshot at timestamp \(T\) and the marker
+algorithm.
+Detection algorithms detect when the system state is in a stable set
+of states.
+System monitors that take repeated scheduled snapshots can be used to solve
+detection problems. 
+
+<p class="w3-text-red">
+<i>Concepts</i>:
+Timelines -> causality graphs -> consistent cuts -> global snapshot
+algorithms -> detection algorithms.
 
 
-<h3 class="w3-text-teal">Next</h3>
+<h4 class="w3-text-teal">Next</h4>
 Next either look at two examples
  -- <a href="TerminationDetectionNew.html">termination</a> and
 <a href="DatabaseDeadlockDetection.html">database deadlock</a>

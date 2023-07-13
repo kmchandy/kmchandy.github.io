@@ -89,10 +89,14 @@ hr.new1 {
   Distributed System Models.</a>
   </p>
 
+  <!------------------------------------------------------------------->
+  <h4 class="w3-text-red">
+  <i>Central Ideas</i></h4>
+
   <p class="w3-text-red">
-  <i>Central Ideas</i>:
   (1) Timelines. (2) Causality graphs. (3) Consistent cuts.
   </p>
+  
   <p class="w3-text-red">
   A consistent cut of a computation is the
   foundation of algorithms that detect states that may have occurred
@@ -479,19 +483,26 @@ future events.
 This result is helpful in developing algorithms that detect properties
 of the states of computations.
 
-<h3 class="w3-text-teal">Summary</h3>
+
+
+
+
+<h4 class="w3-text-red">
+<i>Central Ideas: Review</i></h4>
 <p class="w3-text-red">
-<i>Central Ideas</i>:
-Consistent cut of a computation, timeline, causality graph.
+Timelines help in understanding distributed algorithms.
+Causality graphs show how events depend on each other.
+All topological sorts of causality graphs are computation.
+A consistent cut is a set of events, the <i>past</i>, where all edges
+in the causality graph to the past are from the past -- the past is
+only influenced by the past and not by the future.
+
+<p class="w3-text-red">
+<i>Concepts</i>:
+Timelines -> causality graphs -> topological sorts of causality graphs
+are computations -> consistent cuts.
 </p>
 
-<p>
-The concept of a consistent cut of a computation is used in a large
-number of algorithms that detect properties of computations.
-These algorithms include rollback and recovery, termination detection,
-and deadlock detection. Consistent cuts are described in terms of
-timelines and causality graphs of computations.
-<p>
 
 <h3 class="w3-text-teal">Next</h3>
 Next read about

@@ -86,15 +86,29 @@ hr.new1 {
   Global Snapshots and State Detection.</a>
   </p>
 
+  <!------------------------------------------------------------------->
+  <h4 class="w3-text-red">
+  <i>Central Ideas</i></h4>
+
   <p class="w3-text-red">
-  <i>Central Ideas</i>:
-  The set of states in which a deadlocked cycle of agents exists is a
-  stable set: if a cycle of agents is deadlocked at any point then
-  that cycle of agents remains deadlocked forever thereafter.
-  Deadlock detection is an example of termination detection.
-  Detection algorithms are based on consistent cuts, global snapshots
-  and system monitoring.
-  </p>
+  (1) Deadlock detection is an example of a detection
+  algorithm.
+
+  (2) Detection algorithms are based on the concepts of consistent cuts,
+  global snapshots and system monitoring.
+  
+  <p class="w3-text-red">
+
+  The set of states in which a set of agents is deadlocked is a stable
+  set of states: agents that are deadlocked remain deadlocked.
+  
+  Detection algorithms detect whether the state of a computation is in
+  a stable set of states.
+
+  All detection algorithms, including deadlock detection, are based
+  on the same concepts: consistent cuts, global snapshots and system
+  monitoring. 
+  
 
   <!------------------------------------------------------------------>
   <!------------------------------------------------------------------>
@@ -272,7 +286,41 @@ with additional information in the markers.
 
 The agent states that are recorded are part of a global snapshot. The
 proof of correctness of this modified marker algorithm follows from
-the proof of the marker algorithm. 
+the proof of the marker algorithm.
+
+
+<!---------------------------------------------->
+<!---------------------------------------------->
+<h4 class="w3-text-red">
+<i>Central Ideas: Review</i></h4>
+<p class="w3-text-red">
+
+Deadlock detection is an example of a detection algorithm.
+
+All detection algorithms, including termination detection, are based
+  on the same concepts: consistent cuts, global snapshots and system
+  monitoring.
+
+System monitoring is a general solution for detecting stable
+properties including termination.
+
+The deadlock detection algorithm is the same as the marker algorithm
+  for getting global snapshots with additional information in the markers.
+
+<!---------------------------------------------->
+<p class="w3-text-red">
+<i>Concepts</i>:
+
+Timelines -> causality graphs -> consistent cuts -> global snapshot
+algorithms -> detection algorithms -> deadlock detection.
+
+
+<h3 class="w3-text-teal">Next</h3>
+Next look at
+<a href="LogicalClocksNew.html">logical clocks</a>
+which can also be understood in terms of causality graphs and
+consistent cuts.
+
 
 <!--Start Footer--------------------------------------->
 
