@@ -100,7 +100,7 @@ hr.new1 {
   <i>Central Ideas</i></h4>
 
   <p class="w3-text-red">
-  (1) lobal snapshots: states at consistent cuts. (2) System
+  (1) Global snapshots: states at consistent cuts. (2) System
   monitoring. (3) Detection algorithms.
   
   <p class="w3-text-red">
@@ -404,7 +404,7 @@ there is no transition from a deadlocked state to a non-deadlocked
 state.
 
 
-<h3 class="w3-text-teal">Global Snapshots and Detection Problems</h3>
+<h3 class="w3-text-teal">Global Snapshots and State Detection</h3>
 Let's look again at the specification of a global snapshot.
 Let \(S_{init}\) and \(S_{fini}\) be the states of the computation at
 which the snapshot algorithm starts and ends, respectively and let
@@ -414,9 +414,10 @@ visits \(S_{init}\), later visits \(S_{snap}\) and then later visits
 \(P\) then so is \(S_{snap}\).  Likewise, if \(S_{snap}\) is in \(P\)
 then so is \(S_{fini}\).
 
+<h5 class="w3-text-teal">Property of Global Snapshots</h5>
 <hr class="new2">
 <h6 style="color:blue;">
-In summary, for any stable set \(P\)
+For any stable set \(P\) of states:
 <ol>
   <li>
   If the snapshot algorithm starts when the system is in \(P\)
@@ -435,22 +436,31 @@ What do we know about the snapshot if the snapshot algorithm is
 initiated when the system is outside a stable set \(P\) and enters
 \(P\) while the snapshot algorithm is still running? In this case, the
 specification doesn't tell us whether the snapshot will be in \(P\) or
-not. So, it is possible that the snapshot is not in \(P\) though the
-system is in \(P\) when the snapshot algorithm ends. A method to
-detect whether a system is in a stable set of states is to monitor the
-system by scheduling repeated snapshots.
+not.
+
+<p>
+If the snapshot is in \(P\) then the system is in \(P\) when the
+snapshot algorithm <i>ends</i>.  If the snapshot is not in \(P\) then
+the system is not in \(P\) when the snapshot algorithm <i>begins</i>,
+but we don't know whether the system is in \(P\) when the snapshot
+algorithm <i>ends</i>.
+
+<p>
+If a snapshot is not in \(P\) then more
+snapshots must be taken to detect whether the system may have entered
+\(P\) after the last snapshot was initiated.
+A general method to detect whether a system is in a stable set of
+states is to monitor the system by scheduling repeated snapshots.
 
 
 <h3 class="w3-text-teal">System Monitoring Solves All Detection
 Problems</h3>
-Sequences of global snapshot taken repeatedly at scheduled times, (cron jobs),
-can be used to solve all detection problems as well as for monitoring.
-The snapshot at time \(T\) doesn't have to be stored for all \(T\);
-only the most recent snapshot is required.
-If any snapshot shows that that the system state is in a stable set
+System monitors take
+global snapshots repeatedly -- for example at scheduled times.
+If the system state at any point in a computation is in a stable set \(P\)
+then a later snapshot will be in \(P\).
+And if any snapshot is in 
 \(P\) then the system state at that point is in \(P\).
-If the system state, at any point in a computation, is in \(P\)
-then the snapshot taken at a later \(T\) will be in \(P\).
 
 <h5 class="w3-text-teal">Examples of Detection Problems</h5>
 System monitoring can be used to solve all detection problems
@@ -466,26 +476,38 @@ including those that detect whether:
 There may, however, be more efficient solutions for specific problems.
 We discuss some of these problems in the following pages.
 
+<h3 class="w3-text-teal">Specification of Detection Algorithms</h3>
+A detection algorithm detects whether the state of a computation is in
+a stable set \(P\). The algorithm uses a Boolean variable \(B\) which
+is initially False and which is set to True when
+the algorithm detects that the system is in \(P\) and remains True.
+Once \(B\) becomes True it remains True forever thereafter. The
+specification is:
+<hr class="new2">
+<h6 style="color:blue;">
+<ol>
+  <li>
+  If at any point in a computation the system state is in \(P\) then
+  there is a point in the computation after which \(B\) remains True.
+  </li>
+  <li>
+  If \(B = True\) at any point in a computation then the system state
+  at that point is in \(P\).
+  </li>
+</ol>
+</h6>
+<hr class="new2">
+Next, we look at different detection algorithms that detect 
+different stable sets. Detection algorithms, regardless
+of application, are similar.
+
 <h3 class="w3-text-teal">Summary</h3>
 <p class="w3-text-red">
 <i>Central Ideas</i>:
 Global snapshot; state at a consistent cut;
 marker algorithm; snapshot at time
-\(T\); system monitoring; detection
-algorithms; system monitoring solves all detection problems.
-
-<p>
-A global snapshot is a state of the system that can occur in a
-computation after the state in which the snapshot algorithm is started
-and before the state in which the algorithm ends.
-A global snapshot is the state of the system at a consistent cut.
-We described two algorithms to obtain global snapshots. We designed
-the marker algorithm and the algorithm to get the snapshot at \(T\)
-to obey the consistent cut requirement -- every message sent after the
-sender takes its local snapshot is received after the receiver takes
-its local snapshot. System monitoring by
-scheduling snapshots to be taken at time \(T\), for increasing \(T\),
-is a way of solving  all detection problems.
+\(T\); system monitoring; stable; detection
+algorithms; system monitoring solves all detection problems.)
 
 
 <h3 class="w3-text-teal">Next</h3>

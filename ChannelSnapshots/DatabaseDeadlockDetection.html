@@ -1,4 +1,4 @@
-<title>GlobalSnapshotApplications/DatabaseDeadlockDetection.html</title>
+<title>DatabaseDeadlockDetection</title>
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
 
@@ -39,6 +39,8 @@ hr.new1 {
 
 
 <body>
+
+
 <div class="w3-top">
 <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
   
@@ -65,280 +67,213 @@ hr.new1 {
     
   </div>
   </div>
-
-<nav
-class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5
-w3-animate-left" 
-id="mySidebar">
-
-<a href="javascript:void(0)"
-onclick="w3_close()"
-class="w3-right w3-xlarge w3-padding-large w3-hover-black
-w3-hide-large"
-title="Close Menu">
-<i class="fa fa-remove"></i>
-</a>
-
-<!--END Heading  ---------------------------->
- 
-<!-- Start Sidebar----------> 
- 
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../GlobalSnapshotApplications/StablePredicates.html" > 
-Detection Algorithms
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../GlobalSnapshotApplications/TerminationDetection.html" > 
-Detecting Termination
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../GlobalSnapshotApplications/DatabaseDeadlockDetection.html" > 
-Detecting Database deadlock
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../GlobalSnapshotApplications/TerminationDetectionVideo.mp4" > 
-Detecting Termination: Video
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../GlobalSnapshotApplications/TerminationDetectionExample.html" > 
-Detecting Termination: Example 
-</a>
-
-</nav>
-<!-- End Sidebar---------->
- 
-<!-- Start overlay ---------------------------------->
-
-<!-- Overlay effect when opening sidebar on small screens -->
-<div class="w3-overlay w3-hide-large"
-  onclick="w3_close()"
-  style="cursor:pointer"
-  title="close side menu"
-  id="myOverlay"></div>
-
-<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
-<div class="w3-main" style="margin-left:250px">
   
-<script id="MathJax-script" async
+  <script id="MathJax-script" async
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
 </script>
   
 <div class="w3-row w3-padding-64">
 <div class="w3-twothird w3-container">
 
-<!-- End overlay ---------------------------------->
-    <!--------------------------------------------------------->
-    <h1 class="w3-text-teal">Detecting Database Deadlocks</h1>
+<!--------------------------------------------------------->
+<h1 class="w3-text-teal">Deadlock Detection</h1>
+<!--------------------------------------------------------->
 
-    <h4 class="w3-text-teal">
-This module shows how consistent cuts of timelines are
-used to develop algorithms to detect deadlocks that can arise
-in databases.
-</h4>
-"Computation is deadlocked" is an example of a stable property; a
-deadlocked computation remains deadlocked. A generalization of the
-deadlock detection problem is to break a deadlock after it is detected
-by aborting or rolling back the computation of some agents; the
-generalization is straightforward and we don't discuss it here.
+  <p class="w3-text-green">
+  This page uses material from
+  <a
+  href="../ChannelSnapshots/ChannelSnapshots.html">
+  Global Snapshots and State Detection.</a>
+  </p>
 
-    <h2 class="w3-text-teal">The Problem</h3>
-    The problem of database deadlock detection is similar to that of
-    <a
-    href="../GlobalSnapshotApplications/GlobalSnapshotApplications.html">
-    termination detection discussed in an earlier module</a>.
-    A system consists of
-    <a href="../Channels/Channels.html">a set of agents and a set of message-passing
-    channels.</a>
+  <p class="w3-text-red">
+  <i>Central Ideas</i>:
+  The set of states in which a deadlocked cycle of agents exists is a
+  stable set: if a cycle of agents is deadlocked at any point then
+  that cycle of agents remains deadlocked forever thereafter.
+  Deadlock detection is an example of termination detection.
+  Detection algorithms are based on consistent cuts, global snapshots
+  and system monitoring.
+  </p>
 
-    <p>
-    Agents in the system share a set of files.
-    Each shared file is represented as an
-    indivisible colored token, with each file having its own
-    unique color. The system has at most one token of a given color.
-
-    Tokens can be sent from agent to agent. Tokens are
-    not duplicated or destroyed. Let \(u_{holds}\) be the set of tokens
-    that agent \(u\) holds.
-
-    <p>
-    An agent \(u\) is in one of the following states:
-    <ol>
-      <li>
-      <i>State 1: Executing without needing tokens.</i> This state may persist
-      for an arbitrary amount of time.
-      Let \(u_{needs}\) be the set of tokens that \(u\) needs to
-    continue execution; in
-      this state \(u_{needs}\) is the empty set.
-      An agent may transit from this state
-    to the next state --- state 2 <i>waiting</i>--- at any point.
-      </li>
-      <li>
-      <i>State 2: Waiting</i>: Waiting to hold <i>all</i> tokens in a nonempty set \(u_{needs}\) of
-      tokens. In this state there is at least one token in
-      \(u_{needs}\) which is not in \(u_{holds}\).
-      If \(u_{needs}\) becomes a subset of \(u_{holds}\) because \(u\)
-    receives a token that it is waiting for then \(u\) transits from
-    state 2 to state 3. In the <i>waiting</i> state \(u\) is waiting to acquire
-    tokens so that \(u\) can transit from waiting state to the next
-    state --- state 3.
-      </li>
-      <li>
-      <i>State 3: Executing while holding all tokens in
-      \(u_{needs}\).</i> In this case \(u_{holds}\) is a subset of
-    \(u_{needs}\). This state persists only for finite time after
-    which the agent transits to state 1: executing without needing tokens.
-      </li>
-    </ol>
-    <p>
-    If an agent \(u\) gets a request for a token in \(u_{holds}\)
-    which is not in \(u_{needs}\) then \(u\) sends the requested token
-    to the requester and that token is removed from \(u_{holds}\).
-    If  \(u\) gets a request for a token in \(u_{holds}\)
-    which is in \(u_{needs}\) then \(u\) does not send the requested
-    token while \(u\) continues to be in waiting state.
-
-    
-    
-    <figure>
-    <img src="DeadlockDetection_And_1.jpg" alt="Fig1" style="width:100%">
-    <figcaption>Fig.1 - The Life Cycle of an Agent</figcaption>
-    </figure>
-    An agent executes while holding files --- state 3 --- for only a finite
-    time. However, agents may wait forever to acquire files if they
-    form a deadlock cycle. Agents may remain in state 1
-    forever. Computations may or may not deadlock. Our task is to
-    design an algorithm by which an agent determines that it is
-    deadlocked if it is indeed deadlocked.
-
-<h3 class="w3-text-teal">Deadlock</h3>
-A cycle of waiting agents is in a deadlock if each agent is waiting to
-acquire a token that is needed by the next agent in the cycle. Our task is to
-design an algorithm by which an agent detects if is part of a
-deadlocked cycle.
-
-<h3  style="color:red;">Example</h3>
-A system has one red, one blue and one green token.
-Agents \(x\), \(y\) and \(z\) are deadlocked in the following state.
-Agent \(x\) holds the red token and is
-to acquire the blue token because \(x\) needs both red and blue tokens
-    to continue execution; agent \(y\) holds the blue token and is waiting
-to acquire the green token because \(y\) needs both blue and green
-    tokens to continue execution; and agent \(z\) holds the green token and is waiting
-    to acquire the red token because \(z\) needs both green and red
-    tokens to continue execution.
-    
-    <figure>
-  <img src="DeadlockDetection_And_2.jpg" alt="Fig1" style="width:100%">
-  <figcaption>Fig.1 - An Example of a Deadlock</figcaption>
-</figure>
-
-    <h2 class="w3-text-teal">An Algorithm</h2>
-    A general approach to detecting stable properties has two phases
-    (1) obtain a global snapshot, and (2) analyze the global
-    snapshot. The 
-    first phase reduces analysis of a dynamic system
-    into the analysis of static snapshot. The second step
-    analyzes <i>static</i> date structures such as graphs.
-
-    <p>This module describes an algorithm consisting of a single phase
-    that is an optimization of the two-phase algorithm.
-
-    <p>
-The definition of a deadlocked cycle depends only on the local states
-of agents and is independent of the states of message channels.
-So, we use a simpler version of the global snapshot algorithm which
-does not record states of channels.
-
-<p>
-For an agent \(u\), define \(u_{waits}\) as:
-<p>
-\(
-u_{waits} = u_{needs} - u_{holds}
-\)
-<p>
-and for sets \(S\) and \(S'\), \(S -
-S'\) is the set consisting of elements that are in \(S\) and not in
-\(S'\).
-So, \(u\) is in <i>waiting</i> state exactly when \(u_{waits}\) is nonempty.
-
-<h4 class="w3-text-teal">Initiating the Algorithm</h4>
-A waiting agent \(x\) initiates the algorithm by sending a message, called a
-<i>marker</i> on each outgoing channel. We call \(x\) <i>the
-initiator</i>. Assume that there is only one initiator. (Multiple
-initiators can be handled by tagging messages with the identity of the
-initiator.)
-<p>
-The marker \(m\)
-has a field \(m_{waits}\) that identifies the set
-of tokens for which the sender is waiting; this is the set of tokens
-that the sender has to hold to continue executing, i.e.,
-<p>
-\(m_{waits} = x_{waits}\)
-<p>
-where \(x\) is the initiator, 
-
-
-
-<h4 class="w3-text-teal">Propagating Markers</h4>
-When \(y\) receives a marker \(m\), then if:
-<ol>
-  <li> \(y\) is waiting to receive tokens, i.e.,  \(y_{waits}\) is a
-  nonempty set, and
-  </li>
-  <li>
-  \(y\) needs a token that the sender of marker \(m\) needs as
-  well, i.e., the intersection of \(m_{waits}\) and
-  \(y_{needs}\) is nonempty
-  </li>
-</ol>
-then
-\(y\) sends a marker \(m'\) on each of its outgoing channels where 
-\(m'_{waits} = y_{waits}\) if \(y\) hasn't already sent markers.
-
-
-
-<h4 class="w3-text-teal">Termination Detection</h4>
-When the initiator \(x\) receives a marker \(m*\), the initiator
-detects that it is in a deadlocked cycle if (1) there is a token common to 
-\(m*_{waits}\) and \(x_{needs}\), and (2) \(x\) is in waiting state, i.e. \(x_{waits}\) is nonempty.
-
-<h3  style="color:red;">Example</h3>
-Let's look at the steps of the algorithm for the example given
-earlier.
-<p style="color:red;">Initiation</p>
-Agent \(x\) initiates the algorithm by sending markers
-requesting the blue token.
-
-<p style="color:red;">Marker Propagation</p>
-When agent \(y\) receives the marker, it
-holds the blue token, and it needs the blue token as well as
-the green token; so, it sends markers requesting the green token. When
-agent \(z\) receives the marker, it
-holds the green token, and it needs the green token as well as
-the red token; so, it sends markers requesting the green token.
-
-<p style="color:red;">Termination Detection</p>
-At the point the initiator \(x\) gets the marker, it holds the red
-token, and and it needs the red token as well as
-additional tokens; so, it detects termination.
-
-<h3 class="w3-text-teal">Correctnes of the Algorithm</h3>
-The algorithm is the global snapshot algorithm, and we
-proved the correctness of the algorithm earlier.
-
-<h4 style="color:blue;">Review</h4>
-<ol>
-  <li>
-  Give an example of database deadlock with two agents and two files.
-  </li>
-  <li>
-  Describe how the algorithm detects deadlock in your example.
-  </li>
-  <li>
-  How is the algorithm related to the global snapshot algorithm?
-  </li>
-</ol>
+  <!------------------------------------------------------------------>
+  <!------------------------------------------------------------------>
+  <h2 class="w3-text-teal">Problem Definition</h2>
   
+  <p>
+  Agents in a system share resources such as files.
+  Agents don't release the
+  resources that they hold until they get all the resources they need.
+  A cycle of agents
+  is deadlocked when each agent in the cycle needs a resource held
+  by the next agent in the cycle.
+
+  <!------------------------------------------------------------------>
+  <h4  style="color:red;">Example of a Deadlocked Cycle</h4>
+  In this example, a resource is a token of a specific color.
+  A system has exactly one token of each of the following colors: red,
+  blue, and green.
+  Agents \(u\), \(v\) and \(w\) are deadlocked in the following state.
+  <ol>
+    <li>
+    \(u\) continues to hold the red token until it receives the blue token.
+    </li>
+    <li>
+    \(v\) continues to hold the blue token until it receives the green token.
+    </li>
+    <li>
+    \(w\) continues to hold the green token until it receives the red token.
+    </li>
+  </ol>
+
+  <!------------------------------------------------------------------>
+  <p class="w3-text-teal">Variables of an Agent</p>
+  An agent \(A\) is in a deadlocked cycle only if it continues to hold
+  a nonempty set \(A_{holds}\) of resources until it acquires all the
+  resources in a  nonempty set \(A_{needs}\) of resources. In the
+  example, \(u_{holds} = \{red\}\), and \(u_{needs} = \{blue\}\). 
+
+  <!------------------------------------------------------------------>
+  <h5 class="w3-text-teal">The problem</h5>
+    The problem is to develop an algorithm that detects if there exists
+    a cycle of deadlocked agents,
+The detection algorithm may use messages and agents that are not part of the
+  underlying computation.
+  The detection algorithm must not modify the underlying computation.
+  The algorithm has a boolean variable \(B\) which is initially
+    \(False\) and  becomes \(True\) if and when the
+  detection algorithm detects a cycle of deadlocked agents.
+
+  <p>
+  The algorithm can be extended to output the identitites of the
+  agents in a deadlocked cycle. We
+  leave the extension to the reader.
+
+  <!------------------------------------------------------------------>
+  <!------------------------------------------------------------------>
+  <h4 class="w3-text-teal">Deadlock Detection: Specification</h4>
+
+  The specification of an algorithm that detects that the system state
+  of a computation is in a stable set \(P\) is repeated here, for
+  convenience.
+  
+<hr class="new2">
+<h6 style="color:blue;">
+<ol>
+  <li>
+  If at any point in a computation the system state is in \(P\) then
+  there is a point in the computation after which \(B\) remains True.
+  </li>
+  <li>
+  If \(B = True\) at any point in a computation then the system state
+  at that point is in \(P\).
+  </li>
+</ol>
+</h6>
+<hr class="new2">
+For the specific application of deadlock detection, \(P\) is the
+set of states in which there exists a deadlocked cycle of agents.
+
+<!------------------------------------------------------------------>
+<!------------------------------------------------------------------>
+<h3 class="w3-text-teal">The General Method applied to Termination
+Detection</h3>
+<a
+  href="ChannelSnapshots.html">System monitoring</a> can be used to
+detect every stable property including deadlock.
+Each agent send its local
+snapshot at time \(T\) to an agent, which we call a <i>detector</i>.
+The detector puts together local snapshots at \(T\) to get the global
+snapshot at \(T\).
+The detector obtains global snapshots repeatedly for
+increasing values of \(T\).
+Initially, \(B\) is False and the detector sets \(B\) to True if
+the global snapshot at \(T\), for any \(T\), shows a deadlocked cycle
+of agents.
+
+
+<!-------------------------------------------------->
+<h3 class="w3-text-teal">Algorithm for Deadlock
+Detection without Scheduling Snapshots</h3>
+
+Next, let's design an algorithm for deadlock detection by
+modifying the marker algorithm for global snapshots.
+Multiple agents may initiate snapshot algorithms and 
+an agent may initiate multiple snapshot algorithms.
+Snapshot algorithms initiated by different agents, or initiated
+multiple times by the same agent, can be distinguished from each other
+by tagging markers with the identities of the
+initiators and sequence numbers.  In the following, we restrict attention to one
+snapshot algorithm initiated by a single agent.
+
+<!------------------------------------------------------------------>
+<h5 class="w3-text-teal">A Modified Snapshot Algorithm</h5>
+We modify the marker message in the snapshot algorithm as follows.
+A marker message has a field, \(needs\), which is the
+set of resources that the sender of the message needs.
+The variable \(B\) which signals
+that deadlock has been detected is initially False and is set to True
+by the initiator when the initiator detects deadlock and then remains
+True thereafter.
+
+<!------------------------------------------------------------------>
+<h5 class="w3-text-teal">Algorithm for the Initiator</h5>
+The algorithm for an initiator of the snapshot is as follows.
+Let the initiator be agent \(X\). 
+<ol>
+  <li>
+  <i>Initiation</i>: Agent \(X\) initiates the detection algorithm when
+  \(X_{holds}\) and \(X_{needs}\) are both nonempty. It initiates the
+  algorithm by by broadcasting marker messages \(M\) with \(M_{needs} = X_{needs}\) to
+  all other agents.  
+  </li>
+  <li>
+  <i>Detection</i>: When the initiator receives a marker message \(P\) the initiator
+  detects deadlock if it holds a requested resource, i.e.,
+  \(X_{holds} \cap P_{needs}\) is nonempty.
+  </li>
+</ol>
+
+<!------------------------------------------------------------------>
+<h5 class="w3-text-teal">Algorithm for Agents other than the Initiator</h5>
+When an agent \(Y\), other than the initiator, receives a marker \(Q\),
+the agent takes the following action. If the agent has not already
+sent markers, and the agent needs resources and holds a needed
+resource (i.e., \(Y_{needs}\) and \(Y_{holds} \cap Q_{needs}\) are both
+nonempty), then the agent broadcasts markers \(R\) with \(R_{needs} =
+Y_{needs}\).
+
+<!------------------------------------------------------------------>
+<h4  style="color:red;">Example of the Modified Snapshot Algorithm</h4>
+Let's look at the deadlock detection algorithm with agent \(u\) as the
+initiator for the system described earlier.
+<ol>
+  <li>
+  \(u\) initiates the algorithm by sending marker messages \(M\) with a needs field of {blue}.
+  </li>
+  <li>
+  When \(v\) receives \(M\) it sends marker messages \(M1\) with a needs field of {green}.
+  </li>
+  <li>
+  When \(w\) receives \(M1\) it sends marker messages \(M2\) with a needs field of {red}.
+  </li>
+  <li>
+  When \(u\) receives \(M2\) it detects deadlock.
+  </li>
+</ol>
+
+
+
+
+<h4 class="w3-text-teal">Proof of Correctness</h4>
+
+The algorithm is the same as the marker algorithm for global snapshots
+with additional information in the markers.
+
+The agent states that are recorded are part of a global snapshot. The
+proof of correctness of this modified marker algorithm follows from
+the proof of the marker algorithm. 
+
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
