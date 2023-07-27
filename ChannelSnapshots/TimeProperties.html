@@ -1,5 +1,4 @@
 <title>ChannelSnapshots/PartiallySynchronousAlgorithms.html</title>
-
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
 
@@ -77,171 +76,224 @@ hr.new1 {
 <div class="w3-twothird w3-container">
 
 
+
+  <title>ChannelSnapshots/PartiallySynchronousAlgorithms.html</title>
+
     <!--------------------------------------------------------->
-    <h2 class="w3-text-teal">Trajectories as Sequences of Rounds</h2>
-    
-  In this section we consider distributed systems in
-  which messages can get lost.
-  We describe a framework that allows us
-  to reason about distributed algorithms by analyzing
-   trajectories consisting of sequences of rounds where all messages sent
-  in a round are received in the same round.
+    <h2 class="w3-text-teal">Timelines as Sequences of Rounds</h2>
 
-  <p>
-  The central idea is a <i>sync clock</i>, which is an extension of a
-  logical clock. The time on a sync clock is called a sync time. A
-  sync time is a tuple \([r, t]\) where \(r\) is called the <i>round
-  number</i> and \(t\) is the relative time within a round. Both \(r\)
-  and \(t\) 
-  are total orders which are integers in the examples.
 
-  <p>
-  A sync clock is a logical clock with the following additional
-  requirement.
-  <hr class="new2">
-  <h5 style="color:blue;">
-  Sync clock requirement: 
-  A message sent when the sender's sync time is \([R, T]\) and which
-  arrives at the receiver when the receiver's sync time is \([R', T']\)
-  is discarded if \(R' > R\).
-  </h5>
-  <hr class="new2">
-  A discarded message has exactly the same effect as a lost message.
-  A lost
-  message is merely deleted from its channel --- it has no other
-  effect on the state of the system.
+  <p class="w3-text-green">
+  This page uses material from
+  <a
+  href="https://kmchandy.github.io/DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+  Timelines.
+  </a>
+  </p>
+
+
+  <!------------------------------------------------------------------->
+  <h4 class="w3-text-red">
+  <i>Central Ideas</i></h4>
+
+  <p class="w3-text-red">
+  (1) Systems in which messages may be lost. (2) Consistent cuts of
+  timelines. (3) Timelines in which events occur in rounds.
+  
+  <p class="w3-text-red">
+  
+  We consider systems in which messages may be lost and we
+  describe a framework that allows us to reason about distributed
+  algorithms by analyzing timelines consisting of sequences of rounds
+  where <i>all messages received in a round are sent in the same
+  round.</i> 
+
+
+  <h2 class="w3-text-teal">Rounds</h2>
+  We consider systems in which messages may be lost.
+
+  We assign a number \(R(e)\) to each event \(e\), and we say
+  that <i>event \(e\) occurs in round \(R(e)\).</i>
+
+  Round ids are similar, but not identical, to logical times.
+
+  <h4 class="w3-text-teal">Rules for Assigning Rounds</h4>
+  The following rules are used to assign a round to an event
+  \(e\) at an agent \(A\).
+
+  Let \(e'\) be the event immediately preceding \(e\) at \(A\). 
+
+  <ol>
+    <li>
+    If a message is sent in an event in round \(r\) then the message is
+    assigned a timestamp \(r\).
+    </li>
+    <li>
+    If \(e\) is an event in which no message is received then \(R(e)\)
+    is assigned any value such that \(R(e) \geq R(e')\).
+    </li>
+    <li>
+    If \(e\) is an event in which a message with timestamp \(r\) is
+    received,
+    <ol>
+      <li>
+      If \(r < R(e')\) then the message is discarded i.e., treated
+      as lost, and event \(e\) is removed from the causality graph
+      because it does not change the state of the receiver.
+      </li>
+      <li>
+      If \(r \geq R(e')\) then \(R(e) = r\), and the message is
+      processed, and event \(e\) is in the causality graph.
+      </li>
+    </ol>
+  </ol>
+  A consequence of these rules is that <i>messages stay within a
+    round.</i> 
+  A message sent in round \(r\) is either discarded  -- treated as
+  lost -- or received in round \(r\).
+  And a message received (i.e. not discarded) in round \(r\) was
+  sent in round \(r\).
+
 
   
-  <h4 style="color:red;">Example: Trajectory with Sync Times</h4>
 
-The figure below illustrates a trajectory with agents A and B.
-  The two horizontal lines show the trajectories for agents A and
-  B. The dark circles represent events. The red arrows represent
-  messages that are sent and received, while blue dashed arrows
-  represent messages that are sent but not received.
+  <h3 style="color:red;">Example: Timeline with Rounds</h3>
+  The figure below shows a timeline with two agents \(A\) and
+  \(B\). The sequence of events at agent \(A\) are marked \(A0, A1,
+  A2, \ldots\) and events at \(B\) are marked similarly.
+  <p>
+  Round numbers are shown in green. For example events A0, A1, and A2
+  are in round 0, while event A3 is in round 2, and events A4, A5 are
+  in round 3.
+
+  
+  <h5 style="color:red;">Example: Timeline with Discarded Messages</h5>
+  Messages that are discarded are shown as dashed blue
+  lines. Discarded messages are marked as lost.
+  
+  Messages that are delivered are shown as red lines.
+
+  <figure>
+    <img src="../ChannelSnapshots/TimelinesNew/TimelinesNew.001.jpeg"
+    alt="Fig1" style="width:100%"> 
+    <figcaption>Fig. 1: Timelines with Rounds, and Messages Discarded
+    and Delivered</figcaption>
+  </figure>
+
+  The message sent in event A0 has timestamp 0 because A0 is in round
+  0.
+
+  This message is received by agent B when B is in round 1. So, this
+  message is discarded, and the event in which the message is received
+  is removed from the causality graph.
+
+  The removed event is shown as an empty circle.
 
   <p>
-  The tuple of numbers adjacent to an event
-  is the sync time of the event.
-  The number inside the circle representing an event is the round
-  number of the event.
-  For example, the third event (not counting the initial event) on
-  agent A has sync time \([1, 2]\) and its round number is 1.
-
-<figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.008.jpeg"
-    alt="Fig8" style="width:100%"> 
-    <figcaption>Fig. 1: Trajectory with Sync Times</figcaption>
-</figure>
+  The message sent in event B3 has timestamp 2. This message is
+  received by agent A in event A3. The previous event, A2, on agent A
+  is in round 0. So, A3 is placed in round 2.
 
 <p>
-For example, there is a message sent in the event with sync time [0,
-1] on agent A to the event with sync time [0, 2] on agent B. The
-message sent by A when A's sync time is [0, 3] arrives at agent B when
-B's sync time is [1, 0]; this message is discarded because
-\([0, 3] < [1, 0]\).
+Events in this timeline don't occur in increasing order of rounds.
 
-<p>
-Events do not necessarily occur in a trajectory in increasing
-order of sync times. For example, the event with sync time \([1, 0]\)
-on agent B occurs earlier that the event with sync time \([0, 3]\) on
-agent A.
+For examples events B2, B3 in round 2 occur before event A2 in round 0.
 
+  <h5 style="color:red;">Example: Timeline without Discarded Messages</h5>
+  Figure 2 shows the same timeline as figure 1, but without showing
+  discarded messages. 
 
-<h3 class="w3-text-teal">Events in Order of Sync Times</h3>
+  
 
-<p class="w3-text-teal">Lemma</p>
-A permutation \(Y\) of the sequence of events in a trajectory \(X\)
-is equivalent to \(X\) if the events in \(Y\) occur in increasing
-order of sync times.
-Moreover, a message \(M\) that is discarded in \(X\) can be lost in
-the equivalent trajectory \(Y\), where \(M\) is lost at any point
-after it is sent.
+  <figure>
+    <img src="../ChannelSnapshots/TimelinesNew/TimelinesNew.002.jpeg"
+    alt="Fig2" style="width:100%"> 
+    <figcaption>Fig. 2: Timelines with Rounds, and only Delivered Messages
+  </figure>
 
-<p>
-The proof follows from (1) the theorem on events in order of logical times
-because sync times are logical times, and (2) because a discarded
-message is equivalent to a lost message.
+In this timeline, for every edge from \(e'\) to \(e\) in the causality
+  graph: \(R(e') \leq R(e)\). Therefore, there exists a timeline, with
+  the same causality graph, where events occur in rounds; see figure
+  3. 
 
-<h4 style="color:red;">Example: Trajectory in Order Sync Times</h4>
-
-The upper diagram in figure 2 is the trajectory shown in figure 1;
-let's call this trajectory \(X\).
-The lower diagram in figure 2 is a permutation \(Y\) of the trajectory in
-the upper diagram. For example, the event with sync time [0, 3] at
-agent A
-appears after the event with sync time [1, 0] at agent B in \(X\)
-whereas the order is flipped in \(Y\).
-The theorem tells us that trajectories \(X\) and \(Y\) are equivalent.
+<h5 style="color:red;">Example: Timeline with same Causality Graph and
+   Events in Order of Rounds</h5>
+   <figure>
+    <img src="../ChannelSnapshots/TimelinesNew/TimelinesNew.003.jpeg"
+    alt="Fig3" style="width:100%"> 
+    <figcaption>Fig. 3: Timeline as Sequence of Rounds
+  </figure>
+  In the timeline of figure 3, messages are received in the same round
+    that they are sent.
 
 
-<figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.009.jpeg"
-    alt="Fig9" style="width:100%"> 
-    <figcaption>Fig. 2: Equivalent Trajectory in Order of Sync Times</figcaption>
-</figure>
-
-
-
-
-<h3 class="w3-text-teal">Trajectory as a Sequence of Rounds</h2>
-In trajectories ordered by sync times, events with higher round
-numbers appear after events with lower round numbers, i.e., an
-with sync time \([R, T]\) appears after an events with sync time
-\([R', T']\) if \(R' < R\). We partition the trajectory into rounds
-where a round consists of all events with the same round number.
-
-<p>
-If \(X\) is a trajectory in which a message \(M\) is discarded then in
-the equivalent trajectory \(Y\) we assume that \(M\) is lost before the
-start of the next round. Therefore, all messages sent in a round are
-received or lost in the same round. So, all channels are empty at the
-start of each round.
-
-
-<p>
-Let \(S[i]\) be the global state at the start of round \(i\). Then
-\(S[i]\) is specifed only by the states of agents.
-We will find it helpful to reason about a trajectory as a
-sequence of state transitions between rounds --- each transition is
-from the start of one round to the start of the next one.
-Instead of analyzing every state transition in a trajectory we
-will find it helpful to
+  <!---------------------------------->
+<h3 class="w3-text-teal">Theorem</h3>
+Given any computation \(C\) of an algorithm in which messages may be lost,
+where the algorithm follows the rules for assigning rounds, there
+exists a computation:
 <ol>
   <li>
-  first analyze the state transition of a single generic
-  round: the transition from \(S[i]\) to \(S[i+1]\) for any \(i\), and
-  then
+  with the same causality graph as \(C\) and
   </li>
   <li>
-  apply the reasoning about this generic transition to reason about
-  the trajectory as a sequence of transitions \(S[0] \rightarrow S[1]
-  \rightarrow S[2] \rightarrow \ldots\).
+  in which events in later rounds occur after events in earlier
+  rounds, and
+  </li>
+  <li>
+  messages sent in a round are received in the same round.
   </li>
 </ol>
 
-We will use this method to analyze algorithms such as Paxos.
+<h5 class="w3-text-teal">Proof</h5>
 
-<h4 style="color:red;">Example: Trajectory as a Sequence of Rounds</h4>
-Figure 3 shows a trajectory partitioned into rounds. A message sent in
-a round in this trajectory is received or lost in the same round.
-For example, the message that is sent by
-agent A in the event with sync time \([0, 3]\) in round 0 is lost in
-round 0.
+The rules for assigning rounds to events guarantees that for all edges
+\((e', e)\) in the causality graph: \(R(e') \leq R(e)\).
+Therefore, there exists a topological sort of the causality graph in
+which \(e'\) precedes \(e\) in the sort if \(R(e') \leq R(e)\).
+All topological sorts of a causality graph are computations.
 
-<figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.010.jpeg"
-    alt="Fig10" style="width:100%"> 
-    <figcaption>Fig. 3: Transitions between Rounds</figcaption>
-</figure>
-All channels are empty at the start of each round. Pictorially no
-    message line (red arrow or dashed blue line) crosses the boundary
-between one round and the next. The global states \(S[i]\) at the
-    boundary of each round is specified entirely by agent states.
-<p>
-We will reason about a trajectory as a sequence of transitions between
-    the starts of rounds.
+So, there exists a computation with the same causality graph in which
+events occur in rounds.
 
+The rules for assigning rounds guarantees that messages sent in events
+in round \(r\) are received in round \(r\).
+
+
+
+  <h5 class="w3-text-teal">A Technique for Analyzing Algorithms in
+Systems with Message Loss</h5>
+
+We can simplify the analysis of algorithms in which messages may be
+lost.
+
+Instead of analyzing a given computation we analyze a computation with
+the same causality graph, in which events occur in rounds and messages
+stay within a round.
+
+Analyzing a single round can be simpler than analyzing arbitrary
+computations as we see in the consensus algorithm
+  <a href="../Paxos/PaxosFinal.html">Paxos</a>
+
+<h4 class="w3-text-red">
+<i>Central Ideas: Review</i></h4>
+<p class="w3-text-red">
+
+The rules for assigning rounds enables us to prove properties of
+algorithms in which messages are lost by proving properties of
+computations that occur as sequences of rounds, where all messages
+sent in a round are received in the same round.
+
+<p class="w3-text-red">
+<i>Concepts</i>:
+Timelines -> causality graphs -> topological sorts -> rules for
+assigning rounds -> computation as sequences of rounds.
+
+
+<h4 class="w3-text-teal">Next</h4>
+Next look at
+<a href="../Paxos/ConsensusImpossible.html">consensus algorithms</a> and
+<a href="../Paxos/PaxosFinal.html">Paxos</a>.
   
 <!--Start Footer--------------------------------------->
 

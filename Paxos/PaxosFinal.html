@@ -131,15 +131,16 @@ hr.new1 {
   FLP theorem</a>,
   
   there is no algorithm that guarantees that consensus among agents
-  will be reached if messages can be lost or delayed for arbitrary
-  time, and if agents may fail or be arbitrarily slow.
+  will be reached if messages can be lost and delayed and agents may
+  fail and be arbitrarily slow. 
 
   Paxos may not terminate though it enables consensus to be reached in
   most situations.
+
   
   <!-------------------------------------------------->
-  <h3 class="w3-text-teal">Specification</h3> 
-  
+  <h3 class="w3-text-teal">Specification</h3>
+
   The algorithm assumes that messages are not modified in transit and agents
   do not exhibit Byzantine behavior -- agents may be arbitrarily slow,
   they may stop and restart, but they otherwise obey the protocol.
@@ -153,7 +154,7 @@ hr.new1 {
     <p>
 Each learner \(L\) has a local variable \(L.v\) 
   which is initially \(null\).
-  If \(L.v\) changes from \(null\) to any non-null value \(w\) then we
+  If \(L.v\) becomes any non-null value \(w\) then we
   say that \(L\) has learned \(w\).
 
   Associated with each proposer \(P\) is a
@@ -190,6 +191,419 @@ local constant \(P.V\) which is its proposed value. The specification
 The specification allows for the possibility that
 consensus may never be reached; a learner may never learn a value. 
 
+
+<!------------------------------------->
+<h4 class="w3-text-teal">Introduction of Acceptors</h4>
+
+The algorithm uses agents called <i>acceptors</i> in addition to
+proposers and learners. 
+
+Each acceptor <i>A</i> has two local variables, <i>A.v</i> and
+<i>A.t</i>, where <i>A.v</i> is either a special symbol null or a
+proposer's value, and <i>A.t</i> is a number. \(A.v\) and \(A.t\) are
+called \(A\)'s value and \(A\)'s timestamp, respectively.
+
+<p>
+Let \(N\) be the number of acceptors, and \(M\) be an integer where
+\(M \geq N/2\). A majority of
+acceptors is a set of \(M\) or more acceptors.
+
+
+<h3 class="w3-text-teal">Basic Consensus</h3>
+  Before describing Paxos, we specify a subproblem, called
+  <i>basic consensus</i> that is solved in Paxos. Basic consensus is
+specified in terms of proposers and acceptors without learners.
+
+<h5 class="w3-text-teal">Specification of Basic Consensus</h5>
+<ol>
+  <li>
+Acceptor values are proposer values or \(null\).
+<p>
+\(
+(\exists \; \textrm{proposer} \; P: A.v = P.v) \vee (A.v = null)
+\)
+</li>
+<li>
+If there exists a majority \(S\) of acceptors and there eixsts \(v*
+  \neq null\) and \(t*\) such that for all acceptors \(C\) in \(S\),
+  there is a point in the computation at which
+  <p>
+  \(
+  C.v, C.t = v*,  t*
+  \)
+  <p>
+  then at all points in the computation, every acceptor has 
+value \(v*\) or timestamps less than \(t*\).
+
+<p>
+
+\(
+\forall \; \textrm{acceptors} \; A: \;
+  (A.v = v*)  \vee (A.t < t*)
+\)
+
+</li>
+</ol>
+
+Before giving a distributed algorithm for basic consensus we analyze a
+for-loop in a sequential algorithm. The sequential algorithm gives
+insight into the distributed version.
+
+<!------------------------------------->
+<h4 class="w3-text-teal">A Sequential Simulation of the Basic
+Consensus Algorithm</h4>
+
+The sequential program consists of a for-loop with loop index \(t\).
+
+Initially, \(A.v, A.t = null, 0\) for all acceptors \(A\).
+
+The loop does not terminate:
+
+<pre>
+for t = 0 to infinity:
+   loop_body
+</pre>
+
+The loop_body is given next.
+
+In the loop, agents are treated as shared variables.
+
+For example, the loop body reads and writes \(A.v, A.t\) of an
+acceptor \(A\).
+
+<p>
+The loop body selects an arbitrary proposer, and
+arbitrary subsets of acceptors and learners; these selections simulate
+nondeterminism and faults in the distributed system.
+
+<h5 class="w3-text-teal">Loop Body of the Basic Consensus Algorithm</h5>
+The loop body for the \(t\)-th iteration is as follows.
+
+<p>
+  Select an arbitrary proposer \(P\), and arbitrary subsets \(R, W\) of
+  acceptors.
+<ol>
+  <li>
+  If \(R\) is not a majority, take no action.
+  </li>
+  <li>
+  If \(R\) is a majority, and for all \(A\) in \(R\): \(A.v = null\) ,
+  then assign \((P.v, t)\) to each acceptor in \(W\).
+  </li>
+  <li>
+  If \(R\) is a majority, and there is an acceptor \(A\) in \(R\)
+  where \(A.v \neq null\) then
+  assign  \((B.value, t)\) to each acceptor in \(W\)
+  where \(B\) is an element of \(R\) with the largest
+  timestamp:
+  \(
+  B.t = \textrm{max}(\{A.t | A \in R\})
+  \)
+  </li>
+</ol>
+
+A Python version of the loop body, given \(P, R, W\), where \(R,
+W\) are lists, is as follows.
+
+<pre>
+if len(R) >= M:
+   if all(r.v == null for r in R): next_v = P.v
+   else:
+      max_t = max(r.t for r in R)
+      list_v = [r.v for r in R if r.t == max_t]
+      // next_v is any element of list_v. 
+      next_v = list_v[0]
+   for w in W: w.v, w.t = next_v, t
+</pre>
+
+
+<!-------------------------------------------->
+<h4 style="color:red;">Example of Sequential Algorithm for Basic Consensus</h4>
+This example has acceptors A0, A1, A2 and two proposers with values X
+and Y. Each row of the table shows the values of variables on the
+\(t\)-th iteration where \(t = 0\) represents initial conditions. The
+symbol <i>-</i> is used instead of \(null\).
+
+<pre>
+t   P.v   R      W      A0         A1         A2
+0   -     -      -      (-, 0)     (-, 0)     (-, 0)
+1   X     0      0,1    (-, 0)     (-, 0)     (-, 0)
+2   X     0,1    1      (-, 0)     (X, 2)     (-, 0)
+3   Y     0,2    0      (Y, 3)     (X, 2)     (-, 0)
+4   Y     1,2    2      (Y, 3)     (X, 2)     (X, 4)
+5   X     0,1    0,2    (Y, 5)     (X, 2)     (Y, 5)
+6   X     1,2    1      (Y, 5)     (Y, 6)     (Y, 5)
+7   X     0,1    2      (Y, 5)     (Y, 6)     (Y, 7)
+8   X     1      1,2    (Y, 5)     (Y, 8)     (Y, 8)
+</pre>
+
+The columns with headings \(P.v, R, W\) specify the proposer, and
+subsets of acceptors that are read, \(R\), and written, \(W\). For
+example, on iteration 1, \(P.v = X\), \(R = \{0\}\), \(W = \{0,1\}\). The
+values of the acceptors at the end of iteration \(i\) are shown in the row
+where \(t = i\).
+
+<p style="color:red;">Points to Note in the Example</p>
+The majority of \(A.v\) for acceptors \(A\) after iteration 4 is \(X\)
+because \(A1, A2 = (X, 2), (X, 4)\). The final majority, however, is
+\(Y\); see row 6.
+
+<p>
+In row 4, \(A1.t \neq A2.t\), and that's why the majority value does
+not remain \(X\).
+In row 5, the majority of acceptors have identical \(A.v\)
+<i>and</i> \(A.t\), and so, from row 5 onwards, the acceptor with the
+largest timestamp has value \(Y\).
+
+
+<!-------------------------------->
+<h4 class="w3-text-teal">Proof of Correctness of the Sequential
+Algorithm</h4>
+
+The proof of the invariance of part 1 -- for each acceptor \(A\),
+\(A.v\) is either null or \(P.v\) for some proposer \(P\) -- is
+straightforward. Next, we prove part 2.
+
+<p>
+Consider the case where at the end of the \(k\)-th iteration, there is
+a majority S of acceptors, and there exists \(v* \neq null\), such
+that for all \(B\) in \(S\):
+<p>
+\(
+B.v, B.t = v*, k
+\)
+<p>
+Then, at the end of the \(k\)-th iteration, an acceptor has value
+\(v*\) or it has an earlier timestamp : 
+<p>
+for all acceptors \(A\):
+\(
+  ( A.v = v*) \vee (A.t < k)
+\).
+
+<p>
+We will show that this condition holds at the end of the \(k+1\)-th 
+iteration. Let's go through each of the statements in the loop
+body.
+
+<ol>
+  <li> Statement 1: If \(R\) is not a majority then the state remains
+  unchanged, and so the condition continues to hold.
+  </li>
+  <li>
+  Statement 2: If \(R\) is a majority then there exists an element
+  common to \(S\) and \(R\), and so all the elements of \(R\) are not
+  null. Therefore statement 2 does not change the state, and so the
+  condition continues to hold.
+  </li>
+  <li>
+  Statement 3: Because the condition holds before execution of
+  statement 3, an element \(B\) in \(R\) with the largest timestamp is
+  a member of \(S\) and therefore \(B.v, B.t = v*, k\).
+  
+  So, if \(A\) changes value in the \(k+1\)-th iteration then
+  \(A.v = v*\), and so the condition continues to hold.
+  </li>
+</ol>
+
+
+
+<!------------------------------------->
+
+<h3 class="w3-text-teal">Synchronous Distributed Algorithm for Basic
+Consensus</h3>
+Next we give a distributed algorithm in which proposers and agents
+exchange messages.
+
+<p>
+This algorithm operates in rounds where all messages received in round
+k are sent in round k.
+
+The first field of messages sent in round k have value k to identify the
+round in which the message is sent.
+
+Later, we descibe ways in which rounds are implemented.
+
+Messages may get lost and agents may fail.
+
+The steps of round \(k\) are as follows.
+
+<p>
+
+
+The names of messages -- <code>prepare</code>, <code>promise</code>,
+<code>accept</code> -- are names from the Paxos paper.
+
+The reason for these names will become clear later.
+
+<ol>
+  <li>
+  A round starts with the selection of a single proposer.
+  Later, we describe how the proposer is selected.
+  The proposer selected on the \(k\)-th round sends a message
+  <code>prepare(k)</code> to all acceptors.
+  </li>
+  <li>
+  Each acceptor \(A\) that receives the <code>prepare(k)</code>
+  messages sends a reply <code>promise(k, A.v, A.t)</code> to the
+  proposer. 
+  </li>
+  <li>
+  If the proposer receives <code>promise</code> messages from a
+  majority of acceptors then the  proposer sends <code>accept(k,
+  value)</code> messages to all acceptors where
+  <code>value</code> is determined as specified the sequential
+  algorithm. 
+  </li>
+  <li>
+  If an acceptor \(A\) receives an <code>accept(k, value)</code>
+  message then it sets \(A.v, A.t = value, k\).
+  </li>
+</ol>
+
+<!------------------------------------->
+<h5 class="w3-text-teal">Equivalence of Sequential and Synchronous
+Distributed Algorithms</h5>
+
+Messages may get lost and so the proposer receives
+<code>promise</code> from a subset \(R\) of acceptors, and likewise, a
+subset \(W\) of acceptors receive <code>accept</code> messages.
+
+<ol>
+  <li>
+  Reading <code>A.v, A.t</code> from acceptors \(A\) in \(R\)
+  in the sequential algorithm is equivalent to receiving 
+<code>promise(k, A.v, A.t)</code> from \(R\) in the distributed
+  algorithm.
+  </li>
+  <li>
+  Assigning <code>B.v, B.t = v*, k</code> to each acceptor \(B\) in
+  \(W\) is equivalent to the proposer sending <code>accept(k,
+  value)</code> messages and an acceptor \(A\) updating its value when
+  it receives the message.
+  </li>
+</ol>
+
+The proof of correctness of the sequential algorithm can be used for
+the proof for the synchronous distributed algorithm.
+
+<!---------------------------------------->
+<h1>OLD</h1>
+<H1>OLD</H1>
+<H1>OLD</H1>
+<H1>OLD</H1>
+
+The system is faulty. When a proposer reads acceptors it may read only
+an arbitrary subset \(R\) of acceptors. Likewise, when a proposer assigns a
+value, only a subset \(W\) of acceptors may be assigned that value while
+acceptors not in this subset remain unchanged.
+
+\(R\) and \(W\) can be any subset including the empty set.
+
+<p>
+  Associated with each proposer \(P\) is a constant \(P.value\).
+Each acceptor \(A\) has two fields: \(A.value\)
+and \(A.timestamp\) where timestamps are integers. The specification
+is as follows:
+
+<ol>
+  <li>
+Acceptor values are proposer values or a special symbol
+  \(null\).
+<p>
+\(
+(A.value = null) \vee (\exists \; \textrm{proposer} \; P: A.value =
+P.value)
+\)
+</li>
+<li>
+If there exists a value, \(value*\), and a timestamp, \(timestamp*\), and a
+  majority \(S\) of acceptors
+  such that for all acceptors \(C\) in \(S\), there is a point at
+  which
+  <p>
+  \(
+  C.value, C.timestamp = value*,  timestamp*
+  \)
+  <p>
+  then all acceptors \(A\) with timestamps at least \(timestamp*\) have
+  value \(value*\).
+<p>
+
+  \(
+  A.timestamp \geq timestamp* \quad \Rightarrow \quad A.value = value*
+  \)
+
+<p>
+Next let's look at a loop, <i>for t = 0 to infinity</i>, that represents
+an infinite computation, and that solves the basic consensus
+problem.
+
+The loop body for the \(t\)-th iteration is as follows.
+
+
+<ol>
+  <li>
+  Select an arbitrary proposer \(P\), and an arbitrary subset \(R\) of
+  acceptors. 
+  </li>
+  <li>
+  If \(R\) is not a majority, take no action.
+  </li>
+  <li>
+  If \(R\) is a majority, and \(A.v = null\) for all \(A\) in \(R\),
+  then assign \((P.v, t)\) to each acceptor in a subset of acceptors.
+  </li>
+  <li>
+  If \(R\) is a majority, and there is an acceptor \(A\) in \(R\)
+  where \(A.v \neq null\) then
+  assign  \((B.value, t)\) to each acceptor in a subset of acceptors
+  where \(B\) is an element of \(R\) with the largest
+  timestamp in \(R\), i.e.,
+  \(
+  B.t = \textrm{max}(\{A.t | A \in R\})
+  \)
+  </li>
+</ol>
+
+    
+<pre>
+P = arbitrary proposer
+R = arbitrary subset of acceptors
+W = arbitrary subset of acceptors
+
+//(1) No action if R is not a majority
+if len(R) >= M:
+
+   // (2) If all values of elements in R are null
+   // then next_v becomes P.v
+   if all(r.v == null for r in R): next_v = P.v
+
+   else:
+      // (3) At least one element of R is not null.
+      // next_v is any element r of R with the maximum
+      // r.t
+      max_t = max(r.t for r in R)
+      next_v = r.v for any r in R where r.t == max_t
+
+   // (4) All elements of w become (next_v, t)
+   for w in W: w.v, w.t = next_v, t
+</pre>
+  
+
+
+
+
+
+
+
+  A system has a set \(P\)
+  of agents called \(proposers\) and a set \(acceptors\) of shared
+  variables that all proposers 
+  can access.
+
+  A proposer's operations are to read all acceptor values, or
+assign the same value to all acceptors.
 <!-------------------------------------------------->
 <h4 class="w3-text-teal">Acceptors</h4> 
 The algorithm uses agents called <i>acceptors</i> in addition to

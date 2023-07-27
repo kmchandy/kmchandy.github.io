@@ -118,15 +118,50 @@ Paxos Example
 <div class="w3-row w3-padding-64">
 <div class="w3-twothird w3-container">
 
-<!-- End overlay ---------------------------------->
+  <!-- End overlay ---------------------------------->
+  
     <!--------------------------------------------------------->
     <h1 class="w3-text-teal">The Paxos Algorithm</h1>
-    
-<a href="../ConsensusImpossible/ConsensusImpossible.html"> From the
-FLP theorem</a>, which we discussed in the earlier module, we know
-that that there is no algorithm that guarantees that consensus among
-distributed agents will be reached if messages are delayed for
-arbitrary time. Next we describe an algorithm that enables consensus
+
+  Next, we study an algorithm, called
+  
+  <a
+    href="https://en.wikipedia.org/wiki/Paxos_(computer_science)">
+  <i>Paxos</i>,
+  by which agents determine a single consensus value from a set of
+  proposed values even though messages may be lost, messages may
+overtake each other, agents  may be arbitrarily slow, and agents  may
+  stop and restart.
+
+  From
+  <a href="../ConsensusImpossible/ConsensusImpossible.html">the
+  FLP theorem</a>,
+  there is no algorithm that guarantees that
+  consensus among agents will be reached if messages can
+  be lost or 
+  delayed for arbitrary time, and if agents may fail or be
+  arbitrarily slow.
+
+  Next we describe an algorithm,
+  <a
+    href="https://en.wikipedia.org/wiki/Paxos_(computer_science)">
+  <i>Paxos</i>,
+  that enables consensus
+to be reached in most situations, though there is a possibility that
+  consensus may never be reached.
+
+  Before describing Paxos, we describe a simpler problem which gives
+  insight into Paxos.
+
+  <h1>OLD</h1>
+
+  In this situation, 
+<a href="../ConsensusImpossible/ConsensusImpossible.html">the
+  FLP theorem</a>,
+  says there is no algorithm that guarantees that consensus will be reached 
+
+
+  Next we describe an algorithm that enables consensus
 to be reached in most situations, though there is a possibility that
 consensus may never be reached. We can use probabalistic algorithms to
 reduce the probability of never reaching consensus.
