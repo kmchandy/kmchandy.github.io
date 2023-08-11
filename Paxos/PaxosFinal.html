@@ -131,12 +131,17 @@ hr.new1 {
   FLP theorem</a>,
   
   there is no algorithm that guarantees that consensus among agents
-  will be reached if messages can be lost and delayed and agents may
+  will be reached if messages can be lost and delayed, and if agents may
   fail and be arbitrarily slow. 
 
   Paxos may not terminate though it enables consensus to be reached in
   most situations.
 
+  <p>
+  Paxos deals with systems in which messages may be lost; multiple
+  copies of a message may be delivered; messages may not be
+  delivered in the order sent; agents may be arbitrarily slow; and
+  agents may stop.
   
   <!-------------------------------------------------->
   <h3 class="w3-text-teal">Specification</h3>
@@ -193,20 +198,24 @@ consensus may never be reached; a learner may never learn a value.
 
 
 <!------------------------------------->
-<h4 class="w3-text-teal">Introduction of Acceptors</h4>
+<h4 class="w3-text-teal">Introduction of Acceptors and Timestamps</h4>
 
 The algorithm uses agents called <i>acceptors</i> in addition to
 proposers and learners. 
 
 Each acceptor <i>A</i> has two local variables, <i>A.v</i> and
 <i>A.t</i>, where <i>A.v</i> is either a special symbol null or a
-proposer's value, and <i>A.t</i> is a number. \(A.v\) and \(A.t\) are
-called \(A\)'s value and \(A\)'s timestamp, respectively.
+proposer's value, and <i>A.t</i> is a number which is initially
+\(0\).
+\(A.v\) and \(A.t\) are
+called \(A\)'s <i>value</i> and <i>timestamp</i>, respectively.
 
 <p>
-Let \(N\) be the number of acceptors, and \(M\) be an integer where
-\(M \geq N/2\). A majority of
-acceptors is a set of \(M\) or more acceptors.
+We will see that an agent's timestamp does not decrease, and that
+timestamps specify
+<a href = "../ChannelSnapshots/TimeProperties.html">
+rounds in a timeline.</a>
+We shall say that acceptor \(A\) has accepted \(A.v, A.t\) if \(A.v\) is not null.
 
 
 <h3 class="w3-text-teal">Basic Consensus</h3>
@@ -217,34 +226,32 @@ specified in terms of proposers and acceptors without learners.
 <h5 class="w3-text-teal">Specification of Basic Consensus</h5>
 <ol>
   <li>
-Acceptor values are proposer values or \(null\).
+Acceptors accept only proposer's values.
 <p>
 \(
 (\exists \; \textrm{proposer} \; P: A.v = P.v) \vee (A.v = null)
 \)
 </li>
 <li>
-If there exists a majority \(S\) of acceptors and there eixsts \(v*
-  \neq null\) and \(t*\) such that for all acceptors \(C\) in \(S\),
-  there is a point in the computation at which
-  <p>
-  \(
-  C.v, C.t = v*,  t*
-  \)
-  <p>
-  then at all points in the computation, every acceptor has 
-value \(v*\) or timestamps less than \(t*\).
-
+If there exists there exists \(vM, tM\), and a point in the
+computation where all acceptors in a majority \(S\) accept \(vM, tM\)
 <p>
-
 \(
-\forall \; \textrm{acceptors} \; A: \;
-  (A.v = v*)  \vee (A.t < t*)
+(\forall C \in S: C.v, C.t = vM, tM) \wedge (vM \neq null)
+\)
+<p>
+then at all points in the computation, every acceptor with timestamp
+\(tM\) or greater has value \(vM\)
+<p>
+\(
+\forall \; \textrm{acceptors} \; A \; \textrm{where} \; A.t \geq tM: \;
+  A.v = vM
 \)
 
 </li>
 </ol>
 
+<p>
 Before giving a distributed algorithm for basic consensus we analyze a
 for-loop in a sequential algorithm. The sequential algorithm gives
 insight into the distributed version.
@@ -253,79 +260,66 @@ insight into the distributed version.
 <h4 class="w3-text-teal">A Sequential Simulation of the Basic
 Consensus Algorithm</h4>
 
-The sequential program consists of a for-loop with loop index \(t\).
-
+The sequential program consists of a for-loop with loop index \(k\).
 Initially, \(A.v, A.t = null, 0\) for all acceptors \(A\).
 
-The loop does not terminate:
-
-<pre>
-for t = 0 to infinity:
-   loop_body
-</pre>
-
-The loop_body is given next.
-
-In the loop, agents are treated as shared variables.
-
-For example, the loop body reads and writes \(A.v, A.t\) of an
-acceptor \(A\).
-
 <p>
-The loop body selects an arbitrary proposer, and
-arbitrary subsets of acceptors and learners; these selections simulate
+The loop body selects an arbitrary proposer <code>P</code>, and
+arbitrary subsets <code>R, W</code> of acceptors; these selections simulate
 nondeterminism and faults in the distributed system.
 
-<h5 class="w3-text-teal">Loop Body of the Basic Consensus Algorithm</h5>
-The loop body for the \(t\)-th iteration is as follows.
+In the loop, agents are treated as shared variables.
+For example, the loop reads and writes <code>A.v, A.t</code> for an
+acceptor <code>A</code>.
 
-<p>
-  Select an arbitrary proposer \(P\), and arbitrary subsets \(R, W\) of
-  acceptors.
+
+<h5 class="w3-text-teal">Loop Body of the Basic Consensus
+Algorithm</h5>
+
+The loop body for the \(k\)-th iteration is as follows.
+
 <ol>
   <li>
-  If \(R\) is not a majority, take no action.
+  Select an arbitrary proposer <code>P</code>, and arbitrary subsets
+  <code>R,W</code> of acceptors.
   </li>
   <li>
-  If \(R\) is a majority, and for all \(A\) in \(R\): \(A.v = null\) ,
-  then assign \((P.v, t)\) to each acceptor in \(W\).
+  If <code>R</code> is not a majority then take no action.
   </li>
   <li>
-  If \(R\) is a majority, and there is an acceptor \(A\) in \(R\)
-  where \(A.v \neq null\) then
-  assign  \((B.value, t)\) to each acceptor in \(W\)
-  where \(B\) is an element of \(R\) with the largest
-  timestamp:
-  \(
-  B.t = \textrm{max}(\{A.t | A \in R\})
-  \)
+  If <code>R</code> is a majority then for all acceptors \(A\) in
+  <code>W:  A.v, A.t = f(R), k</code>
   </li>
 </ol>
 
-A Python version of the loop body, given \(P, R, W\), where \(R,
-W\) are lists, is as follows.
-
-<pre>
-if len(R) >= M:
-   if all(r.v == null for r in R): next_v = P.v
-   else:
-      max_t = max(r.t for r in R)
-      list_v = [r.v for r in R if r.t == max_t]
-      // next_v is any element of list_v. 
-      next_v = list_v[0]
-   for w in W: w.v, w.t = next_v, t
-</pre>
+<h5 class="w3-text-teal">Function f</h5>
+<ol>
+  <li>
+If <code>A.v = null</code> for all <code>A</code> in <code>R</code>
+  then <code>f(R) = P.v</code>;
+  </li>
+  <li>
+  else <code>f(R) = C.v</code>
+  <br>
+  where <code>C</code> is a member of
+  <code>R</code> with the largest  timestamp, i.e.,
+  <br>
+  <code>
+  C.t = max({r.t | r in R})
+  </code>
+  </li>
+</ol>
 
 
 <!-------------------------------------------->
-<h4 style="color:red;">Example of Sequential Algorithm for Basic Consensus</h4>
+<h3 style="color:red;">Example of Sequential Simulation of Basic Consensus</h3>
 This example has acceptors A0, A1, A2 and two proposers with values X
 and Y. Each row of the table shows the values of variables on the
-\(t\)-th iteration where \(t = 0\) represents initial conditions. The
+\(k\)-th iteration where \(k = 0\) represents initial conditions. The
 symbol <i>-</i> is used instead of \(null\).
 
 <pre>
-t   P.v   R      W      A0         A1         A2
+k   P.v   R      W      A0         A1         A2
 0   -     -      -      (-, 0)     (-, 0)     (-, 0)
 1   X     0      0,1    (-, 0)     (-, 0)     (-, 0)
 2   X     0,1    1      (-, 0)     (X, 2)     (-, 0)
@@ -341,9 +335,9 @@ The columns with headings \(P.v, R, W\) specify the proposer, and
 subsets of acceptors that are read, \(R\), and written, \(W\). For
 example, on iteration 1, \(P.v = X\), \(R = \{0\}\), \(W = \{0,1\}\). The
 values of the acceptors at the end of iteration \(i\) are shown in the row
-where \(t = i\).
+where \(k = i\).
 
-<p style="color:red;">Points to Note in the Example</p>
+<h5 style="color:red;">Points to Note in the Example</h5>
 The majority of \(A.v\) for acceptors \(A\) after iteration 4 is \(X\)
 because \(A1, A2 = (X, 2), (X, 4)\). The final majority, however, is
 \(Y\); see row 6.
@@ -357,862 +351,289 @@ largest timestamp has value \(Y\).
 
 
 <!-------------------------------->
-<h4 class="w3-text-teal">Proof of Correctness of the Sequential
-Algorithm</h4>
+<h3 class="w3-text-teal">Sequential
+Simulator satisfies Specification of Basic Consensus</h3>
 
-The proof of the invariance of part 1 -- for each acceptor \(A\),
-\(A.v\) is either null or \(P.v\) for some proposer \(P\) -- is
+The proof of the invariance of part 1 -- acceptors accept only
+proposer's values -- is
 straightforward. Next, we prove part 2.
 
 <p>
-Consider the case where at the end of the \(k\)-th iteration, there is
-a majority S of acceptors, and there exists \(v* \neq null\), such
-that for all \(B\) in \(S\):
+Consider the case where at the end of the \(k\)-th iteration
+there exists \(vM \neq null\) such
+that for all \(C\) in a majority \(S\) of acceptors:
 <p>
 \(
-B.v, B.t = v*, k
+C.v, C.t = vM, k
 \)
 <p>
-Then, at the end of the \(k\)-th iteration, an acceptor has value
-\(v*\) or it has an earlier timestamp : 
+Then at the end of the \(k\)-th iteration conditions 1 and 2 hold:
+<p><i>Condition 1</i>:
+Acceptors have value
+\(vM\) or earlier timestamps:
 <p>
 for all acceptors \(A\):
 \(
-  ( A.v = v*) \vee (A.t < k)
+  ( A.v = vM) \vee (A.t < k)
+\)
+<p><i>Condition 2</i>:
+Values of all acceptors in \(S\) are \(vM\), and their timestamps are
+at least \(k\).
+<p>
+for all acceptors \(C\) in \(S\):
+\(
+  (C.v = vM) \wedge (C.t \geq k)
 \).
 
 <p>
-We will show that this condition holds at the end of the \(k+1\)-th 
-iteration. Let's go through each of the statements in the loop
-body.
+We will show that if conditions 1 and 2 hold at the beginning of the \(i\)-th
+iteration, for \(i > k\), then they hold at the end of that iteration,
+and therefore continue to hold thereafter. We will prove that if both
+conditions hold and \(R\)
+is a majority then \(f(R) = vM\) and so both conditions continue to hold.
 
-<ol>
-  <li> Statement 1: If \(R\) is not a majority then the state remains
-  unchanged, and so the condition continues to hold.
-  </li>
-  <li>
-  Statement 2: If \(R\) is a majority then there exists an element
-  common to \(S\) and \(R\), and so all the elements of \(R\) are not
-  null. Therefore statement 2 does not change the state, and so the
-  condition continues to hold.
-  </li>
-  <li>
-  Statement 3: Because the condition holds before execution of
-  statement 3, an element \(B\) in \(R\) with the largest timestamp is
-  a member of \(S\) and therefore \(B.v, B.t = v*, k\).
+<p>
+Two majorities \(R\) and \(S\) have an element in common. Let
+\(X\) be common to \(R\) and \(S\).
+
+From condition 2,  \(X.t \geq k\).
+
+Therefore, the element in \(R\) with the largest timestamp
+  has a timestamp of \(k\) or greater.
+
+<p>
+From condition 1, if \(A.t \geq k\) then \(A.v = vM\).
+
+So, the element in \(R\) with the largest timestamp has value
+\(vM\), and therefore \(f(R) = vM\).
   
-  So, if \(A\) changes value in the \(k+1\)-th iteration then
-  \(A.v = v*\), and so the condition continues to hold.
-  </li>
-</ol>
+
 
 
 
 <!------------------------------------->
 
-<h3 class="w3-text-teal">Synchronous Distributed Algorithm for Basic
-Consensus</h3>
-Next we give a distributed algorithm in which proposers and agents
-exchange messages.
+<h3 class="w3-text-teal">
+A Round of a Distributed Basic Consensus Algorithm
+</h3>
+
+Next, we describe a computation of a Paxos algorithm where the computation
+is a sequence of rounds, and each round is a distributed version of
+the sequential simulation given earlier. The computation has
+timelines for each of the proposers and acceptors. The reason for the
+names of messages -- <code>prepare</code>, <code>promise</code>,
+<code>accept</code> -- will become clear later.
+
+<h4 class="w3-text-teal">Round \(k\) of the Computation</h4>
 
 <p>
-This algorithm operates in rounds where all messages received in round
-k are sent in round k.
-
-The first field of messages sent in round k have value k to identify the
-round in which the message is sent.
-
-Later, we descibe ways in which rounds are implemented.
-
-Messages may get lost and agents may fail.
-
-The steps of round \(k\) are as follows.
-
-<p>
-
-
-The names of messages -- <code>prepare</code>, <code>promise</code>,
-<code>accept</code> -- are names from the Paxos paper.
-
-The reason for these names will become clear later.
+A round starts with the selection of a single proposer \(P\).
+Later, we describe how the proposer is selected.
+Round \(k\) has four steps which are as follows.
 
 <ol>
   <li>
-  A round starts with the selection of a single proposer.
-  Later, we describe how the proposer is selected.
-  The proposer selected on the \(k\)-th round sends a message
-  <code>prepare(k)</code> to all acceptors.
+  \(P\) sends a message <code>prepare(k)</code> to all acceptors.
+  <p>
   </li>
   <li>
-  Each acceptor \(A\) that receives the <code>prepare(k)</code>
-  messages sends a reply <code>promise(k, A.v, A.t)</code> to the
-  proposer. 
+  Each acceptor \(A\) that receives a <code>prepare(k)</code>
+  message from \(P\) sends a reply <code>promise(k, A.v, A.t)</code>
+  to \(P\).
+  <p>
   </li>
   <li>
-  If the proposer receives <code>promise</code> messages from a
-  majority of acceptors then the  proposer sends <code>accept(k,
-  value)</code> messages to all acceptors where
-  <code>value</code> is determined as specified the sequential
-  algorithm. 
+  If \(P\) receives <code>promise(k, _, _)</code> messages from a
+  majority \(R\) of acceptors then \(P\) sends <code>accept(k,
+  f(R))</code> messages to all acceptors. The symbol <code>-</code>
+  represents an arbitrary value.
+  <p>
   </li>
   <li>
-  If an acceptor \(A\) receives an <code>accept(k, value)</code>
-  message then it sets \(A.v, A.t = value, k\).
+  If an acceptor \(A\) receives an <code>accept(k, v)</code>
+  message  then <code>A.v, A.t = v, k</code>.
+  <p> 
   </li>
 </ol>
 
-<!------------------------------------->
-<h5 class="w3-text-teal">Equivalence of Sequential and Synchronous
-Distributed Algorithms</h5>
+<h5 class="w3-text-teal">Four Steps of Round \(k\) in Pseudo Code</h5>
 
-Messages may get lost and so the proposer receives
-<code>promise</code> from a subset \(R\) of acceptors, and likewise, a
+<pre>
+// Proposer P. Step P.1.
+send prepare(k) to all acceptors
+
+// Acceptor A. Step A.1: 
+upon arrival of prepare() from a proposer P:
+   send promise(k, A.v, A.t) to P
+
+// Proposer P. Step P.2.
+wait until
+   end of round or
+   arrival of promise(k, -, -) messages from any majority
+   R of acceptors;
+
+if promise messages are received from a majority R:
+   send accept(k, f(R)) to all acceptors
+
+// Acceptor A. Step A.2. 
+upon arrival of accept(k, v): A.v, A.t = v, k
+</pre>
+
+
+<!------------------------------------->
+<h4 class="w3-text-teal">Rounds in the Sequential Simulation and
+Distributed Computation are Equivalent</h4>
+
+Next we show that each round of the simulation is equivalent to each
+round in the timeline.
+
+Therefore a property that holds after a
+round in the simulation also holds in the corresponding round of the
+timeline.
+
+So, the round-based timeline satisfies the specification of basic consensus.
+
+<p>
+In the distributed algorithm messages may get lost.
+So proposer \(P\) receives
+<code>promise</code> from an arbitrary subset \(R\) of acceptors.
+Likewise, an arbitrary
 subset \(W\) of acceptors receive <code>accept</code> messages.
 
-<ol>
-  <li>
+<p>
   Reading <code>A.v, A.t</code> from acceptors \(A\) in \(R\)
-  in the sequential algorithm is equivalent to receiving 
-<code>promise(k, A.v, A.t)</code> from \(R\) in the distributed
-  algorithm.
-  </li>
-  <li>
-  Assigning <code>B.v, B.t = v*, k</code> to each acceptor \(B\) in
-  \(W\) is equivalent to the proposer sending <code>accept(k,
-  value)</code> messages and an acceptor \(A\) updating its value when
-  it receives the message.
-  </li>
-</ol>
+  in the sequential simulation is equivalent to receiving 
+<code>promise(k, A.v, A.t)</code> from acceptors \(A\) in \(R\) in the
+  distributed algorithm.
 
-The proof of correctness of the sequential algorithm can be used for
-the proof for the synchronous distributed algorithm.
+
+  Similarly, assigning <code>v, k</code> to each acceptor \(A\) in
+  \(W\) in the sequential simulation
+  is equivalent to each acceptor \(A\) in \(W\) receiving <code>accept(k,
+v)</code> in the distributed algorithm.
+
+
+
+
+<h3 class="w3-text-teal">The Distributed Basic Consensus Algorithm</h3>
+Next we described a distributed basic consensus algorithm.
+The algorithm obeys the rules for assigning
+<a href="../ChannelSnapshots/TimeProperties.html"></a>
+rounds to events.
+Therefore, the causality graph of a computation of the distributed
+algorithm is the same
+as the causality graph of a computation that occurs as a sequence of
+rounds.
+
+A proof about states of agents in any computation
+is also a proof for all computations with the same causality graph.
+See the
+<a href="../ChannelSnapshots/TimeProperties.html">section:
+<i>A Technique for Analyzing Algorithms in Systems
+with Message Loss</i>.
+</a>
+
 
 <!---------------------------------------->
-<h1>OLD</h1>
-<H1>OLD</H1>
-<H1>OLD</H1>
-<H1>OLD</H1>
-
-The system is faulty. When a proposer reads acceptors it may read only
-an arbitrary subset \(R\) of acceptors. Likewise, when a proposer assigns a
-value, only a subset \(W\) of acceptors may be assigned that value while
-acceptors not in this subset remain unchanged.
-
-\(R\) and \(W\) can be any subset including the empty set.
+<p>
+A proposer \(P\) has a unique id \(P.id\) and a local integer variable
+\(n\). The pair \([P.n, P.id]\) is a proxy for the iteration index
+\(k\) of the sequential simulator, and the round id of the distributed
+algorithm executing in rounds.
 
 <p>
-  Associated with each proposer \(P\) is a constant \(P.value\).
-Each acceptor \(A\) has two fields: \(A.value\)
-and \(A.timestamp\) where timestamps are integers. The specification
-is as follows:
+The timestamp for a message is its first field.
 
-<ol>
-  <li>
-Acceptor values are proposer values or a special symbol
-  \(null\).
-<p>
-\(
-(A.value = null) \vee (\exists \; \textrm{proposer} \; P: A.value =
-P.value)
-\)
-</li>
-<li>
-If there exists a value, \(value*\), and a timestamp, \(timestamp*\), and a
-  majority \(S\) of acceptors
-  such that for all acceptors \(C\) in \(S\), there is a point at
-  which
-  <p>
-  \(
-  C.value, C.timestamp = value*,  timestamp*
-  \)
-  <p>
-  then all acceptors \(A\) with timestamps at least \(timestamp*\) have
-  value \(value*\).
-<p>
+In the algorithm given below this field has value \(k\).
 
-  \(
-  A.timestamp \geq timestamp* \quad \Rightarrow \quad A.value = value*
-  \)
-
-<p>
-Next let's look at a loop, <i>for t = 0 to infinity</i>, that represents
-an infinite computation, and that solves the basic consensus
-problem.
-
-The loop body for the \(t\)-th iteration is as follows.
+The time of an acceptor \(A\) is \(A.t\), and the time of proposer
+\(P\) is \(P.t\).
 
 
-<ol>
-  <li>
-  Select an arbitrary proposer \(P\), and an arbitrary subset \(R\) of
-  acceptors. 
-  </li>
-  <li>
-  If \(R\) is not a majority, take no action.
-  </li>
-  <li>
-  If \(R\) is a majority, and \(A.v = null\) for all \(A\) in \(R\),
-  then assign \((P.v, t)\) to each acceptor in a subset of acceptors.
-  </li>
-  <li>
-  If \(R\) is a majority, and there is an acceptor \(A\) in \(R\)
-  where \(A.v \neq null\) then
-  assign  \((B.value, t)\) to each acceptor in a subset of acceptors
-  where \(B\) is an element of \(R\) with the largest
-  timestamp in \(R\), i.e.,
-  \(
-  B.t = \textrm{max}(\{A.t | A \in R\})
-  \)
-  </li>
-</ol>
-
-    
-<pre>
-P = arbitrary proposer
-R = arbitrary subset of acceptors
-W = arbitrary subset of acceptors
-
-//(1) No action if R is not a majority
-if len(R) >= M:
-
-   // (2) If all values of elements in R are null
-   // then next_v becomes P.v
-   if all(r.v == null for r in R): next_v = P.v
-
-   else:
-      // (3) At least one element of R is not null.
-      // next_v is any element r of R with the maximum
-      // r.t
-      max_t = max(r.t for r in R)
-      next_v = r.v for any r in R where r.t == max_t
-
-   // (4) All elements of w become (next_v, t)
-   for w in W: w.v, w.t = next_v, t
-</pre>
-  
-
-
-
-
-
-
-
-  A system has a set \(P\)
-  of agents called \(proposers\) and a set \(acceptors\) of shared
-  variables that all proposers 
-  can access.
-
-  A proposer's operations are to read all acceptor values, or
-assign the same value to all acceptors.
-<!-------------------------------------------------->
-<h4 class="w3-text-teal">Acceptors</h4> 
-The algorithm uses agents called <i>acceptors</i> in addition to
-proposers and learners. 
-
-Each acceptor <i>A</i> has two local variables, <i>A.v</i> and <i>A.vt</i>,
-where <i>A.v</i> is either a special symbol null or a proposer's value, and <i>A.vt</i>
-is a number. We call \(A.v\) \(A\)'s value, and \(A.vt\) \(A\)'s
-timestamp. 
-
-<p>
-Let \(N\) be the number of acceptors, and \(M\) be an integer where
-\(M \geq N/2\). A set of \(M\) or more acceptors is a majority of
-acceptors.
-
-<p>
-Let's first design an algorithm with acceptors and without learners
-that solves a simpler problem with the following specification.
-
-<h5 class="w3-text-teal">Specification for Acceptors</h5>
-<ol>
-  <li>
-  An acceptor's value is the value of a proposer or is a
-  special symbol \(null\).
-  <p>
-  \(
-  (A.v = null) \vee (\exists \; \textrm{proposer} \; P: A.v = P.V)
-  \)
-  </li>
-  <li>
-  If there exists a majority \(S\), and \(v*, vt*\)
-  such that for each acceptor \(C\) in \(S\) there is a point at
-  which
-  <p>
-  \(
-  (C.v = v*) \wedge (c.vt = vt*)
-  \)
-  <p>
-  then for all points in the computation, for all acceptors \(A\):
-  <p>
-  \(
-  [A.vt \geq vt* \; \Rightarrow \; A.v = v*]
-  \)
-  </li>
-</ol>
-
-<ol>
-  <li>
-If a majority <i>S</i> of acceptors have identical local
-variables at any point in a computation then from that point onwards
-there exists a majority <i>S'</i> of acceptors with identical local
-  variables, and
-  </li>
-  <li>
-  If <i>v*</i>  is the value of agents in <i>S</i> then 
-  <i>v*</i>  is the value of agents in <i>S'</i>
-
-
-Then from that point onwards
-there exists a majority of acceptors with identical local variables
-and the value of agents in the majority remains <i>v*</i>.
-
-<h2 class="w3-text-teal">Basic Consensus</h2>
-We first discuss a simple <i>for</i> loop that provides insight into
-Paxos.
-
-The loop has a set of variables called <i>acceptors</i>.
-Each acceptor <i>A</i> has two fields, <i>A.v</i> and <i>A.vt</i>,
-where <i>A.v</i> is a value and <i>A.vt</i> is a number which represents the
-time at which <i>A.v</i> last changed value.
-
-<p>
-The loop is <i>for i = 0 to infinity do loop_body</i>, where the loop
-body is as follows:
-<ol>
-  <li>
-  select: an arbitrary proposer <i>p</i>, and arbitrary subsets
-  <i>read_values, write_values, update_values</i> of acceptors.
-  </li>
-  <li>
-  If the <i>read_values</i> is not at least a majority of acceptors
-  then skip this iteration.
-  <pre>
-  if |read_values| < M: skip.
-  </pre>
-  </li>
-  <li>
-  The iteration continues when <i>read_values</i> is at least a
-  majority.
-  <br>
-  If r.v is null for all r in <i>read_values</i>
-  
-
-In
-the loop 
-<pre>
-select: an arbitrary proposer p,
-select arbitrary subsets R, W of acceptors
-
-if |R| >= M:
-  if r.v = null for all r in R :
-     next_v = p.v
-  else:
-     max_t = max(r.t for r in R)
-     next_v = r.v where r is any element of R
-         such that r.t = max_t
-
-  for all w in W: w.v, w.t = next_v, t
-  </pre>
-           
-     
-
-
-
-  A system has a set of agents called <i>proposers</i> and a set of
-  shared variables called <i>acceptors</i>. Associated with each
-  proposer <i>P</i> is a value <i>P.v</i>. An acceptor <i>A</i>
-  is a tuple (<i>A.v, A.t</i>) where
-  <ol>
-    <li>
-    <i>A.v</i> is either a special symbol <i>null</i> or is the value
-    <i>P.v</i> of some proposer <i>P</i>, and
-    </li>
-    <li>
-    <i>A.t</i> is a nonnegative integer representing the time at
-    which <i>A</i> was last modified.
-    </li>
- </ol>
-Initially  all acceptors are (null, 0).
-  <p>
-  Let <i>N</i> be the number of acceptors, and let <i>M</i> be the
-  smallest integer greater than <i>N/2</i>. A set of <i>M</i>
- acceptors  is a majority.
-
- 
-<h3 class="w3-text-teal">The Algorithm</h3>
-The algorithm has an additional
-layer of agents called <i>acceptors</i> in addition to proposers and
-learners. The communication structure 
-between agents is shown in the figure below. Proposers send and
-receive messages from acceptors.
-
-Learners receive messages from
-acceptors, and do not send messages to proposers or
-acceptors. We postpone discussion of learners, and begin by focusing
-on interactions between proposers and acceptors.
-
-<p>
-<figure>
-    <img src="./PaxosLecture/PaxosLecture.002.jpeg" alt="Fig1" style="width:80%">
-    <figcaption>Fig.1: Proposers, Acceptors and Learners</figcaption>
-</figure>
-
-<p class="w3-text-teal">Local Variables</p>
-In the description of the algorithm; a
-<i>time</i> is a pair
-  <code>(n, pid)</code>, where <code>pid</code>
-    is the id
-  of a proposer, and <code>n</code> and <code>pid</code> are integers
-(or any total order).
-A <i>value</i> is either <code>null</code> or
-<code>P.VALUE</code> where <code>P</code> is a proposer.
-
-
-We use symbols <code>P</code>, <code>A</code>,
-<code>t</code> and <code>v</code> for proposer, acceptor, time and
-value.
-
-<p>
-A proposer <code>P</code> has the following
-local variables.
-<ul>
-<li>
-  <code>P.t = [P.n, P.ID]</code> where <code>P.ID</code> is
-  <code>P</code>'s id, and <code>P.n</code> is an integer.
-Initially, <code>P.n = 0</code>.
-</li>
-<li>
-<code>P.V</code> is a constant and is <code>P</code>'s value.
-</li>
-</ul>
-
-<p>
-An acceptor <code>A</code> has the following
-local variables.
-<ul>
-  <li>
-  <code>A.t</code>: The time at <code>A</code>. Initially <code>A.t =
-  [0, null]</code>. 
-  </li>
-  <li>
-  <code>A.v</code>: The most recent value accepted by
-  <code>A</code>. Initially <code>A.v = null</code>. 
-  </li>
-  <li>
-  <code>A.v_t</code>: The time at which <code>A</code> accepted
-  <code>A.v</code>. Initially <code>A.v_t = [0, null]</code>. 
-  </li>
-</ul>
-
-<p class="w3-text-teal">Message Types</p>
-<ul>
-  <li>
-  <code>prepare(time)</code> from a proposer to all acceptors.
-  </li>
-  <li>
-  <code>promise(time, value, time)</code> reply to the proposer from
-  an acceptor.
-  </li>
-  <li>
-  <code>accept(time, value)</code> from the proposer to
-  all acceptors.
-  </li>
-</ul>
-  
-
-<h4 class="w3-text-teal">Algorithm for Proposers and Acceptors</h4>
+<h5 class="w3-text-teal">The Basic Consensus Algorithm</h5>
 <pre>
 // Proposer P. Step P.1. 
 P.n = P.n + any positive value
 P.t = [P.n, P.id]
+// P.t represents k in rounds of the timeline
 send prepare(P.t) to all acceptors
 
 // Acceptor A. Step A.1: 
-upon arrival of prepare(t) at A from a proposer P:
-   if t > A.t:
-      A.t = t
-      // receive arriving message
-      send promise(t, A.v, A.v_t) to P
+upon arrival of prepare(k) at A from a proposer P:
+   if k > A.t:
+      A.t = k
+      send promise(k, A.v, A.t) to P
 
 // Proposer P. Step P.2.
-// only receive promise(t, -, -) messages where t = P.t
-
 wait until timeout or:
-     arrival of promise(t, A.v, A.v_t) from majority of
-     acceptors where t = P.t
+     arrival of promise(k, -, -) from any majority
+     R of acceptors where k = P.t
+
 If timeout: return to step P.1
-else:
-     let promise(t, v*, v_t*) be the promise with
-     the largest v_t where t = P.t
-     if v* == NULL: send accept(t, P.V) to acceptors
-     else: send accept(t, v*) to acceptors
+else: send accept(k, f(R)) to all acceptors
       
 // Acceptor A. Step A.2. 
-upon arrival of accept(t, v):
-    if t > A.t:
-      A.t = t
-      // receive the arriving message
-      A.v = v
-      send accepted(t, v) to all learners
+upon arrival of accept(k, v):
+    if k > A.t: A.t, A.v = k, v
 </pre>
 
 
-<h4 class="w3-text-teal">Algorithm Steps</h4>
-The algorithm has only one point where an agent waits: step P.2
-In this step a proposer <code>P</code> waits for a bounded time
-to receive promise messages from a majority of acceptors
-where the timestamp of each of these messages is <code>P.t</code>.
-If these
-messages don't arrive within this time then the proposer aborts this
-iteration and starts the next iteration, i.e. back to step P.1,
-without completing step P.2.
-Note that the value of <code>P.t</code> in step P.2
-is the same as its value at the end of step P.1.
-
-<p>
-A proposer repeatedly executes a loop consisting of steps P.1 and P.2.
-For the time being assume that the loop never terminates.
-
-
-<h3 style="color:red;">Example</h3>
-The figure below shows events in a single epoch in a system timeline with 3 acceptors and 2
-proposers. Timelines for learners are not shown. All events in the
-same epoch have the same timestamps. We use T for this timestamp
-common to all events in the epoch.
-
-<p>
-The legends for events in the diagram are: 
-<ol>
-  <li>
-  <i>prep(t)</i>: A proposer <code>P</code> sends <code>prepare(T)</code> message, where
-  <code>t</code> is the proposer's timestamp <code>P.t</code> at the
-  point at which <code>P</code> sends the message, and <code>T =
-  P.t</code>.
-  </li>
-  <li>
-  <i>prom(T, -, -)</i>: An acceptor <code>A</code> replies to the proposer with a
-  <code>promise(T, accept_v, accept_t)</code> message, where
-  <code>T</code> is the timestamp that <code>A</code> received in the
-  <code>prepare(T)</code> message.
-  </li>
-  <li>
-  <i>accept(T, _)</i>: A proposer sends <code>accept(T, v)</code>.
-  </li>
-  <li>
-  <i>A(t)</i>: An acceptor accepts
-  <code>accept(T, v)</code> message in step A.2
-  </li>
-</ol>
-
-<p>
-In the diagram, <code>new_time</code> messages are grey,
-<code>updated_time</code> messages are purple, and
-<code>proposals</code> are black. The <code>new_time(t)</code> message
-sent by proposer P0 to acceptor A2 is lost, and the the <code>proposal</code> sent
-by P0 to acceptor A1 is lost.
-
-<figure>
-    <img src="PaxosFigures/PaxosFigures.012.jpeg" alt="Fig2" style="width:100%">
-    <figcaption>Fig.2: Timelines</figcaption>
-</figure>
-
-
-<p class="w3-text-teal">Sync Times</p>
-<code>P.t</code> and <code>A.t</code> are the <i>sync times of agents
-<code>P</code> and <code>A</code></i>, respectively.
-We call <code>A.accept_v</code> and <code>A.accept_t</code> the 
-<i>value accepted</i> and the <i>sync time of the value accepted</i> by
-<code>A</code>, respectively.
-In messages <code>prepare(t)</code>, <code>promise(t, -, -)</code>, and 
-<code>accept(t, -)</code>, <code>t</code> is the <i>sync time
-of the message</i>.
-
-<hr class="new2">
-<p style="color:blue;">
-Sync time property: The sync-time of a sender of a message
-is the same as the sync-time of a receiver of that message.
-</p>
-<hr class="new2">
-
-<p>Proof</p>
-For every step of the algorithm:
-the sync time of a message sent is the same as the sync time of the
-sender at the point at which the message is sent, and
-the sync time of a receiver of a message is the
-same as the sync time of the message.
-
-<p>
-A consequence of the sync time property is the following.
-Let \(X\) be the sequence of events in a given trajectory of the Paxos
-algorithm. Let \(Y\) be a permutation of \(X\) where the timeline of
-each agent is the same in \(X\) and \(Y\) and events in \(Y\) are executed in
-increasing order of sync time. For all \(T\), the state of an agent when its sync
-time is \(T\) is the same in \(X\) and \(Y\). Therefore we can reason
-about agent states in \(X\) by reasoning about them in \(Y\).
-
-<p>Partition the timeline of \(Y\) into
-epochs where all events in an epoch have the same sync time.
-We can analyze \(Y\) as a sequence of state transitions from the start
-of an epoch to the start of the next epoch. Channels are empty at the
-start of each epoch. So, these epoch-level state
-transitions deal only with agent states.
-
-
-
-
-<h4 class="w3-text-teal">Synchronous trajectories</h4>
-We prove that the synchronous trajectory Y satisfies the Paxos
-specifications. 
-
-<p>
-Sync times are pairs (integer, process id). So, identical sync times
-have the same process id. Therefore all sync times in an epoch
-also have the same process id. From the algorithm, this process id is
-the id of the proposer that sends the <code>prepare</code> message.
-Therefore, all events in an epoch are a consequence of
-<code>prepare</code> messages sent by the same proposer.
-
-  
-<h5 style="color:red;">Example</h5>
-<figure>
-    <img src="./PaxosProof/PaxosProof.008.jpeg" alt="Fig4" style="width:80%">
-    <figcaption>Fig.6: Example of epochs in a semi-synchronous trajectory</figcaption>
-</figure>
-The diagram shows a semi-synchronous trajectory with three epochs with
-times \(t^{0}\), \(t^{1}\), and \(t^{2}\), shown
-in brown, blue and green, respectively. All the events and messages in epoch
-\(t^{i}\) have timestamp \(t^{i}\). In epochs \(t^{0}\) and \(t^{2}\)
-the only proposer that sends and receives messages is P1, while in
-epoch \(t^{1}\) the only proposer that sends and receives messages is P0.
-
-<p>
-  In epoch \(t^{0}\), proposer P1 increases its time (see step P.1) to  \(t^{0}\)
-  and sends \(prepare(t^{0})\) messages --- shown as brown arrows ---
-  to acceptors. The message to acceptor A0 is lost. An acceptor \(A\)
-  that gets the message replies with \(promise(t^{0},
-  A.accept\_v, A.accept\_t)\). Proposer P1 waits to receive at least 2
-  \(promise\) messages because 2 is a majority for a set of 3
-  agents. When it receives the 2 messages, P1 sends  \(accept(t^{0},
-  P1.v)\) messages to acceptors. In this diagram, the \(accept\)
-  messages sent to A0 and A1 are lost while A2 receives the
-  message which, in turn, sends \(accepted\) messages. In this epoch, a
-  majority of acceptors do not send \(accepted\) messages.
-
-<p>
-  In epoch \(t^{1}\), proposer P0 increases its time to  \(t^{1}\)
-  and sends \(prepare(t^{1})\) messages
-  to acceptors. P0 timesout waiting to receive
-  \(promise\) messages from a majority of acceptors, and so it
-  sends no \(accept\) messages.
-
-<p>
-  In epoch \(t^{2}\), proposer P1 increases its time to  \(t^{2}\), and sends
-  \(prepare(t^{2})\) messages. P1 receives
-  \(promise\) messages from a majority of acceptors; sends
-  proposals to acceptors; receives replies from a majority of
-  acceptors, and then sends \(accept\) messages. The
-  \(accept\) messages are received by a majority of acceptors, each
-  of which sends \(accepted\) messages. So, learners that receive
-  \(accepted\) messages from a majority of acceptors, set the values
-  that they learned to the value in the \(accept\) messages.
-  
-  
-
+<h3 class="w3-text-teal">The Existence of a Computation Executing in Rounds</h3>
+We will prove that given any computation \(C\) of the Paxos algorithm
+there exists a timeline, with the causality
+graph of timelines the Paxos algorithm, in which events occur in rounds:
+All events at agents when the agents' time equal \(k\) occur before
+all events at agents when the agents' time exceeds \(k\).
 
 
 <h3 class="w3-text-teal">Theorem</h3>
-If a majority of acceptors accept the same value, \(V^{*}\) in an
-epoch \(T^{*}\) of a semi-synchronous 
-trajectory, then in all subsequent epochs:
+Given any computation \(C\) of an algorithm in which messages may be lost,
+where the algorithm follows the rules for assigning rounds, there
+exists a computation \(C'\):
 <ol>
   <li>
-    the value in all proposal and accept messages is \(V^{*}\), and
+  with the same causality graph as \(C\) and
   </li>
   <li>
-  for all acceptors \(A\):
-    \( (A.accept\_t < T^{*}) \vee (A.accept\_v =  V^{*}) \)
-		      </li>
-</ol>
-
-<h4 class="w3-text-teal">Proof</h4>
-The proof is by induction on successive epochs in the sequence of
-epochs that follows epoch \(T^{*}\). Let \(T^{i}\) be the time of the
-\(i\)-th epoch after epoch \(T^{*}\), and let \(T^{0} = T^{*}\).
-
-<p class="w3-text-teal">Base Case: epoch \(T^{*}\)</p>
-<i>Part 1</i>: All proposals are sent by the
-same proposer in an epoch, and all proposals have the same timestamp
-and value. Therefore, the value in all proposal and accept messages in
-epoch \(T^{*}\) is \(V^{*}\).
-
-<p>
-<i>Part 2</i>:  In epoch \(T^{*}\), \(A.accept\_t\) is changed only when 
-\(A.accept\_v\) is set to \(V^{*}\), and so part 2 follows.
-
-<p class="w3-text-teal">Induction step: epoch \(T^{i+1}\)</p>
-Assume that the theorem holds for epochs \(T^{0}, T^{1}, \ldots,
-T^{i}\), and prove that it holds for epoch \(T^{i+1}\).
-The result is vacuously true if no proposals are sent in
-   this epoch. Consider the case where proposals are sent.
-
-   <p>
-     Because  \(A.accept\_t\) is never decreased, it follows
-     that in all epochs after epoch \(T^{*}\) there is a majority of
-     acceptors for which \(A.accept\_t \geq T^{*}\). 
-   <p>
-     A proposer \(p\) sends a proposal only if it receives
-     \(updated\_time\) messages from a majority of acceptors. Any two
-     majorities have at least one element in common. So, there exists
-     an acceptor \(A\) that sends an \(updated\_time\) message to
-     \(p\) and for which \(A.accept\_t \geq T^{*}\). Because
-     \(A.accept\_t\) is positive, \(A.accept\_v\) 
-     is not null (see the invariants).
-
-   <p>
-     So, proposer \(p\) identifies the \(updated\_time\) message with
-     the largest \(A.accept\_t\). This value is greater than or equal
-     to \(T^{*}\), and so the corresponding \(A.accept\_v \) is
-     \(V^{*}\), and therefore the  proposal's value is
-     \(V^{*}\). So, the value of accept messages is also \(V^{*}\),
-     and if \(A.accept\_v\) is changed then the new value is \(V^{*}\).
-
-
-     <h5 style="color:red;">Example</h5>
-     This example illustrates the idea underlying the proof. In the
-     next diagram, proposer P0 sends a \(new\_time(T^{*})\)
-     message which is received by acceptors A0 and A1 which respond
-     with updated time messages with timestamp \(T^{*}\). Proposer P0
-     receives both messages, and sends proposals to all acceptors. In
-     this case the proposals are received by A0 and A2 which then send
-     accept messages. When A0 and A2 receive the proposals they set
-     \(A.accept\_t, A.accept\_v = T^{*}, V^{*}\), and these values
-     remain unchanged until the next proposal is received. 
-<figure>
-    <img src="./PaxosProof/PaxosProof.009.jpeg" alt="Fig4" style="width:60%">
-    <figcaption>Fig.7: Idea underlying the proof</figcaption>
-</figure>
-
-The diagram below shows an epoch T1 that follows epoch T0. In this
-epoch, proposer P1 sends \(new\_time(T^{1})\) messages which are
-received by acceptors A0 and A1 which respond with updated time
-messages with timestamp \(T^{1}\).
-When P1 gets both messages it sends proposals to all acceptors.
-Let's use the argument of the proof
-to determine the value of proposals and the accept message sent by A1 in this
-epoch. 
-
-
-<figure>
-    <img src="./PaxosProof/PaxosProof.010.jpeg" alt="Fig4" style="width:60%">
-    <figcaption>Fig.8: What can be proved about the next accept message?</figcaption>
-</figure>
-
-
-When P1 gets both updated time messages it
-identifies the message with the largest value of \(A.accept\_t\). The
-message sent by A0 has timestamp \(T^{*}\) whereas the message sent by
-A1 has an earlier timestamp. So, the updated time message with the
-largest \(A.accept\_t\) is the message sent by A0. 
-
-P1 sends proposals with a value of
-\(A0.accept\_t\) which is \(V^{*}\). The green circles show how the
-value \(V^{*}\) is sent from A0 to P1 to A1.
-
-   <p>
-     We see that proposals and accept
-messages have value \(V^{*}\) in the next epoch as well. 
-<figure>
-    <img src="./PaxosProof/PaxosProof.012.jpeg" alt="Fig4" style="width:60%">
-    <figcaption>Fig.9: The role of the accept time: accept_t </figcaption>
-</figure>
-     
-		  
-<h3  class="w3-text-teal">Theorem: Paxos is Correct for
-  Semi-Synchronous Trajectories</h3>
-The specification of the algorithm is repeated here for convenience.
-<ol>
-  <li>
-  <i>Learners learn only proposed values.</i>
+  in which, for all \(k\), events with round id \(k\) occur before
+  events with round 
+  ids that exceed \(k\), and 
   </li>
   <li>
-  <i>A learner doesn't change the value that it learns.</i>
-  </li>
-  <li>
-  <i>All learners learn the same value.</i>
+  messages sent in a round are received in the same round.
   </li>
 </ol>
 
-   <p  class="w3-text-teal">Proof</p>
-   The value of
-<code>v</code> in every message is either null or <code>P.VALUE</code>
-for some proposer P, and so part 1 follows. Parts 2 and 3 follow from
-the previous theorem: if a majority of acceptors send identical
- \(accept(T^{*}, V^{*})\) messages in an epoch, then in all succeeding
-epochs, the value \(v\) of every accept message remains \(V^{*}\).
+The proof follows from the rules for assigning round ids to events and
+messages.
+
+<ol>
+  <li>
+  A message sent in an event with round id \(k\) has
+  timestamp \(k\).
+  </li>
+  <li>
+  A message with round id \(k\) is discarded if the message arrives
+  at the receiver when the receiver's round id exceeds \(k\).
+  </li>
+  <li>
+  When a message with timestamp \(k\) arrives at an agent with
+  timestamp \(k\) or greater the message is either discarded or the
+  receiver's timestamp is set to \(k\).
+  </li>
+</ol>
+  
 
 
-<h3  class="w3-text-teal">Paxos is Correct for
-  all Trajectories</h3>
-
-We have shown that the Paxos algorithm is correct for semi-synchronous
-trajectories. Now we show the correctness of the algorithm for all
-trajectories.
-
-Let \([past(T), future(T)]\) be a cut of a timeline where \(past(T)\)
-is the set of events with time \(T\) or
-less. Therefore \(future(T)\) is the set of events with time greater than \(T\).
-
-<h4  class="w3-text-teal">Theorem: Consistent cuts</h4>
-The cut \([past(T), future(T)]\) is consistent.
-
-<h5  class="w3-text-teal">Proof</h5>
-There is no message from an event in \(future(T)\)
-to an event in \(past(T)\).
-
-<p>
-  If a proposer sends a message in the future, i.e., with a timestamp
-  \(T' > T\) then the event in which an acceptor processes the message also
-      has timestamp \(T'\), and is also in the future.
-      Likewise, if a proposer sends a message with a timestamp
-  \(T' > T\) then the event in which an acceptor receives the message also
-      has timestamp \(T'\).
-
-<h5 style="color:red;">Example</h5>
 <figure>
-    <img src="./PaxosProof/PaxosProof.018.jpeg" alt="Fig8" style="width:80%">
-    <figcaption>Fig.8: Consistent Cuts of Paxos Trajectories</figcaption>
+    <img src="PaxosFigures/PaxosFigures.012.jpeg" alt="Fig2" style="width:100%">
+    <figcaption>Fig.1: Timelines</figcaption>
 </figure>
 
-The diagram shows a cut \([past(T), future(T)]\) of a trajectory. The
-green circles represent events in the past, and the yellow circles
-represent events in the future. A little analysis shows that there are
-no edges from the future to the past. (Indeed, you can show that there
-are no edges from the past to the future, and so the graph can be
-partitioned into independent subgraphs.)
-
-<h3  class="w3-text-teal">Theorem: Paxos is Correct</h3>
-Consider any trajectory \(X\) in which a majority of acceptors accepts \((T^{*},
-V^{*})\). Let \(Y\) be the semi-synchronous trajectory corresponding
-to X.
-
-From the theorem on semi-synchronous trajectories, for all
-acceptances \((T', V')\) in \(Y\) with \(T' \geq T\) have \(V' =
-V^{*}\).
-Because the global states are identical in \(X\) and \(Y\), for all
-acceptances \((T', V')\) in \(X\) with \(T' \geq T\) also have \(V' =
-V^{*}\). Therefore if a learner receives \(accept(T^{*}, V^{*})\) from a
-majority of acceptors, and the same or another learner receives \(accept(T', V')\) from a
-majority of acceptors, then \(V' = V^{*}\) and the correctness of parts 2 and 3 of the
-specification follow.
-
-
-<h5 style="color:red;">Example</h5>
 <figure>
-    <img src="./PaxosProof/PaxosProof.019.jpeg" alt="Fig8" style="width:80%">
-    <figcaption>Fig.8: Global States of Unsynchronized and
-    Semi-Synchronized Trajectories</figcaption>
+    <img src="./PaxosProof/PaxosProof.008.jpeg" alt="Fig4" style="width:80%">
+    <figcaption>Fig.2: Example of computation in rounds</figcaption>
 </figure>
-
 
 
 
@@ -1224,7 +645,7 @@ acceptors with identical values of <code>(T, V)</code>.
 We ignore learners in the algorithm description, and restrict
 attention to whether and when a majority of
 acceptors sends <code>accept(T, V)</code> messages with identical
-values of <code>(T, V)</code>. 
+values of <code>(T, V)</code>.
 
 <!--Start Footer--------------------------------------->
 
@@ -1240,30 +661,6 @@ values of <code>(T, V)</code>.
 <!-- END MAIN -->
 </div>
 
-<script>
-// Get the Sidebar
-var mySidebar = document.getElementById("mySidebar");
-
-// Get the DIV with overlay effect
-var overlayBg = document.getElementById("myOverlay");
-
-// Toggle between showing and hiding the sidebar, and add overlay effect
-function w3_open() {
-  if (mySidebar.style.display === 'block') {
-    mySidebar.style.display = 'none';
-    overlayBg.style.display = "none";
-  } else {
-    mySidebar.style.display = 'block';
-    overlayBg.style.display = "block";
-  }
-}
-
-// Close the sidebar with the close button
-function w3_close() {
-  mySidebar.style.display = "none";
-  overlayBg.style.display = "none";
-}
-</script>
 
 </body>
 </html>

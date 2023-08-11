@@ -108,52 +108,62 @@ hr.new1 {
   where <i>all messages received in a round are sent in the same
   round.</i> 
 
+  <h3 class="w3-text-teal">Lost and Discarded Messages</h3>
 
-  <h2 class="w3-text-teal">Rounds</h2>
   We consider systems in which messages may be lost.
 
-  We assign a number \(R(e)\) to each event \(e\), and we say
-  that <i>event \(e\) occurs in round \(R(e)\).</i>
+  A lost message has no effect other than the deletion of the message
+  from a channel.
 
-  Round ids are similar, but not identical, to logical times.
+  The algorithm may discard messages.
+
+  A discarded message is treated in exactly the same way as a lost message.
+  
+
+  <h2 class="w3-text-teal">Rounds</h2>
+
+  <p>
+  We consider algorithms in which each event \(e\) is assigned a
+  number \(R(e)\) called \(e\)'s round id, and we say
+  that <i>event \(e\) occurs in round \(R(e)\).</i>
+  Round ids are similar to logical times.
+
+  <p>
+  Round ids of later events at an agent are the same as, or
+  greater than, round ids of earlier events at the same agent.
+  In contrast, logical times at an agent are <i>strictly
+  greater than</i> logical times of earlier events at the same agent.
+
+  <p>
+  An event \(e\) is said to occur in <i>past rounds</i> of an event
+  \(e'\) when \(R(e) < R(e')\); in <i>future rounds</i>  when \(R(e) >
+  R(e')\); and in the same round when \(R(e) = R(e')\)
 
   <h4 class="w3-text-teal">Rules for Assigning Rounds</h4>
-  The following rules are used to assign a round to an event
-  \(e\) at an agent \(A\).
+  The following rules are used to assign round ids to events.
 
-  Let \(e'\) be the event immediately preceding \(e\) at \(A\). 
 
-  <ol>
-    <li>
-    If a message is sent in an event in round \(r\) then the message is
-    assigned a timestamp \(r\).
-    </li>
-    <li>
-    If \(e\) is an event in which no message is received then \(R(e)\)
-    is assigned any value such that \(R(e) \geq R(e')\).
-    </li>
-    <li>
-    If \(e\) is an event in which a message with timestamp \(r\) is
-    received,
-    <ol>
-      <li>
-      If \(r < R(e')\) then the message is discarded i.e., treated
-      as lost, and event \(e\) is removed from the causality graph
-      because it does not change the state of the receiver.
-      </li>
-      <li>
-      If \(r \geq R(e')\) then \(R(e) = r\), and the message is
-      processed, and event \(e\) is in the causality graph.
-      </li>
-    </ol>
-  </ol>
-  A consequence of these rules is that <i>messages stay within a
-    round.</i> 
-  A message sent in round \(r\) is either discarded  -- treated as
-  lost -- or received in round \(r\).
-  And a message received (i.e. not discarded) in round \(r\) was
-  sent in round \(r\).
+<p>
+A message sent in an event in round \(r\) is assigned a timestamp
+\(r\).
 
+Let \(e\) be the event at the receiver that
+immediately precedes the arrival of the message at the receiver.
+
+If a message with timestamp \(r\) arrives at the receiver then:
+<ol>
+  <li>
+  if \(r < R(e)\) the message is discarded.
+  </li>
+  <li>
+  If \(r \geq R(e)\) the message is discarded or
+  received depending on the specific algorithm. If the message is
+  received then the event in which the message is received is assigned
+  round id \(r\).
+  </li>
+</ol>
+A consequence of these rules is: <i>A message is either (a) discarded
+or lost, or (b) received in the same round as it was sent.</i>
 
   
 
@@ -223,22 +233,23 @@ In this timeline, for every edge from \(e'\) to \(e\) in the causality
     alt="Fig3" style="width:100%"> 
     <figcaption>Fig. 3: Timeline as Sequence of Rounds
   </figure>
-  In the timeline of figure 3, messages are received in the same round
-    that they are sent.
+  In the timeline of figure 3, events in a round occur after events in
+   past rounds and before events in future rounds. Also messages are
+   received in the same round in which they are sent.
 
 
   <!---------------------------------->
 <h3 class="w3-text-teal">Theorem</h3>
 Given any computation \(C\) of an algorithm in which messages may be lost,
 where the algorithm follows the rules for assigning rounds, there
-exists a computation:
+exists a computation \(C'\):
 <ol>
   <li>
   with the same causality graph as \(C\) and
   </li>
   <li>
-  in which events in later rounds occur after events in earlier
-  rounds, and
+  in which events with higher round ids occur after events with lower
+  round ids, and
   </li>
   <li>
   messages sent in a round are received in the same round.
@@ -264,16 +275,23 @@ in round \(r\) are received in round \(r\).
   <h5 class="w3-text-teal">A Technique for Analyzing Algorithms in
 Systems with Message Loss</h5>
 
-We can simplify the analysis of algorithms in which messages may be
-lost.
+We will use the results given here to simplify the analysis of
+algorithms in which messages may be lost.
 
-Instead of analyzing a given computation we analyze a computation with
-the same causality graph, in which events occur in rounds and messages
-stay within a round.
+Instead of proving properties of a given computation we prove
+properties of a computation with the same causality graph, in which
+events occur in rounds and messages stay within a round.
 
-Analyzing a single round can be simpler than analyzing arbitrary
-computations as we see in the consensus algorithm
-  <a href="../Paxos/PaxosFinal.html">Paxos</a>
+Proofs about the states of agents in any computation apply to all
+computations with the same causality graph.
+
+<p>
+Proving properties about computations that occur in rounds is simpler
+than proving properties of arbitrary computations.
+
+We apply this technique in proving the correctness of 
+<a href="../Paxos/PaxosFinal.html">Paxos</a>
+an algorithm by which agents reach consensus.
 
 <h4 class="w3-text-red">
 <i>Central Ideas: Review</i></h4>
