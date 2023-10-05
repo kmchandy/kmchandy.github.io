@@ -103,6 +103,29 @@ hr.new1 {
   </p>
   These ideas are described in terms of timelines.
 
+
+ 
+  <!---------------------------------------------------------------->
+  <h2 class="w3-text-teal">Timelines</h2>
+  <!---------------------------------------------------------------->
+  A <i>timeline of a computation</i> is a labeled, directed, acyclic graph in
+  in which a vertex represents a step; vertices are laid
+  out from left to right in the order of steps in the computation; and edges are as
+  follows:
+  <ol>
+    <li>
+    <i>Agent Edges</i>: There is an edge from (the vertex representing) a step in which an
+    agent executes an action to the next step in which that agent
+    executes an action. The edge is labeled with the state of the agent between the steps.
+    </li>
+    <li>
+    <i>Message Edges</i>: There is an edge from a step in which a
+    message is sent to the step in which the message is received; the
+  edge is labeled with the message.
+    </li>
+  </ol>
+  
+  
   <!---------------------------------------------------------------->
   <h3 class="w3-text-teal">Historical Timelines</h3>
   <!---------------------------------------------------------------->
