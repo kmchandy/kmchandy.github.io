@@ -85,7 +85,8 @@ hr.new1 {
 This module describes a Byzantine consensus algorithm in which
 messages are not encrypted. An agent <i>x</i> that receives a message signed by
 an agent <i>y</i> cannot tell whether <i>y</i> signed the message or
-whether some other agent forged <i>y</i>'s signature and corrupted the message.
+whether some other agent forged <i>y</i>'s signature and corrupted the
+  message.
 </p>
 
 <p>
@@ -93,53 +94,80 @@ This module describes solutions to the Byzantine problem with oral
 messages whereas the previous module studied the problem with written
 messages.  For convenience we repeat the problem specification next.
 
-<p>
-A general has \(N\) army units each of which is led by a lieutenant
-who may be either loyal or disloyal.
-The general may, likewise, be loyal or disloyal.
+  <p>
+  An agent is a general or a lieutenant.
+  An agent may be loyal or disloyal.
+  Let \(N\) be the number of agents and \(t\) the number of disloyal
+  agents. 
+  
 The general sends a command to
 each lieutenant where the command is either attack or retreat.
-A loyal general sends the same message to all lieutenants whereas a
-disloyal general may send different messages to different lieutenants.
-Each
-lieutenant decides to attack or retreat at the end of the
+A loyal general sends the same command to all lieutenants whereas a
+disloyal general may send different commands to different lieutenants.
+Each lieutenant decides to attack or retreat at the end of the
 algorithm.
-If the general is loyal then the decision made by each loyal
-lieutenant is the message that the general sent to that
-lieutenant. Even if the general is disloyal, all loyal lieutenants
-must make the same the decision.
+
+  <p>
+  If all loyal lieutenants get the same command then each loyal
+  lieutenant obeys the commands that it received; if the command is
+  attack then each loyal lieutenant attacks, and if the command is
+  retreat then each loyal lieutenant retreats.
+  <p>
+ Even if loyal lieutenants receive different commands, all loyal
+  lieutenants make the same the decision; either all loyal lieutenants
+  attack or all loyal lieutenants retreat.
+
+  <h4 class="w3-text-teal">Notation</h4>
+
+  We use indices \(i, j, k\) for loyal agents; \(x, y\) for
+  generic agents who may be loyal or disloyal; and \(e\) for
+  disloyal agents.
+  Nothing in an agent's id or data identifies the agent as loyal or
+  disloyal.
+  Moreover, the algorithm does not have to discover which agents act
+  disloyally.
+
+  <p>
+  For a nonempty list \(L\), we use the Python notation \(L_{*}\) to
+  refer the last element of the list.
+  For example, if \(L = [5, 6]\), then \(L_{*} = 6\).
+
+  <p>
+  For a list \(L\) and an element \(x\), the notation \(L , x\) represents a list
+consisting of \(x\) appended to the tail of \(L\).
+For example, if \(L\) is the list \([1, 2]\) then \(L , 3\) is the
+  list \([1, 2, 3]\), and \(L, 3, 4\) is the list \([1, 2, 3, 4]\).
 
 <p>
-Let \(m[i]\) be the message that the general sends
-lieutenant \(i\), and let \(a[i]\) be the decision the lieutenant
-\(i\) makes. Let \(m*\) be the message that a loyal general sends to
-all lieutenants; so if the general is loyal \(m[i] = m*\) for all
-\(i\).
+The general is the agent with index \(0\), and the lieutenants have indices \(1,
+\ldots, N-1\).
 
-<h4 class="w3-text-teal">Specification</h4>
-The specification has two parts:
-    <ol>
-      <li>
-      <i>Validity</i>: Loyal lieutenants must obey a loyal
-      general.
-      <p>
-      \(
-      (\forall i: m[i] = m*) \; \Rightarrow \;
-      (\forall \; \textrm{loyal lieutenants} \; j: a[j] = m*)
-      \)
-      
-      </li>
-      <li><i>Consensus</i>: Loyal lieutenants must make the same
-      decision.
-      <p>
-      \(
-      (\forall \; \textrm{loyal lieutenants} \; j, k: a[j] = a[k])
-      \)
-      
-      </li>
-  </ol>
+<p>
+   Let \(m[x]\) be the message that the general sends
+lieutenant \(x\), and let \(a[x]\) be the decision the lieutenant
+  \(x\) makes.
 
-<h4 class="w3-text-teal">Assumptions</h4>
+<h3 class="w3-text-teal">Specification</h3>
+The specification has two parts, validity and consensus.
+
+  <h4 class="w3-text-teal">Validity: Loyal lieutenants obey a loyal general.</h4>
+  
+  <p>
+  If all loyal lieutenants get the same message then each loyal
+    lieutenant obeys the message that it receives.
+  <p>
+  \(
+  (\forall i, j: m[i] = m[j]) \quad \Rightarrow
+\quad (\forall i: a[i] = m[i])
+\)
+
+<h4 class="w3-text-teal">Consensus: Loyal lieutenants make the same
+decision.</h4>
+\(
+\forall i, j: a[i] = a[j]
+\)
+
+<h3 class="w3-text-teal">Assumptions</h3>
 The oral Byzantine version makes fewer assumptions than the written
   version. The assumptions made are as follows: 
 <ol>
@@ -171,16 +199,11 @@ message.
 By contrast, in the oral, or unencrypted version, any agent can
 forge any agent's signature and send corrupted messages.
 
-<h4 class="w3-text-teal">Bounds</h4>
-Throughout this module \(t\) is an upper bound on the number of
-disloyal agents.  We will show later that there is no solution when
-the the number of loyal agents is less than or equal to \(2t\). Next
-we describe an algorithm in which there are more than \(2t\)
-non-faulty agents. So the total number of agents is at least \(3t +
-1\) agents.
 
-<h2 class="w3-text-teal">Algorithm</h2>
 
+
+
+<h2 class="w3-text-teal">Byzantine Generals Algorithm</h2>
 Messages in the algorithm are either <i>attack</i> or <i>retreat</i>
 messages.  If an agent \(x\) does not receive a message from an agent
 \(y\) on a round then \(x\) treats the absence of the message from
@@ -190,729 +213,279 @@ from \(y\). So, the algorithm only deals with <i>attack</i> and
 takes if it does not receive a message.
 
 <p>
-First, we define an algorithm \(B(k)\) recursively
-for nonnegative integers \(k\). The agents in this algorithm are a
-single general and one or more lieutenants. We describe the algorithm
-for an arbitrary number of lieutenants, some of which may be disloyal.
-Later, we will show how algorithm \(B\) is
-used to solve the Byzantine problem where there are at least \(3t +
-1\) agents, of which at most \(t\) are disloyal.
+First we describe the flow of message in the algorithm and then
+describe the algorithm
+
+
+<h4 class="w3-text-teal">Message Flow</h4>
+Messages flow along a tree of height \(t + 1\).
+
+The root node is \(m[0]\) which represents the general's command.
+Each node of the tree is of the form \(m[L]\) where \(L[0] = 0\) and
+\(L[1, \ldots, ]\) is a list of lieutenants where each lieutenant
+appears at most once.
 
 <p>
-The structure of algorithm \(B(k)\), for all \(k\), is as follows.
-<p>
-The general sends command \(m[i]\) to lieutenant \(i\), for each
-lieutenant. If the general is loyal, then the general sends the same
-message, \(m*\), to all agents, and therefore \(m[i] = m*\) for all
-\(i\).  If the general is disloyal then the messages, \(m[i]\), are
-arbitrary.
+The next figure illustrates a part of the messaging tree for \(N = 7,
+t = 2\).
+(There is insufficient space to show the complete tree.)
 
-<p>
-Each lieutenant \(i\) computes a value \(a[i]\). A loyal lieutenant \(i\)
-follows the specified algorithm to determine \(a[i]\). A disloyal
-lieutenant \(i\) sets \(a[i]\) to an arbitrary value. Next we describe
-the algorithm followed by loyal agents.
-
-<p class="w3-text-teal">Base Case. \(B(0)\)</p>
-The general sends message \(m[i]\) to lieutenant \(i\), for each \(i\).
-Loyal lieutenant \(i\) sets \(a[i] = m[i]\)
-
-<p class="w3-text-teal">Inductive Step: \(B(k), k > 0\)</p>
-<ol>
-  <li>
-  Step 0: The general sends message \(m[i]\) to lieutenant \(i\), for
-  each \(i\). 
-  <p>
-  The general plays no further part in the algorithm.
-  </li>
-  <li>
-  Step 1 - Messaging: Each lieutenant \(i\) acts as a general for
-  algorithm \(B(k-1)\) executed on a new problem.
-  The lieutenants in this new problem are the
-  lieutenants in the original problem other than
-  \(i\) itself. In the new problem,
-  lieutenant \(i\), acting as a general, sends command \(m[i,j]\) to
-  lieutenant \(j\). 
-  <p>
-  If lieutenant \(i\) is loyal then \(m[i, j] = m[i]\).
-  <p>
-  </li>
-  <li>
-  Step 2 - Aggregation:
-  Let \(a[i, j]\) be the value that agent \(j\) computes
-  using algorithm \(B(k-1)\) for the new
-  problem in which lieutenant \(i\) acts as the general
-  and \(j\) is a lieutenant. 
-  <p>
-  A loyal agent \(i\) sets \(a[i]\), in the original problem
-  to be the
-  majority value of a set \(S\) defined as follows.
-  <p> \(S\) consists of \(m[i]\) and
-  \(a[j, i]\), for all lieutenants \(j\) in the new problem in which
-  \(i\) acts as the general.
-  <p>
-  \(
-  S = \{m[i]\} \bigcup \{a[j,i] | j \neq i\}
-  \)
-  </li>
-</ol>
-
-<p class="w3-text-teal">Diagrams Illustrating the Algorithm</p>
-The algorithm operates in a sequence of steps with step \(k\)
-providing input and getting output from step \(k -1\), for \(k > 0\).
-Th algorithm stops at step \(t\).
-
-The diagram below illustrates the algorithm. The problem has a
-general, \(0\), and \(n\) lieutenants indexed \(1, \ldots, n\).
-In the diagram,  the red dotted box represents step \(k\) in which
-there are \(n\) executions of \(B(k)\), one call to \(B(k)\) for each
-lieutenant.
-
-<p>
-The general  sends message \(m[i]\) to lieutenant \(i\).
-The decision made by lieutenant \(i\) in step \(k\) is \(a[i]\).
-Step \(k\) has input \(m[1, \ldots, n]\) and output \(a[1,
-\ldots, n]\). 
 <figure>
-    <img src="Byzantine_5/Byzantine_5.001.jpeg" alt="Fig1" style="width:120%">
-    <figcaption>Fig.1: A Data Flow Graph</figcaption>
+    <img src="Byzantine_5/Byzantine_5.001.jpeg" alt="Fig1" style="width:100%">
+<figcaption>Fig.1: A Part of the Message Tree for General and 6 Lieutenants
+</figcaption>
 </figure>
 
-<p class="w3-text-teal">Inductive Step:</p>
-Step \(k\) step generates inputs for, and gets outputs from, step
-\(k-1\) for \(k > 0\).
-The diagram below shows the flow of data between steps \(k\) and \(k-1\).
+
+<p>
+Each non-leaf node \(m[L]\) in the tree has a child \(m[L,
+x]\) for each lieutenant \(x\) that is not in \(L\).
+For example, \(m[0]\) has children \(m[0,1], m[0,2], \ldots, m[0,
+N-1]\).
+
+
+
+<p>
+\(m[0,x]\) is the message that lieutenant \(x\) receives from the general.
+\(m[0, x_{0}, \ldots, x_{k}]\) is the message that
+lieutenant \(x_{0}\) receives from the general and forwards to
+lieutenant \(x_{1}\),
+...
+which in turn forwards the message to lieutenant \(x_{n-1}\),
+which in turn forwards the message to lieutenant \(x_{n}\).
+
+
+<p>
+If the general is loyal then it sends the same message to all
+lieutenants: \(m[0,x] = m[0]\) for all \(x\).
+Loyal lieutenants forward the messages that they receive; however,
+disloyal lieutenants may send arbitrary messages.
+
+
+<h4 style="color:red;">Example</h4>
+
+The diagram below shows a situation in which the general is loyal and
+sends attack messages to all lieutenants.
+Lieutenant 1 is disloyal (shown as a dashed circle).
+Lieutenant 1 sends retreat messages to some lieutenants and attack
+messages to others.
+Lieutenant 2 is loyal, and so it broadcasts the message that
+it receives.
+
+
 <figure>
-    <img src="Byzantine_5/Byzantine_5.002.jpeg" alt="Fig1" style="width:120%">
-    <figcaption>Fig.2: A Data Flow Graph</figcaption>
+    <img src="Byzantine_5/Byzantine_5.002.jpeg" alt="Fig2" style="width:100%">
+    <figcaption>Fig.2: Edges Aggregation Dataflow Trees
+</figcaption>
 </figure>
 
-The general sends message \(m[i]\) to each lieutenant \(i\). The
-messages are shown as edges directed to the vertex labeled \(m[i]\),
-which are inputs to step \(k\).
+
+
+<h4 class="w3-text-teal">Aggregating Phase</h4>
+Messages received by a lieutenant are processed by the lieutenant in
+steps that are also represented by a tree called the <i>aggregation tree</i>.
+The aggregation tree has a node \(a[L]\) for each node \(m[L]\) of the
+message tree.
+<p>
+The diagram below shows a part of the aggregation tree for \(N=7,
+t=2\); these are the processing steps of lieutenant 1.
+
+
+<figure>
+    <img src="Byzantine_5/Byzantine_5.003.jpeg" alt="Fig3" style="width:100%">
+    <figcaption>Fig.3: Aggregation Tree: Steps for Lieutenant 1
+</figcaption>
+</figure>
 
 <p>
-Each lieutenant \(i\) executes \(B(k)\), and as part of executing \(B(k)\)
-lieutenant \(i\) sends message \(m[i, j]\) to lieutenant \(j\) for all
-\(j \neq i\). A loyal lieutenant broadcasts the message that it
-receives.
-<p>
-For all loyal lieutenants \(i\) and all lieutenants \(j\):
-<br>
-\(m[i, j] = m[i]\)
-<p>
-The
-message sent by lieutenant \(1\) to lieutenant \(2\) is shown as an
-edge from vertex \(m[1]\) to vertex \(m[1,2]\). All the edges aren't
-shown in the diagram so as not to crowd the picture.
+Each node \(a[L, i]\) of the tree has a child \(a[L, x, i]\) for each
+\(x\) that is not in \([L, i]\).
+For example, \(a[0, 1]\) has children \(a[0, 2, 1], a[0, 3, 1], \ldots
+a[0, 6, 1]\).
 
-<p>
-There are \(n\)
-inputs, \(m[1, \ldots, n]\) to step \(k\), and \(n \times (n-1)\)
-inputs to step \(k-1\). Likewise, there are \(n\)
-calls to \(B(k)\) in step \(k\), and \(n \times (n-1)\)
-calls to \(B(k-1)\) in step \(k-1\).
+<p class="w3-text-teal">Connections from Messaging to Aggregating Nodes</p>
+There is an edge directed from each message node \(m(L)\) to the aggregation
+node \(a(L)\).
+For example, there are edges from \(m[2, 3, 1]\) to \(a[2, 3,
+1]\), and from \(m[2, 1]\) to \(a[2, 1]\), and from  \(m[1]\) to
+\(a[1]\). 
 
-<p>
-The outputs of step \(k-1\) are \(a[i,j]\) for lieutenants \(i, j\)
-where \(i \neq j\). The decision made by lieutenant \(j\) in the
-Byzantine problem in which lieutenant \(i\) acts as the general and
-\(j\) acts as a lieutenant. The outputs of step \(k\) are computed from the
-outputs of step \(k-1\) as follows.
-<p>
-\(
-a[i] = \textrm{majority}(\{m[i]\} \bigcup \{a[j, i] | j \neq i\})
-\)
-<p>
+<p class="w3-text-teal">Output of Aggregating Nodes</p>
+The output of an aggregation node is the majority of its inputs.
 For example:
 <p>
 \(
-a[1] = \textrm{majority}(m[1], a[2, 1], a[3, 1], \ldots, a[n, 1])
-\)
-<br>
-\(
-a[2] = \textrm{majority}(m[2], a[1, 2], a[3, 2], \ldots, a[n, 2])
+  a[2, 1] = \textrm{majority}(m[2, 1], a[2, 3, 1], a[2, 4, 1], \ldots, a[2, 6, 1])
 \)
 <p>
-The variables \(m[i]\), \(a[i]\), and \(a[j, i]\)
-are local to lieutant \(i\). So the calculation of \(a[i]\) does not
-require communication.
+If there are an equal number of attack and retreat inputs, then the
+majority value is defined to be any default value.
 
+<h3 style="color:red;">Example</h3>
 
-<p>
-We partition the algorithm into two phases: a  <i>messaging</i> phase
-in which lieutenants send messages to each other, and an
-<i>aggregating</i> phase in which each lieutenant carries out
-computations on its own local data without communicating with other
-lieutenants. In the diagram, the red edges represent messages
-in the messaging phase, and blue edges represent dataflow in the
-aggregating phase.
-
-<p class="w3-text-teal">Step 0</p>
-In step 0, the decision made by each lieutenant is in the message that
-it receives.
-<p>
-\(
-\forall i: \; a[i] = m[i]
-\)
-The next diagram illustrates step 0.
-<figure>
-    <img src="Byzantine_5/Byzantine_5.003.jpeg" alt="Fig3" style="width:100%">
-    <figcaption>Fig.3: Step 0</figcaption>
-</figure>
-
-<h3 style="color:red;">Examples</h3>
-
-The next diagram shows the messaging and aggregation phases with a
-general and 3 lieutenants, and steps 1 and 0.
+The next diagram shows the data flow -- messaging and aggregation
+trees, and the connections between them -- for a system where
+\(N=4, t=1\).
 
 <figure>
     <img src="Byzantine_5/Byzantine_5.004.jpeg" alt="Fig4" style="width:100%">
-    <figcaption>Fig.4: Steps 1 and 0</figcaption>
+    <figcaption>Fig.4: Dataflow for 4 agents 1 of which is disloyal</figcaption>
 </figure>
 
-<h4 style="color:red;">Example: 4 officers, loyal general.</h4>
-The next diagram shows a situation in which the general and
-lieutenants 1 and 2 are loyal and lieutenant 3 is disloyal. The
-messages sent by the general are shown as green edges. Let \(m^{*}\)
-be the message broadcast by the general.
-<p>
-Lieutenants 1
-and 2 transmit the message they receive from the general, and so the
-edges from \(m[1]\) and \(m[2]\) are also shown as green
-edges.
-<p>
-\(m[1, 2] = m[1] = m^{*}\)
-<p>
-\(m[2, 1] = m[2] = m^{*}\)
+
+<!----------------------------------------------------->
+<h3 class="w3-text-teal">Inductive Generation of the Data Flow</h3>
+
+The basic unit of data flow, which is replicated many times, is shown
+in the top diagram of the figure below.
+The input to the unit is a node \(m[L]\) of the message tree; this
+unit is specified by \(L\),and the message \(m[L]\).
+The output of the unit are nodes \(a[L, x]\) of the
+aggregation tree, for all lieutenants \(x\) not in \(L\).
 
 <p>
-Lieutenant 3 may send any message; so the edges from \(m[3]\)
-are colored red representing \(?\) or unknown.
-<p>
-\(m[3, 1] = ? \) and \(m[3, 2] = ? \)
-
-<p>
-The decisions \(a[1]\) and \(a[2]\), made by lieutenants 1 and 2, are
-computed as the majority of values in 2 green edges and 1 unknown
-value along the red edge --- and that is the value on green edges.
+The base case of the induction is a node at depth \(t\).
+The input for the base case is \(m[L]\) where \(L\) is a list starting
+with \(0\) and followed by \(t\) lieutenants.
+For the base case, \(a[L, x] = m[L, x]\) for all \(x\).
+The base case is illustrated in the lower diagram.
 
 <figure>
     <img src="Byzantine_5/Byzantine_5.005.jpeg" alt="Fig5" style="width:100%">
-    <figcaption>Fig.5: Example with loyal general</figcaption>
+    <figcaption>Fig.5: Structure of Dataflow</figcaption>
 </figure>
 
-<p>
-Let's use algebra rather than diagrams to prove the correctness
-of the algorithm for this example.
-<p>
-\(S_{1}\) be the elements over which the majority is taken to compute
-\(a[1]\).
-<p>
-\(
-S_{1} = m[1], a[2,1], a[3,1] = m[1], m[2,1], m[3,1]
-\)
-<p>So,
-\(
-S_{1} = m[1], m[2], m[3,1] = m^{*},  m^{*}, ?
-\)
-<p>
-And therefore \(a[1] = m^{*}\). By the same argument, \(a[2] =
-m^{*}\).
-<p>
-We see that in this example, loyal lieutenants obey the loyal
-general. 
-
-<h4 style="color:red;">Example: 4 officers, disloyal general.</h4>
-
-The next diagram shows a situation in which the general is disloyal
-while lieutenants 1, 2 and 3. The general sends unknown values to each
-of the lieutenants. The unknown values are shown as messages colored
-black, blue and red to lieutenants 1, 2, and 3
-respectively. Lieutenants 1, 2
-and 3 transmit the messages that they receive from the general, and so the
-edges from \(m[1]\), \(m[2]\)  and \(m[3]\) are also black, blue, and
-red, respectively.
-
-<p>
-The decisions \(a[1]\), \(a[2]\), and \(a[3]\) made by lieutenants 1,
-2, and 3, are
-computed as the majority of values in 1 black edge, 1 blue edge and 1
-red edge. Regardless of what values are transmitted along these edges,
-all the majorities are computed on identical sets, and so the results
-are identical. So we
-see that in this example, loyal lieutenants come to a consensus though
-the general is disloyal.
-
-
+The data flow connecting a message node \(m[L]\) at depth \(d < t\) to
+aggregation nodes \(a[L,x]\) is shown below.
 <figure>
     <img src="Byzantine_5/Byzantine_5.006.jpeg" alt="Fig6" style="width:100%">
-    <figcaption>Fig.5: Example with disloyal general</figcaption>
+    <figcaption>Fig.6: Structure of Dataflow</figcaption>
 </figure>
 
+Message node \(m[L]\) feeds message nodes \(m[L,x]\).
+The connections between \(m[L,x]\) and aggregation nodes \(a[L,x,y]\)
+are specified by the data flow connecting nodes of depth \(d + 1\),
+shown in the diagram by blue dotted lines.
+
 <p>
-Let's use algebra rather than diagrams to prove the correctness
-of the algorithm for this example.
-<p>
-Let \(S_{1}, S_{2}\) be the elements over which the majority is taken to compute
-\(a[1], a[2]\), respectively.
+The value of an aggregation node is the majority of its inputs.
 <p>
 \(
-S_{1} = m[1], a[2,1], a[3,1] = m[1], m[2,1], m[3,1]
+a[L,i] = \textrm{majority}(m[L,i], [\forall x \notin [L, i]: a[L, x, i]])
+\)
+<p>
+For example,
+<p>
+\(
+a[0, 1, 2] = \textrm{majority}(m[0,1,2], a[0, 1, 3, 2], a[0, 1, 4, 2],
+a[0, 1, 5, 2], \ldots)
+\)
+
+
+
+<h3 class="w3-text-teal">Proof of Validity</h3>
+We prove that for all nodes \(m[L]\) of the message tree, if \(L_{*}\)
+is loyal then for all \(i\) not in \(L\):
+<p>
+\(
+a[L, i] = m[L]
+\)
+
+<p>
+The proof is by induction.
+The base case is for message nodes at depth \(t\).
+We prove that if validity holds for message nodes at depth \(d > 0\)
+then it holds for message nodes at depth \(d-1\).
+
+<h4 class="w3-text-teal">Base Case</h4>
+See the lower diagram of figure 5. 
+For a message node \(m[L]\) at depth \(t\),
+<p>
+\(
+a[L, i] = m[L, i]
+\)
+<p>
+If \(L_{*}\) is loyal then \(m[L, i] = m[L]\).
+and the result follows.
+
+
+
+
+<h4 class="w3-text-teal">Inductive Step</h4>
+<p>
+See figure 6.
+
+<p>
+A node \(L\) at depth \(d\) consists of \(d+1\) agents.
+Therefore, there are at least \(3t+1 - (d+1)\) lieutenants that are not in
+\(L\).
+Because \(d \leq t\) there are at least \(2t\) not in \(L\).
+So, at least \(t\) lieutenants not in \(L\) are loyal and at most
+\(t\) of them are disloyal.
+
+<p>
+Because \(L_{*}\) is loyal, \(m[L,i] = m[L]\).
+<p>
+By the induction assumption, for each loyal lieutenant \(j\) not in \(L\), and for each loyal
+lieutenant \(i\) not in \([L, j]\):
+\(
+a[L, j, i] = m[L, i] = m[L]
 \)
 <p>
 \(
-S_{2} = m[2], a[1,2], a[3,2] = m[2], m[1,2], m[3,2]
+a[L, i] = \textrm{majority}(m[L,i], [\forall j \notin [L, i]: a[L, j,
+i]])
 \)
 <p>
-Because lieutenants \(1, 2\) are loyal:
-<p>
-\(m[1] = m[1,2]\) and \(m[2] = m[2,1]\).
+The majority is taken over at least \(t + 1\) values equal to
+\(m[L]\),
+and at most \(t\) values that are different from it. And
+therefore \(a[L, i] = m[L]\)
+
+<h3 style="color:red;">Example</h3>
+
+The next illustrates the proof of validity. Message \(m[L]\) is
+shown in red, and the flow of correct messages is shown in red edges
+and red nodes. For example, nodes \(m[L, i], m[L, j], m[L, i, j],
+m[L, j, i]\) are red because agents \(i, j\) are loyal.
 
 <p>
-Therefore, \(S_{1} = S_{2}\),
-and so \(a[1] = a[2]\).
-
-<p>
-By the same argument:
-<p>
-\(
-a[1] = a[2] = a[3]
-\)
-<p>
-So we
-see that in this example, loyal lieutenants come to a consensus though
-the general is disloyal.
+A disloyal agent is represented by the symbol \(e\).
+The output of a disloyal agent is unknown and is shown in black.
+Node \(a[l. i]\) gets more than \(2t\) red inputs and at most \(t\)
+black inputs, and hence the majority of its inputs is red.
 
 
-<h4 class="w3-text-teal">DataFlow</h4>
-The flow of data in the steps of the algorithm help in understanding
-the algorithm and its proof. If you wish you can skip this section and go directly
-to the proof.
-
-<p>
-The vertices in the messaging and aggregation phases are labeled
-\(m[i_{1}, \ldots, i_{r}]\), and \(a[i_{1}, \ldots, i_{r}]\) where the
-\(i_{j}\) are distinct for \(1 \leq j \leq r\).
-Lieutenant \(r\) receives message \(m[i_{1}, \ldots, i_{r}]\) and
-computes \(a[i_{1}, \ldots, i_{r}]\).
-
-<p class="w3-text-teal">Messages</p>
-\(m[i_{1}, \ldots, i_{r}]\) for \(r > 1\) is a message sent by lieutenant
-\(i_{r-1}\) to lieutenant \(i_{r}\). For \(r = 2\), think of the
-message \(m[i_{1}, i_{2}]\), as the message that lieutenant \(i_{1}\)
-tells lieutenant \(i_{2}\) that lieutenant \(i_{1}\) received from the
-general. Likewise, for \(r > 2\), think of the
-message \(m[i_{1}, \ldots, i_{r}]\) as the message that lieutenant \(i_{r-1}\)
-tells lieutenant \(i_{r}\) that lieutenant \(i_{r-1}\) received from
-lieutenant \(i_{r-2}\) on a step.
-
-<p class="w3-text-teal">Local Computation</p>
-The edges that represent dataflow within the same lieutenant are as
-follows.
-<ol>
-  <li>
-  from \(m[i_{1}, \ldots, i_{r}]\) to \(a[i_{1}, \ldots, i_{r}]\),
-  dataflow local to lieutenant \(i_{r}\).
-  </li>
-  <li>
-  for \(r > 1\):
-  from \(a[i_{1}, \ldots, i_{r}, i_{r+1}]\) to \(a[i_{1}, \ldots, i_{r-1},
-  i_{r+1}]\),  dataflow local to lieutenant \(i_{r+1}\).
-  </li>
-</ol>
-  
-There is a dataflow edge from \(m[i_{1}, \ldots, i_{r}]\) to
-\(a[i_{1}, \ldots, i_{r}]\). This edge represents local dataflow within
-lieutenant \(i_{r}\). There is also a local dataflow edge from \(a[i_{1}, i_{2}]\) to
-\(a[i_{2}]\) which represents computation within lieutenant \(i_{2}\).
-Likewise, for \(r > 2\), there is a dataflow edge from
-\(a[i_{1}, \ldots, i_{r-1}, i_{r}]\) to \(a[i_{1}, \ldots, i_{r-2},
-i_{r}]\). This edge also represents dataflow within lieutenant
-\(i_{r}\). 
-
-
-<h5  style="color:red;">Example: Dataflow with 7 lieutenants</h5>
-Skip this example if the dataflow graph is clear.
-The next diagrams illustrate messaging and aggregation phases for a
-problem with 7 lieutenants. There are too many vertices to show all of them.
 <figure>
     <img src="Byzantine_5/Byzantine_5.007.jpeg" alt="Fig7" style="width:100%">
-<figcaption>Fig.7: Message Flow Tree
-</figcaption>
+    <figcaption>Fig.7: Illustration of Validity</figcaption>
 </figure>
 
 
-<figure>
-    <img src="Byzantine_5/Byzantine_5.008.jpeg" alt="Fig8" style="width:100%">
-    <figcaption>Fig.8: Edges Aggregation Dataflow Trees
-</figcaption>
-</figure>
+<h3 class="w3-text-teal">Proof of Consensus</h3>
+We will prove consensus for nodes at depth \(d\) if the number of
+faulty nodes is at most \(t-d\).
 
-
-<h5  style="color:red;">Exercise</h5>
-As an exercise, determine the data flowing along the edges of the
-dataflow graph for two cases:
-<ol>
-  <li>
-  Non-faulty general: agents 0, 1, 2, 3, 4 are non-faulty and
-  agents 5, 6 are faulty.
-  </li>
-  <li>
-  Faulty general: agents 1, 2, 3, 4, 5 are non-faulty and
-  agents 0, 6 are faulty.
-  </li>
-</ol>
-
-
-<h3 class="w3-text-teal">Proof of Correctness</h3>
-The proof that the algorithm is correct has two parts. The first part
-deals only with validity, i.e., this part assumes that the general is loyal. The
-second part deals with consensus as well as validity.
-
-<h4 class="w3-text-teal">Theorem 1: Validity</h4>
-If the general is loyal and there are at \(m\) lieutenants where \(m
-\geq 2 \times t + k\) and there are at most \(t\) disloyal lieutenants, then step
-\(k\) satisfies validity.
+<h4 class="w3-text-teal">Base Case \(d = t\)</h4>
+In this case there are no disloyal lieutenants. For each \(i, j\),
+\(m[L,i]\) and \(m[L,j]\) are arbitrary; however \(m[L, i] = m[L,
+j]\).
 <p>
-Note that in step \(k\), algorithm \(B(k)\) is called \(m\) times.
-<p>
-The theorem is illustrated in the diagram below.
-<figure>
-    <img src="Byzantine_5/Byzantine_5.009.jpeg" alt="Fig9" style="width:100%">
-    <figcaption>Fig.9: Edges Aggregation Dataflow Trees
-</figcaption>
-</figure>
-
-<h5 class="w3-text-teal">Proof</h5>
-The proof is by induction. The base case is for \(k = 0\), and is
-straightforward because when the general broadcasts message \(m*\):
-<p>
-\(\forall i: \; a[i] = m[i] = m*\)
-<p>
-as shown in the diagram below.
-
-
-<figure>
-    <img src="Byzantine_5/Byzantine_5.010.jpeg" alt="Fig10" style="width:100%">
-    <figcaption>Fig.10: Edges Aggregation Dataflow Trees
-</figcaption>
-</figure>
-
-<p class="w3-text-teal">Inductive step</p>
-We assume that the theorem holds for all \(k < d\) and we prove that
-the theorem holds for \(k = d\).
-
-<p>
-Let the message broadcast by the general be \(m^{*}\). We will prove
-that for all loyal lieutenants \(j\): \(a[j] = m^{*}\)
-<p>
-In step \(k=d\) there are at least \(t+d\) loyal
-lieutenants. Therefore in step \(d-1\) there are at least \(t+d-1\) loyal
-lieutenants. So, for all loyal lieutenants \(i, j\):
-<p>
-\(a[i,j] = m^{*}\)
+\(a[L, i, j] = m[L, i]\)
 and
-\(a[j] = m[j] = m^{*}\)
-</p>
-and
-<p>
-\(
-a[j] = \textrm{majority}(m[j], \forall i \neq j : a[i, j])
-\)
-<p>
-The majority is taken over at least \(t + d\) values equal to
-\(m^{*}\). There are at most \(t\) values that are not 
-\(m^{*}\), and \(d > 0\). So,
-<p>
-\(
-a[j] = m^{*}
-\)
+\(a[L, j, i] = m[L, j]\).
+Therefore the inputs to \(a[L,i]\) and to \(a[L,j]\) are identical and
+the result follows.
+
+<h4 class="w3-text-teal">Inductive Step \(d < t\)</h4>
+If the general is loyal, then consensus follows from validity.
 
 <p>
-The structure of message and local data flow in the proof is illustrated in the
-diagram below.
-
-<figure>
-    <img src="Byzantine_5/Byzantine_5.011.jpeg" alt="Fig11" style="width:100%">
-    <figcaption>Fig.11: Edges Aggregation Dataflow Trees
-</figcaption>
-</figure>
-
-
-<h4 class="w3-text-teal">Theorem 2: Consensus</h4>
-Step \(t\) satisfies the specification  if there are \(n\)   
-officers (general and lieutenants) where \(n > 3.t\) and there are at
-most \(t\) disloyal officers.
-
-<h5 class="w3-text-teal">Proof</h5>
-The proof is by induction.
-
-<p class="w3-text-teal">Base Case \(t = 0\)</p>
-Step (t=0) satisfies the specification when there are \(t=0\) faulty
-agents. 
-
-
-<p class="w3-text-teal">Induction Step</p>
-We assume that the theorem holds \(t < d\) and we
-prove the theorem for \(t = d\).
-
-<p class="w3-text-teal">Validity</p>
- The theorem applies to the case of at least \(3 \times t + 1\)
- officers. In this case there are at least \(2 \times t\) loyal
- lieutenants. 
-
-<p>
-From theorem 1, step \(d\) satisfies validity provided the number of
-loyal lieutenants is at least \(t + d\) and the number of disloyal lieutenants is
-at most \(t\).
-Therefore, step \(t = d\) satisfies validity.
-
-<p class="w3-text-teal">Consensus</p>
-If the general is loyal, then consensus follows from validity: all
-loyal lieutenants come to a consensus because all of them obey the general.
-
-<p>
-Next, we consider the case of a disloyal general. In this case there
-are at most \(t - 1\) disloyal lieutenants.
-
-<p>
-
-Let \(j, k\) be loyal lieutenants. We will prove that they come to a
-consensus, i.e.,
-<p>
-\(a[j] = a[k]\).
-<p>
-in step \(t = d\) assuming that the theorem holds for \(t = d-1\).
-
-<p>
-(Note: We have already considered the base case of \(t = 0\).)
-
-<p>
-Let \(i\) be a lieutenant who may be loyal or disloyal.
-From the induction hypothesis, the theorem holds in step \(d
--1\). Therefore, the outputs of step \(d - 1\) satisfies the following
-equations.
-<p>
-Because lieutenants \(j\) and \(k\) reach consensus in step \(d - 1\):
-<br>
-\(
-a[i, j] = a[i, k]
-\)
-
-<p>
-Because lieutenant \(j\) is loyal, it broadcasts the message that it
-receives.
-<br>
-\(
-a[j, k] = m[j, k] = m[j]
-\)
-<p>
-Likewise, because lieutenant \(k\) is loyal:
-\(
-a[k, j] = m[k, j] = m[k]
-\)
-
-<p>
-From the algorithm:
-<p>
-\(
-a[j] = \; \textrm{majority}(m[j], (\forall i \neq  j: a[i, j]))
-\)
-<p>
-\(
-a[k] = \; \textrm{majority}(m[k], (\forall i \neq  k: a[i, k]))
-\)
-<p>
-Let \(S_{i}, S_{j}\) be the sets of values over which majorities are taken to
-compute \(a[i], a[j]\), respectively. Then, substituting for \(m[i]\)
-and \(m[j]\):
-<p>
-\(
-S_{i} = \; a[k,j], a[j, k],  (\forall i \notin  \{j, k\}: a[i, j]))
-\)
-<p>
-\(
-S_{j} = \; a[j,k], a[k, j],  (\forall i \notin  \{j, k\}: a[i, j]))
-\)
-<p>
-Therefore \(S_{j} = S_{k}\) and 
-\(
-a[j] = a[k]
-\).
-
-<h4  style="color:red;">Example: Idea underlying proof</h4>
-The next two diagrams illustrate the idea underlying the proof that
-the algorithm satisfies the consensus requirement. The diagram below
-shows the inductive assumption. The general is disloyal and sends unknown
-messages (either attack or retreat) to the lieutenants. The loyal
-lieutenants are shown to the left and disloyal ones to the right. The
-loyal lieutenants come to a consensus and this consensus is shown as
-purple-colored vertices for \(a[j]\) for loyal \(j\).
-
-<figure>
-    <img src="Byzantine_5/Byzantine_5.012.jpeg" alt="Fig12" style="width:100%">
-    <figcaption>Fig.12: Edges Aggregation Dataflow Trees
-</figcaption>
-</figure>
-
-The next diagram illustrates the arguments in the inductive step.
-This diagram
-has 4 lieutenants with  3 loyal lieutenants to the left and a disloyal
-one to the right. The loyal lieutenants are identified in the diagram
-with "L" and the disloyal one with "D". The disloyal general sends
-unkown messages to the lieutenants.
-
-<figure>
-    <img src="Byzantine_5/Byzantine_5.013.jpeg" alt="Fig13" style="width:100%">
-    <figcaption>Fig.13: Edges Aggregation Dataflow Trees
-</figcaption>
-</figure>
-
-<p>
-Assume that the index of the leftmost lieutenant is 1.
-This lieutenant gets a message \(m[1]\). The message (either attack
-or retreat) is shown colored green.
-Because the lieutenant is loyal, from theorem 1 on validity:
-\(a[1,j] = m[1]\) for all loyal lieutenants \(j\). This is illustrated
-by the green vertices output by step \(k-1\).
-
-<p>
-The same argument applies to the other loyal lieutenants; their
-decisions are shown as blue and yellow output vertices of step \(k-1\)
-where the colors represent the messages
-that they received from the general.
-
-<p>
-Now consider the case of the disloyal lieutenant, which is shown as
-the rightmost lieutenant. When this lieutenant acts as the general, by
-the induction hypothesis, all loyal lieutenants come to a
-consensus. The consensus value is shown as brown output vertices of
-step \(k-1\).
-
-<p>
-The input to \(a[j]\) for every loyal lieutenant \(j\) is the same: one
-green, one blue, one yellow, and one brown edge. So for all loyal
-lieutenants \(i, j\): \(a[i] = a[j]\).
-
-<h4  style="color:red;">Example: Disloyal general, 1 disloyal
-lieutenant</h4>
-The algorithm requires the number of loyal agents to be twice the
-number of disloyal ones, and so the number of loyal agents is at least
-5. Assume that lieutenant 1 is disloyal, and
-lieutenants with index greater than 1 are loyal. We will show that for
-loyal lieutenants 2, 3:
-/(
-a[2] = a[3]
-\)
-and the same argument can be used to show that all loyal agents come
-to a consensus decision.
-<p>
-\(
-a[2] = \textrm{maj}(m[2], a[1, 2], a[3, 2], a[4, 2], \ldots)
-\)
-<p>
-\(
-a[3] = \textrm{maj}(m[3], a[1, 3], a[2, 3], a[4, 3], \ldots)
-\)
-<p>
-We will see that \(a[2] = a[3]\) by observing that for \(i \notin \{2, 3\}\):
-<p>
-\(
-a[i, 2] = a[i, 3]
-\)
-<p>
-and
-\(m[2] = a[2, 3]\), and \(m[3] = a[3, 2]\)
-
-<p  style="color:red;">Proof step</p>
-We first show that for \(i \notin \{2, 3\}: a[i, 2] = a[i, 3] \).
-<p>
-\(
-a[i,2]  =  \textrm{maj}(m[i, 2], a[i, 1, 2], a[i, 3, 2], a[i, 4, 2],
-\ldots)
-\)
-<p>
-\(
-a[i,3]  =  \textrm{maj}(m[i, 3], a[i, 1, 3], a[i, 2, 3], a[i, 4, 3],
-\ldots)
-\)
-<p>
-We will see that \(m[i, 2] = a[i, 2, 3]\) and \(m[i, 3] = a[i, 3, 2]\)
-and for \(i \notin \{2, 3\}\), all \(j\): \(a[i, j, 2] = a[i, j, 3]\).
-<p>
-\(
-a[i, b, c] = \textrm{maj}(m[i, b, c], a[i, b, x, c], \forall d \notin
-\{b, c\}: a[i, b, d, c]) =
-\)
-
-<p>
-\(
-\textrm{maj}(m[i, b, c], a[i, b, x, c], \forall d \notin
-\{b, c\}: m[i, b, d, c]) =
-\)
-
-<p>
-\(
-m[i]
-\)
-
-<p>
-\(
-m[i, c, d, e] = m[i, c]
-\)
-
-<p>
-\(
-m[b, c, d, e] = m[b, c, d] = m[b, c] = m[b]
-\)
-
-<p>
-\(
-m[b, c, x, e] = m[x, e]
-\)
-
-<p>
-\(
-m[b, x, d, e] = m[x, d]
-\)
-
-<p>
-\(
-m[x, c, d, e] = m[x, c]
-\)
-
-<p>
-\(
-a[b, c, d] = \textrm{maj}(m[b, c, d], a[b, c, x, d], \forall e \notin
-\{b, c, d\}: a[b, c, e, d]) =
-\)
-
-<p>
-\(
-a[b, c, d] = \textrm{maj}(m[b], m[b, c, x, d], \forall e \notin
-\{b, c, d\}: m[b, c, e, d]) =
-\)
-
-<p>
-\(
-a[b, c, d] = \textrm{maj}(m[b], m[x, d], \forall d \notin
-\{b, c\}: m[b]) =
-\)
-
-<p>
-\(
-m[b])
-\)
-
-<p>
-\(
-a[b, x, d] = \textrm{maj}(m[b, x, d], \forall e \notin
-\{b, d\}: a[b, x, e, d]) = 
-\)
-
-
-
+There are at most \(t - d\) faulty nodes.
+If the general is disloyal then there at most \(t-d-1 = t -(d+1)\)
+disloyal lieutenants.
+Therefore, the induction assumption holds for \(m[L, x]\).
+Therefore \(a[L, i, k] = a[L, i, j]\)
 
 
 

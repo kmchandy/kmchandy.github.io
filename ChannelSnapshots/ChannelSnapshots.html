@@ -1,4 +1,5 @@
 <title>ChannelSnapshots/ChannelSnapshots.html</title>
+
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
 
@@ -78,7 +79,7 @@ hr.new1 {
 
 
 <!--------------------------------------------------------->
-<h1 class="w3-text-teal">Global Snapshots and State Detection</h1>
+<h1 class="w3-text-teal">A Global Snapshot Algorithm</h1>
 <!--------------------------------------------------------->
 
 <p class="w3-text-green">
@@ -98,96 +99,43 @@ hr.new1 {
   <i>Central Ideas</i></h4>
 
   <p class="w3-text-red">
-  (1) Global snapshots: states at consistent cuts. (2) System
-  monitoring. (3) Detection algorithms.
+  A global snapshot algorithm for determining a state in a computation.
+
   
   <p class="w3-text-red">
   A global snapshot is the state at a consistent cut.
 
-  Algorithms for obtaining global snapshots use marker or timestamp
-  messages so that messages sent in the past are received in the past.
+  Systems can be monitored by scheduling repeated global snapshots.
 
-  Systems can be monitored by scheduling global snapshots at times \(t\) for
-  increasing \(t\).
+  All state detection algorithms are based on global snapshots.
 
-  System monitoring can be used to solve all detection problems -- for
-  example to detect whether agents deadlock or computations terminate.
-  
-  <!------------------------------------------------------------------->
-  <h3 class="w3-text-teal">Specification of a Global Snapshot</h3>
-  <hr class="new2">
-  <h6 style="color:blue;">
-  A global snapshot is any state \(S\) such that there exists a computation
-  that starts in the state in which the snapshot algorithm starts,
-  visits \(S\),
-  and later visits the state in which the snapshot algorithm ends.
-  </h6>
-  <hr class="new2">
-  
-  <p>
-  A global snapshot algorithm determines a global state of the
-  system during a computation, without stopping or modifying the
-  computation.
-  The algorithm cannot, for instance, stop the distributed
-  computation, record the state (i.e., the snapshot), and then restart
-  the computation.
-  <p>
-  Let the states in which the algorithm starts and ends be
-\(s_{init}\) and \(s_{fini}\), respectively, and let \(s_{snap}\) be
-  the global state (the snapshot) recorded by the algorithm.
-  The specification of \(s_{snap}\) is:
-
-  <h5 style="color:blue;">
-There exists a computation that starts in 
-  \(s_{init}\) and then visits \(s_{snap}\) and later visits
-  \(s_{fini}\).
-  </h5>
-  There may be an arbitary number of events between \(s_{init}\) and
-  \(s_{snap}\), and an arbitary number of events between \(s_{snap}\) and
-  \(s_{fini}\).
-
-  <p>
-  Though \(s_{snap}\) is determined while a computation
-  is running, \(s_{snap}\) may not have occurred in the computation. The
-  specification merely says that there <i>exists</i> a computation from
-  \(s_{init}\) through \(s_{snap}\) to \(s_{fini}\), and this
-  computation may not be the computation during which the snapshot is
-  taken.
-  What is the point of computing \(s_{snap}\) during a computation if
-  it never occurred in the computation? We will answer this question later.
-
+  This page gives an algorithm to determine a global snapshot; we will
+  look at other algorithms later.
+ 
 
   <!-----------------------------------------------------------------------------> 
-  <h3 class="w3-text-teal">A Global Snapshot is the State at a
-  Consistent Cut</h3> 
+  <h2 class="w3-text-teal">Global Snapshot: State at a
+  Consistent Cut</h2> 
 
   <p>
-  From the <a
-  href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">theorem on
-consistent cuts</a>:
-A global snapshot is the state of a system at a consistent cut of a
-computation. So, let's design an algorithm by which agents
-collaborate to determine a consistent cut.
+Next, we design an algorithm by which agents
+collaborate to determine the state at a consistent cut.
 
-</p>
   Each agent takes its own local snapshot, i.e. records its own local
   state, at a point in the computation.
-  Define <i>past</i> events to be the events at an
-  agent before the agent takes its own local snapshot.
-
-  <p>
-  Edges in an agent's timeline from events after the agent's snapshot
-  are (obviously) to events after the agent's snapshot.
-Therefore the cut is consistent if it satisfies the
-  following condition:
+  Define <i>past</i> to be the set of events at an
+agent before the agent takes its own local snapshot.
+Then <i>future</i> is the set of events 
+agent after the agent takes its own local snapshot.
+A cut \((past, future)\) is consistent if all messages sent in the
+  future are received in the future.
+Therefore the requirement for the cut to be consistent is:
 
 <hr class="new2">
-<h6 style="color:blue;">
-Consistent cut requirement:
-<br>
+<h5 style="color:blue;">
 All messages sent after the sender takes its local snapshot
 are received after the receiver takes its local snapshot.
-</h6>
+</h5>
 <hr class="new2">
 
 <p>
@@ -235,7 +183,7 @@ every channel, and every agent takes its local snapshot.
 
 
 
-<h4 style="color:red;">Example</h4>
+<h4 style="color:red;">Example of a Global Snapshot</h4>
 Figure 1 illustrates the algorithm. In this example, there are three
 agents -- A, B, and C -- and there is exactly one channel
  from each agent to every other agent. When agent B takes its
@@ -270,11 +218,13 @@ Messages received in the future are the messages received after the
 receiver takes its local snapshot.
 Therefore:
 <hr class="new2">
-<h6 style="color:blue;">
-The state of a channel at a cut is the sequence of messages
+<h5 style="color:blue;">
+The state of a channel in a snapshot is:
+<br>
+the sequence of messages
 received along the channel after the receiver takes its local snapshot
 and before the receiver receives a marker along the channel.
-</h6>
+</h5>
 <hr class="new2">
 <p>
 Note: If an agent takes its local snapshot when it receives a marker
@@ -335,8 +285,28 @@ computations on local snapshots.
 Algorithms that detect system properties by analyzing local snapshots
 are given later.
 
-
 <!--------------------------------------------------------------->
+<h3 class="w3-text-teal">Starting, Snapshot, and Ending States</h3>
+
+Let the states in which the snapshot algorithm starts and ends be
+\(s_{init}\) and \(s_{fini}\), respectively, and let \(s_{snap}\) be
+the global state recorded by the algorithm.
+Because \(s_{snap}\) is the state of a consistent cut, it follows that
+
+<hr class="new2">
+<h5 style="color:blue;">
+There exists a computation that starts in 
+  \(s_{init}\), visits \(s_{snap}\), and then visits
+  \(s_{fini}\).
+</h5>
+<hr class="new2">
+This result is used in algorithms that detect persistent properties
+such as the computation is in a terminated or deadlocked state. If the
+computation has terminated when the snapshot algorithm starts then the
+snapshot shows that the computation has terminated. And, if the
+snapshot shows that the computation has terminated then the
+computation has terminated at the point that the snapshot algorithm
+finishes.  
 <!--------------------------------------------------------------->
 <!--------------------------------------------------------------->
 
@@ -508,15 +478,13 @@ of application, are similar.
 <h4 class="w3-text-red">
 <i>Central Ideas: Review</i></h4>
 <p class="w3-text-red">
+<i>The state at a consistent cut</i> is a concept that is used in all algorithms
+that detect properties of computations.
+A global snapshot is a state at a consistent cut.
+The global snapshot algorithm uses markers to separate <i>past</i> from
+<i>future</i> to identify a consistent cut (<i>past, future</i>).
+We will look at more algorithms that determine global snapshots.
 
-A global snapshot is the state at a consistent cut.
-Global snapshots can be obtained by 
-taking a snapshot at timestamp \(T\) and the marker
-algorithm.
-Detection algorithms detect when the system state is in a stable set
-of states.
-System monitors that take repeated scheduled snapshots can be used to solve
-detection problems. 
 
 <p class="w3-text-red">
 <i>Concepts</i>:

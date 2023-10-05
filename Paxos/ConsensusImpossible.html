@@ -1,4 +1,5 @@
 <title>Paxos/ConsensusImpossible.html</title>
+
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
 
@@ -84,32 +85,16 @@ hr.new1 {
   <h1 class="w3-text-teal">Consensus</h1>
 <!--------------------------------------------------------->
 
-  
-<p class="w3-text-green">
-  This page uses material from
-  <a
-  href="https://kmchandy.github.io/DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-  Timelines.
-</p>
-
-  
-<a href="GlobalSnapshotAlgorithmVideo.mp4">
-<h3 class="w3-text-teal">Video</h3>
-  </a>
 
   
 <!------------------------------------------------------------------->
 <h4 class="w3-text-red">
-<i>Central Ideas</i></h4>
+  <i>Central Ideas</i></h4>
 
   <p class="w3-text-red">
-  (1) Timelines (2) Semi-synchronous timelines (3) Paxos algorithm.
+  (1) Importance of consensus (2) Impossibility of consensus in
+  distributed systems with a faulty agent.
 
-<h4 class="w3-text-teal">
-This module discusses the importance of achieving consensus among
-distributed agents and describes the central ideas of a proof that achieving
-consensus among agents, one of which may be faulty, is impossible.
-</h4>
 
 <h3 class="w3-text-teal">Importance of Consensus</h3>
 
@@ -202,26 +187,32 @@ synchronized. We've done that before with logical clocks. The Paxos
 algorithm shows how the idea of increasing values of timestamps (or
 ids) are used for best-effort consensus.
 
-<h4 style="color:blue;">Review</h4>
-<ol>
-  <li>
-  The proof considers messages with arbitrary delay. Suppose you had a
-  system in which a message was either lost or delivered with a delay
-  of at most T seconds. If all agents had accurate real-time (as
-  opposed to logical) clocks, could the agents reach a consensus? What
-  algorithms would you use?
-  </li>
-  <li>
-  If there were an algorithm that enabled a collection of agents to
-  come to a consensus, then could the algorithm be used to construct a
-  distributed ledger? The ledger would contain a sequence of
-  transactions such as deposits and withdrawals. Agents would propose
-  transactions and the algorithm would create a total order (a
-  sequence) of these transactions. Would that work? Could the idea be
-  used to create a cryptocurrency without a bank or other single
-  trusted agent?
-  </li>
-</ol>
+
+
+<!--------------------------------------------->
+<h4 class="w3-text-red">
+<i>Central Ideas: Review</i></h4>
+<p class="w3-text-red">
+Many applications of distributed systems require agents to come to a
+consensus.
+Agents cannot come to a consensus if an agent is faulty.
+
+<!--------------------------------------------->
+<p class="w3-text-red">
+<i>Concepts</i>:
+Consensus -> impossibility with faulty agents
+
+
+<h4 class="w3-text-teal">Next</h4>
+Next look at <a href="PaxosFinal.html">Paxos</a> an important consensus
+algorithm that may not terminate.
+Later look at <a href="../Byzantine/ByzantineWritten.html">
+Byzantine consensus</a> and
+<a href="../Crypto/BitCoin.html">consensus using block chain</a>.
+
+
+
+
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">

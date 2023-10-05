@@ -1,4 +1,5 @@
 <title>ChannelSnapshots/LogicalClocksNew.html</title>
+
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
 
@@ -115,74 +116,98 @@ hr.new1 {
 
   The set of events with logical timestamps less than \(t\), for any
   \(t\), is a consistent cut.
-  
-
-  <!------------------------------------------------------------------->
-  <!------------------------------------------------------------------->
-  <h2 class="w3-text-teal">Local clocks</h2>
-  <!------------------------------------------------------------------->
-  
-  Each agent can maintain a local clock.
-  Later, we will describe algorithms that use protocols such as
-<a href="https://en.wikipedia.org/wiki/Network_Time_Protocol"> the
-Network Time Protocol (NTP)</a> and <a
-href="https://en.wikipedia.org/wiki/Precision_Time_Protocol"> the
-Precision Time Protocol (PTP)</a> to synchronize agent clocks.
-  These algorithms do not, however, guarantee perfect synchrony.
-  If the times at which messages are sent and received are determined
-  by the sender's and receiver's clocks then a message may appear to
-  be received before it is sent. The logical clock algorithm fixes
-  this problem by assigning logical times to events so that the
-  sender's logical time when a message is sent is earlier than
-the receiver's logical time when the message is received.
 
 
-<!--------------------------------------------->
-  <h3 class="w3-text-teal">Rules for Assigning Logical Times to
-Events</h3>
-<!--------------------------------------------->
+  <!--------------------------------------------->
+  <h3 class="w3-text-teal">Agent Clocks</h3>
+  <!--------------------------------------------->
+  Most computers have clocks that move forward as time progresses.
+  The clocks may, however, drift away from real time.
+  Protocols such as
+  <a href="https://en.wikipedia.org/wiki/Network_Time_Protocol">
+  NTP -- Network Time Protocol</a> 
+  can be used to limit the drift.
+  Later, we will discuss synchronization using these protocols.
+  Next, we look at a very simple synchronization problem.
 
-  Let \(t(e)\) be the value of the local clock at the agent on which
-event \(e\) occurs.
+  <p>
+  Let \(t(e)\) be the time of an agent's clock when event \(e\) occurs
+  at that agent.
+  Assume that clocks tick forward as time progresses.
+  Then for an event \(e\) that follows an event \(e'\) at an agent:
+\(t(e) > t(e')\).
+It is possible that \(t(e) \leq t(e')\) where \(e\) is the
+  event in which a message is received, and \(e'\) is the event in
+which that message is sent.
+This situation may happen when the sender's clock runs 
+faster than the receiver's clock.
+
+<h4 class="w3-text-teal">Simple Clock Synchronization</h4>
+<i>The Problem</i>: Design an algorithm to assign times \(t(e)\) to events \(e\) so that the
+time of an event in which a message is received is later than the time
+of the event in which the message is sent.
+
+<p>
+<i>Solution</i>: Use the following two rules:
 
 <ol>
   <li>
-  Each agent's clock ticks forward. So, if an event \(e'\) occurs
-  after an event \(e\) at an agent then \(t(e') < t(e)\).
+  A message sent in an event \(e\) is assigned a timestamp \(t(e)\).
   </li>
   <li>
-When a message is sent in an event \(e\), the message is assigned
-  timestamp \(t(e)\).
+  If a message with with timestamp \(T\) arrives at an agent when the
+  agent's clock is less than or equal to \(T\) then the clock is moved
+  forward to a value greater than \(T\).
+  </li>
+</ol>
+The amount of clock drift can be reduced by exchanging messages between agents
+  periodically and adjusting clocks using delay statistics. 
+
+<h4 class="w3-text-teal">Algorithm without using Computer Clocks</h4>
+The algorithm given above assumes that agents hav clocks that tick
+forward as time progresses.
+If a computer doesn't have a clock, a rule that creates a logical clock
+that effectively ticks forward is as follows:
+For event \(e\) following event \(e'\) at the same agent, assign a
+logical time \(t(e)\) to event \(e\) such that \(t(e) > t(e')\).
+An algorithm that implements these rules is as follows.
+
+<h4 class="w3-text-teal">Logical Clock Algorithm</h4>
+Let \(e'\) be the event immediately preceding event \(e\) at an
+agent.
+<ol>
+  <li>
+  A message sent in an event \(e\) is assigned a timestamp \(t(e)\).
   </li>
   <li>
-  When a message with timestamp \(T\) arrives at the receiver, if the
-  receiver's timestamp is less than \(T\) then the receiver
-  moves its local clock forward to a value greater than \(T\)
-  before it receives the message.
+  If no message is received in event \(e\) then set \(t(e)\) to any
+  value greater than \(t(e')\).
+  </li>
+  <li>
+  If a message with timestamp \(T\) is received in \(e\) then set
+  \(t(e)\) to any value greater than \(max (t(e'), T) \).
   </li>
 </ol>
 
 <!--------------------------------------------->
-<h3 class="w3-text-teal">The Logical Time Property</h3>
+<h3 class="w3-text-teal">Logical Times of Events</h3>
 <!--------------------------------------------->
-
-Times assigned to events using the above rules have the following property:
+An algorithm that uses the above three rules assigns logical time
+\(t(e)\) to events \(e\) such that:
 <hr class="new2">
 <p style="color:blue;">
-The Logical Time Property: For every edge \((e', e)\) in the causality graph, 
-\(t(e') < t(e)\).
-</p>
-<hr class="new2">
-Event times that satisfy the logical time property are called logical
-times. There are many ways of assigning times to events
-that satisfy the logical time property.
+For every edge \((e', e)\) in the causality
+graph of the computation, 
+  \(t(e') < t(e)\).
+  </p>
+  <hr class="new2">
 
 <!--------------------------------------------->
   <h4 style="color:red;">Example of Logical Time</h4>
 
 <figure>
     <img src="../ChannelSnapshots/Timelines/Timelines.001.jpeg" alt="Fig1" style="width:100%">
-    <figcaption>Fig. 1: Local Clock Times</figcaption>
+    <figcaption>Fig. 1: Logical Times</figcaption>
 </figure>
 The figure shows a timeline diagram with
 agents \(A, B, D\), and with one channel from each agent to every
@@ -192,40 +217,39 @@ The diagram doesn't show arrows from each event to the next event on
     the same agent; each horizontal edge has an implicit direction
 from left to right.
 <p>
-Local clock values are shown as integers inside the circles
+Logical times of events are shown as integers inside the circles
 representing events.
-For example, events 0, 1, and 2 on the timeline for agent B occur when
-B's local clock has value 0, 2 and 4, respectively.
+For example, events 0, 1, and 2 on the timeline for agent B have
+    logical times 0, 2 and 4, respectively.
 
 
 <!--------------------------------------------->
-<h3 class="w3-text-teal">Events in Ascending Logical Time</h3>
+<h3 class="w3-text-teal">Events in Increasing Logical Time are Computations</h3>
 <!--------------------------------------------->
 
-All sequences of events in ascending logical times are
-topological sorts of the causality graph.
+From the definition of logical time: a sequence of events in
+increasing logical time is a topological sort of the causality graph.
+Topological sorts of the causality graph are also computations.
 
-So:
+So we get the following result.
 
 <hr class="new2">
 <p style="color:blue;">
-All permutations of a computation from a state \(S\) to a state \(T\),
-where events in the permutation are in ascending logical time, are also
-computations from \(S\) to \(T\).
+Given logical times assigned to events in a computation from a state \(S\)
+to a state \(S'\):
+any permutation of events in the computation, where events occur in
+increasing order of logical time in the permutation, is also
+computations from \(S\) to \(S'\). 
 </p>
 <hr class="new2">
 
-<p>
-So there is a timeline in which each event occurs at its logical
-time. This is illustrated by the next example.
-
 <!--------------------------------------------->
-<h4 style="color:red;">Example: Events in Ascending Logical Time</h4>
+<h4 style="color:red;">Example: Events in Increasing Logical Time</h4>
 <!--------------------------------------------->
 Given the computation and logical times of figure 1,  there exists a
 computation, shown in figure 2, in which events occur in logical
-time.
-The causality graphs of figures 1 and 2 are identical.
+time: events with higher logical time occur to the right of events
+with lower logical times.
 
 
 
@@ -234,25 +258,19 @@ The causality graphs of figures 1 and 2 are identical.
     alt="Fig2" style="width:100%"> 
     <figcaption>Fig. 2: Events occurring in Logical Time </figcaption>
 </figure>
-In the timeline shown in figure 2, each event occurs at
-the event's logical time; some events occur at logical time 1, and
-others at logical time 2, and so on.
-
-A computation is a sequence of events, and events at the same
-logical time can occur in arbitrary order in the computation.
 
 <h3 class="w3-text-teal">Cuts at Logical Times are Consistent</h3>
-For any \(t\), the cut with <i>past</i> as the set of events with
-logical time \(t\) or less is consistent. This follows from the
-logical time property: edges from events with logical time greater
-than \(t\) are directed to events with logical time greater than
-\(t\).
+For any \(t\), define the cut \((past(t), future(t))\), as follows.
+\(past(t)\) is the set of events with logical time \(t\) or less, and
+therefore \(future(t)\) is the set of events with logical time greater
+than \(t\). From the logical time property it follows that the cut
+\((past(t), future(t))\) is consistent.
 
 
 <!--------------------------------------------->
 
-<h4 class="w3-text-teal">Algorithm to obtain Global Snapshot at Logical Time \(t\)</h4>
-An algorithm to obtain the global snapshot for the cut at logical time \(t\) is as
+<h3 class="w3-text-teal">Global Snapshot at Logical Time \(t\)</h3>
+An algorithm to obtain the global snapshot for the cut at any logical time \(t\) is as
 follows.
 <ol>
   <li>
@@ -276,8 +294,12 @@ follows.
 2.8\)</h4> 
 
 Figure 3 shows a consistent cut and a global snapshot at logical time
-\(t = 2.8\). The <i>past</i> is the set of events with logical time
-\(2.8\) or less.
+\(t = 2.8\).
+
+<i>past(2.8)</i> is the set of events with logical time
+\(2.8\) or less, and events in this set are shown as black vertices.
+<i>future(2.8)</i> is the set of events with logical time greater than
+\(2.8\) and events in this set are shown in green.
 
 
 <figure>
@@ -288,7 +310,7 @@ Figure 3 shows a consistent cut and a global snapshot at logical time
 
 <p>
 Let's look at the same cut and snapshot in a computation in which
-events occur in logical time. 
+events occur in increasing logical time. 
 
 <figure>
     <img src="../ChannelSnapshots/Timelines/Timelines.004.jpeg"
@@ -399,13 +421,9 @@ global snapshots.
 
 
 <h4 class="w3-text-teal">Next</h4>
-Next either look at two examples
- -- <a href="TerminationDetectionNew.html">termination</a> and
-<a href="DatabaseDeadlockDetection.html">database deadlock</a>
-detection --
-of snapshots or
-move to the next topic, 
-<a href="LogicalClocksNew.html">logical clocks</a>.
+Next look at 
+-- <a href="../Paxos/ConsensusImpossible.html">consensus algorithms</a>
+or <a href="../table_of_contents.html">other types of algorithms</a>.
 
 
 
