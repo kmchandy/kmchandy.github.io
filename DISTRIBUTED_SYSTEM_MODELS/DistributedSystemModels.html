@@ -106,8 +106,8 @@ hr.new1 {
   </p>
 
   <h2 class="w3-text-teal">Distributed System: Agents and Channels</h2>
-  We use a simple model that hides implementation details to develop
-  algorithms that are implemented on platforms such as
+  We use a simple model to develop algorithms. Later, we implement the
+  algorithms using libraries such as
   <a href="https://en.wikipedia.org/wiki/Message_queue">Message Queue (MQ)</a> and
   <a href="https://aws.amazon.com/sqs/">AWS Simple Queue Service
   (SQS)</a>.
@@ -115,133 +115,88 @@ hr.new1 {
   <p>
   A distributed system consists of a set of agents and a set of
   communication channels.
-  Agents communicate with other agents only by
-  sending and receiving messages along channels.
-  Each channel has a name and is directed from one agent to one agent.
-
-  <p>
-  The state of an agent is given by the agent's variables including
-  its program counters. An agent cannot access another agent's state,
-  and an agent cannot access the states of channels.
+  A communication channel is a queue.
+  Each channel has exactly one agent that appends messages to it and
+  exactly one agent that gets messages from it.
+  The state of an agent is given by the agent's variables. An agent
+  cannot access another agent's state.
 
 <p>  
-  Agents and channels are represented by a labeled directed graph,
-  called the <i>agent graph</i> in which vertices represent agents and
-  labeled directed edges represent named channels.  A channel from an
+  Agents and channels of a system are represented by a labeled directed graph,
+  called the agent-channel graph.
+  In an agent-channel graph, vertices represent agents and
+  edges represent channels.
+  The direction and label of an edge are the direction and name of the
+  channel that it represents.
+
+  <p>
+  A channel from an
   agent \(A\) to an agent \(B\) is an <i>output</i> channel of \(A\)
-  and an <i>input</i> channel \(B\). An agent can send messages on its
-  output channels and receive messages on its input channels.  We
-  assume that the agent graph is given; the model doesn't specify how
-  the graph is created or how an agent graph can be modified.
+  and an <i>input</i> channel \(B\). An agent can append messages to its
+  output channels and get messages from its input channels.  We
+assume that the agent graph is given and does not change.
+The model doesn't specify how the graph is created.
 
   
-  <h4 style="color:red;">Example: Agent Graph</h4>
-  The figure below shows connections in a system with agents \(A, B,
-C\).  Examples of channels are \(t\) and \(x\) directed from agent
-\(C\) to agent \(B\); they are outputs of \(C\) and inputs of \(B\).
+  <p style="color:red;">Example: Agent-Channel Graph</p>
+  The figure below shows an agent-channel graph with agents \(A, B,
+C\) and channels \(u, v, w, x, y, z\).
 
     <figure>
-    <img src="DistributedSystemModels.001.jpeg" alt="Fig1" style="width:50%">
-    <figcaption>Fig.1: Graph Representation of a Distributed Systems</figcaption>
+    <img src="DistributedSystemModels/DistributedSystemModels.001.jpeg" alt="Fig1" style="width:30%">
+    <figcaption>Fig.1: Example: An Agent Graph</figcaption>
   </figure>
  
 
   <h2 class="w3-text-teal">Agent and Channel State Transitions</h2>
-The state of a distributed system is given by the states of its agents and
+The state of a system is given by the states of its agents and
   channels. The system state is a tuple with an element of the tuple
 for each agent and each channel.
 
-<h4 class="w3-text-teal">Channel State Transitions</h4>
-The state of a channel is a queue of messages.
-When an agent sends a message along a channel, the message is appended
-to the tail of the queue.  When an agent receives a message from a
-nonempty channel then the message at the head of the queue is deleted and
-is passed to the agent. 
-
-<h4 class="w3-text-teal">Agent State Transitions</h4>
-An agent is specified by sets of: states, actions, messages that the agent
-receives, and messages that the agent sends.
-Executing an agent's action causes a state transition of the
-agent and may also send messages and receive a message.
-An action in which an agent receives a message is called
-<i>message-driven</i>, and an action in which no message is received
-is called <i>internally-driven</i>
-
-<h5 class="w3-text-teal">Message-Driven Actions</h5>
-For each input channel of each agent, there is an action of the
-agent that receives the message at the head of the
-channel.
-The action is specified by the channel on which the message is
-received, the message (if any) that is received -- i.e., the message at the head
-of a nonempty channel -- the states of the agent before and after the
-execution of the action, and for each output channel, the message (if
-any) sent on the channel.
+<p>
+An agent is specified by its variables and a set of atomic actions.
+An atomic action is a program that may change the agent's variables,
+send messages on the agent's output channels, and receive a message on
+one of the agent's input channels.
+An agent's action always terminates independent of the states of other
+agents and the states of all channels.
 
 <p>
-If the channel on which a message is received is empty then the action
-leaves states unchanged.
-
-If the channel is nonempty then: the message at the head of the
-channel is removed from the channel and assigned to one of the
-receiver's variables, and the receiver executes a program that
-may modify its variables and append messages to its output channels.
-
-
-<p style="color:red;">Example: Action -- Receive a Message</p>
-In this example, the agent has input channel <code>channel_y</code>,
-output channel <code>channel_x</code>, and variables <code>msg</code>,
-<code>sum</code> and <code>alert</code>.
+The only operations on channels are: append a message to a channel,
+check if a channel is empty, and receive a message from a <i>nonempty</i>
+channel.
+These operations, written (using Python notation for queues) with <code>q</code> as a
+channel and <code>msg</code> as a variable of an agent, are as follows:
 <pre>
-receive msg on channel_y:
+// Append msg to queue q
+q.put(msg)
+
+// if q is not empty, assign the message received from q into msg
+// and execute following steps ...
+if not q.empty():
+    msg = q.get()
+    ....
+</pre>
+
+<p style="color:red;">Example of an Action</p>
+An example action with input channel <code>x</code>, output channel
+<code>y</code>, and variables <code>msg</code> and <code>sum</code> is:
+<pre>
+if not x.empty():
+   msg = x.get()
    sum = sum + msg
-   if sum < 0:
-      send alert on channel_x
+   y.put(sum)
 </pre>
-If <code>channel_y</code> is empty, the execution of this action
-leaves the state unchanged.
-If <code>channel_y</code> is a nonempty queue, then <code>msg</code>
-is assigned the value of the element at the head of the queue;
-the head of the queue is removed from the queue;
-and the agent executes the statements in the block.
+This program takes no action if <code>x</code> is empty.
+If <code>x</code> is not empty then a message is received from
+<code>x</code> and assigned to  <code>msg</code>; then
+<code>sum</code> is incremented; and then the resulting
+<code>sum</code> is appended to  <code>y</code>.
 
 
-<h5 class="w3-text-teal">Notation for Communicating Messages</h5>
-The notation for receiving a message on a channel
-<code>channel_c</code>, and its Python equivalent, with
-<code>channel_c</code> as a queue, are:
-<pre>
-receive msg on channel_c:
-   // process msg
-
-// Equivalent with channel_c as a queue
-if not channel_c.empty():
-   msg = channel_c.get()
-   // process msg
-</pre>
-The notation for sending a message <code>msg</code> on a channel
-<code>channel_c</code>, and its equivalent, with
-<code>channel_c</code> as a queue, are:
-<pre>
-send msg on channel_c
-
-// Equivalent with channel_c as a queue
-channel_c.put(msg)
-</pre>
-
-<h5 class="w3-text-teal">Internally-Driven Actions</h5>
-An internally-driven action may modify the agent's variables and send
-messages, and does not receive messages.
-
-<p style="color:red;">Example: Internally-Driven Action</p>
-An agent has variables <code>holding_file</code> and
-<code>the_file</code>, and an output channel <code>channel_x</code>. 
-<pre>
-if holding_file:
-   send the_file on channel_x
-   holding_file = False
-</pre>
-If <code>holding_file</code> is False when this action is executed
-then the action leaves the system state unchanged.
+<p>
+(Note: Another way to get a message from a nonempty queue
+is to use <code>get</code> without blocking, and catch the empty exception.)
 
 
 
@@ -258,27 +213,37 @@ A transition may be from from a state back to itself.
 
 
 <p>
-A state transition is specified by \((S, a, X, S')\) where \(S\) and
-\(S'\) are the states before and after the transition (respectively) caused by
+The set of state transitions of a system is a set of
+4-tuples \((S, a, X, S')\) where \(S\) and
+\(S'\) are the states before and after (respectively) the transition caused by
 execution of action \(a\) of agent \(X\).
-
-<p>
 Any action of any agent may be executed in any state.
 So, for all states \(S\) and all actions \(a\) of all agents \(X\) there
-is <i>at least one</i> transition \((S, a, X, S')\).
+is <i>at least one</i> transition from \(S\) due to execution of \(a\)
+by \(X\).
+
+<p>
 If a system has state transitions \((S, a, X, S')\) and \((S,
 a, X, S'')\) then execution of action \(a\) of agent \(X\) in state
 \(S\) may result in a next state that is \(S'\) or \(S''\).
 
 
 
-<p class="w3-text-teal">Stuttering</p>
-In addition to agent actions, the system has an action called an empty
-action or a stutter that takes the system from each state back to the
+<h4 class="w3-text-teal">Empty Action</h4>
+In addition to agent actions, the system has an action called an <i>empty
+action</i> or stutter that takes the system from each state back to the
 same state.
-A system can remain in the same state for an arbitrary number of state
-transitions by executing the empty action repeatedly.
-We will see later why this model is helpful.
+
+<p>
+A system can execute the empty action repeatedly
+and thus remain in the same state for an arbitrary number of state
+transitions.
+So, there can be a state transition in which an agent sends a message,
+followed by an arbitrary number of transitions from the state back to
+itself, followed by a transition in which the message is received.
+The message delay -- measured in terms of number of state transitions
+-- is arbitrarily large.
+
 
 <h3 class="w3-text-teal">The State-Transition Graph</h3>
 The states and transitions of a system are represented by a directed
@@ -296,20 +261,16 @@ The edges corresponding to these labels are colored red, blue, and
 green.
 Each label represents an action of an agent.
 <figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.013.jpeg"
+    <img src="DistributedSystemModels/DistributedSystemModels.002.jpeg"
     alt="Fig2" style="width:75%"> 
-    <figcaption>Fig.2: Example</figcaption>
+    <figcaption>Fig.2: Example: A State-Transition Graph</figcaption>
 </figure>
 The transitions from each state back to itself due to stuttering are
 not shown. 
 
 
-<h4 style="color:red;">Example: A Simple Distributed System</h4>
-<figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.014.jpeg"
-    alt="Fig2" style="width:100%"> 
-    <figcaption>Fig.3: Example</figcaption>
-</figure>
+<h4 style="color:red;">Example: State-Transition Graph of a Simple Distributed System</h4>
+
 This system has two agents <code>U, V</code> and channels
 <code>channel_UV</code>, <code>channel_VU</code> from <code>U</code>
 to <code>V</code>, and from <code>V</code> to <code>U</code>,
@@ -317,6 +278,13 @@ respectively.
 The system has one blue token and one red token.
 Later, when we discuss file management, we will use a token to represent exclusive
 access to a file, and use the token color to identify the file.
+
+<figure>
+    <img src="DistributedSystemModels/DistributedSystemModels.003.jpeg"
+    alt="Fig2" style="width:100%"> 
+    <figcaption>Fig.3: Example</figcaption>
+</figure>
+
 
 <p style="color:red;">Example: States and Transitions</p>
 A state \(S\) of the system is a tuple, \((S_{U}, S_{V},S_{UV},
@@ -379,7 +347,7 @@ either the red token or the blue token. So the same action results in
 one of two possible next states.
 
 <figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.015.jpeg"
+    <img src="DistributedSystemModels/DistributedSystemModels.004.jpeg"
     alt="Fig2" style="width:60%"> 
     <figcaption>Fig.4: Example - Nondeterministic Action</figcaption>
 </figure>
@@ -425,7 +393,7 @@ step, the send action, the agent \(U\) that took the action, and the
 state after the step.
 The next step is \((S_{1}, s, V, S_{2})\).
 <figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.016.jpeg"
+    <img src="DistributedSystemModels/DistributedSystemModels.005.jpeg"
     alt="Fig16" style="width:60%"> 
     <figcaption>Fig.4: Example - Computation is a Path in the State Graph</figcaption>
 </figure>
