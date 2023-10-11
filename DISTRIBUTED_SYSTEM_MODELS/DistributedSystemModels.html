@@ -138,7 +138,7 @@ assume that the agent graph is given and does not change.
 The model doesn't specify how the graph is created.
 
   
-  <p style="color:red;">Example: Agent-Channel Graph</p>
+  <h4 style="color:red;">Example: Agent-Channel Graph</h4>
   The figure below shows an agent-channel graph with agents \(A, B,
 C\) and channels \(u, v, w, x, y, z\).
 
@@ -148,7 +148,7 @@ C\) and channels \(u, v, w, x, y, z\).
   </figure>
  
 
-  <h2 class="w3-text-teal">Agent and Channel State Transitions</h2>
+  <h2 class="w3-text-teal">Agent Actions</h2>
 The state of a system is given by the states of its agents and
   channels. The system state is a tuple with an element of the tuple
 for each agent and each channel.
@@ -158,8 +158,6 @@ An agent is specified by its variables and a set of atomic actions.
 An atomic action is a program that may change the agent's variables,
 send messages on the agent's output channels, and receive a message on
 one of the agent's input channels.
-An agent's action always terminates independent of the states of other
-agents and the states of all channels.
 
 <p>
 The only operations on channels are: append a message to a channel,
@@ -178,7 +176,7 @@ if not q.empty():
     ....
 </pre>
 
-<p style="color:red;">Example of an Action</p>
+<h4 style="color:red;">Example of an Action</h4>
 An example action with input channel <code>x</code>, output channel
 <code>y</code>, and variables <code>msg</code> and <code>sum</code> is:
 <pre>
@@ -198,152 +196,178 @@ If <code>x</code> is not empty then a message is received from
 (Note: Another way to get a message from a nonempty queue
 is to use <code>get</code> without blocking, and catch the empty exception.)
 
+<h3 class="w3-text-teal">Atomicity of Actions</h3>
+We will write programs in which <i>executions of actions always
+terminate, independent of channels and other agents.</i>
+For example, we desing agents with actions that do not wait until a channel
+becomes nonempty.
+This is because execution of an action must terminate even if a
+channel remains empty forever.
+
 
 
 <h2 class="w3-text-teal">System States and Transitions</h2>
 The state of a distributed system is a tuple with an element of the
 tuple for each agent and each channel.
+A state transition is either an execution of an action by an agent or
+an execution of the <i>empty action</i>.
+Execution of the empty action leaves the state unchanged.
+The empty action is equivalent to <code>pass</code> in Python.
+We will see how the empty action is used in our model of distributed
+systems. 
 
 <p>
-The execution of an action at an agent causes a state transition.
-The action may change the agents' variables, send messages on its output
+The execution of an action by an agent
+may change the agents' variables, send messages on the agent's output
 channels, and receive a message on one of the agent's input channels.
-The states of all other agents and channels remains unchanged.
-A transition may be from from a state back to itself.
+The states of all other agents and channels remain unchanged.
+A transition may be from a state back to itself.
 
 
 <p>
 The set of state transitions of a system is a set of
-4-tuples \((S, a, X, S')\) where \(S\) and
+4-tuples \((S, a, x, S')\) where \(S\) and
 \(S'\) are the states before and after (respectively) the transition caused by
-execution of action \(a\) of agent \(X\).
-Any action of any agent may be executed in any state.
-So, for all states \(S\) and all actions \(a\) of all agents \(X\) there
-is <i>at least one</i> transition from \(S\) due to execution of \(a\)
-by \(X\).
-
-<p>
-If a system has state transitions \((S, a, X, S')\) and \((S,
-a, X, S'')\) then execution of action \(a\) of agent \(X\) in state
-\(S\) may result in a next state that is \(S'\) or \(S''\).
+execution of action \(a\) by agent \(x\).
+Any agent may execute any action in any state.
+So, for all states \(S\) and all actions \(a\) of all agents \(x\) there
+is <i>at least one</i> transition from \(S\) due to the execution of \(a\)
+by \(x\).
 
 
-
-<h4 class="w3-text-teal">Empty Action</h4>
-In addition to agent actions, the system has an action called an <i>empty
-action</i> or stutter that takes the system from each state back to the
-same state.
-
-<p>
-A system can execute the empty action repeatedly
-and thus remain in the same state for an arbitrary number of state
-transitions.
-So, there can be a state transition in which an agent sends a message,
-followed by an arbitrary number of transitions from the state back to
-itself, followed by a transition in which the message is received.
-The message delay -- measured in terms of number of state transitions
--- is arbitrarily large.
 
 
 <h3 class="w3-text-teal">The State-Transition Graph</h3>
 The states and transitions of a system are represented by a directed
 multigraph, called the <i>state-transition graph</i> in which each vertex
-represents a state and each labeled edge represents the execution of
-an action.
-For each vertex \(S\) and each action \(a\) of an agent there is at
-least one edge from \(S\) labeled \(a\).
-The edge may be from a vertex back to itself.
+represents a state and each edge represents a state
+transition.
+The graph has an edge labeled \((a, x)\) from \(S\) to \(S'\) exactly
+when execution of action \(a\) by agent \(x\) in state \(S\) can cause
+a transition to \(S'\).
 
-<p style="color:red;">Example of a State-Transition Graph</p>
-The figure below shows a state-transition graph with edge labels R, B,
-G.
-The edges corresponding to these labels are colored red, blue, and
-green.
-Each label represents an action of an agent.
+Any action of any agent can be executed in any state; so,
+for each vertex \(S\) and each action \(a\) of each agent \(x\) there is at
+least one edge from \(S\) labeled \((a, x)\).
+
+
+<p>
+An edge from a vertex back to itself due to the execution of the empty
+action is labeled \((None, None)\).
+These edges are in the graph but aren't always shown in figures.
+
+<h4 style="color:red;">Example of a State-Transition Graph</h4>
+The figure below shows a state-transition graph with agents \(u,
+v\). Agent \(u\) has actions \(b\) and \(g\); executing these actions
+result in the transitions shown as blue edges and green edges
+(respectively).
+Agent \(v\) has action \(r\); executing this action
+result in the transitions shown as red edges.
+
 <figure>
     <img src="DistributedSystemModels/DistributedSystemModels.002.jpeg"
     alt="Fig2" style="width:75%"> 
     <figcaption>Fig.2: Example: A State-Transition Graph</figcaption>
 </figure>
-The transitions from each state back to itself due to stuttering are
-not shown. 
+The transitions from each state back to itself due to empty actions are
+not shown. Only some of the states are shown; the dangling edges are
+    to states that don't appear in the figure.
+<p>
+For each edge label \((b, u), (g, u), (g, v)\), and each state, there
+is at least one outgoing edge with that label.
+There are two edges from state \(S1\) with label \((g, u)\); executing
+    action \(g\) by agent \(u\) when the system is in state \(S1\) may
+    result in a transition to \(S2\) or to some other state.
 
 
 <h4 style="color:red;">Example: State-Transition Graph of a Simple Distributed System</h4>
 
-This system has two agents <code>U, V</code> and channels
-<code>channel_UV</code>, <code>channel_VU</code> from <code>U</code>
-to <code>V</code>, and from <code>V</code> to <code>U</code>,
+This example system has two agents <code>u</code> and <code>v</code>.
+The system has two channels
+<code>uv</code> and <code>vu</code>, from <code>u</code>
+to <code>v</code> and from <code>v</code> to <code>u</code>,
 respectively. 
 The system has one blue token and one red token.
-Later, when we discuss file management, we will use a token to represent exclusive
-access to a file, and use the token color to identify the file.
+(Later, when we discuss file management, we will use a token to represent exclusive
+access to a file, and use the token color to identify the file.)
+
+<p>
+
+The state of an agent is the set of tokens that it holds.
+Each agent has two actions: send a token and receive a token.
+These actions are denoted
+by <code>s</code> and <code>r</code> for send and receive, respectively.
 
 <figure>
     <img src="DistributedSystemModels/DistributedSystemModels.003.jpeg"
-    alt="Fig2" style="width:100%"> 
+    alt="Fig3" style="width:100%"> 
     <figcaption>Fig.3: Example</figcaption>
 </figure>
 
 
-<p style="color:red;">Example: States and Transitions</p>
-A state \(S\) of the system is a tuple, \((S_{U}, S_{V},S_{UV},
-S_{VU})\), where the elements of the tuple are the states of agent
-<code>U</code>, agent <code>V</code>, channel <code>channel_UV</code>
-and <code>channel_VU</code>, respectively.
-The state of an agent is the set of tokens that it holds.
-The state of a channel is a queue of tokens.
+<h4 style="color:red;">Example: States and Transitions</h4>
+A state \(S\) of the system is a tuple, \((S_{u}, S_{v},S_{uv},
+S_{vu})\), where the elements of the tuple are the states of agent
+<code>u</code>, agent <code>v</code>, channel <code>uv</code>
+and channel <code>vu</code>, respectively.
 
 <p>
-The figure shows some of the states and transitions of the system. All
-the states are not shown.
-<p>
+The figure shows some of the states and transitions of the system.
 The diagram on the top left of the figure depicts a system state in
-which <code>U</code> holds the blue token, 
-<code>V</code> holds the red token, and both channels are empty.
-This state is <code>({B}, {R}, [], [])</code>.
-<p>
-There is a transition from this state in which <code>U</code> sends
-the blue token. This transition is labeled \(U_{s}\) because
-<code>U</code> <i>s</i>ends a token, and the transition is shown as a
-blue arrow because the transition moves a blue token.
+which <code>u</code> holds the blue token, 
+<code>v</code> holds the red token, and both channels are empty.
+This state, \((S_{u}, S_{v},S_{uv}, S_{vu})\), is <code>({b}, {r}, [],
+[])</code>.
 
 <p>
-In the state after the transition, the blue token is in
-<code>channel_UV</code>, and <code>U</code> holds no tokens.
-The next state is <code>({}, {R}, [B], [])</code>.
-This state is shown in the diagram on the top row, second column.
+If agent <code>u</code>  sends
+a token while the system is in this state then the system transits to
+state <code>({}, {r}, [b], [])</code> in which the blue token is in
+the channel <code>uv</code>; agent <code>u</code> holds no tokens; the
+red token remains at agent <code>v</code>; and channel <code>vu</code>
+remains empty.
+This transition is labeled \((s, u)\) because
+<code>u</code> <i>s</i>ends a token in the transition.
+The state after the transition is shown in the diagram on the top row, second column.
 
 <p>
-A different transition from <code>({B}, {R}, [], [])</code> is one in
-which <code>V</code> sends the red token. The next state, <code>({B},
-{}, [], [R])</code>, is shown in the first column, second row.  
+A different transition from <code>({b}, {r}, [], [])</code> is one in
+which <code>v</code> sends a token. The state, <code>({b},
+{}, [], [r])</code> after the transition is shown in the first column, second row.  
 
-<p style="color:red;">Example: Agent Actions</p>
-The action in which agent <code>U</code> receives a message, and adds
-the message (a token) to its set of tokens is: 
+
+<h5 style="color:red;">Example: Agent Actions</h5>
+Each agent has a variable <code>tokens_I_hold</code> which is the set
+of tokens that the agent holds.
+Each agent also has a variable <code>token</code> which is
+assigned to the token that the agent receives.
+
+<h5 style="color:red;">Example: Receive token</h5>
+The action in which agent <code>u</code> receives a token, and adds
+the token to its set of tokens is: 
 <pre>
-receive msg on channel_VU:
-    state = state.add(msg)
+if not vu.empty():
+    token = vu.get()
+    tokens_I_hold = tokens_I_hold.add(token)
 </pre>
 
-Agent <code>U</code> also has an internal action in which it sends a token that it
+<h5 style="color:red;">Example: Send token</h5>
+Agent <code>u</code> also has an action in which it sends a token that it
 holds. The action is:
 <pre>
-// if the agent holds a nonempty set of tokens
-if len(state) > 0:
-   // Identify any token held by this agent.
+// if the agent holds at least one token
+if len(tokens_I_hold) > 0:
+   // token is any element in tokens_I_hold
    token = state.pop()
-   // Send token
-   send token on channel_UV
-   // Remove token from the set that the agent holds.
-   state.remove(token)
+   tokens_I_hold.remove(token)
+   uv.put(token)
 </pre>
 
-<p style="color:red;">Example of Nondeterministic Actions</p>
-In the above example, when agent <code>U</code> holds both red and
-blue tokens, the action in which it sends one of the tokens may send
-either the red token or the blue token. So the same action results in
+<h5 style="color:red;">Example of Nondeterministic Actions</h5>
+In the above example, when agent <code>u</code> holds both red and
+blue tokens, the action in which <code>u</code> sends a token may
+result in <code>u</code> sending 
+either the red token or the blue token. So, the same action results in
 one of two possible next states.
 
 <figure>
@@ -352,15 +376,9 @@ one of two possible next states.
     <figcaption>Fig.4: Example - Nondeterministic Action</figcaption>
 </figure>
 
-The figure shows the two possible transitions in the edges labeled
-\(U_{s}\) from the diagram at the extreme left of the figure.
+The two possible transitions are shown as the two edges labeled
+<code>(s, u)</code> in the diagram at the extreme left of the figure.
 
-<p style="color:red;">Example: Channel States</p>
-In the above figure, the two diagrams on the right-hand side show two
-different states for channel <code>channel_UV</code>; the state in the top
-diagram is a queue with the blue token ahead of the red token, while
-the state in the lower diagram is a queue with the red token ahead of
-the blue one.
 
 
 <!----------------------------------------------------------------->
@@ -369,82 +387,71 @@ the blue one.
 A <i>computation</i> of a system is a state
 \(S_{0}\) of the system and a sequence of <i>steps</i> where each step
 is a state transition and the \(i\)-th step is \((S_{i-1}, a_{i},
-X_{i}, S_{i})\), where \(S_{i-1}\) is the state before the step,
+x_{i}, S_{i})\), where \(S_{i-1}\) is the state before the step,
 \(S_{i}\) is the state after the step, and the transition is due to
-the execution of action \(a_{i}\) at agent \(X_{i}\).
+the execution of action \(a_{i}\) at agent \(x_{i}\).
 The sequence of steps may be empty, infinite, or finite.
 
 <p>
 A computation is specified by a path in the state transition graph.
 
-<p style="color:red;">Example: Computation specified by a path in the
-state transition graph</p>
+<h4 style="color:red;">Example: Computation specified by a path in the
+state transition graph</h4>
 The figure below shows a path \((S_{0}, \ldots S_{8})\) in the state transition graph of the
 example system given earlier.
-The initial state \(S_{0}\) is depicted in the top left row.
-Recall that a system state is a tuple \((S_{U}, S_{V},S_{UV},
-S_{VU})\).
-State \(S_{0}\) is \((\{b\}, \{r\}, [], [])\).
-<p>
-The first step in this path is a state transition due to agent \(U\) sending a token.
-This step takes the system to the state shown in the top row, second
-column. The step is \((S_{0}, s, U, S_{1})\): the state before the
-step, the send action, the agent \(U\) that took the action, and the
-state after the step.
-The next step is \((S_{1}, s, V, S_{2})\).
 <figure>
     <img src="DistributedSystemModels/DistributedSystemModels.005.jpeg"
     alt="Fig16" style="width:60%"> 
     <figcaption>Fig.4: Example - Computation is a Path in the State Graph</figcaption>
 </figure>
-There may be steps from a state back to itself.
+
+A state of this system is a tuple \((S_{U}, S_{V},S_{UV},
+S_{VU})\).
+State \(S_{0}\) is \((\{b\}, \{r\}, [], [])\). Examples of steps in
+the computation are given below.
+<ol>
+  <li>
+  Step 1: \((S_{0}, a_{1}, x_{1},  S_{1})\):
+  <p>
+  \(((\{b\}, \{r\}, [], []), s, u, (\{\}, \{r\}, [b], []))\)
+  </li>
+  <li>
+  Step 2: \((S_{1}, a_{2}, x_{2},  S_{2})\):
+  <p>
+  \(((\{\}, \{r\}, [b], []), s, v, (\{\}, \{\}, [b], [r]))\)
+  </li>
+  <li>
+  Step 3: \((S_{2}, a_{3}, x_{3},  S_{3})\):
+  <p>
+  \(((\{\}, \{\}, [b], [r]), r, v, (\{\}, \{b\}, [], [r]))\)
+  </li>
+</ol>
 
 
+<h4 class="w3-text-teal">Message Delays are Arbitrary</h4>
+A system can execute the empty action repeatedly
+and thus remain in the same state for an arbitrary number of state
+transitions.
+For all \(n \geq 0\), 
+there can be a computation with a state transition in which an agent sends a message,
+followed by \(n\) state transitions from a state back to
+itself, followed by a transition in which the message is received.
+Message delay -- in terms of number of state transitions
+-- is arbitrary.
 
-<h2 class="w3-text-teal">Rationale for the Model</h2>
+<h4 class="w3-text-teal">Progress</h4>
+The model allows for an infinite computation that executes the empty
+action forever and remains forever in the same state.
+Later, we extend the model to include the concept of <i>fairness</i>.
+We use the concept of fairness to prove that all computations progress
+towards a specified goal.
+
+
+<h3 class="w3-text-teal">Model Simplicity, Adequacy, and Limitations</h3>
 This model, based on
 <a href="https://en.wikipedia.org/wiki/UNITY_(programming_language)">
-UNITY, is simple but adequate for describing many algorithms</a>
-used in distributed systems, shared-memory concurrent systems, and sequential
-machines.
-
-<p>
-The model can be extended to channels other than first-in-first-out
-channels as shown next.
-
-<p class="w3-text-teal">Out of order messages</p>
-Messages may be delivered out of order in some types of channels,
-though each message is delivered once. We represent the state of such
-a channel as a multiset of messages. A message is sent by adding the
-message to the multiset and a message is delivered by removing the message
-from the multiset.
-
-<p class="w3-text-teal">Lossy, multiple delivery channels</p>
-In some channels the same message may be delivered repeatedly, and a
-message sent later may be received before a message sent earlier.  We
-represent the state of such a channel by a set.  A message is sent by
-adding it to the set, and a message is delivered by delivering a copy
-of any element in the set without modifying the set.
-
-<p class="w3-text-teal">Progress</p>
-The model allows for a computation that never executes a given action
-even though the computation has an infinite number of steps.
-In the example above, there is a computation that starts in \(S_{0}\)
-and remains in that state for ever by executing only stuttering
-steps.
-Later, we extend the model to eliminate the problem of no progress.
-We introduce the concept of <i>fairness</i>
-where a computation with an infinite number of steps must execute some
-actions infinitely often.
-
-<p class="w3-text-teal">No construct for Time</p>
-Inexpensive atomic clocks on PC boards, Precision Time
-Protocols (PTP) in local area networks, and Network Time Protocol
-(NTP) servers, allow processes to have accurate clocks.
-Later, we discuss clock synchronization and the use of time in
-algorithms. 
-
-<p class="w3-text-teal">Limited Operators on Channels</p>
+UNITY, is chosen because it is both very simple and adequate</a> for
+describing important algorithms.
 Libraries such as
 <a
 href="https://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol">
@@ -453,14 +460,29 @@ and
 <a href="https://aws.amazon.com/sqs/">
 Amazon Web Services Simple Queue Service (AWS SQS)
 </a>
-offer operations on message channels that are not in this model.
-For example, RabbitMQ allows
-<a href="https://www.rabbitmq.com/maxlength.html">
-users to set the maximum length of a channel.</a>
-Our model does not have some operators in popular
-libraries.
-It is, however, adequate for developing algorithms that
-are implemented using these libraries.
+offer communication operators in addition to appending
+and removing elements from a queue, set, or other data structure.
+Algorithms that use more powerful primitives
+can be rewritten using our model.
+
+
+
+<p>
+The model can be extended to communication mechanisms other than first-in-first-out
+channels. If messages may be delivered out of order then we represent
+a channel by a set. Lossy channels are represented by having agents
+that delete messages.
+
+
+<p class="w3-text-teal">No construct for Time</p>
+Inexpensive atomic clocks on PC boards, Precision Time
+Protocols (PTP) in local area networks, and Network Time Protocol
+(NTP) servers, allow processes to have accurate clocks.
+The absence of time is a limitation of the model.
+Later, we discuss clock synchronization, the use of time in
+algorithms, and models that include time.
+
+
 
 <h4 class="w3-text-red">
 <i>Central Ideas: Review</i></h4>
@@ -487,12 +509,8 @@ transitions.
 
 
 <h3 class="w3-text-teal">Next</h3>
-Next look at a
-<a href="Example.html">simple example of a distributed system</a> or skip it to
-read about
-<a href="Timelines.html">key concepts -- timelines and cuts of
-computations</a> -- which are used in a large number of distributed algorithms.
-
+Next look at
+<a href="Timelines.html">Timelines of Computations.</a>
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
