@@ -76,10 +76,9 @@ hr.new1 {
 <div class="w3-row w3-padding-64">
 <div class="w3-twothird w3-container">
 
-
   
 <!--------------------------------------------------------->
-<h1 class="w3-text-teal">Timelines, Causality Graphs and Cuts</h1>
+<h1 class="w3-text-teal">Causality Graphs and Cuts</h1>
 <!--------------------------------------------------------->
 
   <p class="w3-text-green">
@@ -94,395 +93,405 @@ hr.new1 {
   <i>Central Ideas</i></h4>
 
   <p class="w3-text-red">
-  (1) Timelines. (2) Causality graphs. (3) Consistent cuts of computations
+  (1) Causality graphs of computations. (2) Consistent cuts of
+  causality graphs.
   </p>
   
   <p class="w3-text-red">
   <i>Causality graphs and consistent cuts of computations are the
   foundation of many distributed algorithms.</i> 
-  </p>
-  These ideas are described in terms of timelines.
 
 
  
   <!---------------------------------------------------------------->
-  <h2 class="w3-text-teal">Timelines</h2>
+  <h2 class="w3-text-teal">The Causality Graph of a Computation</h2>
   <!---------------------------------------------------------------->
-  A <i>timeline of a computation</i> is a labeled, directed, acyclic graph in
-  in which a vertex represents a step; vertices are laid
-  out from left to right in the order of steps in the computation; and edges are as
-  follows:
+
+  <p>
+  A <i>causality graph of a computation</i> is a labeled, directed, acyclic
+  graph.
+  Each vertex of the graph represents an action taken by an
+  agent in the computation.
+  In addition, the start and end states of the computation are
+  represented by a start vertex and end vertex for each agent.
+  <p>
+  The edges of the graph are as follows.
   <ol>
     <li>
-    <i>Agent Edges</i>: There is an edge from (the vertex representing) a step in which an
-    agent executes an action to the next step in which that agent
-    executes an action. The edge is labeled with the state of the agent between the steps.
+    <i>Agent Edges</i>:
+    For each agent, the graph has an edge
+    <ol>
+      <li>
+      from each action taken by the agent to the next action taken
+    by the agent,
+      </li>
+      <li>
+      from the start vertex to the first action of the agent,
+      </li>
+      <li>
+      from the last action of the agent to the end vertex.
+      </li>
+    </ol>
+    The agent edges to and from an action are labeled with the states of the
+  agent immediately before and immediately after the action (respectively).
     </li>
     <li>
-    <i>Message Edges</i>: There is an edge from a step in which a
-    message is sent to the step in which the message is received; the
-  edge is labeled with the message.
+    <i>Message Edges</i>:
+    The graph has an edge for each message sent or received in the
+  computation. A message edge is labeled with the message.
+  A message edge is directed from an action in which the
+    message is sent to the action in which the message is
+    received.
+    Messages in channels in the initial state of the
+    computation are represented by message edges from the start vertex.
+    Likewise, messages in channels in the final state of the
+    computation are represented by message edges to the end vertex.
     </li>
   </ol>
-  The state of the system between successive steps is specified by the
-  timeline in the following way.
 
   
+  <!--------------------------------------------------------------------------->
+  <h5 style="color:red;">Example: Causality Graph of a Single Step of a
+  Computation</h5>
+  <!--------------------------------------------------------------------------->
   
+  This example is the same as that in the previous page
+  <a href="DistributedSystemModels.html">Distributed System
+  Models</a>.
+  A system with agents \(u\) and \(v\) has a blue token and a red
+  token.
+  The state of the system is specified by the locations of the tokens.
+  Figure 1 shows a single step of a computation.
+ 
   
-  <!---------------------------------------------------------------->
-  <h3 class="w3-text-teal">Historical Timelines</h3>
-  <!---------------------------------------------------------------->
-  
-A <a href="https://en.wikipedia.org/wiki/Timeline">timeline</a> in
-history and archaeology is a display of a sequence of events at the
-times at which they occurred.  The length of the interval between
-events represents the time elapsed between them. 
-
-  <h4 style="color:red;">Example</h4>
   <figure>
-    <img src="HistoricalTimeline.001.jpeg" alt="Fig001" style="width:60%">
-    <figcaption>Fig.1: A Partial Historical Timeline of Microsoft and IBM</figcaption>
+    <img src="Timelines/Timelines.001.jpeg" alt="Fig001" style="width:60%">
+    <figcaption>Fig.1: Example: A Step in a Computation</figcaption>
   </figure>
 
-  The example shows an incomplete and selective timeline of IBM and
-  Microsoft over a short interval.
-</p>
 
-  <!---------------------------------------------------------------->
-  <h3 class="w3-text-teal">Time</h3>
-  <!---------------------------------------------------------------->
+
+Figure 2 shows the causality graph of the computation consistng of the
+  single step shown in
+  figure 1.
+  The causality graph has start and end vertices, and a single vertex
+  representing execution of an action by agent \(u\).
+  The input and output edges to this vertex are labeled with
+  \(u\)'s state before and after execution of the action.
+The vertex has an output message edge labeled with the message that is
+  sent by the action.
+
+
 
   
+    <figure>
+    <img src="Timelines/Timelines.002.jpeg" alt="Fig001" style="width:75%">
+    <figcaption>Fig.2: Example: A Causality Graph of the Computation</figcaption>
+  </figure>
+
+
+
+<h5 class="w3-text-teal">Representation of an Action in the Causality Graph</h5>
+  Actions are represented as edges in a state-transition graph, but as
+  vertices in a causality graph.
+  States are represented as vertices in a state-transition graph, but as
+  edges in a causality graph.
   <p>
-  The <a href="DistributedSystemModels.html">
-  model of distributed systems</a>, which we gave earlier,
-  has no concept of time.
-
-A computation is specified by an initial state and a sequence of
-events, but the times of events are not specified.
-The only notion of time in a computation is that of <i>before</i> and
-<i>after</i>.
-For example, an event \(e\) occurs after an event \(e'\) in a
-computation. 
-Later we introduce the idea an event occurring
-<i>eventually</i> in a computation.
-For instance a message that is sent is delivered eventually but the
-time interval between sending and receiving the message is left
-unspecified. 
+Each vertex \(v\) in a causality graph of a computation represents a step of a computation
+due to the execution of an action \(a\) by an agent \(x\).
+When \(v\) represents an action \(a\) executed by an agent \(x\),
+the states of \(x\) before and after the transition are given by the
+labels of the agent edges into and out of \(v\), respectively.
+The messages received in the action are given by the labels of
+the input message edges of \(v\).
+Likewise, the messages sent in the action are given by the labels of
+the output message edges of \(v\).
 
 
+<p class="w3-text-teal">Conventions in Diagrams of Computations</p>
+We adopt the following conventions in diagrams of causality graphs of
+computations. 
+Earlier actions in the computation appear to the left of later ones.
+Actions by the same agent are placed on the same horizontal line.
+So, all agent edges are horizontal and directed from left to right.
+The start and end vertices have labels <i>O</i> and <i>N</i>
+respectively. 
+The timeline diagrams of figure 2 and 3 follow these conventions.
+
+<!--------------------------------------------------------------------------->
+  <h5 style="color:red;">Example: Causality Graph of a Multistep
+  Computation</h5>
+  <!--------------------------------------------------------------------------->
 <p>
-Agents in many distributed systems have local clocks that are are
-synchronized (imperfectly) with the local clocks of
-other agents. We will describe algorithms that use 
-<a href="https://en.wikipedia.org/wiki/Network_Time_Protocol"> the
-Network Time Protocol (NTP)</a> and <a
-href="https://en.wikipedia.org/wiki/Precision_Time_Protocol"> the
-Precision Time Protocol (PTP)</a> to synchronize clocks.
-Cyberphysical systems, such as fleets of autonomous vehicles, can only
-be studied by using models that include physical time.
+Figure 3 shows the sequence of states in a computation at the top and
+  the causality graph of the computation at the bottom.
+  </figure>
 
-<p>
-
-Later, we study distributed systems, models, and algorithms that use
-local clocks and incorporate time.
-In this page, however, we restrict attention to
-the <a href="DistributedSystemModels.html">
-  simple model</a>, which has no concept of time other than
-ordering of events.
-
-  
-  <!--------------------------------------------------------->
-  <h3 class="w3-text-teal">From Agent Logs to Computations</h3>
-<!--------------------------------------------------------->
-
-An agent can keep a log of the sequence of events at that agent.
-
-An event at an agent is specified by the state of the agent before and
-after the event; the messages (if any) received and the messages (if
-any) sent in the event.
-
-<p>
-Consider the following problem.
-Each agent keeps a log of the sequence of events at that agent during
-a computation.
-The problem is to determine the computation -- the total ordering of
-events -- that generated the logs.
-Initially all channels are empty.
-
-<h4 style="color:red;">Example: From Agent Logs to Computations</h4>
-
-<p>
-The diagram at the bottom in figure 1 shows logs of agents
-\(A\) and \(B\). The computation has an event \(a0\) followed by event
-\(a1\) at agent \(A\), and an event \(b0\) followed by event
-\(b1\) on agent \(B\). In event \(a0\) agent \(A\) sends a message to agent
-\(B\), and in \(a1\), \(A\) receives a message sent by \(B\). Likewise, in
-\(b0\), \(B\) sends a messaget
-\(A\), and in event \(b1\), \(B\) receives a message sent by \(A\).
-
-<figure>
-    <img src="DISTRIBUTED_SYSTEM_MODELS_TIMELINES/
-DISTRIBUTED_SYSTEM_MODELS_TIMELINES.001.jpeg" alt="Fig1" style="width:100%">
-    <figcaption>Fig.1: Composing Agent Logs to get Computations</figcaption>
+    <figure>
+    <img src="Timelines/Timelines.003.jpeg" alt="Fig006" style="width:75%">
+    <figcaption>Fig.3: Example: A Computation and its Causality Graph</figcaption>
 </figure>
 
-<p>
-The diagram at the top left of figure 1 shows a computation \(a0, b0,
-a1, b1\) while the diagram at the top right shows computation \(b0,
-a0, b1, a1\).
-In the top left diagram \(a1\) occurs before \(b1\), whereas in the
-top right diagram \(b1\) occurs before \(a1\).
-Both computations, however, produce the same agent
-logs. So, we cannot uniquely determine the computation that generated
-the agent logs.
+
+<!--------------------------------------------------------------->
+<h2 class="w3-text-teal">Cuts of Causality Graphs</h2>
+<!--------------------------------------------------------------->
+
+<p class="w3-text-teal">The Relation: "Depends On"</p>
+We say that a vertex \(v\) <i>depends on</i> a vertex \(v'\) exactly when there is a
+path in the graph from \(v'\) to \(v\).
+In the causality graph of figure 3, vertex 5 depends on vertex 2 but
+not on vertex 3.
+
+<p class="w3-text-teal">Consistent Cuts of a Causality Graph</p>
+A <i>cut</i> of a causality graph is a subset of the vertices of the graph.
+A cut is <i>consistent</i> exactly when for every vertex \(v\) in the
+cut all vertices on which \(v\) depends are in the cut.
 
 <p>
-The agent logs give us some information about the computation.
-The logs tell us that \(a1\) occurred after \(a0\) and
-\(b1\) occurred after \(b0\).
-A message can be received only after it is sent.
-Initially, channels are empty.
-So the message received in \(b1\) is the message sent in
-\(a0\). 
-So the logs also tell us that \(b1\) occurred
-after \(a0\), and \(a1\) occurred after \(b0\).
-The information from agent logs is represented in a <i>causality
-graph</i> in which vertices are events and the edges specify which
-events must happen after which events.
+An equivalent definition of a consistent cut is a subset of vertices
+such that every edge to every vertex in the cut is from a vertex
+in the cut.
 
-  <!--------------------------------------------------------->
-  <h3 class="w3-text-teal">Causality Graphs</h3>
-<!--------------------------------------------------------->
-The vertices of the causality graph represent events in a computation.
-The labeled directed edges of the graph are as follows:
-<ul>
-  <li>
-  <i>Agent timeline edges</i>:
-  There is an edge directed from an
-  event \(e\) at an agent \(A\) to the next event \(e'\) at \(A\).
-  The edge is
-  labeled with \(A\)'s state immediately after \(e\).
+
+<p style="color:red;">Example of a consistent cut</p>
+In figure 1, the sets of vertices with numbers at most
+\(i\) are consistent cuts for all \(i \geq 0\).
+For example, \(S = \{0, 1, 2, 3\}\) is consistent because \(3\) depends on
+\(\{0, 1, 2\}\), and \(1\) and \(2\) depend on \(\{0\}\), which are
+subsets of \(S\).
+
+<p style="color:red;">Example of an inconsistent cut</p>
+The set \(\{0, 1, 2, 5, 6\}\) is not consistent because 
+\(6\) depends on \(4\) which is not in the set.
+
+
+<h4 class="w3-text-teal">The State at a Cut</h4>
+We define the state at a cut as follows.
+The state of an agent \(x\) is the label of the edge for \(x\)
+from a vertex in the cut to a vertex outside the cut.
+The state of a channel is the sequence of labels of message edges, for
+messages sent on the channel, in the order in which messages are sent,
+from vertices in the cut to vertices outside the cut.
+
+<p>
+The state of a cut is evident from diagrams of causality graphs: the state is given by
+the labels of edges that cross the cut boundary.
+
+<p style="color:red;">Example of the state at a cut</p>
+For example, let's determine the state at the cut \(\{0, 1,
+2, 3\}\) in figure 1.
+The state at the cut is given by the labels of edges that cross the
+cut which are:
+<ol>
+  <li> the state of \(u\): the label of \(u\)'s agent edge from \(1\) to \(5\) which is
+  "e" representing the set of empty tokens;
   </li>
   <li>
-  <i>Message edges</i>
-  A message \(m\) sent along a channel \(c\) at an event \(e\) and received at an event
-    \(e'\) is represented by an edge directed from \(e\) to \(e'\),
-  and the edge is labeled \(m, c\). In the examples, there is at most
-  one channel from an agent \(A\) to an agent \(A'\), and so we drop
-  the channel and use just \(m\) as the label.
+   the state of \(v\): the label of \(v\)'s agent edge from \(3\) to \(4\) which is the set
+  consisting of the blue token;
   </li>
-</ul>
+  <li>
+  the state of channel \(uv\): the label (the red token) of the
+  message edge from \(3\) to \(5\) represents a sequence of messages
+  consisting of a single message -- the red token
+  </li>
+</ol>
+The state of channel \(vu\) is the empty sequence of messages because
+there are no messages on this channel that cross the cut.
 
-<p>
-A computation specifies a single causality graph;
-however, a causality graph may be generated by more than one
-computation.
+<!---------------------------------------------------------------------->
+<h2 class="w3-text-teal">Computations with the same Causality
+Graph</h2>
+<!---------------------------------------------------------------------->
+More than one computation can share the same causality graph.
+The causality graph captures the dependence of the inputs of an action
+to the outputs of other actions.
+The graph does not, however, capture the order in which actions are
+executed.
+Next, we look at examples of computations that share the same
+causality graph and then prove a theorem which helps in developing
+many algorithms.
 
-<h4 class="w3-text-teal">Topological Sorts of Graphs</h4>
-A topological sort of a graph is a sequence of vertices of the graph
-such that for all edges \((e', e)\) in the graph \(e'\) occurs before
-\(e\) in the sequence. 
+<h5  style="color:red;">Examples of Computations with the same Causality
+Graph</h5>
+Figure 4 is an example of a computation that is different from that shown in
+figure 3, but with the same causality graph as in figure 3.
+The sequence of actions is represented by the vertex sequence \([0, 2,
+1, 3, 5, 4, 6]\).
+The sequence of states in the computation is represented by the states at cuts
+\(\{0\}\), \(\{0, 2\}\), \(\{0, 2, 1\}\),...
+This sequence \([S'_{0},
+\ldots, S'_{6}]\) is shown in figure 4.
 
-<hr class="new2">
-<h4 style="color:blue;">
-Theorem: 
-All topological sorts of a causality graph are computations.
-</h4>
-<hr class="new2">
 
-
-<p class="w3-text-teal">Proof</p>
-
-<p>
-If \(X\) is different from \(Y\) then there is an adjacent pair of
-events \(e_{0}, e_{1}\) in \(X\) where \(e_{0}\) occurs before \(e_{1}\) in \(X\) but \(e_{0}\)
-occurs after \(e_{1}\) in \(Y\).
-There are no edges between \(e_{0}\) and \(e_{1}\) in \(G\) because \(e_{1}\) occurs before
-\(e_{0}\) in \(Y\), and \(e_{0}\) occurs before
-\(e_{1}\) in \(X\).
-<p>
-Therefore \(e_{0}\) and \(e_{1}\) occur on different agents, and there is no
-message sent in \(e_{0}\) that is received in \(e_{1}\), and there is no
-message sent in \(e_{1}\) that is received in \(e_{0}\).
-Events \(e_{0}\) and \(e_{1}\) are similar to events \(a1\) and \(b1\) in the
-top left of figure 1.
-
-<p>
-Let \(X^{(1)}\) be the sequence identical to \(X\) except that order of
-\(e_{0}\) and \(e_{1}\) is flipped. It is easy to prove that \(X^{1}\) is also a
-computation.
-
-<p>
-By repeatedly flipping adjacent out-of-order events we can produce a
-sequence of computations \(X, X^{(1)}, X^{(2)}, \ldots\) that terminates
-in \(Y\).
-
-<h3 class="w3-text-teal">Timeline of a Computation</h3>
-A <i>timeline</i> is a diagrammatic representation of a
-computation.
-A timeline of a computation is the causality graph of the computation
-in which events (vertices) are placed in the sequence in which they
-occur in the computation.
-By convention later events are placed to the right of earlier events,
-and all events at the an agent are placed on a horizontal line.
-<h4 style="color:red;">Example</h4>
 <figure>
-    <img src="Timelines.001.jpeg" alt="Fig2" style="width:100%">
-    <figcaption>Fig.2: A Timeline</figcaption>
+    <img src="Timelines/Timelines.004.jpeg" alt="Fig006" style="width:75%">
+    <figcaption>Fig.4: Example: A Computation and its Causality Graph</figcaption>
 </figure>
 
 <p>
-The horizontal line representing the events at an agent is called the
-agent's timeline.
-An edge along an agent's timeline is labeled with the state of that
-agent at the point. For example, the edge from event A1 to event A2 is
-labeled \(S[A1]\) which is agent \(A\)'s state after event
-A1 and before event A2.
+Other examples of computations with the same causality graph are
+computations represented by vertex sequences \([0, 2, 1, 3, 4, 5,
+6]\), and \([0, 1, 2, 3, 5, 4, 6]\).
 
 <p>
-Event A1 is an example of an internal event in which an agent changes
-state without receiving a message.
-Event A2 is an example of an event in which an agent changes
-state when it receives a message.
+The next theorem tells us which
+computations have the same causality graph.
 
-
-
-<h4 class="w3-text-teal">The Global State at a point in a
-Timelines</h4>
-The global state of the system at a point \(T\) on a timeline can be
-obtained from labels of edges cut by a vertical line at point \(T\).
-We call the vertical line at \(T\), the \(T\)-line. 
-<h4 style="color:red;">Example</h4>
-<figure>
-    <img src="Timelines.002.jpeg" alt="Fig2" style="width:100%">
-    <figcaption>Fig.2: Global State from a System Timeline</figcaption>
-</figure>
-
-
-The state of an agent \(A\) at \(T\) is the label of the
-edge on \(A\)'s timeline cut by the \(T\)-line.  
-The state of a channel \(c\) at point \(T\) in a computation is the sequence (in time
-order) of messages that are sent along \(c\) before \(T\) and that are
-received after \(T\). The state of \(c\) at \(T\) is the sequence
-of edge labels representing
-messages along \(c\) that are cut by the \(T\)-line.
-<p>
-In the figure, the state of channel \(c\) at time \(T\) is the sequence of labels, \([m_{1},
-m_{2}]\), of edges representing messages on \(c\) that are cut by the
-\(T\)-line. 
-
-
-
-<h2 class="w3-text-teal">Cuts of Computations</h2>
-<p>
-A <i>cut of a computation</i> is a partition of the events in the
-computation into sets <i>past</i> and <i>future</i>.
-
-<h5 class="w3-text-teal">Consistent Cuts of Computations</h5>
-A <i>consistent cut of a computation</i> is a cut \((past, future)\) such that
-all edges in the causality graph to events in \(past\) are from events in
-\(past\).
-Equivalently, a consistent cut of a computation is a cut \((past,
-future)\) such that all edges in the causality graph from future events
-are to future events.
-
-<h4 style="color:red;">Example</h4>
-The figure below shows consistent cuts across two system computations
-where past events are colored black and future events are green.
-<figure>
-    <img src="Timelines.007.jpeg" alt="Fig7" style="width:100%">
-    <figcaption>Fig.7: Consistent Cuts of Computations</figcaption>
-</figure>
-An instant \(T\) in the
-lower timeline is represented by the vertical purple line which separates
-past events shown in black (A0, A1, B0, B1, D0, D1) from future events
-shown in green.  The states of agents A, B, D are their states
-immediately after events A1, B1, and D1, respectively. The states of
-channels are the sequences of message lines from the past to the
-future. For example, at \(T\), message \(u_{0}\) has been sent in past
-event B1, and has yet to be received.
-
-<p>
-The upper timeline shows the same sets of past and future events in
-black and green, respectively. The vertical line representing the
-instant \(T\) in the lower timeline corresponds to a curvilinear line
-in the upper timeline.
-
-<p>
-An example of an inconsistent cut is the set <i>past</i> of events {A0, A1, A2,
-B0, D1}. This cut is inconsistent because there is an edge (D1, A2) of
-the causality graph from an event, D1, in the <i>future</i> to an
-event, A2, in the <i>past</i>.
 
 <hr class="new2">
-<h4 style="color:blue;">
-Consistent Cut Theorem
-</h4>
-<h6 style="color:blue;">
-Let \((past, future)\) be a consistent cut of a computation that starts in a state \(S\) and ends
-in a state \(S'\). There exists a computation that starts in \(S\) and
-ends in \(S'\) and in which all events in \(past\) occur in the
-computation before any event in \(future\).
-</h6>
+<h5 style="color:blue;">
+Theorem:
+<br>
+A causality graph and a sequence of its vertices represents a
+computation if:
+<center>
+<p style="color:blue;">
+each vertex \(v\) appears in the sequence after all vertices on which
+\(v\) depends.
+</h5>
+</center>
+</p>
+<hr class="new2">
+<p class="w3-text-teal">Proof</p>
+Let \(G\) be the causality graph of a computation, and let \(Q\) be a
+sequence of vertices of \(G\) where a vertex \(w\) appears in \(Q\) only
+after all vertices on which \(w\) depends.
+Let \(W_{i}\) be the cut consisting of the first \(i \geq 0\) vertices
+of \(Q\).
+Because each vertex appears in \(Q\) only after vertices on 
+which it depends, \(W_{i}\) is consistent for all \(i\).
+Let \(S_{i}\) be the state at the cut \(W_{i}\), for all \(i\).
+We will prove that there is a computation with the state sequence
+\([S_{0}, S_{1}, S_{2}, \ldots]\).
+
+<p>
+Let the \(i+1\)-th vertex in \(Q\) be \(v\).
+Let the label of the agent edge to \(v\) be \(L\).
+Consider the case where there is a message edge to \(v\), and let the
+label of the edge be \(m\) where the edge represents a message
+received on a channel \(c\).
+(The case where no message is received is proved in the same way.)
+Action \(a\) can be executed by agent \(x\) in state \(S_{i}\) if the
+state of \(x\) in \(S_{i}\) is \(L\) and the state of \(c\) in
+\(S_{i}\) is a sequence of messages with 
+message \(m\) at its head.
+
+<p>
+All edges to \(v\) are from \(W_{i}\) because \(W_{i+1}\) is
+consistent.
+\(S_{i}\) is specified by the labels of edges from vertices
+in \(W_{i}\) to vertices outside \(W_{i+1}\).
+Therefore the state of channel \(c\) in \(S_{i}\) is a sequence of messages that has
+\(m\) at its head, and
+the state of agent \(x\) in \(S_{i}\) is \(L\).
+So \(S_{i}\) satisfies the precondition for agent \(x\) to execute action
+\(a\), and 
+there exists a transition from \(S_{i}\) to \(S_{i+1}\),
+for all \(i\).
+
+<h5 class="w3-text-teal">Topological Sorts of Causality Graphs</h5>
+The theorem can also be expressed in terms of topological sorts of
+acyclic graphs.
+A topological sort of an acyclic graph is a sequence of vertices of the graph
+such that for all edges \((v, v')\) in the graph, \(v\) occurs before
+\(v'\) in the sequence.
+
+<hr class="new2">
+<p style="color:blue;">
+Theorem:
+All topological sorts of the causality graph of a computation of a system
+represent computations of the system.
+</p>
+<hr class="new2">
+
+
+<!--------------------------------------------------------->
+<h2 class="w3-text-teal">Computations that generate the same Agent
+Logs</h2>
+<!--------------------------------------------------------->
+
+A log of an agent's actions during a computation is the sequence of
+actions taken by that agent in the computation.
+The log includes the agent states before and after each action, and
+the messages sent and received.
+An agent's log is represented by its timeline -- the horizontal
+sequence of vertices and the edges incident on the vertices -- in the
+computation.
+
+<p>
+An <i>interleaving</i> of logs of a set of agents is a sequence \(S\) of
+actions in the logs where the order of actions in each log is
+preserved, i.e. if \(v\) appears before \(v'\) in the log of an agent
+then \(v\) appears before \(v'\) in \(S\).
+The log of an agent \(x\) can be obtained from an interleaving \(S\) by
+deleting all actions by all agents other than \(x\) in \(S\).
+
+<p>
+The causality graph of a computation can be determined from the logs
+recorded by agents in the computation. The vertices of the graph are
+the vertices in the agent timelines. The agent edges are given in the
+agent timelines, and the message edges connect actions in which
+messages are sent to those in which they are received.
+
+<hr class="new2">
+<h5 style="color:blue;">
+Theorem
+<br>
+An interleaving \(Q\) of agent logs represents a computation exactly
+when each action in which a message is received appears in \(Q\) only
+after the action in which that message is sent.
+</h5>
 <hr class="new2">
 
 <p class="w3-text-teal">Proof</p>
-For a consistent cut \((past, future)\) there are no edges of the
-causality graph from future to past.
-Therefore there is
-a topological sort of the causality graph of the computation in which 
-all events in the past appear before all events in the future.
-All topological sorts of the causality graph are computations.
+Any interleaving \(Q\) of agent logs preserves the <i>depends on</i>
+relation for actions at the same agent.
+If each message received in \(Q\) is received only after it is sent in
+\(Q\) then each vertex in \(Q\) appears only after the vertices on
+which it depends.
 
-<h4 style="color:red;">Example</h4>
-The cut in the diagram on the top of figure 7 is consistent.
-Therefore, there exists a system timeline diagram, shown at the bottom of the
-figure, in which all past events occur before all
-future events.
-<p>
-This result is helpful in developing algorithms that detect properties
-of the states of computations.
+<p  style="color:red;">Examples of Computations with the same Agent
+Logs</p>
+The figure below shows two computations with the same agent logs.
+We can get one computation from another with the same logs by moving
+vertices horizontally -- from left to right or right to left -- while
+ensuring that all message edges are directed forward in time, i.e.,
+have a rightward direction.
+For example, we can get the computation shown below in the figure from
+the one shown above in this way.
+In the top diagram, we can move vertex 1 to the right -- later in time -- so that
+it passes vertex 2; however, we can't move vertex 1 to the right of
+vertex 3 because then the edge from vertex 1 to vertex 3 would be directed to the left -- backwards
+in time.
+Likewise we can move vertex 5 to the left so that it passes vertices 4
+and/or 3, but not 2.
 
-
-
-<hr class="new2">
-<h4 style="color:blue;">
-Consistent Cut Corollary
-</h4>
-<h6 style="color:blue;">
-Let \(S*\) be the state at a consistent cut of a computation that starts in a state \(S\) and ends
-in a state \(S'\). There exists a computation that starts in \(S\),
-visits \(S*\) and then visits \(S'\).
-</h6>
-<hr class="new2">
-
-<p class="w3-text-teal">Proof</p>
-Let \(S*\) be the state at a consistent cut \((past, future)\) of a
-computation that starts in \(S\) and ends in \(S'\).
-From the consistent cut theorem there is a computation \(C\) that starts in
-\(S\) and ends in \(S'\), and in which all \(past\) events occur
-before any \(future\) event.
-Computation \(C\) starts in \(S\),
-visits \(S*\) and then visits \(S'\).
-
+<figure>
+    <img src="Timelines/Timelines.005.jpeg" alt="Fig005" style="width:60%">
+    <figcaption>Fig.5: Example: Computations with the same Agent Logs</figcaption>
+</figure>
 
 
 <h4 class="w3-text-red">
 <i>Central Ideas: Review</i></h4>
 <p class="w3-text-red">
-Timelines help in understanding distributed algorithms.
-Causality graphs show how events depend on each other.
-All topological sorts of causality graphs are computations.
-A consistent cut is a partition of the set of events in a computation
-into subsets <i>past, future</i>, where all edges
-in the causality graph to the past are from the past.
+Causality graphs show how actions in a computation depend on each
+other.
+A consistent cut is subset of vertices of a causality graph where for
+every vertex \(v\) in the cut, all the vertices on which \(v\) depends
+are in the cut.
+A sequence of vertices of a causality graph represents a computation
+if every vertex in the sequence appears only after vertices on which
+it depends.
+All interleavings of agent logs in which messages are received only
+after they are sent are computations.
 
 <p class="w3-text-red">
 <i>Concepts</i>:
-Timelines -> causality graphs -> topological sorts of causality graphs
-are computations -> consistent cuts.
+Causality graphs -> the "depends on" relation -> consistent cuts ->
+vertex sequences that preserve the "depends on"relation 
 </p>
 
 
