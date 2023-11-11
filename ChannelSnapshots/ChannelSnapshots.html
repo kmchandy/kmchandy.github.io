@@ -118,35 +118,138 @@ hr.new1 {
   Consistent Cut</h2> 
 
   <p>
-Next, we design an algorithm by which agents
-collaborate to determine the state at a consistent cut.
-
-  Each agent takes its own local snapshot, i.e. records its own local
-  state, at a point in the computation.
-  Define <i>past</i> to be the set of events at an
-agent before the agent takes its own local snapshot.
-Then <i>future</i> is the set of events 
-agent after the agent takes its own local snapshot.
-A cut \((past, future)\) is consistent if all messages sent in the
-  future are received in the future.
-Therefore the requirement for the cut to be consistent is:
-
-<hr class="new2">
-<h5 style="color:blue;">
-All messages sent after the sender takes its local snapshot
-are received after the receiver takes its local snapshot.
-</h5>
-<hr class="new2">
+We discuss the design of an algorithm by which agents collaborate to determine
+the state at a consistent cut; this state is called a <i>global
+  snapshot</i>.
 
 <p>
-Next, we use the consistent cut requirement to design a global
-snapshot algorithm. 
-The algorithm employs a special type of message called a <i>marker</i>,
-distinct from all other messages in the system.
-Exactly one
-<i>marker</i> is sent along each channel.
+The algorithm is executed by an operating system (OS) on behalf of a
+client.
+  The algorithm consists of OS actions that 
+  do not change the client's causality graph.
+  OS actions can record, but not modify, states.
+Likewise, OS actions can send and receive OS messages without changing
+  client states and messages.
+
+  <p>
+  The OS may use the same processors and channels as clients do.
+  So, the OS may change when client actions are executed.
+  For example, execution of the OS on a processor may delay execution of a client's
+  action on the same processor.
+  The OS may change a client's computation, but we require that it
+  must not change a client's causality graph.
+
+  <p>
+  One way to record a global snapshot is for the OS to stop a client
+  computation, then take a global snapshot, and then  restart the
+  client computation.
+  We describe a snapshot algorithm that runs concurrently with the client
+  computation without stopping the client.
+ 
+<p>
+The algorithm is as follows. Each agent records its own local state, at
+some point in the computation.
+An agent's record of its local state is called the <i>agent's local snapshot.</i> 
+An agent's actions before it takes its local snapshot are called
+pre-snapshot actions.
+
+
+  <h5 class="w3-text-teal">Lemma</h5>
+  The cut consisting of pre-snapshot actions is consistent if and only
+  if
+  <center>
+  each message received in a pre-snapshot action is sent in a
+  pre-snapshot action.
+  </center>
+
+  
+  <p class="w3-text-teal">Proof</p>
+
+If \(v\) and \(v'\) are actions by the same agent and if \(v'\)
+is a pre-snapshot action then so is \(v\) because  \(v\)
+precedes \(v'\).
+If \(v\) and \(v'\) are actions at different agents then \(v'\)
+  receives the message sent in \(v\); from the condition of the 
+theorem, if \(v'\) is a pre-snapshot action then so is \(v\).
+
+<p>
+  <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">A cut is consistent
+  </a>
+  if for all edges \((v, v')\) of the causality
+graph if \(v'\) is in the cut then so is \(v\).
+Therefore, the cut consisting of pre-snapshot actions is consistent.
+
+<h4 style="color:red;">Example: Pre-Snapshot Actions</h4>
+Figure 1 shows a representation of a computation with agents X, Y, Z.
+Assume that there is only one channel, in each direction, between each
+pair of vertices.
+<p>
+The representation of the computation is the causality graph with a
+vertex sequence in which each vertex appears after vertices on which it depends.
+Labels of edges aren't shown so as not to overcrowd the figure.
+
+<figure>
+    <img src="ChannelSnapshots/ChannelSnapshots.001.jpeg" alt="Fig1" style="width:50%">
+    <figcaption>Fig.1: Representation of a Computation</figcaption>
+</figure> 
+
+
+In figure 2, each agent takes a local snapshot shown as a yellow
+circle.
+Taking local snapshots may change the order in which actions of the
+client computation are executed.
+Action 3 occurs after after actions 4, 5, and 6 in figure 2 whereas 3
+is before 4, 5, and 6 in figure 1.
+
+<p>
+The computation shown in figure 2 is different from that in figure 1.
+The computation in figure 2 has a state in which there is
+a message in a channel from agent X to agent Y, and a message in a
+channel from Z to Y (see edges (4, 5) and (1, 3)).
+By contrast, in figure 1,
+message (1, 3) is delivered before message (4, 5) is sent.
+The action of making observations (recording states) of the client
+computation changes the computation.
+
+<p>
+Though the computations are different, the causality graphs for
+figures 1 and 2 are the same. 
+
+<p>
+The pre-snapshot vertices are 0, 1, 2, 4, 6.
+The cut is the set of vertices to the left of the curved brown line.
+Snapshots don't change the client's causality graph.
+So the label of the edge from 4 to 6 (the state of agent X between the
+actions) isn't modified by the action of
+taking the local snapshot; the label of the edge from 4 to the
+snapshot action is the same as that from the snapshot action to 6.
+
+<p>
+There is only one message received in a pre-snapshot action, namely the
+message represented by the edge (0, 2).
+The action of sending this message is a pre-snapshot action.
+So, the local snapshots satisfy the condition of the lemma.
+The lemma tells us that the cut consisting of pre-snapshot vertices is
+consistent.
+
+
+<figure>
+    <img src="ChannelSnapshots/ChannelSnapshots.002.jpeg" alt="Fig2" style="width:50%">
+    <figcaption>Fig.2: Pre-Snapshot Actions</figcaption>
+</figure> 
+
+
 
 <h3 class="w3-text-teal">A Global Snapshot Algorithm</h3>
+
+Next we design an algorithm based on the lemma.
+We assume that the
+<a href="../DISTRIBUTED_SYSTEM_MODELS/DistributedSystemModels.html">
+agent-channel graph</a>
+the directed graph of agents (vertices) and channels
+(edges) is strongly connected, and so the algorithm sends a marker on
+every channel, and every agent takes its local snapshot.
+
 <ol>
   <li>
   The algorithm begins by one or more agents taking their local
@@ -162,61 +265,92 @@ Exactly one
   </li>
 </ol>
 
-<h5 class="w3-text-teal">Proof: Algorithm satisfies the Consistent Cut
-Requirement</h5>
-A message sent after the sender
-takes its local snapshot is sent after the sender sends
-markers.
-Because channels are first in first out, a message that is sent after
-a marker is sent
-is received after the marker is received.
-When an agent receives a marker the agent takes its local snapshot if it hasn't done
-so.
-Therefore, a message sent after the sender
-takes its local snapshot is received after the receiver takes its
-local snapshot.
-
 <p>
-We assume that the directed graph of agents (vertices) and channels
-(edges) is strongly connected, and so the algorithm sends a marker on
+We assume that the
+<a href="../DISTRIBUTED_SYSTEM_MODELS/DistributedSystemModels.html">
+agent-channel graph</a> --
+the directed graph of agents (vertices) and channels
+(edges) -- is strongly connected.
+So the algorithm sends exactly one marker on
 every channel, and every agent takes its local snapshot.
+
+
+<h5 class="w3-text-teal">Proof of Correctness of the Algorithm</h5>
+<ol>
+  <li>
+From rule 2 of the algorithm, the pre-snapshot actions of an agent are
+the actions of the agent before it sends markers on all its output
+  channels.
+  </li>
+  <li>
+From rule 3, the pre-snapshot actions of an agent are
+the actions of the agent before it receives a marker on any of its input
+channels.
+  </li>
+  <li>
+Channels are first-in-first-out. So, if \(m\) is a message received on
+a channel \(c\)
+before the marker was received on \(c\) then \(m\) was sent on \(c\)
+before the marker was sent on \(c\).
+  </li>
+</ol>
+From the above 3 observations it follows that every message received
+in a pre-snapshot action was sent in a pre-snapshot action.
 
 
 
 <h4 style="color:red;">Example of a Global Snapshot</h4>
-Figure 1 illustrates the algorithm. In this example, there are three
-agents -- A, B, and C -- and there is exactly one channel
- from each agent to every other agent. When agent B takes its
-snapshot it sends markers
-to agents A and agents C. Markers are shown as green edges.
-Agent C takes its snapshot when it receives the marker
-which ensures that agent C's snapshot is before event 11.
+Figure 3 illustrates the first step of the algorithm.
+Agent Y takes its local snapshot shown as a yellow vertex on Y's
+timeline. 
+When Y takes its snapshot it sends markers
+on its output channels.
+The markers are shown as green edges in the figure 3.
 
-    <figure>
-    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.005.jpeg" alt="Fig5" style="width:80%">
-    <figcaption>Fig.1: Markers ensure cuts are consistent</figcaption>
+<figure>
+    <img src="ChannelSnapshots/ChannelSnapshots.003.jpeg" alt="Fig3" style="width:50%">
+    <figcaption>Fig.3: Marker Messages Sent when Agent Takes its Local
+    Snapshot</figcaption>
 </figure>
-When agents B and C receive markers they take their snapshots if they
-    haven't done so already, and send markers in their turn. These
-markers are shown in the next figure.
 
-    <figure>
-    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.006.jpeg" alt="Fig6" style="width:80%">
-    <figcaption>Fig.2: Showing all Markers</figcaption>
+When agents X and Z each receive the markers, they take their local snapshots
+because they haven't taken snapshots earlier.
+The actions by X and Z of taking their snapshots are shown as yellow
+vertices on their timelines.
+When X and Z take their snapshots they send markers out on their
+output channels; these markers are not shown in figure 4.
+A total of 6 markers are sent in the algorithm, one marker for each channel.
+
+<figure>
+    <img src="ChannelSnapshots/ChannelSnapshots.004.jpeg" alt="Fig4" style="width:50%">
+    <figcaption>Fig.4: Agent Takes its Local Snapshot when it Receives
+    a Marker
+    Snapshot</figcaption>
+</figure>
+
+
+
 
 <h3 class="w3-text-teal">Snapshots of Channels</h3>
 Next we look at an algorithm to record snapshots (states) of channels
-at a cut.  The messages in the channel at a cut are the messages sent on the channel in the past and
-received on the channel in the future.
+at a cut.
+The messages in a channel at a cut are the messages sent
+by actions in the cut and received by actions outside the
+the cut.
+So, the state of a channel in the global snapshot is the sequence of
+messages sent on the channel  before the sender takes its snapshot and
+that are received after the receiver takes its snapshot.
 
 <p>
-When an agent takes its local snapshot it sends a marker on each of
-its outgoing channels.  So, messages sent along a channel in the past are
-the messages sent on the channel before the marker is sent along the
-channel.
-Messages received in the future are the messages received after the
-receiver takes its local snapshot.
+From rule 2 of the algorithm, the messages sent by an agent along a
+channel before the agent takes its snapshot are the messages that the
+agent sends along the channel before sending a marker on the channel.
+Because channels are first-in-first-out, the messages sent along a
+channel before the
+sender takes its snapshot are the messages received along the channel
+before the marker on the channel.
 Therefore:
+
 <hr class="new2">
 <h5 style="color:blue;">
 The state of a channel in a snapshot is:
@@ -232,62 +366,60 @@ along a channel, then the snapshot of the channel is the empty
 sequence of messages.
 
 <h4 style="color:red;">Example: Channel Snapshot</h4>
-A diagram that illustrates the process by which an agent gets a
-snapshot of an incoming channel is shown below. The diagram shows the
-timelines for two agents, \(A\) and \(B\).
+Figure 5 shows the continuation of the snapshot algorithm after the
+situation in figure 4.
+When agent X takes its snapshot it sends markers on its output edges.
+These markers are shown in green.
 
-<p>
-Agent \(A\) sends messages \(m_{0}, m_{1}, m_{2}\), then sends a
-marker (colored green), and then message \(m_{3}\), to agent \(B\) on a
-channel \(x\). All the messages in the diagram are sent on the same
-channel.
+<figure>
+    <img src="ChannelSnapshots/ChannelSnapshots.005.jpeg" alt="Fig5" style="width:50%">
+    <figcaption>Fig.5: Agent Takes its Local Snapshot when it Receives
+    a Marker
+    Snapshot</figcaption>
+</figure>
 
-<p>
-The events shown as blue circles on \(A\)'s timeline are
-events in which \(A\) sends messages \(m_{0}, m_{1}, m_{2}\) before
-\(A\) takes its local snapshot.  The event shown as a black circle
-shows \(A\) sending messages \(m_{3}\) after \(A\) takes its local
-snapshot. The point at which \(A\) takes its local snapshot is the
-point at which the purple wavy line (the cut) crosses \(A\)'s timeline.
+Figure 6 shows how agent Y determines the state of the channel from X
+to Y in the global snapshot.
+Y starts recording the messages it receives along this channel after Y
+takes its snapshot and stops the recording when it receives a marker
+on this channel.
+The only message in this interval is the message corresponding to edge
+(6, 7).
 
-    <figure>
-    <img src="ChannelSnapshots_Figures/ChannelSnapshots_Figures.007.jpeg" alt="Fig7" style="width:100%">
-    <figcaption>Fig.7: Snapshot of a channel</figcaption>
-    </figure>
 
-The event shown as a yellow circle on \(B\)'s timeline represents the
-event in which \(B\) receives messages \(m_{0}\) before \(B\) takes its
-own snapshot. The events shown as orange circles represent events in
-which \(B\) receives messages \(m_{1}, m_{2}\) after \(B\) takes its
-own snapshot and before \(B\) receives the marker. The black event
-represents \(B\) receiving message \(m_{3}\) after \(B\) takes its
-snapshot.
+<figure>
+    <img src="ChannelSnapshots/ChannelSnapshots.006.jpeg" alt="Fig6" style="width:50%">
+    <figcaption>Fig.6: State of Channel: Messages received between
+    snapshot and marker
+    Snapshot</figcaption>
+</figure>
 
-<p>
-The messages that \(A\) sent in the past are \(m_{0}, m_{1}, m_{2}\).
-The messages that \(B\) receives in the future are \(m_{1}, m_{2},
-m_{3}, \ldots\).
-The state of the channel, at the cut, is the sequence of messages \([m_{1},
-m_{2}]\) that \(A\) sent in the past and that \(B\) receives in the
-future.
-This is shown as the sequence of red message lines that
-cross the wavy purple line which represents the global snapshot.
-These are the messages that \(B\) receives after it takes its local
-snapshot and before it receives the marker.
 
 <h4 class="w3-text-teal">Collecting Local Agent and Channel
 Snapshots</h4>
 Each agent takes its own local snapshot and the snapshots of its
 incoming channels.
-Some applications require a single agent to collect local
-snapshots to form a global snapshot while other applications carry out
-computations on local snapshots.
-Algorithms that detect system properties by analyzing local snapshots
-are given later.
+In some applications, agents send snapshots of their states and the
+states of their
+input channels to a collector agent.
+The collector composes the information to form the global snapshot
+
+<p>
+Other applications carry out distributed computations on local
+snapshots.
+These applications have no single collector agent.
+We will look at both kinds of applications in later pages of this website.
 
 <!--------------------------------------------------------------->
 <h3 class="w3-text-teal">Starting, Snapshot, and Ending States</h3>
+As we showed earlier, making measurements (recording states) of a
+client computation may change the computation.
+The global snapshot is a state of the cut of the changed computation.
+Does the snapshot provide information about the original
+computation -- the computation that wasn't changed by the actions of
+the snapshot algorithm?
 
+<p>
 Let the states in which the snapshot algorithm starts and ends be
 \(s_{init}\) and \(s_{fini}\), respectively, and let \(s_{snap}\) be
 the global state recorded by the algorithm.
