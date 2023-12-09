@@ -102,7 +102,161 @@ hr.new1 {
   foundation of many distributed algorithms.</i> 
 
 
+  <!---------------------------------------------------------------->
+  <h2 class="w3-text-teal">A Timeline Representation of a Trajectory</h2>
+  <!---------------------------------------------------------------->
+A timeline of a trajectory shows the system state at each point in the
+  trajectory.
+
+  By convention, time flows from left to right.
+  
+  Each agent has a horizontal line showing the state of the agent as
+  a function of time; this line is called the agent's timeline.
+
+  A message sent by an agent \(u\) at time \(t\) and received by an agent
+  \(u'\) at time \(t'\) is represented by a line from \(u\)'s timeline
+  at point \(t\) to \(u'\)'s timeline at point \(t'\).
+
+  where the m
+  There is a line from the time a
+  
+  <!---------------------------------------------------------------->
+  <h2 class="w3-text-teal">Dependence Relation</h2>
+  <!---------------------------------------------------------------->
+  The output of an action is dependent on its inputs, which are, in
+  turn, outputs of other actions.
+  The dependence of actions is represented by a dependence graph.
+
+  <p>
+  The dependence graph of a computation is a labeled, directed graph
+  in which vertices represent actions of the computation.
+  The graph has an edge from the action taken by an agent to the next action taken 
+  by that agent; this action is labeled with the state of the agent
+  between the actions. 
+  The graph has an edge from each action in which a message is
+  sent to the action in which that message is received; this edge is
+  labeled with the contents of the message.
+  
+  The graph is acyclic because each edge is from an earlier action in
+  the computation to a later action.
+
+  We define the dependence relation between actions in the computation
+  as follows: action \(v\) is dependent on action \(v'\) exactly when
+  there is a path in the dependency graph from \(v\) to \(v'\).
+  
+
+  ; this edge is called an agent edge and is labeled with
+  the state of the agent between the actions.
  
+  <!---------------------------------------------------------------->
+  <h2 class="w3-text-teal">A Timeline Representation of a Computation</h2>
+  <!---------------------------------------------------------------->
+  A timeline of a computation is a graphical representation of the
+  computation.
+  A timeline is a labeled, directed graph and a total ordering of the vertices of the
+  graph.
+  The vertices of the graph represent actions by agents.
+
+  <p>
+  The graph has an edge from each (vertex representing an) action taken by the agent to the next action taken
+  by the agent; this edge is called an agent edge and is labeled with
+  the state of the agent between the actions.
+  The graph has an edge from each action in which a message is
+  sent to the action in which that message is received; this edge is
+  called a message edge and is labeled with the contents of the message.
+
+  <p>
+  Actions are ordered in the order in which they occur in the
+  computation with
+  later actions placed to the right of earlier actions.
+  Actions by the same agent are placed on the same horizontal line.
+  
+
+  
+
+<!--------------------------------------------------------------------------->
+  <h5 style="color:red;">Example: Timeline of a Computation</h5>
+  <!--------------------------------------------------------------------------->
+<p>
+Figure 1 shows a computation \([S_{0}, S_{1}, \ldots, S_{6}]\) at the top and
+  the timeline of the computation at the bottom.
+  The computation is from the example on the previous
+<a href="DistributedSystemModels.html">
+page on distributed system models.
+</a>
+</p>
+The system has two agents \(u\) and \(v\), and channels between them,
+and channels from each agent to itself.
+The system has a blue token and a red token (shown as squares).
+The agents exchange tokens.
+
+  </figure>
+
+    <figure>
+    <img src="Timelines/Timelines.001.jpeg" alt="Fig001" style="width:100%">
+    <figcaption>Fig.1: Example: A Computation and its Timeline</figcaption>
+</figure>
+
+<p>
+The transition from \(S_{0}\) to \(S_{1}\) occurs when agent \(u\)
+executes an action.
+The action is specified by vertex 1 and its input and output edges.
+Next, we look in detail at the representation of this state transition
+in a timeline.
+Figure 2 shows the state transition.
+
+ 
+  <figure>
+    <img src="Timelines/Timelines.002.jpeg" alt="Fig001" style="width:60%">
+    <figcaption>Fig.2: Example: A State Transition</figcaption>
+</figure>
+
+The specification of the action that causes the transition is as follows.
+
+<p>
+<i>Inputs to the action</i>
+<ol>
+  <li>
+  State of \(u\) before receiving the message: Holds blue token.
+  <br>
+  This is the label of the agent edge directed towards the vertex.
+  </li>
+  <li>
+  Message "wakeup" received on channel \((u, u)\).
+  <br>
+  This is the label of the message edge directed towards the vertex.
+  </li>
+</ol>
+<p>
+<i>Outputs of the action</i>
+<ol>
+  <li>
+  Messages sent by the action: Blue token sent on edge \((u, v)\).
+  <br>
+  This is the label of the message edge directed from the vertex.
+  </li>
+  <li>
+  State of \(u\) after the action.
+  <br>
+  This is the label of the agent edge directed from the vertex.
+  </li>
+</ol>
+
+The representation of the action as a vertex is shown below. The inputs to the
+  action are the labels of the edges directed towards the vertex, and
+  the outputs of the action are the labels of the edges directed away
+  from the vertex.
+  <figure>
+    <img src="Timelines/Timelines.003.jpeg" alt="Fig001" style="width:60%">
+    <figcaption>Fig.3: Example: Timeline Representation of an Action</figcaption>
+</figure>
+
+
+gets a wakeup message from itself.
+The action 
+The specification to the action is
+as follows:
+  
   <!---------------------------------------------------------------->
   <h2 class="w3-text-teal">The Causality Graph of a Computation</h2>
   <!---------------------------------------------------------------->

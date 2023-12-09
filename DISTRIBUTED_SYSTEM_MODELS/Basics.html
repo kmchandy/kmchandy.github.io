@@ -1,0 +1,344 @@
+<title>DistributedSystemModels/Basics.html</title>
+
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+
+<!---------------------------------------------------------------->
+    <h1 class="w3-text-teal">Basics</h1>
+<!----------------------------------------------------------------->
+  
+
+  
+  </p>
+
+  <p class="w3-text-red">
+  <i>
+  A simple notation for distributed algorithms.
+  </i>
+  </p>
+
+  <!----------------------------------------------------------------->
+  <h3 class="w3-text-teal">Agents and Channels</h3>
+  <!----------------------------------------------------------------->
+  We use a simple notation to develop algorithms. Later, we implement
+  algorithms using libraries such as
+  <a href="https://en.wikipedia.org/wiki/Message_queue">Message Queue (MQ)</a>,
+  <a href="https://aws.amazon.com/sqs/">AWS Simple Queue Service
+  (SQS)</a>,
+  and
+  <a
+  href="https://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol">
+  Advanced Message Queuing Protocol (AMQP)
+  </a>,
+  
+  These libraries are implemented on top of protocols such as
+  <a href="https://en.wikipedia.org/wiki/Transmission_Control_Protocol">TCP</a>,
+  <a href="https://en.wikipedia.org/wiki/User_Datagram_Protocol">UDP</a>, and
+  <a
+  href="https://en.wikipedia.org/wiki/Remote_procedure_call">RPC</a>.
+
+  The notation we use is a simplification of a
+  <a
+  href="https://www.rabbitmq.com/tutorials/tutorial-one-python.html">
+  Python implementation of AMQP.
+  </a>
+
+<p>
+
+A distributed system consists of a set of agents and a set of
+channels.
+  
+  A channel is directed from one agent to one agent.
+
+  A channel from an agent <code>P</code> to an agent <code>Q</code> is
+  an output of <code>P</code> and an input of <code>Q</code>.
+  
+  An agent can send messages on its output channels and receive
+  messages on its input channels.
+
+A system is represented by a directed graph in which vertices
+represent agents and edges represent channels.
+
+<p>
+A distributed system is initiated with a set of agents and channels,
+and these sets remain unchanged.
+
+Agents and channels are not created or deleted.
+
+
+
+
+
+  <h4 style="color:red;">Example: Agent-Channel Graph</h4>
+  The figure below shows an agent-channel graph with agents \(A, B, C\).
+
+    <figure>
+    <img
+    src="DistributedSystemModels/DistributedSystemModels.001.jpeg"
+    alt="Fig1" style="width:60%"> 
+    <figcaption>Fig.1: Example: An Agent Graph</figcaption>
+    </figure>
+
+
+
+
+<!---------------------------------------------------->
+<h3 class="w3-text-teal">Message Communication</h3>
+<!----------------------------------------------------------------->
+
+The state of a channel is the sequence of messages in the channel --
+these are the messages that have been sent but not received on the
+channel.  A message that is sent is appended to the tail of the
+sequence, and a message that is received is removed from the head of
+the sequence.
+
+Messages are not delivered instantaneously and message delays are
+unknown.
+
+
+<!---------------------------------------------------->
+<h3 class="w3-text-teal">Agents</h3>
+<!---------------------------------------------------->
+
+Each agent initializes its state and then executes an infinite loop in
+which the agent receives and processes a message from any of its input
+channels. 
+
+An agent is either waiting for a message or processing a message.  An
+agent is said to be <i>active</i> while it is processing a message and
+<i>idle</i> while it is waiting for a message.
+
+<p>
+An idle agent remains idle until it receives a message and becomes
+active when it receives a message.
+
+An active agent becomes idle after processing a message.
+
+A function
+<pre>
+receive(message, sender)
+</pre>
+is associated with each agent.
+
+This function is called a callback function in message-queuing
+libraries. 
+
+<p>
+If an idle agent has a nonempty input channel then the
+<code>receive</code> function of the agent is called with the
+<code>message</code> parameter set to the message at the front of
+<i>any</i> of the agent's nonempty input channels, and the
+<code>sender</code> parameter set to the sender of the message.
+
+The message is removed from the channel.
+
+<p>
+When the agent finishes executing the <code>receive</code> the agent
+becomes idle. 
+
+If a message arrives at an agent while the agent is active then the
+message remains in the channel.
+
+<p>
+An agent sends a mesage by executing
+<pre>
+send(message, receiver)
+</pre>
+The first parameter of <code>send</code> is the message that is sent,
+and the second paramenter is the agent to which the message is sent.
+
+<p>
+A message can be sent on a channel independent of the state of the
+channel.
+
+We will show that every algorithm can be implemented with channels of
+fixed buffer size; however, for the time being assume that channels
+have buffers of infinite size. 
+
+
+<p>
+The infinite loop is started by calling <code>start()</code>.
+
+<h4 style="color:red;">Example of an Agent</h4>
+This is an example of an agent that receives messages from agents
+<code>pos</code> and <code>neg</code>,
+and sends messages to agent <code>results</code>.
+<pre>
+sum = 0
+start()
+
+def receive(message, sender):
+   if sender == pos:
+       sum = sum + message
+   else:
+       sum = sum - message
+   send(sum, results)
+</pre>
+
+
+<!----------------------------------------------------->
+<h4 class="w3-text-teal">Restrictions on receive</h4>
+<!----------------------------------------------------->
+
+Each agent has its own <code>receive</code> function which is local to
+that agent, only accesses that agent's variables, and sends
+messages only on that agent's output channels.
+
+A <code>receive</code> function does not call itself.
+Every execution of <code>receive</code> must terminate.
+
+
+
+<!------------------------------------------------------------>
+<h4 class="w3-text-teal">Local Clocks and Timing</h4>
+<!----------------------------------------------------->
+
+Agents may have local clocks; however, clocks aren't synchronized and
+may deviate from true time by an arbitrary amount.
+
+The time on an agent's clock gives no information about the time
+on another agent's clock.
+
+
+
+<!------------------------------------------------------------>
+<h4 class="w3-text-teal">Termination</h4>
+<!------------------------------------------------------------>
+
+Execution of the system halts when all agents are idle and all
+channels are empty.
+
+We will discuss termination detection later.
+
+<h4 class="w3-text-red">
+<i>Central Ideas: Summary</i></h4>
+
+<p class="w3-text-red">
+A state of the system is given by the states of its components -- agents
+and communication channels.
+
+
+
+<p class="w3-text-red">
+<i>Concepts</i>:
+ Distributed system, agents and channels.
+
+
+<h3 class="w3-text-teal">Next</h3>
+Next look at
+<a href="Timelines.html">Timelines of Computations.</a>
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
