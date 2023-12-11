@@ -474,299 +474,45 @@ Edges and labels are the same as in a computation.
     <figcaption>Fig.6: Example - A Computation and its Event Graph</figcaption>
 </figure>
 
+The event graph of the trajectory shown in figure 6 is the same as the
+event graph of the computation shown in figure 5.
 
+If we make the duration of events infinitisimally small -- shrink the
+length of event 1 to a point in the figure -- then we get a diagram of
+a computation with the same event graph as the trajectory.
 
-<p>
-Given any trajectory, there is a computation with the same event graph
-as the trajectory.
+<h4 class="w3-text-teal">Trajectories and Computations</h4>
+Every trajectory has a computation with the same event graph, and
+every computation has a trajectory with the same event graph.
 
 The computation is obtained from a trajectory by making executions of
 <code>receive</code> instantaneous in the trajectory.
 
-Likewise, every computation has a trajectory with the same event graph.
 
+<p>
 In the first part of this course we study event graphs and
 computations of distributed algorithms; we look at trajectories
 later.
 
 
-<h4 class="w3-text-teal">Agent Computations and Event Graphs</h4>
-A computation of an agent is defined as the sequence of events at that
-agent.
-
-An agent's computation is shown in figure 6 by the horizontal timeline
-for that agent.
-
-An event graph specifies each agent's computation.
-
-The initial state and the computations for each agent specify the
-event graph because there is only one way to connect message edges of
-agent computations together.
-
 <p>
-Pictorially, an event graph specifies the initial state (event 0) and
-the horizontal lines for each agent.
+Agents in a distributed system cannot carry out actions synchronously
+because they don't have access to a shared clock.
 
-And the initial state and horizontal lines for each agent specify the
-event graph.
+For example, an agent cannot add a value to a double-entry ledger at
+the same instant as another agent subtracts the value.
 
-<p>
-The event graph specifies the state of each agent after the \(i\)-th
-event at that agent, for all \(i\).
+Agents can collaborate by sending messages, and in the example, one
+agent can subtract a value after another agent adds a value; the only
+notion of time is before-after.
 
-The event graph does not, however, specify the state of the entire
-system at that point.
+The event graph tells us how agents communicate and collaborate.
 
-Restricting attention to the computations of each
-agent is adequate for reasoning about many algorithms.
+We will describe and reason about the correctness of many distributed
+algorithms using event graphs.
 
-<p>
-Agents in a distributed system in which agents have no access to time
-cannot collaborate to carry out actions synchronously.
 
-Two agents cannot add and subtract values in a double-entry ledger at
-the same time because the agents don't have access to a common time.
 
-Agents can communicate, however, so that an agent carries out an
-action after another.
-
-The event graph tells us how agents communicate and collaborate to
-achieve a goal.
-
-
-
-
-<h4 class="w3-text-teal">Predecessors of Vertices</h4>
-
-In graph theory, a vertex \(e\) is a
-<a href="https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)">
-predecessor
-</a>
-of a vertex \(e'\) exactly when there is a path in the graph from
-\(e\) to \(e'\).
-
-An event graph is acyclic because edges are directed from events
-to later events.
-
-So, the predecessor relation is a
-<a href="https://en.wikipedia.org/wiki/Partially_ordered_set">
-partial order.
-</a>
-
-A subgraph is <i>predecessor closed</i> exactly when all predecessors
-of vertices in the subgraph are in the subgraph.
-
-
-<!---------------------------------------------------------------->
-<h5 style="color:red;">Example: Predecessors of Vertices</h5>
-
-Event 0 represents the initial state of the entire
-system; so it represents all vertices labeled 0.
-
-Similarly event \(N\) represents the final state of the system.
-
-Events 0, 1, 2 are predecessors of event 5 in figure 6.
-
-Events 3, 4, 5, 6 are not predecessors of event 5.
-
-
-<p>
-Examples of subgraphs that are predecessor closed are \(\{0, 1\}\),
-\(\{0, 2\}\), and  \(\{0, 1, 2, 5\}\).
-
-An example of a subgraph that is not predecessor closed is \(\{0, 1,
-3\}\) because there is an edge to vertex \(3\) from vertex \(2\) which
-is not in the subgraph.
-
-
-
-<!----------------------------------------------------------------->
-<h4 class="w3-text-teal">System States and the Event Graph</h4>
-<!----------------------------------------------------------------->
-
-Let \(past\) be a predecessor-closed subgraph of an event
-graph and let \(future\) be the subgraph consisting of vertices that
-are not in \(past\).
-
-The reason for our choice of these names will become clear shortly.
-
-We associate a system state \(S\) with \(past\) where \(S\) is
-defined by the labels of edges from \(past\) to \(future\).
-
-<p>
-The state of an agent \(u\) in \(S\) is the label of the \(u\)
-edge from a vertex in \(past\) to a vertex in \(future\).
-
-The state of a channel \((u, v)\) in \(H\) is the sequence of labels
-of \((u, v)\) edges from vertices in \(past\) to vertices in
-\(future\).
-
-
-<!------------------------------------------------------------------>
-<h4 style="color:red;">Example: State associated with a Subgraph</h4>
-<!------------------------------------------------------------------>
-
-<p>
-Let's look at how system state \(S_{3}\) associated with the
-predecessor-closed subgraph consisting of vertices 0, 1, 2, 3.
-
-Here \(past = \{0, 1, 2, 3\}\) and \(future = \{4, 5, 6\}\).
-
-The edges from \(past\) to \(future\) are the edges that cross the
-boundary -- the vertical line -- between \(past\) to \(future\).
-
-<p>
-A vertical line between events 3 and 4 intersects the agent edge for
-\(u\) at an edge with label "e"; so, \(u\) holds no tokens in
-\(S_{3}\).
-
-The line intersects the edges for channel \((v, u)\) at a single edge
-and that edge has label "red token" and so the state of the \((v, u)\)
-in \(S_{3}\) is a sequence of messages consisting of a single message
--- the red token.
-
-The line does not intersect an edge for the channel \((u, v)\), and so
-the state of this channel is the empty sequence of messages.
-
-The states of other agents and channels are determined similarly.
-
-
-<p>
-The state \(S_{i}\) that occurs in a computation after events \(0,
-\ldots, i\) is shown in figure 7. 
-
-
-<figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.007.jpeg"
-    alt="Fig6" style="width:100%"> 
-    <figcaption>Fig.7: Example - System States in the Event Graph</figcaption>
-</figure>
-
-
-
-<!------------------------------------------------------------------>
-<h4  class="w3-text-teal">
-Theorem: State Transitions 
-</h4>
-<!------------------------------------------------------------------>
-Let \(past\) be a closed subgraph of an event graph \(G\), and let
-\(future\) be the subgraph consisting of vertices in \(G\) that are
-not in \(past\).
-
-Let \(e\) be an event in \(future\).
-
-Let \(next\) be the subgraph with vertex \(e\) and the vertices in
-\(past\). 
-
-If \(next\) is closed then there is a transition from the state
-associated with \(past\) to the state associated with \(next\).
-
-<p>
-For example there is a transition from the state associated with
-\(past\) to the state associated with \(next\) where \(past = \{0, 1,
-2, 5\}\),\(next = \{0, 1, 2, 5, 3\}\), and where \(past = \{0,
-\ldots i\}, next = \{0, \ldots, i, i+1\}\), for all \(i\) in figure
-7.
-
-<p  class="w3-text-teal">
-Proof
-</p>
-The state associated with \(past\) is determined by the labels of
-edges from \(past\) to \(future\), and these edges include the edges
-from \(past\) to \(e\).
-
-So, event \(e\) can occur after events in \(past\) have been executed.
-
-Therefore there is a transition from the state associated with
-\(past\) to the state associated with \(next\).
-
-
-
-
-
-<!------------------------------------------------------------------>
-<h4 style="color:red;">Example: State Transitions</h4>
-<!------------------------------------------------------------------>
-
-<p>
-Let \(Q\) be the sequence of events \([0, 2, 1, 5, 3, 4, 6]\).
-
-The subgraph consisting of the first \(i\) events of \(Q\) is
-predecessor closed for all \(i\).
-
-So, there is a transition from the state associated with the subgraph
-consisting of the first \(i\) events of \(Q\) to that associated with
-the first \(i+1\) events.
-
-<figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.009.jpeg"
-    alt="Fig" style="width:100%"> 
-<figcaption>
-Fig.7: Example - State Transition
-</figcaption>
-</figure>
-Let's look at the transition from \(\{0, 2, 1, 5\}\) to \(\{0, 2, 1,
-5, 3\}\).
-
-The state \(S'_{3}\) corresponding to \(\{0, 2, 1, 5\}\) is given by
-the labels of edges that cross the vertical line after event \(5\) and
-before event \(3\).
-
-These edges include the message edge from \(1\) to \(3\) and the agent
-edge from \(2\) to \(3\).
-
-Therefore event \(e\) can occur in this state, and there is a
-transition from \(S'_{3}\) to \(S'_{4}\).
-
-
-
-<!------------------------------------------------------------------>
-<!------------------------------------------------------------------>
-<h4 class="w3-text-teal">Theorem: Computations with the same
-Event Graphs</h4>
-<!------------------------------------------------------------------>
-<!------------------------------------------------------------------>
-
-Let \(G\) be an event graph of a computation starting in a state
-\(S\).
-
-Any sequence of events of \(G\), where
-<center>
-<i>
-each event \(e\) in the sequence appears after all its predecessors
-</i>
-</center>
-is also a computation starting in \(S\).
-
-<p>
-The theorem can also be stated in the following ways.
-<ol>
-  <li>
-  A sequence of events of \(G\) is a computation starting
-  in \(S\) if for all edges \((e, e')\) of the graph, \(e\) appears
-  before \(e'\) in the sequence.
-  </li>
-  <li>
-  All
-  <a href="https://en.wikipedia.org/wiki/Topological_sorting">
-  topological sorts
-  </a>
-  of \(G\) are computations starting in \(S\).
-  </li>
-</ol>
-
-<p class="w3-text-teal">Proof</p>
-The proof follows directly from the previous theorem.
-
-
-
-<!---------------------------------------------------------------->
-<h4 style="color:red;">Examples of Computations with the same Event
-Graph</h4> 
-<!---------------------------------------------------------------->
-Some examples of event sequences of computations with the same event
-graph are \([0, 1, 2, 3, 4, 5, 6]\), \([0, 2, 1, 3, 4, 5, 6]\),
- \([0, 2, 1, 3, 4, 5, 6]\), and  \([0, 1, 2, 3, 5, 4, 6]\).
 
 
 <h5 class="w3-text-teal">Extending the Model to Different Channel types</h5>
