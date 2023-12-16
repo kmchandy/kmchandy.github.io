@@ -78,7 +78,7 @@ hr.new1 {
 
 
 <!---------------------------------------------------------------->
-    <h1 class="w3-text-teal">A Model of a Distributed System</h1>
+    <h2 class="w3-text-teal">A Model of a Distributed System</h2>
 <!----------------------------------------------------------------->
   
 
@@ -110,7 +110,7 @@ We analyze distributed systems such as the electrical power grid by
   <a href="Basics.html">previous page</a>.
 
 
-  <p>
+<h4 style="color:red;">Example of a Trajectory</h4>
 Figure 1 shows a trajectory of a system with two agents \(u\) and
   \(v\) and channels between them.
 
@@ -123,27 +123,28 @@ There is a timeline for each agent that shows the state of the agent
 The state of an agent \(u\) at time \(t\) is represented by a point
   \(t\) units to the right of the origin on \(u\)'s timeline.
 
-A message sent at time \(t\) by an agent \(u\) and received at
-  time \(t'\) be an agent \(v\) is represented by a line from point
-  \(t\) on \(u\)'s timeline to point \(t'\) on \(v\)'s timeline.
+A message sent at time \(c\) by an agent \(u\) and received at
+  time \(d\) by an agent \(v\) is represented by a line from point
+  \(c\) on \(u\)'s timeline to point \(d\) on \(v\)'s timeline.
 
 The state of the system at time \(t\) is shown diagramatically by the
   vertical line at \(t\).
 
 <figure>
     <img
-    src="DistributedSystemModels/DistributedSystemModels.008.jpeg"
+    src="DistributedSystemModels/DistributedSystemModels.011.jpeg"
     alt="Fig1" style="width:100%"> 
     <figcaption>Fig.1: Example: A System Trajectory</figcaption>
 </figure>
 
 
-Next we describe a simple model that deviates from the distributed
-system described on the <a href="Basics.html">previous page</a> in
-several ways.
+Next we describe a simple model that is adequate for reasoning about
+many algorithms though it cannot represent  trajectories.
 
-The model is adequate for reasoning about many
-algorithms though it cannot represent  trajectories.
+We show the relationship between the model and trajectories later on
+this page.
+
+
 
 
 
@@ -152,13 +153,16 @@ algorithms though it cannot represent  trajectories.
 <!-------------------------------------------------------------->
 
 <p>
+The model deviates from the distributed system described on the <a
+href="Basics.html">previous page</a> in several ways.
+
 The model does not deal with states of an agent while it is executing
 a <code>receive</code> command.
 
 The model only represents states of an agent before the agent
 begins, and after it completes, executing  a <code>receive</code>.
 
-The model deals on with states in which all agents are idle.
+The model deals only with states in which all agents are idle.
 
 
 <p>
@@ -244,7 +248,8 @@ a transition from \(S_{0}\) to \(S_{1}\).
 The diagram at the left of the figure shows a system state in
 which agent \(u\) holds the blue token, agent \(v\) holds the red
 token, channels \((u, v)\) and \((v, u)\) are empty, and channels
-\((u, u)\) and \((v, v)\) each contain a wakeup message.
+\((u, u)\) and \((v, v)\) each contain a wakeup message, shown as a
+star.
 
 
  
@@ -288,7 +293,7 @@ def receive(message, sender):
 </pre>
 
 <!-------------------------------------------------------------->
-<h4 class="w3-text-teal">Timing</h4>
+<h4 class="w3-text-teal">Time</h4>
 <!-------------------------------------------------------------->
 The local clocks of agents are not synchronized.
 
@@ -297,19 +302,20 @@ that it sleeps is unknown.
 
 An agent's clock may be faster or slower than true time.
 
+The length of time that an agent sleeps has no bearing on the
+correctness of the algorithm; however, it can impact
+performance. 
+
+<p>
 An agent may not start processing a message at the instant at which
 the message arrives.
 
 Multiple agents may be scheduled on the same resource and the time at
-which an agent will execute a <code>receive</code> command is unknown.
-
-The length of time that an agent sleeps has no bearing on the
-correctness of the algorithm; however, it can make a difference to its
-performance. 
+which an agent executes a <code>receive</code> command is unknown.
 
 
 <!----------------------------------------------------------->
-<h4 style="color:red;">Example: Event</h4>
+<h4 style="color:red;">Example of an Event</h4>
 
 The event corresponding to the state transition is specified by the
 state of \(u\) before the transition (\(u\) holds blue token), the
@@ -323,13 +329,13 @@ The figure below illustrates the event.
     <figure>
     <img
     src="DistributedSystemModels/DistributedSystemModels.003.jpeg"
-    alt="Fig1" style="width:100%"> 
+    alt="Fig1" style="width:80%"> 
     <figcaption>Fig.3: Example: Representation of an Event</figcaption>
 </figure>
 
 
 <!----------------------------------------------------------->
-<h4 style="color:red;">Example: State Transition Graph</h4>
+<h4 style="color:red;">Example of a State Transition Graph</h4>
 
 The directed graph in which vertices are states and edges represent
 state transitions is called the <i>state transition graph.</i>.
@@ -365,7 +371,7 @@ which the message is received that caused the transition.
 
 
 <!----------------------------------------------------------->
-<h4 style="color:red;">Example: Computation</h4>
+<h4 style="color:red;">Example of a Computation</h4>
 <!----------------------------------------------------------->
 
 An example of a computation is the sequence \([S_{0}, \ldots S_{8}]\)
@@ -403,16 +409,16 @@ the message, and is called a message edge.
 A computation is represented by an event graph with later events
 placed to the right of earlier events.
 
-Events at the same agent are placed on q horizontal line.
+Events at the same agent are placed on a horizontal line.
 
 The diagramatic representation of a computation is similar to that of
 a trajectory.
 
 <!---------------------------------------------------------------->
-<h4 style="color:red;">Example: Event Graph</h4>
+<h4 style="color:red;">Example of an Event Graph</h4>
 <!---------------------------------------------------------------->
 The computation of figure 5 is shown in figure 6 as an event graph with
-events placed in order.
+later events placed to the right of earlier events.
 
 <figure>
     <img src="DistributedSystemModels/DistributedSystemModels.006.jpeg"
@@ -431,68 +437,57 @@ The outputs of events numbered \(0\) are the initial states of agents
 and message channels, and the inputs of events labeled \(N\) are their
 final states.
 
-Let's look at the representation of event 1, shown in figure 3, as it
-apears in figure 6.
+The horizontal black edges show states of agents.
 
-<p>
-Event 1 is at agent \(u\).
+The purple edges show messages.
 
-The inputs to event 1 are the state of \(u\) before the event and the
-message <code>wakeup</code> received by \(u\) on channel \((u, u)\).
+Event 1 in the figure is the same as the event shown in figure 3.
 
-The outputs of event 1 are the state of \(u\) after the event and the
-message <code>blue token</code> sent by \(u\) on channel \((u, v)\).
-
-Before the event \(u\)'s state is that it holds the blue token.
-
-After the event \(u\)'s state is that it holds no tokens show in the
-figure by the letter "e" for empty.
 
 
 
 <!---------------------------------------------------------------->
-<h3 class="w3-text-teal">Event Graphs in Trajectories</h4>
+<h4 class="w3-text-teal">Trajectories and Computations</h4>
 <!---------------------------------------------------------------->
-The 4-tuple specification of an event is independent of the duration
-of the event.
-
-The next figure shows a trajectory in which agent \(v\) executes
-multiple receives while agent \(u\) is executing a single receive.
-
 The event graph of a trajectory is specified in the same way as that
 of a computation.
 
-A vertex represents an event -- an execution of a single
-<code>receive</code>.
 
-Edges and labels are the same as in a computation.
+<!---------------------------------------------------------------->
+<h5 style="color:red;">Example of a Trajectory and a Computation</h5>
+<!---------------------------------------------------------------->
+
+The top diagram of figure 6 shows a trajectory and the lower
+diagram shows a computation with the same event graph. 
+
+The lower diagram can be obtained from the upper diagram by making the
+durations of events infinitisimally small.
 
 
 <figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.006.jpeg"
+    <img src="DistributedSystemModels/DistributedSystemModels.012.jpeg"
     alt="Fig6" style="width:100%"> 
-    <figcaption>Fig.6: Example - A Computation and its Event Graph</figcaption>
+    <figcaption>Fig.6: Example - Trajectory and Computation with
+identical Event Graphs
+</figcaption>
 </figure>
 
-The event graph of the trajectory shown in figure 6 is the same as the
-event graph of the computation shown in figure 5.
 
-If we make the duration of events infinitisimally small -- shrink the
-length of event 1 to a point in the figure -- then we get a diagram of
-a computation with the same event graph as the trajectory.
+<h5 class="w3-text-teal">Trajectories and Computations with Identical
+Event Graphs</h5>
 
-<h4 class="w3-text-teal">Trajectories and Computations</h4>
+Making the duration of events in a trajectory arbitrarily small gives
+a computation with the same event graph.
+
 Every trajectory has a computation with the same event graph, and
 every computation has a trajectory with the same event graph.
 
-The computation is obtained from a trajectory by making executions of
-<code>receive</code> instantaneous in the trajectory.
 
+<h4 class="w3-text-teal">Why are Event Graphs Useful?</h4>
+The model does not represent trajectories but it does represent event
+graphs of trajectories.
 
-<p>
-In the first part of this course we study event graphs and
-computations of distributed algorithms; we look at trajectories
-later.
+Why are event graphs useful?
 
 
 <p>
@@ -502,96 +497,54 @@ because they don't have access to a shared clock.
 For example, an agent cannot add a value to a double-entry ledger at
 the same instant as another agent subtracts the value.
 
-Agents can collaborate by sending messages, and in the example, one
-agent can subtract a value after another agent adds a value; the only
-notion of time is before-after.
-
-The event graph tells us how agents communicate and collaborate.
-
-We will describe and reason about the correctness of many distributed
-algorithms using event graphs.
+Agents collaborate by sending messages, and he event graph tells us
+how agents communicate and collaborate.
 
 
-
-
-
-<h5 class="w3-text-teal">Extending the Model to Different Channel types</h5>
-
-The model can be extended to communication mechanisms other than
-first-in-first-out channels.
-
-Later, we will describe algorithms in which messages may be lost and
-in which messages may be delivered out of order.
-
-Extending the model to more than one channel from one agent to another
-is straightforward.
 
 <h3 class="w3-text-teal">Model Limitations</h3>
 
-
+<!-------------------------------------------------------->
 <p class="w3-text-teal">Progress</p>
-The model allows for an infinite computation in which an agent forever
-processes messages that it sends itself, while other agents starve.
-The model also allows for messages to be delayed on a channel forever.
-Later, we extend the model to include the temporal logic concepts of
-<i>eventually</i> and <i>fairness</i> and prove that computations progress
-towards a goal.
+The model allows for infinite computations in which some agents
+repeatedly send messages to each other while other agents
+with nonempty input channels never process messages.
 
+The model allows for messages to be delayed on a channel forever.
+
+
+We will deal with this limitation later by introducing temporal logic
+concepts of <i>eventually</i> and <i>fairness</i>.
+
+
+<!-------------------------------------------------------->
 <p class="w3-text-teal">No construct for Time</p>
 Processes can maintain accurate clocks by using
 inexpensive atomic clocks on PC boards, Precision Time
 Protocols (PTP) in local area networks, and Network Time Protocol
 (NTP) servers.
-The absence of time is a limitation of the model.
-We will discuss the use of time in
-algorithms.
+
+We discuss the use of time later.
 
 
-
-
+<!-------------------------------------------------------->
 <p class="w3-text-teal">Failure</p>
 The model does not deal with failure of agents or channels.
-Dealing with failure is essential in distributed systems.
+
+Distributed computing platforms, such as AMQP, have operations to deal
+with failure.
+
+Secure systems deal with the possibility of Byzantine failure.
+
 We discuss failure modes later.
 
-<h4 class="w3-text-red">
-<i>Central Ideas: Summary</i></h4>
-
-<p class="w3-text-red">
-A state of the system is given by the states of its components -- agents
-and communication channels.
-
-The state of a channel is the sequence of messages in transit along
-the channel.
-
-An agent is either idle (waiting to process a message) or active (processing a
-message).
-
-An agent may send messages while it is executing an action.
-
-A state transition occurs when a single agent receives and processes a
-message.
-
-A computation is a sequence of states where there is a transition from
-each state to the next.
-
-An event graph is a labeled directed acyclic graph in which vertices
-represent events.
 
 
-
-
-
-
-<p class="w3-text-red">
-<i>Concepts</i>:
- Distributed system, agents and channels -> system states as tuples -> state
-transitions -> computations.
 
 
 <h3 class="w3-text-teal">Next</h3>
 Next look at
-<a href="Timelines.html">Timelines of Computations.</a>
+<a href="Timelines.html">Computations and Events</a>
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
