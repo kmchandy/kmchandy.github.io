@@ -87,7 +87,11 @@ hr.new1 {
 
   <p class="w3-text-red">
   <i>
-  A simple notation for distributed algorithms.
+  This page describes a simple, very limited, notation that we use for
+  distributed algorithms.
+
+  It is straightforward to convert algorithms written in this notation
+  to programs using popular platforms.
   </i>
   </p>
 
@@ -138,9 +142,6 @@ A distributed system is initiated with a set of agents and channels,
 and these sets remain unchanged.
 
 Agents and channels are not created or deleted.
-
-
-
 
 
   <h4 style="color:red;">Example: Agent-Channel Graph</h4>
@@ -251,7 +252,7 @@ def receive(message, sender):
 
 
 <!----------------------------------------------------->
-<h4 class="w3-text-teal">Restrictions on receive</h4>
+<h5 class="w3-text-teal">Restrictions on receive</h5>
 <!----------------------------------------------------->
 
 Each agent has its own <code>receive</code> function which is local to
@@ -264,7 +265,7 @@ Every execution of <code>receive</code> must terminate.
 
 
 <!------------------------------------------------------------>
-<h4 class="w3-text-teal">Local Clocks and Timing</h4>
+<h5 class="w3-text-teal">Local Clocks and Timing</h5>
 <!----------------------------------------------------->
 
 Agents may have local clocks; however, clocks aren't synchronized and
@@ -275,7 +276,7 @@ on another agent's clock.
 
 
 <!------------------------------------------------------------>
-<h4 class="w3-text-teal">Termination</h4>
+<h5 class="w3-text-teal">Termination</h5>
 <!------------------------------------------------------------>
 
 Execution of the system halts when all agents are idle and all
@@ -283,23 +284,15 @@ channels are empty.
 
 We will discuss termination detection later.
 
-<h4 class="w3-text-red">
-<i>Central Ideas: Summary</i></h4>
-
-<p class="w3-text-red">
-A state of the system is given by the states of its components -- agents
-and communication channels.
-
-
-
-<p class="w3-text-red">
-<i>Concepts</i>:
- Distributed system, agents and channels.
 
 
 <h3 class="w3-text-teal">Next</h3>
 Next look at
-<a href="Timelines.html">Timelines of Computations.</a>
+<a href="DistributedSystemModels.html">A Model of a Distributed
+System.</a>
+
+
+
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
