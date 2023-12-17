@@ -585,15 +585,23 @@ Event Graphs and Agent Computations</h5>
 Making the duration of events in a trajectory arbitrarily small gives
 a system computation with the same event graph.
 
-For every trajectory \(Q\) there exists a system computation \(R\)
-where \(R\) and \(Q\) have the same event graph.
-
-So, for every \(Q\) there exists \(R\) such that the set of agent
-computations is the same in \(Q\) and in \(R\).
+For every trajectory there exists a system computation that has the same
+event graph as the trajectory
 
 
-<h3 class="w3-text-teal">Why the Model is Useful</h3>
-Why is a model that does not represent trajectories useful?
+
+
+<h3 class="w3-text-teal">Why is the Model Useful?</h3>
+The model does not represent trajectories.
+
+The model is sequential -- only one <code>receive</code> is executed
+at a time, whereas
+
+multiple agents may execute <code>receive</code> commands concurrently in
+a distributed system.
+
+Given its limitations, why is the model useful?
+
 
 <p>
 Agents in a distributed system cannot carry out actions synchronously
@@ -626,13 +634,11 @@ get.</i>
 <p class="w3-text-teal">Progress</p>
 The model allows for infinite computations in which some agents
 repeatedly send messages to each other while other agents
-with nonempty input channels never process messages.
+never process messages.
 
 The model allows for messages to be delayed on a channel forever.
 
-
-We will deal with this limitation later by introducing temporal logic
-concepts of <i>eventually</i> and <i>fairness</i>.
+Later, we will present a model that does not have these limitations. 
 
 
 <!-------------------------------------------------------->
@@ -642,7 +648,7 @@ inexpensive atomic clocks on PC boards, Precision Time
 Protocols (PTP) in local area networks, and Network Time Protocol
 (NTP) servers.
 
-We discuss the use of time later.
+Later, we discuss the use of time in distributed algorithms.
 
 
 <!-------------------------------------------------------->
@@ -654,7 +660,7 @@ with failure.
 
 Secure systems deal with the possibility of Byzantine failure.
 
-We discuss failure modes later.
+Failure modes are discussed later.
 
 
 
