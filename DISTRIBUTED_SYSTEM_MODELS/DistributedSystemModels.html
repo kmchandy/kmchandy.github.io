@@ -386,6 +386,37 @@ figure 4.
 </figure>
 
 
+<!---------------------------------------------------------------->
+<h3 class="w3-text-teal">A Computation as an Event Sequence</h3>
+<!---------------------------------------------------------------->
+<p>
+As remarked earlier, in a transition of the system from \(S\) to
+\(S'\) caused by an event \(e\), the post-transition state \(S'\) is
+uniquely determined \(S\) and
+\(e\).
+
+A computation is a sequence of states with a transition from each
+state to the next.
+
+So, a computation can be specified by an initial state and the
+sequence of events that cause transitions from each state to the next.
+
+<p>
+We represent the initial state of a computation by an initial event at
+each agent.
+
+The label of the agent edge from the initial event at \(u\) is its
+initial state, and the output message edges represent the messages in
+channels from \(u\) in the initial state. Figure 6 shows an example.
+
+<p>
+With the inclusion of the initial event to represent the initial state
+of a computation, a computation is uniquely determined by a sequence
+of events. 
+We treat computations as both sequences of states and sequences
+of events.
+
+
 
 <!---------------------------------------------------------------->
 <h3 class="w3-text-teal">Event Graph of a Computation</h3>
@@ -446,11 +477,85 @@ Event 1 in the figure is the same as the event shown in figure 3.
 
 
 
+
+
 <!---------------------------------------------------------------->
-<h4 class="w3-text-teal">Trajectories and Computations</h4>
+<h3 class="w3-text-teal">Agent Computations</h3>
+<!---------------------------------------------------------------->
+An agent computation is defined as a sequence of events at the agent.
+
+The computation of an agent \(u\) in a system computation is obtained
+deleting all events in the system computation that are not at \(u\).
+
+<!------------------------------------------------------------------>
+<h5 style="color:red;">Example of Agent Computations</h5>
+<!------------------------------------------------------------------>
+In a system computation with event sequence \([1, 2, 3, 4, 5, 6]\), if
+events \([1, 5, 6]\) are at an agent \(u\), and \([2, 3, 4]\)
+are at an agent \(v\), then \(u\)'s computation in the system computation
+is \([1, 5, 6]\), qne \(v\)'s is  \([2, 3, 4]\).
+
+The initial and final events, \(0\) and \(N\), represent the
+initial and final states, and are common to all agents.
+
+
+<p>
+Figure 6 has two diagrams; the upper diagram shows an event graph and
+the lower diagram shows agent computations.
+
+The top line in the lower diagram shows agent \(u\)'s computation -- the
+sequence \([0, 1, 5, 6, N]\) of events -- at agent \(u\).
+
+The lower line of the lower diagram shows \(v\)'s computation
+-- the sequence of events \([0, 2, 3, 4, N]\).
+
+
+
+<figure>
+    <img src="DistributedSystemModels/DistributedSystemModels.013.jpeg"
+    alt="Fig6" style="width:100%"> 
+    <figcaption>Fig.6: Example - Agent Computations and the Event Graph
+</figcaption>
+</figure>
+
+
+<!------------------------------------------------------------------>
+<h3 class="w3-text-teal">Equivalence of Event Graphs and Agent
+Computations
+</h3>
+<!------------------------------------------------------------------>
+
+<p class="w3-text-teal">Theorem</p>
+The event graph \(G\) of a system computation \(Q\) can be obtained from 
+the set \(R\) of agent
+computations, and \(R\) can be obtained from \(G\).
+
+<p class="w3-text-teal">Proof Outline</p>
+
+<p>
+In graphical terms, the set \(R\) of agent computations is obtained from
+event graph \(G\) by disconnecting message edges in \(G\), and
+leaving dangling message edges. And \(G\)is obtained from
+\(R\) by connecting dangline message edges.
+
+
+
+
+
+<!---------------------------------------------------------------->
+<h3 class="w3-text-teal">Trajectories and Computations: Commonality</h4>
 <!---------------------------------------------------------------->
 The event graph of a trajectory is specified in the same way as that
-of a computation.
+of a system computation.
+
+An event represents the states and messages sent and received during
+the execution of a single <code>receive</code> command; the event does
+not deal with states of an agent while it is executing the command.
+
+<p>
+Likewise, an agent computation in a trajectory is specified in the
+same way as in a system computation: an agent computation is the
+sequence of events at that agent.
 
 
 <!---------------------------------------------------------------->
@@ -458,7 +563,8 @@ of a computation.
 <!---------------------------------------------------------------->
 
 The top diagram of figure 6 shows a trajectory and the lower
-diagram shows a computation with the same event graph. 
+diagram shows a computation with the same event graph, and therefore
+the same agent computations.
 
 The lower diagram can be obtained from the upper diagram by making the
 durations of events infinitisimally small.
@@ -467,28 +573,27 @@ durations of events infinitisimally small.
 <figure>
     <img src="DistributedSystemModels/DistributedSystemModels.012.jpeg"
     alt="Fig6" style="width:100%"> 
-    <figcaption>Fig.6: Example - Trajectory and Computation with
+    <figcaption>Fig.7: Example - Trajectory and Computation with
 identical Event Graphs
 </figcaption>
 </figure>
 
 
-<h5 class="w3-text-teal">Trajectories and Computations with Identical
-Event Graphs</h5>
+<h5 class="w3-text-teal">Trajectories and Computations with Common
+Event Graphs and Agent Computations</h5>
 
 Making the duration of events in a trajectory arbitrarily small gives
-a computation with the same event graph.
+a system computation with the same event graph.
 
-Every trajectory has a computation with the same event graph, and
-every computation has a trajectory with the same event graph.
+For every trajectory \(Q\) there exists a system computation \(R\)
+where \(R\) and \(Q\) have the same event graph.
+
+So, for every \(Q\) there exists \(R\) such that the set of agent
+computations is the same in \(Q\) and in \(R\).
 
 
-<h4 class="w3-text-teal">Why are Event Graphs Useful?</h4>
-The model does not represent trajectories but it does represent event
-graphs of trajectories.
-
-Why are event graphs useful?
-
+<h3 class="w3-text-teal">Why the Model is Useful</h3>
+Why is a model that does not represent trajectories useful?
 
 <p>
 Agents in a distributed system cannot carry out actions synchronously
@@ -497,8 +602,21 @@ because they don't have access to a shared clock.
 For example, an agent cannot add a value to a double-entry ledger at
 the same instant as another agent subtracts the value.
 
-Agents collaborate by sending messages, and he event graph tells us
+Agents collaborate by sending messages, and the event graph tells us
 how agents communicate and collaborate.
+
+<p>
+What is the most information an agent can get from other agents?
+
+An agent \(A\) can ask every agent to send their agent
+computations to \(A\).
+
+The information that \(A\) gets in this way is the set of agent
+computations. 
+
+<i>The set of agent computations is the most information that \(A\) can
+get.</i>
+
 
 
 
