@@ -198,14 +198,16 @@ is associated with each agent.
 This function is called a callback function in message-queuing
 libraries. 
 
-<p>
-If an idle agent has a nonempty input channel then the
-<code>receive</code> function of the agent is called with the
-<code>message</code> parameter set to the message at the front of
-<i>any</i> of the agent's nonempty input channels, and the
-<code>sender</code> parameter set to the sender of the message.
+<p> If an idle agent has a nonempty input channel then the
+<code>receive</code> function of the agent is called.
 
-The message is removed from the channel.
+The <code>message</code> parameter of <code>receive</code> is set to
+the message at the front of <i>any</i> of the agent's nonempty input
+channels, and the <code>sender</code> parameter set to the sender of
+the message.
+
+When <code>receive</code> is called the message is removed from the
+channel. 
 
 <p>
 When the agent finishes executing the <code>receive</code> the agent
