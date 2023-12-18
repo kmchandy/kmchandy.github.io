@@ -78,11 +78,11 @@ hr.new1 {
 
 <h2 class="w3-text-teal">Computations and Events</h2>
 
-  There can be more than one computation with the same event graph.
   
-  This page describes a set of computations that have the same event
-  graph.
-
+  This page specifies the set of system computations that have the
+  same event graph, and hence the same agent computations.
+  
+  <p>
   We begin with a review of reachability in  graphs.
 
 <p class="w3-text-teal">Reachability in a Graph</p>
@@ -106,15 +106,15 @@ An event graph is acyclic because edges are directed from events
 <p class="w3-text-teal">Input-Closed Vertex Sets</p>
 
   A subset \(H\) of vertices of a directed acyclic graph is <i>input
-  closed</i> exactly when every edge to a vertex in \(H\) is from a
+  closed</i> exactly when every edge to every vertex in \(H\) is from a
   vertex in \(H\).
   
   <p>
-There is no edge from a vertex outside an input-closed subgraph to a
-  vertex inside it.
+  There is no path into an input-closed subgraph from a vertex outside
+  it; 
   
-There may, however, be edges from inside an input-closed subgraph to
-  outside it. 
+  there may, however, be paths from inside an input-closed subgraph to
+  vertices outside it. 
 
   
 
@@ -126,14 +126,14 @@ There may, however, be edges from inside an input-closed subgraph to
   <a href="DistributedSystemModels.html">previous page.</a>
   
 <figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.006.jpeg"
-    alt="Fig6" style="width:100%"> 
-    <figcaption>Fig.1: Example of an Event Graph</figcaption>
+    <img src="DistributedSystemModels/DistributedSystemModels.014.jpeg"
+    alt="Fig14" style="width:50%"> 
+    <figcaption>Fig.1: Example of Reachability</figcaption>
   </figure>
 
 Events 0, 1, 2 can reach event 5 in figure 1.
 
-  Events 3, 4, 5, 6 cannot reach event 5.
+  Events 3, 4, 5, 6, 7 cannot reach event 5.
 
 <p>
 Examples of vertex sets that are input closed are \(\{0, 1, 2\}\),
@@ -153,13 +153,13 @@ We define the state \(S\) of an input-closed vertex set \(H\) of an event
 graph as follows.
 
 \(S\) is specified by the labels of edges from
-  vertices in \(H\) to vertices outside it.
+  vertices inside \(H\) to vertices outside \(H\).
 
 The state of an agent \(u\) in \(S\) is the label of the agent \(u\)
-edge from a vertex in \(H\) to a vertex outside \(H\).
+edge from a vertex inside \(H\) to a vertex outside \(H\).
 
 The state of a channel \((u, v)\) in \(S\) is the sequence of labels
-of \((u, v)\) edges from vertices in \(H\) to vertices outside \(H\).
+of \((u, v)\) edges from vertices inside \(H\) to vertices outside \(H\).
 
 
 
@@ -198,10 +198,8 @@ The states of other agents and channels are determined similarly.
 The state \(S_{i}\) that occurs in a computation after events \(0,
 \ldots, i\) are obtained similarly and are shown in figure 2.
 
-The lower part of figure 2 shows the event graph which is the same
-as that in figure 1, with events ordered in the order of a computation.
-
-The upper part of figure 2 shows the sequence of states in the
+The lower part of figure 2 shows the event graph and
+the upper part shows the sequence of states in the
 computation.
 
 The dotted vertical lines show boundaries of event sets \(0,
@@ -231,19 +229,15 @@ than \(H\) does.
  There exists a transition from the state of \(H\) to the state of
 \(H'\).
 
- 
-<p>
-For example there is a transition from the state of the input-closed
-subgraph with vertex set
-\(\{0, 1, 2, 5\}\) to the state of the input-closed
-subgraph with vertex set\( \{0, 1, 2, 5, 3\}\).
 
 <p  class="w3-text-teal">
 Proof
 </p>
-The state associated with \(H\) is determined by the labels of
-edges that cross the \(H\) boundary, and these edges include the
-inputs to \(e\).
+The state associated with \(H\) is specified by the labels of
+edges that cross the \(H\) boundary.
+
+Because \(H'\) is input closed, the edges that cross the \(H\)
+boundary include the inputs to \(e\).
 
 So, event \(e\) can occur after events in \(H\).
 
@@ -251,45 +245,17 @@ Therefore there is a transition from the state associated with
 \(H\) to the state associated with \(H'\).
 
 
-
-<!------------------------------------------------------------------>
-<h4 style="color:red;">Examples of State Transitions and Event Sequences</h4>
-<!------------------------------------------------------------------>
-
-<p>
-Let \(Q\) be the sequence of events \([0, 2, 1, 5, 3, 4, 6]\) from
-figure 2.
-
-The set of the first \(i\) events of \(Q\) is input closed for all \(i\).
-
-So, there is a transition from the state \(S'_{i}\) consisting of the first 
-\(i\) events of \(Q\) to the the state \(S'_{i+1 }\) consisting of the
-first \(i+1\) events of \(Q\).
-
-<figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.009.jpeg"
-    alt="Fig" style="width:100%"> 
-<figcaption>
-Fig.3: Example - State Transition
-</figcaption>
-</figure>
-
-Figure 3 shows the same event graph as figure 2 but in a different
-computation.
-
-The ordering of events is \([0, 2, 1, 5, 3, 4, 6, N]\) in figure 3, and
-is \([0, 1, 2, 3, 4, 5, 6, N]\) in figure 2.
+<h5 style="color:red;">Example of State Transition</h5>
+There is a transition from the states of 
+\(\{0, 1, 2, 5\}\) to \( \{0, 1, 2, 5, 3\}\).
 
 <p>
-The sequence \([S'_{0}, \ldots, S'_{6}]\) of states in the computation
-is shown in the top part of the figure and the event graph in the lower part.
+The edges that cross the boundary from the vertex set \(\{0, 1, 2,
+5\}\) include the input edges to vertex \(3\), which are \((2, 3)\)
+and \((1, 3)\).
 
-The dotted vertical lines show the boundaries of the first \(i\)
-events of \(Q\).
-
-The sequence of states \(S'_{i}\) in the computation of figure 3 is
-different from the sequence \(S_{i}\) in the computation of figure 2.
-
+So event \(3\) can occur after events \(\{0, 1, 2, 5\}\) have
+occurred. 
 
 
 <!------------------------------------------------------------------>
@@ -300,20 +266,17 @@ A topological sort of a directed acyclic graph is a sequence of
 vertices in which a vertex appears after all vertices that can reach
 it.
 
+<h5 style="color:red;">Example of a Topological Sort</h5>
+In figure 2 \([0, 2, 1, 3, 4, 5, 6, N]\) is an example of a
+topological sort.
 
-<!------------------------------------------------------------------>
-<h4 style="color:red;">Examples of Topological Sorts</h4>
-<!------------------------------------------------------------------>
-In the example of the figure 2, \([0, 1, 2, 3, 4, 5, 6, N]\) 
-\([0, 2, 1, 5, 3, 4, 6, N]\) and \([0, 2, 1, 3, 4, 5, 6, N]\) are
-examples of topological sorts.
 The sequence \([0, 1, 3, 2, 4, 5, 6, N]\) is not a topological sort
 because vertex 3 appears before vertex 2 in the sequence and vertex 2
 can reach vertex 3.
 
 <!------------------------------------------------------------------>
 <!------------------------------------------------------------------>
-<h3 class="w3-text-teal">Topological Sorts of
+<h3 class="w3-text-teal">All Topological Sorts of
 Event Graphs are Computations</h3>
 <!------------------------------------------------------------------>
 <!------------------------------------------------------------------>
@@ -333,96 +296,51 @@ transition from the state of the set consisting of the first
 
 
 <!------------------------------------------------------------------>
-<p class="w3-text-teal">Corollary</p>
+<h4 style="color:red;">Example: Topological Sorts of Event
+Graphs are Computations</h4> 
+<!------------------------------------------------------------------>
 
-There exists computations from the state of
-every input-closed event set \(H\) to the state of every input-closed
-superset of \(H'\).
+The figure below shows system computations with the same event graph.
+
+The agent computations of \(u\) and \(v\) are the same in both system
+computations.
 
 
-<p>Proof:
+<figure>
+    <img src="DistributedSystemModels/DistributedSystemModels.010.jpeg"
+    alt="Fig6" style="width:100%"> 
+    <figcaption>Fig.2: Example - Computations with the same Event Graph</figcaption>
+</figure>
+
+
+
+<!------------------------------------------------------------------>
+<h5 class="w3-text-teal">Corollary</h5>
+
+For all input-closed event sets \(H, H'\) where \(H\) is a subset of
+\(H'\) there exists a computation from \(H\) to \(H'\). 
+
 An example of such a computation is the topological sort of \(H' -
-H\), the subgraph consisting of vertices in \(H'\) that are not in
-\(H\).
+H\).
 
 
 
 
 <!------------------------------------------------------------------>
-<h5 style="color:red;">Example of Computations from Event Sets to Supersets</h5>
+<p style="color:red;">Example of Computation from Set to Superset of
+Events </p>
 <!------------------------------------------------------------------>
-The theorem tells us that there exists a computation from \(\{0, 2\}\)
+The corollary tells us that there exists a computation from \(\{0, 2\}\)
 to \(\{0, 1, 2, 5\}\). 
 
 
 
-
-
-<!---------------------------------------------------------------->
-<h4 class="w3-text-teal">Event Graphs and Agent Computations</h4>
-<!---------------------------------------------------------------->
-An agent computation is defined as a sequence of events at the agent.
-
-The computation of an agent \(u\) in a system computation is obtained
-deleting all events in the system computation that are not at \(u\).
-
 <!------------------------------------------------------------------>
-<h5 style="color:red;">Example of Agent Computations</h5>
-<!------------------------------------------------------------------>
-In a system computation with event sequence \([1, 2, 3, 4, 5, 6]\), if
-events \([1, 5, 6]\) are at an agent \(u\), and the other events
-are on other agents, then \(u\)'s computation in the system computation
-is \([1, 5, 6]\).
-
-The initial and final events, \(0\) and \(N\), representing the
-initial and final states, are common to all agents.
-
-
-<p>
-Figure 6 has two diagrams; the upper diagram shows an event graph and
-the lower diagram shows agent computations.
-
-The top line in the lower diagram shows agent \(u\)'s computation -- the
-sequence \([0, 1, 5, 6, N]\) of events -- at agent \(u\).
-
-The lower line of the lower diagram shows \(v\)'s computation
--- the sequence of events \([0, 2, 3, 4, N]\).
-
-
-
-<figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.013.jpeg"
-    alt="Fig6" style="width:100%"> 
-    <figcaption>Fig.6: Example - Agent Computations and the Event Graph
-</figcaption>
-</figure>
-
-
-<!------------------------------------------------------------------>
-<h3 class="w3-text-teal">Event Graphs and Agent Computations are
-Equivalent</h3>
+<h4 class="w3-text-teal">System Computations with Identical Agent Computations</h4>
 <!------------------------------------------------------------------>
 
-<p class="w3-text-teal">Theorem</p>
-An event graph of a system computation is equivalent to the set of agent
-computations of that computation.
-
-<p class="w3-text-teal">Proof Outline</p>
-
-<p>
-In graphical terms, the set of agent computations is obtained from an
-event graph by disconnecting message edges in the event graph, and
-leaving dangling message edges. An event graph is obtained from
-agent computations by connecting dangline message edges.
-
-
-<!------------------------------------------------------------------>
-<h3 class="w3-text-teal">System Computations with Identical Agent Computations</h3>
-<!------------------------------------------------------------------>
-
-In figures 2, 3, and 4, we see that different system computations --
-different sequences of events with different sequences of states
--- have the same agent computations.
+In figure 2 we see that different system computations have
+the same agent computations. 
 
 The next theorem identifies the set of system computations with the
 same agent computations.
@@ -430,16 +348,15 @@ same agent computations.
 
 <p class="w3-text-teal">Theorem</p>
 
-Let \(Q\) be a sequence of events in a computation, and let \(R\) be a
-permutation of \(Q\).
+Let \(Q\) be a sequence of events in a system computation.
 
-\(R\) is also a computation if:
+A permutation \(R\) of \(Q\) is also a computation if
 <ol>
   <li>
-  the computations of all agents are the same in \(R\) and \(Q\), and
+  all agent computations are the same \(R\) and \(Q\), and
   </li>
   <li>
-  each message is received after it is sent.
+  each message is received only after it is sent in \(R\).
   </li>
 </ol>
 
@@ -449,52 +366,19 @@ before \(e'\) in \(R\) if the edge is an event edge (follows from part
 1), and if the edge is a message edge (from part 2).
 
 
-<h1>OLD</h1>
-The same set of agent computations may have multiple system
-computations.
 
-The sequences of system states, \([S_{0}, \ldots, S_{6}]\) and 
-\([S'_{0}, \ldots, S'_{6}]\), of figures 2 and 3 are different, but 
-the agent computations are identical.
+<!------------------------------------------------------------------>
+<p style="color:red;">Example System Computations with Identical Agent
+Computations</p>
+<!------------------------------------------------------------------>
+The agent computations are the same in the upper and lower diagrams of
+figure 2.
 
-<p>
-We will find that working with sets of agent computations is
-convenient for some problems while working with event graphs is easier
-for others.
+For example, the sequence of events at agent \(u\) is \([0, 1, 5, 6,
+N]\) in both diagrams.
 
+Also, every message is received <i>after</i> it is sent.
 
-
-<!---------------------------------------------------------------->
-<h4 class="w3-text-teal">Input-Closed Event Sets and Agent Computations</h4>
-<!---------------------------------------------------------------->
-A point in an agent \(u\)'s computation is an integer \(k\) which
-represents the interval in \(u\)'s computation after exactly \(k\)
-events at \(u\). 
-
-Let \(P_{u}\) be a point on an agent \(u\)'s computation.
-
-The set of points \(P_{u}\) for each agent \(u\) is called a
-<i>cut</i> of the computation.
-
-<p>
-The set of events before the cut -- the first \(P_{u}\) events of
-\(u\), all \(u\) -- is called the <i>past</i> at the cut, and the
-events after the cut is called the <i>future</i> at the cut.
-
-<i>past</i> is input closed exactly when there is no edge from
-<i>future</i> to <i>past</i>.
-
-<p>
-Because \(Q\) is input closed
-<p>
-<i>
-for every channel \((u, v)\), every message received by \(v\)
-before point \(Q_{v}\) is sent by \(u\) before point \(Q_{u}\).
-</i>
-
-<p>
-We will work with both input-closed sets of events and, equivalently,
-with points on agent computations that satisfy the above requirement.
 
 
 
