@@ -85,7 +85,7 @@ hr.new1 {
   <p>
   We begin with a review of reachability in  graphs.
 
-<p class="w3-text-teal">Reachability in a Graph</p>
+<h5 class="w3-text-teal">Reachability</h5>
 
 A vertex \(e'\)
 <a href="https://en.wikipedia.org/wiki/Reachability">
@@ -103,7 +103,7 @@ An event graph is acyclic because edges are directed from events
   </a>
   
 
-<p class="w3-text-teal">Input-Closed Vertex Sets</p>
+<h5 class="w3-text-teal">Input-Closed Vertex Sets</h5>
 
   A subset \(H\) of vertices of a directed acyclic graph is <i>input
   closed</i> exactly when every edge to every vertex in \(H\) is from a
@@ -315,70 +315,23 @@ computations.
 
 
 <!------------------------------------------------------------------>
-<h5 class="w3-text-teal">Corollary</h5>
+<h4 class="w3-text-teal">Corollary: Computations from Sets to Supersets</h4>
 
 For all input-closed event sets \(H, H'\) where \(H\) is a subset of
 \(H'\) there exists a computation from \(H\) to \(H'\). 
 
+<p class="w3-text-teal">Proof</p>
 An example of such a computation is the topological sort of \(H' -
 H\).
 
 
 
-
 <!------------------------------------------------------------------>
-<p style="color:red;">Example of Computation from Set to Superset of
-Events </p>
+<h5 style="color:red;">Example of Computation from Set to Superset of
+Events </h5>
 <!------------------------------------------------------------------>
 The corollary tells us that there exists a computation from \(\{0, 2\}\)
 to \(\{0, 1, 2, 5\}\). 
-
-
-
-<!------------------------------------------------------------------>
-<h4 class="w3-text-teal">System Computations with Identical Agent Computations</h4>
-<!------------------------------------------------------------------>
-
-In figure 2 we see that different system computations have
-the same agent computations. 
-
-The next theorem identifies the set of system computations with the
-same agent computations.
-
-
-<p class="w3-text-teal">Theorem</p>
-
-Let \(Q\) be a sequence of events in a system computation.
-
-A permutation \(R\) of \(Q\) is also a computation if
-<ol>
-  <li>
-  all agent computations are the same \(R\) and \(Q\), and
-  </li>
-  <li>
-  each message is received only after it is sent in \(R\).
-  </li>
-</ol>
-
-<p class="w3-text-teal">Proof</p>
-For all edges \(e, e'\) in the event graph of \(Q\), \(e\) appears
-before \(e'\) in \(R\) if the edge is an event edge (follows from part
-1), and if the edge is a message edge (from part 2).
-
-
-
-<!------------------------------------------------------------------>
-<h5 style="color:red;">Example System Computations with Identical Agent
-Computations</h5>
-<!------------------------------------------------------------------>
-
-Given that the event sequence \(Q = [0, 1, 2,..]\) in the
-top diagram is a computation, the theorem tells us that the
-sequence \(Q' = [0, 2, 1, \ldots, ]\) of the lower diagram is also a
-computation because the sequences of events at agent \(u\) (\([0, 1, 5, 6,
-N]\)) and agent \(v\) \([0, 2, 3, 4, N]\) are the same in both
-\(Q\) and\(Q'\), and every message is received after it is sent in \(Q'\).
-
 
 
 
