@@ -99,156 +99,202 @@ hr.new1 {
   <i>Central Ideas</i></h4>
 
   <p class="w3-text-red">
-  A global snapshot algorithm for determining a state in a computation.
-
   
   <p class="w3-text-red">
-  A global snapshot is the state at a consistent cut.
+  A global snapshot is the system state at an input-closed set of
+  events. 
 
   Systems can be monitored by scheduling repeated global snapshots.
 
-  All state detection algorithms are based on global snapshots.
+  Algorithms that detect states are based on global snapshots.
 
-  This page gives an algorithm to determine a global snapshot; we will
-  look at other algorithms later.
+  This page gives one algorithm to determine a global snapshot, and
+  other algorithms are described later.
  
 
   <!-----------------------------------------------------------------------------> 
-  <h2 class="w3-text-teal">Global Snapshot: State at a
-  Consistent Cut</h2> 
-
+  <h2 class="w3-text-teal">Global Snapshot</h2> 
+  <!----------------------------------------------------------------------------->
   <p>
 We discuss the design of an algorithm by which agents collaborate to determine
-the state at a consistent cut; this state is called a <i>global
-  snapshot</i>.
+the global state at an input-closed set of events; this state is
+called a <i>global snapshot</i>.
 
 <p>
-The algorithm is executed by an operating system (OS) on behalf of a
-client.
-  The algorithm consists of OS actions that 
-  do not change the client's causality graph.
-  OS actions can record, but not modify, states.
-Likewise, OS actions can send and receive OS messages without changing
-  client states and messages.
+The algorithm is executed by a distributed operating system (OS) on behalf of a
+  client.
+  
+  Each client agent has an OS agent that supervises it.
+
+  OS agents use the same processors and channels as clients do.
+  
+  OS agents can record, but not modify, states of their clients.
+  
+  OS agents can send and receive OS messages that are not seen
+  by clients.
 
   <p>
-  The OS may use the same processors and channels as clients do.
-  So, the OS may change when client actions are executed.
-  For example, execution of the OS on a processor may delay execution of a client's
-  action on the same processor.
-  The OS may change a client's computation, but we require that it
-  must not change a client's causality graph.
+  
+  
+  Execution of an OS agent on a processor may delay a client's
+  events on the same processor.
+  
+  The OS may change the order in which agents execute events.
 
+  So,
+  <i>execution of an OS algorithm may change a client's
+  computation.</i> 
+
+  <p>
+We will design OS algorithms that do not change the client's event
+graph.
+
+Equivalently, we design OS algorithms that leave agent computations
+unchanged. 
+
+  
   <p>
   One way to record a global snapshot is for the OS to stop a client
   computation, then take a global snapshot, and then  restart the
-  client computation.
+client computation.
+
   We describe a snapshot algorithm that runs concurrently with the client
   computation without stopping the client.
  
-<p>
-The algorithm is as follows. Each agent records its own local state, at
-some point in the computation.
-An agent's record of its local state is called the <i>agent's local snapshot.</i> 
-An agent's actions before it takes its local snapshot are called
-pre-snapshot actions.
+<!----------------------------------------------------------------------------->
+
+Each agent records its own local state, at
+some point in the computation, and does so exactly once.
+
+An agent's record of its local state is called the <i>agent's local
+snapshot.</i>
+
+An agent's events before it takes its local snapshot are called
+pre-snapshot events.
 
 
-  <h5 class="w3-text-teal">Lemma</h5>
-  The cut consisting of pre-snapshot actions is consistent if and only
+
+
+<h4 style="color:red;">Example: Pre-Snapshot Events</h4>
+Figure 1 shows a representation of a computation with agents X, Y, Z.
+There is only one channel, in each direction, between each
+pair of vertices.
+
+The figure shows a computation with event sequence \([0, 1, 2, 3,
+\ldots,]\). 
+
+<figure>
+    <img src="ChannelSnapshots/ChannelSnapshots.001.jpeg" alt="Fig1"
+    style="width:80%"> 
+    <figcaption>Fig.1: A Computation and its Event Graph</figcaption>
+</figure> 
+
+
+In figure 2, each agent takes a local snapshot which is shown as a yellow
+circle on the agent's timeline.
+
+<figure>
+    <img src="ChannelSnapshots/ChannelSnapshots.002.jpeg" alt="Fig2"
+    style="width:80%"> 
+    <figcaption>Fig.2: Example of Input-Closed Pre-Snapshot Events</figcaption>
+</figure> 
+
+<!--------------------------------------------------------->
+<p style="color:red;">Example: Taking Snapshots may change Client
+Computations</p>
+
+Taking local snapshots may change the order in which events of the
+client computation occur.
+
+Whe agent \(Y\) takes its local snapshot it delays event 3.
+
+So, event 3 occurs after after events 4, 5, and 6 in the computation
+of figure 2 whereas
+event 3 occurs before events 4, 5, and 6 in the computation of figure 1.
+
+The computation in figure 2 has a state in which there is both a
+message in a channel from agent X to agent Y, and a message in a
+channel from Z to Y (see edges (4, 5) and (1, 3)).
+
+That state does not occur in the computation of figure 1.
+
+<p> Though the computations are different, the event graphs, and hence
+the agent computations, are the same for figures 1 and 2 are the same.
+
+
+<!--------------------------------------------------------->
+<p style="color:red;">Example: Pre-Snapshot Set that is Input
+Closed</p> 
+
+<p> The pre-snapshot vertices are 0, 1, 2, 4, 6 in figure 2.
+
+The cut is the boundary between the pre-snapshot events to the left of
+the boundary and post-snapshot events to the right.
+
+<p> In figure 2 there is only one message received in a pre-snapshot
+action, namely the message represented by the edge (0, 2).
+
+Sending this message is also a pre-snapshot event.
+
+So, every message received in a pre-snapshot event is sent in a
+pre-snapshot event.
+
+The figure shows that the set of pre-snapshot
+events is input closed -- there is no edge from a post- to a
+pre-snapshot event.
+
+
+
+
+<!--------------------------------------------------------->
+<p style="color:red;">Example: Pre-Snapshot Set that is not Input
+Closed</p> 
+
+Figure 3 shows an event graph that has a message edge directed from a
+post-snapshot event, 6, to a  pre-snapshot event, 7.
+
+This set of pre-snapshot events is not input closed.
+<figure>
+    <img src="ChannelSnapshots/ChannelSnapshots.003.jpeg" alt="Fig2"
+    style="width:80%"> 
+    <figcaption>Fig.3: Example of Set of Pre-Snapshot Events that is
+    not Input-Closed</figcaption>
+</figure>
+The figures suggest the following theorem.
+
+
+  <h5 class="w3-text-teal">Theorem</h5>
+  The set of pre-snapshot events is input-closed if and only
   if
-  <center>
-  each message received in a pre-snapshot action is sent in a
-  pre-snapshot action.
-  </center>
+  each message received in a pre-snapshot event is sent in a
+  pre-snapshot event.
+
 
   
-  <p class="w3-text-teal">Proof</p>
-
-If \(v\) and \(v'\) are actions by the same agent and if \(v'\)
-is a pre-snapshot action then so is \(v\) because  \(v\)
-precedes \(v'\).
-If \(v\) and \(v'\) are actions at different agents then \(v'\)
-  receives the message sent in \(v\); from the condition of the 
-theorem, if \(v'\) is a pre-snapshot action then so is \(v\).
+<p class="w3-text-teal">Proof</p>
+We prove that the pre-snapshot set is input closed if the
+condition of the theorem holds. The only-if part of the proof is
+straightforward. 
 
 <p>
-  <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">A cut is consistent
-  </a>
-  if for all edges \((v, v')\) of the causality
-graph if \(v'\) is in the cut then so is \(v\).
-Therefore, the cut consisting of pre-snapshot actions is consistent.
+A set of events is input-closed exactly when for every edge \((e,
+e')\) of the event graph, if \(e'\) is in the set then so is \(e\).
 
-<h4 style="color:red;">Example: Pre-Snapshot Actions</h4>
-Figure 1 shows a representation of a computation with agents X, Y, Z.
-Assume that there is only one channel, in each direction, between each
-pair of vertices.
-<p>
-The representation of the computation is the causality graph with a
-vertex sequence in which each vertex appears after vertices on which it depends.
-Labels of edges aren't shown so as not to overcrowd the figure.
+If the edge is at an agent \(u\), then \(e\) precedes \(e'\) in agent
+\(u\)'s computation, and
 
-<figure>
-    <img src="ChannelSnapshots/ChannelSnapshots.001.jpeg" alt="Fig1" style="width:50%">
-    <figcaption>Fig.1: Representation of a Computation</figcaption>
-</figure> 
-
-
-In figure 2, each agent takes a local snapshot shown as a yellow
-circle.
-Taking local snapshots may change the order in which actions of the
-client computation are executed.
-Action 3 occurs after after actions 4, 5, and 6 in figure 2 whereas 3
-is before 4, 5, and 6 in figure 1.
+so, if \(e'\) is pre-snapshot then so is \(e\).
 
 <p>
-The computation shown in figure 2 is different from that in figure 1.
-The computation in figure 2 has a state in which there is
-a message in a channel from agent X to agent Y, and a message in a
-channel from Z to Y (see edges (4, 5) and (1, 3)).
-By contrast, in figure 1,
-message (1, 3) is delivered before message (4, 5) is sent.
-The action of making observations (recording states) of the client
-computation changes the computation.
-
-<p>
-Though the computations are different, the causality graphs for
-figures 1 and 2 are the same. 
-
-<p>
-The pre-snapshot vertices are 0, 1, 2, 4, 6.
-The cut is the set of vertices to the left of the curved brown line.
-Snapshots don't change the client's causality graph.
-So the label of the edge from 4 to 6 (the state of agent X between the
-actions) isn't modified by the action of
-taking the local snapshot; the label of the edge from 4 to the
-snapshot action is the same as that from the snapshot action to 6.
-
-<p>
-There is only one message received in a pre-snapshot action, namely the
-message represented by the edge (0, 2).
-The action of sending this message is a pre-snapshot action.
-So, the local snapshots satisfy the condition of the lemma.
-The lemma tells us that the cut consisting of pre-snapshot vertices is
-consistent.
-
-
-<figure>
-    <img src="ChannelSnapshots/ChannelSnapshots.002.jpeg" alt="Fig2" style="width:50%">
-    <figcaption>Fig.2: Pre-Snapshot Actions</figcaption>
-</figure> 
+If the edge is a message edge, and the message is received in a
+pre-snapshot event \(e'\), then from the condition of the theorem, the
+message is sent in a pre-snapshot event \(e\).
 
 
 
 <h3 class="w3-text-teal">A Global Snapshot Algorithm</h3>
 
-Next we design an algorithm based on the lemma.
-We assume that the
-<a href="../DISTRIBUTED_SYSTEM_MODELS/DistributedSystemModels.html">
-agent-channel graph</a>
-the directed graph of agents (vertices) and channels
-(edges) is strongly connected, and so the algorithm sends a marker on
-every channel, and every agent takes its local snapshot.
+Next we design an algorithm based on the theorem.
 
 <ol>
   <li>
@@ -266,32 +312,28 @@ every channel, and every agent takes its local snapshot.
 </ol>
 
 <p>
-We assume that the
+The
 <a href="../DISTRIBUTED_SYSTEM_MODELS/DistributedSystemModels.html">
 agent-channel graph</a> --
 the directed graph of agents (vertices) and channels
 (edges) -- is strongly connected.
-So the algorithm sends exactly one marker on
-every channel, and every agent takes its local snapshot.
+So the algorithm sends a marker on every channel.
 
 
 <h5 class="w3-text-teal">Proof of Correctness of the Algorithm</h5>
 <ol>
   <li>
-From rule 2 of the algorithm, the pre-snapshot actions of an agent are
-the actions of the agent before it sends markers on all its output
-  channels.
+  From rule 2 of the algorithm, every message sent in a pre-snapshot
+  event on a channel is sent before the marker sent on that channel.
   </li>
   <li>
-From rule 3, the pre-snapshot actions of an agent are
-the actions of the agent before it receives a marker on any of its input
-channels.
+  From rule 3, the pre-snapshot events of an agent occur before the
+  agent receives a marker. 
   </li>
   <li>
-Channels are first-in-first-out. So, if \(m\) is a message received on
-a channel \(c\)
-before the marker was received on \(c\) then \(m\) was sent on \(c\)
-before the marker was sent on \(c\).
+  Channels are first-in-first-out. So, if \(m\) is a message received
+  on a channel \(c\) before the marker was received on channel \(c\)
+  then \(m\) was sent on \(c\) before the marker was sent on \(c\).
   </li>
 </ol>
 From the above 3 observations it follows that every message received
@@ -300,55 +342,82 @@ in a pre-snapshot action was sent in a pre-snapshot action.
 
 
 <h4 style="color:red;">Example of a Global Snapshot</h4>
-Figure 3 illustrates the first step of the algorithm.
-Agent Y takes its local snapshot shown as a yellow vertex on Y's
-timeline. 
-When Y takes its snapshot it sends markers
-on its output channels.
-The markers are shown as green edges in the figure 3.
+Figure 4 illustrates the first step of the algorithm.
 
 <figure>
-    <img src="ChannelSnapshots/ChannelSnapshots.003.jpeg" alt="Fig3" style="width:50%">
-    <figcaption>Fig.3: Marker Messages Sent when Agent Takes its Local
-    Snapshot</figcaption>
+    <img src="ChannelSnapshots/ChannelSnapshots.004.jpeg" alt="Fig4"
+    style="width:100%"> 
+    <figcaption>Fig.4: Agent Sends Markers when it Takes its Local
+    Snapshot</figcaption> 
 </figure>
 
-When agents X and Z each receive the markers, they take their local snapshots
-because they haven't taken snapshots earlier.
+Agent Y takes its local snapshot shown as a yellow vertex on Y's
+timeline.
+
+When Y takes its snapshot it sends markers on its output channels.
+
+The markers are shown as green edges in the figure 4.
+
+
+<p>
+When agents X and Z each receive the markers, they take their local
+snapshots because they haven't taken snapshots earlier.
+
+<figure>
+    <img src="ChannelSnapshots/ChannelSnapshots.005.jpeg" alt="Fig5"
+    style="width:100%"> 
+<figcaption>
+Fig.5: Agents Take Local Snapshots when they Receive Markers
+</figcaption>
+</figure>
+
 The actions by X and Z of taking their snapshots are shown as yellow
 vertices on their timelines.
+
+<p>
 When X and Z take their snapshots they send markers out on their
-output channels; these markers are not shown in figure 4.
-A total of 6 markers are sent in the algorithm, one marker for each channel.
+output channels.
+
+The markers sent by X are shown in figure 6.
 
 <figure>
-    <img src="ChannelSnapshots/ChannelSnapshots.004.jpeg" alt="Fig4" style="width:50%">
-    <figcaption>Fig.4: Agent Takes its Local Snapshot when it Receives
-    a Marker
-    Snapshot</figcaption>
+    <img src="ChannelSnapshots/ChannelSnapshots.006.jpeg" alt="Fig6"
+    style="width:100%"> 
+    <figcaption>Fig.6: When an Agent takes its Snapshot it sends Markers.
+    </figcaption>
 </figure>
 
+The markers sent by Z are not shown in the figure.
+
+<p>
+A total of 6 markers are sent in the algorithm, one marker for each
+channel. 
 
 
-
+<!--------------------------------------------------->
 <h3 class="w3-text-teal">Snapshots of Channels</h3>
+
 Next we look at an algorithm to record snapshots (states) of channels
-at a cut.
-The messages in a channel at a cut are the messages sent
-by actions in the cut and received by actions outside the
-the cut.
+at an input-closed event set.
+
+The messages in a channel at the state of an input-closed event set are the
+messages sent by events in the set and received by events outside the
+the set.
+
 So, the state of a channel in the global snapshot is the sequence of
-messages sent on the channel  before the sender takes its snapshot and
+messages sent on the channel before the sender takes its snapshot and
 that are received after the receiver takes its snapshot.
+
 
 <p>
 From rule 2 of the algorithm, the messages sent by an agent along a
 channel before the agent takes its snapshot are the messages that the
 agent sends along the channel before sending a marker on the channel.
+
 Because channels are first-in-first-out, the messages sent along a
-channel before the
-sender takes its snapshot are the messages received along the channel
-before the marker on the channel.
+channel before the sender takes its snapshot are the messages received
+along the channel before the marker on the channel.
+
 Therefore:
 
 <hr class="new2">
@@ -360,39 +429,47 @@ received along the channel after the receiver takes its local snapshot
 and before the receiver receives a marker along the channel.
 </h5>
 <hr class="new2">
+
 <p>
 Note: If an agent takes its local snapshot when it receives a marker
 along a channel, then the snapshot of the channel is the empty
 sequence of messages.
 
-<h4 style="color:red;">Example: Channel Snapshot</h4>
-Figure 5 shows the continuation of the snapshot algorithm after the
-situation in figure 4.
-When agent X takes its snapshot it sends markers on its output edges.
-These markers are shown in green.
-
-<figure>
-    <img src="ChannelSnapshots/ChannelSnapshots.005.jpeg" alt="Fig5" style="width:50%">
-    <figcaption>Fig.5: Agent Takes its Local Snapshot when it Receives
-    a Marker
-    Snapshot</figcaption>
-</figure>
-
+<p>
 Figure 6 shows how agent Y determines the state of the channel from X
 to Y in the global snapshot.
+
 Y starts recording the messages it receives along this channel after Y
 takes its snapshot and stops the recording when it receives a marker
-on this channel.
+on this channel
+
 The only message in this interval is the message corresponding to edge
 (6, 7).
 
 
 <figure>
-    <img src="ChannelSnapshots/ChannelSnapshots.006.jpeg" alt="Fig6" style="width:50%">
-    <figcaption>Fig.6: State of Channel: Messages received between
-    snapshot and marker
-    Snapshot</figcaption>
+    <img src="ChannelSnapshots/ChannelSnapshots.006.jpeg" alt="Fig6"
+    style="width:100%"> 
+<figcaption>
+Fig.7: When an Agent takes its Snapshot it Sends
+Markers
+</figcaption>
 </figure>
+
+Look at figure 7 to see the snapshot of the channel from X to Y in
+more detail. 
+
+The message corresponding to edge \((0, 2)\) is from X to Y but is not
+in the snapshot of 
+the channel because both \(0\) and \(2\) are pre-snapshot events.
+
+Likewise, the message corresponding to edge \((12, 13)\) is from X to
+Y but is not in the snapshot of
+the channel because both \(12\) and \(13\) are post-snapshot events.
+
+The message corresponding to edge \((6, 7)\) was sent in a
+pre-snapshot event and received in a post-snapshot event, and so it is
+in the snapshot of the channel.
 
 
 <h4 class="w3-text-teal">Collecting Local Agent and Channel
@@ -412,19 +489,42 @@ We will look at both kinds of applications in later pages of this website.
 
 <!--------------------------------------------------------------->
 <h3 class="w3-text-teal">Starting, Snapshot, and Ending States</h3>
+
+<h5 class="w3-text-teal">The Observer Effect</h5>
 As we showed earlier, making measurements (recording states) of a
 client computation may change the computation.
-The global snapshot is a state of the cut of the changed computation.
-Does the snapshot provide information about the original
-computation -- the computation that wasn't changed by the actions of
-the snapshot algorithm?
+
+This is an example of
+<a href="https://en.wikipedia.org/wiki/Observer_effect_(physics)">
+the Observer Effect.
+</a>
 
 <p>
-Let the states in which the snapshot algorithm starts and ends be
+The global snapshot is a state of an input-closed event set of the
+<i>changed computation</i> -- the client computation that may have
+been changed by the execution of the snapshot algorithm.
+
+Does the snapshot provide information about the <i>original
+computation</i> -- the computation without an execution of the
+snapshot algorithm?
+
+<p>
+The key idea is that the event graphs are the same in the original and
+changed computations.
+
+So, the states of input-closed event sets are the same in the original
+and changed computations.
+
+<p>
+Let the global states in which the snapshot algorithm starts and ends be
 \(s_{init}\) and \(s_{fini}\), respectively, and let \(s_{snap}\) be
 the global state recorded by the algorithm.
-Because \(s_{snap}\) is the state of a consistent cut, it follows that
-
+Because these states are states of input-closed event sets, it
+follows from the
+<a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+theorem on computations from sets to supersets
+</a>
+that in both the original and changed computations:
 <hr class="new2">
 <h5 style="color:blue;">
 There exists a computation that starts in 
@@ -432,190 +532,39 @@ There exists a computation that starts in
   \(s_{fini}\).
 </h5>
 <hr class="new2">
-This result is used in algorithms that detect persistent properties
+
+
+
+This result is the key idea underlying many algorithms.
+
+For example, a rollback and recovery system records global snapshots
+periodically.
+
+If a hardware (i.e., non algorithmic) fault is detected, then the
+computation is restarted from the most recent checkpoint (snapshot)
+instead of going all the way back to the initial state.
+
+<p>
+Global snapshots are used to detect persistent properties
 such as the computation is in a terminated or deadlocked state. If the
 computation has terminated when the snapshot algorithm starts then the
 snapshot shows that the computation has terminated. And, if the
 snapshot shows that the computation has terminated then the
 computation has terminated at the point that the snapshot algorithm
-finishes.  
-<!--------------------------------------------------------------->
-<!--------------------------------------------------------------->
-
-<h2 class="w3-text-teal">Monitoring Systems by Scheduling Snapshots</h2>
-Sequences of checkpoints taken repeatedly at scheduled times
-<a href="https://en.wikipedia.org/wiki/Cron">(cron jobs)</a>
-help in monitoring systems.
-A checkpoint of a distributed system is a global snapshot, and
-scheduling repeated snapshots helps in many applications including
-monitoring. 
-The global snapshot taken
-at time \(T\) is assigned timestamp \(T\) to
-distinguish it from snapshots taken at other times.
-The algorithm to get the snapshot at time
-\(T\) is identical to the marker algorithm except that markers and
-snapshots are assigned timestamp \(T\).
-
-
-<!--------------------------------------------------------------->
-<!--------------------------------------------------------------->
-<h3 class="w3-text-teal">Algorithm to get the Snapshot at time \(T\)</h3>
-All snapshots and markers in the algorithm below have timestamp
-\(T\). 
-<ol>
-  <li>
-  When an agent's clock reaches \(T\) the agent takes its local snapshot and sends
-  markers on all its output channels. 
-  </li>
-  <li>
-  When an agent receives a marker with timestamp \(T\), if the agent's
-  local clock is earlier than \(T\) then the agent moves its local
-  clock forward to \(T\), and (rule 1) the agent takes its local
-  snapshot and sends markers on all its output channels.
-  </li>
-</ol>
-Channel snapshots are computed as in the marker algorithm.
-
-<h5 class="w3-text-teal">System Monitoring</h5>
-Algorithms that schedule snapshots at \(T\) for increasing values of
-\(T\) are <i>system monitoring algorithms.</i>
-Agents clocks with a standard time server, such as
-NTP, to ensure that the times at which snapshots are taken are close
-to the true schedules times.
-
-
-<h1 class="w3-text-teal">Applications of Snapshots</h1>
-Next we give a few examples of snapshot applications.
-
-<h4 class="w3-text-teal">Rollback and Recovery</h4>
-If an error is detected during the execution of a computation then a
-rollback and recover algorithm rolls the computation back to the most
-recent checkpoint (global snapshot) and restarts the computation from
-that point. 
-
-
-<h3 class="w3-text-teal">The Detection Problem</h3>
-The detection problem is to design an algorithm that detects
-whether a computation is in a <i>stable</i> set of
-states.
-
-<p class="w3-text-teal">Stable set of States</p>
-A <i>stable</i> set of states is a set \(P\) such that every transition from a
-state in \(P\) is to a state in \(P\). There is no transition from
-inside \(P\) to outside \(P\), and so after a computation visits a
-state in \(P\) the computation remains forever in \(P\). The set of
-states in which agents are deadlocked is  an example of a stable set:
-there is no transition from a deadlocked state to a non-deadlocked
-state.
-
-
-<h3 class="w3-text-teal">Global Snapshots and State Detection</h3>
-Let's look again at the specification of a global snapshot.
-Let \(S_{init}\) and \(S_{fini}\) be the states of the computation at
-which the snapshot algorithm starts and ends, respectively and let
-\(S_{snap}\) be snapshot obtained by the algorithm.  There exists a computation that
-visits \(S_{init}\), later visits \(S_{snap}\) and then later visits
-\(S_{fini}\). So, for any stable set \(P\), if \(S_{init}\) is in
-\(P\) then so is \(S_{snap}\).  Likewise, if \(S_{snap}\) is in \(P\)
-then so is \(S_{fini}\).
-
-<h5 class="w3-text-teal">Property of Global Snapshots</h5>
-<hr class="new2">
-<h6 style="color:blue;">
-For any stable set \(P\) of states:
-<ol>
-  <li>
-  If the snapshot algorithm starts when the system is in \(P\)
-  then the snapshot is in \(P\).
-  </li>
-  <li>
-  If the snapshot is in \(P\) then system is in \(P\) when the
-  snapshot algorithm ends.
-  </li>
-</ol>
-</h6>
-<hr class="new2">
-
-<p>
-What do we know about the snapshot if the snapshot algorithm is
-initiated when the system is outside a stable set \(P\) and enters
-\(P\) while the snapshot algorithm is still running? In this case, the
-specification doesn't tell us whether the snapshot will be in \(P\) or
-not.
-
-<p>
-If the snapshot is in \(P\) then the system is in \(P\) when the
-snapshot algorithm <i>ends</i>.  If the snapshot is not in \(P\) then
-the system is not in \(P\) when the snapshot algorithm <i>begins</i>,
-but we don't know whether the system is in \(P\) when the snapshot
-algorithm <i>ends</i>.
-
-<p>
-If a snapshot is not in \(P\) then more
-snapshots must be taken to detect whether the system may have entered
-\(P\) after the last snapshot was initiated.
-A general method to detect whether a system is in a stable set of
-states is to monitor the system by scheduling repeated snapshots.
-
-
-<h3 class="w3-text-teal">System Monitoring Solves All Detection
-Problems</h3>
-System monitors take
-global snapshots repeatedly -- for example at scheduled times.
-If the system state at any point in a computation is in a stable set \(P\)
-then a later snapshot will be in \(P\).
-And if any snapshot is in 
-\(P\) then the system state at that point is in \(P\).
-
-<h5 class="w3-text-teal">Examples of Detection Problems</h5>
-System monitoring can be used to solve all detection problems
-including those that detect whether:
-<ol>
-  <li> computation has terminated, </li>
-  <li> computation has deadlocked, </li>
-  <li> amount of crypto coins exceeds a constant \(n\), assuming the
-  coins aren't destroyed </li>
-  <li> clocks of all agents exceed a constant \(t\), assuming that
-  clocks don't go backward.  </li>
-</ol>
-There may, however, be more efficient solutions for specific problems.
-We discuss some of these problems in the following pages.
-
-<h3 class="w3-text-teal">Specification of Detection Algorithms</h3>
-A detection algorithm detects whether the state of a computation is in
-a stable set \(P\). The algorithm uses a Boolean variable \(B\) which
-is initially False and which is set to True when
-the algorithm detects that the system is in \(P\) and remains True.
-Once \(B\) becomes True it remains True forever thereafter. The
-specification is:
-<hr class="new2">
-<h6 style="color:blue;">
-<ol>
-  <li>
-  If at any point in a computation the system state is in \(P\) then
-  there is a point in the computation after which \(B\) remains True.
-  </li>
-  <li>
-  If \(B = True\) at any point in a computation then the system state
-  at that point is in \(P\).
-  </li>
-</ol>
-</h6>
-<hr class="new2">
-Next, we look at different detection algorithms that detect 
-different stable sets. Detection algorithms, regardless
-of application, are similar.
-
-
 <h4 class="w3-text-red">
+
+<!--------------------------------------------------------------->
 <i>Central Ideas: Review</i></h4>
+<!--------------------------------------------------------------->
+
 <p class="w3-text-red">
-<i>The state at a consistent cut</i> is a concept that is used in all algorithms
-that detect properties of computations.
-A global snapshot is a state at a consistent cut.
-The global snapshot algorithm uses markers to separate <i>past</i> from
-<i>future</i> to identify a consistent cut (<i>past, future</i>).
-We will look at more algorithms that determine global snapshots.
+<i>The state at an input-closed event set</i> is a concept that is
+used in many algorithms.
+
+A global snapshot is a state at an input-closed event set.
+
+The global snapshot algorithm uses markers to separate events in an
+input-closed set from events outside it.
 
 
 <p class="w3-text-red">
