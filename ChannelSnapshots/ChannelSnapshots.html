@@ -509,7 +509,8 @@ computation</i> -- the computation without an execution of the
 snapshot algorithm?
 
 <p>
-The key idea is that the event graphs are the same in the original and
+Yes, the snapshot provides information about the original computation
+because the event graphs are the same in the original and
 changed computations.
 
 So, the states of input-closed event sets are the same in the original
@@ -533,24 +534,27 @@ There exists a computation that starts in
 </h5>
 <hr class="new2">
 
+This central result is the basis of many distributed algorithms.
 
-
-This result is the key idea underlying many algorithms.
-
-For example, a rollback and recovery system records global snapshots
+<P>
+A rollback and recovery system records global snapshots
 periodically.
 
 If a hardware (i.e., non algorithmic) fault is detected, then the
-computation is restarted from the most recent checkpoint (snapshot)
-instead of going all the way back to the initial state.
+computation is restarted from the most recent snapshot
+instead of rolling all the way back to the initial state.
 
 <p>
 Global snapshots are used to detect persistent properties
-such as the computation is in a terminated or deadlocked state. If the
-computation has terminated when the snapshot algorithm starts then the
-snapshot shows that the computation has terminated. And, if the
-snapshot shows that the computation has terminated then the
-computation has terminated at the point that the snapshot algorithm
+such as the computation is in a deadlocked state.
+
+If the
+computation has deadlocked when the snapshot algorithm starts then the
+snapshot shows that the computation has deadlocked.
+
+And, if the
+snapshot shows that the computation has deadlocked then the
+computation has indeed deadlocked.
 <h4 class="w3-text-red">
 
 <!--------------------------------------------------------------->
@@ -558,7 +562,7 @@ computation has terminated at the point that the snapshot algorithm
 <!--------------------------------------------------------------->
 
 <p class="w3-text-red">
-<i>The state at an input-closed event set</i> is a concept that is
+<i>The state at an input-closed event set</i> is a concept
 used in many algorithms.
 
 A global snapshot is a state at an input-closed event set.
