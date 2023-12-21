@@ -87,11 +87,9 @@ hr.new1 {
   <a
   href="https://kmchandy.github.io/DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
   Timelines.
+  </a>
 </p>
 
-<a href="GlobalSnapshotAlgorithmVideo.mp4">
-<h3 class="w3-text-teal">Video</h3>
-  </a>
 
   
   <!------------------------------------------------------------------->
@@ -395,8 +393,11 @@ A total of 6 markers are sent in the algorithm, one marker for each
 channel. 
 
 
+
+
 <!--------------------------------------------------->
 <h3 class="w3-text-teal">Snapshots of Channels</h3>
+<!--------------------------------------------------->
 
 Next we look at an algorithm to record snapshots (states) of channels
 at an input-closed event set.
@@ -436,6 +437,10 @@ Note: If an agent takes its local snapshot when it receives a marker
 along a channel, then the snapshot of the channel is the empty
 sequence of messages.
 
+
+<!--------------------------------------------------->
+<h4 style="color:red;">Example: Snapshot of a Channel</h4> 
+<!--------------------------------------------------->
 <p>
 Figure 6 shows how agent Y determines the state of the channel from X
 to Y in the global snapshot.
@@ -488,10 +493,12 @@ snapshots.
 These applications have no single collector agent.
 We will look at both kinds of applications in later pages of this website.
 
-<!--------------------------------------------------------------->
-<h3 class="w3-text-teal">Starting, Snapshot, and Ending States</h3>
 
-<h5 class="w3-text-teal">The Observer Effect</h5>
+
+<!--------------------------------------------------------------->
+<h4 class="w3-text-teal">The Observer Effect</h4>
+<!--------------------------------------------------------------->
+
 As we showed earlier, making measurements (recording states) of a
 client computation may change the computation.
 
@@ -517,7 +524,9 @@ changed computations.
 So, the states of input-closed event sets are the same in the original
 and changed computations.
 
-<p>
+<!--------------------------------------------------------------->
+<h4 class="w3-text-teal">The Key Result</h4>
+<!--------------------------------------------------------------->
 Let the global states in which the snapshot algorithm starts and ends be
 \(s_{init}\) and \(s_{fini}\), respectively, and let \(s_{snap}\) be
 the global state recorded by the algorithm.
