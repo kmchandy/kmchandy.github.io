@@ -1,4 +1,5 @@
-<title>ChannelSnapshots/LogicalClocks.html</title>
+<title>ChannelSnapshots/LogicalClocksNew.html</title>
+
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
 
@@ -39,6 +40,8 @@ hr.new1 {
 
 
 <body>
+
+
 <div class="w3-top">
 <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
   
@@ -65,366 +68,226 @@ hr.new1 {
     
   </div>
   </div>
-
-<nav
-class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5
-w3-animate-left" 
-id="mySidebar">
-
-<a href="javascript:void(0)"
-onclick="w3_close()"
-class="w3-right w3-xlarge w3-padding-large w3-hover-black
-w3-hide-large"
-title="Close Menu">
-<i class="fa fa-remove"></i>
-</a>
-
-<!--END Heading  ---------------------------->
- 
-<!-- Start Sidebar----------> 
- 
-<a class="w3-bar-item w3-button w3-hover-black "
-href="SnapshotsChapterIntroduction.html" > 
-Introduction: Timelines, Snapshots, Logical Clocks
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="Timelines.html" > 
-Timelines
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="ChannelSnapshots.html" > 
-Global Snapshots
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="LogicalClocks.html" > 
-Logical Clocks
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="VectorClocks.html" > 
-Vector Clocks
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="SnapshotIntroductionSelfTest.html" > 
-Timelines: Quiz
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="ChannelSnapshotsSelfTest.html" > 
-Snapshots: Quiz
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="ChannelSnapshotsAssignment/ChannelSnapshotsAssignment.html" > 
-Snapshots: Assignment
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="ChannelSnapshotsAssignment/ChannelSnapshotsAssignmentSolution.html" > 
-Snapshots:Solution
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../GlobalSnapshotApplications/StablePredicates.html" > 
- Next
-</a>
-<a class="w3-bar-item w3-button w3-hover-black "
-href="../FoundationsOfDistributedSystems/DistributedSystemsIntroduction.html" > 
- Previous
-</a>
-
-</nav>
-<!-- End Sidebar---------->
- 
-<!-- Start overlay ---------------------------------->
-
-<!-- Overlay effect when opening sidebar on small screens -->
-<div class="w3-overlay w3-hide-large"
-  onclick="w3_close()"
-  style="cursor:pointer"
-  title="close side menu"
-  id="myOverlay"></div>
-
-<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
-<div class="w3-main" style="margin-left:250px">
   
-<script id="MathJax-script" async
+  <script id="MathJax-script" async
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
 </script>
   
 <div class="w3-row w3-padding-64">
 <div class="w3-twothird w3-container">
+  
+  <!--------------------------------------------------------->
+  <!--------------------------------------------------------->
+<h2 class="w3-text-teal">Local Clocks and Logical Time</h2>
 
-<!-- End overlay ---------------------------------->
-    <!--------------------------------------------------------->
-<h1 class="w3-text-teal">Logical Clocks</h1>
+<p class="w3-text-green">
+  This page uses material from
+  <a
+  href="https://kmchandy.github.io/ChannelSnapshots/ChannelSnapshots.html">
+  GlobalSnapshots.
+  </a>
+  </p>
 
-<h4 class="w3-text-teal">
-This module describes the logical clock algorithm which assigns a
-timestamp to each event in a trajectory called the <i>logical time</i>
-of the event. Logical time has a property of
-physical time: the states of agents and channels at a real time or a
-logical time \(t\) are global states of the system.
-</h4>
+  
 
+ 
 
+The logical clock algorithm assigns a value \(t(e)\) to each event
+  \(e\) of a computation so that:
 
-A logical clock algorithm is one in which each agent assigns a
-number \(t(e)\), called
-a timestamp, to each event \(e\) in its trajectory.
-The timestamp of an event is
-called the logical time at the event.
-The specification of the algorithm is as follows.
+  <hr class="new2">
+  <h5 style="color:blue;">
+  Logical Time Property
+  </h5>
+  <h5 style="color:blue;">
+  For all edges \((e, e')\) of the event graph of the computation: \(t(e) < t(e')\).
+  </h5>
+  <hr class="new2">
 
-<p>
-For all
-\(t\), let <i>past(t)</i> be the set of events with timestamps of \(t\) or
-less, and let <i>future(t)</i> be the set of events with timestamps
-greater than \(t\).
+<h4 class="w3-text-teal">Theorem</h4>
+  Events in increasing logical time order are computations.
+  <p  class="w3-text-teal">Proof</p>
+  Events in increasing logical time order are topological sorts of the
+  event graph. 
 
-<hr class="new2">
-<h4 style="color:blue;">
-For all \(t\), the cut \([past(t), future(t)]\)
-must be a consistent cut.
-</h4>
-<hr class="new2">
+  <h5 style="color:red;">Example: Logical Times of Events</h5>
+  Figure 1 shows an event graph of a computation in which the numbers
+  of vertices are the logical times of corresponding events.
 
-<h4 style="color:red;">Examples of Consistent Cut based on
-Timestamps</h4>
-
-The figure below illustrates a consistent cut obtained from timestamps.
-It shows a set of timestamps in a timeline diagram with
-agents \(A, B, D\), and with one channel from each agent to every
-other agent. Timestamps are shown as integers inside the circles
-representing events. Initial events have timestamps of 0.
-
-<p>
-
-The first event on agent \(A\) after the initial event is an internal
-event. Its timestamp can be any value greater than 0; the diagram
-shows a timestamp of 1.  In this event, agent \(A\) sends a message to
-agent \(B\); the message is also given the same timestamp as the
-event, i.e. a timestamp of 1.
-
-<p>
-The first event on agent \(D\), after the initial event, occurs when
-\(D\) receives a message. This message has timestamp 1. The timestamp
-for this event must be greater than 1 and greater than 0 (the
-preceding event on the agent). In the diagram the timestamp is set to
-2. Note that any value greater than 1 would be correct.
-
-
-<figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.011.jpeg" alt="Fig1" style="width:100%">
-    <figcaption>Fig. 1: Consistent Cut based on Timestamps</figcaption>
+  Every edge is directed from a lower to a higer logical time.
+  <figure>
+    <img src="../ChannelSnapshots/Timelines/Timelines.001.jpeg"
+  alt="Fig1" style="width:100%"> 
+    <figcaption>Fig. 1: Logical Times of Events</figcaption>
 </figure>
 
-The diagram shows a cut <i>[past(2), future(2)]</i>.  Because all
-edges are directed from lower- to higher-numbered timestamps, there is
-no edge from <i>future(2)</i> to <i>past(2)</i>. And so the cut is
-consistent.
 
-<p>
-It is obvious that logical times satisfy the specification if and only
-if:
-<hr class="new2">
-<h4 style="color:blue;">
-For all edges \((e, e')\) in the timeline diagram:
-\(t(e') > t(e)\).
-</h4>
-<hr class="new2">
+  <h3 class="w3-text-teal">Logical Clock Algorithm</h3>
+  The following algorithm ensures the logical time property.
 
-
-
-<h4 class="w3-text-teal">Algorithm</h4>
-An algorithm for assigning timestamps follows directly from the above
-observation. 
-
-<p>
-<i>Timestamps of messages</i>:
-Every message is assigned a timestamp by the sender of the message. 
-An agent assigns a timestamp of
-\(t(e)\) or greater to each message that it sends in event \(e\).
-
-<p>
-The timestamp of an initial event is arbitrary.
-For any event \(e'\) on an agent, let \(e\) be the event
-that immediately precedes \(e\) on that agent.
+  <p>
+Let \(e'\) be the event immediately preceding event \(e\) at an
+agent.
 <ol>
   <li>
-  For an internal event \(e'\) (i.e. an event in which no message is
-  received), set \(t(e')\) to any value greater than \(t(e)\).
+  A message sent in an event \(e\) is assigned a timestamp \(t(e)\).
   </li>
   <li>
-  For an event \(e'\) in which message with timestamp \(T\) is
-  received, set \(t(e')\) to any value greater than
-  \(\textrm{max}(t(e), T)\).
- </li>
+  If the timestamp of the message received in \(e\) is \(T\) then set
+  \(t(e)\) to any value greater than \(max (t(e'), T) \).
+  </li>
 </ol>
 
-<h4 class="w3-text-teal">Using Logical Clocks to Determine Global
-Snapshots</h4>
-The state of an agent at a consistent cut is its state after past
-events and before future events. Likewise,
-the state of a channel is the sequence of messages sent in the past
-and received in the future. So, the global snapshot corresponding to
-any timestamp \(T\) can
-be obtained in the following way:
-<ol>
-  <li>
-  Each agent records its local state after an event with timestamp at most
-  \(T\) and before an event with timestamp greater than \(T\).
-  </li>
-  <li>
-  An agent starts recording the state of each of its incoming channels
-  when the agent records its own state.  An agent stops the recording
-  the state of an incoming channel when the agent receives a message
-  on the channel where either:
+  <h3 class="w3-text-teal">Taking Global Snapshots using Logical Time</h3>
+  The state of the set of events with logical time at most \(t\) is a
+  global snapshot because the set is input closed.
+
+  A global snapshot can be recorded as follows.
+
   <ol>
-    <li>
-    the message has timestamp equal to \(T\), in which case this message
-    is included in the recorded state of the channel, or
-    </li>
-    <li>
-    the message has timestamp greater than \(T\), in which case this message
-    is not included in the recorded state of the channel.
-    </li>
+  <li>
+  <i>Agent states</i>: Each agent records its local state
+  after events with logical time at most \(t\) and before
+  events with logical time greater than \(t\).
+  </li>
+  <li>
+  <i>Channel states</i>: The state of an input channel of an agent is
+  recorded by the agent as the sequence of messages with timestamps
+  \(t\) or less, received on the channel, at events with logical
+  time greater than \(t\).
+  </li>
 </ol>
 
-From the algorithm, it follows that an agent records the state of an
-incoming channel as the sequence of messages sent in past events and
-received in future events. This is the state of the channel at the
-consistent cut specified by \(T\).
 
 
-<h4 style="color:red;">Example of a Global Snapshot using Timestamps</h4>
-The figure shows the global snapshot in which <i>past</i> events are
-those with snapshots at most 2. Agent \(A\) records its local state as
-its state after its event with timestamp 1 and before its event with
-timestamp 3. Agent \(B\) records its local state as its state after
-its event with timestamp 2 and before its event with timestamp 4.
-Agent \(B\) records its local state as is its state after its event
-with timestamp 2 and before its event with timestamp 3. The points in
-the timeline at which the agents start recording their states are the
-points at which the cut (the purple line) crosses the agent timelines.
+  <!--------------------------------------------->
+  <h3 class="w3-text-teal">Agent Clocks</h3>
+<!--------------------------------------------->
 
-<p>
-Agent \(A\) starts recording the state of its incoming channel from
-\(B\) when \(A\) records its own local state.  \(A\) stops recording
-the state of this channel when it receives a message on the channel
-with timestamp equal to 2, and this message is included in the state
-of the channel. So, the state of this channel is recorded by agent
-\(A\) as the single message with timestamp 2. In the diagram this is
-the message that crosses the cut.
+Agents can maintain accurate clocks by using atomic clocks on PC
+ boards, Precision Time Protocols (PTP) in local area networks, and
+Network Time Protocol (NTP) servers.
+
+These protocols do not, however, guarantee the logical time property.
+
+So, in addition to synchronization protocols we use rule 2 of the
+logical clock algorithm to guarantee that agent clock times satisfy
+the logical clock property.
 
 
 
+
+<!--------------------------------------------->
 <h3 class="w3-text-teal">Vector Clocks</h3>
-The logical clock algorithm ensures that if there is a path from an
-event \(e\) to an event \(e'\) in the timeline diagram then \(t(e') >
-t(e)\); however, the converse isn't necessarily true.
+<!--------------------------------------------->
 
-<hr class="new2">
-<h4 style="color:blue;">
-The vector clock
-algorithm ensures that \(t(e') > t(e)\) if and <i>only if</i> there is 
-a path from \(e\) to \(e'\).
-</h4>
-<hr class="new2">
+The logical clock algorithm ensures that if there is a path from event
+\(e'\) to event \(e\) in the causality graph then logical times have
+the property \(t(e') < t(e)\).  Vector clocks ensure that the converse
+also holds.  The specification for the vector time \(t(e)\) for an
+event \(e\) is:
 
-<p>
-A vector timestamp is a vector with an element for each agent in the
-system, and for vectors \(v, v'\): \(v \geq v'\) if and only if
-\(v_{i} \geq v'_{i}\), for all \(i\).
-The algorithm is the same as for logical clocks except that
-timestamps are vectors.
+<p style="color:blue;">
+\(t(e') < t(e)\) if and <i>only if</i> there is a path in the
+causality graph from \(e'\) to \(e\).
+</p>
+
 
 <p>
-Let there be \(N\) agents in the system indexed \(0 \leq j <
-N\). Let \(I_{j}\) be unit vector in direction \(j\), a vector of
-zeroes except that \(I_{j}[j] = 1\). A timestamp for an event \(e'\)
-on agent \(j\) is computed in the following way. Initial timestamps
-are zero vectors.
-<ol>
-  <li>
-  For an internal event: \(t(e') = t(e) + I_{j}\)
-  </li>
-  <li>
-  For an event in which a message with timestamp \(T\) is received:
-  \(t(e') = max(t(e), t(M)) + I_{j}\)
-  </li>
-</ol>
+A vector time for an event \(e\) is a vector \(V(e)\) of length \(N\)
+where \(N\) is the number of agents in the system.
 
+Let \(V_{j}(e)\) be the \(j\)-th element of vector \(V(e)\).
+For events \(e'\) and \(e\) at the same agent \(j\), if \(e'\)
+precedes \(e\), then set \(V_{j}(e)\) to any value such that:
+
+<p>
+\(
+V_{j}(e) > V_{j}(e') 
+\)
+
+<p>
+A message \(M\) is assigned a timestamp \(T(M)\) which is the vector
+time of the event in which the message is sent.  Let \(e\) be an event
+at an agent \(j\) where message \(M\) is received in the event, and
+let \(e'\) be the event that immediately precedes \(e\) at agent \(j\). Then:
+<p>
+\(
+\forall k \neq j:
+V_{k}(e) = \textrm{max}(V_{k}(e'), T_{k}(M))
+\)
+
+
+<!--------------------------------------------->
 <h4 style="color:red;">Example of Vector Clocks</h4>
 <figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.012.jpeg" alt="Fig2" style="width:100%">
-    <figcaption>Fig. 2: Example of Vector Clocks</figcaption>
+    <img src="../ChannelSnapshots/Timelines/Timelines.005.jpeg" alt="Fig5" style="width:100%">
+    <figcaption>Fig. 5: Example of Vector Clocks</figcaption>
 </figure>
-The figure shows both scalar and vector timestamps. Scalar
-timestamps are shown inside the circles representing events while
-vector timestamps are shown just outside the circles.
+In this figure, the \(n\)-th event at an agent is shown as a circle
+containing the number \(n\). Vector timestamps have 3 elements
+corresponding to agents 0, 1, and 2.
+
 <p>
-For example, there is a path from the event with timestamp \([1, 0,
-1]\) to the event with timestamp \([2, 0, 1]\) whereas there is no
-path between events with timestamps \([2, 0, 1]\) and \([1, 1, 2]\).
+Let \(U, V, W \) be the vector timestamps for for event number 2 at
+agent 0, event number 3 at agent 0, and event number 1 at agent 1.
+What values can \(V\) have?
 
-<h4 class="w3-text-teal">Proof of Correctness of Vector Clocks</h4>
-We will prove that for all events \(e, e'\) if \(t'(e) \leq t(e)\)
-then there is a path from \(e'\) to 
-\(e\). (If \(t'(e) = t(e)\) then \(e' = e\) and there is a
-zero-length path from \(e\) to itself.)
-The proof is based on the following observations that are easily
-proved.
-<ol>
-  <li>
-  For all events \(e\) and all agents \(j\): There exists a path to
-  \(e\) from the \(i\)-th event on agent \(j\) for all \(i \leq
-  t(e)_{j}\).
-  </li>
-  <li>
-  If \(e\) is at agent \(j\) then \(e\) is the
-  \(t(e)_{j}\)-th event on agent \(j\).
-  </li>
-</ol>
 <p>
-From observation 2, \(e'\) is the \(t(e')_{j}\)-th on an agent \(j\).
-From observation 1, there is a path to \(e\) from the \(i\)-th event on
-agent \(j\) for \(i \leq t(e)_{j}\).
-So, there is a path from \(e'\) to \(e\) because \(t(e')_{j} \leq t(e)_{j}\).
-
-<p style="color:red;">Example of Proof Steps</p>
-As an example of observation 1, consider the 5-th event in figure 2; this event has
-timestamp \([3, 1, 1]\). 
-There are paths to this event from the zeroth, first, second, and third
-events on agent 0, and from the zero-th and first events on agent
-\(1\), and from the zero-th and first
-events on agent \(2\).
+The algorithm requires:
 <p>
-As an example of observation 2, the event with timestamp \([1, 1, 2]\)
-is the second event on agent \(2\).
+\(
+V_{0} > U_{0} = 2
+\)
+<p>
+\(
+V_{1} = \textrm{max}(U_{1}, W_{1}) = \textrm{max}(0, 1) = 1
+\)
+<p>
+\(
+V_{2} = \textrm{max}(U_{2}, W_{2}) = \textrm{max}(1, 0) = 1
+\)
+<p>
+
+<!--------------------------------------------->
+<h4 class="w3-text-teal">Proof of Correctness</h4>
+The proof that the vector clock algorithm satisfies its specification
+is straightforward.
 
 
-<h4 class="w3-text-teal">Logical Time and Causality</h4>
-Lamport proposed logical clocks originally so that if an event \(e\)
-could have an impact on an event \(e'\) --- if there is a path from
-\(e\) to \(e'\) in the timeline diagram --- then \(t(e') > t(e)\). We
-will use logical time for its relevance to timeline diagrams,
-causality and global snapshots.
+<!--------------------------------------------->
+<h4 class="w3-text-red">
+<i>Central Ideas: Review</i></h4>
+<p class="w3-text-red">
 
-<h4 style="color:blue;">Review</h4>
-<ol>
-  <li>
-  In the logical clock algorithm, how is a timestamp assigned to an internal event?
-  </li>
-  <li>
-  How is a timestamp assigned to an event in which a message is received?
-  </li>
-  <li>
-  How can timestamps from the logical clock algorithm be used to obtain global snapshots?
-  </li>
-  <li>
-  How are vector clock values assigned?
-  </li>
-  <li>
-  The vector clock algorithm ensures that \(t(e') > t(e)\) if and <i>only if</i> there is 
-  a path from \(e\) to \(e'\). What are the central ideas in the proof?
-  </li>
-</ol>
+If there is a path in the causality graph from an event \(e'\) to an
+event \(e\) then the logical time of \(e\) is greater than that of
+\(e'\).
+
+For any \(t\), a cut where <i>past</i> is a set of events with logical
+time \(t\) or less is a consistent cut.
+
+Determining global snapshots using logical times is straightforward.
+
+<!--------------------------------------------->
+<p class="w3-text-red">
+<i>Concepts</i>:
+Timelines -> causality graphs -> logical and vector times -> consistent cuts ->
+global snapshots.
+
+
+
+<h4 class="w3-text-teal">Next</h4>
+Next look at 
+-- <a href="../Paxos/ConsensusImpossible.html">consensus algorithms</a>
+or <a href="../table_of_contents.html">other types of algorithms</a>.
+
+
+
+
+
+
+
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
