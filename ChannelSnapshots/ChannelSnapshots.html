@@ -113,7 +113,7 @@ hr.new1 {
  
 
   <!-----------------------------------------------------------------------------> 
-  <h2 class="w3-text-teal">Global Snapshot</h2> 
+  <h3 class="w3-text-teal">Global Snapshot</h3> 
   <!----------------------------------------------------------------------------->
   <p>
 We discuss the design of an algorithm by which agents collaborate to determine
@@ -200,8 +200,8 @@ circle on the agent's timeline.
 </figure> 
 
 <!--------------------------------------------------------->
-<p style="color:red;">Example: Taking Snapshots may change Client
-Computations</p>
+<h4 style="color:red;">Example: Taking Snapshots may change Client
+Computations</h4>
 
 Taking local snapshots may change the order in which events of the
 client computation occur.
@@ -223,8 +223,8 @@ the agent computations, are the same for figures 1 and 2 are the same.
 
 
 <!--------------------------------------------------------->
-<p style="color:red;">Example: Pre-Snapshot Set that is Input
-Closed</p> 
+<h4 style="color:red;">Example: Pre-Snapshot Set that is Input
+Closed</h4> 
 
 <p> The pre-snapshot vertices are 0, 1, 2, 4, 6 in figure 2.
 
@@ -247,8 +247,8 @@ pre-snapshot event.
 
 
 <!--------------------------------------------------------->
-<p style="color:red;">Example: Pre-Snapshot Set that is not Input
-Closed</p> 
+<h4 style="color:red;">Example: Pre-Snapshot Set that is not Input
+Closed</h4> 
 
 Figure 3 shows an event graph that has a message edge directed from a
 post-snapshot event, 6, to a  pre-snapshot event, 7.
@@ -263,7 +263,7 @@ This set of pre-snapshot events is not input closed.
 The figures suggest the following theorem.
 
 
-  <h5 class="w3-text-teal">Theorem</h5>
+  <h3 class="w3-text-teal">Theorem</h3>
   The set of pre-snapshot events is input-closed if and only
   if
   each message received in a pre-snapshot event is sent in a
@@ -341,7 +341,8 @@ in a pre-snapshot action was sent in a pre-snapshot action.
 
 
 
-<h4 style="color:red;">Example of a Global Snapshot</h4>
+<h4 style="color:red;">Example: Steps in a Global Snapshot
+Algorithm</h4> 
 Figure 4 illustrates the first step of the algorithm.
 
 <figure>
@@ -448,7 +449,7 @@ The only message in this interval is the message corresponding to edge
 
 
 <figure>
-    <img src="ChannelSnapshots/ChannelSnapshots.006.jpeg" alt="Fig6"
+    <img src="ChannelSnapshots/ChannelSnapshots.007.jpeg" alt="Fig7"
     style="width:100%"> 
 <figcaption>
 Fig.7: When an Agent takes its Snapshot it Sends
@@ -534,7 +535,7 @@ There exists a computation that starts in
 </h5>
 <hr class="new2">
 
-This central result is the basis of many distributed algorithms.
+<i>This central result is the basis of many distributed algorithms.</i>
 
 <P>
 A rollback and recovery system records global snapshots
@@ -545,16 +546,14 @@ computation is restarted from the most recent snapshot
 instead of rolling all the way back to the initial state.
 
 <p>
-Global snapshots are used to detect persistent properties
-such as the computation is in a deadlocked state.
+Global snapshots are used to detect persistent properties such as the
+computation is in a deadlocked state.
 
-If the
-computation has deadlocked when the snapshot algorithm starts then the
-snapshot shows that the computation has deadlocked.
+If the computation has deadlocked when the snapshot algorithm starts
+then the snapshot shows that the computation has deadlocked.
 
-And, if the
-snapshot shows that the computation has deadlocked then the
-computation has indeed deadlocked.
+And, if the snapshot shows that the computation has deadlocked then
+the computation has indeed deadlocked.
 <h4 class="w3-text-red">
 
 <!--------------------------------------------------------------->
