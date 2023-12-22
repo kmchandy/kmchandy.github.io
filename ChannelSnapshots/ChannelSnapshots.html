@@ -93,10 +93,6 @@ hr.new1 {
 
   
   <!------------------------------------------------------------------->
-  <h4 class="w3-text-red">
-  <i>Central Ideas</i></h4>
-
-  <p class="w3-text-red">
   
   <p class="w3-text-red">
   A global snapshot is the system state at an input-closed set of
@@ -104,12 +100,13 @@ hr.new1 {
 
   Systems can be monitored by scheduling repeated global snapshots.
 
-  Algorithms that detect states are based on global snapshots.
+  Algorithms that detect properties of computations, such as "the
+  computation is deadlocked," are based on global snapshots.
 
-  This page gives one algorithm to determine a global snapshot, and
-  other algorithms are described later.
+  Rollback and recovery in distributed systems is also based on global
+  snapshots.
+  </p>
  
-
   <!-----------------------------------------------------------------------------> 
   <h3 class="w3-text-teal">Global Snapshot</h3> 
   <!----------------------------------------------------------------------------->
@@ -563,17 +560,11 @@ then the snapshot shows that the computation has deadlocked.
 
 And, if the snapshot shows that the computation has deadlocked then
 the computation has indeed deadlocked.
-<h4 class="w3-text-red">
 
 
 <h4 class="w3-text-teal">Next</h4>
-Next either look at two examples
- -- <a href="TerminationDetectionNew.html">termination</a> and
-<a href="DatabaseDeadlockDetection.html">database deadlock</a>
-detection --
-of snapshots or
-move to the next topic, 
-<a href="LogicalClocksNew.html">logical clocks</a>.
+Next  
+<a href="LogicalClocks.html">logical clocks</a>.
 
   
 <!--Start Footer--------------------------------------->
