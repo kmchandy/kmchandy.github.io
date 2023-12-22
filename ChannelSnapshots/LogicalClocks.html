@@ -171,10 +171,30 @@ Network Time Protocol (NTP) servers.
 These protocols do not, however, guarantee the logical time property.
 
 So, in addition to synchronization protocols we use rule 2 of the
-logical clock algorithm to guarantee that agent clock times satisfy
-the logical clock property.
+logical clock algorithm to guarantee that clock times of receive events are
+later than clock times of the corresponding send events.
 
 
+
+  <!--------------------------------------------->
+  <h3 class="w3-text-teal">System Monitoring</h3>
+<!--------------------------------------------->
+A system is monitored by taking repeated snapshots.
+
+When a transient error occurs, a rollback and recover algorithms
+restarts the computation at the most recent snapshot.
+
+Persistent properties of the computation are detected by inspecting
+the most recent snapshot.
+
+For example, if a computation has deadlocked then a snapshot after the
+deadlock will show that the computation has indeed deadlocked.
+
+<p>
+<i>
+Monitoring by repeated snapshots is the general approach to solving
+detection problems.
+</i>
 
 
 
