@@ -477,73 +477,6 @@ Event 1 in the figure is the same as the event shown in figure 3.
 
 
 
-
-
-<!---------------------------------------------------------------->
-<h3 class="w3-text-teal">Agent Computations</h3>
-<!---------------------------------------------------------------->
-Associated with each system computation is a set of agent
-computations.
-is defined as a sequence of events at the agent.
-
-The computation of an agent \(u\) in a system computation is obtained
-deleting all events in the system computation that are not at \(u\).
-
-<!------------------------------------------------------------------>
-<h5 style="color:red;">Example of Agent Computations</h5>
-<!------------------------------------------------------------------>
-In a system computation with event sequence \([1, 2, 3, 4, 5, 6]\), if
-events \([1, 5, 6]\) are at an agent \(u\), and \([2, 3, 4]\)
-are at an agent \(v\), then \(u\)'s computation in the system computation
-is \([1, 5, 6]\), qne \(v\)'s is  \([2, 3, 4]\).
-
-The initial and final events, \(0\) and \(N\), represent the
-initial and final states, and are common to all agents.
-
-
-<p>
-Figure 6 has two diagrams; the upper diagram shows an event graph and
-the lower diagram shows agent computations.
-
-The top line in the lower diagram shows agent \(u\)'s computation -- the
-sequence \([0, 1, 5, 6, N]\) of events -- at agent \(u\).
-
-The lower line of the lower diagram shows \(v\)'s computation
--- the sequence of events \([0, 2, 3, 4, N]\).
-
-
-
-<figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.013.jpeg"
-    alt="Fig6" style="width:100%"> 
-    <figcaption>Fig.6: Example - Agent Computations and the Event Graph
-</figcaption>
-</figure>
-
-
-<!------------------------------------------------------------------>
-<h3 class="w3-text-teal">Equivalence of Event Graphs and Agent
-Computations
-</h3>
-<!------------------------------------------------------------------>
-
-<p class="w3-text-teal">Theorem</p>
-The event graph \(G\) of a system computation \(Q\) can be obtained from 
-the set \(R\) of agent
-computations, and \(R\) can be obtained from \(G\).
-
-<p class="w3-text-teal">Proof Outline</p>
-
-<p>
-In graphical terms, the set \(R\) of agent computations is obtained from
-event graph \(G\) by disconnecting message edges in \(G\), and
-leaving dangling message edges. And \(G\)is obtained from
-\(R\) by connecting dangline message edges.
-
-
-
-
-
 <!---------------------------------------------------------------->
 <h3 class="w3-text-teal">Trajectories and Computations: Commonality</h4>
 <!---------------------------------------------------------------->
@@ -555,9 +488,11 @@ the execution of a single <code>receive</code> command; the event does
 not deal with states of an agent while it is executing the command.
 
 <p>
-Likewise, an agent computation in a trajectory is specified in the
-same way as in a system computation: an agent computation is the
-sequence of events at that agent.
+Making the duration of events in a trajectory arbitrarily small gives
+a system computation with the same event graph as the trajectory.
+
+For every trajectory there exists a system computation that has the same
+event graph as the trajectory.
 
 
 <!---------------------------------------------------------------->
@@ -565,8 +500,7 @@ sequence of events at that agent.
 <!---------------------------------------------------------------->
 
 The top diagram of figure 6 shows a trajectory and the lower
-diagram shows a computation with the same event graph, and therefore
-the same agent computations.
+diagram shows a computation with the same event graph.
 
 The lower diagram can be obtained from the upper diagram by making the
 durations of events infinitisimally small.
@@ -579,17 +513,6 @@ durations of events infinitisimally small.
 identical Event Graphs
 </figcaption>
 </figure>
-
-
-<h5 class="w3-text-teal">Trajectories and Computations with Common
-Event Graphs and Agent Computations</h5>
-
-Making the duration of events in a trajectory arbitrarily small gives
-a system computation with the same event graph.
-
-For every trajectory there exists a system computation that has the same
-event graph as the trajectory
-
 
 
 
@@ -621,10 +544,9 @@ What is the most information an agent can get from other agents?
 An agent \(A\) can ask every agent to send their agent
 computations to \(A\).
 
-The information that \(A\) gets in this way is the set of agent
-computations. 
+The information that \(A\) gets in this way is the event graph.
 
-<i>The set of agent computations is the most information that \(A\) can
+<i>The event graph is the most information that an agent can
 get.</i>
 
 
