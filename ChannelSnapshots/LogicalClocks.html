@@ -89,10 +89,33 @@ hr.new1 {
   </p>
 
   
+ <!------------------------------------------------------------------->
+  
+  <p class="w3-text-red">
+  <i>
+  A logical clock algorithm assigns a value \(t(e)\) to each event
+  \(e\) in a computation.
 
- 
+  \(t(e)\) is called the logical time of \(e\).
 
-The logical clock algorithm assigns a value \(t(e)\) to each event
+ Logical times have the property that all edges
+ of the event graph of the computation are directed from lower to
+  higher logical times.
+  </i>
+  </p>
+
+  <p>
+  <i>
+  <p class="w3-text-red">
+  A consequence of the property is that all sequences of events in
+  ascending order of logical times, are computations.
+  </i>
+  </p>
+  <!------------------------------------------------------------------->
+  
+
+  <h3 class="w3-text-teal">The Logical Time Property</h3>
+A logical clock algorithm assigns a value \(t(e)\) to each event
   \(e\) of a computation so that:
 
   <hr class="new2">
@@ -104,16 +127,18 @@ The logical clock algorithm assigns a value \(t(e)\) to each event
   </h5>
   <hr class="new2">
 
-<h4 class="w3-text-teal">Theorem</h4>
-  Events in increasing logical time order are computations.
-  <p  class="w3-text-teal">Proof</p>
-  Events in increasing logical time order are topological sorts of the
-  event graph. 
+  
+  <h4 style="color:red;">Example: Logical Times of Events</h4>
+  Figure 1 shows an event graph of a computation with event sequence
+  \([0, 1, \ldots, 8]\) in agents \(A, B, D\).
+  The numbers inside the black circles are the event ids, and the
+  numbers in red adjacent to the black circles are the logical times
+  of corresponding events.
+  Message edges from an agent to itself are not shown, and arrows
+  showing the direction of agent edges are not shown.
 
-  <h5 style="color:red;">Example: Logical Times of Events</h5>
-  Figure 1 shows an event graph of a computation in which the numbers
-  of vertices are the logical times of corresponding events.
-
+  <p>
+  The logical times in the figure satisfy the logical time property.
   Every edge is directed from a lower to a higer logical time.
   <figure>
     <img src="../ChannelSnapshots/Timelines/Timelines.001.jpeg"
@@ -121,6 +146,19 @@ The logical clock algorithm assigns a value \(t(e)\) to each event
     <figcaption>Fig. 1: Logical Times of Events</figcaption>
 </figure>
 
+
+
+<h4 class="w3-text-teal">Theorem: 
+  Event sequences in ascending logical
+  time are computations.
+</h4>
+<p  class="w3-text-teal">Proof</p>
+
+Sequences in ascending order of logical time are topological sorts of the
+event graph.
+
+(Note: Ascending order means that for successive elements, where \(e'\)
+follows \(e\): \(t(e') \geq t(e)\).)
 
   <h3 class="w3-text-teal">Logical Clock Algorithm</h3>
   The following algorithm ensures the logical time property.
@@ -158,7 +196,43 @@ agent.
   </li>
 </ol>
 
+<h4 style="color:red;">Example: Global Snapshot at Logical Time 2</h4>
 
+The figure below shows events with logical time at most 2 (colored
+black) and events with logical time greater than 2 (colored green).
+
+The state of agent \(A\) after logical time 2 is the label of the edge
+ for agent \(A\) from an event with with logical time 2 or less to an
+event with logical time greater than 2 -- this is the edge from event 3
+ to event 5.
+
+
+This state is the label of the edge cut by the boundary line
+separating events with logical time at most 2 from its complement.
+
+
+  <figure>
+    <img src="../ChannelSnapshots/Timelines/Timelines.002.jpeg"
+  alt="Fig2" style="width:100%"> 
+    <figcaption>Fig. 2: Global Snapshot at Logical Time 2</figcaption>
+</figure>
+
+<p>
+
+The state of an agent is the label of the edge cut by the boundary line
+separating events with logical time at most 2 from its complement.
+
+The boundary line is shown in purple, and so the state of agents at
+logical time 2 is determined by the labels of agent edges that cross
+the purple line.
+
+<p>
+The state of a channel is the sequence of labels of channel edges that
+cross the purple line.
+
+For example, the state of the channel from \(B\) to \(A\) is the
+sequence consisting of the message sent at event 4 and received at
+event 5. 
 
   <!--------------------------------------------->
   <h3 class="w3-text-teal">Agent Clocks</h3>
@@ -170,31 +244,55 @@ Network Time Protocol (NTP) servers.
 
 These protocols do not, however, guarantee the logical time property.
 
-So, in addition to synchronization protocols we use rule 2 of the
-logical clock algorithm to guarantee that clock times of receive events are
-later than clock times of the corresponding send events.
-
-
-
-  <!--------------------------------------------->
-  <h3 class="w3-text-teal">System Monitoring</h3>
-<!--------------------------------------------->
-A system is monitored by taking repeated snapshots.
-
-When a transient error occurs, a rollback and recover algorithms
-restarts the computation at the most recent snapshot.
-
-Persistent properties of the computation are detected by inspecting
-the most recent snapshot.
-
-For example, if a computation has deadlocked then a snapshot after the
-deadlock will show that the computation has indeed deadlocked.
 
 <p>
-<i>
-Monitoring by repeated snapshots is the general approach to solving
-detection problems.
-</i>
+In addition to using atomic clocks where possible, and using time
+protocols such as NTP, we further modify times assigned to events so
+that they satisfy the logical time property.
+
+Times are assigned to events as follows.
+A message sent in an event \(e\) is assigned a timestamp \(t(e)\),
+  the clock value at the sender's clock at the point at which the
+message is sent.
+If the timestamp of the message received at an event \(e\) is \(T\),
+and the receiver's clock when the message received is \(t\), then:
+
+<ol>
+  <li>
+  If \(t < T\), then the event is assigned time \(t\).
+  </li>
+  <li>
+  If \(t \geq T\) then the event is assigned time 
+  \(T + \epsilon\) where \(\epsilon\) is positive.
+  (A synchronization algorithm determines the value of \(\epsilon\).)
+</ol>
+The likelihood that rule 2 is used is small. 
+
+<p>
+Clocks that are synchronized in this way may not be in perfect
+synchrony but have two valuable characteristics:
+<ol>
+  <li>
+  <i>Clocks keep ticking forward</i>: For all \(T\) there exists a
+  point in an infinite computation where the clocks of all agents have
+  values greater than \(T\).
+  </li>
+  <li>
+  <i>Events in time order are computations</i>: Events ordered by the
+  times assigned to them by the two rules are computations.
+  </li>
+</ol>
+We will use these characteristics in many algorithms.
+
+<h3 class="w3-text-teal">System Monitoring is used in Many Algorithms</h3>
+
+Monitoring systems by taking repeated snapshots is the basis of many
+distributed algorithms.
+
+A simple way to take periodic snapshots with period \(T\) is for each
+agent to take its local snapshot and the snapshot of incoming channels
+when its agent clock reads a multiple of \(T\).
+
 
 
 
