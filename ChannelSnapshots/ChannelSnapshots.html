@@ -82,31 +82,18 @@ hr.new1 {
 <h1 class="w3-text-teal">A Global Snapshot Algorithm</h1>
 <!--------------------------------------------------------->
 
-<p class="w3-text-green">
-  This page uses material from
-  <a
-  href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-  Timelines.
-  </a>
-</p>
-
 
   
   <!------------------------------------------------------------------->
   
   <p class="w3-text-red">
-  <i>
+
   A global snapshot is the system state at an input-closed set of
-  events. 
+  events.
 
-  Systems can be monitored by scheduling repeated global snapshots.
+  Many distributed algorithms are based on monitoring systems by
+  scheduling repeated global snapshots.
 
-  Algorithms that detect properties of computations, such as "the
-  computation is deadlocked," are based on global snapshots.
-
-  Rollback and recovery algorithms for distributed systems are based
-  on global snapshots.
-  </i>
   </p>
  
   <!-----------------------------------------------------------------------------> 
@@ -165,24 +152,22 @@ traps these messages so that the client does not see them.
 
   <p>
   Execution of an OS agent on a processor may delay a client's
-  events on the same processor.
-  
-  The OS may change the order in which agents execute events.
+  events on the same processor, and thus change the order in which the
+  client's events are executed. 
 
-  So,
-  execution of an OS algorithm may change a client's
-  computation.
-
-We design OS algorithms so that the client's dataflow is not changed
-by the OS.
+Though the OS may change the client's computation, we design OS
+algorithms that do not change the client's dataflow.
   
   <p>
   One way to record a global snapshot is for the OS to stop a client
   computation, then take a global snapshot, and then  restart the
 client computation.
 
-  We describe a snapshot algorithm that runs concurrently with the client
-  computation without stopping the client.
+We describe a snapshot algorithm that does not stop the client.
+
+<p>
+Hereafter, when we refer to an agent we mean an OS agent that operates
+on behalf of a client agent.
  
 <!----------------------------------------------------------------------------->
 <h5 class="w3-text-teal">Local Snapshots of Agents</h5>
@@ -195,110 +180,47 @@ An agent's record of its local state is called the <i>agent's local
 snapshot.</i>
 
 An agent's events before it takes its local snapshot are called
-pre-snapshot events.
+pre-snapshot events, and events after the local snapshot are
+called post-snapshot events.
 
-<p>
-Making measurements (e.g., recording states) of a
-client computation may change the computation.
-
-Next, we look at an example of this
-<a href="https://en.wikipedia.org/wiki/Observer_effect_(physics)">
-Observer Effect
-</a>.
-
-The snapshot algorithm may change the computation of a client but not
-its dataflow.
 
 <!--------------------------------------------------------->
-<h4 style="color:red;">Example: Taking Snapshots may change Client
-Computations</h4>
-<!--------------------------------------------------------->
-
-Figure 1 shows a representation of a computation with agents X, Y, Z.
-There is only one channel, in each direction, between each
-pair of vertices.
-
-The figure shows a computation with event sequence \([0, 1, 2, 3,
-\ldots,]\). 
-
-<figure>
-    <img src="ChannelSnapshots/ChannelSnapshots.002.jpeg" alt="Fig2"
-    style="width:80%"> 
-    <figcaption>Fig.2: A Computation and its Event Graph</figcaption>
-</figure> 
-
-
+<h4 style="color:red;">Example: Local Snapshots
+</h4> 
 In figure 2, each agent takes a local snapshot which is shown as a yellow
 circle on the agent's timeline.
 
-Events at an agent before the agent takes its local snapshot are
-called pre-snapshot events, and events after the local snapshot are
-called post-snapshot events.
+The computation when OS agents are not executing is \([0,
+1, 2, 3, \ldots, ]\).
+
+The OS delays event 3 so that it occurs after events 4, 5, 6, and 7,
+as shown in the figure.
+
+Though the OS changes the computation it does not change the dataflow.
 
 <figure>
-    <img src="ChannelSnapshots/ChannelSnapshots.003.jpeg" alt="Fig3"
+    <img src="ChannelSnapshots/ChannelSnapshots.003.jpeg" alt="Fig2"
     style="width:80%"> 
-    <figcaption>Fig.3: Example of Input-Closed Pre-Snapshot Events</figcaption>
+    <figcaption>Fig.2: Example of Input-Closed Pre-Snapshot Events</figcaption>
 </figure> 
 
 In figure 2, the pre-snapshot events are 0, 1, 2, 4, 6.
 
-
-Taking local snapshots may change the order in which events of the
-client computation occur.
-
-Whe agent \(Y\) takes its local snapshot it delays event 3.
-
-So, event 3 occurs after after events 4, 5, and 6 in the computation
-of figure 2 whereas event 3 occurs before events 4, 5, and 6 in the
-computation of figure 1.
-
-<p>
-The computation in figure 2 has a state in which there is both a
-message in a channel from agent X to agent Y, and a message in a
-channel from Z to Y (see edges (4, 5) and (1, 3)).
-
-That state does not occur in the computation of figure 1.
-
-<p> Though the computations are different the event graphs are the
-same in figures 1 and 2. 
-
-
-<!--------------------------------------------------------->
-<h4 style="color:red;">Example: Pre-Snapshot Set that is Input
-Closed</h4> 
-
-<p> The pre-snapshot vertices are 0, 1, 2, 4, 6 in figure 2.
-
-The cut is the boundary between the pre-snapshot events to the left of
-the boundary and post-snapshot events to the right.
-
-<p>
-The cut is specified by the last event before the local snapshot at
-each agent.
-
-In figure 2 the cut is specified by \(\{(X, 6), (Y, 2), (Z, 1)\}\).
-
-<p> In figure 2 there is only one message received in a pre-snapshot
+There is only one message received in a pre-snapshot
 event, namely the message represented by the edge (0, 2).
-
-This message is sent in a pre-snapshot event.
 
 So, every message received in a pre-snapshot event is sent in a
 pre-snapshot event.
 
-<p>
-The figure shows that the set of pre-snapshot events is input closed
--- there is no edge from a post- to a pre-snapshot event.
-
-
+The figure shows that the set of pre-snapshot events is input closed.
 
 
 <!--------------------------------------------------------->
-<h4 style="color:red;">Example: Pre-Snapshot Set that is not Input
+<h4 style="color:red;">Example: Pre-Snapshot Event Set that is not Input
 Closed</h4> 
+The pre-snapshot events in figure 3 are 0, 1, 2, 5, 7.
 
-Figure 3 shows an event graph that has a message edge directed from a
+The dataflow graph that has a message edge directed from a
 post-snapshot event, 6, to a  pre-snapshot event, 7.
 
 This set of pre-snapshot events is not input closed.
@@ -320,23 +242,25 @@ pre-snapshot event.
 
   
 <p class="w3-text-teal">Proof</p>
-We prove that the pre-snapshot set is input closed if the
-condition of the theorem holds. The only-if part of the proof is
-straightforward.
+ 
 
 From the definition of local snapshots, an agent edge to a
-pre-snapshot event at an agent \(u\) are from a
+pre-snapshot event at an agent \(u\) is from a
 pre-snapshot event at \(u\).
 
 From the condition of the theorem, a message edge to a pre-snapshot
 event is from a pre-snapshot event.
 
+
+<p>
+The only-if part of the proof is straightforward.
+
 <h3 class="w3-text-teal">Alternate Versions of the Global Snapshot
 Theorem</h3> 
 The theorem is used so often that we highlight it, and give
 an alternative version of it.
-<hr class="new2">
 
+<hr class="new2">
 <p style="color:blue;">
 The set of pre-snapshot events is input-closed if and only
 if any one of the following conditions holds.
@@ -370,11 +294,8 @@ Each message sent in a post-snapshot event is received in a
 
 
 <h3 class="w3-text-teal">A Global Snapshot Algorithm</h3>
-A global snapshot is the state at an input-closed
-set of pre-snapshot events.
 
-The global snapshot theorem suggests the following algorithm for
-taking a global snapshot.
+The global snapshot theorem suggests the following algorithm.
 
 <ol>
   <li>
@@ -412,12 +333,31 @@ along a channel, then the snapshot of the channel is the empty
 sequence of messages.
 
 
-<p>
+<p class="w3-text-teal">All agents take their local snapshots</p>
 After any agent \(v\) initiates the algorithm, all agents that are
 reachable from \(v\) will receive a marker and take their local
 snapshots.
-All agents take their local snapshots if there are path (sequence of
-channels) from the initiator to all agents.
+
+All agents take their local snapshots if every agent is reachable from
+an initiator along a sequence of channels.
+
+
+
+<p class="w3-text-teal">Collecting Local Agent and Channel
+Snapshots</p>
+Each agent takes its own local snapshot and the snapshots of its
+incoming channels.
+
+In some algorithms, agents send snapshots of their states and 
+input channels to a collector agent which composes the information to
+form the global snapshot. 
+
+<p>
+Other algorithms carry out distributed computations on local
+snapshots.
+These algorithms have no single collector agent.
+We will design both kinds of algorithms.
+
 
 
 
@@ -523,41 +463,25 @@ pre-snapshot event and received in a post-snapshot event, and so it is
 in the snapshot of the channel.
 
 
-<h4 class="w3-text-teal">Collecting Local Agent and Channel
-Snapshots</h4>
-Each agent takes its own local snapshot and the snapshots of its
-incoming channels.
-In some applications, agents send snapshots of their states and the
-states of their
-input channels to a collector agent.
-The collector composes the information to form the global snapshot
-
-<p>
-Other applications carry out distributed computations on local
-snapshots.
-These applications have no single collector agent.
-We will look at both kinds of applications in later pages of this website.
-
-
 
 <!--------------------------------------------------------------->
 <h4 class="w3-text-teal">Key Properties of Global Snapshot Algorithms</h4>
 <!--------------------------------------------------------------->
 
+<p>
+Let \(H\) be a set of events that are completed before a snapshot
+algorithm is initiated.
+
+Let the snapshot be the state at an input-closed event set \(H'\).
+
+Then \(H \subseteq H'\).
 
 From
 <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
 computations between sets of operations
 </a>
-for all input closed sets \(H, H'\) where \(H \subseteq
-H'\), there is a computation from \(H\) to \(H'\).
+there is a computation from \(H\) to \(H'\).
 
-
-<p>
-Let the set of events that have been completed when the snapshot
-algorithm is initiated be \(H\) and let the snapshot be the state at
-\(H'\).
-Then \(H \subseteq H'\).
 
 <p>
 Let \(s_{init}\) be the state in which the snapshot algorithm is
@@ -566,15 +490,14 @@ initiated, i.e., \(s_{init}\) is the state at \(H\).
 Let \(s_{snap}\) be the global state recorded by the algorithm, i.e.,
 \(s_{snap}\) is the state at \(H'\).
 
-<p>
-There exists a computation from \(H\) to \(H'\).
+There exists a computation from \(H\) to \(H'\)
 and so there exists a computation from \(s_{init}\) to \(s_{snap}\).
 
 By the same argument, there exists a computation from \(s_{snap}\) to
 \(s_{fini}\), the state when the global snapshot algorithm terminates.
 
 <p>
-These result are used so frequently that we highlight them here.
+These results are used so frequently that we highlight them here.
 
 <hr class="new2">
 <h5 style="color:blue;">
@@ -607,8 +530,13 @@ many distributed algorithms.
 We give some examples of algorithms based on system monitoring.
 
 <p>
-Rollback and Recovery: When a transient error occurs, a rollback and recover algorithms
-restarts the computation at the most recent snapshot.
+Rollback and Recovery:
+There exists a computation from the initial state of the computation
+to a global snapshot.
+
+So, when a transient error occurs, a rollback and recovery algorithms
+restarts the computation at the most recent snapshot instead starting
+it from the initial state.
 
 <p>
 Detecting Stable Properties:
@@ -618,12 +546,13 @@ once it holds.
 For example, after a computation has terminated it remains
 terminated.
 
-A general way to detect whether any stable property holds in a computation
-is by monitoring the system.
+<p>
+If a stable property holds before a snapshot algorithm is initiated, then from
+key property 1, the snapshot will show that the property holds.
 
-If the stable property holds then a snapshot will show that it holds,
-and if a snapshot shows that a stable property holds then it continues
-to hold.
+Conversely, if a stable property holds in a snapshot then from key
+property 2, the property continues to hold after the snapshot
+algorithm terminates. 
 
 
 
