@@ -76,16 +76,18 @@ hr.new1 {
 <div class="w3-row w3-padding-64">
 <div class="w3-twothird w3-container">
 
-  <h2 class="w3-text-teal">Computations and Events</h2>
+  <h2 class="w3-text-teal">Dataflow in Distributed Computations</h2>
 
+  </p>
 
-    <!------------------------------------------------------------------->
-  <p class="w3-text-green">
-  This page uses material from
-  <a
-  href="DistributedSystemModels.html">
-  Timelines.
-  </a>
+  <p class="w3-text-red">
+  This page describes dataflow -- the key to understanding many
+  distributed algorithms. 
+
+  </p>
+
+We begin with a review of a few basic properties of directed acyclic
+  graphs and dataflow.
 </p>
 
 
@@ -190,8 +192,8 @@ that help in understanding distributed computing algorithms.
 
   We restrict attention to acyclic dataflow graphs.
 
-  A computation of a dataflow graph is an execution (possibly in
-  parallel) of operations of the graph where:
+  A computation of a dataflow graph is an execution (possibly a
+  parallel execution) of operations of the graph where:
   <p>
   <i>
   an operation is executed after all
@@ -209,27 +211,31 @@ that help in understanding distributed computing algorithms.
 <!---------------------------------------------------------------->
 
 The following observations follow from properties of directed acyclic
-graphs. 
+graphs.
 
-<!---------------------------------------------------------->
-<h5 class="w3-text-teal">
-Observation: Topological Sorts of Dataflow
-</h5>
+We highlight these observations because they help in understanding
+distributed algorithms.
 
+<hr class="new2">
+<p style="color:blue;">
+<ol>
+  <li>
+  <p style="color:blue;">
   All <a href="https://en.wikipedia.org/wiki/Topological_sorting">
   topological sorts</a> of dataflow graphs are computations.
- 
-
- 
-<h5 class="w3-text-teal">Observation: Computations between Sets of
-Operations</h5>
-
-For input-closed sets \(H, H'\) of operations where \(H \subseteq H'\)
+  </li>
+  <li>
+  <p style="color:blue;">
+  Computations between sets of operations:
+  For input-closed sets \(H, H'\) of operations where \(H \subseteq H'\)
 there exists a 
 computation that executes all operations in \(H\), then executes
 operations in \(H' - H\), and then executes 
-operations that are not in \(H'\).
-
+  operations that are not in \(H'\).
+  </li>
+</ol>
+</p>
+<hr class="new2">
 
 <!------------------------------------------------------------------>
 <h4 style="color:red;">Example: Topological Sorts of Dataflow
@@ -240,7 +246,7 @@ The figure below shows different computations with the same dataflow
 graph.
 
 In the two diagrams of the figure, vertices of the same graph are laid
-out from left to right in the order of different computations.
+out from left to right in the order of computations.
 
 
 <figure>
@@ -252,7 +258,7 @@ out from left to right in the order of different computations.
 
 <!------------------------------------------------------------------>
 <h5 style="color:red;">Example: Computations between Sets of
-Events </h5>
+Events</h5>
 <!------------------------------------------------------------------>
 There exists a computation from the initial state shown in the figure
 to the state at \(H = \{0, 2\}\) to the state at \(H' = \{0, 1, 2,
@@ -311,14 +317,17 @@ in \(S_{3}\) is a sequence of messages consisting of a single message
 The line does not intersect an edge for the channel \((u, v)\), and so
 the state of this channel is the empty sequence of messages.
 
+The state of channel \((v, v)\) is a sequence consisting of a single
+message -- the wakeup message.
+
 The states of other agents and channels are determined similarly.
 
 
 <p>
 The state \(S_{i}\) that occurs in a computation after events \(0,
-\ldots, i\) are obtained similarly and are shown in figure 2.
+\ldots, i\) are obtained similarly and are shown in figure 3.
 
-The lower part of figure 2 shows the event graph and
+The lower part of figure 3 shows the event graph and
 the upper part shows the sequence of states in the
 computation.
 
@@ -329,19 +338,21 @@ The dotted vertical lines show boundaries of event sets \(0,
 
 <figure>
     <img src="DistributedSystemModels/DistributedSystemModels.007.jpeg"
-    alt="Fig6" style="width:100%"> 
-    <figcaption>Fig.2: Example - System States in the Event Graph</figcaption>
+    alt="Fig3" style="width:100%"> 
+<figcaption>
+Fig.3: Example: States at Input-Closed Event Sets
+</figcaption>
 </figure>
 
 
 
 <!------------------------------------------------------------------>
 <h4 style="color:red;">
-Another Example: State of an Input-Closed Set of Events
+Another Example: State at an Input-Closed Set of Events
 </h4>
 <!------------------------------------------------------------------>
 Let's look at the state of the input closed set \(\{0, 1, 2, 5\}\) in
-figure 2.
+figure 3.
 
 The state of agent \(u\) is the label of the edge \((5, 6)\): \(u\)
 holds the red token.
@@ -361,8 +372,11 @@ The states of channels \((u, v)\) and \((v, v)\) are empty sequences.
 
 <!------------------------------------------------------------------>
 <h3 class="w3-text-teal">Next</h3>
-Next look at
-<a href="../ChannelSnapshots/ChannelSnapshots.html">Global Snapshots.</a>
+<a href="../ChannelSnapshots/ChannelSnapshots.html">
+Global Snapshots.
+</a>
+
+
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
