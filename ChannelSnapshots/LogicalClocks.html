@@ -1,0 +1,232 @@
+<title>ChannelSnapshots/LogicalClocksNew.html</title>
+
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+  
+  <!--------------------------------------------------------->
+  <!--------------------------------------------------------->
+<h2 class="w3-text-teal">Local Clocks and Logical Time</h2>
+
+<p class="w3-text-green">
+  This page uses material from
+  <a
+  href="https://kmchandy.github.io/ChannelSnapshots/ChannelSnapshots.html">
+  GlobalSnapshots.
+  </a>
+  </p>
+
+  
+
+ 
+
+The logical clock algorithm assigns a value \(t(e)\) to each event
+  \(e\) of a computation so that:
+
+  <hr class="new2">
+  <h5 style="color:blue;">
+  Logical Time Property
+  </h5>
+  <h5 style="color:blue;">
+  For all edges \((e, e')\) of the event graph of the computation: \(t(e) < t(e')\).
+  </h5>
+  <hr class="new2">
+
+<h4 class="w3-text-teal">Theorem</h4>
+  Events in increasing logical time order are computations.
+  <p  class="w3-text-teal">Proof</p>
+  Events in increasing logical time order are topological sorts of the
+  event graph. 
+
+  <h5 style="color:red;">Example: Logical Times of Events</h5>
+  Figure 1 shows an event graph of a computation in which the numbers
+  of vertices are the logical times of corresponding events.
+
+  Every edge is directed from a lower to a higer logical time.
+  <figure>
+    <img src="../ChannelSnapshots/Timelines/Timelines.001.jpeg"
+  alt="Fig1" style="width:100%"> 
+    <figcaption>Fig. 1: Logical Times of Events</figcaption>
+</figure>
+
+
+  <h3 class="w3-text-teal">Logical Clock Algorithm</h3>
+  The following algorithm ensures the logical time property.
+
+  <p>
+Let \(e'\) be the event immediately preceding event \(e\) at an
+agent.
+<ol>
+  <li>
+  A message sent in an event \(e\) is assigned a timestamp \(t(e)\).
+  </li>
+  <li>
+  If the timestamp of the message received in \(e\) is \(T\) then set
+  \(t(e)\) to any value greater than \(max (t(e'), T) \).
+  </li>
+</ol>
+
+  <h3 class="w3-text-teal">Taking Global Snapshots using Logical Time</h3>
+  The state of the set of events with logical time at most \(t\) is a
+  global snapshot because the set is input closed.
+
+  A global snapshot can be recorded as follows.
+
+  <ol>
+  <li>
+  <i>Agent states</i>: Each agent records its local state
+  after events with logical time at most \(t\) and before
+  events with logical time greater than \(t\).
+  </li>
+  <li>
+  <i>Channel states</i>: The state of an input channel of an agent is
+  recorded by the agent as the sequence of messages with timestamps
+  \(t\) or less, received on the channel, at events with logical
+  time greater than \(t\).
+  </li>
+</ol>
+
+
+
+  <!--------------------------------------------->
+  <h3 class="w3-text-teal">Agent Clocks</h3>
+<!--------------------------------------------->
+
+Agents can maintain accurate clocks by using atomic clocks on PC
+ boards, Precision Time Protocols (PTP) in local area networks, and
+Network Time Protocol (NTP) servers.
+
+These protocols do not, however, guarantee the logical time property.
+
+So, in addition to synchronization protocols we use rule 2 of the
+logical clock algorithm to guarantee that agent clock times satisfy
+the logical clock property.
+
+
+
+
+
+<h4 class="w3-text-teal">Next</h4>
+Next look at 
+-- <a href="../Paxos/ConsensusImpossible.html">consensus algorithms</a>
+or <a href="../table_of_contents.html">other types of algorithms</a>.
+
+
+
+
+
+
+
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
