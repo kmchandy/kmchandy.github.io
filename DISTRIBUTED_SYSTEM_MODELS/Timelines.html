@@ -89,82 +89,57 @@ hr.new1 {
 </p>
 
 
-  
-  <!------------------------------------------------------------------->
-  
-  <p class="w3-text-red">
-  <i>
-  This page shows that all
-  <a href="https://en.wikipedia.org/wiki/Topological_sorting">
-  topological sorts
-  </a>
-  of event graphs of computations are computations.
-  We prove properties of sets of computations by proving
-  properties of an event graph.
-  </i>
-  </p>
+  <!---------------------------------------------------------->
+  <h3 class="w3-text-teal">Directed Acyclic Graphs: Review</h4> 
+  <!---------------------------------------------------------->
+We review properties of graphs that help in understanding
+distributed systems.
 
-  
+  The figure below is an example of a
+  <a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">
+  directed acyclic graph
+  </a>,
+  abbreviated to dag.
 
-  <!-----------------------------------------------------------------------------> 
-  <h4 class="w3-text-teal">Review: Graph Theory Concepts</h4> 
-  <!----------------------------------------------------------------------------->
-  
-  This page specifies the set of system computations that have the
-  same event graph.
-  
-  <p>
-  We begin with a review of reachability in  graphs.
-
-<h5 class="w3-text-teal">Reachability</h5>
-
-A vertex \(e'\)
-<a href="https://en.wikipedia.org/wiki/Reachability">
-is reachable from
-</a> 
-a vertex \(e\) exactly when there is a (non-empty) path in the graph from
-\(e\) to \(e'\).
-
-An event graph is acyclic because edges are directed from events
-  to later events.
-
-  So, the
-  <a href="https://en.wikipedia.org/wiki/Reachability">
-  reachability relation is a partial order.
-  </a>
-  
-
-<h5 class="w3-text-teal">Input-Closed Vertex Sets</h5>
-
-  A subset \(H\) of vertices of a directed acyclic graph is <i>input
-  closed</i> exactly when every edge to every vertex in \(H\) is from a
-  vertex in \(H\).
-  
-  <p>
-  There is no path into an input-closed subgraph from a vertex outside
-  it; 
-  
-  there may, however, be paths from inside an input-closed subgraph to
-  vertices outside it. 
-
-  
-
-
-<!---------------------------------------------------------------->
-<h5 style="color:red;">Example: Reachability</h5>
-
-  Figure 1 is the event graph from figure 6 of the
-  <a href="DistributedSystemModels.html">previous page.</a>
-  
-<figure>
+  <figure>
     <img src="DistributedSystemModels/DistributedSystemModels.014.jpeg"
     alt="Fig14" style="width:50%"> 
-    <figcaption>Fig.1: Example of Reachability</figcaption>
+    <figcaption>Fig.1: Example of a Directed Acyclic Graph</figcaption>
   </figure>
 
-Events 0, 1, 2 can reach event 5 in figure 1.
+  
 
-  Events 3, 4, 5, 6, 7 cannot reach event 5.
+  <!-------------------------------------------------------->  
+  <h5 class="w3-text-teal">Topological Sort</h5>
+  <!-------------------------------------------------------->
+
+     A vertex \(v\) in a directed acyclic graph precedes a vertex \(w\)
+  exactly when there is a path from \(v\) to \(w\).
+  
+<a
+  href="https://en.wikipedia.org/wiki/Topological_sorting">
+  A topological sort
+  </a>
+  of a dag
+  is a sequence of vertices of the dag in which each vertex appears in
+  the sequence after all vertices that precede it.
+  
+  Examples of topological sorts of the dag shown in figure 1 are \([0,
+  1, 2, 3, 4, 5, 6, 7]\) and \([0, 2, 1, 5, 3, 4, 6, 7]\).
+
+
+  <!-------------------------------------------------------->
+   <h5 class="w3-text-teal">Input-Closed Set of Vertices</h5>
+  <!-------------------------------------------------------->  
+  A subset \(H\) of vertices of a dag is <i>input
+  closed</i> exactly when every edge to every vertex in \(H\) is from a
+  vertex in \(H\).
+
+  There is no path to a vertex in an input-closed vertex set from a
+  vertex outside it.
+  
+  There may, however, be paths from vertices inside an input-closed
+  set to vertices outside it.
 
 <p>
 Examples of vertex sets that are input closed are \(\{0, 1, 2\}\),
@@ -175,28 +150,142 @@ An example of a vertex set that is not input closed is \(\{0, 1,
 is not in the subgraph.
 
 
+  <!-------------------------------------------------------->
+<h5 class="w3-text-teal">Observation</h5>
+  <!-------------------------------------------------------->
+For any input-closed subsets \(H, H'\) of vertices of a dag, where \(H
+\subseteq H'\) the sequence of vertices consisting of a topological
+sort of \(H\) followed by a topological sort of \(H' - H\) followed by
+a topological sort of the complement of \(H'\) is a topological sort
+of the dag.
+
+<p>
+In figure 1, \(H = \{0, 1, 2, 5\}\)
+and \(H' = \{0, 1, 2, 3, 4, 5\}\)
+are input closed, and the sequence
+\([0, 2, 1, 5]\) followed by \([3, 4]\) followed by
+\([6, 7]\) is a topological sort of the dag.
+
+
+
+  <!---------------------------------------------------------->
+  <h3 class="w3-text-teal">Dataflow: Review</h4> 
+<!---------------------------------------------------------->
+
+Next we review properties of
+<a href="https://en.wikipedia.org/wiki/Dataflow_programming">
+dataflow
+</a>
+that help in understanding distributed computing algorithms.
+
+<p>
+  A vertex of a dataflow graph is an operation on variables of a
+  computation. 
+
+  A directed edge connects the output of an operation to the input
+  of another operation.
+
+  An edge is labeled with the data that is transferred between
+  operations.
+
+  We restrict attention to acyclic dataflow graphs.
+
+  A computation of a dataflow graph is an execution (possibly in
+  parallel) of operations of the graph where:
+  <p>
+  <i>
+  an operation is executed after all
+  operations that precede it.
+  </i>
+
+<!---------------------------------------------------------------->
+<h4 style="color:red;">Example of Dataflow</h4>
+<!---------------------------------------------------------------->
+
+
+  
+<!---------------------------------------------------------------->  
+<h3 class="w3-text-teal">Properties of Dataflow</h3>
+<!---------------------------------------------------------------->
+
+The following observations follow from properties of directed acyclic
+graphs. 
+
+<!---------------------------------------------------------->
+<h5 class="w3-text-teal">
+Observation: Topological Sorts of Dataflow
+</h5>
+
+  All <a href="https://en.wikipedia.org/wiki/Topological_sorting">
+  topological sorts</a> of dataflow graphs are computations.
+ 
+
+ 
+<h5 class="w3-text-teal">Observation: Computations between Sets of
+Operations</h5>
+
+For input-closed sets \(H, H'\) of operations where \(H \subseteq H'\)
+there exists a 
+computation that executes all operations in \(H\), then executes
+operations in \(H' - H\), and then executes 
+operations that are not in \(H'\).
+
+
+<!------------------------------------------------------------------>
+<h4 style="color:red;">Example: Topological Sorts of Dataflow
+Graphs are Computations</h4> 
+<!------------------------------------------------------------------>
+
+The figure below shows different computations with the same dataflow
+graph.
+
+In the two diagrams of the figure, vertices of the same graph are laid
+out from left to right in the order of different computations.
+
+
+<figure>
+    <img src="DistributedSystemModels/DistributedSystemModels.010.jpeg"
+    alt="Fig2" style="width:100%"> 
+    <figcaption>Fig.2: Example - Computations with the same Event Graph</figcaption>
+</figure>
+
+
+<!------------------------------------------------------------------>
+<h5 style="color:red;">Example: Computations between Sets of
+Events </h5>
+<!------------------------------------------------------------------>
+There exists a computation from the initial state shown in the figure
+to the state at \(H = \{0, 2\}\) to the state at \(H' = \{0, 1, 2,
+5\}\) to the final state.
+
+
+
 
 <!----------------------------------------------------------------->
-<h3 class="w3-text-teal">System States and the Event Graph</h3>
+<h3 class="w3-text-teal">The State at an Input Closed Set of Events</h3>
 <!----------------------------------------------------------------->
 
-We define the state \(S\) of an input-closed vertex set \(H\) of an event
-graph as follows.
+The state \(S\) at an input-closed set \(H\) of events of the
+dataflow of a computation of a distributed system is obtained from the
+graph as follows. 
 
-\(S\) is specified by the labels of edges from
-  vertices inside \(H\) to vertices outside \(H\).
-
+<ol>
+  <li>
 The state of an agent \(u\) in \(S\) is the label of the agent \(u\)
-edge from a vertex inside \(H\) to a vertex outside \(H\).
+  edge from a vertex inside \(H\) to a vertex outside \(H\).
+  </li>
+  <li>
 
 The state of a channel \((u, v)\) in \(S\) is the sequence of labels
-of \((u, v)\) edges from vertices inside \(H\) to vertices outside \(H\).
-
+of \((u, v)\) edges from vertices inside \(H\) to vertices outside
+  \(H\).
+  </li>
+</ol>
 
 
 
 <!------------------------------------------------------------------>
-<h4 style="color:red;">Example: State after a Set of Events</h4>
+<h4 style="color:red;">Example: State at an Input-Closed Set of Events</h4>
 <!------------------------------------------------------------------>
 
 <p>
@@ -246,126 +335,31 @@ The dotted vertical lines show boundaries of event sets \(0,
 
 
 
-
 <!------------------------------------------------------------------>
-<h3  class="w3-text-teal">State Transitions and Events</h3>
+<h4 style="color:red;">
+Another Example: State of an Input-Closed Set of Events
+</h4>
 <!------------------------------------------------------------------>
-<p  class="w3-text-teal">Theorem</p>
+Let's look at the state of the input closed set \(\{0, 1, 2, 5\}\) in
+figure 2.
 
-Let \(H\) and \(H'\) be input-closed subsets of events of an event graph, and
-let \(H\) be a subset of \(H'\), where \(H'\) has exactly one more event
-than \(H\) does.
+The state of agent \(u\) is the label of the edge \((5, 6)\): \(u\)
+holds the red token.
 
-
- There exists a transition from the state of \(H\) to the state of
-\(H'\).
-
-
-<p  class="w3-text-teal">
-Proof
-</p>
-The state associated with \(H\) is specified by the labels of
-edges that cross the \(H\) boundary.
-
-Because \(H'\) is input closed, the edges that cross the \(H\)
-boundary include the inputs to \(e\).
-
-So, event \(e\) can occur after events in \(H\).
-
-Therefore there is a transition from the state associated with
-\(H\) to the state associated with \(H'\).
-
-
-<h5 style="color:red;">Example of State Transition</h5>
-There is a transition from the states of 
-\(\{0, 1, 2, 5\}\) to \( \{0, 1, 2, 5, 3\}\).
+The state of agent \(v\) is the label of the edge \((2, 3)\): \(v\)
+holds no tokens.
 
 <p>
-The edges that cross the boundary from the vertex set \(\{0, 1, 2,
-5\}\) include the input edges to vertex \(3\), which are \((2, 3)\)
-and \((1, 3)\).
+The state of channel \((v, u)\) is the sequence consisting of a single
+message -- the blue token, the label of  edge \((1, 3)\).
 
-So event \(3\) can occur after events \(\{0, 1, 2, 5\}\) have
-occurred. 
+The state of channel \((u, u)\) is the sequence consisting of a single
+message -- the wakeup message, the label of  the edge \((5, N)\).
 
-
-<!------------------------------------------------------------------>
-<h4 class="w3-text-teal">Topological Sort</h4>
-<!------------------------------------------------------------------>
-
-A topological sort of a directed acyclic graph is a sequence of
-vertices in which a vertex appears after all vertices that can reach
-it.
-
-<h5 style="color:red;">Example of a Topological Sort</h5>
-In figure 2 \([0, 2, 1, 3, 4, 5, 6, N]\) is an example of a
-topological sort.
-
-The sequence \([0, 1, 3, 2, 4, 5, 6, N]\) is not a topological sort
-because vertex 3 appears before vertex 2 in the sequence and vertex 2
-can reach vertex 3.
-
-<!------------------------------------------------------------------>
-<!------------------------------------------------------------------>
-<h3 class="w3-text-teal">All Topological Sorts of
-Event Graphs are Computations</h3>
-<!------------------------------------------------------------------>
-<!------------------------------------------------------------------>
-<p class="w3-text-teal">Theorem</p>
-
-All topological sorts of event graphs are computations. </p>
-
-<p class="w3-text-teal">Proof</p>
-
-The set consisting of the first \(i\) events of a topological
-sort \(Q\) is input closed, for all \(i\). 
-
-From the previous theorem there is a
-transition from the state of the set consisting of the first
-\(i\) events of \(Q\) to the state of the set consisting of the first
-\(i+1\) events of \(Q\).
+The states of channels \((u, v)\) and \((v, v)\) are empty sequences.
 
 
 <!------------------------------------------------------------------>
-<h4 style="color:red;">Example: Topological Sorts of Event
-Graphs are Computations</h4> 
-<!------------------------------------------------------------------>
-
-The figure below shows system computations with the same event graph.
-
-The agent computations of \(u\) and \(v\) are the same in both system
-computations.
-
-
-<figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.010.jpeg"
-    alt="Fig6" style="width:100%"> 
-    <figcaption>Fig.2: Example - Computations with the same Event Graph</figcaption>
-</figure>
-
-
-
-<!------------------------------------------------------------------>
-<h4 class="w3-text-teal">Corollary: Computations from Sets to Supersets</h4>
-
-For all input-closed event sets \(H, H'\) where \(H\) is a subset of
-\(H'\) there exists a computation from \(H\) to \(H'\). 
-
-<p class="w3-text-teal">Proof</p>
-An example of such a computation is the topological sort of \(H' -
-H\).
-
-
-
-<!------------------------------------------------------------------>
-<h5 style="color:red;">Example of Computation from Set to Superset of
-Events </h5>
-<!------------------------------------------------------------------>
-The corollary tells us that there exists a computation from \(\{0, 2\}\)
-to \(\{0, 1, 2, 5\}\). 
-
-
-
 <h3 class="w3-text-teal">Next</h3>
 Next look at
 <a href="../ChannelSnapshots/ChannelSnapshots.html">Global Snapshots.</a>

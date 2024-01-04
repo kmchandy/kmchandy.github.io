@@ -392,8 +392,7 @@ figure 4.
 <p>
 As remarked earlier, in a transition of the system from \(S\) to
 \(S'\) caused by an event \(e\), the post-transition state \(S'\) is
-uniquely determined \(S\) and
-\(e\).
+uniquely determined \(S\) and \(e\).
 
 A computation is a sequence of states with a transition from each
 state to the next.
@@ -410,19 +409,35 @@ initial state, and the output message edges represent the messages in
 channels from \(u\) in the initial state. Figure 6 shows an example.
 
 <p>
-With the inclusion of the initial event to represent the initial state
-of a computation, a computation is uniquely determined by a sequence
-of events. 
-We treat computations as both sequences of states and sequences
+We will specify computations as sequences of states and also as sequences
 of events.
 
 
 
 <!---------------------------------------------------------------->
-<h3 class="w3-text-teal">Event Graph of a Computation</h3>
+<h3 class="w3-text-teal">Dataflow Graph of a Distributed Computation</h3>
 <!---------------------------------------------------------------->
-Associated with a computation is a labeled, directed graph, called an
-event graph in which vertices represent events of the computation.
+<a href="https://en.wikipedia.org/wiki/Dataflow_programming">
+Dataflow graphs
+</a>
+have been
+<a
+href="https://www.sigops.org/2020/the-remarkable-utility-of-dataflow-computing/">
+used in many domains of computer science
+</a>
+from the 1960s.
+
+Dataflow graphs, sometimes abbreviated to dataflow, helps in
+understanding distributed algorithms.
+
+<p>
+Associated with a computation is a labeled, directed, acyclic graph,
+called the <i>dataflow graph of the computation.</i>
+
+An edge in a dataflow graph represents data, and a vertex represents a
+transformation of data.
+
+In our case vertices represent events of the computation.
 
 Edges connect outputs of events to inputs of events (figure 3).
 
@@ -437,7 +452,17 @@ the event in which that message is received; this edge is labeled with
 the message, and is called a message edge.
 
 <p>
-A computation is represented by an event graph with later events
+The initial state of the computation is represented by a set of events
+called \(0\), and the final state is represented by a set of events
+called \(N\).
+
+The outputs of events numbered \(0\) are the initial states of agents
+and message channels, and the inputs of events labeled \(N\) are their
+final states.
+
+<p class="w3-text-teal">Representation of a Computation by Dataflow
+and an Ordering of Events</p>
+A computation is represented by a dataflow graph with later events
 placed to the right of earlier events.
 
 Events at the same agent are placed on a horizontal line.
@@ -445,28 +470,29 @@ Events at the same agent are placed on a horizontal line.
 The diagramatic representation of a computation is similar to that of
 a trajectory.
 
+<p>
+Dataflow graphs do not specify the sequence of events in a
+computation.
+
+There may be multiple computations with the same dataflow.
+
+
 <!---------------------------------------------------------------->
-<h4 style="color:red;">Example of an Event Graph</h4>
+<h4 style="color:red;">Example of a Representation of a
+Computation</h4> 
 <!---------------------------------------------------------------->
-The computation of figure 5 is shown in figure 6 as an event graph with
+The computation of figure 5 is shown in figure 6 as a dataflow graph with
 later events placed to the right of earlier events.
 
 <figure>
     <img src="DistributedSystemModels/DistributedSystemModels.006.jpeg"
     alt="Fig6" style="width:100%"> 
-    <figcaption>Fig.6: Example - A Computation and its Event Graph</figcaption>
+    <figcaption>Fig.6: Example - A Computation and its Dataflow</figcaption>
 </figure>
 
 
 The top line in figure 6 shows the timeline -- the sequence of events
 -- on agent \(u\) and the lower line shows the timeline for \(v\).
-
-Events \(0\) and \(N\) represent the initial and final states of the
-computation.
-
-The outputs of events numbered \(0\) are the initial states of agents
-and message channels, and the inputs of events labeled \(N\) are their
-final states.
 
 The horizontal black edges show states of agents.
 
@@ -480,7 +506,7 @@ Event 1 in the figure is the same as the event shown in figure 3.
 <!---------------------------------------------------------------->
 <h3 class="w3-text-teal">Trajectories and Computations: Commonality</h4>
 <!---------------------------------------------------------------->
-The event graph of a trajectory is specified in the same way as that
+The dataflow graph of a trajectory is specified in the same way as that
 of a system computation.
 
 An event represents the states and messages sent and received during
@@ -489,10 +515,10 @@ not deal with states of an agent while it is executing the command.
 
 <p>
 Making the duration of events in a trajectory arbitrarily small gives
-a system computation with the same event graph as the trajectory.
+a system computation with the same dataflow as the trajectory.
 
 For every trajectory there exists a system computation that has the same
-event graph as the trajectory.
+dataflow as the trajectory.
 
 
 <!---------------------------------------------------------------->
@@ -500,7 +526,7 @@ event graph as the trajectory.
 <!---------------------------------------------------------------->
 
 The top diagram of figure 6 shows a trajectory and the lower
-diagram shows a computation with the same event graph.
+diagram shows a computation with the same dataflow.
 
 The lower diagram can be obtained from the upper diagram by making the
 durations of events infinitisimally small.
@@ -510,7 +536,7 @@ durations of events infinitisimally small.
     <img src="DistributedSystemModels/DistributedSystemModels.012.jpeg"
     alt="Fig6" style="width:100%"> 
     <figcaption>Fig.7: Example - Trajectory and Computation with
-identical Event Graphs
+identical Dataflow
 </figcaption>
 </figure>
 
@@ -535,7 +561,7 @@ because they don't have access to a shared clock.
 For example, an agent cannot add a value to a double-entry ledger at
 the same instant as another agent subtracts the value.
 
-Agents collaborate by sending messages, and the event graph tells us
+Agents collaborate by sending messages, and the dataflow tells us
 how agents communicate and collaborate.
 
 <p>
@@ -544,9 +570,10 @@ What is the most information an agent can get from other agents?
 An agent \(A\) can ask every agent to send their agent
 computations to \(A\).
 
-The information that \(A\) gets in this way is the event graph.
+The information that \(A\) gets in this way is the dataflow of the
+computation .
 
-<i>The event graph is the most information that an agent can
+<i>The dataflow graph is the most information that an agent can
 get.</i>
 
 
