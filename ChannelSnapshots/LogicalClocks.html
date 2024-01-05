@@ -77,53 +77,113 @@ hr.new1 {
 <div class="w3-twothird w3-container">
   
   <!--------------------------------------------------------->
+  <h2 class="w3-text-teal">Local Clocks and Logical Time</h2>
   <!--------------------------------------------------------->
-<h2 class="w3-text-teal">Local Clocks and Logical Time</h2>
+  
+  <p class="w3-text-red">
+  A logical clock algorithm assigns a value, called the logical time,
+  to each event in a computation so that all edges in the dataflow of
+  the computation are from lower to higher logical times.
 
-<p class="w3-text-green">
-  This page uses material from
-  <a
-  href="https://kmchandy.github.io/ChannelSnapshots/ChannelSnapshots.html">
-  GlobalSnapshots.
-  </a>
   </p>
 
-  
-
- 
-
+  <h4 class="w3-text-teal">The Logical Time Property</h4>
 The logical clock algorithm assigns a value \(t(e)\) to each event
   \(e\) of a computation so that:
+<br>
+  For all edges \((e, e')\) of the dataflow graph of the computation:
+  \(t(e) < t(e')\). 
 
-  <hr class="new2">
-  <h5 style="color:blue;">
-  Logical Time Property
-  </h5>
-  <h5 style="color:blue;">
-  For all edges \((e, e')\) of the event graph of the computation: \(t(e) < t(e')\).
-  </h5>
-  <hr class="new2">
 
-<h4 class="w3-text-teal">Theorem</h4>
-  Events in increasing logical time order are computations.
-  <p  class="w3-text-teal">Proof</p>
-  Events in increasing logical time order are topological sorts of the
-  event graph. 
-
+  <!---------------------------------------------------------->
   <h5 style="color:red;">Example: Logical Times of Events</h5>
+  <!---------------------------------------------------------->
+  
   Figure 1 shows an event graph of a computation in which the numbers
   of vertices are the logical times of corresponding events.
 
   Every edge is directed from a lower to a higer logical time.
   <figure>
-    <img src="../ChannelSnapshots/Timelines/Timelines.001.jpeg"
-  alt="Fig1" style="width:100%"> 
+    <img src="Timelines.001.jpeg"
+  alt="Fig1" style="width:60%"> 
     <figcaption>Fig. 1: Logical Times of Events</figcaption>
-</figure>
+  </figure>
+
+  <!---------------------------------------------------------->  
+  <hr class="new2">
+  <h4 style="color:blue;">
+  Consequences of the Logical Time Property
+  </h4>
+  <ol>
+    <li>
+    <p style="color:blue;">
+    Sequences of events in increasing logical time are computations.
+    </li>
+    <li>
+    <p style="color:blue;">
+    For all \(t\), the state at the set of events with 
+  logical times at most \(t\) is a global snapshot.
+    </li>
+ </ol>
+ <hr class="new2">
+
+ 
+ <p class="w3-text-teal">Proof</p>
+ Sequences of events in increasing logical time are topological sorts
+ of dataflow and are therefore computations.
+
+ <p>
+ All edges to events with logical time at most \(t\) are from events
+ with logical time at most \(t\). So the set \(H\) of events with
+ logical time at most \(t\) is input closed, and therefore the state
+ at \(H\) is a global state.
+
+ 
+<!----------------------------------------------------------------->
+ <h4 class="w3-text-teal">Global Snapshots at Logical Time \(t\)</h4>
+ <!----------------------------------------------------------------->
+ 
+  Agents determine the state at the set of events with logical
+  time at most \(t\) as follows.
+
+  <ol>
+  <li>
+  <i>Agent states</i>: Each agent records its local state after an
+  event with logical time at most \(t\) and before an
+  events with logical time greater than \(t\).
+  </li>
+  <li>
+  <i>Channel states</i>: An agent records the state of an input
+  channel \(c\) as the sequence of messages with timestamps 
+  \(t\) or less, received on \(c\), at events with logical
+  time greater than \(t\).
+  </li>
+</ol>
+
+<p>
+The above algorithm for taking the global snapshot at logical time \(t\)
+is exactly the same as the algorithm for taking the global snapshot at
+real time \(t\), when the time at each agent's clock is the real time.
+We highlight this observation because we use it to design algorithms.
+
+<!---------------------------------------------------------->
+
+  <hr class="new2">
+<h5 style="color:blue;">
+Observation: Logical Clocks and Real Time Clocks
+</h5>
+
+<p style="color:blue;">
+The algorithms to determine the global states at logical time \(t\)
+and real time \(t\) are identical.
+</p>
+  <hr class="new2">
 
 
-  <h3 class="w3-text-teal">Logical Clock Algorithm</h3>
-  The following algorithm ensures the logical time property.
+
+  <h4 class="w3-text-teal">A Logical Clock Algorithm</h4>
+  The following algorithm ensures that the value \(t(e)\) assigned to
+  event \(e\) satisfies the logical time property.
 
   <p>
 Let \(e'\) be the event immediately preceding event \(e\) at an
@@ -134,34 +194,14 @@ agent.
   </li>
   <li>
   If the timestamp of the message received in \(e\) is \(T\) then set
-  \(t(e)\) to any value greater than \(max (t(e'), T) \).
-  </li>
-</ol>
-
-  <h3 class="w3-text-teal">Taking Global Snapshots using Logical Time</h3>
-  The state of the set of events with logical time at most \(t\) is a
-  global snapshot because the set is input closed.
-
-  A global snapshot can be recorded as follows.
-
-  <ol>
-  <li>
-  <i>Agent states</i>: Each agent records its local state
-  after events with logical time at most \(t\) and before
-  events with logical time greater than \(t\).
-  </li>
-  <li>
-  <i>Channel states</i>: The state of an input channel of an agent is
-  recorded by the agent as the sequence of messages with timestamps
-  \(t\) or less, received on the channel, at events with logical
-  time greater than \(t\).
+  \(t(e)\) to any value greater than max(t(e'), T).
   </li>
 </ol>
 
 
 
   <!--------------------------------------------->
-  <h3 class="w3-text-teal">Agent Clocks</h3>
+  <h3 class="w3-text-teal">Partially Synchronized Clocks</h3>
 <!--------------------------------------------->
 
 Agents can maintain accurate clocks by using atomic clocks on PC
@@ -170,9 +210,39 @@ Network Time Protocol (NTP) servers.
 
 These protocols do not, however, guarantee the logical time property.
 
-So, in addition to synchronization protocols we use rule 2 of the
-logical clock algorithm to guarantee that agent clock times satisfy
-the logical clock property.
+<p>
+A system is said to have partially synchronized clocks when agents in
+the system use atomic clocks or protocols such as PTP, and in 
+in addition, use the logical clock algorithm to guarantee that times
+assigned to events satisfy  the logical time property.
+
+
+<p>
+Each clock tick is represented by a message from each agent to
+itself.
+
+So, there is always a tick message in the channel from an agent to
+itself. 
+
+Then partially synchronized clocks have two valuable
+properties.
+
+<ol>
+  <li>
+  <i>Clocks tick forward</i>: For all \(t\), there is a point in
+  an infinite computation at which all agent clocks exceed \(t\).
+  </li>
+  <li>
+  <i>Snapshots</i>: Local snapshots taken when their clocks are at
+  time \(t\) are global snapshots.
+  </li>
+</ol>
+
+We use these properties in several algorithms.
+
+For example, the simplest way to take repeated snapshots is for agents to record 
+states periodically with some period \(T\), i.e., when  local clocks are at
+multiples of \(T\). 
 
 
 
