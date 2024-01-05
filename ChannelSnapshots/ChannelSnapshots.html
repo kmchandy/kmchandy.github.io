@@ -529,32 +529,43 @@ many distributed algorithms.
 <p>
 We give some examples of algorithms based on system monitoring.
 
-<p>
-Rollback and Recovery:
+<p class="w3-text-teal">Rollback and Recovery</p>
+From the first key property of global snapshots:
 There exists a computation from the initial state of the computation
 to a global snapshot.
 
 So, when a transient error occurs, a rollback and recovery algorithms
-restarts the computation at the most recent snapshot instead starting
-it from the initial state.
+restarts the computation at the most recent snapshot instead of restarting
+it from the beginning.
 
-<p>
-Detecting Stable Properties:
-A stable property of a system is a property that continues to hold
-once it holds.
+<p class="w3-text-teal">Detecting Stable Properties</p>
+If a stable property holds at any point in any computation then it
+continues to hold forever in that computation.
 
-For example, after a computation has terminated it remains
+For example, if a computation has terminated then it remains
 terminated.
 
+We discuss stable properties in detail later in the notes.
+
 <p>
-If a stable property holds before a snapshot algorithm is initiated, then from
-key property 1, the snapshot will show that the property holds.
+From the first key property of global snapshots:
+If a stable property holds before a snapshot algorithm is initiated,
+then the snapshot shows that the property holds.
 
-Conversely, if a stable property holds in a snapshot then from key
-property 2, the property continues to hold after the snapshot
-algorithm terminates. 
+<p>
+From the second key property:
+If a stable property holds in a snapshot then the property continues
+to hold after the snapshot algorithm terminates. 
 
+<p>
+We design algorithms to detect stable properties such as deadlock by
+monitoring systems by taking repeated snapshots.
 
+If the system deadlocks then the snapshot taken after the deadlock
+will show that the system has deadlocked.
+
+And if any snapshot shows that the system has deadlocked then the
+system is indeed deadlocked at that point.
 
 
 <h4 class="w3-text-teal">Next</h4>
