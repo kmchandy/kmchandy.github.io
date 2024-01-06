@@ -201,30 +201,28 @@ agent.
 
 
   <!--------------------------------------------->
-  <h3 class="w3-text-teal">Partially Synchronized Clocks</h3>
+  <h3 class="w3-text-teal">Logically Synchronized Clocks</h3>
 <!--------------------------------------------->
 
-Agents can maintain accurate clocks by using atomic clocks on PC
- boards, Precision Time Protocols (PTP) in local area networks, and
-Network Time Protocol (NTP) servers.
+Many distributed systems maintain accurate -- but not perfect --
+clocks by using atomic clocks and Precision or Network Time Protocols (PTP, NTP).
 
-These protocols do not, however, guarantee the logical time property.
+These systems do not, however, guarantee the logical time property
+because clocks are not perfectly synchronized. 
+
+Agents use the logical clock algorithm, if necessary, to modify
+their clocks so that their clocks are accurate and have the logical
+time property.
+
+We call such clocks logically synchronized.
+
+
 
 <p>
-A system is said to have partially synchronized clocks when agents in
-the system use atomic clocks or protocols such as PTP, and in 
-in addition, use the logical clock algorithm to guarantee that times
-assigned to events satisfy  the logical time property.
-
-
-<p>
-Each clock tick is represented by a message from each agent to
+We represent each clock tick of an agent's clock as a message from the agent to
 itself.
 
-So, there is always a tick message in the channel from an agent to
-itself. 
-
-Then partially synchronized clocks have two valuable
+Logically synchronized clocks have two valuable
 properties.
 
 <ol>
@@ -233,8 +231,8 @@ properties.
   an infinite computation at which all agent clocks exceed \(t\).
   </li>
   <li>
-  <i>Snapshots</i>: Local snapshots taken when their clocks are at
-  time \(t\) are global snapshots.
+  <i>Global snapshots at \(t\)</i>: For all \(t\), local snapshots taken by agents
+  when the agent clocks are at time \(t\) are global snapshots.
   </li>
 </ol>
 
