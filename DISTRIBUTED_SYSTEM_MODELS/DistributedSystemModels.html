@@ -78,7 +78,7 @@ hr.new1 {
 
 
   <!---------------------------------------------------------------->
-    <h2 class="w3-text-teal">A Model of a Distributed System</h2>
+    <h2 class="w3-text-teal">A Model of Distributed Systems</h2>
   <!----------------------------------------------------------------->
 
   </p>
@@ -539,8 +539,10 @@ identical Dataflow
 </figure>
 
 
+<!----------------------------------------------------->
+<h3 class="w3-text-teal">The Model preserves Dataflow</h3>
+<!----------------------------------------------------->
 
-<h3 class="w3-text-teal">Why is the Model Useful?</h3>
 The model does not represent trajectories.
 
 The model is sequential -- only one <code>receive</code> is executed
@@ -555,9 +557,6 @@ Given its limitations, why is the model useful?
 <p>
 Agents in a distributed system cannot carry out actions synchronously
 because they don't have access to a shared clock.
-
-For example, an agent cannot add a value to a double-entry ledger at
-the same instant as another agent subtracts the value.
 
 Agents collaborate by sending messages, and the dataflow tells us
 how agents communicate and collaborate.
