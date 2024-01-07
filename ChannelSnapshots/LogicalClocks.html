@@ -205,16 +205,18 @@ agent.
 <!--------------------------------------------->
 
 Many distributed systems maintain accurate -- but not perfect --
-clocks by using atomic clocks and Precision or Network Time Protocols (PTP, NTP).
+clocks by using atomic clocks and Precision or Network Time Protocols
+(PTP, NTP).
 
-These systems do not, however, guarantee the logical time property
-because clocks are not perfectly synchronized. 
+The drift of an agent's clock from real time is small, and we will
+assume that the drift is bounded.
 
-Agents use the logical clock algorithm, if necessary, to modify
-their clocks so that their clocks are accurate and have the logical
-time property.
+The clocks may not, however, guarantee the logical time property.
 
-We call such clocks logically synchronized.
+Agents can use the logical clock algorithm, if necessary, to modify
+their clocks so that have the logical time property.
+
+We call such clocks <i>logically synchronized clocks</i>.
 
 
 
@@ -223,16 +225,16 @@ We represent each clock tick of an agent's clock as a message from the agent to
 itself.
 
 Logically synchronized clocks have two valuable
-properties.
+properties in addition to being close to real time.
 
 <ol>
   <li>
   <i>Clocks tick forward</i>: For all \(t\), there is a point in
-  an infinite computation at which all agent clocks exceed \(t\).
+  an infinite computation at which clocks of all agents exceed \(t\).
   </li>
   <li>
   <i>Global snapshots at \(t\)</i>: For all \(t\), local snapshots taken by agents
-  when the agent clocks are at time \(t\) are global snapshots.
+  when their clocks are at time \(t\) are global snapshots.
   </li>
 </ol>
 
