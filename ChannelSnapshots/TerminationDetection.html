@@ -1,0 +1,290 @@
+<title>TerminationDetection</title>
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+<!--------------------------------------------------------->
+<h1 class="w3-text-teal">Termination Detection</h1>
+<!--------------------------------------------------------->
+
+
+  <!------------------------------------------------------------------->
+  <h4 class="w3-text-red">
+  <i>Central Ideas</i></h4>
+
+  <p class="w3-text-red">
+  A distributed computation has terminated when all agents are idle
+  and all channels are empty.
+
+  A termination detection algorithm is executed by the operating
+  system to determine whether a client computation has terminated.
+
+  Detection algorithms are based on global snapshots.
+  </p>
+  
+  
+
+
+  <h3 class="w3-text-teal">Problem Definition</h3>
+  
+  <h4 class="w3-text-teal">Review of Agents</h4>
+  We
+  <a href="../DISTRIBUTED_SYSTEM_MODELS/Basics.html">
+  described agents earlier.
+  </a>
+  We give a summary of that description next.
+
+  <p>
+    An agent is either <i>idle</i> or <i>active</i>. An idle agent
+    remains idle until it receives a message at which point it becomes
+active. An idle agent does not send messages.
+
+An active agent may send messages. An active agent
+may become idle at any point.
+
+<p>
+  A computation terminates in states in which all agents
+  are idle and all channels are empty.
+  The set of states in which computation has terminated is a stable
+  set -- if a computation has terminated then it remains terminated.
+
+
+
+  <!---------------------------------------------------------------->
+  <h3 class="w3-text-teal">Detection of Stable Properties: Specification</h3>
+  <!---------------------------------------------------------------->
+  
+  The problem is to develop an operating system algorithm that
+  detects whether a stable property holds in the client's computation;
+  in this example the stable property is termination.
+  
+  See <a href="ChannelSnapshots.html">Global Snapshots</a> for a
+  description of OS algorithms.
+
+  <p>
+  The detection algorithm has a boolean variable \(B\) which is
+  initially \(False\) and becomes
+  \(True\) if and when the algorithm detects that the specified stable
+  property holds.
+
+  <!---------------------------------------------------------------->
+<hr class="new2">
+<h6 style="color:blue;">
+<ol>
+  <li>
+  If the stable property holds at a point \(t\) then \(B\)
+  becomes \(True\)  at or after \(t\). 
+  </li>
+  <li>
+  If \(B\) is \(True\) at any point then the stable property holds at that point.
+  </li>
+</ol>
+</h6>
+<hr class="new2">
+
+  <!---------------------------------------------------------------->
+
+
+The general method for detecting stable properties is by
+monitoring a system by taking repeated snapshots.
+
+\(B\) becomes \(True\) if and when a snapshot shows that the stable
+predicate holds.
+
+See
+<a href="ChannelSnapshots.html">
+Global Snapshots
+</a>
+and
+<a href="LogicalClocks.html">
+Logical Clocks
+</a>.
+System monitoring is used to detect all stable properties.
+Next we describe a different method for the specific case of
+termination detection.
+This algorithm is a direct application of global snapshots.
+
+<!------------------------------------------------------------->
+<h3 class="w3-text-teal">A Termination Detection Algorithm</h3>
+<!------------------------------------------------------------->
+
+The algorithm is a 
+straightforward application of.
+<a href="ChannelSnapshots.html">the Global Snapshot Theorem</a>.
+
+
+
+<p>
+The algorithm uses an agent, that we call <i>the detector</i> which is
+part of the operating system.
+
+Each time an agent transits from active to idle it sends \(C_{s}\)
+for each of its outgoing channels \(C\),
+and \(C_{r}\) for each of its incoming channels \(C\), to the
+detector.
+
+<p>
+The detector keeps only the latest message that it receives from each
+agent.
+Let \(C_{s}^{*}, C_{r}^{*}\) be the last value of \(C_{s}, C_{r}\)
+(respectively) that the detector has received.
+
+<p class="w3-text-teal">The Detection Condition</p>
+<p style="color:blue;">
+The detector detects that computation has terminated if it has
+received a message from each agent and for
+all channels \(C\): \(C_{s}^{*} = C_{r}^{*}\).
+</p>
+
+
+
+<!-------------------------------------------------------->
+<h5 class="w3-text-teal">Proof of Correctness</h5>
+<!-------------------------------------------------------->
+Each agent takes its local snapshot when it sends a message to the
+detector.
+
+In this snapshot the agent is idle and the numbers of messages sent
+and received on a channel \(C\) incident on the agent is \(C_{s},
+C_{r}\) respectively.
+
+<p>
+The global snapshot theorem says that the local snapshots form a
+global snapshot if, for all channels \(C\): \(C_{s} \geq C_{r}\).
+
+This condition holds if \(C_{s} = C_{r}\).
+
+<p class="w3-text-teal">
+Proof of part 1 of the specification
+</p>
+
+Let \(C_{s}^{*}, C_{r}^{*}\) be the number of messages sent and
+received (respectively) by an agent with incident
+ channel \(C\) when the agent transits from active to idle for
+the  last time before the computation terminates.
+
+<p>
+The last messages received by the detector from agents
+have the property, \(C_{s}^{*} = C_{r}^{*}\), and
+when the detector receives these messages it sets \(B\) to \(True\).
+
+
+<p class="w3-text-teal">
+Proof of part 2 of the specification
+</p>
+
+Let \(T\) be the point at which the detector determines that the
+client computation has terminated.
+Then at \(T\), for all channels \(C\), \(C_{s}^{*} = C_{r}^{*}\).
+
+<p>
+So, for each agent \(A\), there is a point \(t_{A}\), earlier than \(T\), at which \(A\) sent
+\(C_{s}^{*}\) for each of its output channels \(C\), and 
+\(C_{r}^{*}\) for each of its input channels \(C\), to the detector.
+Point \(t_{A}\) is the point of the local snapshot of \(A\).
+
+<p>
+From the global snapshot theorem, because \(C_{s}^{*} = C_{r}^{*}\) for all channels,
+the set of local snapshots forms a global snapshot.
+
+The computation has terminated in this global snapshot -- all agents
+are idle and all channels are empty.
+
+
+<h3 class="w3-text-teal">Next</h3>
+Next
+<a href="DatabaseDeadlockDetection.html">database deadlock
+detection
+</a>
+
+
+
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+
+</body>
+</html>
