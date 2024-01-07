@@ -96,15 +96,15 @@ hr.new1 {
       Executing without holding shared files.
       </li>
       <li>
-      Waiting to acquire a set \(u_{waits}\) of
+      Waiting to acquire a set \(u.needs\) of
       shared files. 
       </li>
       <li>
       Executing while holding all files in
-      \(u_{waits}\).
+      \(u.needs\).
       </li>
     </ol>
-    <p>
+
 
     
     
@@ -121,109 +121,128 @@ hr.new1 {
 <h3 class="w3-text-teal">Deadlock</h3>
 A cycle of waiting agents is in a deadlock if each agent is waiting to
 acquire a token held by the next agent in the cycle. Our task is to
-design an algorithm by which an agent detects if is part of a
+design an algorithm by which an agent detects if it is part of a
 deadlocked cycle.
 
 <h3  style="color:red;">Example</h3>
 A system has one red, one blue and one green token.
 Agents \(x\), \(y\) and \(z\) are deadlocked in the following state.
-Agent \(x\) holds the red token and is waiting
-to acquire a blue token; agent \(y\) holds the blue token and is waiting
-to acquire the green token; and agent \(z\) holds the green token and is waiting
+    Agent \(x\) needs the red and blue token; it is
+holding the red token and is waiting
+    to acquire a blue token,
+
+    Agent \(y\) needs the blue and green tokens; it holds the blue token and is waiting
+    to acquire the green token.
+
+    Agent \(z\) needs the green and red tokens; it holds the green token and is waiting
     to acquire the red token.
     
     <figure>
-  <img src="DeadlockDetectionAnd_002.jpeg" alt="Fig1" style="width:100%">
+  <img
+    src="DatabaseDeadlockDetection/DatabaseDeadlockDetection.002.jpeg"
+    alt="Fig2" style="width:100%">
   <figcaption>Fig.2 - An Example of a Deadlock</figcaption>
 </figure>
 
-    <h2 class="w3-text-teal">An Algorithm</h2>
-    A general approach to detecting stable properties has two phases
-    (1) obtain a global snapshot, and (2) analyze the global
-    snapshot. The 
-    first phase reduces analysis of a dynamic system
-    into the analysis of static snapshot. The second step
-    analyzes <i>static</i> date structures such as graphs.
+    <h5 class="w3-text-teal">Deadlock Specification</h5>
 
-    <p>This module describes an algorithm consisting of a single phase
-    that is an optimization of the two-phase algorithm.
+    
+    <p>
+    A cycle of agents is deadlocked exactly when each agent in the
+    cycle is waiting to get a token that is held and needed by the next
+    agent in the cycle.
 
     <p>
-The definition of a deadlocked cycle depends only on the local states
-of agents and is independent of the states of message channels.
-So, we use a simpler version of the global snapshot algorithm which
-does not record states of channels.
+    Let \(u.holds\) be the set of tokens that \(u\) holds. \(u\) is
+    waiting to get tokens in \(u.waits\), the set of tokens that it
+    needs but does not hold.
+    <p>
+    \(
+    u.waits = \{x | (x \in u.needs) \wedge (x \notin u.holds)\}
+    \)
+    
+    <p>
+    A cycle of agents is deadlocked exactly when for every edge \(u,
+    v\) in the cycle:
+    \(u.waits \cap v.needs \cap v.holds\) is not empty.
 
-<h4 class="w3-text-teal">Initiating the Algorithm</h4>
-A waiting agent \(x\) initiates the algorithm by sending a message, called a
-<i>marker</i> on each outgoing channel. We call \(x\) <i>the
-initiator</i>. Assume that there is only one initiator. (Multiple
-initiators can be handled by tagging messages with the identity of the
-initiator.)
+
+    
+    <h4 class="w3-text-teal">The General Method</h4>
+The general method for detecting stable properties is by
+monitoring a system by taking repeated snapshots.
+See
+<a href="ChannelSnapshots.html">
+Global Snapshots
+</a>
+and
+<a href="LogicalClocks.html">
+Logical Clocks
+</a>.
+
+
+The general method for detecting stable properties has two phases (1)
+    obtain a global snapshot, and (2) analyze the global snapshot.
+
+The first phase reduces analysis of a dynamic system into the analysis
+of static snapshot.
+
+The second phase analyzes <i>static</i> date structures such as phase.
+
 <p>
-The marker \(m\)
-has a field \(m_{waits}\) that identifies the set
-of tokens for which the sender needs to start executing, i.e.,
+    This page describes an algorithm consisting of a single phase
+that is an optimization of the two-phase algorithm.
+
+The algorithm is the global snapshot with marker messages where the
+markers play two roles concurrently: detect snapshots and compute
+properties of snapshots.
+
+<h4 class="w3-text-teal">Modified Global Snapshot Algorithm</h4>
+
+<p class="w3-text-teal">Initiating the Algorithm</p> A waiting agent
+\(u\) initiates the algorithm by sending a <i>marker</i> message on
+each of its outgoing channels. Assume that there is only one
+initiator.
+
+(Multiple initiators can be handled by tagging messages with the
+identity of the initiator.)
+
 <p>
-\(m_{waits} = x_{waits} - x_{holds}\)
-<p>
-where \(x\) is the initiator, and for sets \(S\) and \(S'\), \(S -
-S'\) is the set consisting of elements that are in \(S\) and not in \(S'\).
+A marker \(m\) has a field \(m.waits\).
 
-<h4 class="w3-text-teal">Propagating Markers</h4>
-When \(y\) receives a marker \(m\), if there is a token common to all
-three sets,
-\(m_{waits}\), \(y_{holds}\), \(y_{waits}\), then
-\(y\) sends a marker \(m'\) on each of its outgoing channels where 
-\(m'_{waits} = y_{waits} - y_{holds}\) if \(y\) hasn't already sent markers.
+When an agent \(w\) sends a marker \(m\) the agent sets \(m.waits\) to
+\(w.waits\). 
 
-<p>
-So, \(y\) sends markers if it receives a marker and the sender of that
-marker is waiting to acquire a token that \(y\) holds and needs, and \(y\) is
-waiting to receive additional tokens.
+<p class="w3-text-teal">Propagating Markers</p>
+When \(v\) receives a marker \(m\), if \(v\) hasn't already
+sent markers and
+<br>
+\(m.waits \cap v.needs \cap v.holds\) is not empty
+<br>
+then \(v\) sends a marker \(m'\) on each of its outgoing channels where 
+\(m'.waits\) is \(v.waits\).
 
-<h4 class="w3-text-teal">Termination Detection</h4>
-When the initiator \(x\) receives a marker \(m\), the initiator
-detects that it is in a deadlocked cycle if there is a token common to 
-\(m_{waits}\), \(x_{holds}\), and \(x_{waits}\).
+<p class="w3-text-teal">Termination Detection</p>
+When the initiator \(u\) receives a marker \(m\), the initiator
+detects that it is in a deadlocked cycle if 
+\(m.waits \cap u.needs \cap u.holds\) is not empty.
 
-<h3  style="color:red;">Example</h3>
-Let's look at the steps of the algorithm for the example given
-earlier.
-<p style="color:red;">Initiation</p>
-Agent \(x\) initiates the algorithm by sending markers
-requesting the blue token.
-
-<p style="color:red;">Marker Propagation</p>
-When agent \(y\) receives the marker, it
-holds the blue token, and it needs the blue token as well as
-the green token; so, it sends markers requesting the green token. When
-agent \(z\) receives the marker, it
-holds the green token, and it needs the green token as well as
-the red token; so, it sends markers requesting the green token.
-
-<p style="color:red;">Termination Detection</p>
-At the point the initiator \(x\) gets the marker, it holds the red
-token, and and it needs the red token as well as
-additional tokens; so, it detects termination.
-
-<h3 class="w3-text-teal">Correctnes of the Algorithm</h3>
-The algorithm is the global snapshot algorithm, and we
-proved the correctness of the algorithm earlier.
+<p class="w3-text-teal">Correctnes of the Algorithm</p>
+The algorithm is the global snapshot algorithm which was
+proved earlier.
 
 
 
-  <footer id="myFooter">
 
-    <div class="w3-container w3-theme-l1">
-      <h4>An Introduction to Distributed Algorithms by K. Mani Chandy,
-      <br>
-      Simon Ramo Professor, Emeritus, California Institute of Technology</h4>
-    </div>
-  </footer>
+<!--Start Footer--------------------------------------->
 
-
-      
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
 
 
 <!-- END MAIN -->
@@ -256,4 +275,3 @@ function w3_close() {
 
 </body>
 </html>
-
