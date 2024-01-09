@@ -491,32 +491,23 @@ in the snapshot of the channel.
 <!--------------------------------------------------------------->
 
 <p>
-Let \(H\) be a set of events that are completed before a snapshot
+Let \(H_{pre}\) be any set of events that are completed before a snapshot
 algorithm is initiated.
 
-Let the snapshot be the state at an input-closed event set \(H'\).
+Let \(H_{post}\) be a set of events that have been completed after a snapshot
+algorithm is initiated.
 
-Then \(H \subseteq H'\).
+Let the snapshot be the state at an input-closed event set \(H_{snap}\).
+
+Then \(H_{pre} \subseteq H_{snap} \subseteq H_{post}\).
 
 From
 <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
 computations between sets of operations
 </a>
-there is a computation from \(H\) to \(H'\).
+there are computations from \(H_{pre}\) to \(H_{snap}\), and from
+\(H_{snap}\) to \(H_{post}\).
 
-
-<p>
-Let \(s_{init}\) be the state in which the snapshot algorithm is
-initiated, i.e., \(s_{init}\) is the state at \(H\).
-
-Let \(s_{snap}\) be the global state recorded by the algorithm, i.e.,
-\(s_{snap}\) is the state at \(H'\).
-
-There exists a computation from \(H\) to \(H'\)
-and so there exists a computation from \(s_{init}\) to \(s_{snap}\).
-
-By the same argument, there exists a computation from \(s_{snap}\) to
-\(s_{fini}\), the state when the global snapshot algorithm terminates.
 
 <p>
 These results are used so frequently that we highlight them here.
@@ -572,13 +563,13 @@ terminated.
 We discuss stable properties in detail later.
 
 <p>
-Algorithms to detect stable properties, such as deadlock, 
-take snapshots repeatedly.
+One way to detect stable properties is to monitor the system by
+taking snapshots repeatedly.
 
-If the system deadlocks then a snapshot taken after the deadlock
-shows that the system has deadlocked.
+If the system deadlocks then all snapshots taken after the deadlock
+show that the system has deadlocked.
 
-And if a snapshot shows that the system has deadlocked then the
+If a snapshot shows that the system has deadlocked then the
 system is indeed deadlocked at that point.
 
 
