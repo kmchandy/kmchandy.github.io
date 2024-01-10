@@ -82,7 +82,7 @@ hr.new1 {
   
   <p class="w3-text-red">
   A logical clock algorithm assigns a value, called the logical time,
-  to each event in a computation so that all edges in the dataflow of
+  to each event in a computation so that all edges in the dataflow graph of
   the computation are from lower to higher logical times.
 
   </p>
@@ -99,13 +99,21 @@ The logical clock algorithm assigns a value \(t(e)\) to each event
   <h5 style="color:red;">Example: Logical Times of Events</h5>
   <!---------------------------------------------------------->
   
-  Figure 1 shows an event graph of a computation in which the numbers
-  of vertices are the logical times of corresponding events.
+  Figure 1 shows the dataflow graph of a computation with agents
+  \(A, B, C\) and an event sequence \([0, 1, 2, \ldots, ]\).
 
-  Every edge is directed from a lower to a higer logical time.
+  The numbers inside the vertices show the position of the event in
+  the sequence.
+
+  The red numbers outside the events are logical times assigned to
+  events.
+
+  <p>
+  Logical times are arbitrary provided
+  every edge is directed from a lower to a higer logical time.
   <figure>
-    <img src="Timelines.001.jpeg"
-  alt="Fig1" style="width:60%"> 
+    <img src="Timelines/Timelines.001.jpeg"
+  alt="Fig1" style="width:80%"> 
     <figcaption>Fig. 1: Logical Times of Events</figcaption>
   </figure>
 
@@ -139,110 +147,147 @@ The logical clock algorithm assigns a value \(t(e)\) to each event
  at \(H\) is a global state.
 
  
-<!----------------------------------------------------------------->
- <h4 class="w3-text-teal">Global Snapshots at Logical Time \(t\)</h4>
- <!----------------------------------------------------------------->
+
+<!-------------------------------------------------------->
+<h4 class="w3-text-teal">A Logical Clock Algorithm</h4>
+<!-------------------------------------------------------->
+ Let \(t(e)\) be the logical time assigned to event \(e\).
  
-  Agents determine the state at the set of events with logical
-  time at most \(t\) as follows.
-
-  <ol>
-  <li>
-  <i>Agent states</i>: Each agent records its local state after an
-  event with logical time at most \(t\) and before an
-  events with logical time greater than \(t\).
-  </li>
-  <li>
-  <i>Channel states</i>: An agent records the state of an input
-  channel \(c\) as the sequence of messages with timestamps 
-  \(t\) or less, received on \(c\), at events with logical
-  time greater than \(t\).
-  </li>
-</ol>
-
-<p>
-The above algorithm for taking the global snapshot at logical time \(t\)
-is exactly the same as the algorithm for taking the global snapshot at
-real time \(t\), when the time at each agent's clock is the real time.
-We highlight this observation because we use it to design algorithms.
-
-<!---------------------------------------------------------->
-
-  <hr class="new2">
-<h5 style="color:blue;">
-Observation: Logical Clocks and Real Time Clocks
-</h5>
-
-<p style="color:blue;">
-The algorithms to determine the global states at logical time \(t\)
-and real time \(t\) are identical.
-</p>
-  <hr class="new2">
-
-
-
-  <h4 class="w3-text-teal">A Logical Clock Algorithm</h4>
-  The following algorithm ensures that the value \(t(e)\) assigned to
-  event \(e\) satisfies the logical time property.
+ The following algorithm ensures the logical time property.
 
   <p>
-Let \(e'\) be the event immediately preceding event \(e\) at an
+Let \(e'\) be the event immediately preceding an event \(e\) at an
 agent.
 <ol>
   <li>
   A message sent in an event \(e\) is assigned a timestamp \(t(e)\).
   </li>
   <li>
-  If the timestamp of the message received in \(e\) is \(T\) then set
-  \(t(e)\) to any value greater than max(t(e'), T).
+  If the timestamp of the message received in an event \(e\) is \(T\) then set
+  \(t(e)\) to be any value greater than max(t(e'), T).
   </li>
 </ol>
+
+
+ <!---------------------------------------------------------->
+ <h4 class="w3-text-teal">Global Snapshot at Logical Time \(t\)</h4>
+ <!---------------------------------------------------------->
+
+<p class="w3-text-teal">
+The state of an agent at logical time \(t\)
+</p>
+
+The state of an agent at logical time \(t\) is defined at its state
+after events with logical time less than or equal to \(t\) and
+before events with logical time greater than \(t\).
+
+<p class="w3-text-teal">
+The global snapshot at logical time \(t\)
+</p>
+A global snapshot at logical time \(t\) is the state of each agent and
+channel at logical time \(t\).
+
+The state of a channel at logical time \(t\) is the sequence of
+ messages sent when the sender's logical time is at most \(t\) and
+received when the receiver's logical time exceeds \(t\).
+
+<p class="w3-text-teal">
+Algorithm to record the global snapshot at logical time \(t\)
+</p>
+Each agent takes its local snapshot when its logical clock is at or before
+\(t\).
+
+An agent
+records the state of an input channel as the sequence of
+messages with timestamps atmost \(t\) that the agent
+receives when its logical clock exceeds \(t\).
+ 
+
+<!---------------------------------------------------------->
+  <h5 style="color:red;">Example: Snapshot at Logical Time \(t\)</h5>
+<!---------------------------------------------------------->
+Figure 2 illustrates a global snapshot at logical time 6.5 of the
+computation shown in figure 1.
+
+The curved purple line separates events with logical time at most 6.5
+from events with logical times that exceed 6.5.
+
+<p>
+The point at which the purple line cuts the timeline for agent \(A\)
+can be thought of as the point in \(A\)'s computation at which the
+logical time is 6.5.
+
+This cut is at any point between events with logical times at most 6.5
+and events greater than 6.5, i.e., any point between event numbers 3
+and 5.
+
+<figure>
+    <img src="Timelines/Timelines.002.jpeg"
+  alt="Fig2" style="width:80%"> 
+    <figcaption>Fig. 2: States at Logical Time 6.5</figcaption>
+</figure>
+
+The states of agents and channels at logical time \(t = 6.5\) are
+given by the labels of the edges that cut the purple line.
+
 
 
 
   <!--------------------------------------------->
   <h3 class="w3-text-teal">Logically Synchronized Clocks</h3>
 <!--------------------------------------------->
-
-Many distributed systems maintain accurate -- but not perfect --
-clocks by using atomic clocks and Precision or Network Time Protocols
-(PTP, NTP).
-
-The drift of an agent's clock from real time is small, and we will
-assume that the drift is bounded.
-
-The clocks may not, however, guarantee the logical time property.
-
-Agents can use the logical clock algorithm, if necessary, to modify
-their clocks so that have the logical time property.
-
-We call such clocks <i>logically synchronized clocks</i>.
-
-
-
-<p>
-We represent each clock tick of an agent's clock as a message from the agent to
-itself.
-
-Logically synchronized clocks have two valuable
-properties in addition to being close to real time.
+Many distributed algorithms use clocks with the following two properties.
 
 <ol>
   <li>
-  <i>Clocks tick forward</i>: For all \(t\), there is a point in
+  <i>Clocks tick forward forever</i>: For all \(t\), there is a point in
   an infinite computation at which clocks of all agents exceed \(t\).
   </li>
   <li>
-  <i>Global snapshots at \(t\)</i>: For all \(t\), local snapshots taken by agents
-  when their clocks are at time \(t\) are global snapshots.
+  <i>Global snapshots at \(t\)</i>: For all \(t\), local snapshots
+  taken by agents of their states and input channels,
+  when their clocks are at time \(t\), are global snapshots.
   </li>
 </ol>
+<p>
+We use the two properties in several algorithms.
 
-We use these properties in several algorithms.
-
-For example, the simplest way to take repeated snapshots is for agents to record 
+For example, a simple way to take repeated snapshots is for agents to record 
 states periodically with some period \(T\), i.e., when  local clocks are at
-multiples of \(T\). 
+multiples of time \(T\).
+
+<p class="w3-text-teal">Hardware Clocks and Time Protocols</p>
+
+Most processors, even those on on-board computers, have local clocks
+that keep ticking forwards.
+
+Many systems have atomic clocks or clocks that use Precision or
+Network Time Protocols (PTP, NTP), or other synchronization mechanisms
+to ensure high accuracy.
+
+<p>
+A simple way of making a clock that ticks forward forever is to make each agent
+send itself <i>clock tick</i> messages. 
+
+When an agent receives a clock tick message it moves its clock forward
+and sends itself another clock tick message.
+
+<p>
+We use the logical clock algorithm to ensure the logical time
+property.
+
+The receiver's clock is
+moved forward if a message is received with a timestamp greater than
+or equal to the receiver's clock.
+
+<p>
+Clocks, even when they are inaccurate, can be helpful in distributed
+algorithms. 
+
+
+
+
+
 
 
 
