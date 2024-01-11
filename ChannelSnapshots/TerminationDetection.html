@@ -114,8 +114,8 @@ may become idle at any point.
 <p>
   A computation terminates in states in which all agents
   are idle and all channels are empty.
-  The set of states in which computation has terminated is a stable
-  set -- if a computation has terminated then it remains terminated.
+  Termination is stable -- if a computation has terminated then it
+  remains terminated. 
 
 
 
@@ -124,8 +124,8 @@ may become idle at any point.
   <!---------------------------------------------------------------->
   
   The problem is to develop an operating system algorithm that
-  detects whether a stable property holds in the client's computation;
-  in this example the stable property is termination.
+  detects whether a stable property holds in a client's computation.
+  In this example the stable property to be detected is termination.
   
   See <a href="ChannelSnapshots.html">Global Snapshots</a> for a
   description of OS algorithms.
@@ -135,7 +135,7 @@ may become idle at any point.
   initially \(False\) and becomes
   \(True\) if and when the algorithm detects that the specified stable
   property holds.
-
+The specification of an algorithm to detect a stable property is as follows.
   <!---------------------------------------------------------------->
 <hr class="new2">
 <h6 style="color:blue;">
@@ -154,6 +154,7 @@ may become idle at any point.
   <!---------------------------------------------------------------->
 
 
+<p class="w3-text-teal">General Method for Detecting Stable Properties</p>
 The general method for detecting stable properties is by
 monitoring a system by taking repeated snapshots.
 
@@ -169,29 +170,33 @@ and
 Logical Clocks
 </a>.
 
+
+<p>
 Next we describe an algorithm for the specific case of
 termination detection.
 
-This algorithm is a direct application of the global snapshot theorem.
+This algorithm is a 
+straightforward application of.
+<a href="ChannelSnapshots.html">the Global Snapshot Theorem</a>.
 
 <!------------------------------------------------------------->
 <h3 class="w3-text-teal">A Termination Detection Algorithm</h3>
 <!------------------------------------------------------------->
 
-The algorithm is a 
-straightforward application of.
-<a href="ChannelSnapshots.html">the Global Snapshot Theorem</a>.
-
-
-
 <p>
 The algorithm uses an agent, that we call <i>the detector</i> which is
 part of the operating system.
 
-Each time an agent transits from active to idle it sends \(C_{s}\)
-for each of its outgoing channels \(C\),
-and \(C_{r}\) for each of its incoming channels \(C\), to the
-detector.
+Let  \(C_{s}\) and \(C_{r}\) be the numbers of messages sent and
+received (respectively) on channel \(C\),.
+
+<p>
+Each time an agent transits from active to idle it sends a message to
+the detector.
+
+This message contains \(C_{s}\)
+for each of that agent's outgoing channels \(C\),
+and \(C_{r}\) for each of the agent's incoming channels \(C\).
 
 <p>
 The detector keeps only the latest message that it receives from each
@@ -202,7 +207,7 @@ Let \(C_{s}^{*}, C_{r}^{*}\) be the last value of \(C_{s}, C_{r}\)
 <p class="w3-text-teal">The Detection Condition</p>
 <p style="color:blue;">
 The detector detects that computation has terminated if it has
-received a message from each agent and for
+received at least one message from each agent and for
 all channels \(C\): \(C_{s}^{*} = C_{r}^{*}\).
 </p>
 
@@ -211,55 +216,28 @@ all channels \(C\): \(C_{s}^{*} = C_{r}^{*}\).
 <!-------------------------------------------------------->
 <h5 class="w3-text-teal">Proof of Correctness</h5>
 <!-------------------------------------------------------->
-Each agent takes its local snapshot when it sends a message to the
-detector.
-
-In this snapshot the agent is idle and the numbers of messages sent
-and received on a channel \(C\) incident on the agent is \(C_{s},
-C_{r}\) respectively.
+The proof of part 1 -- after the computation terminates the detection
+condition holds -- is straightforward. Now we prove part 2: If the
+detection condition holds then the computation has terminated.
 
 <p>
-The global snapshot theorem says that the local snapshots form a
+Assume that the detection condition holds.
+
+Then agents sent messages to the detector with the values \(C_{s}^{*}
+= C_{r}^{*}\).
+
+Call the local snapshot in which an agent sends these messages the
+detection snapshot.
+
+<p>
+From the global snapshot theorem, local snapshots form a
 global snapshot if, for all channels \(C\): \(C_{s} \geq C_{r}\).
 
-This condition holds if \(C_{s} = C_{r}\).
+This condition holds when \(C_{s} = C_{r}\).
 
-<p class="w3-text-teal">
-Proof of part 1 of the specification
-</p>
-
-Let \(C_{s}^{*}, C_{r}^{*}\) be the number of messages sent and
-received (respectively) by an agent with incident
- channel \(C\) when the agent transits from active to idle for
-the  last time before the computation terminates.
-
-<p>
-The last messages received by the detector from agents
-have the property, \(C_{s}^{*} = C_{r}^{*}\), and
-when the detector receives these messages it sets \(B\) to \(True\).
-
-
-<p class="w3-text-teal">
-Proof of part 2 of the specification
-</p>
-
-Let \(T\) be the point at which the detector determines that the
-client computation has terminated.
-Then at \(T\), for all channels \(C\), \(C_{s}^{*} = C_{r}^{*}\).
-
-<p>
-So, for each agent \(A\), there is a point \(t_{A}\), earlier than \(T\), at which \(A\) sent
-\(C_{s}^{*}\) for each of its output channels \(C\), and 
-\(C_{r}^{*}\) for each of its input channels \(C\), to the detector.
-Point \(t_{A}\) is the point of the local snapshot of \(A\).
-
-<p>
-From the global snapshot theorem, because \(C_{s}^{*} = C_{r}^{*}\) for all channels,
-the set of local snapshots forms a global snapshot.
-
-The computation has terminated in this global snapshot -- all agents
-are idle and all channels are empty.
-
+Therefore, the detection snapshots form a global snapshot.
+In this global snapshot all agents are idle and all channels are
+empty. 
 
 <h3 class="w3-text-teal">Next</h3>
 Next
