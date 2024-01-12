@@ -77,31 +77,41 @@ hr.new1 {
   
     <!--------------------------------------------------------->
   <h2 class="w3-text-teal">Detecting Database Deadlocks</h2>
+
+  
+  <!------------------------------------------------------------------->
+  <p class="w3-text-red">
+  A database deadlock occurs when the system has a cycle of agents
+  where each agent in the cycle remains waiting forever for a
+  resource held and required by the next agent in the cycle.
+
+  A database deadlock detection algorithm is executed by the operating
+  system to determine whether there exists a cycle of deadlocked agents.
+
+  Detection algorithms are based on global snapshots.
+  </p>
   
   <h3 class="w3-text-teal">The Problem</h3>
 
   <p>
   Agents in a system share a set of files.
-    Each shared file is represented as an
-    indivisible colored token, with each file having its own
-    unique color. The system has at most one token of a given color.
-
-    Tokens can be sent from agent to agent. Tokens are not duplicated
-    or destroyed.
-
+  A file can be accessed by at most one agent at a time.
     <p>
     An agent \(u\) is in one of the following states:
     <ol>
       <li>
-      Executing without holding shared files.
+      State 1: Executing without holding shared files. It may remain in this
+  state for ever or it transits to state 2.
       </li>
       <li>
-      Waiting to acquire a set \(u.needs\) of
-      shared files. 
+      State 2: Waiting to acquire a nonempty set \(u.needs\) of
+      shared files. The agent remains in this state until it holds all
+  the files in \(u.needs\) at which point in transits to state 3.
       </li>
       <li>
-      Executing while holding all files in
-      \(u.needs\).
+      State 3: Executing while holding all files in
+      \(u.needs\). It remains in this state for only finite time after
+  which it transits to state 1.
       </li>
     </ol>
 
@@ -114,28 +124,24 @@ hr.new1 {
     alt="Fig1" style="width:100%">
     <figcaption>Fig.1 - The Life Cycle of an Agent</figcaption>
     </figure>
-    An agent executes, while holding shared files, for only a finite
-    time.
-    An agent may execute without holding shared files forever.
 
 <h3 class="w3-text-teal">Deadlock</h3>
-A cycle of waiting agents is in a deadlock if each agent is waiting to
-acquire a token held by the next agent in the cycle. Our task is to
-design an algorithm by which an agent detects if it is part of a
-deadlocked cycle.
+A cycle of waiting agents is in a deadlock if each agent in the cycle is waiting to
+acquire a file that is held and needed by the next agent in the cycle.
 
-<h3  style="color:red;">Example</h3>
-A system has one red, one blue and one green token.
+    <h3  style="color:red;">Example</h3>
+    In the example, a file is identified by its color.
+A system has one red, one blue and one green file.
 Agents \(x\), \(y\) and \(z\) are deadlocked in the following state.
-    Agent \(x\) needs the red and blue token; it is
-holding the red token and is waiting
-    to acquire a blue token,
+    Agent \(x\) needs the red and blue file; it is
+holding the red file and is waiting
+    to acquire the blue file,
 
-    Agent \(y\) needs the blue and green tokens; it holds the blue token and is waiting
-    to acquire the green token.
+    Agent \(y\) needs the blue and green files; it holds the blue file and is waiting
+    to acquire the green file.
 
-    Agent \(z\) needs the green and red tokens; it holds the green token and is waiting
-    to acquire the red token.
+    Agent \(z\) needs the green and red files; it holds the green file and is waiting
+    to acquire the red file.
     
     <figure>
   <img
@@ -144,29 +150,7 @@ holding the red token and is waiting
   <figcaption>Fig.2 - An Example of a Deadlock</figcaption>
 </figure>
 
-    <h5 class="w3-text-teal">Deadlock Specification</h5>
-
-    
-    <p>
-    A cycle of agents is deadlocked exactly when each agent in the
-    cycle is waiting to get a token that is held and needed by the next
-    agent in the cycle.
-
-    <p>
-    Let \(u.holds\) be the set of tokens that \(u\) holds. \(u\) is
-    waiting to get tokens in \(u.waits\), the set of tokens that it
-    needs but does not hold.
-    <p>
-    \(
-    u.waits = \{x | (x \in u.needs) \wedge (x \notin u.holds)\}
-    \)
-    
-    <p>
-    A cycle of agents is deadlocked exactly when for every edge \(u,
-    v\) in the cycle:
-    \(u.waits \cap v.needs \cap v.holds\) is not empty.
-
-
+   
     
     <h4 class="w3-text-teal">The General Method</h4>
 The general method for detecting stable properties is by
@@ -175,32 +159,96 @@ See
 <a href="ChannelSnapshots.html">
 Global Snapshots
 </a>
-and
+,
 <a href="LogicalClocks.html">
 Logical Clocks
-</a>.
+    </a>
+    and
+<a href="TerminationDetection.html">
+Termination Detection
+    </a>.
+    
 
-
-The general method for detecting stable properties has two phases (1)
+The general method for detecting stable properties has two phases: (1)
     obtain a global snapshot, and (2) analyze the global snapshot.
 
-The first phase reduces analysis of a dynamic system into the analysis
-of static snapshot.
+    <p>
+The first phase reduces the analysis of a dynamic system  -- in which states
+    of agents are changing, and messages are being appended and
+    removed from channels -- into the analysis
+of a single state.
 
-The second phase analyzes <i>static</i> date structures such as phase.
+    This page describes an algorithm that combines the two phases into
+    a single phase.
 
-<p>
-    This page describes an algorithm consisting of a single phase
-that is an optimization of the two-phase algorithm.
+The algorithm is the
+<a href="ChannelSnapshots.html">global snapshot</a> where 
+markers play two concurrent roles: record a snapshot and determine
+where the system is deadlocked in the snapshot state.
 
-The algorithm is the global snapshot with marker messages where the
-markers play two roles concurrently: detect snapshots and compute
-properties of snapshots.
 
 <h4 class="w3-text-teal">Modified Global Snapshot Algorithm</h4>
 
-<p class="w3-text-teal">Initiating the Algorithm</p> A waiting agent
-\(u\) initiates the algorithm by sending a <i>marker</i> message on
+<h5 class="w3-text-teal">Core Idea of the Algorithm</h5>
+A marker \(m\) has a field \(m.waits\).
+
+When a waiting agent \(u\) sends a
+marker \(m\) it sets \(m.waits\) to the set of files that \(u\)
+has to acquire to execute -- these are files that \(u\) needs and
+does not hold.
+
+<p>
+Any one agent initiates the
+algorithm. Marker propagation uses the following rule:
+<hr class="new2">
+<p style="color:blue;">
+When a waiting agent receives a marker \(m\), the agent sends markers if and
+only if
+there is a file in \(m.waits\) that the agent holds and needs.
+</p>
+<hr class="new2">
+A cycle is deadlocked if a marker is propagated around the cycle, and
+reaches the initiator.
+
+<h5 style="color:red;">Example</h5>
+Agent \(x\) initiates the algorithm by sending a marker \(m\) where
+\(m.waits\) is the set consisting of the blue file.
+When \(y\) receives the message it is waiting and
+it is holding a file that is in \(m.waits\) and that \(y\) needs; so,
+\(y\) sends markers \(m'\) with a waits field that contains the green file.
+When \(z\) receives \(m'\), \(z\) sends markers \(m''\) with a
+waits field that has the red file.
+When \(x\) receives \(m''\), \(x\) detects deadlock because
+there is a file in the \(m''.waits\) that
+\(x\) holds and needs.
+
+<h5 class="w3-text-teal">Optimization</h5>
+File managers keep track of which agent holds a given file.
+So, an agent waiting for a file sends markers only to the agent
+holding that file instead of sending markers to all agents.
+
+<h5 class="w3-text-teal">Algorithm Details</h5>
+
+Let \(u.holds\) be the set of files that a waiting agent \(u\)
+holds.
+
+Then 
+
+    <p>
+    \(
+    u.waits = \{x | (x \in u.needs) \wedge (x \notin u.holds)\}
+\)
+
+    <p>
+A cycle of agents is deadlocked if for every edge \(u, v\) in the cycle
+    \(u.waits \cap v.needs \cap v.holds\) is not empty.
+
+
+
+<p class="w3-text-teal">Initiating the Algorithm</p>
+
+A waiting agent
+ initiates the algorithm by sending a <i>marker</i> message on
 each of its outgoing channels. Assume that there is only one
 initiator.
 
@@ -214,13 +262,12 @@ When an agent \(w\) sends a marker \(m\) the agent sets \(m.waits\) to
 \(w.waits\). 
 
 <p class="w3-text-teal">Propagating Markers</p>
-When \(v\) receives a marker \(m\), if \(v\) hasn't already
-sent markers and
-<br>
+When \(v\) receives a marker \(m\), if 
 \(m.waits \cap v.needs \cap v.holds\) is not empty
-<br>
 then \(v\) sends a marker \(m'\) on each of its outgoing channels where 
 \(m'.waits\) is \(v.waits\).
+
+
 
 <p class="w3-text-teal">Termination Detection</p>
 When the initiator \(u\) receives a marker \(m\), the initiator
