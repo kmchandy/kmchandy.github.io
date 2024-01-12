@@ -560,17 +560,28 @@ continues to hold forever in that computation.
 For example, if a computation has terminated then it remains
 terminated.
 
+Likewise, if a cycle of agents is deadlocked then it remains deadlocked.
+
 We discuss stable properties in detail later.
 
 <p>
 One way to detect stable properties is to monitor the system by
 taking snapshots repeatedly.
 
-If the system deadlocks then all snapshots taken after the deadlock
+If the system deadlocks then all snapshots taken after the deadlock occurs
 show that the system has deadlocked.
 
 If a snapshot shows that the system has deadlocked then the
 system is indeed deadlocked at that point.
+
+<p>
+This method for detecting stable properties has two phases (1)
+obtain a global snapshot, and (2) analyze the global snapshot.
+
+The first phase reduces analysis of a dynamic system into the analysis
+of static snapshot.
+
+The second phase analyzes static data structures.
 
 
 <h4 class="w3-text-teal">Next</h4>
