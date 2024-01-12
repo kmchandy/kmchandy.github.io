@@ -86,7 +86,7 @@ hr.new1 {
   </p>
 
   <p class="w3-text-red">
-  This page describes a simple, limited, notation for distributed
+  This page describes a simple notation for distributed
   algorithms.
 
   Converting algorithms in this notation to programs using widely-used
@@ -106,15 +106,9 @@ hr.new1 {
   <a
   href="https://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol">
   Advanced Message Queuing Protocol (AMQP)
-  </a>,
+  </a>.
   
-  These libraries are implemented using protocols such as
-  <a href="https://en.wikipedia.org/wiki/Transmission_Control_Protocol">TCP</a>,
-  <a href="https://en.wikipedia.org/wiki/User_Datagram_Protocol">UDP</a>, and
-  <a
-  href="https://en.wikipedia.org/wiki/Remote_procedure_call">RPC</a>.
-
-  The notation we use is a simplification of a
+  The notation is a simplification of a
   <a
   href="https://www.rabbitmq.com/tutorials/tutorial-one-python.html">
   Python implementation of AMQP.
@@ -162,12 +156,15 @@ Agents and channels are not created or deleted.
 
 The state of a channel is the sequence of messages in the channel --
 these are the messages that have been sent but not received on the
-channel.  A message that is sent is appended to the tail of the
-sequence, and a message that is received is removed from the head of
-the sequence.
+channel.
 
-Messages are not delivered instantaneously and message delays are
-unknown.
+An agent sends a message by appending the message to the tail of the
+sequence of messages in the channel.
+
+An agent can receive the message at the head of a nonempty sequence of
+messages in any of the agent's input channels.
+
+When an agent receives a message it is deleted from the sequence.
 
 
 <!---------------------------------------------------->
@@ -176,44 +173,38 @@ unknown.
 
 Each agent initializes its state and then executes an infinite loop in
 which the agent receives and processes a message from any of its input
-channels. 
+channels.
+The structure of the loop is:
 
-An agent is either waiting for a message or processing a message.  An
-agent is said to be <i>active</i> while it is processing a message and
-<i>idle</i> while it is waiting for a message.
+<pre>
+while true:
+   wait until an input channel is not empty
+   receive a message from any nonempty input channel
+</pre>
 
-<p>
-An idle agent remains idle until it receives a message and becomes
-active when it receives a message.
-
-An active agent becomes idle after processing a message.
-
-A function
+Associated with each agent is a function
 <pre>
 receive(message, sender)
 </pre>
-is associated with each agent.
+called a callback function in
+<a href=
+"https://www.rabbitmq.com/tutorials/tutorial-one-python.html">
+message queuing libraries.
+</a>
 
-This function is called a callback function in message-queuing
-libraries. 
-
-<p> If an idle agent has a nonempty input channel then the
-<code>receive</code> function of the agent is called.
+<p>
+An agent's <code>receive</code> function is called if the agent is
+waiting for an input channel to be nonempty and the agent has a
+nonempty input channel.
 
 The <code>message</code> parameter of <code>receive</code> is set to
-the message at the front of <i>any</i> of the agent's nonempty input
-channels, and the <code>sender</code> parameter set to the sender of
+the message at the head of <i>any</i> of the agent's nonempty input
+channels, and the <code>sender</code> parameter is set to the sender of
 the message.
 
 When <code>receive</code> is called the message is removed from the
 channel. 
 
-<p>
-When the agent finishes executing the <code>receive</code> the agent
-becomes idle. 
-
-If a message arrives at an agent while the agent is active then the
-message remains in the channel.
 
 <p>
 An agent sends a mesage by executing
@@ -227,9 +218,10 @@ and the second paramenter is the agent to which the message is sent.
 A message can be sent on a channel independent of the state of the
 channel.
 
-We will show that every algorithm can be implemented with channels of
-fixed buffer size; however, for the time being assume that channels
-have buffers of infinite size. 
+Assume that channels have buffers of infinite size.
+
+We will show that algorithms described in this website are implementable
+with bounded memory. 
 
 
 <p>
@@ -253,20 +245,21 @@ def receive(message, sender):
 
 
 <!----------------------------------------------------->
-<h5 class="w3-text-teal">Restrictions on receive</h5>
+<p class="w3-text-teal">Restrictions on Agent</p>
 <!----------------------------------------------------->
 
-Each agent has its own <code>receive</code> function which is local to
-that agent, only accesses that agent's variables, and sends
-messages only on that agent's output channels.
+An agent can only access that agent's variables, send
+messages only on that agent's output channels, and receive messages
+only on that agent's input channels.
 
-A <code>receive</code> function does not call itself.
-Every execution of <code>receive</code> must terminate.
+A <code>receive</code> function must not call itself.
+For every algorithm, we will prove that all executions of
+<code>receive</code> terminate. 
 
 
 
 <!------------------------------------------------------------>
-<h5 class="w3-text-teal">Local Clocks and Timing</h5>
+<p class="w3-text-teal">Local Clocks and Timing</p>
 <!----------------------------------------------------->
 
 Agents may have local clocks; however, clocks aren't synchronized and
@@ -277,7 +270,7 @@ on another agent's clock.
 
 
 <!------------------------------------------------------------>
-<h5 class="w3-text-teal">Termination</h5>
+<p class="w3-text-teal">Termination</p>
 <!------------------------------------------------------------>
 
 Execution of the system halts when all agents are idle and all
