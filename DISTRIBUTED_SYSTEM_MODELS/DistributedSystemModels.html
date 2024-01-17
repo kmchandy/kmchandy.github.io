@@ -78,146 +78,174 @@ hr.new1 {
 
 
   <!---------------------------------------------------------------->
-    <h2 class="w3-text-teal">A Model of Distributed Systems</h2>
+    <h2 class="w3-text-teal">States, Transitions and Computations</h2>
   <!----------------------------------------------------------------->
 
   </p>
 
   <p class="w3-text-red">
-  A model is an abstraction that helps in developing algorithms.
-  A model of a distributed system is defined by its components,
-  states, and state transitions. The components of a distributed
-  system are its agents and communication channels.
+
+  A model is an abstraction of a system; the abstraction helps in
+  developing algorithms though it ignores features of the system.
+  
+  This webpage describes states and state transitions of a distributed
+  system in a model.
+  
+  The model does not deal with the change of state of an agent while
+  the agent is executing, nor does it deal with concurrency --
+  multiple agents executing at the same time.
+
+  These simplifications help us design algorithms.
+
   </p>
 
 
 <!-------------------------------------------------------------->
-<h3 class="w3-text-teal">System Trajectories</h3>
+<h3 class="w3-text-teal">States</h3>
 <!-------------------------------------------------------------->
 
 The state of a distributed system is a tuple with an element of the
-  tuple for each of its agents and channels.
+tuple for the state of each of its agents and channels.
 
-We analyze distributed systems such as the electrical power grid by
-  studying properties of its trajectories --  its state as
-  a function of time. 
+The state of a banking system is a tuple with elements of the tuple
+  for states of agents at ATM machines, branch banks, fraud analysis centers,
+  and for channels connecting the agents.
 
-  Let's look at the trajectory of a
-  <a href="Basics.html">distributed system</a>.
+  The state of an airplane navigation system is a tuple with elements
+  for states of agents that analyze sensors that
+  estimate location, wind speed, and pitch, and 
+  elements for channels connecting agents.
 
+  <h4 class="w3-text-teal">Concurrent Operations</h4>
+  Agents in a distributed system operate concurrently.
+  Many ATM machines are used at the same time; many people buy and
+  sell commodities using cryptocurrency at the same time; many
+  sensors and processors execute concurrently in an aircraft carrier.
 
-<h4 style="color:red;">Example of a Trajectory</h4>
-Figure 1 shows a trajectory of a system with two agents \(u\) and
-  \(v\) and channels between them.
+  <p>
+  An agent changes its variables -- and thus its state -- while it is
+  executing statements in a <code>receive</code> function.
+  
+  Analyzing algorithms, keeping in mind that multiple agents are
+  changing variables concurrently, is difficult.
 
-The horizontal axes represent time flowing from left to right.
+So we use a simple model that does not capture all aspects of system
+behavior. 
 
-There is a timeline for each agent that shows the state of the agent
-  at each point in time.
+  
+  
+  <h4 class="w3-text-teal">Model of State Changes</h4>
+The model deviates from the behavior of
+<a href="Basics.html">distributed systems</a>
+in two important ways.
 
-<p>
-The state of an agent \(u\) at time \(t\) is represented by a point
-  \(t\) units from the origin on \(u\)'s timeline.
-
-A message sent at time \(c\) by an agent \(u\) and received at
-  time \(d\) by an agent \(v\) is represented by a line from point
-  \(c\) on \(u\)'s timeline to point \(d\) on \(v\)'s timeline.
-
-The state of the system at time \(t\) is shown diagramatically by the
-  vertical line at \(t\).
-
-<figure>
-    <img
-    src="DistributedSystemModels/DistributedSystemModels.011.jpeg"
-    alt="Fig1" style="width:100%"> 
-    <figcaption>Fig.1: Example: A System Trajectory</figcaption>
-</figure>
-
-
-Next we describe a simple model that is adequate for reasoning about
-many algorithms though it does not represent trajectories.
-
-
-
-<!-------------------------------------------------------------->
-<h3 class="w3-text-teal">The Model</h3>
-<!-------------------------------------------------------------->
-
-<p>
-The model deviates from a <a href="Basics.html">distributed system</a>
-in several ways.
-
-The model does not deal with states of an agent while it is executing
+  <ol>
+    <li>
+The model does not consider changes in states of an agent while it is
+  executing 
 a <code>receive</code> command.
 
-The model only represents states of an agent before the agent
+The model only considers states of an agent before the agent
 begins, and after it completes, executing  a <code>receive</code>.
 
-The model only considers states in which all agents are idle.
+Thus, the model only considers states in which all agents are idle.
+    </li>
+    <li>
 
-
-<p>
-The model is sequential -- at most one agent executes a
-<code>receive</code> at a time while all other agents remain idle.
+The model is sequential -- at most one agent changes state
+at a time.
 
 A state transition occurs when one, and only one, agent receives and
 completes processing a message.
+    </li>
+  </ol>
 
+  <h4 class="w3-text-teal">Computations</h4>
+A <i>computation</i> is a sequence 
+  of states
+where there is a transition from each state in the sequence to the
+next.
+
+A transition is from the state before a receive is executed
+  to the state after the receive is completed.
+
+  
 <p>
-A <i>computation</i> is a sequence of one or more states where there
-exists a transition from each state in the sequence to the next state
-in the sequence.
+A computation can start in any state.
 
-We can think of a computation being generated by the following
-while loop.
+  A computation may be finite or infinite.
+
+  All initial subsequences of a computation are also computations.
+
+
+ <p>
+A maximal computation is modeled as the sequence of states generated
+  by the following <code>while</code> loop.
+
+  Here <code>n</code> is the number of <code>receive</code> functions
+that have been executed, and the sequence of states is \([S[0], S[1],
+\ldots]\). 
+
 <pre>
+n = 0
 while there exists a nonempty channel:
+    // state is S[n]
     select any nonempty channel (u, v)
     let the head of (u, v) be msg
     v executes <code>receive(msg, u)</code>
-</pre>
+    n = n + 1
+  </pre>
+
+  
+A message is received from exactly one channel, and is processed by
+ exactly one agent, in each iteration.
+  
+
+In 
+<a href="Basics.html">distributed systems</a>
+multiple agents process messages
+  concurrently.
+
+  By contrast, in the model, only one agent executes a receive at a time while all the
+other agents are idle.
+
+  <p>
+  The \(n\)-th receive is initiated in state \(S[n]\), and the state
+  when the receive is completed is \(S[n+1]\).
+
+  The changes in state while the receive is being executed are ignored.
+
+  <p>
+A sequential model for a distributed system that only considers states
+  in which all agents are idle seems useless.
+
+On the next page we show why this model is useful.
 
 
 
-<!-------------------------------------------------------------->
-<h3 class="w3-text-teal">Events</h3>
-<!-------------------------------------------------------------->
 
-The change in state caused by an execution of a <code>receive</code> by
-an agent \(v\) is specified by an <i>event</i> which is the 4-tuple:
-<ol>
-  <li>
-  the state of \(v\) before it executes <code>receive</code>,
-  </li>
-  <li>
-  the message received and the channel on which it is received,
-  </li>
-  <li>
-  the state of  \(v\) after it completes execution of the
-  <code>receive</code>, and  
-  </li>
-  <li>
-  for each output channel of <code>v</code>, the sequence of messages
-  sent on the channel during execution of the <code>receive</code>.
-  </li>
-</ol>
-The states of agents other than \(v\) remain unchanged by the
-transition.
 
-The channels other than those listed in the event also remain
-unchanged.
 
-<p>
-In any system state transition from \(S\) to
-\(S'\) specified by an event \(e\), the post-transition state \(S'\)
-is uniquely determined by the pre-transition state \(S\) and the event
-\(e\). 
+<!----------------------------------------------------------->
+<p class="w3-text-teal">State Transitions</p>
+
+States and transitions can represented by a directed
+graph, called the state transition graph, in which vertices are
+  states and edges represent state transitions.
+
+  There can be an arbitrary number of transitions from a state.
+
+A computation can be viewed as a path  in the state transition graph.
+
+<!---------------------------------------------------------------->
+<h2 style="color:red;">Examples </h2>
+<!---------------------------------------------------------------->
 
 <!---------------------------------------------------------------->
 <h4 style="color:red;">Example of a Simple Distributed System</h4>
 <!---------------------------------------------------------------->
 
-This example system has two agents <code>u</code> and <code>v</code>.
+A system has two agents <code>u</code> and <code>v</code>.
 
 The system has channels in both directions between the agents and also
 from each agent to itself.
@@ -234,10 +262,41 @@ identify the file.
 
 
 <p>
+The function <code>receive</code> below is self explanatory.
+
+In the code for an agent, <code>other_agent</code> is the other
+agent.
+
+
+<pre>
+def receive(message, sender):
+   if sender == other_agent:
+       // message is a token
+       list_of_tokens_I_hold.append(message)
+   else:
+       # Sender is me. Message is wakeup.
+       # Send any token I hold to other_agent.
+       token_I_hold = tokens_held.pop()
+       send(token_I_hold, other_agent)
+
+   # If I hold a token then wake me up later.
+   if len(list_of_tokens_I_hold) > 0:
+          time.sleep(1)
+          send(wakeup, me)
+</pre>
+
+The initial state for the agent on the left is that it holds the blue
+token and has a wakeup message in the channel to itself.
+
+The initial state for the agent on the right is symmetric, see figure
+2. 
+
+
+<p>
 The diagram in figure 2 shows two states, \(S_{0}\) and \(S_{1}\), and
 a transition from \(S_{0}\) to \(S_{1}\).
 
-The diagram at the left of the figure shows a system state in
+The diagram at the left of the figure shows a state \(S_{0}\) in
 which agent \(u\) holds the blue token, agent \(v\) holds the red
 token, channels \((u, v)\) and \((v, u)\) are empty, and channels
 \((u, u)\) and \((v, v)\) each contain a wakeup message, shown as a
@@ -260,89 +319,26 @@ and \((v, u)\) are empty, and channel \((v, v)\) contains a wakeup
 message.
 
 <p>
-The transition from \(S_{0}\) to \(S_{1}\) occurs when \(u\)
-sends the blue token to \(v\).
+The transition from \(S_{0}\) to \(S_{1}\) occurs when \(u\) receives
+a wakeup message.
 
-<p>
-The function <code>receive</code> below is self explanatory.
-
-In the code for an agent, <code>other_agent</code> is the other
-agent. 
-
-
-<pre>
-def receive(message, sender):
-   if sender == other_agent:
-       // message is a token
-       list_of_tokens_I_hold.append(message)
-   else:
-       # Sender is me. Message is wakeup.
-       # Send any token I hold.
-       token_I_hold = tokens_held.pop()
-       send(token_I_hold, other_agent)
-
-   # If I hold a token then wake me 1 second later.
-   if len(list_of_tokens_I_hold) > 0:
-          time.sleep(1)
-          send(wakeup, me)
-</pre>
+In this transition \(u\) sends the blue token to \(v\) and \(u\)
+changes to the state in which it holds no tokens.
+ 
 
 <!-------------------------------------------------------------->
-<h4 class="w3-text-teal">Time</h4>
+<p style="color:red;">Time</p>
 <!-------------------------------------------------------------->
-The local clocks of agents are not synchronized.
+Clocks of agents are not synchronized.
 
 When an agent executes <code>time.sleep(1)</code> the length of time
 that it sleeps is unknown.
 
-Multiple agents may be scheduled on the same processor and the time to
-that an agent takes to execute a <code>receive</code> command depends
-on the scheduler and processor.
+When we analyze algorithms, we ignore the length of time an agent
+sleeps.
 
-An agent's clock may be faster or slower than true time.
-
-<p>
-We begin by designing algorithms in which time plays no role other
-than moving forwards.
-
-Later, we will look at systems in which clock drift from real time is
-bounded. 
-
-
-
-
-<!----------------------------------------------------------->
-<h4 style="color:red;">Example of an Event</h4>
-This example illustrates the event corresponding to the state
-transition in figure 2.
-
-The event is specified by the
-state of \(u\) before the transition (\(u\) holds blue token), the
-message <code>wakeup</code> that \(u\) receives on channel \((u, u)\),
-the state of \(u\) after the transition (\(u\) holds no tokens), and
-the message (blue token) sent by \(u\) along output channel \((u,
-v)\).
-
-The figure below illustrates the event.
-
-    <figure>
-    <img
-    src="DistributedSystemModels/DistributedSystemModels.003.jpeg"
-    alt="Fig1" style="width:80%"> 
-    <figcaption>Fig.3: Example: Representation of an Event</figcaption>
-</figure>
-
-
-<!----------------------------------------------------------->
-<h4 class="w3-text-teal">State Transitions and Computations</h4>
-
-The sets of states and state transitions is represented by a directed
-graph, called the <i>state transition graph</i> in which vertices are
-states and edges represent state transitions.
-
-A computation is a path in the state transition graph.
-
-A computation may start in any state and be finite or infinite.
+Later, we will study algorithms in which local clocks of agents are
+synchronized. 
 
 
 
@@ -361,7 +357,7 @@ A computation may start in any state and be finite or infinite.
 Figure 4 shows a part of the state-transition graph for the
 token-passing example.
 
-Not all states are shown.
+Not all states are shown because there are too many to fit the page.
 
 Channels from each agent to itself aren't shown so as to reduce
 cluttering.
@@ -369,14 +365,25 @@ cluttering.
 There is a <i>wakeup</i> message (which is not shown) in the channel
 from an agent to itself if the agent holds a token.
 
+<p>
 A state transition is labeled with the channel on which the message is
 received that caused the transition.
+
+For example, there are two transitions from the state shown in the top
+row, leftmost column.
+
+One transition occurs if \(u\) receives a wakeup
+message. This transition is to the state shown in the top row, middle column.
+
+Another transition occurs if \(v\) receives a wakeup message and this
+transition is to the state shown in the middle row, leftmost column.
 
 
 <!----------------------------------------------------------->
 <h4 style="color:red;">Example of a Computation</h4>
 <!----------------------------------------------------------->
 
+<p>
 An example of a computation is the sequence \([S_{0}, \ldots S_{8}]\)
 of states shown in figure 5 as a path in the state transition graph of
 figure 4. 
@@ -388,249 +395,14 @@ figure 4.
     <figcaption>Fig.5: Example - A Computation is a Path in the State Graph</figcaption>
 </figure>
 
+A maximal computation, in this example, has infinite length.
 
-<!---------------------------------------------------------------->
-<h3 class="w3-text-teal">A Computation as an Event Sequence</h3>
-<!---------------------------------------------------------------->
-<p>
-As remarked earlier, in a transition of the system from \(S\) to
-\(S'\) caused by an event \(e\), the post-transition state \(S'\) is
-uniquely determined \(S\) and \(e\).
-
-A computation is a sequence of states with a transition from each
-state to the next.
-
-So, a computation can be specified by an initial state and the
-sequence of events that cause transitions from each state to the next.
-
-<p>
-We represent the initial state of a computation by an initial event at
-each agent.
-
-The label of the agent edge from the initial event at \(u\) is its
-initial state, and the output message edges represent the messages in
-channels from \(u\) in the initial state. Figure 6 shows an example.
-
-
-<figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.006.jpeg"
-    alt="Fig6" style="width:100%"> 
-    <figcaption>Fig.6: Example - A Computation and its Dataflow</figcaption>
-</figure>
-
-The initial state is specified by the edges from the events labeled
-\(0\).
-
-With the introduction of initial events, a computation can be
-specified as a sequence of states.
-
-We will specify computations as sequences of either states or events.
-
-
-
-<!---------------------------------------------------------------->
-<h3 class="w3-text-teal">Dataflow Graph of a Distributed Computation</h3>
-<!---------------------------------------------------------------->
-<a href="https://en.wikipedia.org/wiki/Dataflow_programming">
-Dataflow graphs
-</a>
-have been
-<a
-href="https://www.sigops.org/2020/the-remarkable-utility-of-dataflow-computing/">
-used in many domains of computer science
-</a>
-from the 1960s.
-
-Dataflow graphs, sometimes abbreviated to dataflow, helps in
-understanding distributed algorithms.
-
-<p>
-Associated with a computation is a labeled, directed, acyclic graph,
-called the <i>dataflow graph of the computation.</i>
-
-An edge in a dataflow graph represents data, and a vertex represents a
-transformation of data.
-
-In our case vertices represent events of the computation.
-
-Edges connect outputs of events to inputs of events. See figures 3 and
-6. 
-
-
-<p>
-The graph has an edge from an event at an agent to the next event at
-that agent; this event is labeled with the state of the agent between
-the events and is called an agent edge.
-
-The graph has an edge from each event in which a message is sent to
-the event in which that message is received; this edge is labeled with
-the message, and is called a message edge.
-
-<p>
-The initial state of the computation is represented by a set of events
-called \(0\), and the final state is represented by a set of events
-called \(N\).
-
-The outputs of events numbered \(0\) are the initial states of agents
-and message channels, and the inputs of events labeled \(N\) are their
-final states.
-
-<p class="w3-text-teal">Representation of a Computation by Dataflow
-and an Ordering of Events</p>
-There may be multiple computations with the same dataflow graph.
-
-A computation is represented by a dataflow graph in which the sequence
-of events of the computation are laid out, in order, from left to
-right.
-
-Events that appear later in the computation are placed to the right of
-events that appear earlier.
-
-Events at the same agent are placed on a horizontal line.
-
-
-
-
-
-<!---------------------------------------------------------------->
-<h4 style="color:red;">Example: Dataflow of a
-Computation</h4> 
-<!---------------------------------------------------------------->
-The computation of figure 5 is shown in figure 6 as a dataflow graph with
-later events placed to the right of earlier events.
-
-
-
-The top line in figure 6 shows the timeline -- the sequence of events
--- on agent \(u\) and the lower line shows the timeline for \(v\).
-
-The horizontal black edges show states of agents.
-
-The purple edges show messages.
-
-Event 1 in the figure is the same as the event shown in figure 3.
-
-
-
-
-<!---------------------------------------------------------------->
-<h3 class="w3-text-teal">Trajectories and Computations have same
-Dataflow</h4>
-<!---------------------------------------------------------------->
-The dataflow graph of a trajectory is specified in the same way as that
-of a system computation.
-
-An event represents the states and messages sent and received during
-the execution of a single <code>receive</code> command; the event does
-not deal with states of an agent while it is executing the command.
-
-<p>
-Making the duration of events in a trajectory arbitrarily small gives
-a system computation with the same dataflow as the trajectory.
-
-For every trajectory there exists a system computation that has the same
-dataflow as the trajectory.
-
-
-<!---------------------------------------------------------------->
-<h5 style="color:red;">Example: Trajectory and Computation with the
-same Dataflow</h5>
-<!---------------------------------------------------------------->
-
-The top diagram of figure 6 shows a trajectory and the lower
-diagram shows a computation with the same dataflow.
-
-The lower diagram can be obtained from the upper diagram by making the
-durations of events infinitisimally small.
-
-
-<figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.012.jpeg"
-    alt="Fig6" style="width:100%"> 
-    <figcaption>Fig.7: Example - Trajectory and Computation with
-identical Dataflow
-</figcaption>
-</figure>
-
-
-<!----------------------------------------------------->
-<h3 class="w3-text-teal">The Model preserves Dataflow</h3>
-<!----------------------------------------------------->
-
-The model does not represent trajectories.
-
-The model is sequential -- only one <code>receive</code> is executed
-at a time, whereas
-
-multiple agents may execute <code>receive</code> commands concurrently in
-a distributed system.
-
-Given its limitations, why is the model useful?
-
-
-<p>
-The model is useful because it captures the dataflow of the system.
-
-Agents in a distributed system collaborate only by sending messages,
-and dataflow tells us how agents communicate.
-
-<p>
-What is the most information an agent can get from other agents?
-
-An agent \(A\) can ask every agent to send their agent
-computations to \(A\).
-
-The information that \(A\) gets in this way is the dataflow of the
-computation .
-
-<p>
-<i>The dataflow graph of a computation is the most information that
-any agent can obtain about the computation.</i>
-
-
-
-
-<h3 class="w3-text-teal">Model Limitations</h3>
-
-<!-------------------------------------------------------->
-<p class="w3-text-teal">Progress</p>
-The model allows for infinite computations in which some agents
-repeatedly send messages to each other while other agents
-never process messages.
-
-The model allows for messages to be delayed on a channel forever.
-
-Later, we will present a model that does not have these limitations. 
-
-
-<!-------------------------------------------------------->
-<p class="w3-text-teal">No construct for Time</p>
-Processes can maintain accurate clocks by using
-inexpensive atomic clocks on PC boards, Precision Time
-Protocols (PTP) in local area networks, and Network Time Protocol
-(NTP) servers.
-
-Later, we discuss the use of time in distributed algorithms.
-
-
-<!-------------------------------------------------------->
-<p class="w3-text-teal">Failure</p>
-The model does not deal with failure of agents or channels.
-
-Distributed computing platforms, such as AMQP, have operations to deal
-with failure.
-
-Secure systems deal with the possibility of Byzantine failure.
-
-Failure modes are discussed later.
-
-
+Agents can keep sending tokens to each other forever.
 
 
 
 <h3 class="w3-text-teal">Next</h3>
-Next look at
-<a href="Timelines.html">Dataflow in Distributed Computations</a>
+<a href="Events.html">Events and Dataflow</a>
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">

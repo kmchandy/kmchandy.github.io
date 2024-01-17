@@ -171,16 +171,7 @@ When an agent receives a message it is deleted from the sequence.
 <h3 class="w3-text-teal">Agents</h3>
 <!---------------------------------------------------->
 
-Each agent initializes its state and then executes an infinite loop in
-which the agent receives and processes a message from any of its input
-channels.
-The structure of the loop is:
 
-<pre>
-while true:
-   wait until an input channel is not empty
-   receive a message from any nonempty input channel
-</pre>
 
 Associated with each agent is a function
 <pre>
@@ -191,19 +182,32 @@ called a callback function in
 "https://www.rabbitmq.com/tutorials/tutorial-one-python.html">
 message queuing libraries.
 </a>
+The parameters <code>message, sender</code> of the function are the
+message that is received, and the sender of the message.
 
 <p>
-An agent's <code>receive</code> function is called if the agent is
-waiting for an input channel to be nonempty and the agent has a
-nonempty input channel.
+Each agent initializes its state and then executes an infinite loop in
+which the agent receives and processes a message from any of its input
+channels.
 
-The <code>message</code> parameter of <code>receive</code> is set to
-the message at the head of <i>any</i> of the agent's nonempty input
-channels, and the <code>sender</code> parameter is set to the sender of
-the message.
+The structure of the loop for an agent \(v\) is as follows.
 
-When <code>receive</code> is called the message is removed from the
-channel. 
+<pre>
+while there exists a nonempty input channel:
+    select any nonempty channel (u, v)
+    let the head of (u, v) be msg
+    <code>receive(msg, u)</code>
+</pre>
+<p>
+The loop body starts with selecting <i>any</i> nonempty input
+channel.
+
+It is possible that the same input channel is selected in every
+iteration of the loop and that messages from other channels are never
+processed.
+
+Later, we will modify this description by introducing the concept of
+fair selection.
 
 
 <p>
@@ -267,6 +271,11 @@ may deviate from true time by an arbitrary amount.
 
 The time on an agent's clock gives no information about the time
 on another agent's clock.
+
+We begin by designing algorithms in which time plays no role other
+than it moves forwards.
+
+Later, we look at systems in which clock drift is bounded.
 
 
 <!------------------------------------------------------------>

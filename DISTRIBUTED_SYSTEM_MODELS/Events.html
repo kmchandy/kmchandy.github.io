@@ -1,0 +1,453 @@
+<title>DistributedSystemModels/DistributedSystemModels.html</title>
+
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+
+
+<!-------------------------------------------------------------->
+<h2 class="w3-text-teal">Events and Dataflow</h2>
+<!-------------------------------------------------------------->
+  <p class="w3-text-red">
+  A change in the state of a system changes the state of at most one
+  agent, and the states of its incident channels.
+
+  The local change is specified by an <i>event.</i>
+
+  The flow of data between agents is represented by a dataflow graph
+  which is helpful in designing algorithms.
+
+  </p>
+
+
+  <h3 class="w3-text-teal">Events</h3>
+  A system changes state when an agent \(v\) executes
+  <code>receive(msg, u)</code>
+  where <code>msg</code> is the message that is received and
+  <code>u</code> is the sender of the message.
+  
+This change in state is specified by an <i>event</i> which is the 4-tuple:
+<ol>
+  <li>
+  the state \(S_{v}\) of \(v\) before it executes <code>receive</code>,
+  </li>
+  <li>
+  the message <code>msg</code> received and the channel <code>(u,
+  v)</code> on which the message is received,
+  </li>
+  <li>
+  the state \(S'_{v}\) of  \(v\) after it completes execution of the
+  <code>receive</code>, and  
+  </li>
+  <li>
+  for each output channel of <code>v</code>, the sequence of messages
+  sent on the channel during execution of the <code>receive</code>.
+  </li>
+</ol>
+
+<p>
+There is a transition from system state \(S\) to
+\(S'\) specified by an event \(e\) if
+the pre-transition state \(S_{v}\)
+of agent \(v\) is its state in
+\(S\), and the head of channel \((u, v)\) in \(S\) is
+<code>msg</code>.
+
+The post-transition state \(S'\)
+is uniquely determined by the pre-transition state \(S\) and the event
+\(e\).
+
+<p>
+An agent can be specified by the set of events that can be executed by
+the agent.
+
+<!----------------------------------------------------------->
+<h4 style="color:red;">Example of an Event</h4>
+Let's look at the example in the
+<a href="DistributedSystemModels.html">previous page</a>.
+
+The example shows a state transition in which agent \(u\) receives a
+wakeup message on the channel \((u, u)\), and then sends a blue
+token.
+
+After the transition, \(u\) holds no tokens.
+
+
+
+The event that cause this state transition is specified by
+<ol>
+  <li>
+  the state of \(u\) before the transition (\(u\) holds blue token),
+  </li>
+  <li>
+  the message <code>wakeup</code> that \(u\) receives on channel \((u,
+  u)\),
+  </li>
+  <li>
+  the state of \(u\) after the transition (\(u\) holds no tokens), and
+  </li>
+  <li>
+  the message (blue token) sent by \(u\) along output channel \((u,
+  v)\).
+  </li>
+</ol>
+
+The figure below illustrates the event.
+
+    <figure>
+    <img
+    src="DistributedSystemModels/DistributedSystemModels.003.jpeg"
+    alt="Fig1" style="width:80%"> 
+    <figcaption>Fig.1: Example: Representation of an Event</figcaption>
+</figure>
+
+The event is shown as a vertex that represents a data transformation.
+
+<p class="w3-text-teal">Input to an Event</p>
+The vertex has two input edges; one edge is labeled with the state of
+the agent \(u\) before the event, and the other edge is labeled with the
+message received and the channel on which it is received.
+
+<p class="w3-text-teal">Output of an Event</p>
+The vertex has one output edge labeled with the state of agent \(u\) after
+the event.
+
+The vertex has an output edge for each output channel and this edge is
+labeled with the sequence of messages sent along the channel in the
+event.
+
+If no messages are sent on a channel, the output edge for that channel
+is not shown.
+
+<p>
+In this example, only one message (blue token) is sent, and this
+message is sent along channel \((u, v)\).
+
+So, the vertex has an output edge labeled with a sequence consisting
+of one message (blue token).
+
+<!---------------------------------------------------------------->
+<h3 class="w3-text-teal">Dataflow Graph of a Computation</h3>
+<!---------------------------------------------------------------->
+<a href="https://en.wikipedia.org/wiki/Dataflow_programming">
+Dataflow graphs
+</a>
+have been
+<a
+href="https://www.sigops.org/2020/the-remarkable-utility-of-dataflow-computing/">
+used in many domains of computer science
+</a>, and they help in
+understanding distributed algorithms.
+
+<p>
+Associated with a computation is a labeled, directed, acyclic graph,
+called the <i>dataflow graph of the computation.</i>
+
+An edge in a dataflow graph represents data, and a vertex represents a
+transformation of data.
+
+In our case vertices represent events of the computation.
+
+Edges connect outputs of events to inputs of events (figure 3)
+
+
+<p class="w3-text-teal">Agent Edges of a Dataflow Graph</p>
+The graph has an edge from an event at an agent to the next event at
+that agent.
+
+This edge is labeled with the state of the agent between
+the events and is called an <i>agent edge.</i>
+
+<p class="w3-text-teal">Message Edges of a Dataflow Graph</p>
+The graph has an edge from each event in which a message is sent to
+the event in which that message is received; this edge is labeled with
+the message, and is called a <i>message edge.</i>
+
+<p class="w3-text-teal">Initial State Represented by an Event</p>
+The initial state of the computation is represented by events
+labeled \(0\), and the final state is represented by a events
+labeled \(N\).
+
+The outputs of events numbered \(0\) are the initial states of agents
+and message channels, and the inputs of events labeled \(N\) are their
+final states.
+
+
+
+
+
+<!---------------------------------------------------------------->
+<h4 style="color:red;">Example: Dataflow of a
+Computation</h4> 
+<!---------------------------------------------------------------->
+Figure 2 shows a diagram of a computation from
+<a href="DistributedSystemModels">the previous page</a>
+and the figure 3 shows the dataflow
+graph of the computation.
+<figure>
+    <img src="DistributedSystemModels/DistributedSystemModels.005.jpeg"
+    alt="Fig2" style="width:100%"> 
+    <figcaption>Fig.2: Example - A Computation: a Sequence of States
+</figcaption>
+</figure>
+
+
+<figure>
+    <img src="DistributedSystemModels/DistributedSystemModels.006.jpeg"
+    alt="Fig6" style="width:100%"> 
+    <figcaption>Fig.3: Example - Dataflow Graph of a Computation</figcaption>
+</figure>
+
+
+The top horizontal line in figure 6 shows the timeline -- the sequence of events
+-- on agent \(u\) and the lower line shows the timeline for \(v\).
+
+The horizontal black edges show states of agents.
+
+The purple edges show messages.
+
+Event 1 in figure 3 is the same as the event shown in figure 1.
+
+<p>
+Let's look at the dataflow graph in detail.
+
+Initially there is a wakeup message in the channel \((u, u)\), and the
+state of agent \(u\) is "holds blue token."
+
+So the label of the agent edge from the initial event to the first event at \(u\) 
+(number 1) is "holds blue token" and the label of the message edge for
+channel \((u, u)\) is "wakeup."
+
+<p>
+The edges to the first event at \(v\) (number 2) are similar.
+
+Let's look at event 2.
+
+The input agent edge is labeled "holds red token" and the input
+message edge is labeled "wakeup."
+
+The event changes \(v\)'s state to "holds no token" and that's the
+label of the output agent edge from event 2 (the symbol E in the
+figure stands for empty).
+
+In the event, \(v\) sends the red token to \(u\), and this is shown as
+the message edge labeled with the red token.
+
+This message edge is from event 2 to event 5 -- the event in which
+\(v\) receives the message.
+
+
+
+
+
+<!---------------------------------------------------------------->
+<h3 class="w3-text-teal">The Simple Model Preserves Dataflow</h4>
+<!---------------------------------------------------------------->
+The
+<a href="DistributedSystemModels.html">previous page</a>
+had the sentence:
+A sequential model of a distributed system that only considers states
+  in which all agents are idle seems useless.
+The simple model is useful because the <i>dataflow of the system is
+preserved in the model.</i>
+
+<p>
+The top diagram of figure 4 shows the timeline of a trajectory of a
+system with agents \(u, v\).
+
+The horizontal axis represents time, and the length of an event
+represents the time taken to execute the event.
+
+The diagram has a timeline for each agent.
+
+<p>
+Let's look at execution of the receive by agent \(u\) corresponding to
+event 1. 
+
+As execution proceeds, \(u\)'s variables are changed, and at some
+point \(u\) sends message \(m_{2}\) and at a later point it sends
+\(m_{3}\).
+
+<p>
+Events 2 and 3 start after event 1 starts, and finish before event 1
+finishes.
+
+The simple model does not capture this situation.
+
+<p>
+The lower
+diagram shows a computation in the model. 
+
+The lower diagram can be obtained from the upper diagram by making the
+durations of events infinitisimally small.
+
+The model faithfully represents dataflow at the
+granularity of events.
+
+
+<p>
+What is the most information any agent can get about the evolution of
+the system state?
+
+An agent \(A\) can ask all agents to record and send their timelines
+to \(A\).
+
+Time is irrelevant, however, because clocks may drift by
+arbitrary amounts.
+
+The information that \(A\) pieces together from the timelines is the
+dataflow graph.
+
+
+
+
+<h3 class="w3-text-teal">Model Limitations</h3>
+
+<!-------------------------------------------------------->
+<p class="w3-text-teal">Fairness and Progress</p>
+A computation progresses by delivering a message on <i>any</i>
+channel.
+
+The model allows messages on some channels to be never delivered.
+
+Later, we will extend the model to include fair selection.
+
+
+<!-------------------------------------------------------->
+<p class="w3-text-teal">No construct for Time</p>
+Processes can maintain accurate clocks by using
+inexpensive atomic clocks on PC boards, Precision Time
+Protocols (PTP) in local area networks, and Network Time Protocol
+(NTP) servers.
+
+Later, we discuss the use of time in distributed algorithms.
+
+
+<!-------------------------------------------------------->
+<p class="w3-text-teal">Failure, Start Up, Shutdown</p>
+The model does not deal with failure of agents or channels, nor does
+it deal with starting and stopping a system.
+
+Distributed computing platforms, such as AMQP, have operations to deal
+with failure.
+
+Failure modes are discussed later.
+
+
+
+<h3 class="w3-text-teal">Next</h3>
+<a href="Timelines.html">Dataflow in Distributed Computations</a>
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
