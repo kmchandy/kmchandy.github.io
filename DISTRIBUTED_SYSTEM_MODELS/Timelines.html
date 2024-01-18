@@ -77,26 +77,30 @@ hr.new1 {
 <div class="w3-twothird w3-container">
 
   <!--------------------------------------------------------------->
-  <h2 class="w3-text-teal">Dataflow in Distributed Computations</h2>
+  <h2 class="w3-text-teal">Topological Sorts of Dataflow are Computations</h2>
 
   </p>
 
   <p class="w3-text-red">
-  This page describes dataflow -- the key to understanding many
-  distributed algorithms. 
+  This page discusses a property of dataflow graphs.
+
+  A sequence of events of a dataflow graph is a computation if for all
+  edges \((e, e')\) of the graph, \(e'\) appears after \(e\) in the
+  sequence.
+
+  This is equivalent to: All topological sorts of dataflow graphs are
+  computations. 
 
   </p>
-
-We begin with a review of a few basic properties of directed acyclic
-  graphs and dataflow.
-</p>
 
 
   <!---------------------------------------------------------->
   <h3 class="w3-text-teal">Directed Acyclic Graphs: Review</h4> 
   <!---------------------------------------------------------->
-We review properties of graphs that help in understanding
-distributed systems.
+
+We begin with a review of a few basic properties of directed acyclic
+  graphs and dataflow.
+
 
   The figure below is an example of a
   <a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">
@@ -246,16 +250,40 @@ in \(H\), then executes operations in \(H' - H\), and then executes
 </ol>
 <hr class="new2">
 
+
+
+
 <!------------------------------------------------------------------>
-<h4 style="color:red;">Example: Topological Sorts of Dataflow
-Graphs are Computations</h4> 
+<h5 style="color:red;">
+Example: Topological Sorts of Dataflow Graphs are Computations
+</h5>
+<!------------------------------------------------------------------>
+Examples of topological sorts of the operations in figure 2 are \([-,
++, *]\), \([+, -, *]\), and \([+, *, -]\).
+All these sequences of operations have the property that an operation
+is executed only after all operations that precede it.
+
+<p>
+An example of a sequence which is not a topological sort is \([*, +,
+-]\). 
+
+
+<!------------------------------------------------------------------>
+<h5 style="color:red;">
+Example: Topological Sorts of Dataflow Graphs are Computations
+</h5>
 <!------------------------------------------------------------------>
 
-The figure below shows different computations with the same dataflow
+
+Figure 3 shows different computations with the same dataflow
 graph.
 
-In the two diagrams of the figure, vertices of the same graph are laid
-out from left to right in the order of computations.
+The two diagrams of the figure show two topological sorts of the same
+dataflow graph.
+
+Events of the same graph are laid
+out from left to right in the order in which they occur in the
+computations. 
 
 <figure>
     <img src="DistributedSystemModels/DistributedSystemModels.010.jpeg"
@@ -268,15 +296,14 @@ out from left to right in the order of computations.
 <h4 style="color:red;">Example: Computations between Sets of
 Events</h4>
 <!------------------------------------------------------------------>
-There exists a computation from the initial state shown in the figure
-to the state at \(H = \{0, 2\}\) to the state at \(H' = \{0, 1, 2,
-5\}\) to the final state.
-
+There exists a computation that first executes events in \(H = \{0,
+2\}\) and then the events in \(H' - H\) where \(H' = \{0, 1, 2,
+5\}\) and then the remaining events.
 
 
 
 <!----------------------------------------------------------------->
-<h3 class="w3-text-teal">The State at an Input Closed Set of Events</h3>
+<h4 class="w3-text-teal">The State at an Input Closed Set of Events</h4>
 <!----------------------------------------------------------------->
 
 The state \(S\) at an input-closed set \(H\) of events of the
@@ -296,10 +323,11 @@ of \((u, v)\) edges from vertices inside \(H\) to vertices outside
   </li>
 </ol>
 
-
+For input-closed event sets \(H, H'\), if \(H \subset H'\) then
+there is a computation from the state at \(H\) to the state at \(H'\).
 
 <!------------------------------------------------------------------>
-<h4 style="color:red;">Example: State at an Input-Closed Set of Events</h4>
+<h5 style="color:red;">Example: State at an Input-Closed Set of Events</h5>
 <!------------------------------------------------------------------>
 
 <p>
@@ -322,12 +350,18 @@ and that edge has label "red token" and so the state of the \((v, u)\)
 in \(S_{3}\) is a sequence of messages consisting of a single message
 -- the red token.
 
-The line does not intersect an edge for the channel \((u, v)\), and so
+<p>
+
+The boundary line does not intersect an edge for the channel \((u, v)\), and so
 the state of this channel is the empty sequence of messages.
 
-The state of channel \((v, v)\) is a sequence consisting of a single
+The line intersects message edges for messages on channel \((v, v)\)
+at a single edge; this edge is labeled with the wakeup message.
+
+So, the state of channel \((v, v)\) is a sequence consisting of a single
 message -- the wakeup message.
 
+<p>
 The states of other agents and channels are determined similarly.
 
 
@@ -351,6 +385,26 @@ The dotted vertical lines show boundaries of event sets \(0,
 Fig.3: Example: States at Input-Closed Event Sets
 </figcaption>
 </figure>
+
+
+
+
+<!------------------------------------------------------------------>
+<h5 style="color:red;">Example: State at an Input-Closed Set of Events</h5>
+<!------------------------------------------------------------------>
+Let's look at the state at the event set \(\{0, 1, 2, 5\}\).
+The state of \(u\) is the label of the edge from event 5 to 6 -- holds
+red token.
+The state of \(v\) is the label of the edge from event 2 to 3 -- holds
+no token.
+The boundary line cuts the message edge from 1 to 3.
+This edge is labeled with blue token; so the state of channel \((u,
+v)\) is blue token.
+The boundary does not intersect with other edges, and so that states
+of the remaining channels are empty sequences.
+
+
+
 
 
 
