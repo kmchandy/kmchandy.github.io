@@ -374,14 +374,10 @@ an initiator along a sequence of channels.
 
 <p class="w3-text-teal">Collecting Local Agent and Channel
 Snapshots</p>
-Each agent takes its own local snapshot and the snapshots of its
-incoming channels.
 
 In some algorithms, agents send snapshots of their states and 
-input channels to a collector agent.
-
-The collector forms the global snapshot by composing the local state
-information that it receives.
+input channels to a collector agent which forms a global snapshot by
+composing the local state information that it receives.
 
 Other algorithms carry out distributed computations on local
 snapshots without sending data to a collector.
@@ -487,50 +483,40 @@ in the snapshot of the channel.
 
 
 <!--------------------------------------------------------------->
-<h4 class="w3-text-teal">Key Properties of Global Snapshot Algorithms</h4>
+<h4 class="w3-text-teal">Properties of Global Snapshot Algorithms</h4>
 <!--------------------------------------------------------------->
 
 <p>
-Let \(H_{pre}\) be any set of events that are completed before a snapshot
-algorithm is initiated.
+Let the snapshot be the state at an input-closed event set \(H\), and
+let \(H'\) be an input-closed event set.
 
-Let \(H_{post}\) be a set of events that have been completed after a snapshot
-algorithm is initiated.
+If \(H' \subset H\) then
+there is a computation from the state at \(H'\) to the snapshot.
 
-Let the snapshot be the state at an input-closed event set \(H_{snap}\).
+Likewise, if \(H \subset H'\) then
+there is a computation from snapshot to the state at \(H'\).
 
-Then \(H_{pre} \subseteq H_{snap} \subseteq H_{post}\).
-
-From
-<a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-computations between sets of operations
-</a>
-there are computations from \(H_{pre}\) to \(H_{snap}\), and from
-\(H_{snap}\) to \(H_{post}\).
-
-
-<p>
 These results are used so frequently that we highlight them here.
 
 <hr class="new2">
-<h5 style="color:blue;">
+<p style="color:blue;">
 
 <ol>
+
   <li>
+  <p style="color:blue;">  
   There exists a computation from the state in which the
   global snapshot algorithm is initiated to the global snapshot. 
   </li>
   <li>
+  <p style="color:blue;">
   There exists a computation from the global
   snapshot to the state at which the global snapshot
   algorithm terminates.
   </li>
 </ol>
-</h5>
+</p>
 <hr class="new2">
-Though OS operations may change a client's computation, there exists a client
-computation that includes OS operations.
-
 
 <!--------------------------------------------->
   <h3 class="w3-text-teal">System Monitoring</h3>
@@ -545,7 +531,7 @@ many distributed algorithms.
 We give some examples of algorithms based on system monitoring.
 
 <p class="w3-text-teal">Rollback and Recovery</p>
-From the first key property of global snapshots:
+
 There exists a computation from the initial state of the computation
 to a global snapshot.
 
@@ -560,28 +546,13 @@ continues to hold forever in that computation.
 For example, if a computation has terminated then it remains
 terminated.
 
-Likewise, if a cycle of agents is deadlocked then it remains deadlocked.
-
 We discuss stable properties in detail later.
 
-<p>
 One way to detect stable properties is to monitor the system by
 taking snapshots repeatedly.
 
 If the system deadlocks then all snapshots taken after the deadlock occurs
 show that the system has deadlocked.
-
-If a snapshot shows that the system has deadlocked then the
-system is indeed deadlocked at that point.
-
-<p>
-This method for detecting stable properties has two phases (1)
-obtain a global snapshot, and (2) analyze the global snapshot.
-
-The first phase reduces analysis of a dynamic system into the analysis
-of static snapshot.
-
-The second phase analyzes static data structures.
 
 
 <h4 class="w3-text-teal">Next</h4>
