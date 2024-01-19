@@ -155,8 +155,8 @@ Agents and channels are not created or deleted.
 <!----------------------------------------------------------------->
 
 The state of a channel is the sequence of messages in the channel --
-these are the messages that have been sent but not received on the
-channel.
+these are the messages that have been sent on the
+channel and that have not been received.
 
 An agent sends a message by appending the message to the tail of the
 sequence of messages in the channel.
@@ -202,12 +202,11 @@ while there exists a nonempty input channel:
 The loop body starts with selecting <i>any</i> nonempty input
 channel.
 
-It is possible that the same input channel is selected in every
-iteration of the loop and that messages from other channels are never
+It is possible that the same input channels are selected in all
+iterations of the loop and that messages from other channels are never
 processed.
 
-Later, we will modify this description by introducing the concept of
-fair selection.
+We introduce the concept of fair selection later.
 
 
 <p>
@@ -266,17 +265,10 @@ For every algorithm, we will prove that all executions of
 <p class="w3-text-teal">Local Clocks and Timing</p>
 <!----------------------------------------------------->
 
-Agents may have local clocks; however, clocks aren't synchronized and
-may deviate from true time by an arbitrary amount.
+Agents may have local clocks; however, clocks aren't synchronized.
 
-The time on an agent's clock gives no information about the time
-on another agent's clock.
-
-We begin by designing algorithms in which time plays no role other
-than it moves forwards.
-
-Later, we look at systems in which clock drift is bounded.
-
+We allow for the possibility that the times at local clocks may deviate
+from each other and the true time by arbitrary amounts.
 
 <!------------------------------------------------------------>
 <p class="w3-text-teal">Termination</p>

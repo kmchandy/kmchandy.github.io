@@ -87,19 +87,16 @@ hr.new1 {
 
   The local change is specified by an <i>event.</i>
 
-  The flow of data between agents is represented by a dataflow graph
-  which is helpful in designing algorithms.
+  The flow of data between agents is represented by a dataflow graph.
 
   </p>
 
 
   <h3 class="w3-text-teal">Events</h3>
-  A system changes state when an agent \(v\) executes
-  <code>receive(msg, u)</code>
-  where <code>msg</code> is the message that is received and
-  <code>u</code> is the sender of the message.
-  
-This change in state is specified by an <i>event</i> which is the 4-tuple:
+  A system changes state when an agent receives a message.
+
+  The change in state when agent \(v\) executes
+  <code>receive(msg, u)</code> is specified by an <i>event</i> which is the 4-tuple:
 <ol>
   <li>
   the state \(S_{v}\) of \(v\) before it executes <code>receive</code>,
@@ -119,7 +116,7 @@ This change in state is specified by an <i>event</i> which is the 4-tuple:
 </ol>
 
 <p>
-There is a transition from system state \(S\) to
+There exists a transition from system state \(S\) to
 \(S'\) specified by an event \(e\) if
 the pre-transition state \(S_{v}\)
 of agent \(v\) is its state in
@@ -143,7 +140,7 @@ The example shows a state transition in which agent \(u\) receives a
 wakeup message on the channel \((u, u)\), and then sends a blue
 token.
 
-After the transition, \(u\) holds no tokens.
+After the transition \(u\) holds no tokens.
 
 
 
@@ -160,7 +157,7 @@ The event that cause this state transition is specified by
   the state of \(u\) after the transition (\(u\) holds no tokens), and
   </li>
   <li>
-  the message (blue token) sent by \(u\) along output channel \((u,
+  the message -- blue token -- sent by \(u\) along output channel \((u,
   v)\).
   </li>
 </ol>
@@ -177,13 +174,23 @@ The figure below illustrates the event.
 The event is shown as a vertex that represents a data transformation.
 
 <p class="w3-text-teal">Input to an Event</p>
-The vertex has two input edges; one edge is labeled with the state of
+The input to an event is the state of the agent before it executes the
+<code>receive</code> and the message received.
+
+<p>
+The vertex representing the event has two input edges; one edge is
+labeled with the state of 
 the agent \(u\) before the event, and the other edge is labeled with the
 message received and the channel on which it is received.
 
 <p class="w3-text-teal">Output of an Event</p>
-The vertex has one output edge labeled with the state of agent \(u\) after
-the event.
+The output of an event is the state of the agent after it completes
+executing <code>receive</code> and the sequences of messages sent on
+the agent's output channels while it executes the <code>receive</code>.
+
+<p>
+The vertex representing the event has one output edge labeled with the
+state of agent after it completes execution of the <code>receive</code>.
 
 The vertex has an output edge for each output channel and this edge is
 labeled with the sequence of messages sent along the channel in the
@@ -231,6 +238,13 @@ that agent.
 This edge is labeled with the state of the agent between
 the events and is called an <i>agent edge.</i>
 
+<p>
+We adopt the convention that agent edges are horizontal and are
+directed from left to right.
+
+The sequence of events at an agent are represented by a horizontal
+line with later events to the right of earlier events.
+
 <p class="w3-text-teal">Message Edges of a Dataflow Graph</p>
 The graph has an edge from each event in which a message is sent to
 the event in which that message is received; this edge is labeled with
@@ -272,8 +286,8 @@ graph of the computation.
 </figure>
 
 
-The top horizontal line in figure 6 shows the timeline -- the sequence of events
--- on agent \(u\) and the lower line shows the timeline for \(v\).
+The top horizontal line in figure 3 shows the timeline -- the sequence of events
+-- at agent \(u\) and the lower line shows the timeline for \(v\).
 
 The horizontal black edges show states of agents.
 
@@ -288,7 +302,7 @@ Initially there is a wakeup message in the channel \((u, u)\), and the
 state of agent \(u\) is "holds blue token."
 
 So the label of the agent edge from the initial event to the first event at \(u\) 
-(number 1) is "holds blue token" and the label of the message edge for
+is "holds blue token" and the label of the message edge for
 channel \((u, u)\) is "wakeup."
 
 The edges to the first event at \(v\) are similar.
@@ -305,7 +319,7 @@ label of the output agent edge from event 2.
 In the event, \(v\) sends the red token to \(u\), and this is shown as
 the message edge labeled with the red token.
 
-This message edge is from event 2 to event 5 -- the event in which
+This message edge is from event 2 to event 5, which is the event in which
 \(u\) receives the message.
 
 
@@ -313,15 +327,16 @@ This message edge is from event 2 to event 5 -- the event in which
 
 
 <!---------------------------------------------------------------->
-<h3 class="w3-text-teal">The Simple Model Preserves Dataflow</h4>
+<h3 class="w3-text-teal">The Model Preserves Dataflow</h4>
 <!---------------------------------------------------------------->
 The
 <a href="DistributedSystemModels.html">previous page</a>
 had the sentence:
 A sequential model of a distributed system that only considers states
-  in which all agents are idle seems useless.
-The simple model is useful because the <i>dataflow of the system is
-preserved in the model.</i>
+in which all agents are idle seems useless. Why is the model useful?
+
+<p>
+The model is useful because <i>the model preserves the dataflow of the system.</i>
 
 
 <p>
@@ -357,7 +372,7 @@ The diagram has a timeline for each agent.
 
 <p>
 Let's look at execution of the receive by agent \(u\) corresponding to
-event 1. 
+event 1 in the top diagram.
 
 As execution proceeds, \(u\)'s variables are changed, and at some
 point \(u\) sends message \(m_{2}\) and at a later point it sends
@@ -367,17 +382,15 @@ point \(u\) sends message \(m_{2}\) and at a later point it sends
 Events 2 and 3 start after event 1 starts, and finish before event 1
 finishes.
 
-The simple model does not capture this situation.
+The model cannot capture this situation.
 
 <p>
-The lower
-diagram shows a computation in the model. 
+The lower diagram shows a computation in the model. 
 
 The lower diagram can be obtained from the upper diagram by making the
 durations of events infinitisimally small.
 
-The model faithfully represents dataflow at the
-granularity of events.
+The model faithfully represents dataflow at the granularity of events.
 
 
 
@@ -388,7 +401,7 @@ granularity of events.
 
 <!-------------------------------------------------------->
 <p class="w3-text-teal">Fairness and Progress</p>
-A computation progresses by delivering a message on <i>any</i>
+In the model, a computation progresses by delivering a message on <i>any</i>
 channel.
 
 The model allows messages on some channels to be never delivered.
@@ -398,8 +411,7 @@ Later, we will extend the model to include fair selection.
 
 <!-------------------------------------------------------->
 <p class="w3-text-teal">No construct for Time</p>
-Processes can maintain accurate clocks by using
-inexpensive atomic clocks on PC boards, Precision Time
+Processes can maintain accurate clocks by using atomic clocks, Precision Time
 Protocols (PTP) in local area networks, and Network Time Protocol
 (NTP) servers.
 

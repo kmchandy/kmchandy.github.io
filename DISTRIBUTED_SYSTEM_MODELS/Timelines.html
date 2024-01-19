@@ -235,17 +235,18 @@ acyclic graphs.
 <p style="color:blue;">
 <ol>
   <li>
-  <h5 style="color:blue;">
+  <h6 style="color:blue;">
   All <a href="https://en.wikipedia.org/wiki/Topological_sorting">
   topological sorts</a> of dataflow graphs are computations.
+  </p>
   </li>
   <li>
-  <h5 style="color:blue;">
+  <h6 style="color:blue;">
   For all input-closed sets \(H, H'\) of operations where \(H
 \subseteq H'\) there exists a computation that executes all operations
 in \(H\), then executes operations in \(H' - H\), and then executes
   operations that are not in \(H'\).
-  </h5>
+  </h6>
   </li>
 </ol>
 <hr class="new2">
@@ -307,8 +308,11 @@ There exists a computation that first executes events in \(H = \{0,
 <!----------------------------------------------------------------->
 
 The state \(S\) at an input-closed set \(H\) of events of the
-dataflow of a computation of a distributed system is obtained from the
-graph as follows. 
+dataflow of a computation is the state after executing
+all events in \(H\) and before executing events any event that is not
+in \(H\).
+
+\(S\) is obtained from the graph as follows. 
 
 <ol>
   <li>
@@ -323,8 +327,14 @@ of \((u, v)\) edges from vertices inside \(H\) to vertices outside
   </li>
 </ol>
 
-For input-closed event sets \(H, H'\), if \(H \subset H'\) then
+<p>
+From observation 2,
+for input-closed event sets \(H, H'\) where \(H \subset H'\):
+<p>
 there is a computation from the state at \(H\) to the state at \(H'\).
+</p>
+
+
 
 <!------------------------------------------------------------------>
 <h5 style="color:red;">Example: State at an Input-Closed Set of Events</h5>
@@ -405,8 +415,108 @@ of the remaining channels are empty sequences.
 
 
 
+<!----------------------------------------------------------------->
+<h4 class="w3-text-teal">Event Sets specified by Points in Agent
+Computations </h4>
+<!----------------------------------------------------------------->
+A point in an agent's computation is an integer \(i\).
+
+The <i>past</i> at point \(i\) on an agent's computation is the set of the
+first \(i\) events at the agent, and the <i>future</i> is the set of
+events at the agent that are not in the past.
+
+<p>
+A point \(i\) in an agent's computation is shown as a location on the
+edge from the \(i\)-th event to the \(i+1\)-th event.
 
 
+<p>
+All agent edges to past events are past events.
+And, all agent edges to future events are from future events.
+
+
+<!------------------------------------------------------------------>
+<h5 style="color:red;">Example: Points, Past, and Future</h5>
+<!------------------------------------------------------------------>
+The figure below shows a dataflow graph for a computation with events
+\([0, 1, 2, \ldots]\).
+Points on the agents' computations are shown as yellow circles.
+For example, the point on agent \(X\) is 3 because it is the edge from
+the 3rd event (event number 6) to the 4th event (event number 8) at
+the agent.
+
+<figure>
+    <img src="../ChannelSnapshots/ChannelSnapshots/ChannelSnapshots.009.jpeg"
+    alt="Fig4" style="width:100%"> 
+<figcaption>
+Fig.4: Example: Past and Future
+</figcaption>
+</figure>
+
+The set of past events are colored black and the set of future events
+are colored green.
+The purple line connecting the points separates the past from the future.
+
+<p>
+All horizontal edges to black vertices are from black vertices.
+And, all horizontal edges to green vertices are from green vertices.
+
+
+<!------------------------------------------------------------------>
+<h5 style="color:red;">Example: Points, Past, and Future</h5>
+<!------------------------------------------------------------------>
+The next figure shows a set of points on agent computations in which
+the past is not input closed.
+
+
+<figure>
+    <img src="../ChannelSnapshots/ChannelSnapshots/ChannelSnapshots.010.jpeg"
+    alt="Fig5" style="width:100%"> 
+<figcaption>
+Fig.5: Example: Past is not Input Closed
+</figcaption>
+</figure>
+
+The past is not input closed because there is a message sent in the future
+(a green vertex) that is received in the past.
+
+<!----------------------------------------------------------------->
+<h4 class="w3-text-teal">Theorem about Past and Future</h4>
+<!----------------------------------------------------------------->
+The following result is self-evident from the definition of
+event-closed sets.
+<hr class="new2">
+<p style="color:blue;">
+Given a point on each agent's computations, the set of past events at
+these points is input-closed if any one of the following conditions holds.
+<ol>
+  <li>
+  <p style="color:blue;">
+Each message received in a past event is sent in a past event.
+  </li>
+  <li>
+<p style="color:blue;">
+Each message sent in a future event is received in a future event.
+  </li>
+  <li>
+  <p style="color:blue;">
+  For all channels \(C\),  \(\; C_{s} \geq C_{r}\), where \(C_{s}, C_{r}\)
+  are the numbers of messages 
+  sent and received (respectively) on the channel in the past
+  events.
+  </li>
+  <li>
+  <p style="color:blue;">
+  In graphical terms, all edges that cross the boundary separating
+  past and future events in the dataflow graph are directed
+  from the past to the future.
+  </li>
+</ol>
+</p>
+<hr class="new2">
+
+The next three webpages describe important -- though straightforward --
+applications of the theorem.
 
 
 <!------------------------------------------------------------------>

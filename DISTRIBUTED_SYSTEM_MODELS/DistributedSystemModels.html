@@ -85,41 +85,38 @@ hr.new1 {
 
   <p class="w3-text-red">
 
-  A model is an abstraction of a system; the abstraction helps in
-  developing algorithms though it ignores features of the system.
-  
+  A model is an abstraction of a system.
+
+  A model ignores some features of systems while representing features
+  that help in algorithm development
+
   This webpage describes states and state transitions of a distributed
   system in a model.
-  
-  The model does not deal with the change of state of an agent while
-  the agent is executing, nor does it deal with concurrency --
-  multiple agents executing at the same time.
 
-  These simplifications help us design algorithms.
-
-  </p>
+  </P>
 
 
 <!-------------------------------------------------------------->
-<h3 class="w3-text-teal">States</h3>
+<H3 Class="w3-text-teal">States</h3>
 <!-------------------------------------------------------------->
 
 The state of a distributed system is a tuple with an element of the
 tuple for the state of each of its agents and channels.
 
+  <p>
 The state of a banking system is a tuple with elements of the tuple
   for states of agents at ATM machines, branch banks, fraud analysis centers,
   and for channels connecting the agents.
 
   The state of an airplane navigation system is a tuple with elements
-  for states of agents that analyze sensors that
+  for states of agents that
   estimate location, wind speed, and pitch, and 
   elements for channels connecting agents.
 
   <h4 class="w3-text-teal">Concurrent Operations</h4>
   Agents in a distributed system operate concurrently.
-  Many ATM machines are used at the same time; many people buy and
-  sell commodities using cryptocurrency at the same time; many
+  Many ATM machines are used at the same time; many people trade
+  using cryptocurrency at the same time; many
   sensors and processors execute concurrently in an aircraft carrier.
 
   <p>
@@ -197,8 +194,7 @@ while there exists a nonempty channel:
   </pre>
 
   
-A message is received from exactly one channel, and is processed by
- exactly one agent, in each iteration.
+In each iteration, exactly one message is received and processed.
   
 
 In 
@@ -331,11 +327,12 @@ changes to the state in which it holds no tokens.
 <!-------------------------------------------------------------->
 Clocks of agents are not synchronized.
 
-When an agent executes <code>time.sleep(1)</code> the length of time
-that it sleeps is unknown.
+When we prove properties of the algorithm, we make no assumptions
+about how long an agent sleeps when it executes 
+<code>time.sleep(1)</code>.
 
-When we analyze algorithms, we ignore the length of time an agent
-sleeps.
+Time and clocks play critical role in analyzing the performance of
+distributed algorithms, but not in analyzing their correctness.
 
 Later, we will study algorithms in which local clocks of agents are
 synchronized. 
