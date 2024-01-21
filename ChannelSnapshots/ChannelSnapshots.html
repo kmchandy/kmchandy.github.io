@@ -88,25 +88,31 @@ hr.new1 {
   
   <p class="w3-text-red">
 
-  A global snapshot is the system state at an input-closed set of
+  A global snapshot is the state at an input-closed set of
   events.
 
-  Many distributed algorithms are based on monitoring systems by
-  scheduling repeated global snapshots.
+  A global snapshot algorithm determines a global snapshot.
+
+Systems are monitored by
+  scheduling repeated executiongs of the global snapshot algorithm.
 
   </p>
  
   <!-----------------------------------------------------------------------------> 
-  <h3 class="w3-text-teal">Global Snapshot</h3> 
+  <h4 class="w3-text-teal">The Problem</h4> 
   <!----------------------------------------------------------------------------->
   <p>
-We describe an algorithm by which agents collaborate to determine
-the global state at an input-closed set of events; this state is
-  called a <i>global snapshot</i>.
+Design an algorithm by which agents collaborate to determine
+  the state at an input-closed set of events.
 
-  Global snapshots are used in many distributed algorithms.
+  This state is
+  called a <i>global snapshot</i> to distinguish it from a <i>local</i>
+  snapshot which is a recording of state of a single agent or a
+  single channel.
 
-  <p>
+  <!-----------------------------------------------------------------------------> 
+  <h4 class="w3-text-teal">The Distributed Operating System</h4>
+  <!-----------------------------------------------------------------------------> 
 The global snapshot algorithm is an example of an algorithm that is
   executed by a distributed operating system (OS) on behalf of a
   client.
@@ -114,8 +120,7 @@ The global snapshot algorithm is an example of an algorithm that is
   Next, we describe features of the OS that are relevant to the
   snapshot algorithm.
   
-  <!-----------------------------------------------------------------------------> 
-  <h4 class="w3-text-teal">The Distributed Operating System</h4> 
+  
 <p>
 
   
@@ -177,7 +182,12 @@ input-closed set of events.
 
 What solution strategies should we use?
 
-When dealing with input-closed sets of events start with
+<p>
+A reasonable way to begin solving a problem that deals
+with input-closed sets of events is to to use the definition of
+input-closed sets and apply theorems based on them.
+
+A helpful result is
 <a href="Timelines.html">the theorem about past and future</a>.
 
 

@@ -82,17 +82,61 @@ hr.new1 {
   
   <p class="w3-text-red">
   A logical clock algorithm assigns a value, called the logical time,
-  to each event in a computation so that all edges in the dataflow graph of
-  the computation are from lower to higher logical times.
+  to each event in a computation so that all sequences of events in
+  ascending logical time are computations.
+
+  Paths in the dataflow graph are from events at lower logical times
+  to events at higher logical times.
 
   </p>
 
-  <h4 class="w3-text-teal">The Logical Time Property</h4>
-The logical clock algorithm assigns a value \(t(e)\) to each event
-  \(e\) of a computation so that:
-<br>
-  For all edges \((e, e')\) of the dataflow graph of the computation:
-  \(t(e) < t(e')\). 
+   
+  <!-----------------------------------------------------------------------------> 
+  <h4 class="w3-text-teal">The Problem</h4> 
+  <!----------------------------------------------------------------------------->
+  <p>
+  Design an algorithm that assigns numbers to events in a computation
+  so that all sequences of events in ascending logical time are computations.
+
+
+   
+<!----------------------------------------------------------------------------->
+<h4 class="w3-text-teal">How Should We Approach the Problem?</h4>
+<!----------------------------------------------------------------------------->
+
+<p>
+The problem deals
+  with sequences of events and computations.
+  So, we start with the definitions of these terms, and we use the theorems
+  based on the definitions.
+
+  <p>
+  A computation is a topological sort of the dataflow graph -- i.e., a
+  computation is sequence of events in which for all edges
+  \((e, e')\) in the dataflow graph \(e\) occurs before \(e'\) in the
+  sequence. 
+
+  <p>
+  Let the logical time of an event \(e\) be \(t(e)\).
+  If there is an edge \((e, e')\) for which \(t(e') < t(e)\) then
+  \(e'\) occurs before \(e\) in all ascending sequences of logical
+  times, and so these sequences are not computations.
+
+  <p>
+  This key insight is the logical time property.
+  
+
+  
+  <hr class="new2">
+  <p style="color:blue;">
+  <h4 style="color:blue;">The Logical Time Property</h4>
+  <p style="color:blue;">
+  All sequences in ascending logical time are computations if 
+  for all edges \((e, e')\) of the dataflow graph of a computation:
+\(t(e) < t(e')\).
+</p>
+<hr class="new2">
+
 
 
   <!---------------------------------------------------------->
@@ -255,76 +299,55 @@ time 6.5.
   <h4 class="w3-text-teal">Using Imperfect Clocks in Distributed Algorithms</h4>
 <!--------------------------------------------->
 Perfect clocks have many useful properties including the following:
-<hr class="new2">
-<p style="color:blue;">
+
 <ol>
-  <p style="color:blue;">
+
   <li>
-  <p style="color:blue;">
+
   Clocks tick forward forever: For all \(t\), there is a point in
   an infinite computation at which clocks of all agents exceed \(t\).
   </li>
-  <p style="color:blue;">
+
   <li>
-  <p style="color:blue;">
-  For all \(t < t'\), there is a computation from the state at 
-  time \(t\) to the state at time \(t'\).
+
+  Sequences of events in ascending order of time are computations.
   </li>
 </ol>
-<hr class="new2">
-A simple way to take repeated snapshots with perfect clocks is for
-  each agent to record its state periodically with a period \(T\) as
-  determined by the agent's clock. 
+<p>
+Agents in most distributed systems have access to clocks maintained by
+operating systems.
+These clocks tick forward (unless there is a failure) and so these
+  clocks hae property 1.
 
 <p>
-We implement imperfect clocks that have these two properties.
-
-Processors have hardware clocks that keep ticking forward
-forever.
-Alternatively, an algorithmic way of implementing a clock that ticks forward
- is to make each agent 
-send itself <i>tick</i> messages.
-When an agent receives a tick message it moves its clock forward and
-sends itself another tick.
-
-<p>
-We use the logical clock algorithm to adjust these clocks: move an
-agent's clock forwards so that the time at which a message is
+We can use the logical clock algorithm to adjust these clocks: move an
+agent's clock forward so that the time at which a message is
 received, as determined by the receiver's clock, is later than the
 timestamp of the message.
-So, these imperfect clocks have the two desired properties of perfect clocks.
+So, these imperfect clocks also have property 2.
 
 <p>
-We design algorithms for some problems in two steps. First step:
+We will  find that it is often helpful to design algorithms in two steps. First step:
 Design an algorithm assuming that
 clocks are perfect. Second step: Show that the algorithm is correct with
-imperfect clocks that have these properties.
-For example, a simple way to take repeated snapshots with these imperfect clocks is for
-  each agent to record its state periodically with a period \(T\) as
-  determined by the agent's clock. 
-
-
-<h5 class="w3-text-teal">Time Protocols</h5>
-
-Many systems have high-fidelity clocks.
-
-Most processors have local clocks that usually limit
- drift from real time.
-
-Atomic clocks are getting cheaper.
-
-Some distributed systems use Precision or
-Network Time Protocols (PTP, NTP) to periodically compare local clocks
-with a standard time server and thus limit the drift among local clocks.
+imperfect clocks that have properties 1 and 2.
 
 <p>
-We use the logical clock algorithm, to update agent clocks, to get
-clocks that are both high fidelity and have the two valuable properties listed
-above.
+For example, let's design an algorithm to to take repeated
+snapshots. First step: With perfect clocks, each agent records its
+state periodically with some period \(T\).
+Second step: Use exactly the same algorithm with imperfect clocks.
+The real times at which snapshots are taken, with imperfect clocks,
+may not be perfectly periodical with period \(T\); however, snapshots
+will be taken periodically.
 
-Time is useful in distributed systems even if we cannot depend on
-perfect clocks.
+<p>
+Many systems have atomic clocks or other high-fidelity clocks that use Precision or
+Network Time Protocols (PTP, NTP) to periodically update local clocks
+based on standard time servers.
 
+The concept of time is useful in distributed systems even though they
+have only imperfect clocks.
 
 
 
