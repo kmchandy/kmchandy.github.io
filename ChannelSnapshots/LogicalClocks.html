@@ -101,28 +101,24 @@ hr.new1 {
 
    
 <!----------------------------------------------------------------------------->
-<h4 class="w3-text-teal">How Should We Approach the Problem?</h4>
+<h4 class="w3-text-teal">How Should You Approach the Problem?</h4>
 <!----------------------------------------------------------------------------->
 
 <p>
 The problem deals
   with sequences of events and computations.
-  So, we start with the definitions of these terms and theorems about
+  So, start with the definitions of these terms and theorems about
   them. 
 
   <p>
   A computation is a topological sort of the dataflow graph -- i.e., a
   computation is sequence of events in which for all edges
   \((e, e')\) in the dataflow graph \(e\) occurs before \(e'\) in the
-  sequence. 
+  sequence.
 
-  <p>
-  Let the logical time of an event \(e\) be \(t(e)\).
-  If there is an edge \((e, e')\) for which \(t(e') < t(e)\) then
-  \(e'\) occurs before \(e\) in all ascending sequences of logical
-  times, and so these sequences are not computations.
-
-  <p>
+  If \(t(e) < t(e')\) then \(e\) occurs before \(e'\) in all ascending
+  sequences of logical time.
+  
   This key insight is the logical time property.
   
 
@@ -170,7 +166,7 @@ The problem deals
 <!-------------------------------------------------------->
  Let \(t(e)\) be the logical time assigned to event \(e\).
  
- The following algorithm ensures the logical time property.
+ The following algorithm is suggested by the logical time property.
 
   <p>
 Let \(e'\) be the event immediately preceding an event \(e\) at an
@@ -188,46 +184,34 @@ agent.
 The correctness of the algorithm is self evident.
 
 
+  
+  <!-------------------------------------------------------->
+  <h4 class="w3-text-teal">The Past and State at Logical Time \(t\)</h4>
+  <!-------------------------------------------------------->
+A point at logical time \(t\) on an agent \(u\)'s computation is an
+  edge from an event at \(u\) with logical time at most \(t\) to an
+event with logical time greater than \(t\).
 
-   <!---------------------------------------------------------->  
-  <h4 class="w3-text-teal">
-  Consequences of the Logical Time Property
-  </h4>
-  <ol>
-    <li>
-    Sequences of events in ascending logical time are computations.
-    </li>
-    <li>
-    For all \(t\): The set of events with logical time at most \(t\)
-  is input closed.
-    </li>
-    <li>
-    For all \(t < t'\): There is a computation from the set of events
-  with logical time at most \(t\) to the the set of events
-  with logical time at most \(t'\).
-  </ol>
+  <p>
+  The <i>past at \(t\)</i> is the set of events  with logical
+time at most \(t\).
 
-  <p class="w3-text-teal">Proof</p>
-  Result 1 follows because sequences in ascending logical time are
-  topological sorts of the dataflow graph.
-  Result 2 follows because there is no edge from an event
-  with logical time greater than \(t\).
-  Result 3 follows from
-  <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-  properties of dataflow.
-  </a>
+The <i>future at \(t\)</i> is the set of events  with logical
+time greater than \(t\).
 
-  <h3 class="w3-text-teal">State at Logical Time \(t\)</h3>
-  The state at logical time \(t\) is defined as the state at the set
-  of events with logical time at most  \(t\).
 
+<p>
+  The past at \(t\) is closed because there is no edge
+  from an event with logical time greater than \(t\) to an event with
+  logical time at most \(t\).
+
+
+  <p>
   The state of an agent at logical time \(t\) is the label of the
-  agent edge from an event with logical time at most \(t\) to an event
-  with greater logical time. 
+  agent edge from the past to the future. 
 
 The state of a channel at logical time \(t\) is the sequence of messages sent along the
-channel in events with logical time at most \(t\) that are received in
-  events at greater logical times. 
+channel in the past and received in the future. 
 
 
 <!---------------------------------------------------------->
@@ -236,11 +220,12 @@ channel in events with logical time at most \(t\) that are received in
 Figure 2 illustrates the state at logical time 6.5 of the
 computation shown in figure 1.
 
-The curved purple line separates events with logical time at most 6.5
-  from events with logical times that exceed 6.5.
+  The curved purple line represents the slice.
 
-  Events with logical time at most 6.5 are colored black, while events
-  with logical time greater than 6.5 are colored green.
+  The slice separates the past of the slice from its future.
+
+  Past events are colored black while future events are colored
+  green. 
 
 <figure>
     <img src="Timelines/Timelines.002.jpeg"
@@ -261,22 +246,39 @@ This cut is at any point on the edge from the event at \(A\) with
 
   <p>
   The message edge from event 3 to event 7 represents a message sent
-  along the channel from \(A\) to \(B\) at a logical time at most 6.5
-that is received at a greater logical time.
+  along the channel from \(A\) to \(B\) in the past that is received
+  in the future.
 
-The state of the channel \((A, B)\) is the sequence consisting of a
+In this example, the state of the channel \((A, B)\) is the sequence
+consisting of a 
 single message which is the label of this edge.
 
 <p>
 The states of agents and channels at logical time \(t = 6.5\) are
 given by the labels of the edges that cut the purple line.
 
+  <p class="w3-text-teal">Intuition</p>
+  It helps intuition to think of points on an agent's computation for
+all real numbers \(t\) even if logical times of events are integers.
+
+Points on an agent with later logical times are represented by
+points to the right of points with earlier logical times at that agent.
+
+<p>
+ In this example, points at logical time \(6.5\) and \(6.6\) at agent
+\(A\) refer to the same edge; however, it can help intuition to think
+of the point at logical time \(6.6\) as a 
+  location to the right of the point at logical time \(6.5\)
+  on the same edge.
+  
+
 
 <h4 class="w3-text-teal">
 Global snapshot algorithm to record the state at logical time \(t\)
 </h4>
-An algorithm to record the state at
-logical time \(t\) is obvious.
+
+An algorithm to record the state at logical time \(t\) follows
+directly from the definition of the state at logical time \(t\).
 
 <ol>
   <li>
@@ -316,8 +318,12 @@ Perfect clocks have many useful properties including the following:
 <p>
 Agents in most distributed systems have access to clocks maintained by
 operating systems.
+
+Many systems have atomic clocks or other high-fidelity clocks that use Precision or
+Network Time Protocols (PTP, NTP).
+
 These clocks tick forward (unless there is a failure) and so these
-  clocks hae property 1.
+  clocks have property 1.
 
 <p>
 We can use the logical clock algorithm to adjust these clocks: move an
@@ -327,30 +333,41 @@ timestamp of the message.
 So, these imperfect clocks also have property 2.
 
 <p>
-We will  find that it is often helpful to design algorithms in two steps. First step:
+We use clocks with these properties in many algorithms, and we employ the following
+heuristic.
+
+<h5 class="w3-text-teal">A Design Heuristic</h5>
+Design algorithms that use snapshots in two steps.
+<ol>
+  <li>
+  <i>First step:</i>
 Design an algorithm assuming that
-clocks are perfect. Second step: Show that the algorithm is correct with
-imperfect clocks that have properties 1 and 2.
+  clocks are perfect.
+  </li>
+  <li>
+  <i>Second step:</i> Check whether the algorithm is correct with
+  imperfect clocks that have properties 1 and 2.
+  In many cases we will need to use only one of the two properties.
+  </li>
+</ol>
 
 <p>
-For example, let's design an algorithm to to take repeated
+Let's design a global snapshot algorithm using the heuristic.
+First step: 
+each agent takes a local snapshot at exactly the same time \(t\).
+Second step: Prove the correctness of the same algorithm even though
+clocks are imperfect.
+
+
+<p>
+Let's design an algorithm to to take repeated
 snapshots. First step: With perfect clocks, each agent records its
 state periodically with some period \(T\).
-Second step: Use exactly the same algorithm with imperfect clocks.
-The real times at which snapshots are taken, with imperfect clocks,
-may not be perfectly periodical with period \(T\); however, snapshots
-will be taken repeatedly.
+Second step: Use exactly the same algorithm with imperfect clocks and
+prove that snapshots are taken repeatedly.
 
 <p>
-Many systems have atomic clocks or other high-fidelity clocks that use Precision or
-Network Time Protocols (PTP, NTP) to periodically update local clocks
-based on standard time servers.
-
-The concept of time is useful in distributed systems even though they
-have only imperfect clocks.
-
-
-
+We use this heuristic with some of the problems described next.
 
 <h4 class="w3-text-teal">Next</h4>
 

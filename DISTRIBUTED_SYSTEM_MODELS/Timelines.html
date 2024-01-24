@@ -120,39 +120,43 @@ We begin with a review of a few basic properties of directed acyclic
   <h5 class="w3-text-teal">Topological Sort</h5>
   <!-------------------------------------------------------->
 
-     A vertex \(v\) in a directed acyclic graph precedes a vertex \(w\)
-  exactly when there is a path from \(v\) to \(w\).
   
 <a
   href="https://en.wikipedia.org/wiki/Topological_sorting">
   A topological sort
   </a>
-  of a dag
-  is a sequence of vertices of the dag in which each vertex appears in
-  the sequence after all vertices that precede it.
+  of a dag is a sequence of vertices of the dag in which each vertex \(u\) appears in
+  the sequence after all vertices that have paths to \(u\).
   
   Examples of topological sorts of the dag shown in figure 1 are \([0,
   1, 2, 3, 4, 5, 6, 7]\) and \([0, 2, 1, 5, 3, 4, 6, 7]\).
 
+  <p>
+  An example of a sequence that is not a topological sort is
+  \([0, 1, 3, 2, 4, 5, 6, 7]\).
+
+  There is a path from vertex 2 to vertex 3, but 2 does not appear
+  before 3 in the sequence.
+
 
   <!-------------------------------------------------------->
-   <h5 class="w3-text-teal">Input-Closed Set of Vertices</h5>
+   <h5 class="w3-text-teal">Closed Set of Vertices</h5>
   <!-------------------------------------------------------->  
-  A subset \(H\) of vertices of a dag is <i>input
+  A subset \(H\) of vertices of a dag is <i>
   closed</i> exactly when every edge to every vertex in \(H\) is from a
   vertex in \(H\).
 
-  There is no path to a vertex in an input-closed vertex set from a
+  There is no path to a vertex in a closed vertex set from a
   vertex outside it.
   
-  There may, however, be paths from vertices inside an input-closed
+  There may, however, be paths from vertices in a closed
   set to vertices outside it.
 
 <p>
-Examples of vertex sets that are input closed are \(\{0, 1, 2\}\),
+Examples of vertex sets that are closed are \(\{0, 1, 2\}\),
 and  \(\{0, 1, 2, 5\}\).
 
-An example of a vertex set that is not input closed is \(\{0, 1,
+An example of a vertex set that is not closed is \(\{0, 1,
 3\}\) because there is an edge to vertex \(3\) from vertex \(2\) which
 is not in the subgraph.
 
@@ -160,11 +164,12 @@ is not in the subgraph.
   <!-------------------------------------------------------->
 <h5 class="w3-text-teal">Observation</h5>
   <!-------------------------------------------------------->
-For any input-closed subsets \(H, H'\) of vertices of a dag, where \(H
-\subseteq H'\) the sequence of vertices consisting of a topological
-sort of \(H\) followed by a topological sort of \(H' - H\) followed by
-a topological sort of the complement of \(H'\) is a topological sort
-of the dag.
+Let \(V\) be the set of vertices.
+
+For a closed subsets \(H, H'\) of vertices of a dag,  where \(H
+\subseteq H'\)
+the concatenation of topological sorts of \(H\),  \(H' - H\), and  \(V
+- H'\) is a topological sort of the dag. 
 
 <p>
 In figure 1, \(H = \{0, 1, 2, 5\}\)
@@ -200,10 +205,9 @@ that help in understanding distributed computing algorithms.
 <p>
   A computation of a dataflow graph is an execution (possibly a
   parallel execution) of operations of the graph where:
-  <p>
   <i>
-  an operation is executed after all
-  operations that precede it.
+  an operation \(v\) is executed only after all
+  operations that have paths to \(v\) in the dataflow graph.
   </i>
 
 <!---------------------------------------------------------------->
@@ -238,13 +242,13 @@ acyclic graphs.
   <h6 style="color:blue;">
   All <a href="https://en.wikipedia.org/wiki/Topological_sorting">
   topological sorts</a> of dataflow graphs are computations.
-  All sequential computations are topological sorts of a dataflow
+  And all sequential computations are topological sorts of a dataflow
   graph. 
   </p>
   </li>
   <li>
   <h6 style="color:blue;">
-  For all input-closed sets \(H, H'\) of operations where \(H
+  For all closed sets \(H, H'\) of operations where \(H
 \subseteq H'\) there exists a computation that executes all operations
 in \(H\), then executes operations in \(H' - H\), and then executes
   operations that are not in \(H'\).
@@ -263,12 +267,273 @@ Example: Topological Sorts of Dataflow Graphs are Computations
 <!------------------------------------------------------------------>
 Examples of topological sorts of the operations in figure 2 are \([-,
 +, *]\), \([+, -, *]\), and \([+, *, -]\).
-All these sequences of operations have the property that an operation
-is executed only after all operations that precede it.
+All these sequences of operations have the property that each operation
+is executed only after all operations that have paths to it in the
+dataflow graph.
 
 <p>
 An example of a sequence which is not a topological sort is \([*, +,
--]\). 
+-]\).
+
+<p>
+An example of a closed set of operations is \(\{-, +\}\), and
+an example of a set that is not closed is \(\{-, *\}\).
+
+<p>
+Let \(H = \{-\}\) and \(H' = \{-, +\}\).
+
+There exists a sequence of
+operations that executes operations in \(H\) and then those that are
+in \(H' - H\), and then the remaining operations.
+
+
+
+<!----------------------------------------------------------------->
+<h3 class="w3-text-teal">Slice of a Dataflow Graph</h3>
+<!----------------------------------------------------------------->
+A point in the computation of an agent \(u\) is specified by an
+integer \(i\) and is the 
+edge from the \(i\)-th event at \(u\) to the \(i+1\)-th event at
+\(u\).
+
+<p>
+A <i>slice</i> of a dataflow graph of a computation is a vector \(N\)
+where \(N[k]\) 
+is a point in the \(k\)-th agent's computation.
+
+The <i>past</i> at the slice  is defined
+as the set consisting of the first \(N[k]\) events of the \(k\)-th
+agent. 
+
+The <i>future</i> at the slice is the
+complement of the past. 
+
+
+
+<!------------------------------------------------------------------>
+<h5 style="color:red;">Example: Past, and Future</h5>
+<!------------------------------------------------------------------>
+The figure below shows a dataflow graph for a computation with events
+\([0, 1, 2, \ldots]\).
+
+The purple line connecting the yellow circles represents the
+slice \([3, 3, 2]\) where agents are numbered in the order \(X, Y,
+Z\).
+
+
+<p>
+Points on the agents' computations are shown as yellow circles.
+For example, the point on agent \(X\) is 3 because it is the edge from
+the 3rd event (event number 6) to the 4th event (event number 8) at
+the agent.
+
+<figure>
+    <img src="../ChannelSnapshots/ChannelSnapshots/ChannelSnapshots.009.jpeg"
+    alt="Fig4" style="width:100%"> 
+<figcaption>
+Fig.4: Example: Past and Future
+</figcaption>
+</figure>
+
+The set of past events are colored black and the set of future events
+are colored green.
+
+
+
+
+
+<!----------------------------------------------------------------->
+<h3 class="w3-text-teal">Theorem about Past and Future</h3>
+<!----------------------------------------------------------------->
+The following result is self-evident from the definition of
+input-closed sets.
+<hr class="new2">
+<p style="color:blue;">
+The past at a slice is input-closed if any one of the following holds.
+<ol>
+  <li>
+  <p style="color:blue;">
+Each message received in a past event is sent in a past event.
+  </li>
+  <li>
+<p style="color:blue;">
+Each message sent in a future event is received in a future event.
+  </li>
+  <li>
+  <p style="color:blue;">
+  For all channels \(C\),  \(\; C_{s} \geq C_{r}\), where \(C_{s}, C_{r}\)
+  are the numbers of messages 
+  sent and received (respectively) on the channel in past
+  events.
+  </li>
+</ol>
+</p>
+<hr class="new2">
+
+
+  In graphical terms, all edges that cross the boundary separating
+  past and future events in the dataflow graph are directed
+from the past to the future.
+
+
+
+
+
+<!----------------------------------------------------------------->
+<h4 class="w3-text-teal">The State at a Slice</h4>
+<!----------------------------------------------------------------->
+
+A slice is closed exactly when the past at the slice is closed.
+
+The state at a closed slice is the state after executing all events in
+the past and before executing any event in the future at the slice.
+
+
+<p>
+The state \(S\) at a closed slice is given by the labels of edges of
+the dataflow graph from past events to future events.
+
+<ol>
+  <li>
+The state of an agent \(u\) in \(S\) is the label of the
+  edge from an event at \(u\) in the past to an event at \(u\) in the
+  future. 
+  </li>
+  <li>
+
+The state of a channel \((u, v)\) in \(S\) is the sequence of labels
+of \((u, v)\) edges from events in the past to events in the future.
+  </li>
+</ol>
+
+
+From property 2 of dataflow graphs:
+<hr class="new2">
+<p style="color:blue;">
+For closed slices \(U, V\) where \(U \leq V\):
+there is a computation from the state at \(U\) to the state at \(V\).
+</p>
+<hr class="new2">
+This result is highlighted because it is used often.
+
+
+
+<!------------------------------------------------------------------>
+<h2 style="color:red;">Examples</h2>
+<!------------------------------------------------------------------>
+
+
+<!------------------------------------------------------------------>
+<h5 style="color:red;">Example: Past is not Input Closed</h5>
+<!------------------------------------------------------------------>
+The next figure shows a slice \(\{(1, X), (4, Y), (3, Z)\}\) for which
+the past is not input closed.
+
+Past events are colored black and future events are green.
+
+The purple line represents the slice.
+
+
+<figure>
+    <img src="../ChannelSnapshots/ChannelSnapshots/ChannelSnapshots.010.jpeg"
+    alt="Fig5" style="width:100%"> 
+<figcaption>
+Fig.5: Example: Past is not Input Closed
+</figcaption>
+</figure>
+
+The past is not input closed because there is a message sent in the future
+(a green vertex) that is received in the past (a black vertex).
+
+
+
+<!------------------------------------------------------------------>
+<h5 style="color:red;">Example: State at a Slice</h5>
+<!------------------------------------------------------------------>
+
+<p>
+Let's look at the state \(S_{3}\) at the slice \(\{(2, u), (3, v)\}\)
+in figure 3.
+
+This is the state after executing events \(0, 1, 2, 3\).
+
+<p>
+The past at the slice is \(H = \{0, 1, 2, 3\}\).
+
+The slice is represented by the vertical line between events 3 and 4.
+
+The slice is a boundary between the past and future.
+
+State \(S_{3}\) is determined by the labels of edges that cross the
+boundary.
+
+<p>
+The boundary line intersects the agent edge for
+\(u\) at an edge with label "e" signifying empty; so, \(u\) holds no tokens in
+\(S_{3}\).
+
+The line intersects the edges for channel \((v, u)\) at a single edge
+and that edge has label "red token" and so the state of the \((v, u)\)
+in \(S_{3}\) is a sequence of messages consisting of a single message
+-- the red token.
+
+<p>
+
+The boundary line does not intersect an edge for the channel \((u, v)\), and so
+the state of this channel is the empty sequence of messages.
+
+The line intersects message edges for messages on channel \((v, v)\)
+at a single edge; this edge is labeled with the wakeup message.
+
+So, the state of channel \((v, v)\) is a sequence consisting of a single
+message -- the wakeup message.
+
+<p>
+The states of other agents and channels are determined similarly.
+
+
+<p>
+The state \(S_{i}\) that occurs in a computation after events \(0,
+\ldots, i\) are obtained similarly and are shown in figure 3.
+
+The lower part of figure 3 shows the dataflow graph and
+the upper part shows the sequence of states in the
+computation.
+
+The dotted vertical lines show boundaries of the slices.
+
+
+
+<figure>
+    <img src="DistributedSystemModels/DistributedSystemModels.007.jpeg"
+    alt="Fig3" style="width:100%"> 
+<figcaption>
+Fig.3: Example: States at Input-Closed Event Sets
+</figcaption>
+</figure>
+
+
+
+
+<!------------------------------------------------------------------>
+<h5 style="color:red;">Example: State at a Slice</h5>
+<!------------------------------------------------------------------>
+Let's look at the state at slice \(\{(3, u), (2, v)\}\).
+
+The past of the slice is \(\{0, 1, 2, 5\}\).
+
+The state of \(u\) is the label of the edge from event 5 to 6 -- holds
+red token.
+The state of \(v\) is the label of the edge from event 2 to 3 -- holds
+no token.
+The boundary line cuts the message edge from 1 to 3.
+This edge is labeled with blue token; so the state of channel \((u,
+v)\) is blue token.
+The boundary does not intersect with other edges, and so that states
+of the remaining channels are empty sequences.
+
+
+
 
 
 <!------------------------------------------------------------------>
@@ -305,217 +570,7 @@ There exists a computation that first executes events in \(H = \{0,
 
 
 
-<!----------------------------------------------------------------->
-<h4 class="w3-text-teal">The State at an Input Closed Set of Events</h4>
-<!----------------------------------------------------------------->
-
-The state \(S\) at an input-closed set \(H\) of events of the
-dataflow of a computation is the state after executing
-all events in \(H\) and before executing events any event that is not
-in \(H\).
-
-\(S\) is obtained from the graph as follows. 
-
-<ol>
-  <li>
-The state of an agent \(u\) in \(S\) is the label of the agent \(u\)
-  edge from a vertex inside \(H\) to a vertex outside \(H\).
-  </li>
-  <li>
-
-The state of a channel \((u, v)\) in \(S\) is the sequence of labels
-of \((u, v)\) edges from vertices inside \(H\) to vertices outside
-  \(H\).
-  </li>
-</ol>
-
 <p>
-From observation 2,
-for input-closed event sets \(H, H'\) where \(H \subset H'\):
-<p>
-there is a computation from the state at \(H\) to the state at \(H'\).
-</p>
-
-
-
-<!------------------------------------------------------------------>
-<h5 style="color:red;">Example: State at an Input-Closed Set of Events</h5>
-<!------------------------------------------------------------------>
-
-<p>
-Let's look state \(S_{3}\) of the
-input-closed event set \(H = \{0, 1, 2, 3\}\) in figure 1.
-
-A vertical line between events 3 and 4 is a boundary between vertices
-in \(H\) and vertices outside it.
-
-\(S_{3}\) is determined by the labels of edges that cross the
-boundary.
-
-<p>
-The boundary line intersects the agent edge for
-\(u\) at an edge with label "e" signifying empty; so, \(u\) holds no tokens in
-\(S_{3}\).
-
-The line intersects the edges for channel \((v, u)\) at a single edge
-and that edge has label "red token" and so the state of the \((v, u)\)
-in \(S_{3}\) is a sequence of messages consisting of a single message
--- the red token.
-
-<p>
-
-The boundary line does not intersect an edge for the channel \((u, v)\), and so
-the state of this channel is the empty sequence of messages.
-
-The line intersects message edges for messages on channel \((v, v)\)
-at a single edge; this edge is labeled with the wakeup message.
-
-So, the state of channel \((v, v)\) is a sequence consisting of a single
-message -- the wakeup message.
-
-<p>
-The states of other agents and channels are determined similarly.
-
-
-<p>
-The state \(S_{i}\) that occurs in a computation after events \(0,
-\ldots, i\) are obtained similarly and are shown in figure 3.
-
-The lower part of figure 3 shows the event graph and
-the upper part shows the sequence of states in the
-computation.
-
-The dotted vertical lines show boundaries of event sets \(0,
-\ldots, i\), for all \(i\).
-
-
-
-<figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.007.jpeg"
-    alt="Fig3" style="width:100%"> 
-<figcaption>
-Fig.3: Example: States at Input-Closed Event Sets
-</figcaption>
-</figure>
-
-
-
-
-<!------------------------------------------------------------------>
-<h5 style="color:red;">Example: State at an Input-Closed Set of Events</h5>
-<!------------------------------------------------------------------>
-Let's look at the state at the event set \(\{0, 1, 2, 5\}\).
-The state of \(u\) is the label of the edge from event 5 to 6 -- holds
-red token.
-The state of \(v\) is the label of the edge from event 2 to 3 -- holds
-no token.
-The boundary line cuts the message edge from 1 to 3.
-This edge is labeled with blue token; so the state of channel \((u,
-v)\) is blue token.
-The boundary does not intersect with other edges, and so that states
-of the remaining channels are empty sequences.
-
-
-
-<!----------------------------------------------------------------->
-<h3 class="w3-text-teal">Event Sets specified by Points in Agent
-Computations </h3>
-<!----------------------------------------------------------------->
-A point in an agent's computation is an integer \(i\).
-
-The <i>past</i> at point \(i\) on an agent's computation is the set of the
-first \(i\) events at the agent, and the <i>future</i> is the set of
-events at the agent that are not in the past.
-
-<p>
-A point \(i\) in an agent's computation is shown as a location on the
-edge from the \(i\)-th event to the \(i+1\)-th event.
-
-
-<p>
-All agent edges to past events are past events.
-And, all agent edges to future events are from future events.
-
-
-<!------------------------------------------------------------------>
-<h5 style="color:red;">Example: Points, Past, and Future</h5>
-<!------------------------------------------------------------------>
-The figure below shows a dataflow graph for a computation with events
-\([0, 1, 2, \ldots]\).
-Points on the agents' computations are shown as yellow circles.
-For example, the point on agent \(X\) is 3 because it is the edge from
-the 3rd event (event number 6) to the 4th event (event number 8) at
-the agent.
-
-<figure>
-    <img src="../ChannelSnapshots/ChannelSnapshots/ChannelSnapshots.009.jpeg"
-    alt="Fig4" style="width:100%"> 
-<figcaption>
-Fig.4: Example: Past and Future
-</figcaption>
-</figure>
-
-The set of past events are colored black and the set of future events
-are colored green.
-The purple line connecting the points separates the past from the future.
-
-<p>
-All horizontal edges to black vertices are from black vertices.
-And, all horizontal edges to green vertices are from green vertices.
-
-
-<!------------------------------------------------------------------>
-<h5 style="color:red;">Example: Points, Past, and Future</h5>
-<!------------------------------------------------------------------>
-The next figure shows a set of points on agent computations in which
-the past is not input closed.
-
-
-<figure>
-    <img src="../ChannelSnapshots/ChannelSnapshots/ChannelSnapshots.010.jpeg"
-    alt="Fig5" style="width:100%"> 
-<figcaption>
-Fig.5: Example: Past is not Input Closed
-</figcaption>
-</figure>
-
-The past is not input closed because there is a message sent in the future
-(a green vertex) that is received in the past.
-
-<!----------------------------------------------------------------->
-<h3 class="w3-text-teal">Theorem about Past and Future</h3>
-<!----------------------------------------------------------------->
-The following result is self-evident from the definition of
-input-closed sets.
-<hr class="new2">
-<p style="color:blue;">
-Given a point on each agent's computations, the set of past events at
-these points is input-closed if any only if one of the following conditions holds.
-<ol>
-  <li>
-  <p style="color:blue;">
-Each message received in a past event is sent in a past event.
-  </li>
-  <li>
-<p style="color:blue;">
-Each message sent in a future event is received in a future event.
-  </li>
-  <li>
-  <p style="color:blue;">
-  For all channels \(C\),  \(\; C_{s} \geq C_{r}\), where \(C_{s}, C_{r}\)
-  are the numbers of messages 
-  sent and received (respectively) on the channel in the past
-  events.
-  </li>
-  <li>
-  <p style="color:blue;">
-  In graphical terms, all edges that cross the boundary separating
-  past and future events in the dataflow graph are directed
-  from the past to the future.
-  </li>
-</ol>
-</p>
-<hr class="new2">
 
 The next four webpages describe important -- though straightforward --
 applications of the theorem.
@@ -523,6 +578,7 @@ applications of the theorem.
 
 <!------------------------------------------------------------------>
 <h3 class="w3-text-teal">Next</h3>
+Chapter on Snapshots and Clocks:
 <a href="../ChannelSnapshots/ChannelSnapshots.html">
 Global Snapshots.
 </a>

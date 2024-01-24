@@ -96,7 +96,7 @@ hr.new1 {
 
   <h3 class="w3-text-teal">Problem Definition</h3>
   
-  <h4 class="w3-text-teal">Review of Agents</h4>
+  <h4 class="w3-text-teal">Review of Agents and Termination of Computation</h4>
   We
   <a href="../DISTRIBUTED_SYSTEM_MODELS/Basics.html">
   described agents earlier.
@@ -114,8 +114,27 @@ may become idle at any point.
 <p>
   A computation terminates in states in which all agents
   are idle and all channels are empty.
+
+  A channel \(C\) is empty exactly when \(\; C_{s} = C_{r}\), where
+  \(C_{s}, C_{r}\) are the numbers of messages 
+  sent and received (respectively) on \(C\).
+
+  So,
+
+  <hr class="new2">
+  <p style="color:blue;">
+  A computation is in a terminated state exactly
+  when all agents are idle and
+  for all channels \(C\),  \(\; C_{s} = C_{r}\).
+  </p>
+  <hr class="new2">
+  
+
+  <p>
   Termination is stable -- if a computation has terminated then it
-  remains terminated. 
+  remains terminated.
+
+  Termination detection is an example of detection of stable properties.
 
 
 
@@ -131,34 +150,37 @@ may become idle at any point.
   description of OS algorithms.
 
   <p>
-  The detection algorithm has a boolean variable \(B\) which is
+  The detection algorithm has a boolean variable \(detected\) which is
   initially \(False\) and becomes
   \(True\) if and when the algorithm detects that the specified stable
-  property holds.
+property holds.
+
 The specification of an algorithm to detect a stable property is as follows.
   <!---------------------------------------------------------------->
 <hr class="new2">
 <h6 style="color:blue;">
 <ol>
   <li>
-  If the stable property holds at a point \(t\) then \(B\)
+  If the stable property holds at a point \(t\) then \(detected\)
   becomes \(True\)  at or after \(t\). 
   </li>
   <li>
-  If \(B\) is \(True\) at any point then the stable property holds at that point.
+  If \(detected\) is \(True\) at any point then the stable property holds at that point.
   </li>
 </ol>
 </h6>
 <hr class="new2">
 
-  <!---------------------------------------------------------------->
+  
+<!----------------------------------------------------------------------------->
+<h4 class="w3-text-teal">How Should You Approach the Problem?</h4>
+<!----------------------------------------------------------------------------->
 
-
-<p class="w3-text-teal">General Method for Detecting Stable Properties</p>
-The general method for detecting stable properties is by
-monitoring a system by taking repeated snapshots.
-
-\(B\) becomes \(True\) if and when a snapshot shows that the stable
+<h6 class="w3-text-teal">Use the General Method for Detecting Stable
+Properties</h6>
+The obvious way to detect stable properties is to use the general method:
+monitor a system by taking repeated snapshots.
+\(detected\) becomes \(True\) if and when a snapshot shows that the stable
 predicate holds.
 
 See
@@ -168,16 +190,30 @@ Global Snapshots
 and
 <a href="LogicalClocks.html">
 Logical Clocks
-</a>.
+</a> for ways to take repeated snapshots. 
 
+
+<h6 class="w3-text-teal">
+An Alternate Method for Detecting Termination
+</h6>
+Next we describe another algorithm which is
+straightforward application of.
+<a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+the Theorem about Past and Future</a>.
+
+From the theorem, a slice is is closed if:
+For all channels \(C\),  \(\; C_{s} \geq C_{r}\), where \(C_{s}, C_{r}\)
+  are the numbers of messages 
+  sent and received (respectively) on the channel in the past
+  events.
 
 <p>
-Next we describe an algorithm for the specific case of
-termination detection.
+So, <i>all</i> slices in which all agents are idle and for all channels
+\(C\),  \(\; C_{s} = C_{r}\), are closed.
 
-This algorithm is a 
-straightforward application of.
-<a href="ChannelSnapshots.html">the Global Snapshot Theorem</a>.
+This insight suggests the following algorithm.
+
+<p>
 
 <!------------------------------------------------------------->
 <h3 class="w3-text-teal">A Termination Detection Algorithm</h3>
@@ -216,28 +252,27 @@ all channels \(C\): \(C_{s}^{*} = C_{r}^{*}\).
 <!-------------------------------------------------------->
 <h5 class="w3-text-teal">Proof of Correctness</h5>
 <!-------------------------------------------------------->
-The proof of part 1 -- after the computation terminates the detection
-condition holds -- is straightforward. Now we prove part 2: If the
-detection condition holds then the computation has terminated.
+Proof of part 1 -- If the computation terminates, then after the
+computation terminates the detection condition holds.
+<p>
+The set of the last messages sent by agents before they remains idle forever
+has the property \(C_{s}^{*} = C_{r}^{*}\) for all channels \(C\).
+
 
 <p>
-Assume that the detection condition holds.
+Proof of part 2 -- If the
+detection condition holds then computation has terminated.
 
-Then agents sent messages to the detector with the values \(C_{s}^{*}
+<p>
+If that the detection condition holds 
+
+then agents sent messages to the detector with the values \(C_{s}^{*}
 = C_{r}^{*}\).
 
-Call the local snapshot in which an agent sends these messages the
-detection snapshot.
+The slice of points at which these messages are sent is closed.
 
-<p>
-From the global snapshot theorem, local snapshots form a
-global snapshot if, for all channels \(C\): \(C_{s} \geq C_{r}\).
-
-This condition holds when \(C_{s} = C_{r}\).
-
-Therefore, the detection snapshots form a global snapshot.
-In this global snapshot all agents are idle and all channels are
-empty. 
+So, the state at the slice -- computation has terminated -- is a state
+in the computation. 
 
 <h3 class="w3-text-teal">Next</h3>
 Next

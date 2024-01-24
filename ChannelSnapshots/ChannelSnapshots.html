@@ -87,14 +87,13 @@ hr.new1 {
   <!------------------------------------------------------------------->
   
   <p class="w3-text-red">
+ A global snapshot algorithm determines an intermediate state in a
+  computation between the states in which the global snapshot algorithm
+  starts and ends.
 
-  A global snapshot is the state at an input-closed set of
-  events.
-
-  A global snapshot algorithm determines a global snapshot.
-
-Systems are monitored by
-  scheduling repeated executiongs of the global snapshot algorithm.
+  This intermediate state is called a <i>global snapshot</i>.
+  
+  Systems are monitored by taking repeated global snapshots.
 
   </p>
  
@@ -102,27 +101,27 @@ Systems are monitored by
   <h4 class="w3-text-teal">The Problem</h4> 
   <!----------------------------------------------------------------------------->
   <p>
-Design an algorithm by which agents collaborate to determine
-  the state at an input-closed set of events.
-
-  This state is
+  A global snapshot algorithm determines an intermediate state in a
+  computation between the states in which a global snapshot algorithm
+  starts and ends.
+  
+  This intermediate state is
   called a <i>global snapshot</i> to distinguish it from a <i>local</i>
-  snapshot which is a recording of state of a single agent or a
+  snapshot which is a recording of the state of a single agent or a
   single channel.
 
-  <!-----------------------------------------------------------------------------> 
-  <h4 class="w3-text-teal">The Distributed Operating System</h4>
-  <!-----------------------------------------------------------------------------> 
-The global snapshot algorithm is an example of an algorithm that is
+  <p>
+  The global snapshot algorithm is an example of an algorithm that is
   executed by a distributed operating system (OS) on behalf of a
   client.
 
   Next, we describe features of the OS that are relevant to the
   snapshot algorithm.
-  
-  
-<p>
 
+  <!-----------------------------------------------------------------------------> 
+  <h4 class="w3-text-teal">The Distributed Operating System</h4>
+  <!-----------------------------------------------------------------------------> 
+  
   
   Each client agent has an OS agent that supervises it.
 
@@ -175,19 +174,13 @@ to clients.
 
  
 <!----------------------------------------------------------------------------->
-<h4 class="w3-text-teal">How Should We Approach the Problem?</h4>
+<h4 class="w3-text-teal">How Should You Approach the Problem?</h4>
 <!----------------------------------------------------------------------------->
-The problem is to design an algorithm to record the state at an
-input-closed set of events.
 
-What solution strategies should we use?
 
-<p>
-A reasonable way to begin solving a problem that deals
-with input-closed sets of events is to to use the definition of
-input-closed sets and apply theorems based on them.
-
-A helpful result is
+A reasonable way to begin solving a problem that deals with recording
+a state in a computation, during the computation, is to use properties
+of slices and 
 <a href="Timelines.html">the theorem about past and future</a>.
 
 
@@ -195,30 +188,48 @@ A helpful result is
 In any snapshot algorithm, each agent must record its own local state at some
 point in its computation because another agent cannot do so.
 
-Let's look at the points at which agents take their local snapshots --
-i.e., record their states.
-
-The <i>past</i> is defined as the set of events at agents before these points.
-
-So, an event at an agent, before the agent takes its snapshot, is in the
-past.
-And an event at an agent, after the agent takes its snapshot, is in the
-future.
+Let's look at the slice \(W\) consisting of the points at which agents take
+ local snapshots --  i.e., record their states.
 
 <p>
-The theorem says that every message sent in the future must be
-received in the future.
+The theorem says that a slice is closed if every
+message sent in the future is received in the future.
+
+An event is in the future exactly when the event is at an agent
+<i>after</i> the agent takes its local snapshot.
 
 This gives us the key to the solution.
 
 <hr class="new2">
 <p style="color:blue;">
-Local snapshots taken by agents form a global snapshot if
+A slice consisting of points at which agents take local snapshots is
+closed if 
 every message sent after the sender takes its local snapshot is
 received after the receiver takes its local snapshot.
 </p>
 <hr class="new2">
 
+<p>
+Let \(S\) be the state of the slice of points at which agents
+take local snapshots.
+
+Next, we show that \(S\) satisfies the specification for a
+global snapshot.
+
+<p>
+The slice at the points at which the snapshot algorithm starts is
+<a href="../DISTRIBUTED_SYSTEM_MODELS/Events.html">earlier than </a>
+the slice of points at which agents take local snapshots.
+
+So, there is a computation from the state in which the algorithm
+starts to \(S\).
+
+<p>
+By the same argument, there is a computation from \(S\) to the
+state in which the algorithm ends.
+
+So there is a computation in which \(S\) is an intermediate
+state between the states at which the algorithm starts and ends.
 
  
 <!----------------------------------------------------------------------------->
@@ -302,49 +313,6 @@ Other algorithms carry out distributed computations on local
 snapshots without sending data to a collector.
 
 Later we give examples of both kinds of algorithms.
-
-
-
-
-
-<!--------------------------------------------------------------->
-<h4 class="w3-text-teal">Properties of Global Snapshot Algorithms</h4>
-<!--------------------------------------------------------------->
-A global snapshot is an intermediate state in a computation between
-the points at which the snapshot algorithm starts and ends.
-
-This result is used frequently.
-
-
-<hr class="new2">
-<p style="color:blue;">
-
-<ol>
-
-  <li>
-  <p style="color:blue;">  
-  There exists a computation from the state in which the
-  global snapshot algorithm is initiated to the global snapshot. 
-  </li>
-  <li>
-  <p style="color:blue;">
-  There exists a computation from the global
-  snapshot to the state at which the global snapshot
-  algorithm terminates.
-  </li>
-</ol>
-</p>
-<hr class="new2">
-
-<p class="w3-text-teal">Proof</p>
-Let the snapshot be the state at an input-closed event set \(H\), and
-let \(H'\) be an input-closed event set.
-
-If \(H' \subset H\) then
-there is a computation from the state at \(H'\) to the snapshot.
-
-Likewise, if \(H \subset H'\) then
-there is a computation from snapshot to the state at \(H'\).
 
 
 

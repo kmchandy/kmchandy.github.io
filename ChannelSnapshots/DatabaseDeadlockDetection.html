@@ -150,41 +150,87 @@ holding the red file and is waiting
   <figcaption>Fig.2 - An Example of a Deadlock</figcaption>
 </figure>
 
-   
-    
-    <h4 class="w3-text-teal">The General Method</h4>
-The general method for detecting stable properties is by
-monitoring a system by taking repeated snapshots.
+ 
+<!----------------------------------------------------------------------------->
+<h3 class="w3-text-teal">How Should You Approach the Problem?</h3>
+<!----------------------------------------------------------------------------->
+
+<h4 class="w3-text-teal">Use the General Method for Detecting Stable
+Properties</h4>
+The obvious way to detect stable properties is to use the general method:
+monitor a system by taking repeated snapshots.
+Detect deadlock if and when a global snapshot is a deadlocked state.
+
 See
 <a href="ChannelSnapshots.html">
 Global Snapshots
 </a>
-,
+and
 <a href="LogicalClocks.html">
 Logical Clocks
-    </a>
-    and
-<a href="TerminationDetection.html">
-Termination Detection
-    </a>.
-    
-
-The general method for detecting stable properties has two phases: (1)
-    obtain a global snapshot, and (2) analyze the global snapshot.
+    </a> for ways to take repeated snapshots.
 
     <p>
+
+    The general method for detecting stable properties has two phases: (1)
+    obtain a global snapshot, and (2) analyze the global snapshot.
+
 The first phase reduces the analysis of a dynamic system  -- in which states
     of agents are changing, and messages are being appended and
     removed from channels -- into the analysis
-of a single state.
+of a static data structure of a single state.
 
-    This page describes an algorithm that combines the two phases into
-    a single phase.
+Analyzing a static graph to determine if there is a cycle of
+deadlocked agents is straightforward.
 
+    <h4 class="w3-text-teal">
+    Alternate Method 1: Modify the Termination Detection Algorithm
+    </h4>
+    
+    Another way to begin thinking about solutions to a detection
+    problem is to attempt to modify an 
+    algorithm for a different detection problem.
+
+    Let's try to modify the
+<a href="TerminationDetection.html">
+termination detection algorithm
+</a>.
+
+<p>
+Each agent sends its state to a <i>detector agent</i> when it starts to wait.
+The detector keeps the latest message that it receives from an agent
+and discards all the earlier ones from that agent.
+
+If there is a deadlock based on the messages that the detector has,
+then the system is deadlocked.
+
+<p>
+The proof of correctness of the algorithm is similar to that for
+termination detection. 
+    
+
+
+
+     <h4 class="w3-text-teal">
+    Alternate Method: Modify the Global Snapshot Algorithm
+    </h4>
+
+Let's use the same tactic again -- modify an algorithm to take a
+snapshot.
+
+<p>
+Algorithms that use snapshot algorithms operate in two phases: (1)
+    obtain a global snapshot, and (2) analyze the static structure of
+    a global snapshot.
+
+    Next, we describe an algorithm that combines the two phases of the
+    global snapshot algorithm into a single phase.
+
+<p>
 The algorithm is the
 <a href="ChannelSnapshots.html">global snapshot</a> where 
 markers play two concurrent roles: record a snapshot and determine
-where the system is deadlocked in the snapshot state.
+whether the system is deadlocked in the snapshot state.
 
 
 <h4 class="w3-text-teal">Modified Global Snapshot Algorithm</h4>
@@ -209,6 +255,11 @@ there is a file in \(m.waits\) that the agent holds and needs.
 <hr class="new2">
 A cycle is deadlocked if a marker is propagated around the cycle, and
 reaches the initiator.
+
+<p>
+The algorithm is the same as the global snapshot algorithm except that
+we care about only a part of the global state -- the part consisting
+of the cycle of deadlocked agents.
 
 <h5 style="color:red;">Example</h5>
 Agent \(x\) initiates the algorithm by sending a marker \(m\) where
