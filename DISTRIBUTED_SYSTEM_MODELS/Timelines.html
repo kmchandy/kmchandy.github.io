@@ -146,7 +146,7 @@ We begin with a review of a few basic properties of directed acyclic
   closed</i> exactly when every edge to every vertex in \(H\) is from a
   vertex in \(H\).
 
-  There is no path to a vertex in a closed vertex set from a
+  There is no path to a vertex in a closed set from a
   vertex outside it.
   
   There may, however, be paths from vertices in a closed
@@ -158,7 +158,7 @@ and  \(\{0, 1, 2, 5\}\).
 
 An example of a vertex set that is not closed is \(\{0, 1,
 3\}\) because there is an edge to vertex \(3\) from vertex \(2\) which
-is not in the subgraph.
+is not in the set.
 
 
   <!-------------------------------------------------------->
@@ -174,7 +174,7 @@ the concatenation of topological sorts of \(H\),  \(H' - H\), and  \(V
 <p>
 In figure 1, \(H = \{0, 1, 2, 5\}\)
 and \(H' = \{0, 1, 2, 3, 4, 5\}\)
-are input closed, and the sequence
+are closed, and the sequence
 \([0, 2, 1, 5]\) followed by \([3, 4]\) followed by
 \([6, 7]\) is a topological sort of the dag.
 
@@ -291,16 +291,20 @@ in \(H' - H\), and then the remaining operations.
 <!----------------------------------------------------------------->
 <h3 class="w3-text-teal">Slice of a Dataflow Graph</h3>
 <!----------------------------------------------------------------->
+A computation of an agent is a sequence of events at that agent.
+
 A point in the computation of an agent \(u\) is specified by an
 integer \(i\) and is the 
 edge from the \(i\)-th event at \(u\) to the \(i+1\)-th event at
 \(u\).
 
 <p>
+
 A <i>slice</i> of a dataflow graph of a computation is a vector \(N\)
 where \(N[k]\) 
 is a point in the \(k\)-th agent's computation.
 
+<p>
 The <i>past</i> at the slice  is defined
 as the set consisting of the first \(N[k]\) events of the \(k\)-th
 agent. 
@@ -313,25 +317,25 @@ complement of the past.
 <!------------------------------------------------------------------>
 <h5 style="color:red;">Example: Past, and Future</h5>
 <!------------------------------------------------------------------>
-The figure below shows a dataflow graph for a computation with events
-\([0, 1, 2, \ldots]\).
-
-The purple line connecting the yellow circles represents the
-slice \([3, 3, 2]\) where agents are numbered in the order \(X, Y,
-Z\).
-
+Figure 3 shows a dataflow graph for a computation with events
+\([0, 1, 2, \ldots]\) and agents \(X, Y, Z\) indexed \(0, 1, 2\)
+respectively. 
 
 <p>
 Points on the agents' computations are shown as yellow circles.
 For example, the point on agent \(X\) is 3 because it is the edge from
 the 3rd event (event number 6) to the 4th event (event number 8) at
-the agent.
+\(X\).
+
+<p>
+The purple line connecting the points represents the
+slice \([3, 3, 2]\).
 
 <figure>
     <img src="../ChannelSnapshots/ChannelSnapshots/ChannelSnapshots.009.jpeg"
-    alt="Fig4" style="width:100%"> 
+    alt="Fig3" style="width:100%"> 
 <figcaption>
-Fig.4: Example: Past and Future
+Fig.3: Example: Past and Future
 </figcaption>
 </figure>
 
@@ -346,10 +350,10 @@ are colored green.
 <h3 class="w3-text-teal">Theorem about Past and Future</h3>
 <!----------------------------------------------------------------->
 The following result is self-evident from the definition of
-input-closed sets.
+closed sets.
 <hr class="new2">
 <p style="color:blue;">
-The past at a slice is input-closed if any one of the following holds.
+The past at a slice is closed if any of the following hold.
 <ol>
   <li>
   <p style="color:blue;">
@@ -371,12 +375,9 @@ Each message sent in a future event is received in a future event.
 <hr class="new2">
 
 
-  In graphical terms, all edges that cross the boundary separating
-  past and future events in the dataflow graph are directed
-from the past to the future.
-
-
-
+  In graphical terms, the past is closed if all edges that cross the
+  boundary separating past and future events in the dataflow graph are
+  directed from the past to the future.
 
 
 <!----------------------------------------------------------------->
@@ -386,12 +387,11 @@ from the past to the future.
 A slice is closed exactly when the past at the slice is closed.
 
 The state at a closed slice is the state after executing all events in
-the past and before executing any event in the future at the slice.
-
+the past and before executing any event in the future.
 
 <p>
 The state \(S\) at a closed slice is given by the labels of edges of
-the dataflow graph from past events to future events.
+the dataflow graph from the past to the future.
 
 <ol>
   <li>
@@ -414,8 +414,12 @@ For closed slices \(U, V\) where \(U \leq V\):
 there is a computation from the state at \(U\) to the state at \(V\).
 </p>
 <hr class="new2">
-This result is highlighted because it is used often.
 
+In figure 3 there is a computation from the slice \([3, 3, 2]\) to
+the slice \([4, 4, 2]\).
+
+<p>
+The remainder of this page consists of examples.
 
 
 <!------------------------------------------------------------------>
@@ -424,27 +428,21 @@ This result is highlighted because it is used often.
 
 
 <!------------------------------------------------------------------>
-<h5 style="color:red;">Example: Past is not Input Closed</h5>
+<h5 style="color:red;">Example: Past is not Closed</h5>
 <!------------------------------------------------------------------>
-The next figure shows a slice \(\{(1, X), (4, Y), (3, Z)\}\) for which
-the past is not input closed.
-
-Past events are colored black and future events are green.
-
-The purple line represents the slice.
+The next figure shows a slice \([1, 4, 3]\) which is not closed.
 
 
 <figure>
     <img src="../ChannelSnapshots/ChannelSnapshots/ChannelSnapshots.010.jpeg"
-    alt="Fig5" style="width:100%"> 
+    alt="Fig4" style="width:100%"> 
 <figcaption>
-Fig.5: Example: Past is not Input Closed
+Fig.4: Example: Slice is not Closed
 </figcaption>
 </figure>
 
-The past is not input closed because there is a message sent in the future
-(a green vertex) that is received in the past (a black vertex).
-
+The slice is not closed because there is a message sent in the future
+(event 4) that is received in the past (event 5).
 
 
 <!------------------------------------------------------------------>
@@ -452,8 +450,10 @@ The past is not input closed because there is a message sent in the future
 <!------------------------------------------------------------------>
 
 <p>
-Let's look at the state \(S_{3}\) at the slice \(\{(2, u), (3, v)\}\)
-in figure 3.
+In figure 5, the agents \(u, v\) are indexed \(0, 1\), respectively.
+
+Let's look at the state \(S_{3}\) at the slice \([2, 3]\)
+in the figure.
 
 This is the state after executing events \(0, 1, 2, 3\).
 
@@ -508,7 +508,7 @@ The dotted vertical lines show boundaries of the slices.
     <img src="DistributedSystemModels/DistributedSystemModels.007.jpeg"
     alt="Fig3" style="width:100%"> 
 <figcaption>
-Fig.3: Example: States at Input-Closed Event Sets
+Fig.4: Example: States at Closed Slices
 </figcaption>
 </figure>
 
@@ -518,21 +518,23 @@ Fig.3: Example: States at Input-Closed Event Sets
 <!------------------------------------------------------------------>
 <h5 style="color:red;">Example: State at a Slice</h5>
 <!------------------------------------------------------------------>
-Let's look at the state at slice \(\{(3, u), (2, v)\}\).
+Let's look at the state at slice \([3, 2]\).
 
 The past of the slice is \(\{0, 1, 2, 5\}\).
 
 The state of \(u\) is the label of the edge from event 5 to 6 -- holds
 red token.
+
 The state of \(v\) is the label of the edge from event 2 to 3 -- holds
 no token.
-The boundary line cuts the message edge from 1 to 3.
+
+The slice boundary cuts the message edge from 1 to 3.
+
 This edge is labeled with blue token; so the state of channel \((u,
 v)\) is blue token.
+
 The boundary does not intersect with other edges, and so that states
 of the remaining channels are empty sequences.
-
-
 
 
 
@@ -543,37 +545,31 @@ Example: Topological Sorts of Dataflow Graphs are Computations
 <!------------------------------------------------------------------>
 
 
-Figure 3 shows different computations with the same dataflow
-graph.
+Figure 5 shows different computations \([0, 1, 2, 3, 4, 5, 6, N]\) and
+\([0, 2, 1, 5, 3, 4, 6, N]\) with the same dataflow graph.
 
-The two diagrams of the figure show two topological sorts of the same
-dataflow graph.
+Both computations are topological sorts of the graph.
 
-Events of the same graph are laid
-out from left to right in the order in which they occur in the
-computations. 
+In the figure, events of the graph are laid out from left to
+right in the order in which they occur in the computations.
 
 <figure>
     <img src="DistributedSystemModels/DistributedSystemModels.010.jpeg"
-    alt="Fig3" style="width:100%"> 
-    <figcaption>Fig.3: Example - Computations with the same Dataflow</figcaption>
+    alt="Fig5" style="width:100%"> 
+    <figcaption>Fig.5: Example - Computations with the same Dataflow</figcaption>
 </figure>
 
 
 <!------------------------------------------------------------------>
-<h4 style="color:red;">Example: Computations between Sets of
-Events</h4>
+<h4 style="color:red;">Example: Computations between Slices</h4>
 <!------------------------------------------------------------------>
-There exists a computation that first executes events in \(H = \{0,
-2\}\) and then the events in \(H' - H\) where \(H' = \{0, 1, 2,
-5\}\) and then the remaining events.
-
-
+There exists a computation from the slice \([0, 2]\) to the slice
+\([3, 2]\).
 
 <p>
 
-The next four webpages describe important -- though straightforward --
-applications of the theorem.
+The next four webpages describe straightforward, but important,
+applications of slices.
 
 
 <!------------------------------------------------------------------>

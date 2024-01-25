@@ -83,11 +83,11 @@ hr.new1 {
 <!-------------------------------------------------------------->
   <p class="w3-text-red">
   A change in the state of a system changes the state of at most one
-  agent, and the states of its incident channels.
+  agent and the states of its incident channels.
 
   The local change is specified by an <i>event.</i>
 
-  The flow of data between agents is represented by a dataflow graph.
+  The flow of data between events at agents is represented by a dataflow graph.
 
   </p>
 
@@ -95,15 +95,15 @@ hr.new1 {
   <h3 class="w3-text-teal">Events</h3>
   A system changes state when an agent receives a message.
 
-  The change in state when agent \(v\) executes
+  The change in state when an agent \(v\) executes
   <code>receive(msg, u)</code> is specified by an <i>event</i> which is the 4-tuple:
 <ol>
   <li>
-  the state \(S_{v}\) of \(v\) before it executes <code>receive</code>,
+  the state, \(S_{v}\), of \(v\) before it executes the <code>receive</code>,
   </li>
   <li>
-  the message <code>msg</code> received and the channel <code>(u,
-  v)</code> on which the message is received,
+  the message, <code>msg</code>, received and the channel, <code>(u,
+  v)</code>, on which the message is received,
   </li>
   <li>
   the state \(S'_{v}\) of  \(v\) after it completes execution of the
@@ -116,18 +116,18 @@ hr.new1 {
 </ol>
 
 <p>
-There exists a transition from system state \(S\) to
-\(S'\) specified by an event \(e\) if
-the pre-transition state \(S_{v}\)
+There exists a transition from state \(S\) to
+\(S'\) specified by an event \(e\) exactly when
+the pre-transition state, \(S_{v}\),
 of agent \(v\) is its state in
-\(S\), and the head of channel \((u, v)\) in \(S\) is
-<code>msg</code>.
+  \(S\), and
+  the head of channel \((u, v)\) in \(S\) is <code>msg</code>.
 
+<p>
 The post-transition state \(S'\)
 is uniquely determined by the pre-transition state \(S\) and the event
 \(e\).
 
-<p>
 An agent can be specified by the set of events that can be executed by
 the agent.
 
@@ -171,6 +171,8 @@ The figure below illustrates the event.
     <figcaption>Fig.1: Example: Representation of an Event</figcaption>
 </figure>
 
+ <h4 class="w3-text-teal">Representation of an Event as a Vertex</h4>
+
 The event is shown as a vertex that represents a data transformation.
 
 <p class="w3-text-teal">Input to an Event</p>
@@ -196,8 +198,8 @@ The vertex has an output edge for each output channel and this edge is
 labeled with the sequence of messages sent along the channel in the
 event.
 
-If no messages are sent on a channel, the output edge for that channel
-is not shown.
+The output edge for a channel is not shown if there are no messages
+sent on the channel during the event.
 
 <p>
 In this example, only one message (blue token) is sent, and this
@@ -252,7 +254,7 @@ the message, and is called a <i>message edge.</i>
 
 <p class="w3-text-teal">Initial State Represented by an Event</p>
 The initial state of the computation is represented by events
-labeled \(0\), and the final state is represented by a events
+labeled \(0\), and the final state is represented by events
 labeled \(N\).
 
 The outputs of events numbered \(0\) are the initial states of agents
@@ -289,7 +291,9 @@ graph of the computation.
 The top horizontal line in figure 3 shows the timeline -- the sequence of events
 -- at agent \(u\) and the lower line shows the timeline for \(v\).
 
-The horizontal black edges show states of agents.
+<p>
+The label of a horizontal edge \((e, e')\) on the timeline of an agent
+\(u\) is the state of \(u\) after event \(e\) and before event \(e'\).
 
 The purple edges show messages.
 
@@ -349,7 +353,7 @@ to \(A\).
 Time is irrelevant, however, because clocks may drift by
 arbitrary amounts.
 
-The only information that an agent can obtain from the timelines is the
+The only information that an agent can obtain is the
 dataflow graph.
 
 <!---------------------------------------------------------------->
@@ -368,13 +372,15 @@ system with agents \(u, v\).
 The horizontal axis represents time, and the length of an event
 represents the time taken to execute the event.
 
-The diagram has a timeline for each agent.
+A message is directed from a point representing the time at which the
+message is sent to a point representing the time at which the message
+is received.
 
 <p>
-Let's look at execution of the receive by agent \(u\) corresponding to
+Let's look at execution of the receive by agent \(u\) represented by
 event 1 in the top diagram.
 
-As execution proceeds, \(u\)'s variables are changed, and at some
+As execution proceeds, \(u\)'s variables change, and at some
 point \(u\) sends message \(m_{2}\) and at a later point it sends
 \(m_{3}\).
 
@@ -382,16 +388,21 @@ point \(u\) sends message \(m_{2}\) and at a later point it sends
 Events 2 and 3 start after event 1 starts, and finish before event 1
 finishes.
 
-The model cannot capture this situation.
+Our simple model cannot capture this situation.
 
 <p>
-The lower diagram shows a computation in the model. 
+The lower diagram shows a computation in our model. 
 
 The lower diagram can be obtained from the upper diagram by making the
 durations of events infinitisimally small.
 
-The model faithfully represents dataflow at the granularity of events.
+In the lower diagram events 2 and 3 are executed after event 1 finishes.
 
+<p>
+Though the model does not capture elapsed time, the  model faithfully
+represents dataflow at the granularity of events. 
+
+The dataflow graphs in both diagrams is the same.
 
 
 
@@ -411,6 +422,9 @@ Later, we will extend the model to include fair selection.
 
 <!-------------------------------------------------------->
 <p class="w3-text-teal">No construct for Time</p>
+The only representation of time in our model is that some events occur
+before others.
+
 Processes can maintain accurate clocks by using atomic clocks, Precision Time
 Protocols (PTP) in local area networks, and Network Time Protocol
 (NTP) servers.
@@ -421,7 +435,7 @@ Later, we discuss the use of time in distributed algorithms.
 <!-------------------------------------------------------->
 <p class="w3-text-teal">Failure, Start Up, Shutdown</p>
 The model does not deal with failure of agents or channels, nor does
-it deal with starting and stopping a system.
+it deal with starting and stopping systems.
 
 Distributed computing platforms, such as AMQP, have operations to deal
 with failure.

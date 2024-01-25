@@ -85,13 +85,16 @@ hr.new1 {
 
   <p class="w3-text-red">
 
-  A model is an abstraction of a system.
 
-  A model ignores some features of systems while representing features
-  that help in algorithm development
 
-  This webpage describes states and state transitions of a distributed
-  system in a model.
+  A model is an abstraction that ignores some features of systems
+  while retaining features that help in  design.
+
+  This webpage describes states, state transitions, and computations
+  of a distributed system in a simple model.
+
+  We begin by designing algorithms based on the model, and we use
+   realistic representations later.
 
   </P>
 
@@ -115,25 +118,25 @@ The state of a banking system is a tuple with elements of the tuple
 
   <h4 class="w3-text-teal">Concurrent Operations</h4>
   Agents in a distributed system operate concurrently.
-  Many ATM machines are used at the same time; many people trade
-  using cryptocurrency at the same time; many
+  Many ATM machines are used at the same time; many people use
+  cryptocurrency to trade at the same time; many
   sensors and processors execute concurrently in an aircraft carrier.
 
   <p>
-  An agent changes its variables -- and thus its state -- while it is
+  An agent changes its variables -- and thus its state -- while
   executing statements in a <code>receive</code> function.
   
-  Analyzing algorithms, keeping in mind that multiple agents are
+  Analyzing algorithms, with many agents
   changing variables concurrently, is difficult.
 
-So we use a simple model that does not capture all aspects of system
+So we use a simple model that does not completely capture concurrent system
 behavior. 
 
   
   
   <h4 class="w3-text-teal">Model of State Changes</h4>
-The model deviates from the behavior of
-<a href="Basics.html">distributed systems</a>
+The model deviates from the behavior of distributed systems described on
+<a href="Basics.html"> the previous page</a>
 in two important ways.
 
   <ol>
@@ -159,7 +162,7 @@ completes processing a message.
 
   <h4 class="w3-text-teal">Computations</h4>
 A <i>computation</i> is a sequence 
-  of states
+  of one or more states 
 where there is a transition from each state in the sequence to the
 next.
 
@@ -172,7 +175,9 @@ A computation can start in any state.
 
   A computation may be finite or infinite.
 
-  All initial subsequences of a computation are also computations.
+  All initial subsequences of a computation are also computations: If
+  \(S_{0}, \ldots, S_{k}, \ldots\) is a computation then \(S_{0},
+  \ldots, S_{j}\) is also a computation for \(j < k\).
 
 
  <p>
@@ -215,7 +220,7 @@ other agents are idle.
 A sequential model for a distributed system that only considers states
   in which all agents are idle seems useless.
 
-On the next page we show why this model is useful.
+In the following webpages we show how this model is useful.
 
 
 
@@ -226,12 +231,15 @@ On the next page we show why this model is useful.
 <p class="w3-text-teal">State Transitions</p>
 
 States and transitions can represented by a directed
-graph, called the state transition graph, in which vertices are
+graph, called the state transition graph, in which vertices represent
   states and edges represent state transitions.
 
-  There can be an arbitrary number of transitions from a state.
+A computation can be viewed as a path in the state transition graph.
 
-A computation can be viewed as a path  in the state transition graph.
+(A path may consist of a single vertex.)
+
+<p>
+The remainder of this webpage consists of examples.
 
 <!---------------------------------------------------------------->
 <h2 style="color:red;">Examples </h2>
@@ -281,15 +289,10 @@ def receive(message, sender):
           send(wakeup, me)
 </pre>
 
-The initial state for the agent on the left is that it holds the blue
-token and has a wakeup message in the channel to itself.
-
-The initial state for the agent on the right is symmetric, see figure
-2. 
 
 
 <p>
-The diagram in figure 2 shows two states, \(S_{0}\) and \(S_{1}\), and
+Figure 1 shows two states, \(S_{0}\) and \(S_{1}\), and
 a transition from \(S_{0}\) to \(S_{1}\).
 
 The diagram at the left of the figure shows a state \(S_{0}\) in
@@ -299,13 +302,13 @@ token, channels \((u, v)\) and \((v, u)\) are empty, and channels
 star.
 
 
- 
     <figure>
     <img
     src="DistributedSystemModels/DistributedSystemModels.002.jpeg"
     alt="Fig1" style="width:100%"> 
-    <figcaption>Fig.2: Example: State Transition</figcaption>
+    <figcaption>Fig.1: Example: A Token-Passing System</figcaption>
 </figure>
+
 
 <p>
 The diagram at the right shows system state \(S_{1}\) in
@@ -316,7 +319,7 @@ message.
 
 <p>
 The transition from \(S_{0}\) to \(S_{1}\) occurs when \(u\) receives
-a wakeup message.
+a wakeup message on channel \((u, u)\).
 
 In this transition \(u\) sends the blue token to \(v\) and \(u\)
 changes to the state in which it holds no tokens.
@@ -345,13 +348,13 @@ synchronized.
 
 <figure>
     <img src="DistributedSystemModels/DistributedSystemModels.004.jpeg"
-    alt="Fig4" style="width:100%"> 
-    <figcaption>Fig.4: Example of State Transitions</figcaption>
+    alt="Fig2" style="width:100%"> 
+    <figcaption>Fig.2: Example of a State Transition Graph</figcaption>
 </figure>
 
 
 <p>
-Figure 4 shows a part of the state-transition graph for the
+Figure 2 shows a part of the state-transition graph for the
 token-passing example.
 
 Not all states are shown because there are too many to fit the page.
@@ -382,17 +385,17 @@ transition is to the state shown in the middle row, leftmost column.
 
 <p>
 An example of a computation is the sequence \([S_{0}, \ldots S_{8}]\)
-of states shown in figure 5 as a path in the state transition graph of
-figure 4. 
+of states shown in figure 3 as a path in the state transition graph of
+figure 2. 
 
 
 <figure>
     <img src="DistributedSystemModels/DistributedSystemModels.005.jpeg"
-    alt="Fig5" style="width:100%"> 
-    <figcaption>Fig.5: Example - A Computation is a Path in the State Graph</figcaption>
+    alt="Fig3" style="width:100%"> 
+    <figcaption>Fig.3: Example - A Computation is a Path in the State Graph</figcaption>
 </figure>
 
-A maximal computation, in this example, has infinite length.
+In this example a maximal computation has infinite length:
 
 Agents can keep sending tokens to each other forever.
 

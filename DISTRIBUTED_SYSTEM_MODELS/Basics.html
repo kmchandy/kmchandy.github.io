@@ -89,7 +89,7 @@ hr.new1 {
   This page describes a simple notation for distributed
   algorithms.
 
-  Converting algorithms in this notation to programs using widely-used
+  Converting this notation to widely-used programming
   languages is straightforward.
   </i>
   </p>
@@ -132,8 +132,8 @@ A system is represented by a directed graph in which vertices
 represent agents and edges represent channels.
 
 <p>
-A distributed system is initiated with a set of agents and channels,
-and these sets remain unchanged.
+A distributed system is initiated with sets of agents and channels
+  that remain unchanged. 
 
 Agents and channels are not created or deleted.
 
@@ -182,7 +182,7 @@ called a callback function in
 "https://www.rabbitmq.com/tutorials/tutorial-one-python.html">
 message queuing libraries.
 </a>
-The parameters <code>message, sender</code> of the function are the
+The parameters <code>message</code> and <code>sender</code> of the function are the
 message that is received, and the sender of the message.
 
 <p>
@@ -202,8 +202,8 @@ while there exists a nonempty input channel:
 The loop body starts with selecting <i>any</i> nonempty input
 channel.
 
-It is possible that the same input channels are selected in all
-iterations of the loop and that messages from other channels are never
+It is possible that the some input channels are selected in all
+iterations of the loop while messages from other channels are never
 processed.
 
 We introduce the concept of fair selection later.
