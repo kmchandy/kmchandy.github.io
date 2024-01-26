@@ -95,6 +95,10 @@ hr.new1 {
   
   Systems are monitored by taking repeated global snapshots.
 
+  When a transient error is detected, a rollback and recovery
+  algorithm restarts the computation from the most recent global
+  snapshot instead of starting it again from the beginning.
+
   </p>
  
   <!-----------------------------------------------------------------------------> 
@@ -154,7 +158,7 @@ traps these messages so that the client does not see them.
   events on the same processor, and thus change the order in which the
   client's events are executed. 
 
-<i>The OS may change a client's computation but
+<i>The OS may change a client's computation -- the event order -- but
 the OS must not change the client's dataflow.</i>
   
   <p>
@@ -177,68 +181,49 @@ OS.
 <h4 class="w3-text-teal">How Should You Approach the Problem?</h4>
 <!----------------------------------------------------------------------------->
 The problem is to record a state of a computation after the state
-in which the computation starts and before the state at which the
-computation ends.
+in which the global snapshot algorithm starts and before the state at which the
+global snapshot ends.
 
+The phrases "before the state" and "after the state" in the problem
+definition suggest that we use
+theorems about past (before) and future (after).
 
-A reasonable way to begin solving a problem that deals with recording
-a state in a computation, during the computation, is to use properties
-of slices and 
-<a href="Timelines.html">the theorem about past and future</a>.
+So, lets look at 
+<a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">the theorem about past and future</a>.
 
 
 <p>
 In any snapshot algorithm, each agent must record its own local state at some
 point in its computation because another agent cannot do so.
 
-Let's look at the slice \(W\) consisting of the points at which agents take
+Let's look at the slice consisting of the points at which agents take
  local snapshots --  i.e., record their states.
 
 <p>
-The theorem says that a slice is closed if every
-message sent in the future is received in the future.
+In this slice, a past event is an event at an agent
+before the agent takes its local snapshot, and a future event is an event at an agent
+after the agent takes its local snapshot.
 
-An event is in the future exactly when the event is at an agent
-<i>after</i> the agent takes its local snapshot.
+The theorem about past and future says that a slice is closed if every
+message sent in the future is received in the future.
 
 This gives us the key to the solution.
 
 <hr class="new2">
 <p style="color:blue;">
 A slice consisting of points at which agents take local snapshots is
-closed if 
+closed if:
+<p style="color:blue;">
 every message sent after the sender takes its local snapshot is
 received after the receiver takes its local snapshot.
 </p>
 <hr class="new2">
 
-<p>
-Let \(S\) be the state of the slice of points at which agents
-take local snapshots.
-
-Next, we show that \(S\) satisfies the specification for a
-global snapshot.
-
-<p>
-The slice at the points at which the snapshot algorithm starts is
-<a href="../DISTRIBUTED_SYSTEM_MODELS/Events.html">earlier than </a>
-the slice of points at which agents take local snapshots.
-
-So, there is a computation from the state in which the algorithm
-starts to \(S\).
-
-<p>
-By the same argument, there is a computation from \(S\) to the
-state in which the algorithm ends.
-
-So there is a computation in which \(S\) is an intermediate
-state between the states at which the algorithm starts and ends.
-
- 
+Next, let's design an algorithm based on this insight.
 <!----------------------------------------------------------------------------->
 <h4 class="w3-text-teal">The Global Snapshot Algorithm</h4>
 <!----------------------------------------------------------------------------->
-The algorithm follows directly from the key insight.
+
 
 The insight tells us that we must distinguish messages sent before the
 sender takes its snapshot from those sent after the snapshot.
@@ -246,6 +231,7 @@ sender takes its snapshot from those sent after the snapshot.
 We use a special message called a <i>marker</i> for this purpose.
 
 Markers are used only by the OS and are not seen by clients.
+
 
 <p class="w3-text-teal">The algorithm</p>
 <ol>
@@ -261,32 +247,46 @@ Markers are used only by the OS and are not seen by clients.
   When an agent receives a marker, the agent takes its local snapshot
   if it has not already done so. 
   </li>
+  <li>
+  The snapshot of a channel is the sequence of messages received on
+  the channel after the receiver takes its snapshot and before the
+  receiver receives a marker on the channel.
 </ol>
 
-<p class="w3-text-teal">Proof of correctness</p>
+<h5 class="w3-text-teal">Proof of correctness</h5>
 Channels are first in first out.
 
-So, messages sent on a channel after a marker is sent on the channel
-are received after the marker is received.
+All messages sent on a channel after a marker
+are received after the marker. 
 
 <p>
-From rule 2, messages sent on a channel after a marker on the channel
-are messages sent after the sender takes its snapshot.
+From rule 2, messages sent on a channel after the marker
+are sent after the sender takes its snapshot.
 
 From rule 3, messages received after a marker are messages received
 after the receiver takes its snapshot.
 
 So, messages sent after the sender takes its snapshot are received
 after the receiver takes its snapshot.
+<p>
+Therefore, the slice consisting of points at which agents take local snapshots is
+closed.
 
 
-<h5 class="w3-text-teal">Snapshots of Channels</h5>
-The messages in a channel at the state of an input-closed event set are the
-messages sent by events in the set and received by events outside the
-the set.
+<p class="w3-text-teal">Proof about Snapshots of Channels</p>
+The messages in a channel at the slice are the
+messages sent in the past and received in the future.
+These are messages sent before the sender takes its snapshot and
+received after the receiver takes its snapshot.
 
-So, the state of a channel in a snapshot is the sequence of
-messages received along the channel after the receiver takes its local
+<p>
+From rule 2, and because messages are delivered in order,
+messages sent in the past on
+a channel are messages received before the marker on the channel.
+
+<p>
+So, the state of a channel is the sequence of
+messages received along the channel after the receiver takes its
 snapshot and before the receiver receives a marker along the channel.
 
 <p>
@@ -294,41 +294,57 @@ Note: If an agent takes its local snapshot when it receives a marker
 along a channel, then the snapshot of the channel is the empty
 sequence of messages.
 
+<p class="w3-text-teal">Proof that the Snapshot is an Intermediate State</p>
+The slice at which the algorithm starts is earlier than the slice at
+which local snapshots are taken, which in turn is earlier than the slice at
+which the algorithm ends.
+
+There
+<a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+exists a computation from earlier to later slices
+</a>
+and so the global snapshot is an intermediate state between the points
+at which the algorithm starts and ends.
 
 <h5 class="w3-text-teal">Termination of the Algorithm</h5>
+
 After any agent \(v\) initiates the algorithm, all agents that are
 reachable from \(v\) will receive a marker and take their local
 snapshots.
 
-All agents take their local snapshots if every agent is reachable from
-an initiator along a sequence of channels.
+If every agent is reachable from an initiator then all agents take
+local snapshots. 
+
+<p>
+Each agent takes its local snapshot at most once.
+
+So, a marker is sent on a channel at most once.
+
+The computation terminates when all markers are received.
 
 
+
+
+<!--------------------------------------------->
+  <h4 class="w3-text-teal">Applications of Global Snapshots</h4>
+<!--------------------------------------------->
+<p>
+<i>
+Many algorithms are based on monitoring systems by taking repeated
+  snapshots. 
+</i>
 
 <p class="w3-text-teal">Collecting Local Agent and Channel
 Snapshots</p>
 
 In some algorithms, agents send snapshots of their states and 
 input channels to a collector agent which forms a global snapshot by
-composing the local state information that it receives.
+putting the information together.
 
-Other algorithms carry out distributed computations on local
-snapshots without sending data to a collector.
+In other algorithms agents carry
+out distributed computations on local snapshots without using a collector.
 
-Later we give examples of both kinds of algorithms.
-
-
-
-
-
-<!--------------------------------------------->
-  <h4 class="w3-text-teal">Applications of Global Snapshots: System Monitoring</h4>
-<!--------------------------------------------->
-<p>
-<i>
-Monitoring systems by taking repeated snapshots is the basis of
-many distributed algorithms.
-</i>
+We describe both types of algorithms in these pages.
 
 <p>
 Next we give a few examples of system monitoring.
@@ -338,7 +354,7 @@ Next we give a few examples of system monitoring.
 There exists a computation from the initial state of the computation
 to a global snapshot.
 
-So, when a transient error occurs, a rollback and recovery algorithms
+So, when a transient error occurs, a rollback and recovery algorithm
 restarts the computation at the most recent snapshot instead of restarting
 it from the beginning.
 
@@ -351,12 +367,15 @@ deadlocked.
 
 We discuss stable properties in detail later.
 
+<p>
 One way to detect stable properties is to monitor the system by
 taking snapshots repeatedly.
 
-If the system deadlocks then all snapshots taken after the deadlock occurs
+For example, if a system deadlocks then all snapshots taken after the deadlock occurs
 show that the system has deadlocked.
 
+And, if a snapshot shows that the system is deadlocked then the system
+is indeed deadlocked at that point.
 
 <!--------------------------------------------------------->
 <h2 style="color:red;">Examples</h2>
@@ -414,7 +433,7 @@ event, namely the message represented by the edge (0, 2).
 So, every message received in a pre-snapshot event is sent in a
 pre-snapshot event.
 
-The figure shows that the set of pre-snapshot events is input closed.
+The figure shows that the set of pre-snapshot events is closed.
 
 
 <!---------------------------------------------------------->

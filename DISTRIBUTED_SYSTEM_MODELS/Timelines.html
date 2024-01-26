@@ -373,12 +373,12 @@ Each message sent in a future event is received in a future event.
   boundary separating past and future events in the dataflow graph are
   directed from the past to the future.
 
+<p>
+<i>A slice is closed</i> is defined as the past of the slice is closed.
 
 <!----------------------------------------------------------------->
 <h4 class="w3-text-teal">The State at a Slice</h4>
 <!----------------------------------------------------------------->
-
-A slice is closed exactly when the past at the slice is closed.
 
 The state at a closed slice is the state after executing all events in
 the past and before executing any event in the future.
@@ -400,17 +400,33 @@ of \((u, v)\) edges from events in the past to events in the future.
   </li>
 </ol>
 
+The state at a slice is defined only for a closed slice.
 
-From property 2 of dataflow graphs:
+We use the shorter phrase "computation from a slice \(U\) to a
+ size \(V\)" for "computation from the state at a closed slice
+\(U\) to the state at a closed size \(V\)"
+
 <hr class="new2">
 <p style="color:blue;">
+From property 2 of dataflow graphs:
 For closed slices \(U, V\) where \(U \leq V\):
-there is a computation from the state at \(U\) to the state at \(V\).
-</p>
+there is a computation from \(U\) to \(V\).
 <hr class="new2">
 
-In figure 3 there is a computation from the slice \([3, 3, 2]\) to
-the slice \([4, 4, 2]\).
+
+<p>
+A closed slice \(U\) is defined to be <i>earlier than</i> a closed slice \(V\) (or \(V\) is
+<i>later than</i> \(U\)) exactly when \(U \leq V\).
+
+So, for all closed slices \(U, V\) of a dataflow graph: If \(U\) is
+earlier than \(V\) then
+there is a computation from \(U\) to  \(V\).
+
+
+<p>
+In figure 3, \([3, 3, 2] \leq [4, 4, 2]\), and so slice \([3, 3, 2]\)
+is earlier than slice \([4, 4, 2]\), and there is a computation from
+slice \([3, 3, 2]\) to slice \([4, 4, 2]\).
 
 <p>
 The remainder of this page consists of examples.
