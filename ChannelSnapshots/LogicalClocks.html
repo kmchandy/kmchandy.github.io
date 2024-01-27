@@ -85,9 +85,6 @@ hr.new1 {
   to each event in a computation so that all sequences of events in
   ascending logical time are computations.
 
-  Paths in the dataflow graph are from events at lower logical times
-  to events at higher logical times.
-
   </p>
 
    
@@ -105,21 +102,24 @@ hr.new1 {
 <!----------------------------------------------------------------------------->
 
 <p>
-The problem deals
-  with sequences of events and computations.
-  So, start with the definitions of these terms and theorems about
-  them. 
+The problem deals with sequences of events and computations.  So,
+  start with theorems about event sequences and computations.
 
   <p>
-  A computation is a topological sort of the dataflow graph -- i.e., a
+
+  <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+  A computation is a topological sort of the dataflow graph
+  </a>
+  -- i.e., a
   computation is sequence of events in which for all edges
   \((e, e')\) in the dataflow graph \(e\) occurs before \(e'\) in the
   sequence.
 
+  <p>
   If \(t(e) < t(e')\) then \(e\) occurs before \(e'\) in all ascending
   sequences of logical time.
   
-  This key insight is the logical time property.
+  These observations suggest the logical time property.
   
 
   
@@ -164,41 +164,43 @@ The problem deals
 <!-------------------------------------------------------->
 <h4 class="w3-text-teal">A Logical Clock Algorithm</h4>
 <!-------------------------------------------------------->
- Let \(t(e)\) be the logical time assigned to event \(e\).
- 
- The following algorithm is suggested by the logical time property.
+The following algorithm is suggested by the logical time property.
 
-  <p>
+Let \(t(e)\) be the logical time assigned to event \(e\).
+
+A message sent in an event \(e\) is assigned a timestamp \(t(e)\).
+
+<hr class="new2">
+<p style="color:blue;">
 Let \(e'\) be the event immediately preceding an event \(e\) at an
-agent.
-<ol>
-  <li>
-  A message sent in an event \(e\) is assigned a timestamp \(t(e)\).
-  </li>
-  <li>
-  If the timestamp of the message received in an event \(e\) is \(T\) then set
-  \(t(e)\) to be any value greater than max(t(e'), T).
-  </li>
-</ol>
+agent, and let the timestamp of the message received in \(e\) be
+\(T\).
+<p style="color:blue;">
+Set \(t(e)\) to be any value greater than max(t(e'), T).
+<hr class="new2">
 
+<p>
 The correctness of the algorithm is self evident.
 
 
   
   <!-------------------------------------------------------->
-  <h4 class="w3-text-teal">The Past and State at Logical Time \(t\)</h4>
+  <h4 class="w3-text-teal">The Past, Future and State at Logical Time \(t\)</h4>
   <!-------------------------------------------------------->
-A point at logical time \(t\) on an agent \(u\)'s computation is an
-  edge from an event at \(u\) with logical time at most \(t\) to an
-event with logical time greater than \(t\).
+
 
   <p>
-  The <i>past at \(t\)</i> is the set of events  with logical
+  The <i>past at logical time \(t\)</i> is defined as the set of events  with logical
 time at most \(t\).
 
-The <i>future at \(t\)</i> is the set of events  with logical
+The <i>future at logical \(t\)</i> is the set of events  with logical
 time greater than \(t\).
 
+The <i>point at logical time \(t\)</i> on an agent \(u\)'s computation is an
+edge between a past and future event at logical time \(t\) at \(u\).
+
+The <i>slice at logical time \(t\)</i> is given by the points at
+logical time \(t\).
 
 <p>
   The past at \(t\) is closed because there is no edge
@@ -225,7 +227,10 @@ computation shown in figure 1.
   The slice separates the past of the slice from its future.
 
   Past events are colored black while future events are colored
-  green. 
+green.
+
+The states of agents and channels at logical time \(t = 6.5\) are
+given by the labels of the edges that cut the purple line.
 
 <figure>
     <img src="Timelines/Timelines.002.jpeg"
@@ -238,7 +243,7 @@ The point at which the purple line cuts the timeline for agent \(A\)
 can be thought of as the point in \(A\)'s computation at which the
 logical time is exactly 6.5.
 
-This cut is at any point on the edge from the event at \(A\) with
+This cut is on the edge from the event at \(A\) with
   logical time at most 6.5 to the event with logical time greater
   than 6.5.
 
@@ -253,24 +258,7 @@ In this example, the state of the channel \((A, B)\) is the sequence
 consisting of a 
 single message which is the label of this edge.
 
-<p>
-The states of agents and channels at logical time \(t = 6.5\) are
-given by the labels of the edges that cut the purple line.
 
-  <p class="w3-text-teal">Intuition</p>
-  It helps intuition to think of points on an agent's computation for
-all real numbers \(t\) even if logical times of events are integers.
-
-Points on an agent with later logical times are represented by
-points to the right of points with earlier logical times at that agent.
-
-<p>
- In this example, points at logical time \(6.5\) and \(6.6\) at agent
-\(A\) refer to the same edge; however, it can help intuition to think
-of the point at logical time \(6.6\) as a 
-  location to the right of the point at logical time \(6.5\)
-  on the same edge.
-  
 
 
 <h4 class="w3-text-teal">
@@ -298,8 +286,40 @@ time 6.5.
 
 
   <!--------------------------------------------->
-  <h4 class="w3-text-teal">Using Imperfect Clocks in Distributed Algorithms</h4>
+  <h3 class="w3-text-teal">Using Imperfect Clocks in Distributed Algorithms</h3>
 <!--------------------------------------------->
+
+  <p class="w3-text-teal">Intuition</p>
+  It can help intuition, as we design algorithms for some problems, to think of 
+logical time playing the role of real time.
+Figure 3 shows the computation in figure 2 with the horizontal axis
+representing real time.
+The position of an event with logical time \(t\) is at a distance of
+\(t\) units from the origin.
+
+<figure>
+    <img src="Timelines/Timelines.003.jpeg"
+  alt="Fig3" style="width:80%"> 
+    <figcaption>Fig. 3: Computation with Logical Time as Real Time</figcaption>
+</figure>
+
+
+<p>
+Thinks of logical time as continuous, just as real time is continuous.
+In this example, points at logical time \(6.5\) and \(6.6\) at agent
+\(A\) refer to the same edge; however, it helps intuition to think
+of the point at logical time \(6.6\) as a location to the right of the
+point at logical time \(6.5\) on the same edge.
+
+<p>
+The slice at logical time \(6.5\) is represented by the vertical line
+at time \(6.5\).
+The left of the line is the past, and the right side of the line is
+the future at that time.
+
+
+  
+<p class="w3-text-teal">Properties shared by Perfect and Imperfect Clocks</p>
 Perfect clocks have many useful properties including the following:
 
 <ol>
@@ -316,28 +336,25 @@ Perfect clocks have many useful properties including the following:
   </li>
 </ol>
 <p>
-Agents in most distributed systems have access to clocks maintained by
-operating systems.
-
-Many systems have atomic clocks or other high-fidelity clocks that use Precision or
+Operating systems maintain clocks. Some have atomic clocks or other
+  high-fidelity clocks that use Precision or 
 Network Time Protocols (PTP, NTP).
 
-These clocks tick forward (unless there is a failure) and so these
-  clocks have property 1.
+These clocks have property 1.
 
 <p>
-We can use the logical clock algorithm to adjust these clocks: move an
-agent's clock forward so that the time at which a message is
+We can use the logical clock algorithm to adjust these clocks to get
+property 2:
+move an agent's clock forward so that the time at which a message is
 received, as determined by the receiver's clock, is later than the
 timestamp of the message.
-So, these imperfect clocks also have property 2.
 
 <p>
-We use clocks with these properties in many algorithms, and we employ the following
+We use clocks with these two properties in many algorithms, and we employ the following
 heuristic.
 
 <h5 class="w3-text-teal">A Design Heuristic</h5>
-Design algorithms that use snapshots in two steps.
+A heuristic is to design algorithms in two steps.
 <ol>
   <li>
   <i>First step:</i>
@@ -347,27 +364,31 @@ Design an algorithm assuming that
   <li>
   <i>Second step:</i> Check whether the algorithm is correct with
   imperfect clocks that have properties 1 and 2.
-  In many cases we will need to use only one of the two properties.
+  In some cases we will need to use only one of the two properties.
   </li>
 </ol>
 
 <p>
+Here are a couple of examples of applications of the heuristic.
+
 Let's design a global snapshot algorithm using the heuristic.
-First step: 
-each agent takes a local snapshot at exactly the same time \(t\).
+First step: When clocks are perfect, the algorithm is trivial.
+Each agent takes a local snapshot at exactly the same time \(t\).
 Second step: Prove the correctness of the same algorithm even though
 clocks are imperfect.
 
 
 <p>
-Let's design an algorithm to to take repeated
-snapshots. First step: With perfect clocks, each agent records its
+Another example: design an algorithm to to take repeated
+snapshots. First step: With perfect clocks, the algorithm is
+straightforward. Each agent records its 
 state periodically with some period \(T\).
-Second step: Use exactly the same algorithm with imperfect clocks and
-prove that snapshots are taken repeatedly.
+Second step: Prove the correctness of the same algorithm even though
+clocks are imperfect.
 
 <p>
-We use this heuristic with some of the problems described next.
+We use this heuristic in designing other problems that are described
+in later webpages.
 
 <h4 class="w3-text-teal">Next</h4>
 
