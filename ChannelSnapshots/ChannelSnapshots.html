@@ -322,6 +322,40 @@ So, a marker is sent on a channel at most once.
 
 The computation terminates when all markers are received.
 
+<h5 class="w3-text-teal">Code Structure</h5>
+The code outline is given below in Python.
+
+<i>channels_recorded</i> is a dict (dictionary), where
+<i>channels_recorded[sender]</i> becomes True when the snapshot for
+the channel from this sender has finished being recorded.
+<i>channel_snapshots</i> is a dict where
+<i>channel_snapshots[sender]</i> is the ongoing recording of the
+snapshot of the channel from the sender.
+
+<pre>
+taken_local_snapshot = False
+channel_snapshots = {key: [] for key in predecessors}
+channels_recorded = {key: False for key in predecessors}
+
+start()
+def receive(message, sender):
+   if isinstance(message, Marker) and not taken_local_snapshot:
+        local_snapshot = record_state()
+        taken_local_snapshot = True
+        channels_recorded[sender] = True
+        output_message = Marker()
+        for receiver in successors:
+            send(output_message, receiver)
+   elif isinstance(message, Marker) and taken_local_snapshot:
+        channels_recorded[sender] = True
+   else: 
+        if taken_local_snapshot and not channels_recorded[sender]:
+           channel_snapshots[sender] = \\ 
+                       channel_snapshots[sender].append(message)
+</pre>
+
+
+
 
 
 
