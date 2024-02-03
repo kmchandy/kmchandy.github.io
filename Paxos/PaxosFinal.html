@@ -80,33 +80,6 @@ hr.new1 {
     <!--------------------------------------------------------->
   <h1 class="w3-text-teal">The Paxos Algorithm</h1>
 
-  <p class="w3-text-green">
-  This page uses material from
-  <a
-  href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-  Timelines.
-  </a>
-  and
-  <a
-  href="./ConsensusImpossible.html">
-  Consensus is Impossible.
-  </a>
-  
-  </p>
-
-
-  <!------------------------------------------------------------------->
-  <h4 class="w3-text-red">
-  <i>Central Ideas</i></h4>
-
-  <p class="w3-text-red">
-  (1) Paxos: an algorithm by which agents reach consensus.
-
-  (2) Systems in which messages may be lost and agents may stop.
-
-  (3) Timelines in which events occur in rounds.
-
-  (4) An application of consistent cuts of timelines.
   
   <!-------------------------------------------------->
   <p class="w3-text-red">
@@ -142,8 +115,453 @@ hr.new1 {
   copies of a message may be delivered; messages may not be
   delivered in the order sent; agents may be arbitrarily slow; and
   agents may stop.
+
   
   <!-------------------------------------------------->
+  <h4 class="w3-text-teal">A Sequential Model of Distributed Systems
+  with Lossy Channels</h4>
+  <!-------------------------------------------------->
+  In a distributed system an agent \(p\) simulates reading local
+  variables of a set of agents \(A\) as follows: \(p\) sends a message
+  to each agent \(a\) in \(A\) requesting \(a\) to reply with
+  values of \(a\)'s local variables.
+
+  <p>
+  Requests and replies may get lost in a system with lossy channels.
+  
+  So \(p\) gets replies from a subset of the agents in
+  \(A\).
+
+  We call this subset the <i>read subset</i>.
+
+  The read subset is arbitrary -- it may be the empty set, or the
+  entire set, or a nonempty proper subset.
+  
+  <p>
+  Likewise, if \(p\) sends messages to all agents in \(A\),
+requesting agents in \(A\) to update their local variables, some
+  agents may not receive the messages.
+So, agents in a subset of \(A\) update their variables.
+
+We call this subset the <i>write subset</i>.
+
+
+<!----------------------------------------------------------->
+<h5 class="w3-text-teal">Majorities Accept Proposed Values</h5>
+<!----------------------------------------------------------->
+
+Next, we give an example of a while loop of a
+sequential program which illustrates read and write subsets.
+
+We later show how the while loop is converted to a distributed
+algorithm for a system with lossy channels.
+
+<p>
+The variables of the loop are sets <code>P</code> and <code>A</code>
+called the sets of proposers and acceptors, respectively.
+
+A proposer <code>p</code> has a field <code>p.v</code> called
+<code>p</code>'s value. 
+
+An acceptor <code>a</code> has fields <code>a.v, a.t</code> called
+<code>a</code>'s value and time, respectively.
+
+An acceptor's value is the same type as a proposer's value, and an
+acceptor's time is an integer.
+
+
+<p>
+Initially <code>a.v, a.t = None, 0</code> for all  <code>a</code>.
+The symbol <code>None</code> indicates unassigned.
+The steps of the loop are as follows.
+<ol>
+  <li>
+  Select any <code>p</code> from the set <code>P</code>
+  nondeterministically.
+  </li>
+  <li>
+  Select a subset <code>read_subset</code> of <code>A</code>
+  nondeterministically.
+  </li>
+  <li>
+  If <code>read_subset</code> is a majority of acceptors then
+  select a subset, <code>write_subset</code>, of <code>A</code>
+  nondeterministically, and assign values to all elements in <code>write_subset</code>.
+  </li>
+</ol>
+
+<pre>
+  t = 0
+  for a in A:
+    a.v, a.t = None, 0
+      
+  while True:
+    p = any_element(P)
+    read_subset = any_subset(A)
+
+    if len(read_subset) >= len(A)/2:
+        write_subset = any_subset(A)
+        for a in write_subset:
+           a.v, a.t = f(p, read_subset), t
+    t = t + 1
+</pre>
+
+Next we describe function <code>f</code>.
+
+If the time for all acceptors in <code>read_subset</code> is 0 then
+the function returns <code>p.v</code>, the proposer's value.
+
+Otherwise the function returns the value of the acceptor in
+<code>read_subset</code> with the largest time.
+
+<pre>
+def f(p, read_subset):
+   v, t = p.v, 0
+   for a in read_subset:
+      if a.t > t:   v, t = a.v, a.t
+   return v
+</pre>
+
+
+<h5 class="w3-text-teal">Properties of the Sequential Program</h5>
+The proof of the following observation is straightforward.
+
+<p>
+In all states of the computation, for all acceptors \(a\),
+<ol>
+  <li>
+  <code>a.t</code> is the iteration number in which <code>a.v</code>
+  was last assigned a value.
+  </li>
+  <li>
+  \(a\)'s value is None or is a value of some proposer.
+  <p>
+  \(
+  \forall a:  (a.v = None) \vee (\exists p: a.v = p.v)
+  \)
+  </li>
+</ol>
+
+  The program has the following property.
+  If in the \(n\)-th iteration, for any \(n\) the write subset is a majority and acceptors in
+  the write subset are assigned a value \(u\)
+  then, in subsequent iterations an acceptor's value
+  does not change or changes to \(u\).
+  <p>
+
+
+<p>
+The property can be written as follows. For all values \(u\),
+iteration number \(n\) and majority \(M\) of acceptors:
+<p>
+\(
+(\forall a \in M: a.v, a.t = u, n)
+\)
+<br>
+\(
+\Rightarrow
+\)
+<br>
+\(
+\forall a: (a.t < n) \vee (a.v = u)
+\)
+  
+
+
+<!----------------------------------------------------------->
+<h5 class="w3-text-teal">Proof of the property</h5>
+<!----------------------------------------------------------->
+Let \(M\) be a majority of acceptors, \(u\) be a value, and \(n\) be
+an iteration number where all acceptors in \(M\) have value \(u\) and
+time \(n\).
+
+We will prove that in all states an acceptor's time is less than \(n\)
+or its value is \(u\).
+
+<p>
+The result holds after the first \(n-1\) iterations because \(a.t <
+n\) in these iterations.
+
+The result holds after the \(n\)-th iteration, because if an
+acceptor \(a\)'s variables are modified in this iteration then
+\(a.v, a.t = u, n\).
+
+<p>
+Assume that the result holds after the first \(i \geq n\) iterations and
+prove that it holds for the \(i+1\)-th.
+
+We need only consider the case where the read subset in the iteration
+is a majority, and 
+in this case the read subset has an element in common
+with majority \(M\).
+
+So there is an element \(a\) of read subset in which \(a.t = n\) and
+\(a.v = n\).
+<p>
+
+
+
+
+
+
+<h1>OLD</h1>
+<h1>OLD</h1>
+<h1>OLD</h1>
+<p>
+Next, we give an example of a synchronous algorithm for a message-passing system with
+lossy channels and then map the algorithm to a single while loop of a
+sequential program.
+
+Later we show how the synchronous algorithm can be implemented in (asynchronous)
+distributed systems.
+
+<p>
+  The system has nonempty sets <code>P</code> and <code>A</code> of
+  agents called the sets of <i>proposers</i> and <i>acceptors</i>, respectively.
+  Each proposer <code>p</code> has a local variable <code>p.v</code>, and each
+  acceptor <code>a</code> has local variables <code>a.v</code> and
+  <code>a.t</code>.
+
+<p>
+<code>p.v</code> is constant for all proposers <code>p</code>.
+  Initially, <code>a.v = None</code> and <code>a.t = 0</code> for all
+acceptors <code>a</code>.
+  The symbol <code>None</code> indicates unassigned.
+
+
+<p>
+The program consists of a sequence of rounds where each round
+  consists of the following synchronous phases. 
+
+  <ol>
+    <li>
+    <i>The selection phase: </i>A single proposer <code>p</code> is
+    selected nondeterministically. 
+    </li>
+    <li>
+    <i>The read phase: </i>
+    <code>p</code> sends read requests to all acceptors asking the
+    acceptors to reply with the values of their local variables.
+    An acceptor <code>a</code> which receives the request replies with
+    a message <code>r</code> (for <i>r</i>ead) which has fields <code>id, v,
+    t</code>, and where
+<pre>
+  r.id, r.v, r.t = a.id, a,v, a.t
+</pre>
+    
+    Let <code>read subset</code> be the subset of acceptors from which
+    <code>p</code> gets replies.
+    </li>
+    <li>
+    <i>The write phase: </i>
+    If the read subset is a majority of acceptors then <code>p</code>
+    sends write requests to all acceptors.
+    Let <code>write subset</code> be the subset of acceptors that update
+    their values.
+  </ol>
+  
+
+<p>
+In the program, <code>P</code> is a set of arbitrary values, and
+<code>A</code> is a set of objects where each <code>a</code> in
+<code>A</code> has fields <code>a.v</code> and <code>a.t</code>.
+Later, we use <code>A</code> to represent agents.
+
+<p>
+The algorithm proceeds in two phases.
+First, send requ
+
+
+
+  <!-------------------------------------------------->
+  <h3 class="w3-text-teal">A Rounds-Based Algorithm</h3>
+
+  A system has nonempty sets <code>P</code> and <code>A</code> of
+  agents called the sets of <i>proposers</i> and <i>acceptors</i>, respectively.
+  Each proposer <code>p</code> has a local variable <code>p.v</code>, and each
+  acceptor <code>a</code> has local variables <code>a.v</code> and
+  <code>a.t</code>.
+  We call <code>p.v</code> the value proposed by <code>p.v</code>.
+
+  <p>
+  Initially, <code>a.v = None</code> and <code>a.t = 0</code>
+  where the symbol <code>None</code> indicates unassigned.
+
+  If an acceptor's value is any non-<code>None</code> <code>w</code>
+  then we say that the acceptor has accepted <code>w</code>.
+  We refer to <code>a.t</code> as <code>a</code>'s time.
+  <p>
+  Proposers send messages to, and receive messages from, acceptors.
+  Messages may get lost or delayed by arbitrary amounts.
+
+  The problem is to design an algorithm with the following
+  specification:
+  <ol>
+    <li>
+    Acceptors only accept proposer's values.
+    <p>
+    \(
+    \forall a: (a.v = None) \vee (\exists p: a.v = p.v)
+    \)
+    </li>
+    <li>
+    If a majority of acceptors accept the same value, <code>v*</code>
+  and have the same time <code>t*</code> at any point in a
+    computation, then in all points of the computation an acceptor has also accepted
+  <code>v*</code> or its time is less than <code>t*</code>.
+
+    <p>
+    \(
+    (\exists v*, t*, M: \forall a \in M: a.v, a.t = v*, t*)
+    \)
+    <br>
+    \(
+    \Rightarrow
+    \)
+    <br>
+    \(
+    (\forall a: (a.v = v*) \vee (a.t < t*))
+    \)
+    </li>
+ </ol>
+  
+
+
+
+  in a sequence of rounds where each round
+  consists of the following synchronous phases. 
+
+  <ol>
+    <li>
+    A single proposer is selected nondeterministically.
+    Let's call this proposer the <code>p</code>.
+    </li>
+    <li>
+    <i>The read phase: </i>
+    <code>p</code> sends read requests to all acceptors asking the
+    acceptors to reply with the values of their local variables.
+    <code>p</code> receives replies from none, some, or all acceptors
+    because messages may be lost.
+    Let <code>read subset</code> be the subset of acceptors from which
+    <code>p</code> gets replies.
+    </li>
+    <li>
+    <i>The write phase: </i>
+    If the read subset is a majority of acceptors then <code>p</code>
+    sends write requests to all acceptors.
+    When an acceptor receives a write request it 
+    updates its local variables with the values specified in
+    the request.
+    
+    A subset of acceptors update their values because some write requests may be lost.
+    Let <code>write subset</code> be the subset of acceptors that update
+    their values.
+  </ol>
+  
+  
+  The sequence of rounds can be represented by a loop in a sequential program.
+
+  <pre>
+  t = 0
+  for a in A:
+    a.v = None
+    a.t = 0
+      
+  while True:
+    p = any_element(P)
+    read_subset = any_subset(A)
+
+    if len(read_subset) >= len(A)/2:
+        write_subset = any_subset(A)
+        for a in write_subset:
+           a.v = f(v, read_subset)
+           a.t = t
+    t = t + 1
+   </pre>
+
+  <!-------------------------------------------------->
+
+  
+  The problem is to design phase 3 so that if on any given round \(T\), the selected
+    proposer sends write requests, and the write
+    subset is large enough, and for all acceptors <code>a</code> in the
+    write subset, <code>a.v = V*</code>, 
+In the code outline, <code>h</code> is a boolean function of the
+  variables in read subset.
+  The call <code>update(a, read_subset, t)</code> modifies
+  <code>a</code> with values that depend on <code>read_subset</code>
+  and <code>t</code>.
+  
+    
+
+    (1) read any
+  subset \(r\) of acceptors, and (2) write any subset \(w\) of acceptors.
+  
+  Proposers propose values and acceptors may accept or ignore the
+  proposed values.
+
+  <p>
+  On each round, exactly one proposer \(p\) is selected, and \(p\)
+  sends messages to, and receives messages from, acceptors in this
+  round.
+
+  The only communication in a round is between the selected
+  proposer and acceptors.
+
+  Messages may get lost.
+
+  Messages sent in a round are received in the round.
+
+  <p>
+  We want to design an algorithm with the following specification.
+
+If a majority of acceptors accept the same value on any round then in
+    all subsequent rounds all m
+
+  <h1>OLD</h1>
+
+  
+    
+
+  
+  Let's begin with a sequential program with a single loop.
+
+  Later, we will map the sequential algorithm to a distributed
+  system. 
+
+  <p>
+  The variables of the algorithm are nonempty sets \(A\) and \(P\) of
+  objects called <i>acceptors</i> and <i>proposers</i>, respectively.
+  Associated with each proposer <i>p</i>, and each acceptor <i>a</i>
+  are values <p.v> and <a.v>, respectively.
+  Each acceptor has an additional field, <i>a.t</i>.
+
+  Let <i>M</i> be the number of elements that constitute a majority of
+  acceptors. 
+
+  <p>
+  The \(t\)=th iteration of the loop consists of four steps:
+  <ol>
+    <li>
+    Select any proposer <i>selected_proposer</i>
+    </li>
+    <li>
+    Select any subset <i>read_subset</i> of acceptors.
+    </li>
+    <li>
+    Select any subset <i>write_subset</i> of acceptors.
+    </li>
+    <li>
+    If <i>read_subset</i> is a majority of acceptors, then
+    for each <i>a</i> in <i>write_subset</i>. 
+    assign
+    <i>f(selected_proposer, read_subset)</i> to <i>a.v</i> and assign <i>t</i> to
+    a.t</i>. We specify <i>f</i> later.
+    </li>
+</ol>
+The selections in the algorithm are nondeterministic.
+A selected subset of acceptors may be the empty subset.
+
   <h3 class="w3-text-teal">Specification</h3>
 
   The algorithm assumes that messages are not modified in transit and agents
