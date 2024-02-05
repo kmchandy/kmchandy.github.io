@@ -116,6 +116,139 @@ hr.new1 {
   delivered in the order sent; agents may be arbitrarily slow; and
   agents may stop.
 
+
+    
+  <!-------------------------------------------------->
+  <h4 class="w3-text-teal">Implementing a Synchronous Algorithm on a
+  Lossy Distributed System
+  </h4>
+  <!-------------------------------------------------->
+We begin by describing a method for implementing a synchronous
+  algorithm on a distributed system with lossy channels.
+
+  A set \(P\) of agents reads and writes a  shared
+  object \(v\).
+
+  An agent \(p\) in \(P\) has local variables \(p.r\) and \(p.w\)
+  which are the most recent value of \(v\) that
+  \(p\) has read, and the most recent value that \(p\) has written,
+  respectively. 
+
+  <p>
+ The following iterations ensure that at most one agent
+  accesses the shared object at a time.
+  <ol>
+    <li>
+    Select any one agent \(p\) in \(P\). The selection is
+    nondeterministic.
+    </li>
+    <li>
+    Copy \(v\) into \(p.r\).
+    </li>
+    <li>
+    Compute \(p.w\) as function of \(p.r\) and other local variables
+  of \(p\).
+    </li>
+    <li>
+    Copy \(p.w\) into \(v\).
+    </li>
+  </ol>
+
+  <p>
+  The shared object is implemented by having an
+  agent \(a\) with a local variable \(a.v\), where \(a.v\) is the
+  shared object.
+  
+  An agent \(p\) reads \(v\) into \(p.r\) by sending a read request to
+  \(a\) which replies with \(a.v\).
+
+  When \(p\) receives the reply \(p\) copies \(a.v\) into \(p.r\).
+
+  <p>
+  Agent \(p\) writes \(p.w\) by sending a write
+  request containing \(p.w\) and when \(a\) gets the request it
+  sets \(a.v\) to \(p.w\).
+
+  <p>
+  Next, we show how timestamps are used to select a single agent \(p\)
+  from a set.
+  Each message \(m\) sent between a proposer \(p\) and \(a\) has a
+  timestamp \(m.t\).
+  Each proposer \(p\) has a local variable \(p.t\) and \(a\) has a
+  local variable \(a.t\).
+  The central feature of the algorithm is this: \(a\) ignores any
+  message \(m\) that it receives if \(m.t < a.t\).
+
+
+A proposer \(p\) sends ReadRequest and WriteRequest messages to \(a\).
+\(a\) replies to a ReadRequest with a ReadReply message.
+In addition, each proposer sends a Timeout message to itself.
+
+<p>
+Each proposer starts by sending a Timeout to itself.
+If a proposer receives a Timeout message it increments its own time by
+a positive amoung \(h()\) and sends a read request to \(a\).
+The timestamp of the read request is the proposer's time (written here
+as <code>self.t</code>).
+The proposer then sleeps for an aribtrary (finite) amount of time, and
+then sends itself a Timeout message.
+
+<p>
+
+The pseudo-code for an agent \(p\) is given below in Python-like notation.
+
+  
+<pre>
+send(Timeout, self)
+start()
+
+def receive(m, sender):
+   if isinstance(m, Timeout):
+        self.t = self.t + h()
+        send(ReadRequest(t=self.t), a)
+        time.sleep(..)
+        send(Timeout, self)
+   elif m.t == self.t:
+         send(WriteRequest(v=f(..), t=self.t), a)
+  </pre>
+
+If \(p\) receives a message \(m\) of type <i>ReadReply</i> and \(m.t =
+  p.t\) then \(p\) sends a write request to \(a\) requesting \(a\) to
+  write the value returned by a function \(f(..)\) into \(a.v\).
+  The time field of the write request is \(p.t\).
+
+  
+
+
+  
+  
+<pre>
+def receive(message, sender):
+   if instance(message, Reply):
+      if message.time == my_time:
+         received_reply[sender] = message.value
+         if len(received_reply) > num_acceptors/2:
+            send_message = WriteRequest(
+                value = f(received_reply, ...),
+                time  = my_time
+            for all acceptor in acceptors:
+               send(send_message, acceptor)
+   else:
+        // message is Timeout
+        sleep_time = g()
+        time.sleep(sleep_time)
+        my_time = my_time + h()
+        received_reply = {}
+        msg = ReadRequest(time = my_time)
+        for acceptor in acceptors:
+           send(msg, acceptor)
+        send(Timeout, self)
+</pre>
+         
+      
+  
+
+  
   
   <!-------------------------------------------------->
   <h4 class="w3-text-teal">A Sequential Model of Distributed Systems
