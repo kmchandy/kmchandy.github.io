@@ -1,4 +1,4 @@
-<title>DistributedSystemModels/Basics.html</title>
+<title>DistributedSystemModels/BasicsFAQ.html</title>
 
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
@@ -78,213 +78,155 @@ hr.new1 {
 
 
 <!---------------------------------------------------------------->
-    <h1 class="w3-text-teal">Basics</h1>
-<!----------------------------------------------------------------->
-  
-
-  
-  </p>
-
-  <p class="w3-text-red">
-  This page describes a simple notation for distributed
-  algorithms.
-
-  Converting this notation to widely-used programming
-  languages is straightforward.
-  </i>
-  </p>
-
-  <!----------------------------------------------------------------->
-  <h3 class="w3-text-teal">Agents and Channels</h3>
-  <!----------------------------------------------------------------->
-  We use a simple notation to develop algorithms. Later, we implement
-  algorithms using libraries such as
-  <a href="https://en.wikipedia.org/wiki/Message_queue">Message Queue (MQ)</a>,
-  <a href="https://aws.amazon.com/sqs/">AWS Simple Queue Service
-  (SQS)</a>,
-  and
-  <a
-  href="https://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol">
-  Advanced Message Queuing Protocol (AMQP)
-  </a>.
-  
-  The notation is a simplification of a
-  <a
-  href="https://www.rabbitmq.com/tutorials/tutorial-one-python.html">
-  Python implementation of AMQP.
-  </a>
-
-  
-<p>
-
-A distributed system consists of a set of agents and a set of
-channels.
-  
-  A channel is directed from one agent to one agent.
-
-  A channel from an agent <code>P</code> to an agent <code>Q</code> is
-  an output of <code>P</code> and an input of <code>Q</code>.
-  
-  An agent can send messages on its output channels and receive
-  messages on its input channels.
-
-A system is represented by a directed graph in which vertices
-represent agents and edges represent channels.
-
-<p>
-A distributed system is initiated with sets of agents and channels
-  that remain unchanged. 
-
-Agents and channels are not created or deleted.
-
-
-  <h4 style="color:red;">Example: Agent-Channel Graph</h4>
-  The figure below shows an agent-channel graph with agents \(A, B, C\).
-
-    <figure>
-    <img
-    src="DistributedSystemModels/DistributedSystemModels.001.jpeg"
-    alt="Fig1" style="width:60%"> 
-    <figcaption>Fig.1: Example: An Agent Graph</figcaption>
-    </figure>
-
-
-
-<!---------------------------------------------------->
-<h3 class="w3-text-teal">Message Communication</h3>
+    <h1 class="w3-text-teal">Basics: FAQ</h1>
 <!----------------------------------------------------------------->
 
-The state of a channel is the sequence of messages in the channel --
-these are the messages that have been sent on the
-channel and that have not been received.
+    <!----------------------------------------------------------------->
+  <p class="w3-text-teal">Why use such a simplistic model?</p>
+  <!----------------------------------------------------------------->
+  The model is indeed simplistic; however, it is adequate to describe
+  and prove the correctness of the algorithms described in this
+  website. 
+    
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">Can you represent systems in which agents
+  are created and deleted in the model?</p>
+  <!----------------------------------------------------------------->
+  Construct a system with a large number of agents and channels.
 
-An agent sends a message by appending the message to the tail of the
-sequence of messages in the channel.
+  Represent an agent that has yet to be created by an agent \(a\) that
+  is created in a special state -- "dormant."
 
-An agent can receive the message at the head of a nonempty sequence of
-messages in any of the agent's input channels.
+  \(a\) has an input channel from a system manager which
+  sends \(a\) a message -- say a "create" message -- and when \(a\) receives the
+  message it starts executing and changes state from dormant to executing.
 
-When an agent receives a message it is deleted from the sequence.
+  <p>
+  A similar method can be used for representing channels that are
+  created and deleted.
 
+      
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">How do you represent channels that are not
+  first in first out?</p>
+  <!----------------------------------------------------------------->
+  Later we describe algorithms with different types of channels.
 
-<!---------------------------------------------------->
-<h3 class="w3-text-teal">Agents</h3>
-<!---------------------------------------------------->
+  For example, the state of a channel in which messages may overtake
+  each other is a multiset or bag.
 
+  A message is sent on a channel by adding the message to the
+  multiset.
 
+  A nonempty multiset may deliver any message in the mutliset to the
+  receiving agent.
 
-Associated with each agent is a function
-<pre>
-receive(message, sender)
-</pre>
-called a callback function in
-<a href=
-"https://www.rabbitmq.com/tutorials/tutorial-one-python.html">
-message queuing libraries.
-</a>
-The parameters <code>message</code> and <code>sender</code> of the function are the
-message that is received, and the sender of the message.
+  <p>
+  Lossy channels, and channels in which messages have priorities, are
+  also modeled by defining channel states appropriately.
 
-<p>
-Each agent initializes its state and then executes an infinite loop in
-which the agent receives and processes a message from any of its input
-channels.
+        
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">Can the model represent sequential
+  computation of distributed computation?</p>
+  <!----------------------------------------------------------------->
+  A sequential composition of distributed computations is one in which
+  a distributed computation starts and later terminates after
+which a new distributed computation starts.
 
-The structure of the loop for an agent \(v\) is as follows.
-
-<pre>
-while there exists a nonempty input channel:
-    select any nonempty channel (u, v)
-    let the head of (u, v) be msg
-    <code>receive(msg, u)</code>
-</pre>
-<p>
-The loop body starts with selecting <i>any</i> nonempty input
-channel.
-
-It is possible that the some input channels are selected in all
-iterations of the loop while messages from other channels are never
-processed.
-
-We introduce the concept of fair selection later.
-
-
-<p>
-An agent sends a mesage by executing
-<pre>
-send(message, receiver)
-</pre>
-The first parameter of <code>send</code> is the message that is sent,
-and the second paramenter is the agent to which the message is sent.
+The model has no constructs for implementing such algorithmic structures.
 
 <p>
-A message can be sent on a channel independent of the state of the
-channel.
+In the model, once an agent starts it waits to receive messages for
+ever; there are no provisions for stopping and restarting agents.
 
-Assume that channels have buffers of infinite size.
-
-We will show that algorithms described in this website are implementable
-with bounded memory. 
-
+We can, however, represent sequential composition of distributed
+computations.
 
 <p>
-The infinite loop is started by calling <code>start()</code>.
+Consider an example in which a distributed computation starts and ends
+after which a new distributed computation is initiated.
 
-<h4 style="color:red;">Example of an Agent</h4>
-This is an example of an agent that receives messages from agents
-<code>pos</code> and <code>neg</code>,
-and sends messages to agent <code>results</code>.
-<pre>
-sum = 0
-start()
+Call the computations phase 0 and phase 1.
 
-def receive(message, sender):
-   if sender == pos:
-       sum = sum + message
-   else:
-       sum = sum - message
-   send(sum, results)
-</pre>
+Each agent has a local variable which identifies the phase in which it
+is operating.
+
+When an agent -- say a systems manager -- detects termination of phase
+0 it sends messages to all agents telling them to start phase 1.
+
+(We discuss algorithms for termination detection later.)
+
+<p>
+We can represent complex sequential and parallel compositional
+structures in our simple model.
+
+The algorithms in this course do not, however, use such compositional
+structures. 
+  
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">Can the model represent agents that make state transitions
+  without receiving messages? </p>
+<!----------------------------------------------------------------->
+Some books on distributed systems allow agents to make <i>internal</i>
+  state transitions -- these are transitions without receiving
+messages.
+
+For example, an agent that is computing using a set of files may
+  transition to a state in which it no longer needs those files; this
+transition occurs without the agent receiving a message.
+
+Can the model represent such internal state transitions?
+
+<p>
+Internal state transitions are represented by transitions in which an
+agent receives a message from itself.
+
+  We represent an internal state change by having the agent
+  send a message to itself; the agent makes a state change when it
+receives the message.
+
+<p>
+For example, an agent that is computing using a set of files sends a
+message "<i>finished using files</i>" to itself, and when the message
+arrives, the agent changes state to one in which it no longer using
+the files.
 
 
-<!----------------------------------------------------->
-<p class="w3-text-teal">Restrictions on Agent</p>
-<!----------------------------------------------------->
 
-An agent can only access that agent's variables, send
-messages only on that agent's output channels, and receive messages
-only on that agent's input channels.
-
-A <code>receive</code> function must not call itself.
-For every algorithm, we will prove that all executions of
-<code>receive</code> terminate. 
+  <p>
+  Representing internal state changes in this way is an artifice;
+  however, the artifice allows us to use a simple model in which a
+  state change occurs only when a message is delivered.
 
 
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">Local clocks can be synchronized using NTP
+  and other protocols. Why do you assume that clocks aren't synchronized? </p>
+<!----------------------------------------------------------------->
+Local clocks can, indeed, be synchronized very accurately; however, we
+  do not assume that they are perfect.
 
-<!------------------------------------------------------------>
-<p class="w3-text-teal">Local Clocks and Timing</p>
-<!----------------------------------------------------->
+We use agents' local clocks for ensuring algorithm performance but not for proving
+correctness.
 
-Agents may have local clocks; however, clocks aren't synchronized.
+<p>
+Consider an algorithm in which one agent carries out a computation
+starting at 1pm and another agent carries out a computation starting at 2pm.
 
-We allow for the possibility that the times at local clocks may deviate
-from each other and the true time by arbitrary amounts.
+When we prove the correctness of our algorithms, we allow for the
+unlikely possibility that that the agent starting its 
+computation at 2pm does so before the agent that starts a 1pm.
 
-<!------------------------------------------------------------>
-<p class="w3-text-teal">Termination</p>
-<!------------------------------------------------------------>
-
-Execution of the system halts when all agents are idle and all
-channels are empty.
-
-We will discuss termination detection later.
-
+For evaluating performance, however, we assume that the agent that starts a 1pm
+usually does so before the agent that starts at 2pm.
 
 
 <h5 class="w3-text-teal">Next</h5>
-<a href="DistributedSystemModels.html">States, Transitions and
-Computations in a model of a distributed system.</a>
-
+<a href="DistributedSystemModels.html">States, transitions and
+computations in a model of a distributed system.</a>
+<p>
+<a href="Basics.html">Basics.</a>
 
 
 <!--Start Footer--------------------------------------->
