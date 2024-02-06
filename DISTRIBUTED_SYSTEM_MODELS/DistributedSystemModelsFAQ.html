@@ -1,4 +1,4 @@
-<title>DistributedSystemModels/DistributedSystemModels.html</title>
+<title>DistributedSystemModels/DistributedSystemModelsFAQ.html</title>
 
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
@@ -78,331 +78,99 @@ hr.new1 {
 
 
   <!---------------------------------------------------------------->
-    <h2 class="w3-text-teal">States, Transitions and Computations</h2>
+    <h3 class="w3-text-teal">States, Transitions and Computations FAQ</h3>
   <!----------------------------------------------------------------->
 
   </p>
 
-  <p class="w3-text-red">
-
-
-
-  A model is an abstraction that ignores some features of systems
-  while retaining features that help in  design.
-
-  This webpage describes states, state transitions, and computations
-  of a distributed system in a simple model.
-
-  We begin by designing algorithms based on the model, and we use
-   realistic representations later.
-
-  </P>
 
 
 <!-------------------------------------------------------------->
-<H3 Class="w3-text-teal">States</h3>
+<p Class="w3-text-teal">Many distributed systems have continuous
+  states and transitions. The model only deals with discrete states
+  and transitions. Can algorithms for systems with continuous states be described using the model?</p>
+  <!-------------------------------------------------------------->
+  
+  This website describes only a few algorithms for systems with continuous
+  state.
+
+  The models used for these systems are described later.
+
+  <p>
+  Systems with continuous state are critical to almost every aspect of
+  life, and we will point to papers in which distributed systems are described.
+
+  
+  <!-------------------------------------------------------------->
+  <p Class="w3-text-teal">The model only considers states in which all
+  agents are idle. Isn't that too restrictive.</p>
+  <!-------------------------------------------------------------->
+  Yes, the model only considers states in which all agents are idle.
+
+  And the model only considers state transitions in which one message
+  is received.
+
+  We will see in the following webpages that the dataflow of system
+  trajectories are preserved in the simple model.
+
+  <p>
+  Many properties of system behavior can be determined by analyzing
+  the flow of data between agents.
+
+  Yes, the model is restrictive but adequate for our purposes because
+  we prove properties of distributed computations by analyzing
+  dataflow.
+
+  
+  <!-------------------------------------------------------------->
+  <p Class="w3-text-teal">Shouldn't computations start from initial
+  states? </p>
+  <!-------------------------------------------------------------->
+  Yes, we define a computation as a sequence of states that starts in <i>any</i> state.
+
+We explicitly consider computations that start in an initial
+state of the system when we need to do so.
+
+For example, we define <i>invariant properties</i> of a system as
+properties that hold in all states of computations that start in an
+initial state.
+
+<p>
+Treating a computation as <i>any</i> path in the state transition graph
+simplifies some analyses, and isn't restrictive.
+
+  
+  <!-------------------------------------------------------------->
+  <p Class="w3-text-teal">The model is unfair. It allows one agent to keep executing
+  state transitions while all the other agents remain idle forever. Isn't such
+  a model ineffective?</p>
 <!-------------------------------------------------------------->
+ Yes, the model is unfair. The model allows an infinite computation in
+  which an agent communicates with itself forever, while other
+agents never change state.
 
-The state of a distributed system is a tuple with an element of the
-tuple for the state of each of its agents and channels.
+Yes, this is too weak to describe most algorithms.
 
-  <p>
-The state of a banking system is a tuple with elements of the tuple
-  for states of agents at ATM machines, branch banks, fraud analysis centers,
-  and for channels connecting the agents.
+There are, however, a few algorithms that can be analyzed by
+determining properties of <i>all</i> computations including unfair
+ones.
 
-  The state of an airplane navigation system is a tuple with elements
-  for states of agents that
-  estimate location, wind speed, and pitch, and 
-  elements for channels connecting agents.
-
-  <h4 class="w3-text-teal">Concurrent Operations</h4>
-  Agents in a distributed system operate concurrently.
-  Many ATM machines are used at the same time; many people use
-  cryptocurrency to trade at the same time; many
-  sensors and processors execute concurrently in an aircraft carrier.
-
-  <p>
-  An agent changes its variables -- and thus its state -- while
-  executing statements in a <code>receive</code> function.
-  
-  Analyzing algorithms, with many agents
-  changing variables concurrently, is difficult.
-
-So we use a simple model that does not completely capture concurrent system
-behavior. 
-
-  
-  
-  <h4 class="w3-text-teal">Model of State Changes</h4>
-The model deviates from the behavior of distributed systems described on
-<a href="Basics.html"> the previous page</a>
-in two important ways.
-
-  <ol>
-    <li>
-The model does not consider changes in states of an agent while it is
-  executing 
-a <code>receive</code> command.
-
-The model only considers states of an agent before the agent
-begins, and after it completes, executing  a <code>receive</code>.
-
-Thus, the model only considers states in which all agents are idle.
-    </li>
-    <li>
-
-The model is sequential -- at most one agent changes state
-at a time.
-
-A state transition occurs when one, and only one, agent receives and
-completes processing a message.
-    </li>
-  </ol>
-
-  <h4 class="w3-text-teal">Computations</h4>
-A <i>computation</i> is a sequence 
-  of one or more states 
-where there is a transition from each state in the sequence to the
-next.
-
-A transition is from the state before a receive is executed
-  to the state after the receive is completed.
-
-  
-<p>
-A computation can start in any state.
-
-  A computation may be finite or infinite.
-
-  All initial subsequences of a computation are also computations: If
-  \(S_{0}, \ldots, S_{k}, \ldots\) is a computation then \(S_{0},
-  \ldots, S_{j}\) is also a computation for \(j < k\).
-
-
- <p>
-A maximal computation is modeled as the sequence of states generated
-  by the following <code>while</code> loop.
-
-  Here <code>n</code> is the number of <code>receive</code> functions
-that have been executed, and the sequence of states is \([S[0], S[1],
-\ldots]\). 
-
-<pre>
-n = 0
-while there exists a nonempty channel:
-    // state is S[n]
-    select any nonempty channel (u, v)
-    let the head of (u, v) be msg
-    v executes <code>receive(msg, u)</code>
-    n = n + 1
-  </pre>
-
-  
-In each iteration, exactly one message is received and processed.
-  
-
-In 
-<a href="Basics.html">distributed systems</a>
-multiple agents process messages
-  concurrently.
-
-  By contrast, in the model, only one agent executes a receive at a time while all the
-other agents are idle.
-
-  <p>
-  The \(n\)-th receive is initiated in state \(S[n]\), and the state
-  when the receive is completed is \(S[n+1]\).
-
-  The changes in state while the receive is being executed are ignored.
-
-  <p>
-A sequential model for a distributed system that only considers states
-  in which all agents are idle seems useless.
-
-In the following webpages we show how this model is useful.
-
-
-
-
-
-
-<!----------------------------------------------------------->
-<p class="w3-text-teal">State Transitions</p>
-
-States and transitions can represented by a directed
-graph, called the state transition graph, in which vertices represent
-  states and edges represent state transitions.
-
-A computation can be viewed as a path in the state transition graph.
-
-(A path may consist of a single vertex.)
+We describe these algorithms next.
 
 <p>
-The remainder of this webpage consists of examples.
-
-<!---------------------------------------------------------------->
-<h2 style="color:red;">Examples </h2>
-<!---------------------------------------------------------------->
-
-<!---------------------------------------------------------------->
-<h4 style="color:red;">Example of a Simple Distributed System</h4>
-<!---------------------------------------------------------------->
-
-A system has two agents <code>u</code> and <code>v</code>.
-
-The system has channels in both directions between the agents and also
-from each agent to itself.
-
-The system has one blue token and one red token.
-
-Agents send tokens to each other.
-
-A token is either at an agent or in a channel.
-
-Later, when we discuss file management, we will use a token to
-represent exclusive access to a file and use the token color to
-identify the file. 
-
-
-<p>
-The function <code>receive</code> below is self explanatory.
-
-In the code for an agent, <code>other_agent</code> is the other
-agent.
-
-
-<pre>
-def receive(message, sender):
-   if sender == other_agent:
-       // message is a token
-       list_of_tokens_I_hold.append(message)
-   else:
-       # Sender is me. Message is wakeup.
-       # Send any token I hold to other_agent.
-       token_I_hold = tokens_held.pop()
-       send(token_I_hold, other_agent)
-
-   # If I hold a token then wake me up later.
-   if len(list_of_tokens_I_hold) > 0:
-          time.sleep(1)
-          send(wakeup, me)
-</pre>
-
-
-
-<p>
-Figure 1 shows two states, \(S_{0}\) and \(S_{1}\), and
-a transition from \(S_{0}\) to \(S_{1}\).
-
-The diagram at the left of the figure shows a state \(S_{0}\) in
-which agent \(u\) holds the blue token, agent \(v\) holds the red
-token, channels \((u, v)\) and \((v, u)\) are empty, and channels
-\((u, u)\) and \((v, v)\) each contain a wakeup message, shown as a
-star.
-
-
-    <figure>
-    <img
-    src="DistributedSystemModels/DistributedSystemModels.002.jpeg"
-    alt="Fig1" style="width:100%"> 
-    <figcaption>Fig.1: Example: A Token-Passing System</figcaption>
-</figure>
-
-
-<p>
-The diagram at the right shows system state \(S_{1}\) in
-which \(u\) holds no tokens, \(v\)  holds the red
-token, channel \((u, v)\) has the blue token, channels \((u, u)\) 
-and \((v, u)\) are empty, and channel \((v, v)\) contains a wakeup
-message.
-
-<p>
-The transition from \(S_{0}\) to \(S_{1}\) occurs when \(u\) receives
-a wakeup message on channel \((u, u)\).
-
-In this transition \(u\) sends the blue token to \(v\) and \(u\)
-changes to the state in which it holds no tokens.
- 
-
-<!-------------------------------------------------------------->
-<p style="color:red;">Time</p>
-<!-------------------------------------------------------------->
-Clocks of agents are not synchronized.
-
-When we prove properties of the algorithm, we make no assumptions
-about how long an agent sleeps when it executes 
-<code>time.sleep(1)</code>.
-
-Time and clocks play critical role in analyzing the performance of
-distributed algorithms, but not in analyzing their correctness.
-
-Later, we will study algorithms in which local clocks of agents are
-synchronized. 
-
-
-
-<!----------------------------------------------------------->
-<h4 style="color:red;">Example of a State Transition Graph</h4>
-<!----------------------------------------------------------->
-
-<figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.004.jpeg"
-    alt="Fig2" style="width:100%"> 
-    <figcaption>Fig.2: Example of a State Transition Graph</figcaption>
-</figure>
-
-
-<p>
-Figure 2 shows a part of the state-transition graph for the
-token-passing example.
-
-Not all states are shown because there are too many to fit the page.
-
-Channels from each agent to itself aren't shown so as to reduce
-cluttering.
-
-There is a <i>wakeup</i> message (which is not shown) in the channel
-from an agent to itself if the agent holds a token.
-
-<p>
-A state transition is labeled with the channel on which the message is
-received that caused the transition.
-
-For example, there are two transitions from the state shown in the top
-row, leftmost column.
-
-One transition occurs if \(u\) receives a wakeup
-message. This transition is to the state shown in the top row, middle column.
-
-Another transition occurs if \(v\) receives a wakeup message and this
-transition is to the state shown in the middle row, leftmost column.
-
-
-<!----------------------------------------------------------->
-<h4 style="color:red;">Example of a Computation</h4>
-<!----------------------------------------------------------->
-
-<p>
-An example of a computation is the sequence \([S_{0}, \ldots S_{8}]\)
-of states shown in figure 3 as a path in the state transition graph of
-figure 2. 
-
-
-<figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.005.jpeg"
-    alt="Fig3" style="width:100%"> 
-    <figcaption>Fig.3: Example - A Computation is a Path in the State Graph</figcaption>
-</figure>
-
-In this example a maximal computation has infinite length:
-
-Agents can keep sending tokens to each other forever.
+Later, we look at computations in which certain messages are delivered
+eventually, and we describe a temporal logic that deals with eventualities.
 
 
 
 <h3 class="w3-text-teal">Next</h3>
 <a href="Events.html">Events and Dataflow</a>
+
+<p>
+<a href="DistributedSystemModels.html">
+States, transitions and computations</a>
+
+
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
