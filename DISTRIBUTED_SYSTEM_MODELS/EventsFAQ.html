@@ -1,0 +1,209 @@
+<title>DistributedSystemModels/EventsFAQ.html</title>
+
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+
+
+<!-------------------------------------------------------------->
+<h2 class="w3-text-teal">Events and Dataflow: FAQ</h2>
+<!-------------------------------------------------------------->
+
+
+<!-------------------------------------------------------------->
+<p class="w3-text-teal">Does the definition of events depend on the
+  receive function being deterministic?</p>
+<!-------------------------------------------------------------->
+
+  Does the definition of events assume implicitly that the receive
+  function is deterministic?
+
+  Can the receive function have different outputs -- next state and
+  output messages -- with the same inputs?
+
+  <p>
+  The receive function may be nondeterministic.
+
+  An event represents a <i>single</i> execution of receive.
+
+  The event specifies the outputs and inputs for that one execution.
+
+  <p>
+  Two executions of receive, with the same inputs, that produce
+  different outputs are represented by two different events each of
+  which shows the different outputs for the same inputs.
+
+
+<!-------------------------------------------------------------->
+<p class="w3-text-teal">Is a dataflow defined for a computation or for
+  a system?</p>
+<!-------------------------------------------------------------->
+
+  The example of dataflow on the webpage with operations are \(+, -, /
+  \) show the flow of data between operations in a system.
+
+  The example of dataflow for a computation shows the flow of data
+  between events in a computation.
+
+  A system may have many computations and so may have many dataflow
+  graphs.
+
+  So, is dataflow defined for a system or a computation?
+
+  <p>
+  In these notes, we define dataflow for a computation and not for a
+  system.
+
+  A distributed system may have many computations and therefore many
+  dataflow graphs.
+
+  <p>
+  The properties of dataflow given on the webpage hold whether
+  dataflow is defined for a system or a computation.
+
+
+
+<!-------------------------------------------------------------->
+<p class="w3-text-teal">Is the initial state represented by a single
+initial event or by a separate event for each agent?</p>
+<!-------------------------------------------------------------->
+
+The initial state is represented by a single event; however, it is
+easier to see the flow of data in a computation if this single event
+is represented by a set of initial vertices, one for each agent.
+  
+
+
+<!-------------------------------------------------------------->
+<p class="w3-text-teal">Is dataflow, as specified here, the same as
+assuming that execution of a receive is atomic?</p>
+<!-------------------------------------------------------------->
+
+Yes, each event is atomic.
+
+The execution of a receive by one agent does not change the execution
+of a receive by another agent.
+
+Dataflow, as described here, assumes that receives are atomic operations.
+
+
+<h3 class="w3-text-teal">Next</h3>
+<a href="Timelines.html">Properties of Dataflow</a>
+
+<p>
+<a href="Events.html">Events and Dataflow</a>
+
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
