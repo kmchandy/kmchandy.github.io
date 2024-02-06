@@ -226,30 +226,26 @@ The initial vertex generates the variables of the dataflow.
 <h3 class="w3-text-teal">Properties of Dataflow</h3>
 <!---------------------------------------------------------------->
 
-The following observations follow directly from properties of directed
-acyclic graphs.
+The following observation follows directly from properties of dags,
 
 <hr class="new2">
-<p style="color:blue;">
-<ol>
-  <li>
   <h6 style="color:blue;">
   All <a href="https://en.wikipedia.org/wiki/Topological_sorting">
   topological sorts</a> of dataflow graphs are computations.
-  And all sequential computations are topological sorts of a dataflow
-  graph. 
-  </p>
-  </li>
-  <li>
-  <h6 style="color:blue;">
-  For all closed sets \(H, H'\) of operations where \(H
-\subseteq H'\) there exists a computation that executes all operations
-in \(H\), then executes operations in \(H' - H\), and then executes
-  operations that are not in \(H'\).
+</h6>
   </h6>
   </li>
 </ol>
 <hr class="new2">
+
+<pL
+Another direct consequence of a property of a dag is:
+<p>
+  For all closed sets \(H, H'\) of operations where \(H
+\subseteq H'\) there exists a computation that executes all operations
+in \(H\), then executes operations in \(H' - H\), and then executes
+  operations that are not in \(H'\).
+
 
 
 
@@ -309,7 +305,7 @@ complement of the past.
 
 
 <!------------------------------------------------------------------>
-<h5 style="color:red;">Example: Past, and Future</h5>
+<h5 style="color:red;">Example: Past and Future</h5>
 <!------------------------------------------------------------------>
 Figure 3 shows a dataflow graph for a computation with events
 \([0, 1, 2, \ldots]\) and agents \(X, Y, Z\) indexed \(0, 1, 2\)
@@ -374,7 +370,8 @@ Each message sent in a future event is received in a future event.
   directed from the past to the future.
 
 <p>
-<i>A slice is closed</i> is defined as the past of the slice is closed.
+We use the shorter phrase,
+"<i>the slice is closed</i>" for the "past of the slice is closed."
 
 <!----------------------------------------------------------------->
 <h4 class="w3-text-teal">The State at a Slice</h4>
@@ -406,9 +403,10 @@ We use the shorter phrase "computation from a slice \(U\) to a
  size \(V\)" for "computation from the state at a closed slice
 \(U\) to the state at a closed size \(V\)"
 
+<p>
+From property 2 of dataflow graphs:
 <hr class="new2">
 <p style="color:blue;">
-From property 2 of dataflow graphs:
 For closed slices \(U, V\) where \(U \leq V\):
 there is a computation from \(U\) to \(V\).
 <hr class="new2">
@@ -418,18 +416,22 @@ there is a computation from \(U\) to \(V\).
 A closed slice \(U\) is defined to be <i>earlier than</i> a closed slice \(V\) (or \(V\) is
 <i>later than</i> \(U\)) exactly when \(U \leq V\).
 
-So, for all closed slices \(U, V\) of a dataflow graph: If \(U\) is
-earlier than \(V\) then
-there is a computation from \(U\) to  \(V\).
+So, for all closed slices \(U, V\) of a dataflow graph:
+<p>
+<i>
+\(U\) is earlier than \(V\) exactly when 
+there is a computation from \(U\) to \(V\).
+</i>
+</p>
 
 
 <p>
-In figure 3, \([3, 3, 2] \leq [4, 4, 2]\), and so slice \([3, 3, 2]\)
+In figure 3, slice \([3, 3, 2]\)
 is earlier than slice \([4, 4, 2]\), and there is a computation from
 slice \([3, 3, 2]\) to slice \([4, 4, 2]\).
 
 <p>
-The remainder of this page consists of examples.
+The remainder of this webpage consists of examples.
 
 
 <!------------------------------------------------------------------>
@@ -588,6 +590,13 @@ Chapter on Snapshots and Clocks:
 <a href="../ChannelSnapshots/ChannelSnapshots.html">
 Global Snapshots.
 </a>
+
+<p>
+<a href="TimelinesFAQ.html">
+Properties of Dataflow: FAQ
+</a>
+
+
 
 
 <!--Start Footer--------------------------------------->
