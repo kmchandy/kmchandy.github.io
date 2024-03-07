@@ -116,7 +116,697 @@ hr.new1 {
   delivered in the order sent; agents may be arbitrarily slow; and
   agents may stop.
 
+  <p>
+  We begin with two fundamental algorithm structures for dealing with
+  lossy channels: Synchrony with lossy channels, and reading/writing
+  with lossy channels.
 
+  <!-------------------------------------------------->
+  <h4 class="w3-text-teal">Synchrony with Lossy Channels: The Problem</h4>
+  <!-------------------------------------------------->
+
+  A distributed system has  sets <code>P, Q</code> of agents called
+  <i>initiators</i> and <i>responders</i>, respectively.
+
+  The system has lossy channels: Messages in a channel may get lost,
+  may remain in the channel for 
+  arbitrary periods, and may be delivered out of order.
+
+  <p>
+  Look at the the following 
+  sequential program in which the
+  variables of <code>p</code> and <code>Q</code> are objects.
+
+    <pre>
+while True:
+  select any initiator p nondeterministically
+  f(p, Q)
+</pre>
+
+<code>f(p, Q)</code> is a nondeterministic program which can read and modify
+  objects in <code>p</code> and <code>Q</code>.
+  
+  Let \(S[i]\) be the state of the program at the start of the
+  \(i\)-th iteration, \(i \geq 0\).
+
+<p>
+The state of the distributed system is a tuple of states of agents and
+channels.
+
+The states of agents -- initiators and responders -- are the same in
+the distributed and sequential programs.
+
+<p>
+The problem is to design an algorithm for the distributed system that has
+the following property:
+<br>
+
+there exists a computation that
+visits a sequence of states \(S'[i], i \geq 0\) where the states of agents are
+the same in \(S[i]\) and \(S'[i]\).
+
+
+
+
+<!-------------------------------------------------->
+<h4 class="w3-text-teal">How Should You Approach The Problem?</h4>
+<!-------------------------------------------------->
+Where should you start to design an algorithm for which there exists a
+computation that visits a sequence of specified states?
+A good place to start solving such problems is with dataflow and
+either
+<a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+slices
+</a>
+or
+<a href="../ChannelSnapshots/LogicalClocks.html">
+logical time
+</a>
+or some other surrogate for time.
+
+
+<p>
+Let's assume that there is a partition of the dataflow graph of a computation into
+a sequence of dataflow subgraphs, where the \(i\)-th subgraph is the
+dataflow of the computation that implements the \(i\)-th iteration of
+the sequential program.
+Let's call each subgraph an <i>epoch</i>.
+
+<p>
+Let's use an idea from logical clocks and assign a time to each epoch,
+event and message where all events in an epoch have the same time
+
+
+
+
+
+<h1>OLD</h1>
+visits the states \(S[i]\) in sequence for \(i \geq 0\), where
+\(S[i]\) is a state in which the states of \(p, q\) are \(p[i], q[i]\)
+for all initiators \(p\) and responders \(q\).
+
+has a
+  sequence of states which are the states at the start of each
+  iteration of 
+  the following sequential program.
+
+The selection of <code>p</code> is nondeterministic.
+
+  <code>f(p, Q)</code> is a nondeterministic program in which the
+  variables of <code>p</code> and <code>Q</code> are objects.
+<code>f(p, Q)</code> can access
+  objects in <code>Q</code> and <code>p</code> but does not access any
+  initiator other than <code>p</code>.
+
+The rationale for this problem will become clear later.
+
+
+  <ol>
+    <li>
+  An epoch is initiated by a single initiator <code>p</code> sending
+  messages to responders.
+  Initiators, other than <code>p</code>, do not send or receive messages or change state in
+    the epoch.
+    </li>
+    <li>
+All messages sent to, or sent by, responders in an epoch are received
+  in the same epoch. 
+    </li>
+  </ol>
+
+  <ol>
+    <li>
+    <i>Epoch initiation</i>:
+    Each epoch is initiated by a single initiator <code>p</code>,
+  selected nondeterministically.
+    Initiators, other than <code>p</code>, do not communicate or change state in
+  the epoch.
+    </li>
+    <li>
+    <i>The only message that crosses an epoch boundary is a
+  <i>start_new_epoch</i> message</i>.
+    The only message received in an event in an epoch from an event in
+  another epoch is a single
+    <i>start_new_epoch</i> message from <code>p</code> to itself.
+    Likewise, the only message sent in an event in an epoch to an event in
+  another epoch is a single
+    <i>start_new_epoch</i> message from <code>p</code> to itself.
+    </li>
+  </ol>
+
+  Dataflows that can be partitioned into epochs can be represented by
+  the following sequential program in which <code>P, Q</code> are objects.
+<pre>
+while True:
+  select an initiator p
+  f(p, Q)
+</pre>
+
+The selection of <code>p</code> is nondeterministic.
+
+  <code>f(p, Q)</code> represents the execution of an epoch.
+  It is a nondeterministic program that can access
+  objects in <code>Q</code> and <code>p</code> but does not access any
+  initiator other than <code>p</code>.
+  It represents the execution of an epoch.
+
+The rationale for this problem will become clear later.
+
+
+<!-------------------------------------------------->
+<h4 class="w3-text-teal">How Should You Approach The Problem?</h4>
+<!-------------------------------------------------->
+
+<p>
+<a href="../ChannelSnapshots/LogicalClocks.html">
+Logical time</a> partitions dataflow into a past
+(events with logical times at most <code>t</code>) and a future (events with logical
+times greater than <code>t</code>).
+
+This suggests that we use a surrogate for time to partition the
+  dataflow into epochs.
+
+  We will design many algorithms that use surrogates for time.
+
+<p>
+  Next, we design an algorithm that assigns a time to each event so
+  that all events with the same time are in the same epoch.
+
+  An epoch finishes before the next one begins;
+  so the algorithm
+  must ensure that every message from an event with time
+  <code>t</code>  is received in an event with time <code>t</code>.
+  An exception is made for the <i>start_new_epoch</i> message.
+
+
+  <p>
+  We call the time of events in an epoch the <i>epoch time</i>.
+
+  Each epoch time is unique.
+  
+  An epoch time <code>t</code> is a pair (number, proposer id) where ties in
+  number are broken by proposer ids.
+
+  We use the technique of breaking ties by using proposer ids in many algorithms.
+
+
+  <p>
+  We use ideas from logical clocks.
+
+Each message is timestamped with the time of the event in which it is
+sent.
+
+If an agent at time <code>t</code> receives a message with timestamp
+  <code>t'</code> greater than <code>t</code>, then the agent
+  increases its own time to <code>t'</code> and assigns time
+<code>t'</code> to the event that receives the message.
+
+This ensures that there is no message from an event at time
+<code>t</code> to an event at time less than <code>t</code>.
+
+<p>
+How can we ensure that there is no message from an
+  event at time <code>t</code> to an event at time
+greater than <code>t</code>?
+
+<i>An agent at time <code>t</code> discards messages with timestamps
+less than <code>t</code>.</i>
+
+<p>
+A discarded message has the same effect as a lost message.
+
+The event of losing a message does not change the statee of  agents.
+
+We assign time <code>t</code> to an event in which a message with
+timestamp <code>t</code> is lost.
+
+These rules ensure that messages from events at time <code>t</code>
+are received at events at time <code>t</code>.
+
+The pseudo-code for an initiator, in Python-like notation, is given below.
+
+  
+<pre>
+self.t = 0
+send(message=start_new_epoch(time=Delta), receiver=self)
+start()
+
+def receive(message, sender):
+   if isinstance(message, start_new_epoch):
+        self.t = message.t
+        start new epoch with time self.t
+        send(message=start_new_epoch(time=self.t+Delta),
+             receiver=self)
+   elif message.t == self.t:
+        continue executing epoch with time self.t
+</pre>
+
+The responder ignores messages that it receives with message times
+earlier (i.e. less) than the responder's time.
+
+<p>
+If the responder receives a message with a time greater than or equal
+to the responder's time then the responder sets its time to that of
+the message that it received and sends messages with the responder's
+new time.
+
+Because the responder sets its time to the message's time before
+carrying out further steps we can assume that the time of the message
+received by the responder is the responder's time.
+
+<pre>
+self.t = 0
+
+start()
+def receive(message, sender):
+   if message.t >= self.t:
+      self.t = message.t
+      continue_executing_f(time = self.t)
+</pre>
+
+Because the responder sets its time to the message's time before
+carrying out further steps we can assume that the time of the message
+received by the responder is the responder's time.
+
+
+<!-------------------------------------------------->
+  <p class="w3-text-teal">Dataflow</p>
+<!-------------------------------------------------->
+We associate a time with each event in a computation where event times
+  are defined as follows.
+
+When an initiator receives a timeout it increments its time;
+the time of the event is defined as the initiator's new time.
+
+If a responder receives a message with a time greater than or equal
+to the responder's time then the responder sets its time to the that
+of the message; the time of the event is defined as the responder's new time.
+<p>
+
+
+<p>
+If a responder gets a message where the message time is less than
+the responder's time then the message is ignored.
+A lost message has the same effect as an ignored message.
+An event in which a receiver ignores a message that it receives does
+not change the receiver's state.
+The time of the event in which a receiver ignores a message is defined
+as the time of the message.
+
+
+
+
+
+<!-------------------------------------------------->
+  <p class="w3-text-teal">Theorem</p>
+<!-------------------------------------------------->
+The dataflow graph can be partitioned into a subgraphs where:
+<ol>
+  <li>
+  All message edges within a subgraph have the same time, and
+  </li>
+  <li>
+  the only message edges to a subgraph from other subgraphs is from an
+  event in one subgraph in which an initiator sends a timeout message to an
+  event in another subgraph where that initiator receives the message.
+  </li>
+</ol>
+
+  
+
+  
+  <!-------------------------------------------------->
+  <h4 class="w3-text-teal">Reading and Writing
+  with Lossy Channels</h4>
+  <!-------------------------------------------------->
+  A distributed system has a set \(P\) of agents called proposers and
+  a set \(A\) of agents called acceptors.
+
+  The system has channels from each proposer to each acceptor, and
+  from each acceptor to each proposer.
+
+  <p>
+
+A proposer <code>p</code> has a field <code>p.v</code> called
+<code>p</code>'s value. 
+
+An acceptor <code>a</code> has fields <code>a.v, a.t</code> called
+<code>a</code>'s value and time, respectively.
+
+An acceptor's value is the same type as a proposer's value, and an
+  acceptor's time is an integer.
+
+  <p>
+Initially <code>a.v, a.t = None, 0</code> for all acceptors <code>a</code>.
+The symbol <code>None</code> indicates unassigned.
+
+  <p>
+Let's design an algorithm which is a sequence of iterations where each
+iteration has the following structure.
+
+<p  class="w3-text-teal">
+Step 0: Select a single proposer \(p\).
+</p>
+<p>
+Select a single proposer \(p\) from the set of proposers.
+
+The selection is nondeterministic.
+
+<p  class="w3-text-teal">
+Step 1: \(p\) reads acceptors' local variables.
+</p>
+<p>
+  \(p\) reads local
+  variables of acceptors as follows: \(p\) sends a message
+  to each acceptor requesting the acceptor to reply with
+  values of the acceptor's local variables.
+
+  <p>
+  \(p\) gets replies from a subset of acceptors because requests
+  and replies may get lost.
+
+Let's call this subset the <i>read subset</i>.
+
+<p  class="w3-text-teal">
+Step 2: \(p\) writes acceptors' local variables.
+</p>
+  If the read subset is a majority of acceptors then \(p\) sends a
+write request to all acceptors.
+
+A write request contains a value \(v\) and a time \(t\).
+
+When an acceptor \(a\) gets the write request it sets \(a.v, a.t = v,
+t\).
+
+<p>
+Some write requests may get lost.
+
+Let <i>write subset</i> be the subset of acceptors that receive write
+requests.
+
+<!-------------------------------------------------->
+  <h4 class="w3-text-teal">Algorithm Structure</h4>
+<!-------------------------------------------------->
+
+The structure of the algorithm is as follows.
+
+<pre>
+  t = 0
+  for a in A: a.v, a.t = None, 0
+      
+  while True:
+    t = t + 1
+    p = any_element(P)
+    read_subset = any_subset(A)
+
+    if len(read_subset) >= len(A)/2:
+        write_subset = any_subset(A)
+        for a in write_subset:
+           a.v, a.t = f(p, read_subset), t
+</pre>
+
+Next we describe function <code>f</code>.
+
+If the time for all acceptors in <code>read_subset</code> is 0 then
+the function returns <code>p.v</code>, the proposer's value.
+
+Otherwise the function returns the value of the acceptor in
+<code>read_subset</code> with the largest time.
+
+<pre>
+def f(p, read_subset):
+   v, t = p.v, 0
+   for a in read_subset:
+      if a.t > t:   v, t = a.v, a.t
+   return v
+</pre>
+
+
+
+<h5 class="w3-text-teal">Properties of the Sequential Program</h5>
+The proofs of the following observations are straightforward.
+
+<p>
+In all states of the computation, for all acceptors \(a\),
+<ol>
+  <li>
+  <code>a.t</code> does not decrease.
+  </li>
+  <li>
+  <code>a.t</code> is the iteration number in which <code>a.v</code>
+  was last assigned a value.
+  </li>
+  <li>
+  \(a\)'s value is None or is a value of some proposer.
+  <p>
+  \(
+  \forall a:  (a.v = None) \vee (\exists p: a.v = p.v)
+  \)
+  </li>
+</ol>
+
+  The program has the following important property which we prove
+next.
+<hr class="new2">
+  <p style="color:blue;">
+  If the write subset is a
+majority in any iteration, let \(u\) be the value assigned to acceptors in
+  the write subset in that iteration;
+then,
+<p style="color:blue;">
+thereafter an acceptor's value either remains unchanged or changes to \(u\).
+</p>
+<hr class="new2">
+
+
+<p>
+The property can be written as follows. For all values \(u\),
+iteration number \(n\) and majority \(M\) of acceptors:
+<p>
+\(
+(\forall a \in M: a.v, a.t = u, n)
+\)
+<br>
+\(
+\Rightarrow
+\)
+<br>
+\(
+\forall a: (a.t < n) \vee (a.v = u)
+\)
+  
+
+
+<!----------------------------------------------------------->
+<h5 class="w3-text-teal">Proof of the property</h5>
+<!----------------------------------------------------------->
+Let \(M\) be a majority of acceptors, \(u\) be a value, and \(n\) be
+an iteration number where all acceptors in \(M\) have value \(u\) and
+time \(n\).
+
+We will prove that in all states an acceptor's time is less than \(n\)
+or its value is \(u\).
+
+<p>
+The result holds after the \(i\)-th iteration for \(i < n\) because \(a.t <
+n\) in these iterations.
+
+The result holds immediately after the \(n\)-th iteration, because
+either an acceptor \(a\)'s variables are not changed in the \(n\)-th
+iteration in which case \(a.t < n\) or it is modified in which case
+\(a.v, a.t = u, n\).
+
+<p>
+Assume that the result holds after the first \(i \geq n\) iterations and
+prove that it holds for the \(i+1\)-th.
+
+We need only consider the case where the read subset in the iteration
+is a majority, and 
+in this case the read subset has an element in common
+with majority \(M\).
+
+So there is an element \(a\) in both the read subset and \(M\), and for
+this element \(a.t \geq n\), and therefore \(a.v = u\).
+<p>
+
+
+
+<!----------------------------------------------------------->
+<h5 class="w3-text-teal">Majorities Accept Proposed Values</h5>
+<!----------------------------------------------------------->
+
+Next, we give an example of a while loop of a
+sequential program which illustrates read and write subsets.
+
+We later show how the while loop is converted to a distributed
+algorithm for a system with lossy channels.
+
+<p>
+The variables of the loop are sets <code>P</code> and <code>A</code>
+called the sets of proposers and acceptors, respectively.
+
+A proposer <code>p</code> has a field <code>p.v</code> called
+<code>p</code>'s value. 
+
+An acceptor <code>a</code> has fields <code>a.v, a.t</code> called
+<code>a</code>'s value and time, respectively.
+
+An acceptor's value is the same type as a proposer's value, and an
+acceptor's time is an integer.
+
+
+<p>
+Initially <code>a.v, a.t = None, 0</code> for all  <code>a</code>.
+The symbol <code>None</code> indicates unassigned.
+The steps of the loop are as follows.
+<ol>
+  <li>
+  Select any <code>p</code> from the set <code>P</code>
+  nondeterministically.
+  </li>
+  <li>
+  Select a subset <code>read_subset</code> of <code>A</code>
+  nondeterministically.
+  </li>
+  <li>
+  If <code>read_subset</code> is a majority of acceptors then
+  select a subset, <code>write_subset</code>, of <code>A</code>
+  nondeterministically, and assign values to all elements in <code>write_subset</code>.
+  </li>
+</ol>
+
+<pre>
+  t = 0
+  for a in A: a.v, a.t = None, 0
+      
+  while True:
+    t = t + 1
+    p = any_element(P)
+    read_subset = any_subset(A)
+
+    if len(read_subset) >= len(A)/2:
+        write_subset = any_subset(A)
+        for a in write_subset:
+           a.v, a.t = f(p, read_subset), t
+</pre>
+
+Next we describe function <code>f</code>.
+
+If the time for all acceptors in <code>read_subset</code> is 0 then
+the function returns <code>p.v</code>, the proposer's value.
+
+Otherwise the function returns the value of the acceptor in
+<code>read_subset</code> with the largest time.
+
+<pre>
+def f(p, read_subset):
+   v, t = p.v, 0
+   for a in read_subset:
+      if a.t > t:   v, t = a.v, a.t
+   return v
+</pre>
+
+
+<h5 class="w3-text-teal">Properties of the Sequential Program</h5>
+The proofs of the following observations are straightforward.
+
+<p>
+In all states of the computation, for all acceptors \(a\),
+<ol>
+  <li>
+  <code>a.t</code> is the iteration number in which <code>a.v</code>
+  was last assigned a value.
+  </li>
+  <li>
+  \(a\)'s value is None or is a value of some proposer.
+  <p>
+  \(
+  \forall a:  (a.v = None) \vee (\exists p: a.v = p.v)
+  \)
+  </li>
+</ol>
+
+  The program has the following important property which we prove
+later.
+<p>
+  If on any iteration a value \(u\) is  assigned to acceptors in a
+write subset and the write subset is a majority,
+  then thereafter any acceptor's value remains
+unchanged or changes to \(u\).
+  <p>
+
+
+<p>
+The property can be written as follows. For all values \(u\),
+iteration number \(n\) and majority \(M\) of acceptors:
+<p>
+\(
+(\forall a \in M: a.v, a.t = u, n)
+\)
+<br>
+\(
+\Rightarrow
+\)
+<br>
+\(
+\forall a: (a.t < n) \vee (a.v = u)
+\)
+  
+
+
+<!----------------------------------------------------------->
+<h5 class="w3-text-teal">Proof of the property</h5>
+<!----------------------------------------------------------->
+Let \(M\) be a majority of acceptors, \(u\) be a value, and \(n\) be
+an iteration number where all acceptors in \(M\) have value \(u\) and
+time \(n\).
+
+We will prove that in all states an acceptor's time is less than \(n\)
+or its value is \(u\).
+
+<p>
+The result holds after the first \(n-1\) iterations because \(a.t <
+n\) in these iterations.
+
+The result holds after the \(n\)-th iteration, because if an
+acceptor \(a\)'s variables are modified in this iteration then
+\(a.v, a.t = u, n\).
+
+<p>
+Assume that the result holds after the first \(i \geq n\) iterations and
+prove that it holds for the \(i+1\)-th.
+
+We need only consider the case where the read subset in the iteration
+is a majority, and 
+in this case the read subset has an element in common
+with majority \(M\).
+
+So there is an element \(a\) of read subset in which \(a.t = n\) and
+\(a.v = n\).
+<p>
+
+
+
+
+
+
+<h1>OLD</h1>
+   
+  <!-------------------------------------------------->
+  <h4 class="w3-text-teal">Synchrony in a Lossy System
+  </h4>
+  <!-------------------------------------------------->
+  We begin with solving a problem that will help us design a consensus
+  algorithm.
+
+  The problem is to implement a form of synchrony in a lossy
+  distributed system; let's call the problem <i>lossy synchrony</i>.
+
+  <p>
+  A system consists of a set \(P\) of agents and other agents.
+
+  The problem is to design an algorithm that has the following behavior.
+  
     
   <!-------------------------------------------------->
   <h4 class="w3-text-teal">Implementing a Synchronous Algorithm on a
@@ -248,196 +938,7 @@ def receive(message, sender):
       
   
 
-  
-  
-  <!-------------------------------------------------->
-  <h4 class="w3-text-teal">A Sequential Model of Distributed Systems
-  with Lossy Channels</h4>
-  <!-------------------------------------------------->
-  In a distributed system an agent \(p\) simulates reading local
-  variables of a set of agents \(A\) as follows: \(p\) sends a message
-  to each agent \(a\) in \(A\) requesting \(a\) to reply with
-  values of \(a\)'s local variables.
 
-  <p>
-  Requests and replies may get lost in a system with lossy channels.
-  
-  So \(p\) gets replies from a subset of the agents in
-  \(A\).
-
-  We call this subset the <i>read subset</i>.
-
-  The read subset is arbitrary -- it may be the empty set, or the
-  entire set, or a nonempty proper subset.
-  
-  <p>
-  Likewise, if \(p\) sends messages to all agents in \(A\),
-requesting agents in \(A\) to update their local variables, some
-  agents may not receive the messages.
-So, agents in a subset of \(A\) update their variables.
-
-We call this subset the <i>write subset</i>.
-
-
-<!----------------------------------------------------------->
-<h5 class="w3-text-teal">Majorities Accept Proposed Values</h5>
-<!----------------------------------------------------------->
-
-Next, we give an example of a while loop of a
-sequential program which illustrates read and write subsets.
-
-We later show how the while loop is converted to a distributed
-algorithm for a system with lossy channels.
-
-<p>
-The variables of the loop are sets <code>P</code> and <code>A</code>
-called the sets of proposers and acceptors, respectively.
-
-A proposer <code>p</code> has a field <code>p.v</code> called
-<code>p</code>'s value. 
-
-An acceptor <code>a</code> has fields <code>a.v, a.t</code> called
-<code>a</code>'s value and time, respectively.
-
-An acceptor's value is the same type as a proposer's value, and an
-acceptor's time is an integer.
-
-
-<p>
-Initially <code>a.v, a.t = None, 0</code> for all  <code>a</code>.
-The symbol <code>None</code> indicates unassigned.
-The steps of the loop are as follows.
-<ol>
-  <li>
-  Select any <code>p</code> from the set <code>P</code>
-  nondeterministically.
-  </li>
-  <li>
-  Select a subset <code>read_subset</code> of <code>A</code>
-  nondeterministically.
-  </li>
-  <li>
-  If <code>read_subset</code> is a majority of acceptors then
-  select a subset, <code>write_subset</code>, of <code>A</code>
-  nondeterministically, and assign values to all elements in <code>write_subset</code>.
-  </li>
-</ol>
-
-<pre>
-  t = 0
-  for a in A:
-    a.v, a.t = None, 0
-      
-  while True:
-    p = any_element(P)
-    read_subset = any_subset(A)
-
-    if len(read_subset) >= len(A)/2:
-        write_subset = any_subset(A)
-        for a in write_subset:
-           a.v, a.t = f(p, read_subset), t
-    t = t + 1
-</pre>
-
-Next we describe function <code>f</code>.
-
-If the time for all acceptors in <code>read_subset</code> is 0 then
-the function returns <code>p.v</code>, the proposer's value.
-
-Otherwise the function returns the value of the acceptor in
-<code>read_subset</code> with the largest time.
-
-<pre>
-def f(p, read_subset):
-   v, t = p.v, 0
-   for a in read_subset:
-      if a.t > t:   v, t = a.v, a.t
-   return v
-</pre>
-
-
-<h5 class="w3-text-teal">Properties of the Sequential Program</h5>
-The proof of the following observation is straightforward.
-
-<p>
-In all states of the computation, for all acceptors \(a\),
-<ol>
-  <li>
-  <code>a.t</code> is the iteration number in which <code>a.v</code>
-  was last assigned a value.
-  </li>
-  <li>
-  \(a\)'s value is None or is a value of some proposer.
-  <p>
-  \(
-  \forall a:  (a.v = None) \vee (\exists p: a.v = p.v)
-  \)
-  </li>
-</ol>
-
-  The program has the following property.
-  If in the \(n\)-th iteration, for any \(n\) the write subset is a majority and acceptors in
-  the write subset are assigned a value \(u\)
-  then, in subsequent iterations an acceptor's value
-  does not change or changes to \(u\).
-  <p>
-
-
-<p>
-The property can be written as follows. For all values \(u\),
-iteration number \(n\) and majority \(M\) of acceptors:
-<p>
-\(
-(\forall a \in M: a.v, a.t = u, n)
-\)
-<br>
-\(
-\Rightarrow
-\)
-<br>
-\(
-\forall a: (a.t < n) \vee (a.v = u)
-\)
-  
-
-
-<!----------------------------------------------------------->
-<h5 class="w3-text-teal">Proof of the property</h5>
-<!----------------------------------------------------------->
-Let \(M\) be a majority of acceptors, \(u\) be a value, and \(n\) be
-an iteration number where all acceptors in \(M\) have value \(u\) and
-time \(n\).
-
-We will prove that in all states an acceptor's time is less than \(n\)
-or its value is \(u\).
-
-<p>
-The result holds after the first \(n-1\) iterations because \(a.t <
-n\) in these iterations.
-
-The result holds after the \(n\)-th iteration, because if an
-acceptor \(a\)'s variables are modified in this iteration then
-\(a.v, a.t = u, n\).
-
-<p>
-Assume that the result holds after the first \(i \geq n\) iterations and
-prove that it holds for the \(i+1\)-th.
-
-We need only consider the case where the read subset in the iteration
-is a majority, and 
-in this case the read subset has an element in common
-with majority \(M\).
-
-So there is an element \(a\) of read subset in which \(a.t = n\) and
-\(a.v = n\).
-<p>
-
-
-
-
-
-
-<h1>OLD</h1>
 <h1>OLD</h1>
 <h1>OLD</h1>
 <p>
@@ -534,7 +1035,7 @@ First, send requ
     Acceptors only accept proposer's values.
     <p>
     \(
-    \forall a: (a.v = None) \vee (\exists p: a.v = p.v)
+S    \forall a: (a.v = None) \vee (\exists p: a.v = p.v)
     \)
     </li>
     <li>
