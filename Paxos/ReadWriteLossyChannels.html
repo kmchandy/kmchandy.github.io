@@ -1,0 +1,646 @@
+<title>Paxos/ReadWriteLossyChannels.html</title>
+
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+  
+  <!--------------------------------------------------------->
+  <h2 class="w3-text-teal">Shared Variables in Faulty Systems</h2>
+  <!--------------------------------------------------------->
+
+<p>
+A distributed system has agents that read and write shared variables.
+
+Associated with each shared variable is an agent, called a
+  <i>manager</i>,
+which gets requests to read and write the variable.
+
+The agents that send requests to managers to read or write shared
+  variables are called <i>writers</i>.
+
+  The system also has a set of agents called <i>observers</i>.
+
+  When a shared variable is assigned a value, the value is sent to all
+  observers. 
+
+  <p>
+  We begin with a simple problem.
+
+  Design a distributed algorithm that implements the following
+  sequence of iterations.
+
+  In each iteration a single writer <code>p</code> is selected;
+  <code>p</code> reads all shared variables and then writes all shared
+  variables.
+
+  The <code>n</code>-th message that an observer receives from a
+  manager of a shared variable is the <code>n</code>-th value assigned
+  to the variable.
+
+  <p>
+  An algorithm that does so is: select <code>p</code> in increasing
+  order of ids; <code>p</code> sends read requests to all managers of
+  shared variables; after getting copies of
+  all shared variables from managers <code>p</code> sends requests to
+  write all shared variables; after getting confirmations that all
+  writes have been completed, <code>p</code> sends a message to a
+  writer to start the next iteration.
+
+  When a shared variable is assigned a value the value is sent to observers.
+  
+
+  <p>
+  Now consider the problem of implementing the same program on a
+  distributed system in which messages may get lost, duplicated and
+  sent out of order.
+
+  The same algorithm won't work because only
+  subsets of shared variables may reply to read requests and execute
+  write requests on each iteration.
+
+  The <code>n</code>-th message received by an observer from a manager
+  of a shared variable may not be the <code>n</code>-th value assigned
+to the variable.
+
+<p>
+We begin with a model of a faulty system.
+
+   <!--------------------------------------------------------->
+  <h5 class="w3-text-teal">Lossy Channels and Halting Agents </h5>
+  <!-------------------------------------------------->
+
+  <p>
+  The state of a channel is a
+ <a href="https://en.wikipedia.org/wiki/Multiset">multiset or bag</a>.
+
+  An example of a multiset of messages is \(\{b, b, c\}\) which is the
+state of a channel with two messages \(b\) and one message \(c\).
+
+  If the channel duplicates \(c\) then the new state is \(\{b, b,
+c, c\}\).
+
+  If the channel loses \(b\) then the new state is \(\{b, c, c\}\),
+  and if the channel now delivers \(b\) to an agent then the channel's
+  state becomes \(\{c, c\}\).
+
+<p>
+The sets of writers and shared variables are nonempty but they are not
+given.
+
+An agent may stop execution forever or it may halt execution for an
+arbitrary period and restart.
+    <!--------------------------------------------------------->
+  <h2 class="w3-text-teal">The Problem</h2>
+  <!--------------------------------------------------------->
+In each iteration of the sequential algorithm, given above, exactly
+  one writer reads and then writes all shared variables.
+
+We will implement the following variant of the sequential algorithm
+on a faulty distributed system.
+
+We call the variant <i>Seq</i>.
+
+<p>
+<i>Seq</i> initializes variables and then executes a loop.
+
+A single writer <code>p</code> is selected nondeterministically in each
+iteration.
+
+The selected writer <code>p</code>
+reads and then writes subsets of shared variables.
+
+No writer, other than <code>p</code>,
+accesses shared variables in this iteration.
+
+<p>
+The writer <code>p</code>, selected on an iteration, determines a
+value <code>p.t</code>, called the <i>iteration id.</i>
+
+Later we give rules that ensure that the id of each iteration is unique.
+
+
+<p>
+The manager <code>q</code> of a shared variable has a field
+<code>q.var</code> where <code>q.var</code> is a tuple <code>(v,
+t)</code> where
+<code>v</code> is the value of the shared variable and 
+<code>t</code> is the id of the most recent iteration in which
+<code>v</code> was assigned a value.
+
+<p>
+Each writer <code>p</code> has a local variable <code>p.copy</code>, a
+dictionary, where <code>p.copy[q]</code> contains a (possibly stale)
+copy of <code>q.var</code>.
+
+Each writer <code>p</code> also has a local variable <code>p.t</code>
+which is the id of the most recent iteration in which <code>p</code>
+was selected as the writer that accesses shared variables.
+
+<p>
+We describe the steps of the sequential program later.
+
+
+
+<!---------------------------------------------------->
+<h4 class="w3-text-teal">Sequential Program Seq</h4>
+<!---------------------------------------------------->
+    <pre>
+for p in P: p.t = 0
+for q in Q: q.var = (None, 0)
+
+while True:
+   select a writer p
+   p.t = p.t + pos()
+
+   p.copy = {}
+   for q in read_set: p.copy[q] = q.var
+
+   if g(p):
+      for q in write_set: q.var = (f(p, q), p.t)
+</pre>
+
+<code>None</code> is a value that indicates unassigned.
+
+<code>pos</code> is a function that returns a positive value.
+
+The value returned by <code>pos</code> impacts the performance, but not
+the correctness of the algorithm.
+
+
+<p>
+<code>read_set</code> and <code>write_set</code> are subsets of
+managers of shared variables.
+
+These subsets are selected nondeterministically.
+
+
+<p>
+The iteration id determined by a selected writer <code>p</code> is a
+pair <code>(n,p.id)</code> where 
+<code>n</code> is a number, and 
+<code>p.id</code> is the id of <code>p</code>.
+
+So, different writers cannot determine the same iteration id.
+
+When <code>p</code> starts an iteration it increases <code>p.t</code>.
+
+So, different iterations in which <code>p</code> is the selected
+writer have different ids.
+
+<p>
+(We don't include <code>p.id</code> explicitly in the algorithm
+description so that we can focus on more important aspects.)
+
+
+<p>
+<code>p</code> reads shared variables in <code>read_set</code>, and
+<code>p</code> writes shared variables in <code>write_set</code> only 
+if condition <code>g(p)</code> holds.
+
+For example, an algorithm may write shared variables only if 
+<code>read_set</code> is not empty.
+
+<p>
+In the statement that writes shared variables, <code>f(p,q)</code> is
+assigned to the value field, 
+and <code>p.t</code> is assigned to the iteration id field of
+<code>q.var</code>.
+
+<p>
+The nondeterministic statements of Seq 
+are the statements that select <code>p</code>,
+<code>read_set</code> and <code>write_set</code> in each iteration;
+different selections of these variables result in different executions
+of Seq.
+An instance of Seq is a deterministic algorithm with a given selection of these
+variables.
+
+
+<!-------------------------------------------------->
+<h3 class="w3-text-teal">Problem Specification</h3>
+<!-------------------------------------------------->
+
+Design a distributed algorithm in which agents are writers, managers of shared
+variables and observers, and in which an observer receives
+a message <code>m</code> 
+from a manager <code>q</code> of a shared variable only if
+<code>q.var = m</code> at some point in the execution of an instance
+of Seq.
+
+
+<p>
+Observers cannot distinguish between messages that they receive in the
+distributed algorithm and values of shared variables in Seq.
+
+<p>
+In the observer pattern, agents sends descriptions of events to
+observers which construct the dataflow of a computation.
+
+In our algorithm, copies of shared variables are sent to observers.
+x
+Messages may, however, be lost, duplicated and delivered out of order.
+
+What can we deduce from the messages that observers receive?
+
+<p>
+If an observer receives <code>(v, t)</code> and <code>(v', t)</code>
+from <code>q</code> and <code>q'</code>, respectively, 
+then we know that <code>q.var</code> and <code>q'.var</code> were
+assigned values <code>(v, t)</code> and <code>(v', t)</code>,
+respectively, in the same iteration -- the iteration with unique id
+<code>t</code>. 
+
+<!-------------------------------------------------->
+<h3 class="w3-text-teal">How Should You Approach The Problem?</h3>
+<!-------------------------------------------------->
+We want to design a distributed algorithm for which the dataflow graph can
+be partitioned into a sequence of subgraphs where each subgraph is the
+dataflow of exactly one iteration.
+
+What method comes to mind to partition a dataflow graph into dataflow
+subgraphs? 
+
+<p>
+Logical time partitions dataflow into a past and future -- events with
+logical time at most \(t\) or greater than \(t\).
+
+So we use iteration ids in a similar way.
+
+<p>
+As with logical times, each event <code>e</code> is assigned an
+iteration id <code>t(e)</code>.
+
+We design an algorithm in which all events that 
+implement an iteration with id
+<code>T</code> also have iteration id <code>T</code>.
+
+<p>
+The following aspects of iteration ids are the same as with logical time.
+Each agent <code>A</code> has a local variable
+<code>A.t</code> which is the iteration id of the most recent event at
+<code>A</code>.
+
+And each message <code>m</code> has a
+timestamp <code>m.t</code> which is the iteration id of the event in
+which the message is sent.
+
+<p>
+The difference between iteration ids and logical time is as follows.
+
+The logical time of an event that receives a message is
+<i>strictly greater</i> than the logical time of the event that sends the message.
+
+By contrast, 
+the iteration id of the event in which a request is received is <i>the
+same as</i> the iteration id of the event in which that request is
+sent.
+
+This condition is achieved by the following rule.
+
+
+
+<p class="w3-text-teal">The Key Rule</p>
+<p>
+When a manager at iteration id <code>t</code>
+  gets a request with iteration id <code>t'</code>
+<ol>
+  <li>
+  If <code>t'</code> \(<\) <code>t</code> the request is ignored.
+  </li>
+  <li>
+  If <code>t'</code> \(\geq\) <code>t</code> then the manager processes
+  the request by setting its own iteration id and the iteration id of
+  the event that receives the request to <code>t'</code>, and sending
+  a reply with iteration id <code>t'</code>.
+  </li>
+</ol>
+Ignoring a message is equivalent to losing the message -- the message
+is removed from the channel and the states of agents don't change.
+
+An event in which a message is lost is assigned the iteration id of
+the event in which the message is sent.
+
+<p>
+The key rule ensures that iteration id of an event in which a request
+is received is the same as the timestamp of the request which is the
+same as the iteration id of the event that sends the request.
+
+<!-------------------------------------------------->
+<h3 class="w3-text-teal">The Algorithm</h3>
+<!-------------------------------------------------->
+<p>
+We give the algorithm for managers in Python-like pseudo code and
+explain the algorithm later.
+
+<h4 class="w3-text-teal">Algorithm for Managers of Shared Variables</h4>
+<pre>
+self.t = 0
+
+start()
+def receive(request, writer):
+   if request.t >= self.messaget:
+      self.t = request.t
+      if isinstance(request, ReadRequest):
+         send(Reply(self.var, self.t), writer)
+      else:
+         // message is a WriteRequest
+         self.var = request.var
+</pre>
+
+
+<p>
+If the timestamp <code>request.t</code> of the request 
+is greater than or equal to the iteration id <code>self.t</code> of
+the manager that receives the request, 
+then the manager takes the following steps.
+<ol>
+  <li>
+  The manager's iteration id, <code>self.t</code>, is set to the
+  timestamp of the request. 
+  </li>
+  <li>
+  The iteration id of the event that receives the request
+  is defined to be the timestamp of the request.
+  A reply, <code>Reply(self.var, self.t)</code> to the read request
+  has the iteration id <code>self.t</code> of the manager which is the
+  same as the timestamp of the request. 
+  </li>
+  <li>
+  If a write request is received then the shared variable
+  <code>self.var</code> is assigned
+  the value <code>request.var</code> specified in the request.
+  </li>
+</ol>
+
+
+<p>
+If the request's timestamp is less than the manager's iteration id
+then the request is ignored.
+
+<!-------------------------------------------------->
+<h4 class="w3-text-teal">Algorithm for Writers</h4>
+<!-------------------------------------------------->
+
+
+<p>
+
+Each writer <code>p</code> sends itself a <code>start_new_iteration</code> message.
+
+A writer starts a new iteration when it receives a
+<code>start_new_iteration</code> message.
+
+The writer increases its iteration id
+by a positive amount <code>self.pos()</code>.
+
+The writer's new iteration id is the unique iteration id for all the
+events that represent an iteration of Seq with this iteration id.
+
+<p>
+The writer discards earlier copies of shared variables;
+sends read requests and sends a <code>start_new_iteration</code> message to
+itself.
+
+The writer then waits to receive the
+<code>start_new_iteration</code> message and waits to receive replies to
+its read requests. 
+
+<p>
+If the writer receives a reply then it
+adds the <code>var</code> field of the reply to its local copy, and if
+condition <code>g()</code> 
+holds then it sends write requests.
+
+<p>
+If the writer receives a <code>start_new_iteration</code> before
+<code>g()</code> holds then it starts a new
+iteration without sending write requests.
+
+
+
+<p>
+We give the algorithm in Python-like pseudo code and then describe the
+algorithm.
+
+<pre>
+self.t = 0
+send(message=StartNewIteration(), receiver=self)
+start()
+
+def receive(message, sender):
+   if isinstance(message, StartNewIteration):
+      // start new iteration with larger iteration id.
+      self.t = self.t + self.h()
+
+      self.copy = {}
+      for q in Q: send(ReadRequest(t = self.t), q)
+
+      send(StartNewIteration(), self)
+
+   elif message.t == self.t:
+        // message is a reply to a read request 
+        self.copy[sender] = message.var
+        if self.g():
+           for q in Q:
+               send(WriteRequest(var = self.f(q), t=self.t), q)
+</pre>
+
+
+<p>
+A writer only receives replies with epoch times less than or equal to the
+writer's epoch time.
+
+This is because 
+the epoch time of a reply is the epoch time of the writer when it
+sent the request, and a writer's epoch time never decreases.
+
+
+
+<p>
+The writer ignores replies that have epoch timestamps that are 
+less than the writer's epoch time <code>p.t</code>.
+
+Therefore, a reply sent at epoch time <code>p.t</code> is lost,
+ignored, or received
+by <code>p</code> at epoch time <code>p.t</code>.
+
+
+
+<!-------------------------------------------------->
+<h3 class="w3-text-teal">Performance Issues</h3>
+<!-------------------------------------------------->
+
+
+
+
+
+<p>
+The events in the dataflow of an iteration are as follows.
+
+<ol>
+  <li>
+  A single writer <code>p</code> is selected.
+  </li>
+  <li>
+  The epoch time <code>p.t</code> is increased and the resulting epoch
+  time uniquely identifies the iteration -- no other iteration has the
+  same epoch time.
+  </li>
+  <li>
+  <code>p</code> sends read requests to shared variables.
+  </li>
+  <li>
+  A read request may get lost, or the manager may ignore the request,
+  or the manager may send a reply.
+  </li>
+  <li>
+  A reply may get lost, or <code>p</code> may ignore the reply, or
+  <code>p</code> may copy the reply into a local variable and send
+  write requests if <code>g(p)</code> holds.
+  </li>
+  <li>
+  A write request may get lost, or a manger may ignore the request, or
+  the manager may assign the value specified in the request to the
+  shared variable.
+  </li>
+</ol>
+
+
+<p>
+Ignoring a message has the same effect as losing the message -- the
+message is removed from the channel without changing agent states.
+
+<p>
+<code>read_set</code> is the set of managers that send replies that
+<code>p</code> copies in step 5.
+<code>write_set</code> is the set of managers that assign
+values to shared variables specified in write requests in step 6.
+
+
+
+<p>
+<i>The Problem</i>:
+
+Determine how to select a single writer <code>p</code> for each
+iteration and which requests and replies to ignore and which to process so that:
+<hr class="new2">
+  <p style="color:blue;">
+Values assigned to shared variables in the distributed
+and sequential algorithms are identical.
+</p>
+<hr class="new2">
+
+
+
+
+<h5 class="w3-text-teal">Message Types</h5>
+<ol>
+  <li>
+  A read request is an instance of a class <code>ReadRequest</code>
+  and has a single field <code>t</code> which is the epoch  time of
+  the request.
+  </li>
+  <li>
+  A reply is an instance of a class <code>Reply</code> and has fields
+  <code>var</code> and <code>t</code> which are a copy of the shared
+  variable and the epoch time of the reply, respectively.
+  </li>
+  <li>
+  A write request is an instance of a class <code>WriteRequest</code>
+  and has fields <code>var</code> and <code>t</code> which
+  are the value to be written into the shared variable and the epoch
+  time of the request, respectively. 
+  </li>
+</ol>
+
+
+
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+
+</body>
+</html>
