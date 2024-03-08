@@ -85,24 +85,18 @@ hr.new1 {
 
   <p class="w3-text-red">
 
-
-
   A model is an abstraction that ignores some features of systems
   while retaining features that help in  design.
 
   This webpage describes states, state transitions, and computations
   of a distributed system in a simple model.
 
-  We begin by designing algorithms based on the model, and we use
-   realistic representations later.
-
-  </P>
+  </p>
 
 
-<!-------------------------------------------------------------->
-<H3 Class="w3-text-teal">States</h3>
-<!-------------------------------------------------------------->
-
+<!---------------------------------------------------->
+<h3 class="w3-text-teal">States of a Distributed System</h3>
+<!---------------------------------------------------->
 The state of a distributed system is a tuple with an element of the
 tuple for the state of each of its agents and channels.
 
@@ -116,134 +110,111 @@ The state of a banking system is a tuple with elements of the tuple
   estimate location, wind speed, and pitch, and 
   elements for channels connecting agents.
 
-  <h4 class="w3-text-teal">Concurrent Operations</h4>
+  <p class="w3-text-teal">Concurrent Operations: Many Agents are Active
+  Simultaneously</p> 
   Agents in a distributed system operate concurrently.
-  Many ATM machines are used at the same time; many people use
-  cryptocurrency to trade at the same time; many
-  sensors and processors execute concurrently in an aircraft carrier.
-
-  <p>
-  An agent changes its variables -- and thus its state -- while
-  executing statements in a <code>receive</code> function.
+  Many ATM machines are used at the same time and many people trade in a
+  stock exchange at the same time.
   
-  Analyzing algorithms, with many agents
-  changing variables concurrently, is difficult.
+  Dealing with multiple concurrent agents is difficult.
 
-So we use a simple model that does not completely capture concurrent system
-behavior. 
+  The model uses a sequential program to represent a distributed
+  system.
+
+  We will show that the sequential program captures key aspects of
+  distributed systems.
 
   
-  
-  <h4 class="w3-text-teal">Model of State Changes</h4>
-The model deviates from the behavior of distributed systems described on
-<a href="Basics.html"> the previous page</a>
-in two important ways.
+  <!-------------------------------------->
+<p class="w3-text-teal">Sequential Program Representation of a
+Distributed System</p>
 
-  <ol>
-    <li>
-The model does not consider changes in states of an agent while it is
-  executing 
-a <code>receive</code> command.
+A distributed algorithm is represented by a sequential program in which
+  at most one agent changes state at a time.
 
-The model only considers states of an agent before the agent
-begins, and after it completes, executing  a <code>receive</code>.
+  The sequential program initializes states of agents and channels and
+  then executes the following while loop.
 
-Thus, the model only considers states in which all agents are idle.
-    </li>
-    <li>
 
-The model is sequential -- at most one agent changes state
-at a time.
+<pre>
+while there exists a nonempty input channel in the system:
+   select any nonempty channel (u, v) in the system
+   let the head of channel (u, v) be msg
+   agent v executes receive(message=msg, sender=u)
+</pre>
 
-A state transition occurs when one, and only one, agent receives and
-completes processing a message.
-    </li>
-  </ol>
+<p>
 
-  <h4 class="w3-text-teal">Computations</h4>
+Execution of the system halts when all channels are empty.
+
+We will discuss termination detection later.
+
+
+<!---------------------------------------------------->
+<h3 class="w3-text-teal">Computations</h3>
+<!---------------------------------------------------->
+An agent is said to be <i>active</i> while it is executing a
+<code>receive</code>.
+
+An agent is <i>idle</i> when it is not active.
+
+Many agents are active concurrently in a distributed system whereas at
+most one agent is active at a time in the sequential representation of
+the system.
+
+We next use one more level of abstraction: 
+<p>
+<i>The model only considers system states in which all agents are idle.</i>
+
+<p>
+A state transition is from a system state
+when an agent begins executing a <code>receive</code> to the system state 
+ after execution of that
+<code>receive</code> terminates.
+
+The model does not deal with state changes that occur
+while a <code>receive</code> is being executed.
+
+<p>
 A <i>computation</i> is a sequence 
-  of one or more states 
-where there is a transition from each state in the sequence to the
+of one or more states where there is a transition from each state in the sequence to the
 next.
 
-A transition is from the state before a receive is executed
-  to the state after the receive is completed.
+A computation can start in any state, though we will often deal with
+computations that start in an initial state.
 
-  
 <p>
-A computation can start in any state.
+A computation may be infinite.
 
-  A computation may be finite or infinite.
-
-  All initial subsequences of a computation are also computations: If
-  \(S_{0}, \ldots, S_{k}, \ldots\) is a computation then \(S_{0},
-  \ldots, S_{j}\) is also a computation for \(j < k\).
-
-
- <p>
-A maximal computation is modeled as the sequence of states generated
+A maximal computation is a  sequence of states generated
   by the following <code>while</code> loop.
 
   Here <code>n</code> is the number of <code>receive</code> functions
-that have been executed, and the sequence of states is \([S[0], S[1],
-\ldots]\). 
+that have been executed, and the sequence of states is <code>[S[0],
+S[1], ..]</code>. 
 
 <pre>
 n = 0
-while there exists a nonempty channel:
-    // state is S[n]
-    select any nonempty channel (u, v)
-    let the head of (u, v) be msg
-    v executes <code>receive(msg, u)</code>
+while there exists a nonempty channel in the system:
+    select any nonempty channel (u, v) in the system
+    let the head of channel (u, v) be msg
+
+    // State is S[n]
+    agent v executes receive(message=msg, sender=u)
+    // State is S[n+1]
+
     n = n + 1
   </pre>
 
-  
-In each iteration, exactly one message is received and processed.
-  
+You may wonder how a model of a distributed system can be useful if
+the model only deals with states in which all agents are idle and the
+model only deals with state transitions in which exactly one agent
+changes state.
 
-In 
-<a href="Basics.html">distributed systems</a>
-multiple agents process messages
-  concurrently.
+We show how the model is useful in the next page.
 
-  By contrast, in the model, only one agent executes a receive at a time while all the
-other agents are idle.
-
-  <p>
-  The \(n\)-th receive is initiated in state \(S[n]\), and the state
-  when the receive is completed is \(S[n+1]\).
-
-  The changes in state while the receive is being executed are ignored.
-
-  <p>
-A sequential model for a distributed system that only considers states
-  in which all agents are idle seems useless.
-
-In the following webpages we show how this model is useful.
-
-
-
-
-
-
-<!----------------------------------------------------------->
-<p class="w3-text-teal">State Transitions</p>
-
-States and transitions can represented by a directed
-graph, called the state transition graph, in which vertices represent
-  states and edges represent state transitions.
-
-A computation can be viewed as a path in the state transition graph.
-
-(A path may consist of a single vertex.)
-
-<p>
 The remainder of this webpage consists of examples.
 
-<!---------------------------------------------------------------->
-<h2 style="color:red;">Examples </h2>
-<!---------------------------------------------------------------->
 
 <!---------------------------------------------------------------->
 <h4 style="color:red;">Example of a Simple Distributed System</h4>
@@ -266,27 +237,56 @@ identify the file.
 
 
 <p>
-The function <code>receive</code> below is self explanatory.
+Initially  <code>u</code> and <code>v</code> hold the blue and red
+token, respectively. The program that initializes variables is not shown.
 
-In the code for an agent, <code>other_agent</code> is the other
+Next, we describe the function <code>receive</code> which is written
+in a Python notation.
+
+Each agent is an object of a class, and <code>self.v</code> refers to
+a local variable <code>v</code> of the agent.
+
+The agents are constructed so that <code>self.other_agent</code> is
+the other agent.
+
+<p>
+A message received by an agent is either a token sent by the other
+agent or is a wakeup message that the agent sends to itself.
+
+(More about the wakeup message later.)
+
+<p>
+If an agent receives a message from the other agent, then the message
+is a token, and so the agent appends the token to the list of tokens
+<code>self.list_of_tokens_I_hold</code> that the agent holds.
+
+<p>
+If an agent receives a message from itself, then the message is a
+wakeup.
+
+In this case, the agent removes a token, <code>token_I_hold</code>
+from the list of tokens that it holds, and sends it to the other
 agent.
+
+<p>
+If an agent is holding a token then it sends a wakeup message (an
+object of class <code>Wakeup</code>) to itself.
 
 
 <pre>
 def receive(message, sender):
-   if sender == other_agent:
-       // message is a token
-       list_of_tokens_I_hold.append(message)
+   if sender == self.other_agent:
+      // message is a token
+      self.list_of_tokens_I_hold.append(message)
    else:
-       # Sender is me. Message is wakeup.
-       # Send any token I hold to other_agent.
-       token_I_hold = tokens_held.pop()
-       send(token_I_hold, other_agent)
+      # Sender is me. Message is wakeup.
+      # Send a token I hold to other_agent.
+      token_I_hold = self.list_of_tokens_I_hold.pop()
+      send(token_I_hold, self.other_agent)
 
    # If I hold a token then wake me up later.
-   if len(list_of_tokens_I_hold) > 0:
-          time.sleep(1)
-          send(wakeup, me)
+   if len(self.list_of_tokens_I_hold) > 0:
+      send(Wakeup(), self)
 </pre>
 
 
@@ -325,74 +325,26 @@ In this transition \(u\) sends the blue token to \(v\) and \(u\)
 changes to the state in which it holds no tokens.
  
 
-<!-------------------------------------------------------------->
-<p style="color:red;">Time</p>
-<!-------------------------------------------------------------->
-Clocks of agents are not synchronized.
-
-When we prove properties of the algorithm, we make no assumptions
-about how long an agent sleeps when it executes 
-<code>time.sleep(1)</code>.
-
-Time and clocks play critical role in analyzing the performance of
-distributed algorithms, but not in analyzing their correctness.
-
-Later, we will study algorithms in which local clocks of agents are
-synchronized. 
-
-
-
-<!----------------------------------------------------------->
-<h4 style="color:red;">Example of a State Transition Graph</h4>
-<!----------------------------------------------------------->
-
-<figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.004.jpeg"
-    alt="Fig2" style="width:100%"> 
-    <figcaption>Fig.2: Example of a State Transition Graph</figcaption>
-</figure>
-
-
-<p>
-Figure 2 shows a part of the state-transition graph for the
-token-passing example.
-
-Not all states are shown because there are too many to fit the page.
-
-Channels from each agent to itself aren't shown so as to reduce
-cluttering.
-
-There is a <i>wakeup</i> message (which is not shown) in the channel
-from an agent to itself if the agent holds a token.
-
-<p>
-A state transition is labeled with the channel on which the message is
-received that caused the transition.
-
-For example, there are two transitions from the state shown in the top
-row, leftmost column.
-
-One transition occurs if \(u\) receives a wakeup
-message. This transition is to the state shown in the top row, middle column.
-
-Another transition occurs if \(v\) receives a wakeup message and this
-transition is to the state shown in the middle row, leftmost column.
-
-
 <!----------------------------------------------------------->
 <h4 style="color:red;">Example of a Computation</h4>
 <!----------------------------------------------------------->
 
 <p>
 An example of a computation is the sequence \([S_{0}, \ldots S_{8}]\)
-of states shown in figure 3 as a path in the state transition graph of
-figure 2. 
+of states shown in figure 2.
 
+Channels from each agent to itself aren't shown in the diagram for
+each state so as to reduce cluttering.
 
+There is a <i>wakeup</i> message (which is not shown) in the channel
+from an agent to itself if the agent holds a token.
+
+A state transition is labeled with the channel on which the message is
+received that caused the transition.
 <figure>
     <img src="DistributedSystemModels/DistributedSystemModels.005.jpeg"
-    alt="Fig3" style="width:100%"> 
-    <figcaption>Fig.3: Example - A Computation is a Path in the State Graph</figcaption>
+    alt="Fig2" style="width:100%"> 
+    <figcaption>Fig.2: Example - A Computation is a Path in the State Graph</figcaption>
 </figure>
 
 In this example a maximal computation has infinite length:
