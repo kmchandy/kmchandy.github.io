@@ -86,11 +86,8 @@ hr.new1 {
   </p>
 
   <p class="w3-text-red">
-  This page describes a simple model and notation for distributed
+  This page describes a simple model for distributed
   algorithms.
-
-  Converting this notation to widely-used programming
-  languages is straightforward.
 
   The model, though simple, is adequate for designing many
   algorithms.
@@ -104,63 +101,46 @@ hr.new1 {
   <!----------------------------------------------------------------->
 
   <!---------------------------------------->
-  <p class="w3-text-teal">Complex Systems</p>
+  <p class="w3-text-teal">Complex Systems and Simple Models</p>
 
   Distributed systems are complex.
 
-  The information system that supports a bank has actions taking place
+  The information system that supports a bank supports actions taking place
   in ATM machines, branch offices, and fraud analysis centers.
 
   An earthquake monitoring system has thousands of sensors and agents
   connected to sensors and in the cloud.
-
-
-  <!---------------------------------------->  
-  <p class="w3-text-teal">Simple Models</p>
+  
+<p>
   
   A model of a distributed system is an abstraction that ignores some
-  features of systems while retaining features that help in designing
-  algorithms.
+  features of systems while retaining others.
 
-  We use different models to design algorithms in different
+  Different models are used to design algorithms in different
   settings.
 
-  For example, models of systems in which messages may be
-  corrupted are different from models if systems in which messages
-  are not corrupted.
+  A model of a system in which messages may be
+  corrupted is different from one in which messages
+  cannot be corrupted.
 
-  <p>
-  We begin with a very simple model.
-
-  We will identify features that the model ignores and show why the
-  model is useful despite its simplicity.
+  We begin with a very simple model, identify its limitations, and show why
+  it is useful. 
 
 
 
   <!---------------------------------------->  
-  <p class="w3-text-teal">Powerful Programming Languages</p>
+  <p class="w3-text-teal">Notations</p>
 
-  A small number of programming languages and software libraries
-are used to implement most distributed systems.
+ Languages and software libraries for implementing distributed systems
+  have many features because distributed systems are complex.
 
-In addition, there are beautiful concurrent programming languages
-that becoming widely adopted.
+The algorithms in this course deal with only a few key problems in
+  distributed computing.
 
-These languages and libraries have many features because distributed
-systems are complex.
+  We use a message queuing notation to describe algorithms:
+  a message is appended to the tail of a queue and removed from its head.
 
-
-  <!---------------------------------------->  
-<p class="w3-text-teal">Simple Notations</p>
-
-The algorithms in this course are very short.
-
-Implementing them in
-different programming languages is straightforward.
-
-We use a simple notation and show how algorithms in this notation are converted in a
-straightforward way into programs
-using libraries such as 
+ We give examples of implementations of the algorithms using libraries such as 
   <a
   href="https://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol">
   Advanced Message Queuing Protocol (AMQP)
@@ -239,8 +219,8 @@ messages in the channel when the distributed system starts executing.
 <h4 class="w3-text-teal">Agents</h4>
 <!---------------------------------------------------->
 
-Associated with each agent is a program that initializes the
-variables of the agent and a function 
+Associated with each agent is (1) a program that initializes the
+variables of the agent and (2) a function 
 <pre>
 receive(message, sender)
 </pre>
@@ -252,11 +232,14 @@ message queuing libraries.
 The parameters <code>message</code> and <code>sender</code> of the function are the
 message that is received, and the sender of the message.
 
-<p>
 If an agent has a nonempty input channel then the <code>receive</code>
 function of the agent is called where <code>message</code> is the
-message at the head of the channel, and <code>sender</code> is the
-agent that sent the message.
+message at the head of the channel and <code>sender</code> is the
+agent that sent the message;
+
+the message is removed from the channel.
+
+
 
 <p>
 An agent sends a mesage by executing
@@ -267,7 +250,7 @@ The first parameter of <code>send</code> is the message that is sent,
 and the second paramenter is the agent to which the message is sent.
 
 Execution of this statement places the message in the output channel
-from the agent to the receiver.
+directed from the sender to the receiver.
 
 A message can be sent on a channel independent of the state of the
 channel.
