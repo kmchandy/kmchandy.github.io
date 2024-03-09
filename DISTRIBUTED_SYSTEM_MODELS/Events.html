@@ -87,7 +87,8 @@ hr.new1 {
 
   The local change is specified by an <i>event.</i>
 
-  The flow of data between events at agents is represented by a dataflow graph.
+  The flow of data between events at agents is represented by a
+  dataflow graph.
 
   </p>
 
@@ -443,6 +444,73 @@ with failure.
 Failure modes are discussed later.
 
 
+
+<!------------------------------------------------------------>
+<p class="w3-text-teal">Local Clocks and Timing</p>
+<!----------------------------------------------------->
+
+Agents may have local clocks; however, clocks aren't synchronized.
+
+Times at local clocks may deviate
+from each other and the true time by arbitrary amounts.
+
+<p>
+We use local clocks in some algorithms.
+
+For instance an agent may send
+a heartbeat message periodically indicating that it hasn't stopped
+executing.
+
+The performance of some algorithms depends on intervals of time
+determined by local clocks.
+
+We will, however, prove the correctness of all
+algorithms without using local clocks.
+
+
+<!-------------------------------------------------------------->
+<p style="color:red;">Time</p>
+<!-------------------------------------------------------------->
+Clocks of agents are not synchronized.
+
+When we prove properties of the algorithm, we make no assumptions
+about how long an agent sleeps when it executes 
+<code>time.sleep(1)</code>.
+
+Time and clocks play critical role in analyzing the performance of
+distributed algorithms, but not in analyzing their correctness.
+
+Later, we will study algorithms in which local clocks of agents are
+synchronized. 
+
+
+<!-------------------------------------------------------------->
+<p style="color:red;">Discrete State Space</p>
+<!-------------------------------------------------------------->
+The state space is discrete in most of the algorithms described here.
+
+Later, we study some algorithms in which the state space is
+continuous.
+
+<p>
+The algorithm for an agent is a set of statements that define the
+initial value of the agent and a definition of the agent's
+<code>receive</code> function.
+
+
+
+<p>
+The set of states of an agent is the set of possible values of the agent's
+variables including its
+<a href="https://en.wikipedia.org/wiki/Program_counter">
+program counters
+</a>.
+
+In the algorithms described in this course an agent is a
+sequential program; however,
+
+an agent may be any object that sends and
+receives messages, and an agent may itself be a  distributed programs.
 
 <h3 class="w3-text-teal">Next</h3>
 <a href="Timelines.html">Properties of Dataflow</a>
