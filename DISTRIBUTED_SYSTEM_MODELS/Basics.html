@@ -257,7 +257,8 @@ channel.
 
 An agent is never blocked from sending a message.
 
-
+<p>
+The website has <a href="../CODE_EXAMPLES">examples of implementations.</a>
 
 <h4 style="color:red;">Example of an Agent</h4>
 This is an example of an agent that receives messages from agents
@@ -277,6 +278,16 @@ def receive(message, sender):
    send(sum, results)
 </pre>
 
+<p>
+See <a href="../CODE_EXAMPLES/SumPosAndNeg.py"> an example of an
+implementation in Python.</a>
+The implementation is a simple simulation of a distributed system.
+Implementations with multiple processes using
+<a
+  href="https://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol">
+  AMQP
+</a>
+are given later.
 
 <!----------------------------------------------------->
 <p class="w3-text-teal">Restrictions on Agents</p>
