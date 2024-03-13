@@ -109,7 +109,7 @@ hr.new1 {
   in ATM machines, branch offices, and fraud analysis centers.
 
   An earthquake monitoring system has thousands of sensors and agents
-  connected to sensors and in the cloud.
+  carrying out complex calculations.
   
 <p>
   
@@ -167,7 +167,10 @@ channels.
   A channel is directed from one agent to one agent.
 
   A channel from an agent <code>P</code> to an agent <code>Q</code> is
-  an output of <code>P</code> and an input of <code>Q</code>.
+called an output of <code>P</code> and an input of <code>Q</code>.
+
+The ordered pair <code>(P, Q)</code> represents the channel from
+<code>P</code> to <code>Q</code>.
   
   An agent can send messages on its output channels and receive
   messages on its input channels.
@@ -179,7 +182,7 @@ represent agents and edges represent channels.
 A distributed system is initiated with sets of agents and channels
   that remain unchanged. 
 
-Agents and channels are not created or deleted.
+Agents and channels are not created or deleted during a computation.
 
 
   <h4 style="color:red;">Example: Agent-Channel Graph</h4>
@@ -198,29 +201,59 @@ Agents and channels are not created or deleted.
 <h4 class="w3-text-teal">Message Communication: Channels</h4>
 <!----------------------------------------------------------------->
 
-The state of a channel is the sequence of messages in the channel --
-these are the messages that have been sent on the
-channel and that have not been received.
-
-An agent sends a message by appending the message to the tail of the
-sequence of messages in the channel.
-
-An agent can receive the message at the head of a nonempty sequence of
-messages in any of the agent's input channels.
-
-When an agent receives a message it is deleted from the sequence.
+The state of a channel is a
+<a href="https://en.wikipedia.org/wiki/Queue_(abstract_data_type)">
+queue</a> consisting of the sequence of
+messages in the channel -- these are the messages that have been sent
+on the channel and that have not been received.
 
 <p>
-Associated with each channel is its initial state -- the sequence of
+An agent sends a message by appending the message to the tail (rear)
+of the queue.
+
+An agent receives a message from a nonempty queue by removing
+the message from the head (front) of the queue.
+
+
+<!----------------------------------------------->
+<h4 style="color:red;">Example of Channel States</h4>
+The figure below shows a sequence of states <code>S0, S1, S2,
+S3</code> of a channel from agent <code>A</code> to agent
+<code>B</code>.
+
+The channel is empty in <code>S0</code>, i.e., its state is the empty
+queue.
+Then agent <code>A</code> sends message <code>M1</code> on the
+channel, and then the state of the channel is a queue consisting of the
+single message <code>M1</code>.
+The states after <code>A</code> sends <code>M2</code> and then
+<code>B</code> receives a message are shown below.
+    <figure>
+    <img
+    src="DistributedSystemModels/DistributedSystemModels.019.jpeg"
+    alt="Fig1" style="width:100%"> 
+    <figcaption>Fig.2: Example: States of a Channel</figcaption>
+</figure>
+
+<p>
+Associated with each channel is its initial state -- the queue of
 messages in the channel when the distributed system starts executing.
 
 
 <!---------------------------------------------------->
 <h4 class="w3-text-teal">Agents</h4>
 <!---------------------------------------------------->
+An agent is an object that sends and receives messages.
 
-Associated with each agent is (1) a program that initializes the
-variables of the agent and (2) a function 
+In this course, an agent is a sequential program, and the
+<a href="https://en.wikipedia.org/wiki/State_(computer_science)">
+state</a> of an
+agent is given by the values of its variables and its program
+counter. 
+
+<p>
+Associated with each agent is a program that initializes
+variables and output channels of the agent and a function:
 <pre>
 receive(message, sender)
 </pre>
@@ -229,20 +262,17 @@ called a callback function in
 "https://www.rabbitmq.com/tutorials/tutorial-one-python.html">
 message queuing libraries.
 </a>
-The parameters <code>message</code> and <code>sender</code> of the function are the
-message that is received, and the sender of the message.
+The parameters <code>message</code> and <code>sender</code> of the
+function are the message that is received, and the sender of the message.
 
+<p>
 If an agent has a nonempty input channel then the <code>receive</code>
 function of the agent is called where <code>message</code> is the
 message at the head of the channel and <code>sender</code> is the
-agent that sent the message;
-
-the message is removed from the channel.
-
-
+agent that sent the message.
 
 <p>
-An agent sends a mesage by executing
+An agent sends a message by executing
 <pre>
 send(message, receiver)
 </pre>
@@ -257,17 +287,47 @@ channel.
 
 An agent is never blocked from sending a message.
 
-<p>
-The website has <a href="../CODE_EXAMPLES">examples of implementations.</a>
 
+<p>
+See <a href="../CODE_EXAMPLES">examples of
+implementations</a> that use a simple simulation of a distributed
+system. 
+
+Implementations with multiple processes using
+<a
+  href="https://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol">
+  AMQP
+</a>
+are given later.
+
+
+<!----------------------------------------------->
 <h4 style="color:red;">Example of an Agent</h4>
-This is an example of an agent that receives messages from agents
+
+This is an example of an agent, <code>sum_pos_neg</code>,
+that receives messages from agents
 <code>pos</code> and <code>neg</code>,
 and sends messages to agent <code>results</code>.
+
+See <a href="../CODE_EXAMPLES/SumPosAndNeg.py"> an example of an
+implementation in Python.</a>
+
+   <figure>
+    <img
+    src="DistributedSystemModels/DistributedSystemModels.020.jpeg"
+    alt="Fig3" style="width:60%"> 
+    <figcaption>Fig.3: Agent Graph of the Example</figcaption>
+</figure>
+
+<p>
 The state of the agent is given by the values of its local variable
 <code>sum</code> and its program counter.
+
+In the initial state <code>sum = 0</code> and the agent's output
+channels are empty.
+
+
 <pre>
-// Initial state
 sum = 0
 
 def receive(message, sender):
@@ -278,16 +338,7 @@ def receive(message, sender):
    send(sum, results)
 </pre>
 
-<p>
-See <a href="../CODE_EXAMPLES/SumPosAndNeg.py"> an example of an
-implementation in Python.</a>
-The implementation is a simple simulation of a distributed system.
-Implementations with multiple processes using
-<a
-  href="https://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol">
-  AMQP
-</a>
-are given later.
+
 
 <!----------------------------------------------------->
 <p class="w3-text-teal">Restrictions on Agents</p>
@@ -297,19 +348,19 @@ An agent can only access that agent's variables, send
 messages only on that agent's output channels, and receive messages
 only on that agent's input channels.
 
-A <code>receive</code> function must not call itself, and every
-execution of <code>receive</code> must terminate. 
+A <code>receive</code> function must not be recursive: an agent cannot
+receive a new message while it is executing a receive of a previous
+message. 
 
-
-
+Every execution of <code>receive</code> must terminate.
 
 
 <h5 class="w3-text-teal">Next</h5>
-<a href="DistributedSystemModels.html">
-States, transitions and
-computations in a model of a distributed system.</a>
 The next two webpages continue the description of a model of
 distributed systems and point out its strengths and limitations.
+
+The next page defines <a href="DistributedSystemModels.html">
+states, transitions and computations.</a> 
 
 <p>
 <a href="BasicsFAQ.html">Frequenty Asked Questions</a>

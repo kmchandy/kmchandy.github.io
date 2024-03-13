@@ -157,20 +157,20 @@ is not in the set.
 
   <!-------------------------------------------------------->
 <h5 class="w3-text-teal">Observation</h5>
-  <!-------------------------------------------------------->
-Let \(V\) be the set of vertices.
+<!-------------------------------------------------------->
+Let \(H\) be a closed subset of vertices of a dag.
 
-For a closed subsets \(H, H'\) of vertices of a dag,  where \(H
-\subseteq H'\)
-the concatenation of topological sorts of \(H\),  \(H' - H\), and  \(V
-- H'\) is a topological sort of the dag. 
+The topological sort of the subgraph spanned by \(H\) followed by the
+topological sort of the subgraph spanned by vertices not in \(H\) is a
+topological sort of the graph.
+
 
 <p>
-In figure 1, \(H = \{0, 1, 2, 5\}\)
-and \(H' = \{0, 1, 2, 3, 4, 5\}\)
-are closed, and the sequence
-\([0, 2, 1, 5]\) followed by \([3, 4]\) followed by
-\([6, 7]\) is a topological sort of the dag.
+Example: In figure 1, \(H = \{0, 1, 2, 5\}\) is closed,
+and \([0, 2, 1, 5]\) followed by \([3, 4, 6, 7]\) is a topological
+sort of the graph.
+
+
 
 
 
@@ -226,7 +226,7 @@ The initial vertex generates the variables of the dataflow.
 <h3 class="w3-text-teal">Properties of Dataflow</h3>
 <!---------------------------------------------------------------->
 
-The following observation follows directly from properties of dags,
+The following observation follows directly from properties of dags:
 
 <hr class="new2">
   <h6 style="color:blue;">
@@ -241,10 +241,9 @@ The following observation follows directly from properties of dags,
 <pL
 Another direct consequence of a property of a dag is:
 <p>
-  For all closed sets \(H, H'\) of operations where \(H
-\subseteq H'\) there exists a computation that executes all operations
-in \(H\), then executes operations in \(H' - H\), and then executes
-  operations that are not in \(H'\).
+  For all closed sets \(H\) of operations
+there exists a computation that executes all operations
+in \(H\) and then executes operations that are not in \(H\).
 
 
 
@@ -270,34 +269,83 @@ An example of a closed set of operations is \(\{-, +\}\), and
 an example of a set that is not closed is \(\{-, *\}\).
 
 <p>
-Let \(H = \{-\}\) and \(H' = \{-, +\}\).
+Let \(H = \{-, +\}\).
 
 There exists a sequence of
-operations that executes operations in \(H\) and then those that are
-in \(H' - H\), and then the remaining operations.
+operations that executes operations in \(H\) and then the remaining
+operations. 
 
 
 
 <!----------------------------------------------------------------->
 <h3 class="w3-text-teal">Slice of a Dataflow Graph</h3>
 <!----------------------------------------------------------------->
-A computation of an agent is a sequence of events at that agent.
 
-A point in the computation of an agent \(u\) is specified by an
+<p class="w3-text-teal">Review of Dataflow Graph of a Computation</p>
+A dataflow graph of a computation of a distributed system is a labeled
+directed graph in which vertices represent events.
+
+The graph has two kinds of edges: a message edge is from an event in
+which a message is sent to the event in which that message is
+received.
+
+An agent edge is from an event at an agent to the next event at that
+agent.
+
+A message edge is labeled with the message and an agent edge is
+labeled with the state of the agent.
+
+
+<p>
+
+The timeline of an agent in a computation is the sequence of events at
+that agent in the computation.
+
+By convention, the timeline of an agent is depicted by a horizontal
+line in the dataflow graph of the computation.
+
+<p>
+<i>A point in the timeline of an agent</i> \(u\) is specified by an
 integer \(i\) and is the 
 edge from the \(i\)-th event at \(u\) to the \(i+1\)-th event at
 \(u\).
 
+
+<!------------------------------------------------------------------>
+<h5 style="color:red;">Example: Points on Agent Timelines</h5>
+<!------------------------------------------------------------------>
+
+Figure 1 shows a dataflow of a computation in the top diagram and
+the timelines of agents in the lower diagram.
+
+
+<figure>
+    <img src="DistributedSystemModels/DistributedSystemModels.018.jpeg"
+    alt="Fig6" style="width:100%"> 
+    <figcaption>Fig.1: Example - Dataflow Graph of a Computation and Timelines</figcaption>
+</figure>
+
+
+
+
 <p>
+In figure 1, the point 2 on the timeline of \(u\) is the edge from
+event number 1 to event number 5 because event number 1 is the second
+event on \(u\)'s timeline in this computation.
+
+Point 3 on the timeline of \(u\) is the edge from
+event number 5 to event number 6.
+
+<h5 class="w3-text-teal">Slices</h5> 
 
 A <i>slice</i> of a dataflow graph of a computation is a vector \(N\)
 where \(N[k]\) 
-is a point in the \(k\)-th agent's computation.
+is a point in the \(k\)-th agent's computation, for all agents \(k\).
 
 <p>
 The <i>past</i> at the slice  is defined
 as the set consisting of the first \(N[k]\) events of the \(k\)-th
-agent. 
+agent for all \(k\).
 
 The <i>future</i> at the slice is the
 complement of the past. 
@@ -305,14 +353,16 @@ complement of the past.
 
 
 <!------------------------------------------------------------------>
-<h5 style="color:red;">Example: Past and Future</h5>
+<h5 style="color:red;">Example: Past and Future at a Slice</h5>
 <!------------------------------------------------------------------>
 Figure 3 shows a dataflow graph for a computation with events
 \([0, 1, 2, \ldots]\) and agents \(X, Y, Z\) indexed \(0, 1, 2\)
 respectively. 
 
 <p>
-Points on the agents' computations are shown as yellow circles.
+Points on the agents' computations are shown as yellow circles on
+edges.
+
 For example, the point on agent \(X\) is 3 because it is the edge from
 the 3rd event (event number 6) to the 4th event (event number 8) at
 \(X\).
@@ -374,7 +424,7 @@ We use the shorter phrase,
 "<i>the slice is closed</i>" for the "past of the slice is closed."
 
 <!----------------------------------------------------------------->
-<h4 class="w3-text-teal">The State at a Slice</h4>
+<h3 class="w3-text-teal">The State at a Slice</h3>
 <!----------------------------------------------------------------->
 
 The state at a closed slice is the state after executing all events in
@@ -399,6 +449,11 @@ of \((u, v)\) edges from events in the past to events in the future.
 
 The state at a slice is defined only for a closed slice.
 
+
+<!----------------------------------------------------------------->
+<h3 class="w3-text-teal">Computation between Slices of a Dataflow Graph</h3>
+<!----------------------------------------------------------------->
+
 We use the shorter phrase "computation from a slice \(U\) to a
  size \(V\)" for "computation from the state at a closed slice
 \(U\) to the state at a closed size \(V\)"
@@ -417,18 +472,16 @@ A closed slice \(U\) is defined to be <i>earlier than</i> a closed slice \(V\) (
 <i>later than</i> \(U\)) exactly when \(U \leq V\).
 
 So, for all closed slices \(U, V\) of a dataflow graph:
-<p>
-<i>
 \(U\) is earlier than \(V\) exactly when 
 there is a computation from \(U\) to \(V\).
-</i>
 </p>
 
 
 <p>
-In figure 3, slice \([3, 3, 2]\)
-is earlier than slice \([4, 4, 2]\), and there is a computation from
-slice \([3, 3, 2]\) to slice \([4, 4, 2]\).
+Example: In figure 3, slice \([3, 3, 2]\)
+is earlier than slice \([4, 4, 2]\) and both slices are closed.
+So, there is a computation from slice \([3, 3, 2]\) to slice \([4, 4,
+2]\). 
 
 <p>
 The remainder of this webpage consists of examples.
@@ -580,21 +633,18 @@ There exists a computation from the slice \([0, 2]\) to the slice
 
 <p>
 
-The next four webpages describe straightforward, but important,
-applications of slices.
-
 
 <!------------------------------------------------------------------>
 <h3 class="w3-text-teal">Next</h3>
-Chapter on Snapshots and Clocks:
-<a href="../ChannelSnapshots/ChannelSnapshots.html">
-Global Snapshots.
-</a>
 
-<p>
-<a href="TimelinesFAQ.html">
-Properties of Dataflow: FAQ
+This completes the first chapter: Introduction.
+
+The next chapter  --
+<a href="../ChannelSnapshots/ChannelSnapshots.html">
+Global Snapshots and Logical Clocks
 </a>
+-- consists of four webpages and describes straightforward, but important,
+applications of slices and dataflow.
 
 
 

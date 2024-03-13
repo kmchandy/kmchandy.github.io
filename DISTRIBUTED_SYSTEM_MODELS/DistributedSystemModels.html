@@ -103,12 +103,15 @@ tuple for the state of each of its agents and channels.
   <p>
 The state of a banking system is a tuple with elements of the tuple
   for states of agents at ATM machines, branch banks, fraud analysis centers,
-  and for channels connecting the agents.
+  and for states of channels connecting the agents.
 
   The state of an airplane navigation system is a tuple with elements
-  for states of agents that
-  estimate location, wind speed, and pitch, and 
-  elements for channels connecting agents.
+  for states of agents that estimate location, wind speed, and pitch, and 
+  for states of channels connecting agents.
+
+  <p>
+  We refer to the state of the system as the <i>system state</i> to
+  distinguish it from the states of its component agents and channels.
 
   <p class="w3-text-teal">Concurrent Operations: Many Agents are Active
   Simultaneously</p> 
@@ -162,7 +165,7 @@ Many agents are active concurrently in a distributed system whereas at
 most one agent is active at a time in the sequential representation of
 the system.
 
-We next use one more level of abstraction: 
+We next use one further level of abstraction: 
 <p>
 <i>The model only considers system states in which all agents are idle.</i>
 
@@ -176,12 +179,11 @@ The model does not deal with state changes that occur
 while a <code>receive</code> is being executed.
 
 <p>
-A <i>computation</i> is a sequence 
-of one or more states where there is a transition from each state in the sequence to the
-next.
+A <i>computation</i> is a sequence of one or more system states where
+there is a transition from each state in the sequence to the next.
 
-A computation can start in any state, though we will often deal with
-computations that start in an initial state.
+A computation can start in any system state, though we will often deal
+with computations that start in an initial state.
 
 <p>
 A computation may be infinite.
@@ -213,6 +215,7 @@ changes state.
 
 We show how the model is useful in the next page.
 
+<p>
 The remainder of this webpage consists of examples.
 
 
@@ -257,20 +260,21 @@ agent or is a wakeup message that the agent sends to itself.
 
 <p>
 If an agent receives a message from the other agent, then the message
-is a token, and so the agent appends the token to the list of tokens
+must be a token; so the agent appends the token to the list of tokens
 <code>self.list_of_tokens_I_hold</code> that the agent holds.
 
 <p>
-If an agent receives a message from itself, then the message is a
-wakeup.
+If an agent receives a message from itself, then the message must be a
+wakeup, and the agent must hold at least one token.
 
-In this case, the agent removes a token, <code>token_I_hold</code>
+In this case, the agent removes a token, <code>token_I_hold</code>,
 from the list of tokens that it holds, and sends it to the other
 agent.
 
 <p>
-If an agent is holding a token then it sends a wakeup message (an
-object of class <code>Wakeup</code>) to itself.
+If an agent is holding a token then it sends a "wakeup" message to
+itself. See <a href="../CODE_EXAMPLES/PassingTokens.py"> an
+implementation of the algorithm.</a>
 
 
 <pre>
@@ -286,7 +290,7 @@ def receive(message, sender):
 
    # If I hold a token then wake me up later.
    if len(self.list_of_tokens_I_hold) > 0:
-      send(Wakeup(), self)
+      send('wakeup', self)
 </pre>
 
 
@@ -336,7 +340,7 @@ of states shown in figure 2.
 Channels from each agent to itself aren't shown in the diagram for
 each state so as to reduce cluttering.
 
-There is a <i>wakeup</i> message (which is not shown) in the channel
+There is a wakeup message (which is not shown) in the channel
 from an agent to itself if the agent holds a token.
 
 A state transition is labeled with the channel on which the message is
