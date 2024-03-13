@@ -97,21 +97,80 @@ hr.new1 {
 <!---------------------------------------------------->
 <h3 class="w3-text-teal">States of a Distributed System</h3>
 <!---------------------------------------------------->
-The state of a distributed system is a tuple with an element of the
-tuple for the state of each of its agents and channels.
+The state of a distributed system is given by the states of each of
+  its agents and channels. 
 
   <p>
-The state of a banking system is a tuple with elements of the tuple
-  for states of agents at ATM machines, branch banks, fraud analysis centers,
-  and for states of channels connecting the agents.
+The state of a banking system is given by the states of agents
+  such as those
+  ATM machines, branch banks, fraud analysis centers, 
+  and states of channels connecting the agents.
 
-  The state of an airplane navigation system is a tuple with elements
-  for states of agents that estimate location, wind speed, and pitch, and 
-  for states of channels connecting agents.
+  The state of an airplane navigation system is given by states of
+  agents such as those that estimate location, wind speed, and pitch, and 
+  states of channels connecting agents.
+
+  
+<!---------------------------------------------------------------->
+<h4 style="color:red;">Example: System State</h4>
+  <!---------------------------------------------------------------->
+  The figure below shows the network of agents from the
+  <a href="Basics.html">previous page</a>.
+
+  Program counters -- pointers to the next
+  statement to be executed -- are not shown as part of the state in
+  the example.
 
   <p>
-  We refer to the state of the system as the <i>system state</i> to
-  distinguish it from the states of its component agents and channels.
+  The system consists of agents <code>pos</code>, <code>neg</code>,
+  <code>sum</code>, and <code>results</code>.
+  In <a href="../CODE_EXAMPLES/SumPosAndNeg.py"> the code </a>, <code>sum</code> is
+  <code>sum_pos_neg</code> and <code>results</code> is
+  <code>print_message</code>.
+
+  <p> The channels in the system are <code>(pos, sum)</code>,
+  <code>(neg, sum)</code> and <code>(sum, results)</code>.
+  
+  In the diagram, the channel <code>(pos, sum)</code>, from agent
+  <code>pos</code> to agent <code>sum</code> has a single message,
+  <code>20</code>.
+
+So the state of <code>(pos, sum)</code> is a queue consisting of a
+single value 20, and is represented as a list <code>[20]</code>.
+
+<p>
+There are two messages <code>5</code> and <code>10</code> in the
+channel from <code>neg</code> to <code>pos</code>, and so the state of
+channel <code>(neg, sum)</code> is <code>[5, 10]</code>.
+
+The states <code>(sum, result)</code> is <code>[2]</code>.
+
+<p>
+The state of an agent is given by the values of its local variables
+and the program counter (which is not shown).
+The state of agent <code>pos</code> is given by the value of its
+only local variable <code>n</code>.
+In the diagram, this value is 2, and the state of <code>pos</code> is
+represented as <code>{n : 2}</code>.
+The diagram shows the states of all agents.
+
+<p>
+The system state consists of the states of all its component agents
+and channels. It is shown in a notation <code>{component :
+state}</code> where a component is an agent or a channel.
+  
+    <code>n</code>.
+    <figure>
+    <img
+    src="DistributedSystemModels/DistributedSystemModels.021.jpeg"
+    alt="Fig1" style="width:100%"> 
+    <figcaption>Fig.1: Example: System State</figcaption>
+  </figure>
+  
+  <p>
+  We refer to the state of the system as the <i>system state</i> or
+  <i>global state</i> to distinguish it from the states of its
+  component agents and channels. 
 
   <p class="w3-text-teal">Concurrent Operations: Many Agents are Active
   Simultaneously</p> 
@@ -133,7 +192,7 @@ The state of a banking system is a tuple with elements of the tuple
 Distributed System</p>
 
 A distributed algorithm is represented by a sequential program in which
-  at most one agent changes state at a time.
+  <i>at most one agent changes state at a time.</i>
 
   The sequential program initializes states of agents and channels and
   then executes the following while loop.
@@ -147,8 +206,16 @@ while there exists a nonempty input channel in the system:
 </pre>
 
 <p>
+While an agent <code>v</code> is executing a <code>receive</code>, in
+the sequential program, the states of all
+agents other than <code>v</code> remain unchanged.
 
-Execution of the system halts when all channels are empty.
+Agent <code>v</code> may send messages while it is executing a
+<code>receive</code>, and so the states of <code>v</code>'s output channels may
+change, but the states of all other channels remain unchanged.
+
+<p>
+Execution of the sequential program halts when all channels are empty.
 
 We will discuss termination detection later.
 
@@ -256,7 +323,6 @@ the other agent.
 A message received by an agent is either a token sent by the other
 agent or is a wakeup message that the agent sends to itself.
 
-(More about the wakeup message later.)
 
 <p>
 If an agent receives a message from the other agent, then the message
@@ -284,7 +350,8 @@ def receive(message, sender):
       self.list_of_tokens_I_hold.append(message)
    else:
       # Sender is me. Message is wakeup.
-      # Send a token I hold to other_agent.
+      # Remove element from self.list_of_tokens_I_hold
+      # and assign it to token_I_hold.
       token_I_hold = self.list_of_tokens_I_hold.pop()
       send(token_I_hold, self.other_agent)
 
@@ -351,9 +418,8 @@ received that caused the transition.
     <figcaption>Fig.2: Example - A Computation is a Path in the State Graph</figcaption>
 </figure>
 
-In this example a maximal computation has infinite length:
-
-Agents can keep sending tokens to each other forever.
+In this example a maximal computation has infinite length because there is
+a nonempty channel in every state of every computation.
 
 
 
