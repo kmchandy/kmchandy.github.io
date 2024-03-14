@@ -81,36 +81,145 @@ hr.new1 {
     <h1 class="w3-text-teal">Basics: FAQ</h1>
 <!----------------------------------------------------------------->
 
-    <!----------------------------------------------------------------->
+  <!----------------------------------------------------------------->
   <p class="w3-text-teal">Why use such a simplistic model?</p>
   <!----------------------------------------------------------------->
   The model is indeed simplistic; however, it is adequate to describe
   and prove the correctness of the algorithms described in this
-  website. 
+  website.
+
+  <p>
+  We point out the model's weaknesses and we introduce other models as
+  needed to deal with different problems.
+
+  The idea is to use the simplest model adequate for designing
+  algorithms. 
+
+
+  
+
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">What are the most serious limitations of the
+  model?</p>
+  <!----------------------------------------------------------------->
+  The model is inadequate for analyzing the performance of
+  algorithms. 
+
+  <p>
+  This is because the model is inherently sequential whereas distributed systems are
+  inherently concurrent.
+
+  In the model, at most one agent is active at a time while all other agents are
+  idle.
+
+  Let's look at one consequence of this assumption.
+
+  <p>
+  Consider a distributed system in which an
+  agent executes a <code>receive</code> that includes the statement
+  <code>time.sleep(1)</code> that causes the agent to sleep (do
+  nothing) for 1 second.
+
+  We may want an agent to sleep after it sends a message and before it
+  sends the next message to reduce congestion and improve performance.
+
+  <p>
+  The model cannot represent this situation.
+
+  In the model only one agent executes <code>receive</code> at a time.
+  
+  So, if an agent sleeps for a second while executing
+  <code>receive</code> then -- in effect -- all agents sleep for a second.
+
+  <p>
+  We discuss the use of local clocks when we discuss system
+performance.
+
+We do not use clocks for proving that algorithms are correct.
+  
+
+
+  
     
   <!----------------------------------------------------------------->
   <p class="w3-text-teal">Can you represent systems in which agents
   are created and deleted in the model?</p>
   <!----------------------------------------------------------------->
-  Construct a system with a large number of agents and channels.
+  The model doesn't have features that allow agents to be created and
+  deleted.
 
-  Represent an agent that has yet to be created by an agent \(a\) that
-  is created in a special state -- "dormant."
+<p>
+  You may want to implement a system in which agents are created and
+  deleted infinitely often, and so create and delete an unbounded
+  number of agents.
 
-  \(a\) has an input channel from a system manager which
-  sends \(a\) a message -- say a "create" message -- and when \(a\) receives the
-  message it starts executing and changes state from dormant to executing.
+  In this case the network of agents changes over time in an arbitrary
+  fashion. 
+
+  This model doesn't represent such systems.
 
   <p>
-  A similar method can be used for representing channels that are
-  created and deleted.
+  The implementations and software libraries given in this course
+  allow agents to be created.
 
-      
+  The implementation platforms are more powerful than the model.
+
+  In this course we don't need use all features of these platforms. 
+
+
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">Can an agent refuse to receive a message?</p>
+<!----------------------------------------------------------------->
+In this model an agent cannot refuse to receive a message.
+
+<p>
+ You may want to design an algorithm in which an agent
+  <code>X</code> refuses to receive messages from an agent
+  <code>Z</code> until it first receives a message from an agent
+  <code>Y</code>.
+
+In our model, agent <code>X</code> has to receive the message from
+  <code>Z</code> in every state of <code>X</code>.
+
+  <p>
+  Agent <code>X</code> can copy the message from <code>Z</code> into a
+  local queue -- a local 
+  variable of <code>X</code> -- and process the local queue later.
+
+
+
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">Can a full channel block a sender from
+  sending more messages?</p>
+<!----------------------------------------------------------------->
+In the model a sender is never blocked from sending a message.
+
+<p>
+Some implementations of queues specify a maximum size, and when the
+queue is full, agents cannot append messages to the queue.
+
+Our model assumes that queues that represent messages in channels can
+be of arbitrary size, and so a sender is never blocked from sending
+more messages in a channel.
+
+<p>
+We will, however, prove that the number of messages in a channel is
+bounded by some number, and so we need only ensure that queue sizes are
+large enough.
+
+
+
+  
   <!----------------------------------------------------------------->
   <p class="w3-text-teal">How do you represent channels that are not
   first in first out?</p>
   <!----------------------------------------------------------------->
-  Later we describe algorithms with different types of channels.
+We use queues to represent states of first in first out channels, and
+  we use other data structures -- such as multisets -- to represent
+  states of other types of channels. 
+
+<p>
+Later we describe algorithms with different types of channels.
 
   For example, the state of a channel in which messages may overtake
   each other is a multiset or bag.
@@ -128,46 +237,41 @@ hr.new1 {
         
   <!----------------------------------------------------------------->
   <p class="w3-text-teal">Can the model represent sequential
-  computation of distributed computation?</p>
+  composition of distributed computations?</p>
   <!----------------------------------------------------------------->
-  A sequential composition of distributed computations is one in which
-  a distributed computation starts and later terminates after
-which a new distributed computation starts.
-
-The model has no constructs for implementing such algorithmic structures.
+Yes.
 
 <p>
-In the model, once an agent starts it waits to receive messages for
-ever; there are no provisions for stopping and restarting agents.
+There are problems in which we would like to start a distributed
+computation <code>P</code>; wait for <code>P</code> to finish, and
+then start another distributed computation <code>Q</code>.
 
-We can, however, represent sequential composition of distributed
-computations.
-
-<p>
-Consider an example in which a distributed computation starts and ends
-after which a new distributed computation is initiated.
-
-Call the computations phase 0 and phase 1.
-
-Each agent has a local variable which identifies the phase in which it
-is operating.
-
-When an agent -- say a systems manager -- detects termination of phase
-0 it sends messages to all agents telling them to start phase 1.
-
-(We discuss algorithms for termination detection later.)
+We want a barrier between <code>P</code> and <code>Q</code>.
 
 <p>
-We can represent complex sequential and parallel compositional
-structures in our simple model.
+A barrier can be implemented in several ways.
 
-The algorithms in this course do not, however, use such compositional
-structures. 
+An agent, say a <i>coordinator</i> agent, sends messages to all agents to start
+<code>P</code>.
+
+The coordinator then detects termination of <code>P</code>; we discuss
+termination detection algorithms later.
+
+After detecting termination of <code>P</code> the coordinator sends
+messages to all agents to start <code>Q</code>.
   
   <!----------------------------------------------------------------->
   <p class="w3-text-teal">Can the model represent agents that make state transitions
   without receiving messages? </p>
 <!----------------------------------------------------------------->
+No, the model does not represent agents that make state transitions
+without receiving messages.
+
+The effect of a state transition without receiving a message can be
+simulated by an agent sending itself a message and carrying out the
+transition when it receives a message from itself.
+
+<p>
 Some books on distributed systems allow agents to make <i>internal</i>
   state transitions -- these are transitions without receiving
 messages.
@@ -192,8 +296,6 @@ message "<i>finished using files</i>" to itself, and when the message
 arrives, the agent changes state to one in which it no longer using
 the files.
 
-
-
   <p>
   Representing internal state changes in this way is an artifice;
   however, the artifice allows us to use a simple model in which a
@@ -207,8 +309,10 @@ the files.
 Local clocks can, indeed, be synchronized very accurately; however, we
   do not assume that they are perfect.
 
-We use agents' local clocks for ensuring algorithm performance but not for proving
-correctness.
+<p>
+We use agents' local clocks for evaluating algorithm performance but
+not for proving correctness because even a small drift can cause race
+conditions. 
 
 <p>
 Consider an algorithm in which one agent carries out a computation
