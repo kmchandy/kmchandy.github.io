@@ -1,0 +1,435 @@
+<title>DistributedSystemModels/Models.html</title>
+
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+
+<!-------------------------------------------------------------->
+<h2 class="w3-text-teal">A Model</h2>
+<!-------------------------------------------------------------->
+  <p class="w3-text-red">
+  A change in the state of a system changes the state of at most one
+  agent and the states of its incident channels.
+
+  The local change is specified by an <i>event.</i>
+
+  The flow of data between events at agents is represented by a
+  dataflow graph.
+
+  </p>
+
+
+  
+  <!----------------------------------------------->
+  <h3 class="w3-text-teal">Timelines</h3>
+  <!----------------------------------------------->
+
+  <p>
+  An idle agent waits for messages to arrive on its input channels.
+
+  An idle agent <code>v</code> executes <code>receive(msg, u)</code> by
+  receiving <code>msg</code> at the head of any nonempty input channel
+  <code>(u, v)</code>.
+
+  An agent's variables change as it executes a <code>receive()</code>
+  and the agent may send messages.
+
+  <p>
+  The evolution of the state of a system over time is depicted by a
+  timeline 
+  diagram in which the x-axis is the time axis or t-axis.
+
+  Figure 1 shows states of a system with two agents \(u\) and
+  \(v\).
+  
+  Each horizontal line shows the state of an agent at each point in
+  time. 
+
+  The lower horizontal line shows the states of agent v
+  and the upper horizontal line shows the states of agent u.
+
+
+    <figure>
+    <img
+    src="Model/Model.001.jpeg"
+    alt="Fig1" style="width:100%"> 
+    <figcaption>Fig.1: Example: Timeline</figcaption>
+</figure>
+
+  
+
+<p>
+An execution of a receive is represented by a rectangle, and
+the length of the rectangle represents the time to execute the
+  receive.
+
+  The state of the agent changes as the receive is executed, and is
+  specified at each point in the rectangle.
+
+
+  <p>
+  Each message is represented by a line which is labeled with the
+message.
+
+The line starts from the point on the sender's timeline at the time that the
+message is sent.
+
+The line ends at the point on the receiver's timeline at the time that the
+receiver starts executing the <code>receive()</code> which receives
+  the message.
+
+  <p>
+For example, messages m2 and m3 are sent by \(u\) while it is executing its
+  first <code>receive</code>.
+  Agent \(v\) starts executing <code>receive(m2, u)</code> some time
+after v sends m2.
+
+The state of v before it starts its <code>k</code>-th execution of receive is
+shown in the figure as <code>vk</code>.
+
+
+<p>
+An instant at time T is represented by a vertical line T units to the
+right of the origin.
+
+The state of an agent at time T is the state where the vertical line
+at T intersects the horizontal line representing the agent's state at
+different points in time.
+
+In the figure, at time T represented by the dotted red line, agents
+<code>u</code> and <code>v</code> are both executing receives.
+
+<p>
+Next, we describe a model that ignores time and ignores changes in the
+state of an agent while it is executing a <code>receive</code>.
+
+  <!----------------------------------------------->
+  <h4 class="w3-text-teal">Events</h3>
+<!----------------------------------------------->
+
+The top diagram of the figure below depicts an execution of
+<code>receive</code> as time progresses, and the lower diagram ignores
+time and restricts attention to the states of the agent before and
+after execution of the receive.
+
+    <figure>
+    <img
+    src="Model/Model.002.jpeg"
+    alt="Fig1" style="width:100%"> 
+    <figcaption>Fig.2: Representation of receive with and without time</figcaption>
+</figure>
+
+An execution of a <code>receive</code> by an agent
+<code>u</code> is called an <i>event at <code>u</code></i>.
+
+Ignoring the evolution of state over real time (upper diagram of
+figure 2), we specify an event in which an agent <code>u</code> executes
+  <code>receive(msg, v)</code> as the following 4-tuple (lower diagram of
+figure 2):
+<ol>
+  <li>
+  <code>u</code>'s state before it executes the <code>receive</code>,
+  </li>
+  <li>
+  the message, <code>msg</code>, received and the sender, <code>v</code>, of the message,
+  </li>
+  <li>
+  <code>u</code>'s state after it completes execution of the <code>receive</code>, and  
+  </li>
+  <li>
+  for each output channel of <code>u</code>, the sequence of messages
+  sent and the receivers of the messages.
+  </li>
+</ol>
+The first two elements of the tuple are the <i>inputs to the event</i>, and
+the last two elements are the <i>outputs of the event</i>.
+
+<p>
+Each event represents an execution of a receive but without specifying
+the time evolution of state.
+And each execution of a receive is represented by an event.
+
+  <!----------------------------------------------->
+  <h3 class="w3-text-teal">Dataflow</h3>
+<!----------------------------------------------->
+A dataflow graph is an abstraction of the timeline diagram.
+
+The lower diagram of figure 3 is the dataflow abstraction of the
+timeline shown in the upper diagram.
+
+
+  
+    <figure>
+    <img
+    src="Model/Model.003.jpeg"
+    alt="Fig3" style="width:100%"> 
+    <figcaption>Fig.3: Example: Dataflow Graph</figcaption>
+</figure>
+
+
+A dataflow graph of a system is a labeled, directed, acyclic graph
+where the vertices represent events and the edges represent relations
+between events.
+There is an edge from an event at an agent to the next event at that
+agent; this edge is labeled with the state of the agent between the
+events and is called an <i>agent edge</i>.
+There is an edge from an event in which a message is sent
+to the edge at which the message is received; this edge is labeled
+with the message and is called a <i>message edge</i>.
+
+<p>
+The inputs and outputs of each vertex in a dataflow graph are
+as in the 4-tuple specification of the event that the vertex
+represents.
+
+A dataflow graph starts in any state, and may be finite or infinite.
+
+
+  <!----------------------------------------------->
+  <h5 class="w3-text-teal">Example</h5>
+<!----------------------------------------------->
+For example, vertex 1 in the graph represents an event at agent
+<code>u</code> specified by the 4-tuple: (1) state before event is
+<code>u1</code>, (2) message received is <code>m1</code> from
+<code>v</code>, (3) state after event is <code>u2</code>, (4) messages
+sent in the event are <code>m3</code> sent to <code>v</code>.
+
+
+<p>
+A dataflow graph has an initial vertex, labeled <i>O</i>, for each
+agent.
+
+The output edges from an initial vertex at an agent <code>u</code>
+specify <code>u</code>'s initial state and the states of
+<code>u</code>'s output channels.
+
+<p>
+The graph representing a finite computation has a vertex labeled
+<i>N</i> for each agent, representing the final state.
+This vertex is called the
+final vertex of the agent. The input edges to a final vertex at an agent <code>u</code>
+specify <code>u</code>'s final state and the final states of
+<code>u</code>'s input channels.
+
+<p>
+The initial and final vertices do not represent events.
+
+They are introduced to avoid dangling edges.
+
+
+
+  <!----------------------------------------------->
+  <h4 class="w3-text-teal">Timing of Receives</h4>
+<!----------------------------------------------->
+<p>
+If there is an agent edge from an event <code>p</code> to an event
+<code>q</code> in the dataflow graph then the receive corresponding to
+<code>q</code> starts after the receive corresponding to
+<code>p</code> terminates.
+
+<p>
+If there is a message edge from an event <code>p</code> to an event
+<code>q</code> then the receive corresponding to
+<code>q</code> starts after the receive corresponding to
+<code>p</code> starts.
+The receive corresponding to <code>p</code> may end before, during, or
+after the receive corresponding to <code>q</code>.
+
+<p>
+If there is no path from an event <code>p</code> to an event
+<code>q</code> then the executions of receives corresponding to <code>p</code> and
+<code>q</code> may occur in any order and may overlap.
+
+All dataflow graphs represent evolutions of the system state but without
+specifying the times at which executions of receives start and stop.
+
+
+  <!----------------------------------------------->
+  <h5 class="w3-text-teal">Dataflow and State
+Evolution</h5>
+<!----------------------------------------------->
+A dataflow graph is an abstraction -- a model -- of reality.
+
+In figure 1, while agent <code>u</code> is executing its first receive
+(event 1), agent <code>v</code>
+starts and finishes executing two receives (events 2 and 3).
+
+A dataflow graph cannot represent this situation; however, it is
+adequate for designing many algorithms.
+
+
+
+ 
+  <!----------------------------------------------->
+  <h3 class="w3-text-teal">Computations</h3>
+<!----------------------------------------------->
+
+A computation of a system is a sequence of events in a dataflow graph
+of the system where for every edge \((e, e')\) in the dataflow graph,
+\(e\) appears before \(e'\) in the sequence.
+
+So, a computation is a <a href="https://en.wikipedia.org/wiki/Topological_sorting">
+  topological sort</a> of a dataflow graph.
+
+A computation is drawn as a dataflow graph with events earlier in the
+sequence appearing to the left of later events.
+
+Figure 4 shows computations \([1, 2, 3, 4]\) and \([2, 1, 3, 4]\) that
+have the same dataflow.
+
+  
+    <figure>
+    <img
+    src="Model/Model.004.jpeg"
+    alt="Fig4" style="width:100%"> 
+    <figcaption>Fig.3: Example: Computations with the same Dataflow</figcaption>
+</figure>
+
+There can be more than one computation with the same dataflow graph,
+as in figure 4.
+The order in which vertices appear in a diagram doesn't change the graph, so each
+computation represents exactly one dataflow graph.
+
+<p>
+A model for generating the sequence of events in a computation is the
+following loop:
+
+<pre>
+while there exists a nonempty input channel in the system:
+   select a nonempty channel (u, v) in the system
+   let the head of channel (u, v) be msg
+   let the state of v be s
+   execute event specified by inputs: current state is s,
+     and message received is msg from u
+</pre>
+
+The while loop is merely a model; we will never execute it. 
+
+All computations, and therefore all dataflows, can be generated by
+suitably selecting the nonempty channel in each iteration.
+
+v
+  <!----------------------------------------------->
+  <h5 class="w3-text-teal">Example</h5>
+<!----------------------------------------------->
+The computation \([2, 1, 3, 4]\) shown in the lower diagram of figure
+4 can be generated by selecting nonempty channels in the following
+sequence: <code>(u, v)</code>, <code>(v, u)</code>, <code>(u,
+v)</code>, <code>(v, u)</code>.
+
+We will use dataflows and computations repeatedly in this course.
+
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
