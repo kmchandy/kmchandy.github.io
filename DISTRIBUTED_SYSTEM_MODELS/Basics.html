@@ -80,29 +80,21 @@ hr.new1 {
 <!---------------------------------------------------------------->
     <h1 class="w3-text-teal">Basics</h1>
 <!----------------------------------------------------------------->
-  
-
-  
   </p>
 
   <p class="w3-text-red">
-  This page describes a simple model for distributed
+  This page describes a simple model and notation for distributed
   algorithms.
 
-  The model, though simple, is adequate for designing many
-  algorithms.
+  The model is adequate for describing a collection of algorithms
 
-  More models are introduced when needed.
+  More models are introduced later.
   </i>
   </p>
 
   <!----------------------------------------------------------------->
   <h3 class="w3-text-teal">Models of Distributed Systems</h3>
   <!----------------------------------------------------------------->
-
-  <!---------------------------------------->
-  <p class="w3-text-teal">Complex Systems and Simple Models</p>
-
   Distributed systems are complex.
 
   The information system that supports a bank supports actions taking place
@@ -114,47 +106,29 @@ hr.new1 {
 <p>
   
   A model of a distributed system is an abstraction that ignores some
-  features of systems while retaining others.
+  features.
 
   Different models are used to design algorithms in different
   settings.
 
   A model of a system in which messages may be
-  corrupted is different from one in which messages
-  cannot be corrupted.
-
-  We begin with a very simple model, identify its limitations, and show why
-  it is useful. 
+  corrupted is different from one in which messages are incorruptible.
 
 
-
-  <!---------------------------------------->  
-  <p class="w3-text-teal">Notations</p>
-
- Languages and software libraries for implementing distributed systems
-  have many features because distributed systems are complex.
-
-The algorithms in this course deal with only a few key problems in
-  distributed computing.
-
-  We use a message queuing notation to describe algorithms:
-  a message is appended to the tail of a queue and removed from its head.
-
- We give examples of implementations of the algorithms using libraries such as 
+  <p>
+  We begin with a simple model and notation.
+  Examples of distributed algorithms are given in Python using a
+  simulator and using software libraries such as  
   <a
   href="https://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol">
   Advanced Message Queuing Protocol (AMQP)
-</a>,
-and 
+  </a>
+  and 
   <a
   href="https://www.rabbitmq.com/tutorials/tutorial-one-python.html">
   a Python implementation of AMQP.
-</a>
+  </a>
 
-
-
-
-  
   
   <!----------------------------------------------------------------->
   <h3 class="w3-text-teal">A Simple Model: Agents and Channels</h3>
@@ -175,25 +149,21 @@ The ordered pair <code>(P, Q)</code> represents the channel from
   An agent can send messages on its output channels and receive
   messages on its input channels.
 
-A system is represented by a directed graph in which vertices
+<p>
+A system is represented by a
+<a href="https://en.wikipedia.org/wiki/Directed_graph">
+directed graph
+</a> in which vertices
 represent agents and edges represent channels.
+The graph is called a <i>network of agents.</i>
+See 
+<a href=""ExamplesBasics.html">examples of agent networks.</a> 
 
 <p>
 A distributed system is initiated with sets of agents and channels
   that remain unchanged. 
 
 Agents and channels are not created or deleted during a computation.
-
-
-  <h4 style="color:red;">Example: Agent-Channel Graph</h4>
-  The figure below shows an agent-channel graph with agents \(A, B, C\).
-
-    <figure>
-    <img
-    src="DistributedSystemModels/DistributedSystemModels.001.jpeg"
-    alt="Fig1" style="width:60%"> 
-    <figcaption>Fig.1: Example: An Agent Graph</figcaption>
-    </figure>
 
 
 
@@ -214,30 +184,13 @@ of the queue.
 An agent receives a message from a nonempty queue by removing
 the message from the head (front) of the queue.
 
-
-<!----------------------------------------------->
-<h4 style="color:red;">Example of Channel States</h4>
-The figure below shows a sequence of states <code>S0, S1, S2,
-S3</code> of a channel from agent <code>A</code> to agent
-<code>B</code>.
-
-The channel is empty in <code>S0</code>, i.e., its state is the empty
-queue.
-Then agent <code>A</code> sends message <code>M1</code> on the
-channel, and then the state of the channel is a queue consisting of the
-single message <code>M1</code>.
-The states after <code>A</code> sends <code>M2</code> and then
-<code>B</code> receives a message are shown below.
-    <figure>
-    <img
-    src="DistributedSystemModels/DistributedSystemModels.019.jpeg"
-    alt="Fig1" style="width:100%"> 
-    <figcaption>Fig.2: Example: States of a Channel</figcaption>
-</figure>
+See <a href="BasicsExamples.html">examples of channel states.</a>
 
 <p>
 Associated with each channel is its initial state -- the queue of
 messages in the channel when the distributed system starts executing.
+
+
 
 
 <!---------------------------------------------------->
@@ -248,8 +201,11 @@ An agent is an object that sends and receives messages.
 In this course, an agent is a sequential program, and the
 <a href="https://en.wikipedia.org/wiki/State_(computer_science)">
 state</a> of an
-agent is given by the values of its variables and its program
-counter. 
+agent is given by the values of its variables and its
+<a href="https://en.wikipedia.org/wiki/Program_counter">program
+counter</a>.
+The program counter, also called instruction pointer, points to the
+next instruction to be executed.
 
 <p>
 Associated with each agent is a program that initializes
@@ -262,8 +218,6 @@ called a callback function in
 "https://www.rabbitmq.com/tutorials/tutorial-one-python.html">
 message queuing libraries.
 </a>
-The parameters <code>message</code> and <code>sender</code> of the
-function are the message that is received, and the sender of the message.
 
 <p>
 If an agent has a nonempty input channel then the <code>receive</code>
@@ -282,11 +236,12 @@ and the second paramenter is the agent to which the message is sent.
 Execution of this statement places the message in the output channel
 directed from the sender to the receiver.
 
-A message can be sent on a channel independent of the state of the
-channel.
+<p>
+A <code>receive</code> function must not be recursive: an agent cannot
+receive a new message while it is executing a receive on a previous
+message. 
 
-An agent is never blocked from sending a message.
-
+Every execution of <code>receive</code> must terminate.
 
 <p>
 See <a href="../CODE_EXAMPLES">examples of
@@ -315,16 +270,22 @@ implementation in Python.</a>
    <figure>
     <img
     src="DistributedSystemModels/DistributedSystemModels.020.jpeg"
-    alt="Fig3" style="width:60%"> 
-    <figcaption>Fig.3: Agent Graph of the Example</figcaption>
+    alt="Fig1" style="width:60%"> 
+    <figcaption>Fig.1: Agent Network of the Example</figcaption>
 </figure>
 
 <p>
-The state of the agent is given by the values of its local variable
-<code>sum</code> and its program counter.
 
-In the initial state <code>sum = 0</code> and the agent's output
-channels are empty.
+The statements before the <code>receive</code> function specify the
+initial values of variables and output channels of the agent.
+
+The state of an output channel is an empty queue unless it is assigned
+a different value.
+
+In this example, the initial state is <code>sum = 0</code> and the
+agent's output channels are empty.
+
+
 
 
 <pre>
@@ -338,29 +299,22 @@ def receive(message, sender):
    send(sum, results)
 </pre>
 
+If the agent receives a message from agent <code>pos</code> then the
+agent increments <code>sum</code> by the contents of the message and sends the
+resulting value of <code>sum</code> to the agent <code>results</code>.
 
+The agent takes similar actions when it receives a message from
+<code>neg</code> except that it decrements <code>sum</code>.
 
-<!----------------------------------------------------->
-<p class="w3-text-teal">Restrictions on Agents</p>
-<!----------------------------------------------------->
-
-An agent can only access that agent's variables, send
-messages only on that agent's output channels, and receive messages
-only on that agent's input channels.
-
-A <code>receive</code> function must not be recursive: an agent cannot
-receive a new message while it is executing a receive of a previous
-message. 
-
-Every execution of <code>receive</code> must terminate.
 
 
 <h5 class="w3-text-teal">Next</h5>
 The next two webpages continue the description of a model of
 distributed systems and point out its strengths and limitations.
 
+<p>
 The next page defines <a href="DistributedSystemModels.html">
-states, transitions and computations.</a> 
+States, Transitions and Computations.</a> 
 
 <p>
 <a href="BasicsFAQ.html">Frequenty Asked Questions</a>
