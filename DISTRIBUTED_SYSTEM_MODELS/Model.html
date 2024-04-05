@@ -78,16 +78,18 @@ hr.new1 {
 
 
 <!-------------------------------------------------------------->
-<h2 class="w3-text-teal">A Model</h2>
+<h2 class="w3-text-teal">Timelines, Dataflow, and Computations</h2>
 <!-------------------------------------------------------------->
   <p class="w3-text-red">
-  A change in the state of a system changes the state of at most one
-  agent and the states of its incident channels.
+  A <i>timeline</i> shows how the state of a system changes over time.
 
-  The local change is specified by an <i>event.</i>
+  A <i>dataflow graph</i> is an abstraction of a timeline that
+  represents the execution of each <code>receive</code> as
+  a vertex.
 
-  The flow of data between events at agents is represented by a
-  dataflow graph.
+  A <i>computation</i> is a topological sort of a dataflow graph.
+
+  Dataflow graphs and computations are used throughout this website.
 
   </p>
 
@@ -172,6 +174,9 @@ different points in time.
 In the figure, at time T represented by the dotted red line, agents
 <code>u</code> and <code>v</code> are both executing receives.
 
+
+
+
 <p>
 Next, we describe a model that ignores time and ignores changes in the
 state of an agent while it is executing a <code>receive</code>.
@@ -255,12 +260,6 @@ The inputs and outputs of each vertex in a dataflow graph are
 as in the 4-tuple specification of the event that the vertex
 represents.
 
-A dataflow graph starts in any state, and may be finite or infinite.
-
-
-  <!----------------------------------------------->
-  <h5 class="w3-text-teal">Example</h5>
-<!----------------------------------------------->
 For example, vertex 1 in the graph represents an event at agent
 <code>u</code> specified by the 4-tuple: (1) state before event is
 <code>u1</code>, (2) message received is <code>m1</code> from
@@ -268,7 +267,17 @@ For example, vertex 1 in the graph represents an event at agent
 sent in the event are <code>m3</code> sent to <code>v</code>.
 
 
+
+
+
+  <!----------------------------------------------->
+  <h5 class="w3-text-teal">Initial and Final States</h5>
+<!----------------------------------------------->
+
+
 <p>
+A dataflow graph starts in any state, and may be finite or infinite.
+
 A dataflow graph has an initial vertex, labeled <i>O</i>, for each
 agent.
 
@@ -276,60 +285,18 @@ The output edges from an initial vertex at an agent <code>u</code>
 specify <code>u</code>'s initial state and the states of
 <code>u</code>'s output channels.
 
+
 <p>
 The graph representing a finite computation has a vertex labeled
 <i>N</i> for each agent, representing the final state.
-This vertex is called the
-final vertex of the agent. The input edges to a final vertex at an agent <code>u</code>
+
+This vertex is called the final vertex of the agent.
+
+The input edges to a final vertex at an agent <code>u</code>
 specify <code>u</code>'s final state and the final states of
 <code>u</code>'s input channels.
 
-<p>
 The initial and final vertices do not represent events.
-
-They are introduced to avoid dangling edges.
-
-
-
-  <!----------------------------------------------->
-  <h4 class="w3-text-teal">Timing of Receives</h4>
-<!----------------------------------------------->
-<p>
-If there is an agent edge from an event <code>p</code> to an event
-<code>q</code> in the dataflow graph then the receive corresponding to
-<code>q</code> starts after the receive corresponding to
-<code>p</code> terminates.
-
-<p>
-If there is a message edge from an event <code>p</code> to an event
-<code>q</code> then the receive corresponding to
-<code>q</code> starts after the receive corresponding to
-<code>p</code> starts.
-The receive corresponding to <code>p</code> may end before, during, or
-after the receive corresponding to <code>q</code>.
-
-<p>
-If there is no path from an event <code>p</code> to an event
-<code>q</code> then the executions of receives corresponding to <code>p</code> and
-<code>q</code> may occur in any order and may overlap.
-
-All dataflow graphs represent evolutions of the system state but without
-specifying the times at which executions of receives start and stop.
-
-
-  <!----------------------------------------------->
-  <h5 class="w3-text-teal">Dataflow and State
-Evolution</h5>
-<!----------------------------------------------->
-A dataflow graph is an abstraction -- a model -- of reality.
-
-In figure 1, while agent <code>u</code> is executing its first receive
-(event 1), agent <code>v</code>
-starts and finishes executing two receives (events 2 and 3).
-
-A dataflow graph cannot represent this situation; however, it is
-adequate for designing many algorithms.
-
 
 
  
@@ -344,6 +311,7 @@ of the system where for every edge \((e, e')\) in the dataflow graph,
 So, a computation is a <a href="https://en.wikipedia.org/wiki/Topological_sorting">
   topological sort</a> of a dataflow graph.
 
+<p>
 A computation is drawn as a dataflow graph with events earlier in the
 sequence appearing to the left of later events.
 
@@ -368,21 +336,29 @@ A model for generating the sequence of events in a computation is the
 following loop:
 
 <pre>
-while there exists a nonempty input channel in the system:
+while there exists a nonempty channel in the system:
    select a nonempty channel (u, v) in the system
    let the head of channel (u, v) be msg
-   let the state of v be s
-   execute event specified by inputs: current state is s,
-     and message received is msg from u
+   v executes receive(msg, u)
 </pre>
 
-The while loop is merely a model; we will never execute it. 
 
-All computations, and therefore all dataflows, can be generated by
-suitably selecting the nonempty channel in each iteration.
+<p>
 
-v
-  <!----------------------------------------------->
+A message sent in some iteration of the while loop is received in some
+future iteration.
+
+The number of iterations after a message is sent until the message is
+received is arbitrary but finite.
+
+If a channel is nonempty at the start of an iteration then
+that channel will be selected in that or future iteration.
+
+<p>
+The while loop is merely a model.
+A distributed system is not implemented by a sequential while loop.
+
+<!----------------------------------------------->
   <h5 class="w3-text-teal">Example</h5>
 <!----------------------------------------------->
 The computation \([2, 1, 3, 4]\) shown in the lower diagram of figure
@@ -390,7 +366,42 @@ The computation \([2, 1, 3, 4]\) shown in the lower diagram of figure
 sequence: <code>(u, v)</code>, <code>(v, u)</code>, <code>(u,
 v)</code>, <code>(v, u)</code>.
 
-We will use dataflows and computations repeatedly in this course.
+
+<!----------------------------------------------->
+  <h5 class="w3-text-teal">Models and Reality</h5>
+<!----------------------------------------------->
+The state of a system evolves over time.
+
+Agents change local variables as they execute <code>receive</code>s.
+
+Timelines are a diagrammatic representation of state evolution.
+
+<p>
+
+A dataflow graph is a model that ignores state evolution over time.
+
+A computation is a restriction because it is inherently sequential --
+at most one agent is executing a program while all others are idle.
+
+<p>
+You may wonder how models that ignore important features such as time
+and parallel execution can be useful.
+
+This website shows how simple models help in designing distributed
+systems. 
+
+
+<!---------------------------------------->
+<h5 class="w3-text-teal">Next</h5>
+<!---------------------------------------->
+
+The next webpage describes
+<a href="Timelines.html">concepts of <i>past</i> and <i>future</i>
+in dataflow and computations.</a>
+
+<p>
+<a href="PastAndFutureFAQ.html">Frequenty Asked Questions</a>
+
 
 <!--Start Footer--------------------------------------->
 
