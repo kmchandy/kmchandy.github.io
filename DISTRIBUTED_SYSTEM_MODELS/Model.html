@@ -93,10 +93,23 @@ hr.new1 {
 
   </p>
 
-
   
   <!----------------------------------------------->
-  <h3 class="w3-text-teal">Timelines</h3>
+  <h3 class="w3-text-teal">Model</h3>
+  <!----------------------------------------------->
+  We design and analyze distributed algorithms by using dataflow
+  graphs and computations which are defined later on this page.
+
+  We begin by describing
+  <a href="https://en.wikipedia.org/wiki/Timeline">
+  timelines</a> which represents how the state of the
+  system evolves over time.
+
+  We don't use timelines in algorithm design; they are presented here
+  to show aspects of reality that our model ignores.
+  
+  <!----------------------------------------------->
+  <h4 class="w3-text-teal">Timelines</h4>
   <!----------------------------------------------->
 
   <p>
@@ -175,11 +188,29 @@ In the figure, at time T represented by the dotted red line, agents
 <code>u</code> and <code>v</code> are both executing receives.
 
 
+<p>
+The initial state of the timeline is given by the initial states of
+agents and channels and is shown by the labels of the edges
+representing agent states and messages from the point at time 0 -- the
+point at which execution starts.
+
+<p>
+The hardware on which agents execute is not specified.
+
+An agent may execute for a while on a processing unit and then be
+preempted and then restarted later.
+
+Some processing units may be much slower than others.
+
+A system has many timelines, and as we shall see we can use a simple
+model that restricts attention to features that help us design
+algorithms.
 
 
 <p>
 Next, we describe a model that ignores time and ignores changes in the
 state of an agent while it is executing a <code>receive</code>.
+
 
   <!----------------------------------------------->
   <h4 class="w3-text-teal">Events</h3>
@@ -222,10 +253,9 @@ figure 2):
 The first two elements of the tuple are the <i>inputs to the event</i>, and
 the last two elements are the <i>outputs of the event</i>.
 
-<p>
-Each event represents an execution of a receive but without specifying
-the time evolution of state.
-And each execution of a receive is represented by an event.
+An agent's <code>receive</code> function can be specified by the set
+of events at that agent.
+
 
   <!----------------------------------------------->
   <h3 class="w3-text-teal">Dataflow</h3>
@@ -246,8 +276,9 @@ timeline shown in the upper diagram.
 
 
 A dataflow graph of a system is a labeled, directed, acyclic graph
-where the vertices represent events and the edges represent relations
+where the vertices represent events at agents and the edges represent relations
 between events.
+
 There is an edge from an event at an agent to the next event at that
 agent; this edge is labeled with the state of the agent between the
 events and is called an <i>agent edge</i>.
@@ -267,16 +298,15 @@ For example, vertex 1 in the graph represents an event at agent
 sent in the event are <code>m3</code> sent to <code>v</code>.
 
 
-
-
-
   <!----------------------------------------------->
   <h5 class="w3-text-teal">Initial and Final States</h5>
 <!----------------------------------------------->
 
 
 <p>
-A dataflow graph starts in any state, and may be finite or infinite.
+A dataflow graph starts in an initial state of the system.
+
+A dataflow graph may be finite or infinite.
 
 A dataflow graph has an initial vertex, labeled <i>O</i>, for each
 agent.
@@ -323,7 +353,7 @@ have the same dataflow.
     <img
     src="Model/Model.004.jpeg"
     alt="Fig4" style="width:100%"> 
-    <figcaption>Fig.3: Example: Computations with the same Dataflow</figcaption>
+    <figcaption>Fig.4: Example: Different Computations with the same Dataflow</figcaption>
 </figure>
 
 There can be more than one computation with the same dataflow graph,
@@ -333,7 +363,8 @@ computation represents exactly one dataflow graph.
 
 <p>
 A model for generating the sequence of events in a computation is the
-following loop:
+following loop, where execution of the loop is started at an
+initial state of the system.
 
 <pre>
 while there exists a nonempty channel in the system:
@@ -342,21 +373,43 @@ while there exists a nonempty channel in the system:
    v executes receive(msg, u)
 </pre>
 
-
 <p>
+Execution of the while loop terminates in a state in which all
+channels are empty.
 
-A message sent in some iteration of the while loop is received in some
-future iteration.
+A <i>maximal computation</i> is one that terminates or has an infinite
+number of iterations.
 
-The number of iterations after a message is sent until the message is
-received is arbitrary but finite.
-
-If a channel is nonempty at the start of an iteration then
-that channel will be selected in that or future iteration.
+A message sent in any iteration of the while loop is received in some
+future iteration of a maximal computation.
 
 <p>
 The while loop is merely a model.
 A distributed system is not implemented by a sequential while loop.
+
+
+<!----------------------------------------------->
+  <h5  class="w3-text-teal">Fairness in Selecting a Nonempty Channel</h5>
+<!----------------------------------------------->
+When there is more than one nonempty channel how is the channel \((u,
+v)\) selected in the first statement in the loop body?
+
+The selection must be <i>fair</i> as motivated by the following example.
+
+<p>
+The example consists of a network of agents <code>G</code> and a single stand-alone
+agent <code>X</code> which has a single channel from the
+agent to itself.
+
+There is always a message in the channel to <code>X</code>.
+
+When <code>X</code> receives a message it sends itself another
+message.
+
+If all selections of a nonempty channel in the while loop select the
+channel from <code>X</code> to itself then the states of all other
+agents remain unchanged forever.
+
 
 <!----------------------------------------------->
   <h5 class="w3-text-teal">Example</h5>
@@ -367,21 +420,6 @@ sequence: <code>(u, v)</code>, <code>(v, u)</code>, <code>(u,
 v)</code>, <code>(v, u)</code>.
 
 
-<!----------------------------------------------->
-  <h5 class="w3-text-teal">Models and Reality</h5>
-<!----------------------------------------------->
-The state of a system evolves over time.
-
-Agents change local variables as they execute <code>receive</code>s.
-
-Timelines are a diagrammatic representation of state evolution.
-
-<p>
-
-A dataflow graph is a model that ignores state evolution over time.
-
-A computation is a restriction because it is inherently sequential --
-at most one agent is executing a program while all others are idle.
 
 <p>
 You may wonder how models that ignore important features such as time
@@ -394,13 +432,24 @@ systems.
 <!---------------------------------------->
 <h5 class="w3-text-teal">Next</h5>
 <!---------------------------------------->
+This page describes the model of distributed systems that we use to
+design most of the algorithms in this course.
 
-The next webpage describes
-<a href="Timelines.html">concepts of <i>past</i> and <i>future</i>
-in dataflow and computations.</a>
+You may wonder how a model as simple as a sequential while loop that
+ignores critical features of time evolution of system state (figure 1)
+can be useful.
+
+The remaining pages give examples of algorithms designed using this
+and other simple models.
 
 <p>
-<a href="PastAndFutureFAQ.html">Frequenty Asked Questions</a>
+<a href="Invariants.html">The next webpage on invariants
+</a>
+shows how loop invariants of while loops are used in
+distributed algorithms
+
+<p>
+<a href="Model.html">Frequenty Asked Questions</a>
 
 
 <!--Start Footer--------------------------------------->
