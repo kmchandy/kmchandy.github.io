@@ -87,17 +87,20 @@ hr.new1 {
   <!------------------------------------------------------------------->
   
   <p class="w3-text-red">
- A global snapshot algorithm determines an intermediate state in a
-  computation between the states in which the global snapshot algorithm
-  starts and ends.
+  A global snapshot algorithm determines a state that can occur during
+  a computation.
 
-  This intermediate state is called a <i>global snapshot</i>.
-  
+  The state obtained by the algorithm is called a global snapshot.
+
   Systems are monitored by taking repeated global snapshots.
 
   When a transient error is detected, a rollback and recovery
-  algorithm restarts the computation from the most recent global
-  snapshot instead of starting it again from the beginning.
+  algorithm restarts the computation from the most recent snapshot
+  instead of starting it from the initial state.
+
+  
+
+  
 
   </p>
  
@@ -106,13 +109,13 @@ hr.new1 {
   <!----------------------------------------------------------------------------->
   <p>
   A global snapshot algorithm determines an intermediate state in a
-  computation between the states in which a global snapshot algorithm
-  starts and ends.
-  
-  This intermediate state is
-  called a <i>global snapshot</i> to distinguish it from a <i>local</i>
-  snapshot which is a recording of the state of a single agent or a
-  single channel.
+  computation.
+
+  A global snapshot is a state that can occur after the state in which
+  the global snapshot algorithm starts and before the state in which
+  the algorithm ends.
+
+  This page describes a global snapshot algorithm.
 
   <p>
   The global snapshot algorithm is an example of an algorithm that is
@@ -123,7 +126,7 @@ hr.new1 {
   snapshot algorithm.
 
   <!-----------------------------------------------------------------------------> 
-  <h4 class="w3-text-teal">The Distributed Operating System</h4>
+  <h4 class="w3-text-teal">A Distributed Operating System</h4>
   <!-----------------------------------------------------------------------------> 
   
   
@@ -149,7 +152,7 @@ traps these messages so that the client does not see them.
 
 <figure>
     <img src="ChannelSnapshots/ChannelSnapshots.001.jpeg" alt="Fig1"
-    style="width:80%"> 
+    style="width:60%"> 
     <figcaption>Fig.1: OS and Clients use the same Channels</figcaption>
 </figure> 
 
@@ -180,57 +183,38 @@ OS.
 <!----------------------------------------------------------------------------->
 <h4 class="w3-text-teal">How Should You Approach the Problem?</h4>
 <!----------------------------------------------------------------------------->
-The problem is to record a state of a computation after the state
-in which the global snapshot algorithm starts and before the state at which the
-global snapshot ends.
+The state at a <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+slice</a> is a state that can occur in a computation.
 
-The phrases "before the state" and "after the state" in the problem
-definition suggest that we use
-theorems about past (before) and future (after).
+Each agent records its own state -- takes its local snapshot -- at
+some point in a computation.
 
-So, lets look at 
-<a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">the theorem about past and future</a>.
+Define <code>past</code> as the set of events at an agent before the
+agent takes its local snapshot.
 
+The definition of a slice is that all events before events in <code>past</code>
+are in <code>past</code>.
 
-<p>
-In any snapshot algorithm, each agent must record its own local state at some
-point in its computation because another agent cannot do so.
+So, local snapshots must be taken so that messages sent in
+<code>past</code> are received in <code>past</code>.
 
-Let's look at the slice consisting of the points at which agents take
- local snapshots --  i.e., record their states.
-
-<p>
-In this slice, a past event is an event at an agent
-before the agent takes its local snapshot, and a future event is an event at an agent
-after the agent takes its local snapshot.
-
-The theorem about past and future says that a slice is closed if every
-message sent in the future is received in the future.
-
-This gives us the key to the solution.
 
 <hr class="new2">
 <p style="color:blue;">
-A slice consisting of points at which agents take local snapshots is
-closed if:
-<p style="color:blue;">
-every message sent after the sender takes its local snapshot is
-received after the receiver takes its local snapshot.
+The central question in designing the algorithm is:
+How should the algorithm separate messages sent in <code>past</code>
+from messages sent in <code>future</code>?
 </p>
 <hr class="new2">
 
-Next, let's design an algorithm based on this insight.
+A special OS message, called a <code>marker</code> is used where
+messages sent on a channel before a <code>marker</code> is sent on the
+channel are messages sent in <code>past</code>, and messages sent
+after the marker are sent in <code>future</code>.
+
 <!----------------------------------------------------------------------------->
 <h4 class="w3-text-teal">The Global Snapshot Algorithm</h4>
 <!----------------------------------------------------------------------------->
-
-
-The insight tells us that we must distinguish messages sent before the
-sender takes its snapshot from those sent after the snapshot.
-
-We use a special message called a <i>marker</i> for this purpose.
-
-Markers are used only by the OS and are not seen by clients.
 
 
 <p class="w3-text-teal">The algorithm</p>
@@ -254,37 +238,27 @@ Markers are used only by the OS and are not seen by clients.
 </ol>
 
 <h5 class="w3-text-teal">Proof of correctness</h5>
-Channels are first in first out.
-
-All messages sent on a channel after a marker
-are received after the marker. 
 
 <p>
-From rule 2, messages sent on a channel after the marker
-are sent after the sender takes its snapshot.
+From rule 2, messages sent on a channel after the marker is sent on
+the channel
+are sent after the sender takes its snapshot; so, these messages are
+sent in <code>future</code>.
 
 From rule 3, messages received after a marker are messages received
-after the receiver takes its snapshot.
+after the receiver takes its snapshot; so these messages are received
+in <code>future</code>.
 
-So, messages sent after the sender takes its snapshot are received
-after the receiver takes its snapshot.
-<p>
-Therefore, the slice consisting of points at which agents take local snapshots is
-closed.
+Therefore all messages sent in <code>future</code> are received in
+<code>future</code>, and so all events after <code>future</code>
+events are <code>future</code> events.
 
-
-<p class="w3-text-teal">Proof about Snapshots of Channels</p>
+<p class="w3-text-teal">Proof about States of Channels</p>
 The messages in a channel at the slice are the
-messages sent in the past and received in the future.
+messages sent in <code>past</code> and received in <code>future</code>.
 These are messages sent before the sender takes its snapshot and
 received after the receiver takes its snapshot.
 
-<p>
-From rule 2, and because messages are delivered in order,
-messages sent in the past on
-a channel are messages received before the marker on the channel.
-
-<p>
 So, the state of a channel is the sequence of
 messages received along the channel after the receiver takes its
 snapshot and before the receiver receives a marker along the channel.
@@ -293,18 +267,6 @@ snapshot and before the receiver receives a marker along the channel.
 Note: If an agent takes its local snapshot when it receives a marker
 along a channel, then the snapshot of the channel is the empty
 sequence of messages.
-
-<p class="w3-text-teal">Proof that the Snapshot is an Intermediate State</p>
-The slice at which the algorithm starts is earlier than the slice at
-which local snapshots are taken, which in turn is earlier than the slice at
-which the algorithm ends.
-
-There
-<a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-exists a computation from earlier to later slices
-</a>
-and so the global snapshot is an intermediate state between the points
-at which the algorithm starts and ends.
 
 <h5 class="w3-text-teal">Termination of the Algorithm</h5>
 
@@ -354,67 +316,14 @@ def receive(message, sender):
                        channel_snapshots[sender].append(message)
 </pre>
 
-
-
-
-
-
-<!--------------------------------------------->
-  <h4 class="w3-text-teal">Applications of Global Snapshots</h4>
-<!--------------------------------------------->
-<p>
-<i>
-Many algorithms are based on monitoring systems by taking repeated
-  snapshots. 
-</i>
-
-<p class="w3-text-teal">Collecting Local Agent and Channel
-Snapshots</p>
-
-In some algorithms, agents send snapshots of their states and 
-input channels to a collector agent which forms a global snapshot by
-putting the information together.
-
-In other algorithms agents carry
-out distributed computations on local snapshots without using a collector.
-
-We describe both types of algorithms in these pages.
-
-<p>
-Next we give a few examples of system monitoring.
-
-<p class="w3-text-teal">Rollback and Recovery</p>
-
-There exists a computation from the initial state of the computation
-to a global snapshot.
-
-So, when a transient error occurs, a rollback and recovery algorithm
-restarts the computation at the most recent snapshot instead of restarting
-it from the beginning.
-
-<p class="w3-text-teal">Detecting Stable Properties</p>
-If a stable property holds at any point in any computation then it
-continues to hold forever in that computation.
-
-For example, if a computation has deadlocked then it remains
-deadlocked.
-
-We discuss stable properties in detail later.
-
-<p>
-One way to detect stable properties is to monitor the system by
-taking snapshots repeatedly.
-
-For example, if a system deadlocks then all snapshots taken after the deadlock occurs
-show that the system has deadlocked.
-
-And, if a snapshot shows that the system is deadlocked then the system
-is indeed deadlocked at that point.
-
-<!--------------------------------------------------------->
-<h2 style="color:red;">Examples</h2>
-<!--------------------------------------------------------->
 The remainder of this webpage consists of examples.
+
+<!--------------------------------------------------------->
+<center>
+<h2 style="color:red;">Examples</h2>
+</center>
+<!--------------------------------------------------------->
+
 
 <!--------------------------------------------------------->
 <h4 style="color:red;">Example: Snapshots may change a Client's Computation
