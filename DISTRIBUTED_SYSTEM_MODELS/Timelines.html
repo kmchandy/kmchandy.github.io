@@ -77,577 +77,147 @@ hr.new1 {
 <div class="w3-twothird w3-container">
 
   <!--------------------------------------------------------------->
-  <h2 class="w3-text-teal">Properties of Dataflow</h2>
+  <h2 class="w3-text-teal">Past and Future in the Model</h2>
 
-  </p>
-
-  <p class="w3-text-red">
-  This webpage reviews properties of directed acyclic graphs and
-  dataflow graphs, and introduces concepts of past and future in
-  slices of dataflow graphs.
-  </p>
-
-
-  <!---------------------------------------------------------->
-  <h3 class="w3-text-teal">Directed Acyclic Graphs: Review</h4> 
-  <!---------------------------------------------------------->
-
-We begin with a review of a few basic properties of directed acyclic
-  graphs and dataflow.
-
-
-  The figure below is an example of a
+  <p  class="w3-text-teal">Only Notion of Time: Before and After</p>
+  The only notions of time in a dataflow graph are the
   <a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">
-  directed acyclic graph
-  </a>,
-  abbreviated to dag.
+  partial orders</a>
+  <i>before</i> and <i>after</i>.
 
-  <figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.014.jpeg"
-    alt="Fig14" style="width:75%"> 
-    <figcaption>Fig.1: Example of a Directed Acyclic Graph</figcaption>
-  </figure>
+  An event \(e\) is <i>before</i> an event \(e'\), and \(e'\) is <i>after</i> \(e\),
+  in a dataflow graph exactly when there is a path from \(e\) to \(e'\).
 
-  
 
-  <!-------------------------------------------------------->  
-  <h5 class="w3-text-teal">Topological Sort</h5>
-  <!-------------------------------------------------------->
-
-  
-<a
-  href="https://en.wikipedia.org/wiki/Topological_sorting">
-  A topological sort
-  </a>
-  of a dag is a sequence of vertices of the dag in which each vertex \(u\) appears in
-  the sequence after all vertices that have paths to \(u\).
-  
-  Examples of topological sorts of the dag shown in figure 1 are \([0,
-  1, 2, 3, 4, 5, 6, 7]\) and \([0, 2, 1, 5, 3, 4, 6, 7]\).
+  <p  class="w3-text-teal">Slice: Partition Event Set into Past and Future</p>
+  A <i>slice</i> of a dataflow graph is a partition of the set of events of
+  the graph into subsets <code>past</code> and <code>future</code>
+  such that all events before <code>past</code> events are
+  <code>past</code> events.
 
   <p>
-  An example of a sequence that is not a topological sort is
-  \([0, 1, 3, 2, 4, 5, 6, 7]\).
-
-  There is a path from vertex 2 to vertex 3, but 2 does not appear
-  before 3 in the sequence.
+  An equivalent definition is:
+  All events after <code>future</code> events are <code>future</code> events.
 
 
-  <!-------------------------------------------------------->
-   <h5 class="w3-text-teal">Closed Set of Vertices</h5>
-  <!-------------------------------------------------------->  
-  A subset \(H\) of vertices of a dag is <i>
-  closed</i> exactly when every edge to every vertex in \(H\) is from a
-  vertex in \(H\).
-
-  There is no path to a vertex in a closed set from a
-  vertex outside it.
+   
+  <!----------------------------------------------->
+  <p style="color:red;">Example</p>
   
-  There may, however, be paths from vertices in a closed
-  set to vertices outside it.
+  The top diagram of figure 1 shows a slice in which vertices in
+  <code>past</code> are 
+  colored red and vertices in <code>future</code> are green.
 
-<p>
-Examples of vertex sets that are closed are \(\{0, 1, 2\}\),
-and  \(\{0, 1, 2, 5\}\).
-
-An example of a vertex set that is not closed is \(\{0, 1,
-3\}\) because there is an edge to vertex \(3\) from vertex \(2\) which
-is not in the set.
-
-
-  <!-------------------------------------------------------->
-<h5 class="w3-text-teal">Observation</h5>
-<!-------------------------------------------------------->
-Let \(H\) be a closed subset of vertices of a dag.
-
-The topological sort of the subgraph spanned by \(H\) followed by the
-topological sort of the subgraph spanned by vertices not in \(H\) is a
-topological sort of the graph.
-
-
-<p>
-Example: In figure 1, \(H = \{0, 1, 2, 5\}\) is closed,
-and \([0, 2, 1, 5]\) followed by \([3, 4, 6, 7]\) is a topological
-sort of the graph.
-
-
-
-
-
-  <!---------------------------------------------------------->
-  <h3 class="w3-text-teal">Dataflow: Review</h4> 
-<!---------------------------------------------------------->
-
-Next we review properties of
-<a href="https://en.wikipedia.org/wiki/Dataflow_programming">
-dataflow
-</a>
-that help in understanding distributed computing algorithms.
-
-<p>
-  A vertex of a dataflow graph is an operation on variables of a
-  computation. 
-
-  A directed edge connects the output of an operation to the input
-  of another operation.
-
-  An edge is labeled with the data that is transferred between
-  operations.
-
-  We restrict attention to acyclic dataflow graphs.
-
-<p>
-  A computation of a dataflow graph is an execution (possibly a
-  parallel execution) of operations of the graph where:
-  <i>
-  an operation \(v\) is executed only after all
-  operations that have paths to \(v\) in the dataflow graph.
-  </i>
-
-<!---------------------------------------------------------------->
-<h4 style="color:red;">Example of Dataflow</h4>
-<!---------------------------------------------------------------->
-The figure 2 is an example of a dataflow graph.
-
-The vertices are operations, \(+. *, -\), and the edges show the
-formula of the data on the edge.
-
-The initial vertex generates the variables of the dataflow.
+  The curved black line is the boundary separating <code>past</code>
+  from <code>future</code>.
 
   <figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.016.jpeg"
-    alt="Fig16" style="width:75%"> 
-    <figcaption>Fig.2: Example of Dataflow</figcaption>
-  </figure>
+    <img src="Model/Model.005.jpeg"
+    alt="Fig1" style="width:100%"> 
+    <figcaption>Fig.1: Example - A Slice of a Dataflow Graph</figcaption>
+</figure>
 
+  All edges to <code>past</code> events are from <code>past</code>
+  events.
+
+  All edges from <code>future</code> events are to <code>future</code>
+  events.
+
+  The state of the system at a slice is specified by the events from
+  <code>past</code> to <code>future</code>.
 
   
-<!---------------------------------------------------------------->  
-<h3 class="w3-text-teal">Properties of Dataflow</h3>
-<!---------------------------------------------------------------->
-
-The following observation follows directly from properties of dags:
-
-<hr class="new2">
-  <h6 style="color:blue;">
-  All <a href="https://en.wikipedia.org/wiki/Topological_sorting">
-  topological sorts</a> of dataflow graphs are computations.
-</h6>
-  </h6>
-  </li>
-</ol>
-<hr class="new2">
-
-<pL
-Another direct consequence of a property of a dag is:
-<p>
-  For all closed sets \(H\) of operations
-there exists a computation that executes all operations
-in \(H\) and then executes operations that are not in \(H\).
 
 
+  <!--------------------------------------------------------------->
+  <h5 class="w3-text-teal">A Slice Partitions a Dataflow Graphs into
+  Two Dataflow Graphs</h5>
 
-
-
-<!------------------------------------------------------------------>
-<h5 style="color:red;">
-Example: Topological Sorts of Dataflow Graphs are Computations
-</h5>
-<!------------------------------------------------------------------>
-Examples of topological sorts of the operations in figure 2 are \([-,
-+, *]\), \([+, -, *]\), and \([+, *, -]\).
-All these sequences of operations have the property that each operation
-is executed only after all operations that have paths to it in the
-dataflow graph.
+  Associated with a slice of a dataflow graph \(G\) are two graphs
+  called the <code>past</code> and <code>future</code>
+  graphs.
+  The events (vertices) of the <code>past</code> graph are
+  <code>past</code> events in \(G\) with an additional final event
+for each agent.
+The events of the <code>future</code> graph are 
+  <code>future</code> events in \(G\) with an additional initial event
+for each agent.
 
 <p>
-An example of a sequence which is not a topological sort is \([*, +,
--]\).
+The edges to the final event for an agent <code>u</code> in the
+  <code>past</code> graph are the edges
+  to events at <code>u</code> in \(G\)
+  from <code>past</code> to
+<code>future</code>.
+
+The edges from the initial event for an agent <code>v</code> in the
+<code>future</code> graph are the edges from events at <code>v</code>
+  in \(G\)
+  from <code>past</code> to <code>future</code> .
 
 <p>
-An example of a closed set of operations is \(\{-, +\}\), and
-an example of a set that is not closed is \(\{-, *\}\).
+The events of the <code>past</code> graph are identical to those in
+\(G\) except for the addition of final vertices.
+Because \(G\) is a dataflow graph of the system it follows that the
+<code>past</code> graph is also a dataflow graph of the system.
+Likewise the <code>future</code> graph is a dataflow graph of the
+system. 
 
-<p>
-Let \(H = \{-, +\}\).
+  <!----------------------------------------------->
+  <p style="color:red;">Example</p>
+ 
+  The lower diagram of figure 1 shows two graphs, the red one
+  consisting of events in <code>past</code> and the green one consisting
+  of events in <code>future</code>.
 
-There exists a sequence of
-operations that executes operations in \(H\) and then the remaining
-operations. 
+  Vertices representing final states of <code>past</code> and initial
+  states of <code>future</code> are added to complete the graphs.
 
+  Vertices and edges in the original dataflow graph (upper diagram)
+  are identical to the corresponding vertices and edges in the <code>past</code>
+  and <code>future</code> graphs (lower diagram).
 
+  
+  <!--------------------------------------------------------------->
+  <h5 class="w3-text-teal">The Final State of Past is the Initial
+  State of Future</h5>
 
-<!----------------------------------------------------------------->
-<h3 class="w3-text-teal">Slice of a Dataflow Graph</h3>
-<!----------------------------------------------------------------->
+  The edges that cross the boundary from <code>past</code> to
+  <code>future</code> in the dataflow graph \(G\) are the edges to the final
+  vertices of the <code>past</code> dataflow graph;
+  these are also the edges from the initial vertices of the
+  <code>future</code> dataflow graph. 
 
-<p class="w3-text-teal">Review of Dataflow Graph of a Computation</p>
-A dataflow graph of a computation of a distributed system is a labeled
-directed graph in which vertices represent events.
+  So, the final state of the <code>past</code> dataflow graph is the
+  same as the initial 
+state of the <code>future</code> dataflow graph.
 
-The graph has two kinds of edges: a message edge is from an event in
-which a message is sent to the event in which that message is
-received.
+This state is called the <i>state at the slice</i>.
 
-An agent edge is from an event at an agent to the next event at that
-agent.
-
-A message edge is labeled with the message and an agent edge is
-labeled with the state of the agent.
-
-
-<p>
-
-The timeline of an agent in a computation is the sequence of events at
-that agent in the computation.
-
-By convention, the timeline of an agent is depicted by a horizontal
-line in the dataflow graph of the computation.
-
-<p>
-<i>A point in the timeline of an agent</i> \(u\) is specified by an
-integer \(i\) and is the 
-edge from the \(i\)-th event at \(u\) to the \(i+1\)-th event at
-\(u\).
-
-
-<!------------------------------------------------------------------>
-<h5 style="color:red;">Example: Points on Agent Timelines</h5>
-<!------------------------------------------------------------------>
-
-Figure 1 shows a dataflow of a computation in the top diagram and
-the timelines of agents in the lower diagram.
-
-
-<figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.018.jpeg"
-    alt="Fig6" style="width:100%"> 
-    <figcaption>Fig.1: Example - Dataflow Graph of a Computation and Timelines</figcaption>
-</figure>
-
-
-
-
-<p>
-In figure 1, the point 2 on the timeline of \(u\) is the edge from
-event number 1 to event number 5 because event number 1 is the second
-event on \(u\)'s timeline in this computation.
-
-Point 3 on the timeline of \(u\) is the edge from
-event number 5 to event number 6.
-
-<h5 class="w3-text-teal">Slices</h5> 
-
-A <i>slice</i> of a dataflow graph of a computation is a vector \(N\)
-where \(N[k]\) 
-is a point in the \(k\)-th agent's computation, for all agents \(k\).
-
-<p>
-The <i>past</i> at the slice  is defined
-as the set consisting of the first \(N[k]\) events of the \(k\)-th
-agent for all \(k\).
-
-The <i>future</i> at the slice is the
-complement of the past. 
-
-
-
-<!------------------------------------------------------------------>
-<h5 style="color:red;">Example: Past and Future at a Slice</h5>
-<!------------------------------------------------------------------>
-Figure 3 shows a dataflow graph for a computation with events
-\([0, 1, 2, \ldots]\) and agents \(X, Y, Z\) indexed \(0, 1, 2\)
-respectively. 
-
-<p>
-Points on the agents' computations are shown as yellow circles on
-edges.
-
-For example, the point on agent \(X\) is 3 because it is the edge from
-the 3rd event (event number 6) to the 4th event (event number 8) at
-\(X\).
-
-<p>
-The purple line connecting the points represents the
-slice \([3, 3, 2]\).
-
-<figure>
-    <img src="../ChannelSnapshots/ChannelSnapshots/ChannelSnapshots.009.jpeg"
-    alt="Fig3" style="width:100%"> 
-<figcaption>
-Fig.3: Example: Past and Future
-</figcaption>
-</figure>
-
-The set of past events are colored black and the set of future events
-are colored green.
-
-
-
-
-
-<!----------------------------------------------------------------->
-<h3 class="w3-text-teal">Theorem about Past and Future</h3>
-<!----------------------------------------------------------------->
-The following result is self-evident from the definition of
-closed sets.
 <hr class="new2">
 <p style="color:blue;">
-The past at a slice is closed if any of the following hold.
-<ol>
-  <li>
-  <p style="color:blue;">
-Each message received in a past event is sent in a past event.
-  </li>
-  <li>
+Let <i>S</i> and <i>S'</i> be the initial and final states,
+respectively, of a dataflow of a system and
+let <i>S*</i> be the state at a slice of the dataflow.
 <p style="color:blue;">
-Each message sent in a future event is received in a future event.
-  </li>
-  <li>
-  <p style="color:blue;">
-  For all channels \(C\),  \(\; C_{s} \geq C_{r}\), where \(C_{s}, C_{r}\)
-  are the numbers of messages 
-  sent and received (respectively) on the channel in past
-  events.
-  </li>
-</ol>
-</p>
+There exists dataflows  of
+the system from <i>S</i> to <i>S*</i> and from <i>S*</i>
+to <i>S'</i>.
 <hr class="new2">
 
-
-  In graphical terms, the past is closed if all edges that cross the
-  boundary separating past and future events in the dataflow graph are
-  directed from the past to the future.
-
 <p>
-We use the shorter phrase,
-"<i>the slice is closed</i>" for the "past of the slice is closed."
-
-<!----------------------------------------------------------------->
-<h3 class="w3-text-teal">The State at a Slice</h3>
-<!----------------------------------------------------------------->
-
-The state at a closed slice is the state after executing all events in
-the past and before executing any event in the future.
-
-<p>
-The state \(S\) at a closed slice is given by the labels of edges of
-the dataflow graph from the past to the future.
-
-<ol>
-  <li>
-The state of an agent \(u\) in \(S\) is the label of the
-  edge from an event at \(u\) in the past to an event at \(u\) in the
-  future. 
-  </li>
-  <li>
-
-The state of a channel \((u, v)\) in \(S\) is the sequence of labels
-of \((u, v)\) edges from events in the past to events in the future.
-  </li>
-</ol>
-
-The state at a slice is defined only for a closed slice.
-
-
-<!----------------------------------------------------------------->
-<h3 class="w3-text-teal">Computation between Slices of a Dataflow Graph</h3>
-<!----------------------------------------------------------------->
-
-We use the shorter phrase "computation from a slice \(U\) to a
- size \(V\)" for "computation from the state at a closed slice
-\(U\) to the state at a closed size \(V\)"
-
-<p>
-From property 2 of dataflow graphs:
-<hr class="new2">
-<p style="color:blue;">
-For closed slices \(U, V\) where \(U \leq V\):
-there is a computation from \(U\) to \(V\).
-<hr class="new2">
-
-
-<p>
-A closed slice \(U\) is defined to be <i>earlier than</i> a closed slice \(V\) (or \(V\) is
-<i>later than</i> \(U\)) exactly when \(U \leq V\).
-
-So, for all closed slices \(U, V\) of a dataflow graph:
-\(U\) is earlier than \(V\) exactly when 
-there is a computation from \(U\) to \(V\).
-</p>
-
-
-<p>
-Example: In figure 3, slice \([3, 3, 2]\)
-is earlier than slice \([4, 4, 2]\) and both slices are closed.
-So, there is a computation from slice \([3, 3, 2]\) to slice \([4, 4,
-2]\). 
-
-<p>
-The remainder of this webpage consists of examples.
-
-
-<!------------------------------------------------------------------>
-<h2 style="color:red;">Examples</h2>
-<!------------------------------------------------------------------>
-
-
-<!------------------------------------------------------------------>
-<h5 style="color:red;">Example: Past is not Closed</h5>
-<!------------------------------------------------------------------>
-The next figure shows a slice \([1, 4, 3]\) which is not closed.
-
-
-<figure>
-    <img src="../ChannelSnapshots/ChannelSnapshots/ChannelSnapshots.010.jpeg"
-    alt="Fig4" style="width:100%"> 
-<figcaption>
-Fig.4: Example: Slice is not Closed
-</figcaption>
-</figure>
-
-The slice is not closed because there is a message sent in the future
-(event 4) that is received in the past (event 5).
-
-
-<!------------------------------------------------------------------>
-<h5 style="color:red;">Example: State at a Slice</h5>
-<!------------------------------------------------------------------>
-
-<p>
-In figure 5, the agents \(u, v\) are indexed \(0, 1\), respectively.
-
-Let's look at the state \(S_{3}\) at the slice \([2, 3]\)
-in the figure.
-
-This is the state after executing events \(0, 1, 2, 3\).
-
-<p>
-The past at the slice is \(H = \{0, 1, 2, 3\}\).
-
-The slice is represented by the vertical line between events 3 and 4.
-
-The slice is a boundary between the past and future.
-
-State \(S_{3}\) is determined by the labels of edges that cross the
-boundary.
-
-<p>
-The boundary line intersects the agent edge for
-\(u\) at an edge with label "e" signifying empty; so, \(u\) holds no tokens in
-\(S_{3}\).
-
-The line intersects the edges for channel \((v, u)\) at a single edge
-and that edge has label "red token" and so the state of the \((v, u)\)
-in \(S_{3}\) is a sequence of messages consisting of a single message
--- the red token.
-
-<p>
-
-The boundary line does not intersect an edge for the channel \((u, v)\), and so
-the state of this channel is the empty sequence of messages.
-
-The line intersects message edges for messages on channel \((v, v)\)
-at a single edge; this edge is labeled with the wakeup message.
-
-So, the state of channel \((v, v)\) is a sequence consisting of a single
-message -- the wakeup message.
-
-<p>
-The states of other agents and channels are determined similarly.
-
-
-<p>
-The state \(S_{i}\) that occurs in a computation after events \(0,
-\ldots, i\) are obtained similarly and are shown in figure 3.
-
-The lower part of figure 3 shows the dataflow graph and
-the upper part shows the sequence of states in the
-computation.
-
-The dotted vertical lines show boundaries of the slices.
-
-
-
-<figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.007.jpeg"
-    alt="Fig3" style="width:100%"> 
-<figcaption>
-Fig.4: Example: States at Closed Slices
-</figcaption>
-</figure>
-
-
-
-
-<!------------------------------------------------------------------>
-<h5 style="color:red;">Example: State at a Slice</h5>
-<!------------------------------------------------------------------>
-Let's look at the state at slice \([3, 2]\).
-
-The past of the slice is \(\{0, 1, 2, 5\}\).
-
-The state of \(u\) is the label of the edge from event 5 to 6 -- holds
-red token.
-
-The state of \(v\) is the label of the edge from event 2 to 3 -- holds
-no token.
-
-The slice boundary cuts the message edge from 1 to 3.
-
-This edge is labeled with blue token; so the state of channel \((u,
-v)\) is blue token.
-
-The boundary does not intersect with other edges, and so that states
-of the remaining channels are empty sequences.
-
-
-
-<!------------------------------------------------------------------>
-<h5 style="color:red;">
-Example: Topological Sorts of Dataflow Graphs are Computations
-</h5>
-<!------------------------------------------------------------------>
-
-
-Figure 5 shows different computations \([0, 1, 2, 3, 4, 5, 6, N]\) and
-\([0, 2, 1, 5, 3, 4, 6, N]\) with the same dataflow graph.
-
-Both computations are topological sorts of the graph.
-
-In the figure, events of the graph are laid out from left to
-right in the order in which they occur in the computations.
-
-<figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.010.jpeg"
-    alt="Fig5" style="width:100%"> 
-    <figcaption>Fig.5: Example - Computations with the same Dataflow</figcaption>
-</figure>
-
-
-<!------------------------------------------------------------------>
-<h4 style="color:red;">Example: Computations between Slices</h4>
-<!------------------------------------------------------------------>
-There exists a computation from the slice \([0, 2]\) to the slice
-\([3, 2]\).
-
-<p>
-
-
-<!------------------------------------------------------------------>
-<h3 class="w3-text-teal">Next</h3>
-
-This completes the first chapter: Introduction.
-
-The next chapter  --
-<a href="../ChannelSnapshots/ChannelSnapshots.html">
-Global Snapshots and Logical Clocks
-</a>
--- consists of four webpages and describes straightforward, but important,
-applications of slices and dataflow.
-
-
-
+Any topological sort of the dataflow graph is a computation. So, there
+exists computations from <i>S</i> to <i>S*</i> and from <i>S*</i>
+to <i>S'</i>
+  
+
+<!---------------------------------------->
+<h5 class="w3-text-teal">Next</h5>
+<!---------------------------------------->
+The next chapter describes
+<a href="../ChannelSnapshots/ChannelSnapshots.html">algorithms by
+which agents record the 
+states of distributed systems.</a>
 
 <!--Start Footer--------------------------------------->
 
