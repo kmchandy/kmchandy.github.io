@@ -95,28 +95,12 @@ hr.new1 {
 
 
   <h3 class="w3-text-teal">Problem Definition</h3>
-  
-  <h4 class="w3-text-teal">Review of Agents and Termination of Computation</h4>
-  We
-  <a href="../DISTRIBUTED_SYSTEM_MODELS/Basics.html">
-  described agents earlier.
-  </a>
-  We give a summary of that description next.
-
-  <p>
-    An agent is either <i>idle</i> or <i>active</i>. An idle agent
-    remains idle until it receives a message at which point it becomes
-active. An idle agent does not send messages.
-
-An active agent may send messages. An active agent
-may become idle at any point.
-
 <p>
-  A computation terminates in states in which all agents
-  are idle and all channels are empty.
+  A computation terminates in states in which all
+  channels are empty and all agents are waiting to receive messages.
 
   A channel \(C\) is empty exactly when \(\; C_{s} = C_{r}\), where
-  \(C_{s}, C_{r}\) are the numbers of messages 
+  \(C_{s}\) and \(C_{r}\) are the numbers of messages 
   sent and received (respectively) on \(C\).
 
   So:
@@ -124,61 +108,13 @@ may become idle at any point.
   <hr class="new2">
   <p style="color:blue;">
   A computation is in a terminated state exactly
-  when all agents are idle and
-  for all channels \(C\),  \(\; C_{s} = C_{r}\).
+  when:
+  <br>
+  (1) all agents are waiting to receive messages and
+  <br>
+  (2) For all channels \(C\):  \(\; C_{s} = C_{r}\).
   </p>
   <hr class="new2">
-  
-
-  <p>
-  Termination is stable -- if a computation has terminated then it
-  remains terminated.
-
-  Algorithms to detect termination are examples of algorithms to
-  detect stable properties. 
-
-
-
-  <!---------------------------------------------------------------->
-  <h3 class="w3-text-teal">Detection of Stable Properties: Specification</h3>
-  <!---------------------------------------------------------------->
-
-Next, we give the specification for detecting general stable
-  properties and then specialize the specification to detecting
-termination.
-
-<p>
-  The general detection problem is to develop an operating system algorithm that
-  detects whether a stable property holds in a client's computation.
-  In this example the stable property to be detected is termination.
-  
-  See <a href="ChannelSnapshots.html">Global Snapshots</a> for a
-  description of OS algorithms.
-
-  <p>
-  The detection algorithm has a boolean variable \(detected\) which is
-  initially \(False\) and becomes
-  \(True\) if and when the algorithm detects that the specified stable
-property holds.
-
-The specification of the algorithm is as follows.
-  <!---------------------------------------------------------------->
-<hr class="new2">
-<h6 style="color:blue;">
-Specification of algorithms to detect stable properties.
-<ol>
-  <li>
-  If \(detected\) is \(True\) at any point in a computation then the
-  stable property holds at that point. 
-  </li>
-  <li>
-  If the stable property holds at a point in the computation then \(detected\)
-  becomes \(True\) in the computation.
-  </li>
-</ol>
-</h6>
-<hr class="new2">
-
   
 <!----------------------------------------------------------------------------->
 <h4 class="w3-text-teal">How Should You Approach the Problem?</h4>
@@ -186,138 +122,60 @@ Specification of algorithms to detect stable properties.
 
 <h6 class="w3-text-teal">Use the General Method for Detecting Stable
 Properties</h6>
-The obvious way to tackle this problem is to use the fact that
-termination is stable.
 
 <p>
-The general method for detecting stable properties is to
-monitor a system by taking repeated snapshots.
-\(detected\) becomes \(True\) if and when a snapshot shows that the stable
-predicate holds.
+The OS  monitors a system by taking repeated global
+  snapshots.
+  If a global snapshot is a state in which the computation has
+  terminated then the computation has indeed terminated.
+  And if a computation has terminated then repeated snapshots ensure
+  that a snapshot is taken after computation terminates.
 
-See
-<a href="ChannelSnapshots.html">
-Global Snapshots
-</a>
-and
-<a href="LogicalClocks.html">
-Logical Clocks
-</a> for ways to take repeated snapshots.
-<p>
-We apply the general method to detecting termination.
-Agents send their local snapshots to a collector agent.
-Successive snapshots are differentiated in some straightforward way.
-For example, each snapshot is timestamped with the time of the snapshot --
-<a href="LogicalClocks.html">
-see Logical Clocks
-</a> -- and this differentiates snapshots taken at different points.
-Alternately, each snapshot is given a sequence id which is used to
-differential them.
-<p>
-The collector sets \(detected\) to \(True\) if a snapshot shows that
-computation has terminated.
-
-
-<h6 class="w3-text-teal">
-An Alternate Method for Detecting Termination
-</h6>
-Another way of tackling this problem is to recognize the similarity in
-conditions of
-<a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-the Theorem about Past and Future</a>,
-and the specification of termination.
+<h6 class="w3-text-teal">An Alternate Method</h6>
 
 <p>
-From the theorem, a slice is is closed if:
-For all channels \(C\),  \(\; C_{s} \geq C_{r}\), where \(C_{s}, C_{r}\)
-  are the numbers of messages 
-  sent and received (respectively) on the channel in the past
-  events.
-
-<p>
-The specification of termination is that all agents are idle and for all channels
-\(C\),  \(\; C_{s} = C_{r}\).
-
-
-<p>
-Therefore, any slice in which computation has terminated is closed.
-
-So the state at the slice is a state in the computation.
-
-This gives us the key idea on which to base the algorithm.
-
-<hr class="new2">
-<p style="color:blue;">
-Set \(detected\) to \(True\) if the state at any slice shows that
-computation has terminated.
-<hr class="new2">
-
-Next, we describe an algorithm based on this insight.
-
-<!------------------------------------------------------------->
-<h5 class="w3-text-teal">Alternate Termination Detection Algorithm</h5>
-<!------------------------------------------------------------->
-
-<p>
-The algorithm uses an agent, that we call <i>the collector</i> which is
-part of the operating system.
+The algorithm uses an OS agent called an observer.
 
 Let  \(C_{s}\) and \(C_{r}\) be the numbers of messages sent and
-received (respectively) on channel \(C\),.
+received (respectively) on channel \(C\).
 
-<p>
-Each time an agent transits from active to idle it sends a message to
-the collector.
+Each time an agent completes executing a <code>receive</code> it sends
+a message to an observer.
 
 This message contains \(C_{s}\)
 for each of that agent's outgoing channels \(C\),
 and \(C_{r}\) for each of the agent's incoming channels \(C\).
 
 <p>
-The collector keeps only the latest message that it receives from each
+The agent keeps only the latest message that it receives from each
 agent.
 Let \(C_{s}^{*}, C_{r}^{*}\) be the last value of \(C_{s}, C_{r}\)
-(respectively) that the collector has received.
+(respectively) that the observer has received.
+Initially \(C_{s}^{*} = 0, C_{r}^{*} = -1\) for all channels \(C\) so
+as to ensure \(C_{s}^{*} \neq C_{r}^{*}\).
 
 <p style="color:blue;">
-The collector sets \(detected\) to \(True\) if it has
-received at least one message from each agent and for
-all channels \(C\): \(C_{s}^{*} = C_{r}^{*}\).
+The observer detects computation has terminated if:
+for all channels \(C\): \(C_{s}^{*} = C_{r}^{*}\).
 </p>
-
 
 
 <!-------------------------------------------------------->
 <h5 class="w3-text-teal">Proof of Correctness</h5>
 <!-------------------------------------------------------->
 
+<p>
+Define the local snapshot of an agent as the point at which it sends
+\(C_{s} = C_{s}^{*}\) for each of its output channels \(s\), and
+\(C_{r} = C_{r}^{*}\) for each of its input channels \(r\).
 
 <p>
-Proof of: If \(detected\) is \(True\) then computation has terminated.
+The local snapshots correspond to a
+<a href="ChannelSnapshots.html">global snapshot</a> exactly when all
+messages received in the <code>past</code> are sent in the
+<code>past</code> which is the case when \(C_{s}^{*} =
+C_{r}^{*}\). 
 
-<p>
- \(detected\) becomes \(True\) when the collector receives messages
-in which \(C_{s}^{*} = C_{r}^{*}\).
-
-So, the agents sent messages to the collector with these values.
-
-The slice of points at which these messages are sent is closed.
-
-So, the state at the slice is a state in the computation.
-
-Computation has terminated in this state.
-
-
-<p>
-Proof of: If the computation terminates, then \(detected\) becomes
-\(True\).
-
-<p>
-The last messages sent by agents before they remains idle forever
-has the property \(C_{s}^{*} = C_{r}^{*}\) for all channels \(C\).
-
-When the collector receives these messages it sets  \(detected\) to
-\(True\). 
 
 
 
