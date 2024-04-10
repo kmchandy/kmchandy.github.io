@@ -156,8 +156,25 @@ directed graph
 </a> in which vertices
 represent agents and edges represent channels.
 The graph is called a <i>network of agents.</i>
+
+<p>
+Figure 1 shows a network of 4 agents: <code>pos</code>,
+<code>neg</code>, <code>sum</code>, and <code>result</code>.
+
+The network has edges <code>(pos, sum)</code> to <code>(neg, sum)</code>,
+and <code>(sum, result)</code>.
+
+   <figure>
+    <img
+    src="DistributedSystemModels/DistributedSystemModels.020.jpeg"
+    alt="Fig1" style="width:60%"> 
+    <figcaption>Fig.1: Agent Network of the Example</figcaption>
+</figure>
+
 See 
-<a href=""ExamplesBasics.html">examples of agent networks.</a> 
+<a href=""ExamplesBasics.html">examples of agent networks</a> for more
+examples. 
+
 
 <p>
 A distributed system is initiated with sets of agents and channels
@@ -187,10 +204,9 @@ the message from the head (front) of the queue.
 See <a href="BasicsExamples.html">examples of channel states.</a>
 
 <p>
-Associated with each channel is its initial state -- the queue of
-messages in the channel when the distributed system starts executing.
-
-
+Messages are not lost or modified in channels.
+Every message sent is received.
+Message delays are arbitrary (but finite).
 
 
 <!---------------------------------------------------->
@@ -267,13 +283,6 @@ and sends messages to agent <code>results</code>.
 See <a href="../CODE_EXAMPLES/SumPosAndNeg.py"> an example of an
 implementation in Python.</a>
 
-   <figure>
-    <img
-    src="DistributedSystemModels/DistributedSystemModels.020.jpeg"
-    alt="Fig1" style="width:60%"> 
-    <figcaption>Fig.1: Agent Network of the Example</figcaption>
-</figure>
-
 <p>
 
 The statements before the <code>receive</code> function specify the
@@ -307,8 +316,10 @@ The agent takes similar actions when it receives a message from
 <code>neg</code> except that it decrements <code>sum</code>.
 
 
-
+<!---------------------------------------->
 <h5 class="w3-text-teal">Next</h5>
+<!---------------------------------------->
+
 The next two webpages continue the description of a model of
 distributed systems and point out its strengths and limitations.
 
