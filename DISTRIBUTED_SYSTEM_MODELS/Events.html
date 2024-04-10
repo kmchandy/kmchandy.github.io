@@ -77,7 +77,6 @@ hr.new1 {
 <div class="w3-twothird w3-container">
 
 
-
 <!-------------------------------------------------------------->
 <h2 class="w3-text-teal">Events and Dataflow</h2>
 <!-------------------------------------------------------------->
@@ -117,11 +116,11 @@ hr.new1 {
 </ol>
 
 <p>
-There exists a transition from state \(S\) to
-\(S'\) specified by an event \(e\) exactly when
-the pre-transition state, \(S_{v}\),
-of agent \(v\) is its state in
-  \(S\), and
+There exists a transition from state \(S\) to \(S'\) specified by
+event \(e\), defined above, exactly when
+(1) the pre-transition state, \(S_{v}\), of agent \(v\), is its state in
+\(S\), and
+(2)
   the head of channel \((u, v)\) in \(S\) is <code>msg</code>.
 
 <p>
@@ -176,15 +175,13 @@ The figure below illustrates the event.
 
 The event is shown as a vertex that represents a data transformation.
 
-<p class="w3-text-teal">Input to an Event</p>
-The input to an event is the state of the agent before it executes the
-<code>receive</code> and the message received.
+<p class="w3-text-teal">Inputs to an Event</p>
+An event has two inputs: (1) the identity \(v\) of the agent that
+changes state in the event, and the state of \(v\) before the event,
+and (2) the message received in the event and the sender of the message.
 
-<p>
-The vertex representing the event has two input edges; one edge is
-labeled with the state of 
-the agent \(u\) before the event, and the other edge is labeled with the
-message received and the channel on which it is received.
+The vertex representing the event has two input edges corresponding to
+each of the two inputs.
 
 <p class="w3-text-teal">Output of an Event</p>
 The output of an event is the state of the agent after it completes
@@ -203,14 +200,14 @@ The output edge for a channel is not shown if there are no messages
 sent on the channel during the event.
 
 <p>
-In this example, only one message (blue token) is sent, and this
+In figure 1, only one message (blue token) is sent, and this
 message is sent along channel \((u, v)\).
 
 So, the vertex has an output edge labeled with a sequence consisting
 of one message (blue token).
 
 <!---------------------------------------------------------------->
-<h3 class="w3-text-teal">Dataflow Graph of a Computation</h3>
+<h3 class="w3-text-teal">The Dataflow Graph of a Computation</h3>
 <!---------------------------------------------------------------->
 <a href="https://en.wikipedia.org/wiki/Dataflow_programming">
 Dataflow graphs
@@ -234,9 +231,9 @@ In our case vertices represent events of the computation.
 Edges connect outputs of events to inputs of events (figure 3)
 
 
-<p class="w3-text-teal">Agent Edges of a Dataflow Graph</p>
-The graph has an edge from an event at an agent to the next event at
-that agent.
+<h5 class="w3-text-teal">Agent Edges of a Dataflow Graph</h5>
+The dataflow graph of a computation has an edge from an event at an
+agent in the computation to the next event at that agent.
 
 This edge is labeled with the state of the agent between
 the events and is called an <i>agent edge.</i>
@@ -248,12 +245,12 @@ directed from left to right.
 The sequence of events at an agent are represented by a horizontal
 line with later events to the right of earlier events.
 
-<p class="w3-text-teal">Message Edges of a Dataflow Graph</p>
+<h5 class="w3-text-teal">Message Edges of a Dataflow Graph</h5>
 The graph has an edge from each event in which a message is sent to
 the event in which that message is received; this edge is labeled with
 the message, and is called a <i>message edge.</i>
 
-<p class="w3-text-teal">Initial State Represented by an Event</p>
+<h5 class="w3-text-teal">Initial and Final States Represented by Events</h5>
 The initial state of the computation is represented by events
 labeled \(0\), and the final state is represented by events
 labeled \(N\).
@@ -270,7 +267,7 @@ final states.
 <h4 style="color:red;">Example: Dataflow of a
 Computation</h4> 
 <!---------------------------------------------------------------->
-Figure 2 shows a diagram of a computation from
+Figure 2 shows a diagram of a computation \([S_{0}, \ldots, S_{8}]\) from
 <a href="DistributedSystemModels">the previous page</a>
 and the figure 3 shows the dataflow
 graph of the computation.
@@ -278,6 +275,7 @@ graph of the computation.
     <img src="DistributedSystemModels/DistributedSystemModels.005.jpeg"
     alt="Fig2" style="width:100%"> 
     <figcaption>Fig.2: Example - A Computation: a Sequence of States
+\([S_{0}, \ldots, S_{8}]\)
 </figcaption>
 </figure>
 
@@ -285,7 +283,8 @@ graph of the computation.
 <figure>
     <img src="DistributedSystemModels/DistributedSystemModels.006.jpeg"
     alt="Fig6" style="width:100%"> 
-    <figcaption>Fig.3: Example - Dataflow Graph of a Computation</figcaption>
+    <figcaption>Fig.3: Example - Dataflow Graph of the Computation of
+    figure 2</figcaption>
 </figure>
 
 
@@ -296,32 +295,35 @@ The top horizontal line in figure 3 shows the timeline -- the sequence of events
 The label of a horizontal edge \((e, e')\) on the timeline of an agent
 \(u\) is the state of \(u\) after event \(e\) and before event \(e'\).
 
-The purple edges show messages.
+The purple edges represent messages.
 
 Event 1 in figure 3 is the same as the event shown in figure 1.
 
 <p>
-Let's look at the dataflow graph in detail.
-
-Initially there is a wakeup message in the channel \((u, u)\), and the
-state of agent \(u\) is "holds blue token."
-
-So the label of the agent edge from the initial event to the first event at \(u\) 
-is "holds blue token" and the label of the message edge for
-channel \((u, u)\) is "wakeup."
-
-The edges to the first event at \(v\) are similar.
+Let's look at the dataflow graph in detail, and let's begin by looking
+at event 2 in figure 3. Event 2 is the first event at agent \(v\).
 
 <p>
-Let's look at event 2.
+Initially there is a wakeup message in the channel \((v, v)\), and the
+initial state of agent \(v\) is "holds red token."
 
-The input agent edge is labeled "holds red token" and the input
-message edge is labeled "wakeup."
+So the label of the agent \(v\) edge from the initial event to event 2 
+is "holds red token" and the label of the message edge for
+channel \((v, v)\) from the initial event to event 2 is "wakeup."
 
-The event changes \(v\)'s state to "holds no token" and that's the
-label of the output agent edge from event 2.
 
-In the event, \(v\) sends the red token to \(u\), and this is shown as
+<p>
+The event changes \(v\)'s state to "holds no token." So the
+label of the output agent edge from event 2 is "holds no token."
+
+The agent edge from event 2 is to event 3 which is the next event at agent \(v\) in the
+computation.
+
+By convention, this edge is drawn as a horizontal line with event 3 to
+the right of event 2.
+
+<p>
+In event 2, \(v\) sends the red token to \(u\), and this is shown as
 the message edge labeled with the red token.
 
 This message edge is from event 2 to event 5, which is the event in which
@@ -340,37 +342,39 @@ had the sentence:
 A sequential model of a distributed system that only considers states
 in which all agents are idle seems useless. Why is the model useful?
 
+The model is useful because:
 <p>
-The model is useful because <i>the model preserves the dataflow of the system.</i>
+<center>
+<i>The model preserves the dataflow of the system.</i>
+</center>
+</p>
 
+Let's look at an example of the evolution of the state of a system in
+true time and compare dataflow in this true evolution with the
+dataflow in a computation in the model.
 
-<p>
-What is the most information any agent can get about the evolution of
-the system state?
-
-An agent \(A\) can ask all agents to record and send their timelines
-to \(A\).
-
-Time is irrelevant, however, because clocks may drift by
-arbitrary amounts.
-
-The only information that an agent can obtain is the
-dataflow graph.
 
 <!---------------------------------------------------------------->
-<h4 style="color:red;">Example: Timelines and Computations</h4> 
+<h4 class="w3-text-teal">Dataflow in True Timelines and Model Computations</h4> 
 <!---------------------------------------------------------------->
+
+The top diagram of figure 4 shows the true timeline showing the
+evolution of the state of a system with agents \(u, v\).
+
+The lower diagram shows the dataflow graph of a computation in the
+model.
+
+
 <figure>
-    <img src="DistributedSystemModels/DistributedSystemModels.012.jpeg"
+    <img src="DistributedSystemModels/DistributedSystemModels.013.jpeg"
     alt="Fig4" style="width:100%"> 
     <figcaption>Fig.4: Example - Timeline and Computation with the
 same Dataflow Graph
 </figcaption>
 </figure>
-The top diagram of figure 4 shows the timeline of a trajectory of a
-system with agents \(u, v\).
-
-The horizontal axis represents time, and the length of an event
+<p>
+In the top diagram,
+the horizontal axis represents true time, and the length of an event
 represents the time taken to execute the event.
 
 A message is directed from a point representing the time at which the
@@ -378,18 +382,51 @@ message is sent to a point representing the time at which the message
 is received.
 
 <p>
-Let's look at execution of the receive by agent \(u\) represented by
-event 1 in the top diagram.
+Define the dataflow graph of a true system evolution -- top diagram --
+in a way that is similar to dataflow graphs of computations.
+
+Message edges are labeled with the content of the messages.
+
+A message edge is directed from the event in which the message is sent
+to the event in which the message is received.
+
+The label of the agent edge after an agent completes execution of a
+<code>receive</code> is its state at that point.
+
+<p>
+Let's compare the dataflow graphs for true evolution of system states
+(top diagram)
+versus that of computations in the model (lower diagram).
+
+<p>
+Let's first look at event 1 in the top diagram in detail.
+
+Event 1 represents execution of a <code>receive</code> by agent
+\(u\). 
+
+Event 1 starts when \(u\) receives the message sent in event 0.
 
 As execution proceeds, \(u\)'s variables change, and at some
 point \(u\) sends message \(m_{2}\) and at a later point it sends
 \(m_{3}\).
 
 <p>
-Events 2 and 3 start after event 1 starts, and finish before event 1
-finishes.
+Events 2 and 3 represent executions of <code>receive</code> by agent
+\(v\).
 
-Our simple model cannot capture this situation.
+Event 2 starts when \(v\) receives message \(m_{2}\) from \(u\).
+
+Events 2 finishes before event 1 finishes.
+
+Similarly, event 3 starts when \(v\) receives message \(m_{3}\) from
+\(u\) and finishes before event 1 finishes.
+
+Events 2 and 3 start after event 1 and finish before event 1.
+
+<p>
+<i>
+The model does not capture this situation.
+</i>
 
 <p>
 The lower diagram shows a computation in our model. 
@@ -397,15 +434,60 @@ The lower diagram shows a computation in our model.
 The lower diagram can be obtained from the upper diagram by making the
 durations of events infinitisimally small.
 
-In the lower diagram events 2 and 3 are executed after event 1 finishes.
+In the lower diagram events 2 and 3 are executed after event 1
+finishes, whereas in the top diagram they finish before event 1 does.
 
 <p>
-Though the model does not capture elapsed time, the  model faithfully
+The model does not capture the evolution of the system state over
+time; however, computations in the model faithfully 
 represents dataflow at the granularity of events. 
 
-The dataflow graphs in both diagrams is the same.
+The dataflow graphs in both diagrams are identical.
+
+This is because a computation is obtained from a true evolution by
+shrinking the time to execute an event to an infinitisimally small
+value. So, the states of agents
+after they complete events and the messages sent are the same in both
+cases. 
 
 
+
+<!---------------------------------------------------------------->
+<h4 class="w3-text-teal">What Information do Timelines Provide?</h4> 
+<!---------------------------------------------------------------->
+<p>
+What information can any agent get about the evolution of
+the system state?
+
+An agent \(X\) can ask all agents to record and send their timelines
+to \(X\).
+
+An agent timeline is a horizontal line in the dataflow graph.
+
+What can be deduced from the agent timelines that \(X\) receives?
+
+<p>
+A timeline of an agent is the sequence of events at the agent.
+
+We know that a message is received after it is sent.
+
+So, we can create a (unique) dataflow graph from the set of agent
+timelines of all agents.
+
+The timeline may also have the duration between events as determined
+by the agent's clock; however, this information isn't useful because
+clocks can drift apart by arbitrary amounts.
+
+<p>
+<i>
+The only information that can be deduced from a set of agent timelines
+in a computation 
+is the dataflow graph of the computation.
+</i>
+
+<p>
+When we design algorithms dataflow graphs provide all the
+information that we use about state evolution.
 
 <h3 class="w3-text-teal">Next</h3>
 <a href="Timelines.html">Properties of Dataflow</a>
