@@ -186,31 +186,56 @@ OS.
 The state at a <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
 slice</a> is a state that can occur in a computation.
 
+So we design the global snapshot algorithm to determine a global
+snapshot -- a state at a slice.
+
+<p>
 Each agent records its own state -- takes its local snapshot -- at
 some point in a computation.
 
 Define <code>past</code> as the set of events at an agent before the
 agent takes its local snapshot.
 
-The definition of a slice is that all events before events in <code>past</code>
-are in <code>past</code>.
+The definition of a slice is that all events <code>before</code> <code>past</code> events
+are <code>past</code> events.
+An equivalent definition of a slice is that all events <code>after</code> <code>future</code> events
+are <code>future</code> events.
 
-So, local snapshots must be taken so that messages sent in
-<code>past</code> are received in <code>past</code>.
+An event in which a message is sent is <code>before</code> the event
+in which the message is received, and a message is received
+<code>after</code> it is sent.
 
-
+<p>
+So, local snapshots correspond to a global snapshot exactly when:
 <hr class="new2">
 <p style="color:blue;">
-The central question in designing the algorithm is:
-How should the algorithm separate messages sent in <code>past</code>
-from messages sent in <code>future</code>?
+Messages received in the <code>past</code> are sent in the <code>past</code>, i.e.
+<p style="color:blue;">
+Each message received before the receiver takes its snapshot
+is sent before the sender takes its snapshot.
+<p>
+Or equivalently,
+<p style="color:blue;">
+Messages sent in the <code>future</code> are received in the
+<code>future</code>, i.e.
+<p style="color:blue;">
+Each message sent after the sender takes its snapshot
+is received after the receiver takes its snapshot.
 </p>
 <hr class="new2">
 
-A special OS message, called a <code>marker</code> is used where
-messages sent on a channel before a <code>marker</code> is sent on the
-channel are messages sent in <code>past</code>, and messages sent
-after the marker are sent in <code>future</code>.
+
+<p>
+The central question in designing the algorithm is:
+How should the algorithm separate messages sent in <code>past</code>
+from messages sent in <code>future</code>?
+
+
+A special OS message, called a <code>marker</code> is used for this
+purpose.
+Messages sent on a channel before a <code>marker</code> is sent on the
+channel are messages sent in the <code>past</code>, and messages sent
+after the marker are sent in the <code>future</code>.
 
 <!----------------------------------------------------------------------------->
 <h4 class="w3-text-teal">The Global Snapshot Algorithm</h4>
@@ -268,6 +293,7 @@ Note: If an agent takes its local snapshot when it receives a marker
 along a channel, then the snapshot of the channel is the empty
 sequence of messages.
 
+<!---------------------------------------------------->
 <h5 class="w3-text-teal">Termination of the Algorithm</h5>
 
 After any agent \(v\) initiates the algorithm, all agents that are
@@ -315,6 +341,27 @@ def receive(message, sender):
            channel_snapshots[sender] = \\ 
                        channel_snapshots[sender].append(message)
 </pre>
+
+
+
+<!---------------------------------------------------->
+<h5 class="w3-text-teal">Collecting Local Snapshots to form Global
+Snapshots</h5>
+One way to collect local snapshots is to have an OS agent act as an
+observer.
+
+Each agent sends its local snapshots to the observer which puts the
+local snapshots together to form the global snapshots.
+
+Successive snapshots are disambiguated by using sequence numbers or
+timestamps.
+
+<p>
+Some algorithms carry out distributed computations on local snapshots
+without forming a global snapshot.
+
+We give examples of such algorithms in this chapter.
+
 
 The remainder of this webpage consists of examples.
 
