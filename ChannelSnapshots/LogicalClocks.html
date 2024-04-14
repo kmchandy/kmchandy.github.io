@@ -92,34 +92,29 @@ hr.new1 {
   <h4 class="w3-text-teal">The Problem</h4> 
   <!----------------------------------------------------------------------------->
   <p>
-  Design an algorithm that assigns numbers to events in a computation
-  so that all sequences of events in ascending logical time are computations.
+  Design an algorithm that assigns a value,  called the <i>logical
+  time</i>, to each event in a computation so that all sequences of
+  events in ascending logical time are computations.
 
 
    
 <!----------------------------------------------------------------------------->
-<h4 class="w3-text-teal">How Should You Approach the Problem?</h4>
+<h5 class="w3-text-teal">How Should You Approach the Problem?</h5>
 <!----------------------------------------------------------------------------->
 
-<p>
-The problem deals with sequences of events and computations.  So,
-  start with theorems about event sequences and computations.
-
   <p>
 
+  A
   <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-  A computation is a topological sort of the dataflow graph
-  </a>
-  -- i.e., a
-  computation is sequence of events in which for all edges
-  \((e, e')\) in the dataflow graph \(e\) occurs before \(e'\) in the
+  computation</a> is a sequence of events in which for all edges
+  \((e, e')\) in the dataflow graph:
+  <center>\(e\) occurs before \(e'\) in the
   sequence.
+  </center>
 
   <p>
-  If \(t(e) < t(e')\) then \(e\) occurs before \(e'\) in all ascending
-  sequences of logical time.
-  
-  These observations suggest the logical time property.
+  So, the algorithm assigns logical time \(t(e)\) to event \(e\) such that:
+
   
 
   
@@ -127,8 +122,7 @@ The problem deals with sequences of events and computations.  So,
   <p style="color:blue;">
   <h4 style="color:blue;">The Logical Time Property</h4>
   <p style="color:blue;">
-  All sequences in ascending logical time are computations if 
-  for all edges \((e, e')\) of the dataflow graph of a computation:
+  For all edges \((e, e')\) of the dataflow graph:
 \(t(e) < t(e')\).
 </p>
 <hr class="new2">
@@ -152,12 +146,16 @@ The problem deals with sequences of events and computations.  So,
   Logical times are arbitrary provided
   every edge is directed from a lower to a higer logical time.
   <figure>
-    <img src="Timelines/Timelines.001.jpeg"
-  alt="Fig1" style="width:80%"> 
-    <figcaption>Fig. 1: Logical Times of Events</figcaption>
+    <img src="Timelines/Timelines.001.jpeg" alt="Fig1" style="width:100%"> 
+    <figcaption>Fig. 1: Logical Times of Events: Edges Directed from
+  Lower to Higher Logical Times</figcaption>
   </figure>
 
+Verify that every edge in figure 1 is from an event with a lower
+logical time to an event with a higher logical time.
 
+<p>The sequence of events in increasing logical time is:
+[1, 2, 4, 3, 5, 6, 7, 8, 9], and this sequence is a computation.
   
 
   
@@ -193,19 +191,8 @@ The correctness of the algorithm is self evident.
   The <i>past at logical time \(t\)</i> is defined as the set of events  with logical
 time at most \(t\).
 
-The <i>future at logical \(t\)</i> is the set of events  with logical
+So, the <i>future at logical \(t\)</i> is the set of events  with logical
 time greater than \(t\).
-
-The <i>point at logical time \(t\)</i> on an agent \(u\)'s computation is an
-edge between a past and future event at logical time \(t\) at \(u\).
-
-The <i>slice at logical time \(t\)</i> is given by the points at
-logical time \(t\).
-
-<p>
-  The past at \(t\) is closed because there is no edge
-  from an event with logical time greater than \(t\) to an event with
-  logical time at most \(t\).
 
 
   <p>
@@ -234,8 +221,9 @@ given by the labels of the edges that cut the purple line.
 
 <figure>
     <img src="Timelines/Timelines.002.jpeg"
-  alt="Fig2" style="width:80%"> 
-    <figcaption>Fig. 2: States at Logical Time 6.5</figcaption>
+alt="Fig2" style="width:100%">
+<figcaption>Fig. 2: Slice at Logical Time 6.5. Past is Set of Events
+    with Logical Time at most 6.5</figcaption>
 </figure>
 
 <p>
@@ -290,8 +278,8 @@ time 6.5.
 <!--------------------------------------------->
 
   <p class="w3-text-teal">Intuition</p>
-  It can help intuition, as we design algorithms for some problems, to think of 
-logical time playing the role of real time.
+  We will design some algorithms using 
+logical time to play the role of real time.
 Figure 3 shows the computation in figure 2 with the horizontal axis
 representing real time.
 The position of an event with logical time \(t\) is at a distance of
@@ -318,9 +306,18 @@ The left of the line is the past, and the right side of the line is
 the future at that time.
 
 
-  
-<p class="w3-text-teal">Properties shared by Perfect and Imperfect Clocks</p>
-Perfect clocks have many useful properties including the following:
+<p class="w3-text-teal">Physical and Logical Clocks</p>
+<p>
+Operating systems maintain clocks. Some have atomic clocks or other
+  high-fidelity clocks that use Precision or 
+Network Time Protocols (PTP, NTP).
+With high-fidelity clocks, it is unlikely -- though not impossible -- that a message sent when
+the sender's clock is at \(t\) will be received when the receiver's
+clock is \(t\) or earlier.
+We will use OS clocks, but correct them using the logical clock
+algorithm.
+Such clocks have the following properties that we use in
+designing many algorithms:
 
 <ol>
 
@@ -336,63 +333,12 @@ Perfect clocks have many useful properties including the following:
   </li>
 </ol>
 <p>
-Operating systems maintain clocks. Some have atomic clocks or other
-  high-fidelity clocks that use Precision or 
-Network Time Protocols (PTP, NTP).
-
-These clocks have property 1.
-
-<p>
-We can use the logical clock algorithm to adjust these clocks to get
-property 2:
-move an agent's clock forward so that the time at which a message is
-received, as determined by the receiver's clock, is later than the
-timestamp of the message.
-
-<p>
-We use clocks with these two properties in many algorithms, and we employ the following
-heuristic.
-
-<h5 class="w3-text-teal">A Design Heuristic</h5>
-A heuristic is to design algorithms in two steps.
-<ol>
-  <li>
-  <i>First step:</i>
-Design an algorithm assuming that
-  clocks are perfect.
-  </li>
-  <li>
-  <i>Second step:</i> Check whether the algorithm is correct with
-  imperfect clocks that have properties 1 and 2.
-  In some cases we will need to use only one of the two properties.
-  </li>
-</ol>
-
-<p>
-Here are a couple of examples of applications of the heuristic.
-
-Let's design a global snapshot algorithm using the heuristic.
-First step: When clocks are perfect, the algorithm is trivial.
-Each agent takes a local snapshot at exactly the same time \(t\).
-Second step: Prove the correctness of the same algorithm even though
-clocks are imperfect.
-
-
-<p>
-Another example: design an algorithm to to take repeated
-snapshots. First step: With perfect clocks, the algorithm is
-straightforward. Each agent records its 
-state periodically with some period \(T\).
-Second step: Prove the correctness of the same algorithm even though
-clocks are imperfect.
-
-<p>
-We use this heuristic in designing other problems that are described
-in later webpages.
 
 <h4 class="w3-text-teal">Next</h4>
 
-<a href="TerminationDetection.html">Termination Detection</a>
+The next few pages describe applications of global snapshots.
+We begin with
+<a href="TerminationDetection.html">Termination Detection</a>.
 
 
 
