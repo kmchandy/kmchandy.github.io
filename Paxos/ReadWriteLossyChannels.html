@@ -80,88 +80,408 @@ hr.new1 {
   <!--------------------------------------------------------->
   <h2 class="w3-text-teal">Shared Variables in Faulty Systems</h2>
   <!--------------------------------------------------------->
-
-<p>
-A distributed system has agents that read and write shared variables.
-
-Associated with each shared variable is an agent, called a
-  <i>manager</i>,
-which gets requests to read and write the variable.
-
-The agents that send requests to managers to read or write shared
-  variables are called <i>writers</i>.
-
-  The system also has a set of agents called <i>observers</i>.
-
-  When a shared variable is assigned a value, the value is sent to all
-  observers. 
-
-  <p>
-  We begin with a simple problem.
-
-  Design a distributed algorithm that implements the following
-  sequence of iterations.
-
-  In each iteration a single writer <code>p</code> is selected;
-  <code>p</code> reads all shared variables and then writes all shared
-  variables.
-
-  The <code>n</code>-th message that an observer receives from a
-  manager of a shared variable is the <code>n</code>-th value assigned
-  to the variable.
-
-  <p>
-  An algorithm that does so is: select <code>p</code> in increasing
-  order of ids; <code>p</code> sends read requests to all managers of
-  shared variables; after getting copies of
-  all shared variables from managers <code>p</code> sends requests to
-  write all shared variables; after getting confirmations that all
-  writes have been completed, <code>p</code> sends a message to a
-  writer to start the next iteration.
-
-  When a shared variable is assigned a value the value is sent to observers.
   
+<p class="w3-text-teal">Shared Variables</p>
+A distributed system has agents, called <i>clients</i> that read and
+  write shared variables. 
+
+Associated with each shared variable is an agent, called an
+  <i>manager</i>,
+  which gets requests from clients to read or write the manager's
+  variable.
+  A shared variable is <code>q.v</code>, where <code>q</code> is a
+  manager. 
+ The only actions of a manager <code>q</code> are to respond to
+  requests to read or write <code>q.v</code>.
+  A manager only receives messages from, and sends messages to,
+  clients.
+  Managers do not send messages to each other and do not send messages
+  to themselves.
+
+  <p class="w3-text-teal">Reading and Writing Shared Variables</p>
+  A client <code>p</code> reads a shared variable <code>q.v</code>
+  by sending a read request to <code>q</code> which sends a reply
+  containing <code>q.v</code> to <code>p</code>.
+
+  A client <code>p</code> assigns a value <code>v'</code> to a shared
+  variable <code>q.v</code> by sending a write request containing <code>v'</code>
+  to <code>q</code>.
+  
+  When <code>q</code> receives the request it is assigns <code>q.v =
+  v'</code>, and sends reply to <code>p</code> stating
+  that the operation has been carried out.
 
   <p>
-  Now consider the problem of implementing the same program on a
-  distributed system in which messages may get lost, duplicated and
-  sent out of order.
+  A client sends messages to, and receive messages from, managers.
+  Clients do not send messages to themselves or to each other.
+  Each client also receives timeout messages, at intervals, from a
+  clock; the intervals between timeout messages are irrelevant for the
+  correctness of the algorithm but play a role in the algorithm's
+  performance. 
 
-  The same algorithm won't work because only
-  subsets of shared variables may reply to read requests and execute
-  write requests on each iteration.
+  <p class="w3-text-teal">Lossy Channels</p>
+  In this page we design an algorithm for a system in which messages may be duplicated,
+  lost, and delivered out of order, and in which agents may halt.
 
-  The <code>n</code>-th message received by an observer from a manager
-  of a shared variable may not be the <code>n</code>-th value assigned
-to the variable.
+  Requests by clients to managers, and replies from managers may be lost, and so a client may never receive
+  a reply.
 
 <p>
-We begin with a model of a faulty system.
+  Clients avoid waiting forever for a reply by taking the following
+steps.
 
-   <!--------------------------------------------------------->
-  <h5 class="w3-text-teal">Lossy Channels and Halting Agents </h5>
-  <!-------------------------------------------------->
+A client sends requests to
+managers when the client receives a timeout message.
+
+A client only accepts replies that arrive before the client receives
+its next timeout.
+
+  If the client receives the next timeout before receiving a
+reply from the manager then the client treats the request as lost, and
+if the reply arrives later then the reply is ignored and is also
+treated as lost.
+
+
+  
+  <p class="w3-text-teal">Transactions</p>
+  A <i>transaction</i> is a sequence of operations on shared variables
+by a client.
+
+We begin by considering a very simple type of transaction. 
+General transactions are discussed in <a href="">worked-out examples.</a>
+
+<p>
+A transaction by a client <code>p</code> has two consecutive steps.
+<ol>
+  <li>
+  <i><code>p</code> reads shared
+  variables.</i> 
+  <p>
+  This step uses a constant <code>M</code> and is implemented as follows.
+  When <code>p</code> receives a timeout message it starts executing a
+  new transaction by
+  sending read requests to all managers of shared
+  variables.
+  If <code>p</code> receives replies from <code>M</code> or more
+  managers before <code>p</code> receives its next timeout message then <code>p</code>
+  proceeds to step 2.
+  If <code>p</code> receives the next timeout message before it receives
+  <code>M</code> replies then this transaction terminates without
+  executing step 2.
+
+  </li>
+  <li>
+  <i>
+  <code>p</code> writes a subset of shared
+  variables.</i> 
+  <p>
+  This step is implemented as follows.
+  <code>p</code> sends write
+  requests to managers of all shared variables.
+  A subset
+  <code>W</code> of them receive the requests and execute the write
+  operation. <code>p</code> does not wait for replies to write requests.
+  </li>
+</ol>
+
+<p>
+
+  A transaction of a client <code>p</code> has a dataflow graph where
+the events are at <code>p</code> or at managers.
+The graph has edges that represent requests from <code>p</code> to
+managers, and replies from managers to <code>p</code>, in the
+transaction. 
+
+  <p class="w3-text-teal">Serializable Executions</p>
+A dataflow graph is <i>serializable</i> if it can be partitioned into
+a sequence of subgraphs where each subgraph is the dataflow graph of a
+single transaction.
+
+If the dataflow is serializable then it represents execution of a
+sequence of transactions where at most one transaction is in execution
+at a time.
+The execution selects a single client <code>p</code> in a
+nondeterministic manner which is described later.
+<p>
+The steps of the transaction executed by <code>p</code> are as
+follows.
+<ol>
+  <li>
+  <code>p</code> sends read requests to all managers.
+  <code>R</code> is the subset of managers of shared variables from
+  which <code>p</code> receives replies to its read requests.
+  For each <code>q</code> in <code>R</code>: <code>p</code>
+  copies the shared variable, <code>q.v</code>, into 
+  <code>p</code>'s local variable <code>p.copy[q]</code>.
+  </li>
+  <li>
+  <code>p</code> requests each manager <code>q</code> to assign
+  <code>p.f()</code> to <code>q.v</code> where <code>f()</code> is a
+  function that depends on the transaction.
+  The write requests are processed by a subset <code>W</code> of
+  managers.
 
   <p>
-  The state of a channel is a
- <a href="https://en.wikipedia.org/wiki/Multiset">multiset or bag</a>.
+  The structure of the sequence of transactions is represented by the
+  following loop.
+<pre>
+while true:
+  select a client p and subsets R, W of managers
+  for q in R: p.copy[q] = q.v
+  if len(R) > M: for q in W: q.v = p.f()
+</pre>
 
-  An example of a multiset of messages is \(\{b, b, c\}\) which is the
-state of a channel with two messages \(b\) and one message \(c\).
+The problem is to design a distributed algorithm such that its
+dataflow is serializable.
 
-  If the channel duplicates \(c\) then the new state is \(\{b, b,
-c, c\}\).
 
-  If the channel loses \(b\) then the new state is \(\{b, c, c\}\),
-  and if the channel now delivers \(b\) to an agent then the channel's
-  state becomes \(\{c, c\}\).
+<!-------------------------------------------------->
+<h3 class="w3-text-teal">How Should You Approach The Problem?</h3>
+<!-------------------------------------------------->
+
+What method comes to mind to partition a dataflow graph into dataflow
+subgraphs? 
+
+Logical time partitions dataflow into a past and future.
+
+So we use a similar, but not identical, mechanism with transaction ids
+playing the role of logical time.
 
 <p>
-The sets of writers and shared variables are nonempty but they are not
-given.
+Each transaction has a unique id called its <i>transaction id</i>.
 
-An agent may stop execution forever or it may halt execution for an
-arbitrary period and restart.
+The algorithm assigns a transaction id <code>t(e)</code> to each
+event <code>e</code> and a transaction id <code>m.t</code> to each
+message <code>m</code>, so that:
+<ol>
+  <li>
+  All events and messages in a transaction have the id of the
+  transaction, and
+  </li>
+  <li>
+  events at an agent are in ascending order of transaction id,
+  i.e. for events <code>e, e'</code> at an agent where <code>e'</code>
+  occurs after <code>e</code>: <code>t(e)</code> \(\leq\)
+  <code>t(e')</code>.
+  </li>
+</ol>
+
+The dataflow graph can be partitioned into a sequence of subgraphs where all events
+in a subgraph have the same transaction id, and later subgraphs
+have larger transaction ids.
+
+
+
+
+<!-------------------------------------------------->
+<h4 class="w3-text-teal">Algorithm for a Manager of Shared
+Variables</h4>
+<!-------------------------------------------------->
+
+A manager <code>q</code> has two local variables:
+<ol>
+  <li>
+  <code>q.t</code>,
+called <code>q</code>'s transaction id,
+which is the id of the transaction that the manager is currently
+  processing.
+  <code>q.t</code> is also the id of the most recent request that
+  <code>q</code> has processed.
+  </li>
+  <li>
+  <code>q.v</code> which is the value of the variable managed by
+  <code>q</code>.
+  </li>
+</ol>
+
+<p>
+Initially <code>q.v</code> is a symbol <code>None</code> to indicate
+that no value has been assigned, and <code>q.t</code> is <code>0</code>.
+
+<p>
+A manager gets two classes of messages: <code>ReadRequest</code> and
+<code>WriteRequest</code>.
+Every message <code>m</code> has a field <code>m.t</code> which is the
+transaction id of the message.
+A write request has a field <code>v</code> which is the value to be written.
+A manager replies to a read request with a message of class
+<code>Reply</code> which has two fields: <code>v</code> the value of
+the shared variable and <code>t</code> the transaction id of the message.
+The algorithm is given below.
+
+<pre>
+# initialization
+q.t, q.v = 0, None
+
+start()
+def receive(request, client):
+   if request.t >= q.t
+      q.t = request.t
+      if isinstance(request, ReadRequest):
+         send(Reply(q.v, q.t), client)
+      else:
+         // message is a WriteRequest
+         q.v = request.v
+</pre>
+
+<p>
+A manager ignores requests with transaction ids lower than its own
+transaction id: a request is
+ignored if <code>request.t < q.t</code>.
+
+Such requests are treated as lost and don't appear in the dataflow.
+
+
+<p>
+If <code>request.t</code> \(=\) <code>q.t</code> then the manager
+continues to process the transaction with id <code>q.t</code>.
+
+<p>
+If <code>request.t</code> \(>\) <code>q.t</code> then the manager
+begins processing the transaction with id <code>request.t</code>, and
+stops processing transactions with any other id.
+
+The manager increases its transaction id to <code>request.t</code> to
+indicate that it is now processing the transaction with it
+<code>request.t</code>. 
+
+
+<p>
+<code>q</code> replies to a read request and sets the transaction id of the
+reply to <code>q.t</code> which is also the transaction id of the
+event which is the same as the transaction id of the request.
+
+<!-------------------------------------------------->
+<h4 class="w3-text-teal">Algorithm for a Client </h4>
+<!-------------------------------------------------->
+
+<p>
+
+A transaction id is a pair <code>(n, p)</code> where <code>n</code> is
+an integer and the transaction is by client <code>p</code>.
+
+Transaction ids are compared lexicographically.
+
+Later transactions initiated by a client have higher transaction ids
+than earlier transactions initiated by the same client.
+
+
+<p>
+Each client <code>p</code> has a local variable <code>p.t</code> 
+which is the id of the transaction that <code>p</code>
+is processing.
+
+A client <code>p</code> has a local variable <code>p.copy</code> which
+contains copies of shared variables.
+<code>p.copy</code> is a dictionary and <code>p.copy[q]</code> is
+<code>p</code>'s copy of the shared variable of manager
+<code>q</code>. 
+
+
+<p class="w3-text-teal">Starting a New Transaction</p>
+A client <code>p</code> starts executing a new transaction
+and terminates execution of previous transactions when it gets a
+timeout message.
+
+A client starts a new transaction by executing the following steps:
+<pre>
+p.t = p.t + pos()
+p.copy = {}
+for q in Q: send(ReadRequest(p.t), q)
+</pre>
+
+<code>p</code> sets the id <code>p.t</code> of the new transaction to be a value greater than the
+  id of its previous transactions.
+  <code>pos</code> is a function that returns a positive value.
+  The value returned is not relevant to the
+  correctness of the algorithm provided that it is positive.
+The value is, however, relevant to performance.
+We discuss performace later.
+<p>
+  <code>p</code> discards earlier copies of shared variables and sends
+read requests to each manager <code>p</code>.
+The transaction id of the
+requests is <code>p.t</code>, the id of the new transaction.
+
+
+<code>p</code> then waits to receive a timeout 
+message and simultaneously waits to receive
+  replies to its read requests.
+
+
+<p class="w3-text-teal">Processing a Reply to a Read Request</p>
+A client <code>p</code> takes the following steps if it
+receives a reply in the transaction that the client is currently
+processing,
+i.e., where the client and reply have the same transaction id.
+The steps shown below are when the client receives a reply.
+<code>message</code>, from a manager, <code>sender</code>.
+<pre>
+p.copy[sender] = message.v
+if len(p.copy) > M:
+   for q in Q:
+      send(WriteRequest(v = p.f(), t=p.t), q)
+</pre>
+
+<code>p</code> copies the value in the reply from <code>sender</code> into <code>p</code>'s
+local variable, <code>p.copy[sender]</code>.
+
+If <code>p</code> has received replies from more than <code>M</code>
+managers then <code>p</code> sends write requests to all managers.
+
+The transaction id of the write requests is <code>p.t</code>, the id
+of the transaction that <code>p</code> is processing.
+
+The value to be written, specified in the write request is
+<code>p.f()</code>, a function of <code>p</code>.
+
+The function <code>p.f()</code> depends on the problem to be solved.
+
+<p class="w3-text-teal">Proof of Correctness</p>
+
+The entire algorithm for a client <code>p</code> is given below.
+
+<pre>
+# Initialization
+p.t = 0
+
+start()
+def receive(message, sender):
+   if isinstance(message, Timeout):
+      p.t = p.t + pos()
+      p.copy = {}
+      for q in Q:  send(ReadRequest(p.t), q)
+   else:
+      # message is a reply to a read request
+      if message.t == p.t: 
+         p.copy[sender] = message.v
+         if len(p.copy) > M:
+            for q in Q:
+               send(WriteRequest(v = p.f(), t=p.t), q)
+</pre>
+
+In the algorithm, <code>p.t</code> and <code>q.t</code> do not decrease for all clients
+<code>p</code> and managers <code>q</code>. 
+
+So, all events with a transaction id <code>T</code> at an agent occur
+after all events with transaction id less than  <code>T</code> at that
+agent, and before  all events with transaction id greater than
+<code>T</code> at that agent.
+
+
+<p>
+From the algorithm, 
+all requests sent be a client in a transaction with id <code>T</code>
+are received by  a manager <code>q</code>  executing the transaction with the same id:
+<code>request.t</code> \(=\) <code>q.t</code>,
+and all replies sent by a manager executing a transaction  with id
+<code>T</code> are received by the client <code>p</code> when it is
+executing the same transaction:
+<code>message.t</code> \(=\) <code>p.t</code>.
+Therefore, there exists a subgraph in which all events and messages
+have the same transaction id.
+
+
     <!--------------------------------------------------------->
   <h2 class="w3-text-teal">The Problem</h2>
   <!--------------------------------------------------------->
@@ -322,220 +642,6 @@ then we know that <code>q.var</code> and <code>q'.var</code> were
 assigned values <code>(v, t)</code> and <code>(v', t)</code>,
 respectively, in the same iteration -- the iteration with unique id
 <code>t</code>. 
-
-<!-------------------------------------------------->
-<h3 class="w3-text-teal">How Should You Approach The Problem?</h3>
-<!-------------------------------------------------->
-We want to design a distributed algorithm for which the dataflow graph can
-be partitioned into a sequence of subgraphs where each subgraph is the
-dataflow of exactly one iteration.
-
-What method comes to mind to partition a dataflow graph into dataflow
-subgraphs? 
-
-<p>
-Logical time partitions dataflow into a past and future -- events with
-logical time at most \(t\) or greater than \(t\).
-
-So we use iteration ids in a similar way.
-
-<p>
-As with logical times, each event <code>e</code> is assigned an
-iteration id <code>t(e)</code>.
-
-We design an algorithm in which all events that 
-implement an iteration with id
-<code>T</code> also have iteration id <code>T</code>.
-
-<p>
-The following aspects of iteration ids are the same as with logical time.
-Each agent <code>A</code> has a local variable
-<code>A.t</code> which is the iteration id of the most recent event at
-<code>A</code>.
-
-And each message <code>m</code> has a
-timestamp <code>m.t</code> which is the iteration id of the event in
-which the message is sent.
-
-<p>
-The difference between iteration ids and logical time is as follows.
-
-The logical time of an event that receives a message is
-<i>strictly greater</i> than the logical time of the event that sends the message.
-
-By contrast, 
-the iteration id of the event in which a request is received is <i>the
-same as</i> the iteration id of the event in which that request is
-sent.
-
-This condition is achieved by the following rule.
-
-
-
-<p class="w3-text-teal">The Key Rule</p>
-<p>
-When a manager at iteration id <code>t</code>
-  gets a request with iteration id <code>t'</code>
-<ol>
-  <li>
-  If <code>t'</code> \(<\) <code>t</code> the request is ignored.
-  </li>
-  <li>
-  If <code>t'</code> \(\geq\) <code>t</code> then the manager processes
-  the request by setting its own iteration id and the iteration id of
-  the event that receives the request to <code>t'</code>, and sending
-  a reply with iteration id <code>t'</code>.
-  </li>
-</ol>
-Ignoring a message is equivalent to losing the message -- the message
-is removed from the channel and the states of agents don't change.
-
-An event in which a message is lost is assigned the iteration id of
-the event in which the message is sent.
-
-<p>
-The key rule ensures that iteration id of an event in which a request
-is received is the same as the timestamp of the request which is the
-same as the iteration id of the event that sends the request.
-
-<!-------------------------------------------------->
-<h3 class="w3-text-teal">The Algorithm</h3>
-<!-------------------------------------------------->
-<p>
-We give the algorithm for managers in Python-like pseudo code and
-explain the algorithm later.
-
-<h4 class="w3-text-teal">Algorithm for Managers of Shared Variables</h4>
-<pre>
-self.t = 0
-
-start()
-def receive(request, writer):
-   if request.t >= self.messaget:
-      self.t = request.t
-      if isinstance(request, ReadRequest):
-         send(Reply(self.var, self.t), writer)
-      else:
-         // message is a WriteRequest
-         self.var = request.var
-</pre>
-
-
-<p>
-If the timestamp <code>request.t</code> of the request 
-is greater than or equal to the iteration id <code>self.t</code> of
-the manager that receives the request, 
-then the manager takes the following steps.
-<ol>
-  <li>
-  The manager's iteration id, <code>self.t</code>, is set to the
-  timestamp of the request. 
-  </li>
-  <li>
-  The iteration id of the event that receives the request
-  is defined to be the timestamp of the request.
-  A reply, <code>Reply(self.var, self.t)</code> to the read request
-  has the iteration id <code>self.t</code> of the manager which is the
-  same as the timestamp of the request. 
-  </li>
-  <li>
-  If a write request is received then the shared variable
-  <code>self.var</code> is assigned
-  the value <code>request.var</code> specified in the request.
-  </li>
-</ol>
-
-
-<p>
-If the request's timestamp is less than the manager's iteration id
-then the request is ignored.
-
-<!-------------------------------------------------->
-<h4 class="w3-text-teal">Algorithm for Writers</h4>
-<!-------------------------------------------------->
-
-
-<p>
-
-Each writer <code>p</code> sends itself a <code>start_new_iteration</code> message.
-
-A writer starts a new iteration when it receives a
-<code>start_new_iteration</code> message.
-
-The writer increases its iteration id
-by a positive amount <code>self.pos()</code>.
-
-The writer's new iteration id is the unique iteration id for all the
-events that represent an iteration of Seq with this iteration id.
-
-<p>
-The writer discards earlier copies of shared variables;
-sends read requests and sends a <code>start_new_iteration</code> message to
-itself.
-
-The writer then waits to receive the
-<code>start_new_iteration</code> message and waits to receive replies to
-its read requests. 
-
-<p>
-If the writer receives a reply then it
-adds the <code>var</code> field of the reply to its local copy, and if
-condition <code>g()</code> 
-holds then it sends write requests.
-
-<p>
-If the writer receives a <code>start_new_iteration</code> before
-<code>g()</code> holds then it starts a new
-iteration without sending write requests.
-
-
-
-<p>
-We give the algorithm in Python-like pseudo code and then describe the
-algorithm.
-
-<pre>
-self.t = 0
-send(message=StartNewIteration(), receiver=self)
-start()
-
-def receive(message, sender):
-   if isinstance(message, StartNewIteration):
-      // start new iteration with larger iteration id.
-      self.t = self.t + self.h()
-
-      self.copy = {}
-      for q in Q: send(ReadRequest(t = self.t), q)
-
-      send(StartNewIteration(), self)
-
-   elif message.t == self.t:
-        // message is a reply to a read request 
-        self.copy[sender] = message.var
-        if self.g():
-           for q in Q:
-               send(WriteRequest(var = self.f(q), t=self.t), q)
-</pre>
-
-
-<p>
-A writer only receives replies with epoch times less than or equal to the
-writer's epoch time.
-
-This is because 
-the epoch time of a reply is the epoch time of the writer when it
-sent the request, and a writer's epoch time never decreases.
-
-
-
-<p>
-The writer ignores replies that have epoch timestamps that are 
-less than the writer's epoch time <code>p.t</code>.
-
-Therefore, a reply sent at epoch time <code>p.t</code> is lost,
-ignored, or received
-by <code>p</code> at epoch time <code>p.t</code>.
-
 
 
 <!-------------------------------------------------->
