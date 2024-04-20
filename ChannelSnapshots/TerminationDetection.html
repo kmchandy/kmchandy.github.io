@@ -103,28 +103,27 @@ hr.new1 {
   \(C_{s}\) and \(C_{r}\) are the numbers of messages 
   sent and received (respectively) on \(C\).
 
-  So:
-
-  <hr class="new2">
-  <p style="color:blue;">
+  <p>
   A computation is in a terminated state exactly
   when:
-  <br>
-  (1) all agents are waiting to receive messages and
-  <br>
-  (2) For all channels \(C\):  \(\; C_{s} = C_{r}\).
-  </p>
-  <hr class="new2">
+  <ol>
+    <li>
+    All agents are waiting to receive messages and
+    </li>
+    <li>
+    for all channels \(C\):  \(\; C_{s} = C_{r}\).
+    </li>
+  </ol>
+
   
 <!----------------------------------------------------------------------------->
 <h4 class="w3-text-teal">How Should You Approach the Problem?</h4>
 <!----------------------------------------------------------------------------->
 
-<h6 class="w3-text-teal">Use the General Method for Detecting Stable
-Properties</h6>
+<h6 class="w3-text-teal">General Method: Monitor System with Repeated Snapshots</h6>
 
 <p>
-The OS  monitors a system by taking repeated global
+In the general method, the OS  monitors a system by taking repeated global
   snapshots.
   If a global snapshot is a state in which the computation has
   terminated then the computation has indeed terminated.
@@ -164,8 +163,10 @@ for all channels \(C\): \(C_{s}^{*} = C_{r}^{*}\).
 <h5 class="w3-text-teal">Proof of Correctness</h5>
 <!-------------------------------------------------------->
 
-<p>
-Define the local snapshot of an agent as the point at which it sends
+  <p>
+  We first prove that if the observer detects that the computation has
+  terminated then the computation has indeed terminated.
+Define the local snapshot of an agent as the state at which it sends
 \(C_{s} = C_{s}^{*}\) for each of its output channels \(s\), and
 \(C_{r} = C_{r}^{*}\) for each of its input channels \(r\).
 
@@ -173,8 +174,19 @@ Define the local snapshot of an agent as the point at which it sends
 The local snapshots correspond to a
 <a href="ChannelSnapshots.html">global snapshot</a> exactly when all
 messages received in the <code>past</code> are sent in the
-<code>past</code> which is the case when \(C_{s}^{*} =
-C_{r}^{*}\). 
+<code>past</code>.
+
+If \(C_{s}^{*} = C_{r}^{*}\) for all channels \(C\) then 
+messages received in the <code>past</code> are sent in the
+<code>past</code>.
+
+<p>
+Next we prove that if the computation terminates then the observer
+detects termination.
+
+The last message sent by each agent has \(C_{s} = C_{s}^{*}\) for each
+of its output channels \(s\), and 
+\(C_{r} = C_{r}^{*}\) for each of its input channels \(r\).
 
 
 
