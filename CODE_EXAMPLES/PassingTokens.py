@@ -1,8 +1,10 @@
 from Engine import engine, Agent
 
 class PassingTokens(Agent):
-    def __init__(self):
+    def __init__(self, other):
         Agent.__init__(self)
+        self.other = other
+        
 
     def receive(self, message, sender):
         self.n = self.n - 1
@@ -21,8 +23,8 @@ class PassingTokens(Agent):
 
 #-------------------------------------------
 def test():
-    u = PassingTokens()
-    v = PassingTokens()
+    u = PassingTokens(other=None)
+    v = PassingTokens(other=None)
     u.n, v.n = 3, 3
     u.other, v.other = v, u
     u.name, v.name = 'u', 'v'
