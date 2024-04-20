@@ -150,241 +150,126 @@ holding the red file and is waiting
   <figcaption>Fig.2 - An Example of a Deadlock</figcaption>
 </figure>
 
- 
-<!----------------------------------------------------------------------------->
-<h3 class="w3-text-teal">How Should You Approach the Problem?</h3>
-<!----------------------------------------------------------------------------->
+    <h5 class="w3-text-teal">Variables</h5>
+Associated with each agent \(v\) is a set of files <i>v.needs</i> that
+\(v\) must hold to continue execution and a set of files <i>v.holds</i> that \(v\)
+has.
 
-<h4 class="w3-text-teal">Use the General Method for Detecting Stable
-Properties</h4>
-The obvious way to design an algorithm to detect a stable property is
-    to use the general method for detecting stable properties: 
-monitor a system by taking repeated snapshots.
-The algorithm detects deadlock if a global snapshot is a deadlocked state.
+The set of files that \(v\) needs to continue executing is
+<i>v.waits</i> which is the set that \(v\) needs but does not
+    hold.
 
-See
-<a href="ChannelSnapshots.html">
-Global Snapshots
-</a>
-and
-<a href="LogicalClocks.html">
-Logical Clocks
-    </a> for ways to take repeated snapshots.
+    In the example \(z.needs = \{red, green\}\), \(z.holds =
+    \{green\}\), and \(z.waits = \{red\}\)
 
     <p>
-
-    The general method for detecting stable properties has two phases: (1)
-    obtain a global snapshot, and (2) analyze the global snapshot.
-
-The first phase reduces the analysis of a dynamic system  -- in which states
-    of agents are changing, and messages are being sent and received -- into the analysis
-of a static structure.
-
-Analyzing a static graph to determine if there is a cycle of
-deadlocked agents is straightforward.
-
-<p>
-Agents can send data to a collector agent which detects whether there
-is a cycle of waiting agents in the graph.
-
-Alternatively, agents can analyze the graph using a distributed
-algorithm without sending data to a single collector.
-
-Let's look at both methods.
+    An agent \(v\) is executing without shared files when \(v.needs\) is the
+    empty set.
+    Agent \(v\) transits from executing without shared files to waiting
+    when \(v.needs\) becomes nonempty; if \(v.waits\) is empty then
+    \(v\) transits to the state in which it is executing while holding
+    the files in \(v.needs\).
+    If \(v.waits\) is not empty then \(v\) waits until \(v.waits\)
+    becomes nonempty.
+ 
+    <!----------------------------------------------------------------------------->
+    <h3 class="w3-text-teal">How Should You Approach the Problem?</h3>
+    <!----------------------------------------------------------------------------->
 
 
-    <h5 class="w3-text-teal">
-    Algorithm in which Agents send Local Snapshots to a Collector.
-    </h5>
+    <h4 class="w3-text-teal">General Method: Monitor System with Repeated Snapshots</h4>
 
-The
-<a href="TerminationDetection.html">
-termination detection algorithm
-</a> is an example of an algorithm in which a collector collates data
-from agents.
-Let's modify the termination detection algorithm to detect a
-deadlocked cycle.
+    <p>
+    In the general method, the OS  monitors a system by taking repeated global
+    snapshots.
+    If a global snapshot is a state in which there is a deadlock then
+    there is indeed a deadlock.
+    And if a computation is deadlocked then repeated snapshots ensure
+    that a snapshot is taken after computation deadlocks.
 
-<p>
-Each agent sends its state to a <i>collector agent</i> when the agent starts to wait.
-The collector keeps the latest message that it receives from an agent
-and discards all the earlier ones from that agent.
-
-If there is a deadlock based on the messages that the collector has received,
-then the system is deadlocked.
-
-<p>
-The proof of correctness of the algorithm is similar to that for
-termination detection. 
-    
-
-
-
-     <h5 class="w3-text-teal">
-    Distributed Algorithm that Detects Cycles in Graphs
-    </h5>
-
-<p>
-Algorithms that use global snapshots operate in two phases: (1)
-    obtain a global snapshot, and (2) analyze the static structure of
-a global snapshot.
-For deadlock detection, the
-problem is to detect cycles in a (static) graph obtained by
-the snapshot.
+    <h4 class="w3-text-teal">An Alternate Method</h4>
+    <p> Algorithms that use global snapshots operate in two phases:
+    (1) obtain a global snapshot, and (2) analyze the static structure of
+a global snapshot.  For deadlock detection, the problem is to detect
+cycles in a (static) graph obtained by the snapshot.
 
     Next, we describe an algorithm that combines the two phases of the
 global snapshot algorithm into a single phase.
 
+We begin by describing an algorithm by which an agent determines if it
+is part of a cycle.
 
 
-<p>
-The algorithm is a modification of 
-<a href="ChannelSnapshots.html">the global snapshot algorithm</a> where 
-markers play two roles: record a snapshot and determine
-whether there is a cycle of waiting agents in the snapshot state.
-
-We begin by describing a straightforward distributed algorithm by
-which any agent \(u\) determines if it is part of a cycle.
-
-Then we combine this algorithm with the marker algorithm for taking
-global snapshots.
 
 
 <h5 class="w3-text-teal">
 A Distributed Algorithm to Determine if an Agent is in a Cycle
 </h5>
-Let's design an algorithm by which an agent \(u\) determines if it is
+Next we describe an algorithm by which an agent \(u\) determines if it is
 part of a cycle.
 
-The algorithm uses messages where every message is a path in the
-graph.
+A message is a list of vertices that represents a cycle-free path from the
+initiator.
 
-A path is represented by a list of vertices.
-
-<p>
 The initiator \(u\) sends a message \([u]\) -- a list consisting of
 the single element \(u\) on each of its output channels.
 
-This message represents a path of zero hops starting at \(u\).
-
 <p>
-
-The algorithm for an agent other than the receiver is given below.
-
-When an agent receives a message it sends messages on its output
+When an agent, other than the initiator, receives a message it sends
+messages on its output 
 channels if it has not already done so.
-
-<p>
-A message is a list of vertices that represents a cycle-free path from the
-initiator.
 
 When an agent \(w\) gets a message \([u, \ldots, v]\) it sends the
 message \([u, \ldots, v, w]\) on each of its output channels.
 
-<pre>
-finished = False
 
-start()
-def receive(path, sender):
-   if not finished:
-       path.append(my_id)
-       for receiver in successor_list:
-           send(path, receiver)
-       finished = True
-</pre>
-
-
-
-<p>
-If the initiator receives a message, then the initiator is part of the
-cycle given by the list of vertices in the message.
-
-The algorithm for the initiator is given below.
-
-<pre>
-finished = False
-path = [my_id]
-for receiver in successor_list:
-   send(path, receiver)
-
-start()
-def receive(path, sender):
-   if not finished:
-      path.append(my_id)
-      print(path)
-      finished = True
-</pre>
+If the initiator receives a message \([u, \ldots, v]\)  then the
+initiator is part of the cycle \([u, \ldots, v, u]\).
 
 
 <h5 class="w3-text-teal">Combining Cycle Detection and Snapshot
 Algorithms</h5>
 
-Associated with each agent \(v\) is a set of files <i>v.needs</i> that
-\(v\) needs to execute and a set of files <i>v.holds</i> that \(v\)
-has.
-
-The set of files that \(v\) needs to continue executing is
-<i>v.waits</i> which is the set that \(v\) needs but does not
-hold. 
-
-An agent is in the waiting state when <i>v.waits</i> is not empty, and
-transits to the next state -- executing with shared files -- 
-when <i>v.waits</i> becomes empty.
 
 <p>
-A marker <i>m</i> has fields <i>m.waits</i> and <i>m.path</i> where <i>m.path</i>
+A marker, in the extension of the global snapshot algorithm, has
+fields <i>m</i> has fields <i>m.waits</i> and <i>m.path</i>.
+The field <i>m.path</i>
 plays the same role as a message in the algorithm to detect cycles --
-<i>m.path</i> is a path of waiting agents. 
-
-
-When an agent \(v\) sends a
-marker \(m\) it sets \(m.waits\) to <i>v.waits</i>.
+<i>m.path</i> is a path of waiting agents.
+When an agent \(v\) sends a marker \(m\) it sets \(m.waits = v.waits\).
 
 <p>
-Any waiting agent initiates the
-algorithm by sending markers on its output channels.
+A waiting agent \(u\) initiates the
+algorithm by taking its local snapshot (recording \(u.waits\)) and
+sending markers \(m\) on its output channels where \(m.waits = u.waits\).
+Algorithms initiated by different agents are disambiguated by the
+identity of the initiator which is the first vertex in \(m.path\).
 
-When an agent, other than the initiator, receives a message it carries
-out the following steps.
 
-The agent participates in the snapshot algorithm at most once, and the
-variable <i>finished</i> indicates whether it has already
-participated.
 
 <p>
-If the agent receives a marker while it is waiting and has not
-finished it sends markers on its output channels.
+If an agent \(v\) receives a marker \(m\) while \(v\) is waiting and \(v\) has
+not sent markers already then \(v\) carries out the following steps.
+If there is an element common to both \(m.waits\) and \(v.waits\) then
+\(v\) takes its local snapshot and
+sends a marker \(m'\) on each of its outgoing channels where
+\(m'.waits = v.waits\).
 
-The <i>waits</i> field of the marker is the set of resources that the
-agent is waiting for.
 
-</p>
-<pre>
-finished = False
-
-start()
-def receive(message, sender):
-   waits = needs - holds
-   waiting = (waits != {})
-   if message.isinstance(Marker) and waiting and not finished:
-      if message.waits & holds & needs:
-         extended_path = message.path.append(my_id)
-         new_message = Marker(waits, extended_path)
-         for receiver in successors:
-            send(new_message, receiver)
-</pre>
-   
-
-The initiator detects the existence of a deadlocked cycle if the
-initiator is waiting when it receives a marker \(m\) and there
-is a file in \(m.waits\) that the initiator holds and needs.
-
+<p>
+If the initiator \(u\) receives a marker \(m\) where there is an
+element common to \(m.waits\) and the recorded snapshot value
+\(u.waits\), then \(u\) is part of the deadlocked cycle specified by
+the path \(m.path\). 
 
 
 <p class="w3-text-teal">Proof of correctness</p>
 The algorithm is essentially the same as the global snapshot
-algorithm, and the proof follows directly from the proof of the
-snapshot algorithm. 
+algorithm, and the proof is similar to that of the
+snapshot algorithm.
+
+
 
 
 <h5 style="color:red;">Example</h5>
@@ -417,6 +302,60 @@ waiting and there is a file in the \(m''.waits\) that
 File managers keep track of which agent holds a given file.
 So, an agent waiting for a file sends markers only to the agent
 holding that file instead of sending markers to all agents.
+
+
+
+<pre>
+finished = False
+
+start()
+def receive(path, sender):
+   if not finished:
+       path.append(my_id)
+       for receiver in successor_list:
+           send(path, receiver)
+       finished = True
+</pre>
+
+
+
+<p>
+
+The algorithm for the initiator is given below.
+
+<pre>
+finished = False
+path = [my_id]
+for receiver in successor_list:
+   send(path, receiver)
+
+start()
+def receive(path, sender):
+   if not finished:
+      path.append(my_id)
+      print(path)
+      finished = True
+</pre>
+
+<pre>
+finished = False
+
+start()
+def receive(message, sender):
+   waits = needs - holds
+   waiting = (waits != {})
+   if message.isinstance(Marker) and waiting and not finished:
+      if message.waits & holds & needs:
+         extended_path = message.path.append(my_id)
+         new_message = Marker(waits, extended_path)
+         for receiver in successors:
+            send(new_message, receiver)
+</pre>
+   
+
+
+
+
 
 <!--Start Footer--------------------------------------->
 
