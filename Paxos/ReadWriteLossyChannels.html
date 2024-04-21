@@ -82,70 +82,65 @@ hr.new1 {
   <!--------------------------------------------------------->
   
 <p class="w3-text-teal">Shared Variables</p>
-A distributed system has agents, called <i>clients</i> that read and
-  write shared variables. 
+A distributed system has agents, called <i>clients</i> that send
+  requests to agents, called <i>managers</i>, to read and
+  write local variables of managers.
 
-Associated with each shared variable is an agent, called an
-  <i>manager</i>,
-  which gets requests from clients to read or write the manager's
-  variable.
-  A shared variable is <code>q.v</code>, where <code>q</code> is a
-  manager. 
- The only actions of a manager <code>q</code> are to respond to
-  requests to read or write <code>q.v</code>.
-  A manager only receives messages from, and sends messages to,
-  clients.
-  Managers do not send messages to each other and do not send messages
-  to themselves.
+  Each manager <code>q</code> has a local variable <code>q.v</code>.
 
-  <p class="w3-text-teal">Reading and Writing Shared Variables</p>
-  A client <code>p</code> reads a shared variable <code>q.v</code>
-  by sending a read request to <code>q</code> which sends a reply
-  containing <code>q.v</code> to <code>p</code>.
+  A manager  <code>q</code> receives messages from clients to read or
+  write <code>q.v</code>.
 
-  A client <code>p</code> assigns a value <code>v'</code> to a shared
-  variable <code>q.v</code> by sending a write request containing <code>v'</code>
-  to <code>q</code>.
-  
-  When <code>q</code> receives the request it is assigns <code>q.v =
-  v'</code>, and sends reply to <code>p</code> stating
-  that the operation has been carried out.
+  When a manager <code>q</code> receives a read request from a client
+  <code>p</code>, the manager sends a reply containing
+  <code>q.v</code> to <code>p</code>.
+
+  When <code>q</code> receives a write request, containing the value
+  <code>w</code> to be written, <code>q</code> executes <code>q.v =
+  w</code>. 
+
+  The only actions of a manager are to respond to requests.
 
   <p>
-  A client sends messages to, and receive messages from, managers.
-  Clients do not send messages to themselves or to each other.
-  Each client also receives timeout messages, at intervals, from a
-  clock; the intervals between timeout messages are irrelevant for the
-  correctness of the algorithm but play a role in the algorithm's
-  performance. 
+  Associated with each client is a clock that sends the client
+  a sequence of <i>clock tick</i> messages.
+  
+  The only actions of a client are to send requests to managers, receive
+  replies from managers, and receive clock tick messages.
+
+  <p>
+  The interval between clock tick messages is irrelevant for the
+  correctness of the algorithm; however, it plays a role in the algorithm's
+  performance.
+
+
 
   <p class="w3-text-teal">Lossy Channels</p>
-  In this page we design an algorithm for a system in which messages may be duplicated,
-  lost, and delivered out of order, and in which agents may halt.
+  In this page we design an algorithm for a system in which agents may
+  halt and messages may be duplicated,
+  lost, and delivered out of order.
 
-  Requests by clients to managers, and replies from managers may be lost, and so a client may never receive
-  a reply.
+  Requests by clients to managers, and replies from managers may be
+  lost, and so a client may never receive a reply.
 
 <p>
   Clients avoid waiting forever for a reply by taking the following
 steps.
 
 A client sends requests to
-managers when the client receives a timeout message.
+managers when the client receives a clock tick message.
 
 A client only accepts replies that arrive before the client receives
-its next timeout.
+its next clock tick.
 
-  If the client receives the next timeout before receiving a
-reply from the manager then the client treats the request as lost, and
-if the reply arrives later then the reply is ignored and is also
-treated as lost.
+  If the client receives the next clock tick before receiving a
+reply from the manager then the client treats the request as lost.
 
 
   
   <p class="w3-text-teal">Transactions</p>
   A <i>transaction</i> is a sequence of operations on shared variables
-by a client.
+by a single client.
 
 We begin by considering a very simple type of transaction. 
 General transactions are discussed in <a href="">worked-out examples.</a>
@@ -158,14 +153,14 @@ A transaction by a client <code>p</code> has two consecutive steps.
   variables.</i> 
   <p>
   This step uses a constant <code>M</code> and is implemented as follows.
-  When <code>p</code> receives a timeout message it starts executing a
+  When <code>p</code> receives a clock tick message it starts executing a
   new transaction by
   sending read requests to all managers of shared
   variables.
   If <code>p</code> receives replies from <code>M</code> or more
-  managers before <code>p</code> receives its next timeout message then <code>p</code>
+  managers before <code>p</code> receives its next clock tick message then <code>p</code>
   proceeds to step 2.
-  If <code>p</code> receives the next timeout message before it receives
+  If <code>p</code> receives the next clock tick message before it receives
   <code>M</code> replies then this transaction terminates without
   executing step 2.
 
@@ -187,25 +182,33 @@ A transaction by a client <code>p</code> has two consecutive steps.
 <p>
 
   A transaction of a client <code>p</code> has a dataflow graph where
-the events are at <code>p</code> or at managers.
+the vertices in the graph represent events at <code>p</code> and at managers.
 The graph has edges that represent requests from <code>p</code> to
-managers, and replies from managers to <code>p</code>, in the
-transaction. 
+managers, and replies from managers to <code>p</code>.
+
+<p>
+The graph has an event representing the client getting a clock tick
+that starts the transaction.
+
+The diagram doesn't show events at the clock agent or clock tick
+messages. 
 
   <p class="w3-text-teal">Serializable Executions</p>
 A dataflow graph is <i>serializable</i> if it can be partitioned into
 a sequence of subgraphs where each subgraph is the dataflow graph of a
 single transaction.
 
-If the dataflow is serializable then it represents execution of a
-sequence of transactions where at most one transaction is in execution
-at a time.
-The execution selects a single client <code>p</code> in a
-nondeterministic manner which is described later.
+
 <p>
-The steps of the transaction executed by <code>p</code> are as
-follows.
+There is a computation of a serializable dataflow in which all events of a
+single transaction occur in sequence.
+
+Each transaction is represented by the following steps.
 <ol>
+  <li>
+  A single client <code>p</code> is selected to start a new
+  transaction. We discuss mechanisms for this selection later.
+  </li>
   <li>
   <code>p</code> sends read requests to all managers.
   <code>R</code> is the subset of managers of shared variables from
@@ -222,16 +225,6 @@ follows.
   managers.
   </li>
 </ol>
-
-  <p>
-  The structure of the sequence of transactions is represented by the
-  following loop.
-<pre>
-while true:
-  select a client p and subsets R, W of managers
-  for q in R: p.copy[q] = q.v
-  if len(R) > M: for q in W: q.v = p.f()
-</pre>
 
 The problem is to design a distributed algorithm such that its
 dataflow is serializable.
@@ -268,10 +261,9 @@ message <code>m</code>, so that:
   </li>
 </ol>
 
-The dataflow graph can be partitioned into a sequence of subgraphs where all events
-in a subgraph have the same transaction id, and later subgraphs
-have larger transaction ids.
-
+The dataflow graph can be partitioned into a sequence of subgraphs
+where all events and messages in a subgraph have the same transaction
+id.
 
 
 
@@ -301,14 +293,19 @@ Initially <code>q.v</code> is a symbol <code>None</code> to indicate
 that no value has been assigned, and <code>q.t</code> is <code>0</code>.
 
 <p>
-A manager gets two classes of messages: <code>ReadRequest</code> and
+A manager receives two classes of messages: <code>ReadRequest</code> and
 <code>WriteRequest</code>.
-Every message <code>m</code> has a field <code>m.t</code> which is the
+Every message, <code>m</code>, has a field, <code>m.t</code>, which is the
 transaction id of the message.
-A write request has a field <code>v</code> which is the value to be written.
+
+A write request has a field, <code>v</code>, which is the value to be
+written.
+
 A manager replies to a read request with a message of class
-<code>Reply</code> which has two fields: <code>v</code> the value of
-the shared variable and <code>t</code> the transaction id of the message.
+<code>Reply</code> which has two fields: <code>v</code>, the value of
+the shared variable, and <code>t</code>, the transaction id of the
+message.
+
 The algorithm is given below.
 
 <pre>
@@ -328,7 +325,7 @@ def receive(request, client):
 
 <p>
 A manager ignores requests with transaction ids lower than its own
-transaction id: a request is
+transaction id, i.e., a request is
 ignored if <code>request.t < q.t</code>.
 
 Such requests are treated as lost and don't appear in the dataflow.
@@ -341,7 +338,7 @@ continues to process the transaction with id <code>q.t</code>.
 <p>
 If <code>request.t</code> \(>\) <code>q.t</code> then the manager
 begins processing the transaction with id <code>request.t</code>, and
-stops processing transactions with any other id.
+stops processing transactions with any earlier id.
 
 The manager increases its transaction id to <code>request.t</code> to
 indicate that it is now processing the transaction with it
@@ -350,17 +347,18 @@ indicate that it is now processing the transaction with it
 
 <p>
 <code>q</code> replies to a read request and sets the transaction id of the
-reply to <code>q.t</code> which is also the transaction id of the
-event which is the same as the transaction id of the request.
+reply to <code>q.t</code>.
+
+<code>q</code> carries out a write operation when <code>q</code>
+receives a write request.
 
 <!-------------------------------------------------->
 <h4 class="w3-text-teal">Algorithm for a Client </h4>
 <!-------------------------------------------------->
 
 <p>
-
 A transaction id is a pair <code>(n, p)</code> where <code>n</code> is
-an integer and the transaction is by client <code>p</code>.
+a number and <code>p</code> is the client that carries out the transaction.
 
 Transaction ids are compared lexicographically.
 
@@ -382,8 +380,8 @@ contains copies of shared variables.
 
 <p class="w3-text-teal">Starting a New Transaction</p>
 A client <code>p</code> starts executing a new transaction
-and terminates execution of previous transactions when it gets a
-timeout message.
+and stops execution of previous transactions when it gets a
+clock tick message.
 
 A client starts a new transaction by executing the following steps:
 <pre>
@@ -407,18 +405,17 @@ The transaction id of the
 requests is <code>p.t</code>, the id of the new transaction.
 
 
-<code>p</code> then waits to receive a timeout 
+<code>p</code> then waits to receive a clock tick 
 message and simultaneously waits to receive
   replies to its read requests.
 
 
 <p class="w3-text-teal">Processing a Reply to a Read Request</p>
-A client <code>p</code> takes the following steps if it
-receives a reply in the transaction that the client is currently
-processing,
-i.e., where the client and reply have the same transaction id.
-The steps shown below are when the client receives a reply.
-<code>message</code>, from a manager, <code>sender</code>.
+A client <code>p</code> takes the following steps when it
+receives a reply, <code>message</code>, from a manager,
+<code>sender</code>, in the transaction that the client is  
+processing.
+
 <pre>
 p.copy[sender] = message.v
 if len(p.copy) > M:
@@ -432,8 +429,7 @@ local variable, <code>p.copy[sender]</code>.
 If <code>p</code> has received replies from more than <code>M</code>
 managers then <code>p</code> sends write requests to all managers.
 
-The transaction id of the write requests is <code>p.t</code>, the id
-of the transaction that <code>p</code> is processing.
+The transaction id of the write requests is <code>p.t</code>.
 
 The value to be written, specified in the write request is
 <code>p.f()</code>, a function of <code>p</code>.
@@ -455,7 +451,7 @@ p.t = 0
 
 start()
 def receive(message, sender):
-   if isinstance(message, Timeout):
+   if isinstance(message, ClockTick):
       p.t = p.t + pos()
       p.copy = {}
       for q in Q:  send(ReadRequest(p.t), q)
@@ -468,24 +464,28 @@ def receive(message, sender):
                send(WriteRequest(v = p.f(), t=p.t), q)
 </pre>
 
-In the algorithm, <code>p.t</code> and <code>q.t</code> do not decrease for all clients
+In the algorithm, <code>p.t</code> and <code>q.t</code> do not
+decrease for all clients 
 <code>p</code> and managers <code>q</code>. 
 
 So, all events with a transaction id <code>T</code> at an agent occur
-after all events with transaction id less than  <code>T</code> at that
-agent, and before  all events with transaction id greater than
-<code>T</code> at that agent.
+as a sequence.
+
 
 
 <p>
-From the algorithm, 
-all requests sent be a client in a transaction with id <code>T</code>
-are received by  a manager <code>q</code>  executing the transaction with the same id:
-<code>request.t</code> \(=\) <code>q.t</code>,
-and all replies sent by a manager executing a transaction  with id
-<code>T</code> are received by the client <code>p</code> when it is
-executing the same transaction:
-<code>message.t</code> \(=\) <code>p.t</code>.
+From the algorithm, when a client executing  a transaction with id
+<code>T</code> sends a request, the request is assigned the same
+transaction id, <code>T</code>.
+
+<p>
+When a manager <code>q</code> accepts a request with transaction id
+<code>T</code> it sets its own transaction id to that of the request,
+i.e., <code>q.t</code> becomes <code>T</code>.
+
+A reply sent by a manager when the manager's transaction id is
+<code>T</code> also has transaction id <code>T</code>.
+
 Therefore, there exists a subgraph in which all events and messages
 have the same transaction id.
 
