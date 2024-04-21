@@ -468,8 +468,10 @@ In the algorithm, <code>p.t</code> and <code>q.t</code> do not
 decrease for all clients 
 <code>p</code> and managers <code>q</code>. 
 
-So, all events with a transaction id <code>T</code> at an agent occur
-as a sequence.
+So, events at every agent occur in ascending order of transaction id,
+i.e., for all events <code>e, e'</code> at an agent, if
+<code>e'</code> occurs after <code>e</code> then <code>t(e)</code>
+\(\leq\) <code>t(e')</code>.
 
 
 
@@ -480,15 +482,48 @@ transaction id, <code>T</code>.
 
 <p>
 When a manager <code>q</code> accepts a request with transaction id
-<code>T</code> it sets its own transaction id to that of the request,
+<code>T</code>, the manager sets its own transaction id to that of the request,
 i.e., <code>q.t</code> becomes <code>T</code>.
 
 A reply sent by a manager when the manager's transaction id is
 <code>T</code> also has transaction id <code>T</code>.
 
+A manager's reply, with transaction id <code>T</code>, is accepted by
+the client if and only if the client's transaction id is also
+<code>T</code>.  
+
 Therefore, there exists a subgraph in which all events and messages
 have the same transaction id.
 
+<h5 class="w3-text-teal">Performance Issues</h5>
+All clients are executing transactions at the same time because all
+clients execute receives concurrently
+
+There may be computations with an infinite number of transactions in
+which shared variables are never assigned values.
+
+This happens if all messages are lost.
+
+<p>
+Two transactions can collide with each other so that neither
+transaction sends write requests.
+
+For example, suppose clock ticks arrive every millisecond while
+requests are delayed 5 milliseconds.
+
+In this case, clients will start new transactions every millisecond
+and never receive replies.
+
+<p>
+If all clock ticks are synchronized, then the winner of <code>(N,
+p)<\code>, for all <code>p</code> is the client with the smallest
+<code>p</code>.
+
+You may want function <code>pos</code> to return random numbers to
+give other clients a chance of winning.
+
+<p>
+For more on performance and related issues, see <a href="">here</a>.
 
 
 <!--Start Footer--------------------------------------->
