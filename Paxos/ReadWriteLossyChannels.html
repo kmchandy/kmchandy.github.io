@@ -204,18 +204,24 @@ There is a computation of a serializable dataflow in which all events of a
 single transaction occur in sequence.
 
 Each transaction is represented by the following steps.
+
+  A single client <code>p</code> is selected to start a new
+transaction. We discuss mechanisms for this selection later.
+The selected client <code>p</code> carries out the following steps.
+
 <ol>
   <li>
-  A single client <code>p</code> is selected to start a new
-  transaction. We discuss mechanisms for this selection later.
-  </li>
-  <li>
+  <i>Read</i>:
   <code>p</code> sends read requests to all managers.
   <code>R</code> is the subset of managers of shared variables from
   which <code>p</code> receives replies to its read requests.
   For each <code>q</code> in <code>R</code>: <code>p</code>
   copies the shared variable, <code>q.v</code>, into 
   <code>p</code>'s local variable <code>p.copy[q]</code>.
+  If <code>p.copy</code> has more than <code>M</code> elements then
+  the client executes the next step.
+  If <code>p.copy</code> has <code>M</code> or fewer elements then the
+  transaction terminates without executing the next step.
   </li>
   <li>
   <code>p</code> requests each manager <code>q</code> to assign
@@ -225,6 +231,17 @@ Each transaction is represented by the following steps.
   managers.
   </li>
 </ol>
+
+The sequence of transactions are represented by the following loop:
+<pre>
+p is an arbitrary client
+R, W are arbitrary subsets of managers
+
+p.copy = {}
+for q in R: p.copy[q] = q.v
+if len(p.copy) > M:
+   for q in W: q.v = p.f()
+</pre>
 
 The problem is to design a distributed algorithm such that its
 dataflow is serializable.
@@ -495,35 +512,44 @@ the client if and only if the client's transaction id is also
 Therefore, there exists a subgraph in which all events and messages
 have the same transaction id.
 
-<h5 class="w3-text-teal">Performance Issues</h5>
-All clients are executing transactions at the same time because all
-clients execute receives concurrently
 
+<!----------------------------------------------->
+<h5 class="w3-text-teal">Performance Issues</h5>
+<!----------------------------------------------->
+
+Each client is either executing a receive or is waiting to receive a
+message.
+
+Clients execute transactions concurrently; however, the algorithm
+ensures that the dataflow represents a sequence of transaction
+executions, one transaction at a time.
+
+
+<p>
 There may be computations with an infinite number of transactions in
 which shared variables are never assigned values.
 
-This happens if all messages are lost.
+For example, requests may be lost, or there may fewer than
+<code>M</code> replies to read requests.
 
 <p>
+Another scenario in which shared variables are never assigned values
+is as follows.
+
 Two transactions can collide with each other so that neither
 transaction sends write requests.
 
 For example, suppose clock ticks arrive every millisecond while
-requests are delayed 5 milliseconds.
+the time taken for a request to reach a manager is 5 milliseconds.
 
-In this case, clients will start new transactions every millisecond
-and never receive replies.
+In this case, clients start new transactions every millisecond
+and never receive replies to any transaction.
 
-<p>
-If all clock ticks are synchronized, then the winner of <code>(N,
-p)</code>, for all <code>p</code> is the client with the smallest
-<code>p</code>.
-
-You may want function <code>pos</code> to return random numbers to
-give other clients a chance of winning.
+So, the interval selected for clock ticks depends on the delays of
+requests and replies.
 
 <p>
-For more on performance and related issues, see <a href="">here</a>.
+For more on performance issues, see <a href="">here</a>.
 
 
 <!--Start Footer--------------------------------------->
