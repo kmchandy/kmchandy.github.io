@@ -154,7 +154,20 @@ hr.new1 {
 Verify that every edge in figure 1 is from an event with a lower
 logical time to an event with a higher logical time.
 
-<p>The sequence of events in increasing logical time is:
+ 
+<!-------------------------------------------------------->
+<h4 class="w3-text-teal">Events in Increasing Order of Logical Time</h4>
+<!-------------------------------------------------------->
+<i>All sequences of events in increasing order of logical time are
+computations.</i>
+
+<p>
+This result follows from the fact that all topological sorts of dataflow
+graphs are computations, and sequences of of events in increasing
+logical time are topological sorts.
+
+<p>For example, a sequence of events in increasing logical time in
+figure 1 is:
 [1, 2, 4, 3, 5, 6, 7, 8, 9], and this sequence is a computation.
   
 
@@ -183,7 +196,7 @@ The correctness of the algorithm is self evident.
 
   
   <!-------------------------------------------------------->
-  <h4 class="w3-text-teal">The Past, Future and State at Logical Time \(t\)</h4>
+  <h5 class="w3-text-teal">The Past and Future at Logical Time \(t\)</h5>
   <!-------------------------------------------------------->
 
 
@@ -195,12 +208,21 @@ So, the <i>future at logical \(t\)</i> is the set of events  with logical
 time greater than \(t\).
 
 
-  <p>
-  The state of an agent at logical time \(t\) is the label of the
-  agent edge from the past to the future. 
+  <h5 class="w3-text-teal">System State at Logical Time \(t\)</h5>
+  The state of an agent \(A\) at logical time \(t\) is the label of the
+ edge for \(A\) from the past at \(t\) to the future at \(t\).
 
+Equivalently, the state of an agent \(A\) at logical time \(t\) is its state after
+the event at \(A\) with the highest logical time less than or equal to \(t\)
+and before the event at \(A\) with the lowest logical time greater than \(t\).
+
+<p>
 The state of a channel at logical time \(t\) is the sequence of messages sent along the
-channel in the past and received in the future. 
+channel in the past and received in the future.
+
+Equivalently, the state of a channel at logical time \(t\) is the
+sequence of messages sent in events with logical time at most \(t\)
+that are received in events with logical time greater than \(t\).
 
 
 <!---------------------------------------------------------->
