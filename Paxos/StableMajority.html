@@ -1,0 +1,293 @@
+<title>Paxos/StableMajority.html</title>
+
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+  
+  <!--------------------------------------------------------->
+  <h2 class="w3-text-teal">Stable Majority in Faulty Systems</h2> 
+  <!--------------------------------------------------------->
+
+  This webpage is a continuation of 
+  <a href="ReadWriteLossyChannels.hmtl">
+  Serial Transactions on Faulty Systems</a>.
+  
+  We are given a system in which
+  agents may halt, and messages may be lost, duplicated and delivered
+  out of order.
+
+  The system has clients and servers.
+
+  Each server <code>q</code> has a local variable <code>q.v</code>.
+
+  Clients send requests to servers to read and write local variables
+  of servers.
+
+  <p>
+  The
+  <a href="ReadWriteLossyChannels.hmtl">
+  algorithm</a> ensures that there exists a computation in which
+  transactions are executed one at a time.
+
+  We use a special case of the algorithm in which:
+  <ol>
+    <li>
+    The constant <code>M</code> in the algorithm is a majority of
+    clients. Let <code>N</code> be the number of clients; then <code>M
+    = int(N/2) + 1</code>.
+    In the running example, <code>N = 5</code> and <code>M = 3</code>.
+    </li>
+    <li>
+    The local variable <code>q.v</code> of server <code>q</code> has
+  two fields: <code>q.v.value</code> and <code>q.v.t</code> which is
+  the epoch in which <code>q.v</code> was last modified.
+    </li>
+  </ol>
+  The program that executes the sequence of transactions in the serial computation can be
+  written as follows.
+  
+<pre>
+t = 0
+for all servers q: q.v.value, q.v.t = None, 0
+
+while True:
+   select an arbitrary client p
+   t = t + positive value
+
+   # p executes a transaction with epoch t
+
+   # p reads variables
+   select an arbitrary majority R of servers
+   p.copy = {}
+   for q in R: p.copy[q] = q.v
+
+   # p writes variables
+   select an arbitrary subset W of servers
+   for q in W:
+        q.v.value = p.f(),
+        q.v.t = t
+  </pre>
+
+  <!--------------------------------------------------------->
+  <h4 class="w3-text-teal">Specification</h4>
+  <!--------------------------------------------------------->
+
+  Associated with each client <code>p</code> is a constant
+  <code>p.VALUE</code>.
+
+  Determine function <code>f</code> such that the algorithm has the
+  following properties: 
+  <ol>
+    <li>
+    <i>Values written in servers are values of clients.</i>
+    <p>
+    <code>q.v.value</code> is either <code>None</code> or is
+    <code>p.VALUE</code> for some client <code>p</code>.
+    </li>
+    <li>
+    <i>Stability of writes to a majority of servers.</i>
+    <p>
+    If there is a transaction \(X\) in which <code>W</code> is a majority of
+    servers, then values written in subsequent transactions are the
+  same as the value written in \(X\).
+
+    Let the epoch of transaction \(X\) be <code>k</code> and the
+    value written be <code>v*</code>. Then
+    <p>
+    for all <code>q</code>: if <code>q.v.t > k</code> then
+  <code>q.v.value = v*</code>. 
+    </li>
+  </ol>
+
+  <!--------------------------------------------------------->
+  <h4 class="w3-text-teal">How Should You Approach the Problem?</h4>
+  <!--------------------------------------------------------->
+  Each transaction that changes values of variables reads a majority
+  of variables and then writes some variables.
+
+  Our task is to determine <code>f</code> that specifies what is
+  written.
+
+  <p>
+  Steps that are reasonable are as follows.
+  If all the values read by a client <code>p</code> are
+  <code>None</code> then <code>p</code> writes <code>p.VALUE</code>.
+
+  If all the values read by a client <code>p</code> are the same value
+  <code>v*</code> then <code>p</code> writes <code>v*</code>.
+
+  What should <code>p</code> do if it reads different non-<code>None</code>
+  values?
+
+  <p>
+  A solution is for <code>p</code> to give priority to the most recent
+  value that it reads.
+
+  So, <code>p.f()</code> returns the most recent value in
+  <code>p.copy</code>, i.e., <code>p.f()</code> returns
+  <code>p.copy[q*].value</code> where <code>p.copy[q*].t</code> is the
+  largest among all <code>p.copy[q].t</code> for all <code>q</code>.
+  
+<pre>
+def f(self):
+   value, t = self.VALUE, 0
+   for item in self.copy.items():
+      if item.t > t:  value, t = item.value, item.t
+   return value
+</pre>
+
+  
+  <!--------------------------------------------------------->
+  <h4 class="w3-text-teal">Proof of Correctness</h4>
+  <!--------------------------------------------------------->
+  Let <code>t*</code> be the epoch of the earliest transaction which
+  writes a majority of variables, and let <code>v*</code> be the value
+  written.
+
+  Let <code>W*</code> be the set of servers whose values are written.
+  
+  We will prove that the following conditions hold after all
+  transactions with epochs of <code>t*</code> or greater.
+  <ol>
+    <li>
+    for all servers <code>q</code>:
+    <br>
+    <code>(q.v.value = v*)</code> or <code>(q.v.t < t*)</code>
+    </li>
+    <li>
+    for all servers <code>q</code> in <code>W*</code>:
+    <br>
+    <code>(q.v.value = v*)</code> and <code>(q.v.t</code> \(\geq\)
+    <code>t*)</code>
+    </li>
+  </ol>
+
+  The second condition follows from the fact that <code>q.v.t</code>
+  does not decrease for all <code>q</code>, as is evident from the
+  algorithm.
+
+  We now prove the first condition.
+  The proof that condition holds for the transaction with epoch <code>t*</code>;
+  is straightforward.
+
+  <p>
+  For a transaction with epoch <code>T</code> greater than
+  <code>t*</code>,
+  Assume that the condition holds for transactions with epoch less
+  than <code>T</code> (<code>T</code> > <code>t*</code>)  and prove it holds for the transaction
+  with epoch <code>T</code>.
+
+<p>
+Let <code>R'</code> be the set of servers read in the transaction with
+  epoch <code>T</code>. 
+
+Because any two majorities have an element in common, there is a
+server <code>q*</code> which is in both <code>W*</code> and
+  <code>R'</code>.
+
+  <p>
+  From condition 2, <code>q*.v.t</code> \(\geq\) <code>t*</code>.
+
+  Therefore, the mose recent value is written in a transaction with
+  epoch greater than or equal to <code>t*</code>, and from 
+  condition 1, this value is <code>v*</code>
+
+  <p>
+  So, function <code>f</code> returns <code>v*</code>.
+
+  Therefore, the values (if any) written in this transaction are also <code>v*</code>
+  and the conditions continue to hold.
+
+
+  
+
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+
+</body>
+</html>
