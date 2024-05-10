@@ -121,7 +121,9 @@ hr.new1 {
   
 <pre>
 t = 0
-for all servers q: q.v.value, q.v.t = None, 0
+for all servers q:
+   q.v.value = None
+   q.v.t = 0
 
 while True:
    select an arbitrary client p
@@ -148,14 +150,17 @@ while True:
   Associated with each client <code>p</code> is a constant
   <code>p.VALUE</code>.
 
-  Determine function <code>f</code> such that the algorithm has the
+  Determine function <code>f</code> such that the sequence of transactions has the
   following properties: 
   <ol>
     <li>
     <i>Values written in servers are values of clients.</i>
     <p>
-    <code>q.v.value</code> is either <code>None</code> or is
-    <code>p.VALUE</code> for some client <code>p</code>.
+    for all servers <code>q</code>:
+    <br>
+    <code>q.v.value = None</code> or
+    there is a client
+    <code>p</code> such that <code>q.v.value = p.VALUE</code>.
     </li>
     <li>
     <i>Stability of writes to a majority of servers.</i>
@@ -178,8 +183,7 @@ while True:
   Each transaction that changes values of variables reads a majority
   of variables and then writes some variables.
 
-  Our task is to determine <code>f</code> that specifies what is
-  written.
+  Our task is to determine <code>f</code> with the specified properties.
 
   <p>
   Steps that are reasonable are as follows.
@@ -213,11 +217,10 @@ def f(self):
   <!--------------------------------------------------------->
   <h4 class="w3-text-teal">Proof of Correctness</h4>
   <!--------------------------------------------------------->
-  Let <code>t*</code> be the epoch of the earliest transaction which
-  writes a majority of variables, and let <code>v*</code> be the value
-  written.
-
-  Let <code>W*</code> be the set of servers whose values are written.
+  Let <code>t*</code> be the epoch of the earliest transaction in
+  which <code>W</code> is a majority, and let <code>v*</code> be the value
+  written, and let <code>W*</code> be the the value of <code>W</code> 
+  in this transaction.
   
   We will prove that the following conditions hold after all
   transactions with epochs of <code>t*</code> or greater.
@@ -229,9 +232,7 @@ def f(self):
     </li>
     <li>
     for all servers <code>q</code> in <code>W*</code>:
-    <br>
-    <code>(q.v.value = v*)</code> and <code>(q.v.t</code> \(\geq\)
-    <code>t*)</code>
+    <code>(q.v.t</code> \(\geq\) <code>t*)</code>
     </li>
   </ol>
 
@@ -239,15 +240,15 @@ def f(self):
   does not decrease for all <code>q</code>, as is evident from the
   algorithm.
 
+  <p>
   We now prove the first condition.
-  The proof that condition holds for the transaction with epoch <code>t*</code>;
-  is straightforward.
+  The proof that condition holds for the transaction with epoch
+  <code>t*</code> is straightforward.
 
   <p>
-  For a transaction with epoch <code>T</code> greater than
-  <code>t*</code>,
   Assume that the condition holds for transactions with epoch less
-  than <code>T</code> (<code>T</code> > <code>t*</code>)  and prove it holds for the transaction
+  than <code>T</code> (where <code>T</code> > <code>t*</code>)  and
+  prove it holds for the transaction 
   with epoch <code>T</code>.
 
 <p>
@@ -259,17 +260,17 @@ server <code>q*</code> which is in both <code>W*</code> and
   <code>R'</code>.
 
   <p>
-  From condition 2, <code>q*.v.t</code> \(\geq\) <code>t*</code>.
-
-  Therefore, the mose recent value is written in a transaction with
-  epoch greater than or equal to <code>t*</code>, and from 
-  condition 1, this value is <code>v*</code>
+  <code>q*.v.t</code> \(\geq\) <code>t*</code>, from condition 2.
 
   <p>
-  So, function <code>f</code> returns <code>v*</code>.
+  Therefore, the greatest value of <code>q.v.t</code> for
+  <code>q</code> in <code>R'</code> is <code>t*</code> or greater.
 
+  So, from condition1, function <code>f</code> returns <code>v*</code>.
+
+  <p>
   Therefore, the values (if any) written in this transaction are also <code>v*</code>
-  and the conditions continue to hold.
+  and so both conditions continue to hold.
 
 
   
