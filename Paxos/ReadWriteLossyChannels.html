@@ -78,13 +78,28 @@ hr.new1 {
 
   
   <!--------------------------------------------------------->
-  <h2 class="w3-text-teal">Serial Transactions on Faulty Systems</h2> 
+  <h1 class="w3-text-teal">Serializable Computations in Faulty Systems</h1> 
   <!--------------------------------------------------------->
 
   <!--------------------------------------------------------->
-  <h4 class="w3-text-teal">Clients and Servers</h4>
-  <!--------------------------------------------------------->  
-A distributed system has agents, called <i>clients</i> that send
+  <h4 class="w3-text-teal">The System</h4>
+  <!--------------------------------------------------------->
+  
+  A discussion about
+  about serializability and transactions can be found
+  <a
+  href="https://en.wikipedia.org/wiki/Database_transaction">here.</a>
+
+  In this webpage we describe a problem with a specific limited form
+  of a transaction.
+  
+  
+  We design an algorithm for a system in which agents may
+  halt and messages may be duplicated,
+  lost, and delivered out of order.
+
+  <p>
+  The system has agents, called <i>clients</i> that send
   requests to agents, called <i>servers</i>, to read and
   write local variables of servers.
 
@@ -109,44 +124,33 @@ A distributed system has agents, called <i>clients</i> that send
   a sequence of <i>clock tick</i> messages.
   
   The intervals between clock tick messages are irrelevant for the
-  correctness of the algorithm, but play a role in the algorithm's
+  correctness of the algorithm but play a role in the algorithm's
   performance.
   
+  <p>
   The only actions of a client are to send requests to servers, receive
   replies from servers, and receive clock tick messages.
 
+  We can think of the collections of servers as implementing a set of
+  variables shared by clients.
+
+
   <p>
-
-
-
-  <h4 class="w3-text-teal">Lossy Channels</h4>
-  We design an algorithm for a system in which agents may
-  halt and messages may be duplicated,
-  lost, and delivered out of order.
-
   Requests by clients to servers, and replies from servers may be
   lost, and so a client may never receive a reply.
 
-<p>
-  Clients avoid waiting forever for a reply by taking the following
-steps.
+  Clients can avoid waiting forever for a reply by taking the following
+  steps. 
 
-A client sends requests to
-servers when the client receives a clock tick message.
-
-A client only accepts replies that arrive before the client receives
-its next clock tick.
+When a client sends requests it also sends itself a timeout message, and
+the client only accepts replies that arrive before the timeout.
 
 
   <!-------------------------------------------------------->
-  <h4 class="w3-text-teal">Transactions in a System with a Single
-Client</h4>
+  <h4 class="w3-text-teal">Transactions</h4>
 
-We begin by considering a system with a single client <code>p</code>.
-
-A client carries out a sequence of transactions.
-
-Each transaction is simple: a client reads and writes server values.
+A transaction is carried out by a single client and consists of step
+in which the client reads and then writes server values. 
 
 The transaction uses a constant <code>M</code>.
 
@@ -154,10 +158,9 @@ Each client <code>p</code> has a local variable <code>p.copy</code>
 which is a dictionary and where <code>p.copy[q]</code> contains a
 (possibly stale) copy of <code>q.v</code>.
 
-
 A transaction is as follows.
 
-  <h5 class="w3-text-teal">Read</h5>
+  <p class="w3-text-teal">Read</p>
   <code>p</code> sends read requests to all servers.
   Requests may be lost.
   Servers that receive requests send replies, but replies may be lost.
@@ -177,18 +180,18 @@ A transaction is as follows.
    transaction terminates without executing the write step.
 
 
-  <h5 class="w3-text-teal">Write</h5>
+  <p class="w3-text-teal">Write</p>
   <code>p</code> requests each server <code>q</code> to assign
   <code>p.f()</code> to <code>q.v</code> where <code>f()</code> is a
 given function.
 
-Some requests may be losts.
+Some requests may be lost.
 
 Let <code>W</code> be the set of servers that receive and process
 write requests.
 
 
-<h5 class="w3-text-teal">The  Transaction</h5>
+<p class="w3-text-teal">The  Transaction</p>
 A  transaction by a client <code>p</code> is as follows.
 
 <pre>
@@ -204,104 +207,115 @@ if len(p.copy) >= M:
 
 
 <h4 class="w3-text-teal">Serializable Computations</h4>
+A computation \(X\) is serializable exactly when there exists a
+computation \(Y\) where
+<ol>
+  <li>
+  transactions are executed sequentially in \(Y\), and
+  </li>
+  <li>
+  the timeline of each agent is identical in
+  \(X\) and \(Y\).
+  </li>
+</ol>
 
-A dataflow graph is <i>serializable</i> if it can be partitioned into
-a sequence of subgraphs where each subgraph is the dataflow graph of a
-single transaction.
-
-<p>
-An equivalent definition in terms of computations is as follows.
-
-A computation \(X\) is serializable if there exists a
-computation \(Y\) which is a permutation of \(X\) where \(Y\) is a
-sequence of  transactions.
-
-The sequence of  transactions in \(Y\) can represented by the
-following iteration.
-
-
+If computation \(X\) is serializable then the timelines of agents in
+\(X\) is the same as that of a sequential iteration:
 <pre>
 while True:
-   select an arbitrary client p
-   p executes a  transaction
+   select a client p
+   p executes a transaction
 </pre>
-
-
-<!-------------------------------------------------->
-<h3 class="w3-text-teal">The Problem</h3>
-<!-------------------------------------------------->
-
-The problem is to design an algorithm with multiple
-clients such that computations are serializable.
+where <code>R, W</code> and <code>p</code> are selected appropriately
+for each iteration.
 
 <p>
-The challenge is to design an algorithm in which the execution of a
- transaction by one client doesn't modify the execution of a
- transaction by another client though both clients are
-executing transactions concurrently.
-
-<!-------------------------------------------------->
-<h4 class="w3-text-teal">How Should You Approach The Problem?</h4>
-<!-------------------------------------------------->
-
-What method comes to mind to partition a dataflow graph into dataflow
-subgraphs? 
-
-Logical time partitions dataflow into a dataflow of the past at
-logical time \(t\) and a dataflow of the future at logical time \(t\).
-
-The state of the system after the past at \(t\) and before the future
-at \(t\) is the global snapshot at logical time \(t\).
-
-We use a similar mechanism.
+(Agents have identical timelines in \(X\) and \(Y\) is equivalent to
+\(X\) and \(Y\) are
+<a href="../DISTRIBUTED_SYSTEM_MODELS/Model.html">
+topological sorts of the same dataflow graph.
+</a>.)
 
 
 <!-------------------------------------------------->
-<p class="w3-text-teal">Logical Times and Epochs</p>
+<h2 class="w3-text-teal">The Problem</h2>
+<!-------------------------------------------------->
+
+The problem is to design a distributed algorithm that executes
+transaction such that all computations are serializable. 
+
+<!-------------------------------------------------->
+<h5 class="w3-text-teal">How Should You Approach The Problem?</h5>
+<!-------------------------------------------------->
+
+What method comes to mind to partition a computation into sequences
+where each sequence has some specified property.
+
+Logical time partitions computations into steps in the past at
+logical time \(t\) and steps in the future at logical time \(t\).
+
+We use a mechanism, <i>epoch</i>, similar to logical time.
+
+
+<!-------------------------------------------------->
+<h3 class="w3-text-teal">Epochs and Logical Times</h3>
 <!-------------------------------------------------->
 <p>
 Logical clocks assign a logical time \(t(e)\) to each step \(e\) such
 that for all edges \((e, e')\) of the dataflow graph:
 \(t(e) < t(e')\).
 
+Later steps at an agent have higher logical times than earlier steps, and a message is
+received in a step with a higher logical time than the step in which
+the message is sent.
 
 <p>
-In this algorithm, we assign a value \(t(e)\), called \(e\)'s epoch to
+An <i>epoch</i> is a value \(t(e)\) assigned to
 each step \(e\) such 
 that for all edges \((e, e')\) of the dataflow graph:
 \(t(e) \leq t(e')\).
+Later steps at an agent have the same or higher epochs as earlier steps, and a message is
+received in a step with the same or higher epoch as the step in which
+the message is sent.
+
 
 <p>
-We will see that epochs have some of the properties of logical time
+The only difference is that \(<\) of logical times is
+replaced by \(\leq\) in epochs.
+
+Epochs have some of the properties of logical time
 including the following:
 
-<p class="w3-text-teal">Observation</p>
+<h5 class="w3-text-teal">Observation</h5>
 <i>There exists a computation in which steps are executed in
 ascending order of epochs</i>.
 
 <p>
-This observation follows from the fact that there is a computation in
-ascending order of
-<a href="../ChannelSnapshots/LogicalClocks.html">logical times.</a>
+The proof of this observation is the same as that for
+<a href="../ChannelSnapshots/LogicalClocks.html">logical times:</a>
+There exists a topological sort of a dataflow graph where vertices in
+the sort occur in ascending order of epoch.
 
-See <a href="">details</a>.
 
 <p>
 A consequence of this observation is that there is a computation
 in which all steps with the same epoch, say \(T\), occur after all steps with
-epochs less than \(T\) and before all steps with epochs greater than
+epochs less than \(T\), and before all steps with epochs greater than
 \(T\).
 
-The key idea of the algorithm is as follows:
+The key idea of the algorithm is:
 
   <hr class="new2">
-  <p style="color:blue;">
-Each transaction is assigned a unique epoch, and all steps of a transaction are
-assigned the epoch of the transaction.
+<p style="color:blue;">
+A sufficient condition for computations to be serializable:
+
+<p style="color:blue;">
+Each transaction has a unique epoch, and all steps of a transaction
+have the epoch of the transaction.
 </p>
 <hr class="new2">
 
-Next, we describe an algorithm based on this key idea.
+Next, we describe an algorithm based on this sufficient condition.
 
 
 <!-------------------------------------------------->
@@ -323,28 +337,39 @@ which is the epoch of the transaction that <code>q</code> is
 </ol>
 
 <p>
-Initially <code>q.v</code> is a symbol <code>None</code> to indicate
-that no value has been assigned, and <code>q.t</code> is <code>0</code>.
+Initially <code>q.t</code> is <code>0</code> and
+<code>q.v</code> is a common value <code>init</code>
+for all <code>q</code>.
 
 <p>
 A server receives two classes of messages: <code>ReadRequest</code> and
 <code>WriteRequest</code>.
-Every message, <code>m</code>, has a field, <code>m.t</code>, which is the
- epoch of the transaction in which <code>m</code> is sent.
 
-A write request has a field, <code>v</code>, which is the value to be
-written.
+Every message, <code>m</code>, has a field, <code>m.t</code>, which is
+called the epoch of the message.
+
+<code>m.t</code> is the epoch of the transaction in which
+<code>m</code> is sent. 
+
+
+<p>
+A read request has a single field <code>t</code> which is the epoch of the
+message.
 
 A server replies to a read request with a message of class
 <code>Reply</code> which has two fields: <code>v</code>, the value of
 the shared variable, and <code>t</code>, the epoch of the
 message.
 
+A write request has two fields, <code>v</code>, which is the value to be
+written, and <code>t</code>, the epoch of the message.
+
+
 The algorithm is given below.
 
 <pre>
 # initialization
-q.t, q.v = 0, None
+q.v, q.t = init, 0
 
 start()
 def receive(request, client):
@@ -361,11 +386,11 @@ def receive(request, client):
 <!-------------------------------------------------->
 <h5 class="w3-text-teal">Explanation of the Algorithm</h5>
 <!-------------------------------------------------->
-A server rejects (ignores) requests from epochs earlier than the epoch
+A server ignores requests from epochs earlier than the epoch
 that the server is processing, i.e., a request is
-rejected if <code>request.t < q.t</code>.
+ignored if <code>request.t < q.t</code>.
 
-Rejected requests are treated as lost and don't appear in the
+Ignored requests are treated as lost and don't appear in the
 computation.
 
 <p>
@@ -379,13 +404,13 @@ in processing the transaction with epoch <code>T</code>.
 
 <p>
 If <code>request.t</code> \(=\) <code>q.t</code> then the server
-continues to process the transaction in epoch <code>q.t</code>.
+continues processing the transaction in epoch <code>q.t</code>.
 
 If <code>request.t</code> \(>\) <code>q.t</code> then the server
 begins processing the transaction with epoch <code>request.t</code>, and
 stops processing transactions from earlier epochs.
 
-The server increases its transaction id to <code>request.t</code> to
+In this case, the server increases its transaction id to <code>request.t</code> to
 indicate that it is now processing the transaction with epoch
 <code>request.t</code>. 
 
@@ -394,8 +419,10 @@ indicate that it is now processing the transaction with epoch
 A server <code>q</code> replies to each read request that it accepts and sets the
 epoch of the reply to <code>q.t</code>.
 
-A server <code>q</code> carries out a write transaction when <code>q</code>
-accepts a write request.
+When a server <code>q</code> accepts a write request, the server
+assigns the value, <code>request.v</code>, in the request to the server's
+variable <code>q.v</code>. 
+.
 
 
 
@@ -413,6 +440,12 @@ Epochs are compared lexicographically.
 
 Later transactions initiated by a client have higher epochs
 than earlier transactions initiated by the same client.
+
+So, each transaction has a unique epoch.
+
+<p>
+In the paragraphs below an epoch is treated as a value without explicitly writing an
+epoch as a pair <code>(n, p)</code>.
 
 
 <p>
@@ -447,7 +480,8 @@ def receive(message, sender):
          p.copy[sender] = message.v
          if len(p.copy) >= M:
             for q in Q:
-               send(WriteRequest(v = p.f(), t=p.t), q)
+               v, t = p.f(), p.t
+               send(WriteRequest(v, t), q)
 </pre>
 
 
@@ -466,7 +500,7 @@ A client <code>p</code> sets the epoch <code>p.t</code> of the new
 be a value greater than the epoch of the transaction that it was
   processing previously.
 
-The client stops processing the transaction with an earlier epoch.
+The client stops processing transactions with earlier epochs.
 
 <p>
   <code>pos</code> is a function that returns a positive value.
@@ -476,6 +510,7 @@ correctness of the algorithm but does impact performance.
 <p>
   A client <code>p</code> discards earlier copies of shared variables and sends
 read requests to each server.
+
 The epoch of the
 requests is <code>p.t</code>, the epoch of the transaction that
   <code>p</code> has started processing.
@@ -493,15 +528,18 @@ the reply is in the same epoch
 as that of the transaction that <code>p</code> is processing.
 i.e., <code>p.t</code> \(=\) <code>reply.t</code>.
 
-Client <code>p</code> rejects replies from earlier transactions.
+Client <code>p</code> ignores replies from earlier transactions.
 
-We will see that <code>p</code> never receives a reply from a
-an epoch later than the transaction that <code>p</code> is processing.
+We will see that <code>p</code> doesn't receive replies from
+transactions in later epochs, i.e. <code>p.t</code> \(\geq\)
+<code>reply.t</code>. 
+
 
 <p>
 Client <code>p</code> takes the following steps when it
 accepts <code>reply</code> from a server,
 <code>q</code>.
+
 The client copies the value in the reply from <code>q</code> into the client's
 local variable, <code>p.copy[q]</code>.
 
@@ -519,82 +557,98 @@ The value to be written, specified in the write request is
 <!--------------------------------------------------->
 <h4 class="w3-text-teal">Proof of Correctness</h4>
 <!--------------------------------------------------->
-We will show that
-(1) each transaction has a unique epoch, and (2) all steps of a transaction are
-assigned the epoch of the transaction.
-
-<p class="w3-text-teal">Part 1</p>
-Each client starts each transaction with an epoch greater than epochs of
-earlier transactions started by the client.
-
-Transactions started by different clients have different epochs
-because an epoch is a pair <code>(n, p)</code> where <code>p</code> is
-a client.
-
-<p class="w3-text-teal">Part 2</p>
-Consider a transaction with epoch <code>T</code> started by a client
-<code>p</code>.
-
-The client starts the transaction by setting <code>p.t = T</code>.
-
-The epoch of a request <code>m</code> sent by a client <code>p</code> is the same as the epoch
-of the transaction that the client is processing: <code>m.t =
-p.t</code>, and so <code>m.t = T</code>.
-
-A client accepts a reply with epoch <code>T</code> only if the client is
-processing the transaction with epoch <code>T</code> (i.e. <code>p.t =
-T</code>).
+We will show that the algorithm satisfies the sufficient condition for
+serializability: 
+(1) each transaction has a unique epoch and
+(2) all steps and messages of a transaction have the epoch of the
+transaction. 
 
 <p>
-When a server <code>q</code> accepts a request <code>m</code> with epoch <code>m.t = T</code>, the server
-is executing the transaction with epoch
-<code>T</code> because <code>q.t = T</code> when the request is
-accepted.
-
-If the request is a read request then <code>q</code> sends a reply with epoch <code>T</code>. 
-
-<p>
-Therefore, all requests and replies and steps in a transaction in
-epoch <code>T</code> are in epoch <code>T</code>.
+We have shown that each transaction has a unique epoch.
+From the algorithm, all requests sent by clients, all requests accepted
+by servers, all replies sent by servers, all replies accepted by
+clients, and all steps in a transaction with epoch <code>T</code> have epoch
+<code>T</code>.
 
 
 <!----------------------------------------------->
-<h5 class="w3-text-teal">Performance Issues</h5>
+<h3 class="w3-text-teal">Tagging Variables with Write Times</h3>
+<!----------------------------------------------->
+Next we describe an algorithm which keeps track of the epoch in which
+each server's variable is last written.
+
+To do so, the variable <code>q.v</code> of a server <code>q</code> has two
+fields, <code>q.v.s</code> and <code>q.v.t</code> where
+<code>q.v.s</code> is the state of <code>q.v</code> and
+<code>q.v.t</code> is the epoch in which <code>q.v</code> was last
+written.
+
+We make the 
+obvious change to the algorithm of client <code>p</code>: replace the
+assignment
+<code>v = p.f()</code>
+by
+<pre>
+v.s, v.t = p.f(), p.t
+</pre>
+where <code>p.t</code> is the epoch in which the assignment is made.
+
+Initially <code>q.v.s, q.v.t = init, 0</code>.
+
+
+<!----------------------------------------------->
+<h3 class="w3-text-teal">Sequential and
+Distributed Algorithms with Identical Timelines</h3>
 <!----------------------------------------------->
 
-Each client is either executing a receive or is waiting to receive a
-message.
+<p>
+In each transaction a client sends read requests, receives replies
+from some servers, and sends write requests only if the client
+receives at least <code>M</code> replies.
 
-Clients execute transactions concurrently; however, the algorithm
-ensures that the dataflow represents a sequence of transaction
-executions, one transaction at a time.
+Server variables are left unchanged in a transaction if the client
+receives fewer than <code>M</code> replies.
+
+So, such transactions have no impact on server timelines.
+
+<p>
+Server timelines in any computation \(X\) of the distributed algorithm are identical to
+server timelines in the following sequential algorithm with
+appropriate selections of <code>p, R, W</code>. (Initial conditions are
+not shown.)
+
+
+<pre>
+while True:
+   select a client p.
+   select a subset R of M or more servers
+   select a nonempty subset W 
+
+   p.t = p.t + arbitrary positive value
+   for q in W:
+        q.v.s = p.f(q.v for q in R)
+        q.v.t = p.t
+</pre>
+
+The list of replies that client
+<code>q</code> receives in the iteration is <code>[q.v for q in
+R]</code>. 
 
 
 <p>
-There may be computations with an infinite number of transactions in
-which shared variables are never assigned values.
 
-For example, requests may be lost, or there may fewer than
-<code>M</code> replies to read requests.
 
 <p>
-Another scenario in which shared variables are never assigned values
-is as follows.
+We will prove properties of server timelines in the sequential
+algorithm for arbitrary, nondeterministic selections of <code>p, R, W</code> .
+These properties hold for all computations of the distributed
+algorithm.
 
-Two transactions can collide with each other so that neither
-transaction sends write requests.
+Proving properties of the nondeterministic sequential algorithm is
+easier than proving properties of the distributed algorithm
+executing in a faulty environment.
 
-For example, suppose clock ticks arrive every millisecond while
-the time taken for a request to reach a server is 5 milliseconds.
 
-In this case, clients start new transactions every millisecond
-and never receive replies to any transaction.
-
-So, the interval selected for clock ticks depends on the delays of
-requests and replies.
-
-<p>
-For more on performance issues, see <a href="">here</a>.
 
 
 <!--Start Footer--------------------------------------->
