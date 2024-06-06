@@ -84,62 +84,75 @@ hr.new1 {
   <!----------------------------------------------------------------->
   <p class="w3-text-teal">Why use such a simplistic model?</p>
   <!----------------------------------------------------------------->
-  The model is indeed simplistic; however, it is adequate to describe
-  and prove the correctness of the algorithms described in this
-  website.
+  The model is indeed simplistic; however, it is adequate for describing
+  and reasoning about many of the algorithms described in the first
+  part of this course.
+
+  We introduce other models later.
+
+  We use the simplest model adequate for the problem at hand.
 
   <p>
   We point out the model's weaknesses and we introduce other models as
   needed to deal with different problems.
 
-  The idea is to use the simplest model adequate for designing
-  algorithms. 
-
 
   
-
   <!----------------------------------------------------------------->
-  <p class="w3-text-teal">What are the most serious limitations of the
-  model?</p>
+  <p class="w3-text-teal">Can an agent refuse to receive a message?</p>
+<!----------------------------------------------------------------->
+  In this model an agent cannot refuse to receive a message.
+
+  If a channel is not empty then a message from the channel can be
+  delivered to the agent <i>independent of the state of the agent</i>.
+  
+
+<p>
+ Suppose you want to design an algorithm in which an agent
+  <code>X</code> refuses to receive messages from an agent
+  <code>Z</code> until it first receives a message from an agent
+  <code>Y</code>.
+
+  How would you use this model?
+
+  <p>
+
+In our model, agent <code>X</code> has to receive the message from
+  <code>Z</code> in every state of <code>X</code>.
+
+  <p>
+  Agent <code>X</code> can copy the message from <code>Z</code> into a
+  local queue -- a local variable of <code>X</code> -- and process the
+  message only after receiving the message from <code>Y</code>.
+  
+
+  
   <!----------------------------------------------------------------->
-  The model is inadequate for analyzing the performance of
-  algorithms. 
+  <p class="w3-text-teal">Can a full channel block a sender from
+  sending more messages?</p>
+<!----------------------------------------------------------------->
+In the model a sender is never blocked from sending a message.
 
-  <p>
-  This is because the model is inherently sequential whereas distributed systems are
-  inherently concurrent.
+<p>
+How could this model be used to analyze a system in which a channel
+has a maximum size, and
+when a channel is full it cannot accept messages?
 
-  In the model, at most one agent is active at a time while all other agents are
-  idle.
+<p>
+Our model assumes that channels have unlimited capacity.
 
-  Let's look at one consequence of this assumption.
+We can represent a situation in which channels have limited capacity
+in the following way.
 
-  <p>
-  Consider a distributed system in which an
-  agent executes a <code>receive</code> that includes the statement
-  <code>time.sleep(1)</code> that causes the agent to sleep (do
-  nothing) for 1 second.
+An agent has a local output queue into which the agent puts messages
+when the channel is full.
 
-  We may want an agent to sleep after it sends a message and before it
-  sends the next message to reduce congestion and improve performance.
-
-  <p>
-  The model cannot represent this situation.
-
-  In the model only one agent executes <code>receive</code> at a time.
-  
-  So, if an agent sleeps for a second while executing
-  <code>receive</code> then -- in effect -- all agents sleep for a second.
-
-  <p>
-  We discuss the use of local clocks when we discuss system
-performance.
-
-We do not use clocks for proving that algorithms are correct.
-  
+Messages from this output queue are sent on the channel when the
+channel stops being full.
 
 
-  
+
+
     
   <!----------------------------------------------------------------->
   <p class="w3-text-teal">Can you represent systems in which agents
@@ -150,63 +163,41 @@ We do not use clocks for proving that algorithms are correct.
 
 <p>
   You may want to implement a system in which agents are created and
-  deleted infinitely often, and so create and delete an unbounded
-  number of agents.
+  deleted infinitely often. 
 
   In this case the network of agents changes over time in an arbitrary
   fashion. 
 
-  This model doesn't represent such systems.
+  The model doesn't represent such systems.
 
-  <p>
-  The implementations and software libraries given in this course
-  allow agents to be created.
+<p>
+A work around for the case in which agents are created or deleted a
+finite number of times is as follows.
 
-  The implementation platforms are more powerful than the model.
+The network of agents in the model is made large enough to include
+agents that have not been created as yet and also include agents that
+have been deleted.
 
-  In this course we don't need use all features of these platforms. 
+An agent that has not been created is represented by an agent that is
+idle, i.e., one that doesn't receive messages.
+
+An agent this is deleted is represented in the same way.
+  
 
 
+    
   <!----------------------------------------------------------------->
-  <p class="w3-text-teal">Can an agent refuse to receive a message?</p>
+  <p class="w3-text-teal">Can an agent process background jobs that
+  are interrupted when messages arrive?</p>
 <!----------------------------------------------------------------->
-In this model an agent cannot refuse to receive a message.
 
-<p>
- You may want to design an algorithm in which an agent
-  <code>X</code> refuses to receive messages from an agent
-  <code>Z</code> until it first receives a message from an agent
-  <code>Y</code>.
+No, there are no interruptions in the model.
 
-In our model, agent <code>X</code> has to receive the message from
-  <code>Z</code> in every state of <code>X</code>.
+After an agent is initiated it does nothing but execute receives or wait to execute
+receives.
 
-  <p>
-  Agent <code>X</code> can copy the message from <code>Z</code> into a
-  local queue -- a local 
-  variable of <code>X</code> -- and process the local queue later.
-
-
-
-  <!----------------------------------------------------------------->
-  <p class="w3-text-teal">Can a full channel block a sender from
-  sending more messages?</p>
-<!----------------------------------------------------------------->
-In the model a sender is never blocked from sending a message.
-
-<p>
-Some implementations of queues specify a maximum size, and when the
-queue is full, agents cannot append messages to the queue.
-
-Our model assumes that queues that represent messages in channels can
-be of arbitrary size, and so a sender is never blocked from sending
-more messages in a channel.
-
-<p>
-We will, however, prove that the number of messages in a channel is
-bounded by some number, and so we need only ensure that queue sizes are
-large enough.
-
+When an agent is executing a receive it is not interrupted by the
+arrival of another message.
 
 
   
@@ -327,10 +318,12 @@ usually does so before the agent that starts at 2pm.
 
 
 <h5 class="w3-text-teal">Next</h5>
-<a href="DistributedSystemModels.html">States, transitions and
-computations in a model of a distributed system.</a>
-<p>
-<a href="Basics.html">Basics.</a>
+The next three webpages continue the description of a model of
+distributed systems and point out its strengths and limitations.
+
+The next page introduces <a href="Model.html">
+Timelines and Dataflow.</a> 
+
 
 
 <!--Start Footer--------------------------------------->
