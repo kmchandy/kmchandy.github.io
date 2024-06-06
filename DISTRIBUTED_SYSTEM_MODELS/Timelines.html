@@ -77,27 +77,23 @@ hr.new1 {
 <div class="w3-twothird w3-container">
 
   <!--------------------------------------------------------------->
-  <h2 class="w3-text-teal">Past and Future in the Model</h2>
+  <h2 class="w3-text-teal">Past and Future in Dataflow</h2>
 
-  <p  class="w3-text-teal">Only Notion of Time: Before and After</p>
-  The only notions of time in a dataflow graph are the
-  <a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">
-  partial orders</a>
-  <i>before</i> and <i>after</i>.
-
-  An event \(e\) is <i>before</i> an event \(e'\), and \(e'\) is <i>after</i> \(e\),
-  in a dataflow graph exactly when there is a path from \(e\) to \(e'\).
-
-
-  <p  class="w3-text-teal">Slice: Partition Event Set into Past and Future</p>
-  A <i>slice</i> of a dataflow graph is a partition of the set of events of
-  the graph into subsets <code>past</code> and <code>future</code>
-  such that all events before <code>past</code> events are
-  <code>past</code> events.
+  Recall that a vertex \(v\) is <i>before</i> a vertex \(v'\) in the
+  dataflow graph exactly when there is a path from \(v\) to \(v'\).
+  And \(v'\) is <i>after</i> \(v\) exactly when \(v\) is before \(v'\).
 
   <p>
-  An equivalent definition is:
-  All events after <code>future</code> events are <code>future</code> events.
+  A <i>slice</i> of a dataflow graph is a partition of the set of vertices of
+  the graph into subsets <code>past</code> and <code>future</code>
+  such that all events before <code>past</code> events are
+  <code>past</code> events, or equivalently
+  all events after <code>future</code> events are <code>future</code>
+  events.
+
+  <p>
+  The state of the system at a slice is specified by the labels of edges from
+  <code>past</code> to <code>future</code>.
 
 
    
@@ -117,99 +113,140 @@ hr.new1 {
     <figcaption>Fig.1: Example - A Slice of a Dataflow Graph</figcaption>
 </figure>
 
-  All edges to <code>past</code> events are from <code>past</code>
+  In figure 1 all edges to <code>past</code> events are from <code>past</code>
+  events, and 
+
+  all edges from <code>future</code> events are to <code>future</code>
   events.
 
-  All edges from <code>future</code> events are to <code>future</code>
-  events.
+  <p>
+  The state <code>S*</code> after completion of <code>past</code> events and before
+  initiation of 
+  <code>future</code> events is given by the labels of
+  edges from <code>past</code> to <code>future</code>.
 
-  The state of the system at a slice is specified by the events from
-  <code>past</code> to <code>future</code>.
+  These are the
+  edges that cross the boundary line separating <code>past</code>
+  from <code>future</code>.
 
+  <p>
+  <code>S*</code> is
+  the final state of the sub-dataflow of <code>past</code> events.
+
+  <code>S*</code> is also the initial state of the sub-dataflow of
+  <code>future</code> events.
+
+<p>
+See the lower diagram in figure 1.
+<code>S*</code> is shown as final vertices (which are labeled
+<code>N</code>) of <code>past</code> dataflow, 
+ and <code>S*</code> is shown as as initial vertices (which
+  are labeled <code>0</code>) of <code>future</code> dataflow.
   
 
+  
+ <!--------------------------------------------------------------->
+<h4 class="w3-text-teal">Reachability of States at Slices</h4>
+ <!--------------------------------------------------------------->
+For a dataflow graph with initial state \(S_{init}\) and final state \(S_{fini}\)
+and a state \(S^{*}\) at a slice, there exists a dataflow of
+<ol>
+  <li>
+  <code>past</code> events with initial state  \(S_{init}\) and final
+  state \(S^{*}\), and
+  </li>
+  <li>
+  <code>future</code> events with initial state \(S*\) and final
+  state \(S_{fini}\).
+  </li>
+</ol>
+  
 
   <!--------------------------------------------------------------->
-  <h5 class="w3-text-teal">A Slice Partitions a Dataflow Graphs into
-  Two Dataflow Graphs</h5>
+  <h4 class="w3-text-teal">Theorem</h4>
+  Given a dataflow graph and a slice <code>(past, future)</code> of
+  the graph, there exists a computation that starts at the initial
+  state of the dataflow, and executes the events in
+  <code>past</code> and then executes events in <code>future</code>.
 
-  Associated with a slice of a dataflow graph \(G\) are two graphs
-  called the <code>past</code> and <code>future</code>
-  graphs.
-  The events (vertices) of the <code>past</code> graph are
-  <code>past</code> events in \(G\) with an additional final event
-for each agent.
-The events of the <code>future</code> graph are 
-  <code>future</code> events in \(G\) with an additional initial event
-for each agent.
+  <p class="w3-text-teal">Proof</p>
+  There exists a topological sort of the dataflow graph where vertices
+  in <code>past</code> appear before vertices in <code>future</code>.
 
-<p>
-The edges to the final event for an agent <code>u</code> in the
-  <code>past</code> graph are the edges
-  to events at <code>u</code> in \(G\)
-  from <code>past</code> to
-<code>future</code>.
 
-The edges from the initial event for an agent <code>v</code> in the
-<code>future</code> graph are the edges from events at <code>v</code>
-  in \(G\)
-  from <code>past</code> to <code>future</code> .
 
-<p>
-The events of the <code>past</code> graph are identical to those in
-\(G\) except for the addition of final vertices.
-Because \(G\) is a dataflow graph of the system it follows that the
-<code>past</code> graph is also a dataflow graph of the system.
-Likewise the <code>future</code> graph is a dataflow graph of the
-system. 
-
-  <!----------------------------------------------->
-  <p style="color:red;">Example</p>
- 
-  The lower diagram of figure 1 shows two graphs, the red one
-  consisting of events in <code>past</code> and the green one consisting
-  of events in <code>future</code>.
-
-  Vertices representing final states of <code>past</code> and initial
-  states of <code>future</code> are added to complete the graphs.
-
-  Vertices and edges in the original dataflow graph (upper diagram)
-  are identical to the corresponding vertices and edges in the <code>past</code>
-  and <code>future</code> graphs (lower diagram).
 
   
-  <!--------------------------------------------------------------->
-  <h5 class="w3-text-teal">The Final State of Past is the Initial
-  State of Future</h5>
+ <!--------------------------------------------------------------->
+<h4 class="w3-text-teal">Points in an Agent's Computation in a Dataflow</h4>
+<!--------------------------------------------------------------->
+The computation of an agent \(a\) in a dataflow is the sequence of steps at
+agent \(a\) in the computation.
 
-  The edges that cross the boundary from <code>past</code> to
-  <code>future</code> in the dataflow graph \(G\) are the edges to the final
-  vertices of the <code>past</code> dataflow graph;
-  these are also the edges from the initial vertices of the
-  <code>future</code> dataflow graph. 
-
-  So, the final state of the <code>past</code> dataflow graph is the
-  same as the initial 
-state of the <code>future</code> dataflow graph.
-
-This state is called the <i>state at the slice</i>.
-
-<hr class="new2">
-<p style="color:blue;">
-Let <i>S</i> and <i>S'</i> be the initial and final states,
-respectively, of a dataflow of a system and
-let <i>S*</i> be the state at a slice of the dataflow.
-<p style="color:blue;">
-There exists dataflows  of
-the system from <i>S</i> to <i>S*</i> and from <i>S*</i>
-to <i>S'</i>.
-<hr class="new2">
+It is given by the horizontal line representing steps of the agent in
+the dataflow diagram.
 
 <p>
-Any topological sort of the dataflow graph is a computation. So, there
-exists computations from <i>S</i> to <i>S*</i> and from <i>S*</i>
-to <i>S'</i>
-  
+A point in the computation of an agent \(a\) in a dataflow is an
+integer \(k\) and identifies the edge from the \(k\)-th to the
+\(k+1\)-th step of \(a\).
+
+ <!--------------------------------------->
+<h5 class="w3-text-teal">Theorem</h5>
+<!--------------------------->
+<p>
+Given a dataflow graph \(G\) and a point \(n_{a}\) in the computation
+of each agent \(a\) in \(G\):
+
+<hr class="new2">  
+<p style="color:blue;">
+There is a slice <code>(past,
+future)</code> where <code>past</code> consists of the first \(n_{a}\)
+steps of agent \(a\) exactly when:
+<p style="color:blue;">
+Every message received in <code>past</code> is sent in
+<code>past</code>,
+<br>
+Equivalently:
+</br>
+Every message sent in 
+<code>future</code> is received in <code>future</code>
+</p>
+<hr class="new2">
+
+<p class="w3-text-teal">Proof</p>
+Consider an edge \(v', v\) in the dataflow graph where \(v\) is in
+<code>past</code>.
+
+If the edge is between successive steps at the same agent \(a\) then
+\(v'\) is also in <code>past</code> because the first \(n_{a}\) steps
+of \(a\) are in <code>past</code>, and if \(v\) is one of the first
+\(n_{a}\) steps then so is \(v'\).
+
+<p>
+If the edge is a message edge where \(v'\) is a step in which a
+message is sent and \(v\) is the step in which that message is
+received, then the condition of the observation implies that \(v'\) is
+also in <code>past</code>. 
+
+
+
+ <!--------------------------------------->
+<h5 class="w3-text-teal">Observation</h5>
+<!--------------------------->
+For a channel \(c\), let \(c_{sent}\) and \(c_{rcvd}\) be the numbers
+of messages sent and received along the channel at each point in a
+computation. 
+
+<p>
+Given a dataflow graph \(G\) and a point \(n_{a}\) in the computation
+of each agent \(a\) in \(G\):
+
+There is a slice <code>(past,
+future)</code> where <code>past</code> consists of the first \(n_{a}\)
+steps of agent \(a\) exactly when:
+\(c_{sent} \geq c_{rcvd}\).
+
 
 <!---------------------------------------->
 <h5 class="w3-text-teal">Next</h5>
