@@ -77,34 +77,54 @@ hr.new1 {
 <div class="w3-twothird w3-container">
 
   <!--------------------------------------------------------------->
-  <h2 class="w3-text-teal">Properties of Dataflow: FAQ</h2>
+  <h2 class="w3-text-teal">Timelines: FAQ</h2>
   <!--------------------------------------------------------------->
 
+  
+  <!---------------------------------------------------------->
+  <p Class="w3-text-teal">For two cuts <code>(past, future)</code>
+  and <code>(past', future')</code>, is it the case that either
+  <code>past</code> is a subset of <code>past'</code> or
+  <code>past'</code> is a subset of <code>past</code>
+  ?/p> 
+  <!---------------------------------------------------------->
+  No
+  <p>
+  <a href="Timelines.html">In figure 1</a>
+  there are cuts <code>(past, future)</code>
+  and <code>(past', future')</code>
+  in which <code>past</code> is {0, 1}
+  and <code>past'</code> is {0, 2}.
 
   
 
+ <!---------------------------------------------------------->
+  <p Class="w3-text-teal">For a cut <code>(past, future)</code> could
+  there exist computations that execute some events in
+  <code>future</code> before executing events in <code>past</code>?
+  </p>
   <!---------------------------------------------------------->
-  <P Class="w3-text-teal">Why is the state at a slice defined only for
-  closed slices?/p> 
+  <p>
+  yes
+  <p>
+  <a href="Timelines.html">In figure 1</a>
+  there is a cut <code>(past, future)</code>
+  in which <code>past</code> is {0, 1}
+  and [0, 2, 1, 3, 4] is a computation.
+
+ 
+
   <!---------------------------------------------------------->
-  The state at a closed slice is defined as the state after executing
-  all events in the past at the slice and before executing any event
-  in the future.
-
+  <p Class="w3-text-teal">Is "every message received in
+  <code>past</code> is sent in <code>past</code>" equivalent to
+  "every message sent in
+  <code>future</code> is received in <code>future</code>"?
+  </p>
+  <!---------------------------------------------------------->
   <p>
-  There exists a computation in which all events in the past are
-  executed before events in the future because the past is closed --
-  an example of such a computation is a topological sort of the past
-  followed by a topological sort of the future.
-
+  Yes
   <p>
-  If the past is not closed there is no computation that executes all
-  the events in the past before executing events in the future.
-
-  
-
-
-
+  Note that a message may be received in the final state.
   
 
 <!------------------------------------------------------------------>
