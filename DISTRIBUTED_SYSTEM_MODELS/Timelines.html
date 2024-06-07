@@ -113,7 +113,8 @@ hr.new1 {
   <p>
   A cut of a dataflow graph is an instance of the general
   <a href="https://en.wikipedia.org/wiki/Cut_(graph_theory)">cut of a
-  graph.</a> 
+  graph</a>, and more specifically a cut of a flow network where the
+  source is an initial vertex and the sink is a final vertex.
 
     
   <!--------------------------------------------------------------->
@@ -175,68 +176,32 @@ See the lower diagram in figure 1.
  <!--------------------------------------------------------------->
 <h3 class="w3-text-teal">Properties of Cuts of Dataflow</h3>
 <!--------------------------------------------------------------->
+The proofs of these properties are straigtforward and are given
+<a href="TimelinesProofs.html">here.</a>
 
 <!------------------------------------->
 <h4 class="w3-text-teal">Dataflows of past events and
 future events.</h4>
 
-<p class="w3-text-teal">Theorem</p>
-For a dataflow graph \(G\) with initial state \(S_{init}\) and final state
-\(S_{fini}\) and a state \(S^{*}\) at a cut <code>(past, future)</code>:
+Given a cut <code>(past, future)</code>:
 <ol>
   <li>
-  There exists a dataflow graph \(H\) of
-  <code>past</code> events with initial state  \(S_{init}\) and final
-  state \(S^{*}\).
+  There exists exists a
+dataflow consisting only of <code>past</code> events, and there
+exists exists a dataflow consisting only of <code>future</code>
+  events.
   </li>
   <li>
-  There exists a dataflow graph \(H'\) of
-  <code>future</code> events with initial state \(S*\) and final
-  state \(S_{fini}\).
+  There exists a computation that starts at the initial
+  state of the dataflow, executes the events in
+  <code>past</code> and then executes events in <code>future</code>.
   </li>
 </ol>
 
-<p class="w3-text-teal">Proof</p>
-Every vertex of \(H\), apart from final vertices, is a vertex in
-\(G\).
-Every edge of \(H\), apart from edges to final vertices, is an edge in
-\(G\).
-Since every vertex in \(G\) represents an event so does every vertex
-in \(H\).
-<p>
-The proof for the second part is similar.
 
-Figure 1 illustrates the idea underlying the proof.
-
-
-<h4 class="w3-text-teal">Computation in which Past precedes
-Future.</h4>
-
-<p class="w3-text-teal">Theorem</p>
-Given a dataflow graph and a cut <code>(past, future)</code> of
-  the graph, there exists a computation that starts at the initial
-  state of the dataflow, and executes the events in
-<code>past</code> and then executes events in <code>future</code>.
-
-<p class="w3-text-teal">Proof</p>
-Every topological sort of a dataflow graph is a computation.
-
-There exists at least one topological sort of a directed acyclic
-graph.
-
-From the previous theorem there is at least one computation consisting
-of past events, and there is at least one computation consisting of
-future events.
-
-<p>
-The final state of computations of past events is the initial state of
-computations of future events.
-
-
-
-<!----------------------------------------->
-<h4 class="w3-text-teal">Initial Subsequences of Steps by Agents</h4>
-For the remainder of this page we assume that agents are indexed \(i\)
+<!------------------------------------->
+<h4 class="w3-text-teal">Cuts at Initial Sequences of Agent Steps.</h4>
+Next, we assume that agents are indexed \(i\)
 for \(0 \leq i < N\).
 
 We restrict attention to a cut 
@@ -244,57 +209,41 @@ We restrict attention to a cut
 where <code>past</code> consists of the
 first \(n[k]\) steps of agent \(k\).
 
-Cuts specified by a vector, in this way, are used in taking global
-snapshots. 
 
 
-
-<!---------------------------------->
-<p class="w3-text-teal">Theorem</p>
-There exists a cut <code>(past, future)</code>
-specified by a vector \(n\)
-where <code>past</code>
-consists of the first \(n[k]\) steps of agent \(k\)
-exactly when: 
 <p>
-Every message received in <code>past</code> is sent in
-<code>past</code>.
-
-
-<!---------------------------------->
-<p class="w3-text-teal">Proof</p>
-<p>
-If the \(i\)-th step of agent \(k\) is in <code>past</code> then
-all steps of agent \(k\) before its \(i\)-th step are
-also in <code>past</code>.
-
-So, if all messages received in <code>past</code> are sent in
-<code>past</code> then all paths in the dataflow to <code>past</code>
-are from <code>past</code>.
-
-
-<!----------------------------------------->
-<h4 class="w3-text-teal">Numbers of Messages Sent and Received</h4>
-
 For a channel \(c\), let \(c_{sent}\) and \(c_{rcvd}\) be the numbers
 of messages sent and received along the channel at each point in a
 computation.
 
+<p class="w3-text-teal">Theorem</p>
+
 There exists a cut <code>(past, future)</code>
-specified by a vector \(n\)
+specified by a vector \(n\),
 where <code>past</code>
-consists of the first \(n[k]\) steps of agent \(k\)
+consists of the first \(n[k]\) steps of agent \(k\),
 exactly when:
-<p>
- For all channels \(c\): \(c_{sent} \geq c_{rcvd}\).
-</p>
+<ol>
+  <li>
+  Every message received in <code>past</code> is sent in
+  <code>past</code>,
+  </li>
+  <li>
+  which is equivalent to:
+  For all channels \(c\): \(c_{sent} \geq c_{rcvd}\).
+  </li>
+</ol>
+
+  
+
+
 
 
 <!---------------------------------------->
 <h5 class="w3-text-teal">Next</h5>
 <!---------------------------------------->
-The properties of cuts in dataflow, and the concepts of before/after,
-past/future are central for 
+The properties of cuts in dataflow, and the concepts of before - after,
+past - future are central for 
 <a href="../ChannelSnapshots/ChannelSnapshots.html">algorithms by
 which agents record the 
 states of distributed systems</a> discussed in the next chapter.
