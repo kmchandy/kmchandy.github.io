@@ -1,0 +1,197 @@
+<title>DistributedSystemModels/BasicsFAQ.html</title>
+
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+
+<!---------------------------------------------------------------->
+    <h1 class="w3-text-teal">Timelines and Dataflow: FAQ</h1>
+<!----------------------------------------------------------------->
+
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">Dataflow doesn't have the concept of
+  time. Does that mean that we cannot use time in our algorithms?</p>
+  <!----------------------------------------------------------------->
+  You can use the local clock of an agent in its <code>receive</code>
+  function. Indeed, it can be helpful to do so.
+
+  For example, you can have a sleep statement in a
+  <code>receive</code>.
+
+  
+  <p>
+  Properties of all dataflows of a system are properties of all
+  timelines of the system.
+
+  Dataflow doesn't make any assumptions about time, and so it works for
+  all possible evaluations over time.
+
+  <p>
+  You may be able to determine more properties of a system by making
+  assumptions about local clocks; however, properties that you prove
+  without making assumptions are properties that hold for any
+  assumptions that you make.
+
+
+  
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">Does dataflow assume that events are instantaneous?</p>
+  <!----------------------------------------------------------------->
+
+  Dataflow makes no assumptions about the duration of an event.
+  
+  The only states of an agent that appear in dataflow are the states
+
+  You can, however, think of a vertex in a dataflow as an event in
+  which a <code>receive</code> is executed in an infitisimally small
+  time. 
+
+
+
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">Local clocks can be synchronized using NTP
+  and other protocols. Why do you assume that clocks aren't synchronized? </p>
+<!----------------------------------------------------------------->
+Local clocks can, indeed, be synchronized very accurately; however, we
+  do not assume that they are perfect.
+
+<p>
+We use agents' local clocks for evaluating algorithm performance but
+not for proving correctness because even a small drift can cause race
+conditions. 
+
+<p>
+Consider an algorithm in which one agent carries out a computation
+starting at 1pm and another agent carries out a computation starting at 2pm.
+
+When we prove the correctness of our algorithms, we allow for the
+unlikely possibility that that the agent starting its 
+computation at 2pm does so before the agent that starts a 1pm.
+
+For evaluating performance, however, we assume that the agent that starts a 1pm
+usually does so before the agent that starts at 2pm.
+
+
+<h5 class="w3-text-teal">Next</h5>
+<p>
+<a href="Computations.html">Computations
+</a>
+shows how a while loop of a sequential program can be used to analyze
+distributed algorithms.
+
+
+
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
