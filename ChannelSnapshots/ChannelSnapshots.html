@@ -87,8 +87,8 @@ hr.new1 {
   <!------------------------------------------------------------------->
   
   <p class="w3-text-red">
-  A global snapshot algorithm determines a state that can occur during
-  a computation.
+  A global snapshot algorithm records a state of the system that can
+  occur during a computation.
 
   The state obtained by the algorithm is called a global snapshot.
 
@@ -105,17 +105,31 @@ hr.new1 {
   </p>
  
   <!-----------------------------------------------------------------------------> 
-  <h4 class="w3-text-teal">The Problem</h4> 
+  <h4 class="w3-text-teal">Global Snapshot</h4> 
   <!----------------------------------------------------------------------------->
   <p>
-  A global snapshot algorithm determines an intermediate state in a
-  computation.
+  A global snapshot algorithm records a state of the system that
+  occurs during a computation of the system.
 
-  A global snapshot is a state that can occur after the state in which
-  the global snapshot algorithm starts and before the state in which
-  the algorithm ends.
+  A state obtained by the algorithm is called a global snapshot.
 
-  This page describes a global snapshot algorithm.
+  <p>
+  A state of the system is a tuple with an element of the tuple for each agent and
+  each channel.
+
+  A system state is also called a global state to distinguish it from
+  states of agents and states of channels.
+  
+
+  <p>
+  An algorithm to record the state of a system is not instantaneous
+  because the algorithm records the states of multiple agents and
+  channels.
+
+  The algorithm starts at some point and terminates at a later point.
+
+  A global snapshot is a state that occurs in a computation from the
+  state in which the algorithm starts to the state in which the algorithm ends.
 
   <p>
   The global snapshot algorithm is an example of an algorithm that is
@@ -178,69 +192,64 @@ Likewise, by messages we mean those that are sent and received by the
 OS.
 
 
-
+<p>
+Next, let's develop OS agents and OS messages to record a global snapshot.
  
 <!----------------------------------------------------------------------------->
-<h4 class="w3-text-teal">How Should You Approach the Problem?</h4>
+<h4 class="w3-text-teal">How Should You Solve the Problem?</h4>
 <!----------------------------------------------------------------------------->
-The state at a <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-slice</a> is a state that can occur in a computation.
-
-So we design the global snapshot algorithm to determine a global
-snapshot -- a state at a slice.
 
 <p>
-Each agent records its own state -- takes its local snapshot -- at
-some point in a computation.
+Each agent has to record its own state because an agent's state is not
+accessible to other agents.
 
-Define <code>past</code> as the set of events at an agent before the
-agent takes its local snapshot.
-
-The definition of a slice is that all events <code>before</code> <code>past</code> events
-are <code>past</code> events.
-An equivalent definition of a slice is that all events <code>after</code> <code>future</code> events
-are <code>future</code> events.
-
-An event in which a message is sent is <code>before</code> the event
-in which the message is received, and a message is received
-<code>after</code> it is sent.
+The state of an agent that it records is called a local snapshot.
 
 <p>
-So, local snapshots correspond to a global snapshot exactly when:
+Define <code>past</code> as the set of events at each agent before the
+agent takes its local snapshot, and
+define <code>future</code> as the set of events at each agent after the
+agent takes its local snapshot
+
+<p>
+Let's use
+<a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html"> the following property of
+<code>past</code> and <code>future</code>:</a>
+<p>
+The partition <code>(past, future)</code> is a cut exactly when every
+message received in <code>past</code> is sent in <code>past</code>.
+
+<p>
+Therefore, <code>(past, future)</code> is a cut exactly when:
 <hr class="new2">
+<p style="color:blue;">Global Snapshot Rule</p>
 <p style="color:blue;">
-Messages received in the <code>past</code> are sent in the <code>past</code>, i.e.
-<p style="color:blue;">
-Each message received before the receiver takes its snapshot
-is sent before the sender takes its snapshot.
+Each message received before the receiver takes its local snapshot
+is sent before the sender takes its local snapshot.
 <p>
-Or equivalently,
-<p style="color:blue;">
-Messages sent in the <code>future</code> are received in the
-<code>future</code>, i.e.
-<p style="color:blue;">
-Each message sent after the sender takes its snapshot
-is received after the receiver takes its snapshot.
-</p>
 <hr class="new2">
 
+Design an algorithm yourself before reading further, and compare your
+algorithm with the one below.
 
 <p>
-The central question in designing the algorithm is:
-How should the algorithm separate messages sent in <code>past</code>
-from messages sent in <code>future</code>?
+Hint: Use the global snapshot rule and use an OS message to distinguish
+messages sent before and after the sender takes its local snapshot.
 
 
-A special OS message, called a <code>marker</code> is used for this
-purpose.
-Messages sent on a channel before a <code>marker</code> is sent on the
-channel are messages sent in the <code>past</code>, and messages sent
-after the marker are sent in the <code>future</code>.
+
 
 <!----------------------------------------------------------------------------->
 <h4 class="w3-text-teal">The Global Snapshot Algorithm</h4>
 <!----------------------------------------------------------------------------->
 
+A special OS message called a <code>marker</code> is used to distinguish
+pre-snapshot from post-snapshot messages.
+
+Messages sent on a channel before a <code>marker</code> is sent on the
+channel are messages sent in the <code>past</code> -- i.e. before the
+sender takes its local snapshot -- and messages sent
+after the marker are sent in the <code>future</code>.
 
 <p class="w3-text-teal">The algorithm</p>
 <ol>
@@ -260,25 +269,35 @@ after the marker are sent in the <code>future</code>.
   The snapshot of a channel is the sequence of messages received on
   the channel after the receiver takes its snapshot and before the
   receiver receives a marker on the channel.
+  </li>
 </ol>
 
 <h5 class="w3-text-teal">Proof of correctness</h5>
 
 <p>
-From rule 2, messages sent on a channel after the marker is sent on
-the channel
-are sent after the sender takes its snapshot; so, these messages are
-sent in <code>future</code>.
 
-From rule 3, messages received after a marker are messages received
-after the receiver takes its snapshot; so these messages are received
-in <code>future</code>.
+From rule 3, each message received by an agent \(r\) on a channel
+\(c\) before \(r\) takes its 
+local snapshot is a message received by \(r\) before \(r\) receives a
+marker on channel \(c\).
 
-Therefore all messages sent in <code>future</code> are received in
-<code>future</code>.
+<p>
+Because channels are first in first out, each message received by
+ \(r\) on \(c\) before \(r\) receives a
+marker on \(c\) is sent on \(c\) before a marker is
+sent on \(c\).
+
+<p>
+From rule 2 each message sent on \(c\) before a marker is sent on
+\(c\) is sent before the sender takes its local snapshot.
+
+<p>
+From the three paragraphs above it follows that the global snapshot
+rule holds for the algorithm.
+
 
 <p class="w3-text-teal">Proof about States of Channels</p>
-The messages in a channel at the slice are the
+The messages in a channel at the cut are the
 messages sent in <code>past</code> and received in <code>future</code>.
 These are messages sent before the sender takes its snapshot and
 received after the receiver takes its snapshot.
@@ -309,40 +328,6 @@ So, a marker is sent on a channel at most once.
 
 The computation terminates when all markers are received.
 
-<h5 class="w3-text-teal">Code Structure</h5>
-The code outline is given below in Python.
-
-<i>channels_recorded</i> is a dict (dictionary), where
-<i>channels_recorded[sender]</i> becomes True when the snapshot for
-the channel from this sender has finished being recorded.
-<i>channel_snapshots</i> is a dict where
-<i>channel_snapshots[sender]</i> is the ongoing recording of the
-snapshot of the channel from the sender.
-
-<pre>
-taken_local_snapshot = False
-channel_snapshots = {key: [] for key in predecessors}
-channels_recorded = {key: False for key in predecessors}
-
-start()
-def receive(message, sender):
-   if isinstance(message, Marker) and not taken_local_snapshot:
-        local_snapshot = record_state()
-        taken_local_snapshot = True
-        channels_recorded[sender] = True
-        output_message = Marker()
-        for receiver in successors:
-            send(output_message, receiver)
-   elif isinstance(message, Marker) and taken_local_snapshot:
-        channels_recorded[sender] = True
-   else: 
-        if taken_local_snapshot and not channels_recorded[sender]:
-           channel_snapshots[sender] = \\ 
-                       channel_snapshots[sender].append(message)
-</pre>
-
-
-
 <!---------------------------------------------------->
 <h5 class="w3-text-teal">Collecting Local Snapshots to form Global
 Snapshots</h5>
@@ -359,167 +344,16 @@ timestamps.
 Some algorithms carry out distributed computations on local snapshots
 without forming a global snapshot.
 
-We give examples of such algorithms in this chapter.
-
-
-The remainder of this webpage consists of examples.
-
-<!--------------------------------------------------------->
-<center>
-<h2 style="color:red;">Examples</h2>
-</center>
-<!--------------------------------------------------------->
-
-
-<!--------------------------------------------------------->
-<h4 style="color:red;">Example: Snapshots may change a Client's Computation
-</h4>
-<!--------------------------------------------------------->
-This example shows that the OS algorithm may change a client's
-computation though it does not change the client's dataflow.
-
-<p>
-Figure 2 is a representation of a computation with event sequence
-\([0, 1, 2, \ldots, ]\) and agents \(X, Y, Z\) without a concurrent OS
-algorithm, and figure 3 shows how the OS changes this computation.
-
-Events later in the computation are placed to the
-right of earlier events.
-
-
-<figure>
-    <img src="ChannelSnapshots/ChannelSnapshots.002.jpeg" alt="Fig2"
-    style="width:80%"> 
-<figcaption>
-Fig.2: Representation of a Computation without Snapshots
-</figcaption> 
-</figure> 
-
-
-<p>
-Figure 3 shows how a client's computation is changed when the OS takes
-snapshots. 
-
-The local snapshots taken by agents are shown as a yellow
-circle on the agents' timelines.
-
-The OS delays event 3 so that it occurs after events 4, 5, 6, and 7,
-as shown in the figure.
-
-The OS changes the computation, but it does not change the dataflow.
-
-<figure>
-    <img src="ChannelSnapshots/ChannelSnapshots.003.jpeg" alt="Fig2"
-    style="width:80%"> 
-    <figcaption>Fig.3: The OS changes a Client's Computation</figcaption>
-</figure> 
-
-In figure 3, the pre-snapshot events are 0, 1, 2, 4, 6.
-
-There is only one message received in a pre-snapshot
-event, namely the message represented by the edge (0, 2).
-
-So, every message received in a pre-snapshot event is sent in a
-pre-snapshot event.
-
-The figure shows that the set of pre-snapshot events is closed.
-
-
-<!---------------------------------------------------------->
-<h4 style="color:red;">Example: Steps in a Global Snapshot
-Algorithm: Initiation</h4>
-<!---------------------------------------------------------->
-
-Figure 4 illustrates the first step of the algorithm.
-
-<figure>
-    <img src="ChannelSnapshots/ChannelSnapshots.005.jpeg" alt="Fig4"
-    style="width:100%"> 
-    <figcaption>Fig.4: Agent Sends Markers when it Takes its Local
-    Snapshot</figcaption> 
-</figure>
-
-Agent Y takes its local snapshot shown as a yellow vertex on Y's
-timeline.
-
-When Y takes its snapshot it sends markers on its output channels.
-
-The markers are shown as green edges in the figure.
-
-
-<p>
-When agents X and Z each receive the markers, they take their local
-snapshots because they haven't taken snapshots earlier.
-
-<figure>
-    <img src="ChannelSnapshots/ChannelSnapshots.006.jpeg" alt="Fig5"
-    style="width:100%"> 
-<figcaption>
-Fig.5: Agents Take Local Snapshots when they Receive Markers
-</figcaption>
-</figure>
-
-The actions by X and Z of taking their snapshots are shown as yellow
-vertices on their timelines in figure 5.
-
-
-<!--------------------------------------------------->
-<h4 style="color:red;">Example: Agents take Snapshots upon Receiving Markers</h4> 
-<!--------------------------------------------------->
-<p>
-When X and Z take their snapshots they send markers out on their
-output channels.
-
-The markers sent by X are shown in figure 7.
-
-The markers sent by Z are not shown in the figure.
-
-<figure>
-    <img src="ChannelSnapshots/ChannelSnapshots.007.jpeg" alt="Fig6"
-    style="width:100%"> 
-    <figcaption>Fig.6: When an Agent takes its Snapshot it sends Markers.
-    </figcaption>
-</figure>
-
-
-
-<!--------------------------------------------------->
-<h4 style="color:red;">Example: Snapshot of a Channel</h4> 
-<!--------------------------------------------------->
-<p>
-Figure 8 shows how agent Y determines the state of the channel from X
-to Y in the global snapshot.
-
-Y starts recording the messages it receives along this channel after Y
-takes its snapshot and stops the recording when it receives a marker
-on this channel
-
-The only message in this interval is the message corresponding to edge
-(6, 7).
-
-
-<figure>
-    <img src="ChannelSnapshots/ChannelSnapshots.008.jpeg" alt="Fig7"
-    style="width:100%"> 
-<figcaption>
-Fig.7: Example: Recording a Channel State
-</figcaption>
-</figure> 
-
-The message corresponding to edge \((0, 2)\) is from X to Y but is not
-in the snapshot of 
-the channel because both \(0\) and \(2\) are pre-snapshot events.
-
-Likewise, the message corresponding to edge \((12, 13)\) is from X to
-Y but is not in the snapshot of
-the channel because both \(12\) and \(13\) are post-snapshot events.
-
-The message corresponding to edge \((6, 7)\) was sent in a
-pre-snapshot event and received in a post-snapshot event, and so it is
-in the snapshot of the channel.
+We give examples of such algorithms.
 
 
 <h4 class="w3-text-teal">Next</h4>
+
+<p>
+A code skeleton of the algorithm and examples of the global snapshot
+algorithm are provided
+<a href="ChannelSnapshotDetails.html">here</a>.
+
 Next  
 <a href="LogicalClocks.html">logical clocks</a>.
 
