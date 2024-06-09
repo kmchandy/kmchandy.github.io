@@ -82,35 +82,44 @@ hr.new1 {
 
   
   <!---------------------------------------------------------->
-  <p Class="w3-text-teal">For two cuts <code>(past, future)</code>
-  and <code>(past', future')</code>, is it the case that either
-  <code>past</code> is a subset of <code>past'</code> or
-  <code>past'</code> is a subset of <code>past</code>
-  ?/p> 
+  <p Class="w3-text-teal">Which agent starts a global snapshot
+  algorithm? 
+  </p> 
   <!---------------------------------------------------------->
-  No
+
   <p>
-  <a href="Timelines.html">In figure 1</a>
-  there are cuts <code>(past, future)</code>
-  and <code>(past', future')</code>
-  in which <code>past</code> is {0, 1}
-  and <code>past'</code> is {0, 2}.
+  The algorithm is started by <i>any</i> one or more agents.
+
+  The agents that start the algorithm isn't specified.
+
+  <p>
+  The agent that should initiate a snapshot algorithm is usually self
+  evident from the application of the algorithm.
+
+  For example, an agent that has been waiting for a long time for a
+  message may obtain a global snapshot to determine if the agent is in
+  a deadlock.
 
   
 
  <!---------------------------------------------------------->
-  <p Class="w3-text-teal">For a cut <code>(past, future)</code> could
-  there exist computations that execute some events in
-  <code>future</code> before executing events in <code>past</code>?
+  <p Class="w3-text-teal">Can the snapshot algorithm be used to record
+  the states and channels of a subset of agents, or does the algorithm
+  have to span all agents and channels?
   </p>
   <!---------------------------------------------------------->
+  
   <p>
-  yes
-  <p>
-  <a href="Timelines.html">In figure 1</a>
-  there is a cut <code>(past, future)</code>
-  in which <code>past</code> is {0, 1}
-  and [0, 2, 1, 3, 4] is a computation.
+  The snapshot algorithm can be used to record the states of a
+  connected subset of agents.
+
+  An agent doesn't propagate markers to agents outside the set of
+  interest.
+
+  The recorded states of the subset of agents and channels forms a
+  part of a global snapshot.
+
+  Some algorithms only used snapshots of subsets of agents.
 
  
 
