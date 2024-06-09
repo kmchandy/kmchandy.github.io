@@ -1,0 +1,663 @@
+<title>Paxos/ReadWriteLossyChannels.html</title>
+
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+  
+  <!--------------------------------------------------------->
+  <h2 class="w3-text-teal">Serial Transactions on Faulty Systems</h2> 
+  <!--------------------------------------------------------->
+
+  <!--------------------------------------------------------->
+  <h4 class="w3-text-teal">Clients and Servers</h4>
+  <!--------------------------------------------------------->  
+A distributed system has agents, called <i>clients</i> that send
+  requests to agents, called <i>servers</i>, to read and
+  write local variables of servers.
+
+  Each server <code>q</code> has a local variable <code>q.v</code>.
+
+  A server  <code>q</code> receives messages from clients to read or
+  write <code>q.v</code>.
+
+  <p>
+  When a server <code>q</code> receives a read request from a client
+  <code>p</code>, the server sends a reply containing
+  <code>q.v</code> to <code>p</code>.
+
+  When <code>q</code> receives a write request, containing the value
+  <code>w</code> to be written, <code>q</code> executes <code>q.v =
+  w</code>.
+
+  The only actions of a server are to respond to requests.
+
+  <p>
+  Associated with each client is a clock that sends the client
+  a sequence of <i>clock tick</i> messages.
+  
+  The intervals between clock tick messages are irrelevant for the
+  correctness of the algorithm, but play a role in the algorithm's
+  performance.
+  
+  The only actions of a client are to send requests to servers, receive
+  replies from servers, and receive clock tick messages.
+
+  <p>
+
+
+
+  <h4 class="w3-text-teal">Lossy Channels</h4>
+  We design an algorithm for a system in which agents may
+  halt and messages may be duplicated,
+  lost, and delivered out of order.
+
+  Requests by clients to servers, and replies from servers may be
+  lost, and so a client may never receive a reply.
+
+<p>
+  Clients avoid waiting forever for a reply by taking the following
+steps.
+
+A client sends requests to
+servers when the client receives a clock tick message.
+
+A client only accepts replies that arrive before the client receives
+its next clock tick.
+
+
+  <!-------------------------------------------------------->
+  <h4 class="w3-text-teal">Transactions in a System with a Single
+Client</h4>
+
+We begin by considering a system with a single client <code>p</code>.
+
+A client carries out a sequence of transactions.
+
+Each transaction is simple: a client reads and writes server values.
+
+The transaction uses a constant <code>M</code>.
+
+Each client <code>p</code> has a local variable <code>p.copy</code>
+which is a dictionary and where <code>p.copy[q]</code> contains a
+(possibly stale) copy of <code>q.v</code>.
+
+
+A transaction is as follows.
+
+  <h5 class="w3-text-teal">Read</h5>
+  <code>p</code> sends read requests to all servers.
+  Requests may be lost.
+  Servers that receive requests send replies, but replies may be lost.
+  
+  Let <code>R</code> be the subset of servers from
+  which <code>p</code> receives replies to its read requests.
+  
+  For each <code>q</code> in <code>R</code>: <code>p</code>
+  copies the value, <code>q.v</code>, in the reply into 
+  <code>p</code>'s local variable <code>p.copy[q]</code>.
+
+  <p>
+  If <code>p.copy</code> has more than <code>M</code> elements then
+  the client executes the write step.
+  
+  If <code>p.copy</code> has <code>M</code> or fewer elements then the
+   transaction terminates without executing the write step.
+
+
+  <h5 class="w3-text-teal">Write</h5>
+  <code>p</code> requests each server <code>q</code> to assign
+  <code>p.f()</code> to <code>q.v</code> where <code>f()</code> is a
+given function.
+
+Some requests may be losts.
+
+Let <code>W</code> be the set of servers that receive and process
+write requests.
+
+
+<h5 class="w3-text-teal">The  Transaction</h5>
+A  transaction by a client <code>p</code> is as follows.
+
+<pre>
+select arbitrary subset R of servers
+p.copy = {}
+for q in R: p.copy[q] = q.v
+
+if len(p.copy) >= M:
+   select arbitrary subset W of servers
+   for q in W: q.v = p.f()
+</pre>
+
+
+
+<h4 class="w3-text-teal">Serializable Computations</h4>
+
+A dataflow graph is <i>serializable</i> if it can be partitioned into
+a sequence of subgraphs where each subgraph is the dataflow graph of a
+single transaction.
+
+<p>
+An equivalent definition in terms of computations is as follows.
+
+A computation \(X\) is serializable if there exists a
+computation \(Y\) which is a permutation of \(X\) where \(Y\) is a
+sequence of  transactions.
+
+The sequence of  transactions in \(Y\) can represented by the
+following iteration.
+
+
+<pre>
+while True:
+   select an arbitrary client p
+   p executes a  transaction
+</pre>
+
+
+<!-------------------------------------------------->
+<h3 class="w3-text-teal">The Problem</h3>
+<!-------------------------------------------------->
+
+The problem is to design an algorithm with multiple
+clients such that computations are serializable.
+
+<p>
+The challenge is to design an algorithm in which the execution of a
+ transaction by one client doesn't modify the execution of a
+ transaction by another client though both clients are
+executing transactions concurrently.
+
+<!-------------------------------------------------->
+<h4 class="w3-text-teal">How Should You Approach The Problem?</h4>
+<!-------------------------------------------------->
+
+What method comes to mind to partition a dataflow graph into dataflow
+subgraphs? 
+
+Logical time partitions dataflow into a dataflow of the past at
+logical time \(t\) and a dataflow of the future at logical time \(t\).
+
+The state of the system after the past at \(t\) and before the future
+at \(t\) is the global snapshot at logical time \(t\).
+
+We use a similar mechanism.
+
+
+<!-------------------------------------------------->
+<p class="w3-text-teal">Logical Times and Epochs</p>
+<!-------------------------------------------------->
+<p>
+Logical clocks assign a logical time \(t(e)\) to each step \(e\) such
+that for all edges \((e, e')\) of the dataflow graph:
+\(t(e) < t(e')\).
+
+
+<p>
+In this algorithm, we assign a value \(t(e)\), called \(e\)'s epoch to
+each step \(e\) such 
+that for all edges \((e, e')\) of the dataflow graph:
+\(t(e) \leq t(e')\).
+
+<p>
+We will see that epochs have some of the properties of logical time
+including the following:
+
+<p class="w3-text-teal">Observation</p>
+<i>There exists a computation in which steps are executed in
+ascending order of epochs</i>.
+
+<p>
+This observation follows from the fact that there is a computation in
+ascending order of
+<a href="../ChannelSnapshots/LogicalClocks.html">logical times.</a>
+
+See <a href="">details</a>.
+
+<p>
+A consequence of this observation is that there is a computation
+in which all steps with the same epoch, say \(T\), occur after all steps with
+epochs less than \(T\) and before all steps with epochs greater than
+\(T\).
+
+The key idea of the algorithm is as follows:
+
+  <hr class="new2">
+  <p style="color:blue;">
+Each transaction is assigned a unique epoch, and all steps of a transaction are
+assigned the epoch of the transaction.
+</p>
+<hr class="new2">
+
+Next, we describe an algorithm based on this key idea.
+
+
+<!-------------------------------------------------->
+<h4 class="w3-text-teal">Algorithm for a Server</h4>
+<!-------------------------------------------------->
+
+A server <code>q</code> has two local variables:
+<ol>
+  <li>
+  <code>q.t</code>,
+called <code>q</code>'s epoch,
+which is the epoch of the transaction that <code>q</code> is
+  processing.
+  </li>
+  <li>
+  <code>q.v</code> which is the value of the variable managed by
+  <code>q</code>.
+  </li>
+</ol>
+
+<p>
+Initially <code>q.v</code> is a symbol <code>None</code> to indicate
+that no value has been assigned, and <code>q.t</code> is <code>0</code>.
+
+<p>
+A server receives two classes of messages: <code>ReadRequest</code> and
+<code>WriteRequest</code>.
+Every message, <code>m</code>, has a field, <code>m.t</code>, which is the
+ epoch of the transaction in which <code>m</code> is sent.
+
+A write request has a field, <code>v</code>, which is the value to be
+written.
+
+A server replies to a read request with a message of class
+<code>Reply</code> which has two fields: <code>v</code>, the value of
+the shared variable, and <code>t</code>, the epoch of the
+message.
+
+The algorithm is given below.
+
+<pre>
+# initialization
+q.t, q.v = 0, None
+
+start()
+def receive(request, client):
+   if request.t >= q.t
+      q.t = request.t
+      if isinstance(request, ReadRequest):
+         send(Reply(q.v, q.t), client)
+      else:
+         // message is a WriteRequest
+         q.v = request.v
+</pre>
+
+
+<!-------------------------------------------------->
+<h5 class="w3-text-teal">Explanation of the Algorithm</h5>
+<!-------------------------------------------------->
+A server rejects (ignores) requests from epochs earlier than the epoch
+that the server is processing, i.e., a request is
+rejected if <code>request.t < q.t</code>.
+
+Rejected requests are treated as lost and don't appear in the
+computation.
+
+<p>
+A server <code>q</code> is said to <i>accept</i> a request when
+<code>request.t</code> \(\geq\) <code>q.t</code>.
+
+The step in which <code>q</code> accepts a request with epoch
+<code>T</code> is assigned epoch <code>T</code> because it is a step
+in processing the transaction with epoch <code>T</code>.
+
+
+<p>
+If <code>request.t</code> \(=\) <code>q.t</code> then the server
+continues to process the transaction in epoch <code>q.t</code>.
+
+If <code>request.t</code> \(>\) <code>q.t</code> then the server
+begins processing the transaction with epoch <code>request.t</code>, and
+stops processing transactions from earlier epochs.
+
+The server increases its transaction id to <code>request.t</code> to
+indicate that it is now processing the transaction with epoch
+<code>request.t</code>. 
+
+
+<p>
+A server <code>q</code> replies to each read request that it accepts and sets the
+epoch of the reply to <code>q.t</code>.
+
+A server <code>q</code> carries out a write transaction when <code>q</code>
+accepts a write request.
+
+
+
+<!-------------------------------------------------->
+<h4 class="w3-text-teal">Algorithm for a Client </h4>
+<!-------------------------------------------------->
+
+<p>
+An epoch is a pair <code>(n, p)</code> where <code>p</code> is
+the client that carries out the transaction and where <code>n</code> is
+and  <code>p</code> are
+<a href="https://en.wikipedia.org/wiki/Total_order">total orders.</a>
+
+Epochs are compared lexicographically.
+
+Later transactions initiated by a client have higher epochs
+than earlier transactions initiated by the same client.
+
+
+<p>
+Each client <code>p</code> has a local variable <code>p.t</code> 
+which is the epoch of the transaction that <code>p</code>
+is processing.
+
+A client <code>p</code> has a local variable <code>p.copy</code> which
+contains copies of shared variables.
+<code>p.copy</code> is a dictionary and <code>p.copy[q]</code> is
+<code>p</code>'s copy of the shared variable of server
+<code>q</code>. 
+
+<p>
+The client's algorithm and explanation are given next.
+
+
+<pre>
+# Initialization
+p.t = 0
+
+start()
+def receive(message, sender):
+   if isinstance(message, ClockTick):
+      # Start new transaction
+      p.t = p.t + pos()
+      p.copy = {}
+      for q in Q:  send(ReadRequest(p.t), q)
+   else:
+      # message is a reply to a read request
+      if message.t == p.t: 
+         p.copy[sender] = message.v
+         if len(p.copy) >= M:
+            for q in Q:
+               send(WriteRequest(v = p.f(), t=p.t), q)
+</pre>
+
+
+
+<!-------------------------------------------------->
+<h5 class="w3-text-teal">Explanation of the Algorithm</h5>
+<!-------------------------------------------------->
+
+<p class="w3-text-teal">Receive a Clock Tick Message</p>
+A client <code>p</code> starts executing a new transaction
+ when it gets a clock tick message.
+
+
+A client <code>p</code> sets the epoch <code>p.t</code> of the new
+  transaction that it starts processing to
+be a value greater than the epoch of the transaction that it was
+  processing previously.
+
+The client stops processing the transaction with an earlier epoch.
+
+<p>
+  <code>pos</code> is a function that returns a positive value.
+  The value returned is not relevant to the
+correctness of the algorithm but does impact performance.
+
+<p>
+  A client <code>p</code> discards earlier copies of shared variables and sends
+read requests to each server.
+The epoch of the
+requests is <code>p.t</code>, the epoch of the transaction that
+  <code>p</code> has started processing.
+
+
+Client <code>p</code> then waits to receive a clock tick 
+message and waits concurrently for replies to its read requests.
+
+<!---------------------------------------------->
+<p class="w3-text-teal">Receive a Reply</p>
+<!---------------------------------------------->
+
+A client <code>p</code> accepts a <code>reply</code> if and only if
+the reply is in the same epoch
+as that of the transaction that <code>p</code> is processing.
+i.e., <code>p.t</code> \(=\) <code>reply.t</code>.
+
+Client <code>p</code> rejects replies from earlier transactions.
+
+We will see that <code>p</code> never receives a reply from a
+an epoch later than the transaction that <code>p</code> is processing.
+
+<p>
+Client <code>p</code> takes the following steps when it
+accepts <code>reply</code> from a server,
+<code>q</code>.
+The client copies the value in the reply from <code>q</code> into the client's
+local variable, <code>p.copy[q]</code>.
+
+If <code>p</code> has received replies from <code>M</code> or more 
+servers then <code>p</code> sends write requests to all servers.
+
+The epoch of the write requests is <code>p.t</code>, the epoch of the
+transaction that <code>p</code> is processing.
+
+The value to be written, specified in the write request is
+<code>p.f()</code>, a given function.
+
+
+
+<!--------------------------------------------------->
+<h4 class="w3-text-teal">Proof of Correctness</h4>
+<!--------------------------------------------------->
+Each transaction has a unique epoch because a client starts a
+transaction with an epoch greater than epochs of 
+earlier transactions that it starts.
+
+Transactions started by different clients have different epochs
+because an epoch is a pair <code>(n, p)</code> where <code>p</code> is
+a client.
+
+<p>
+From the algorithm, all requests sent by clients, all requests accepted
+by servers, all replies sent by servers, all replies accepted by
+clients, and all steps in a transaction with epoch <code>T</code> have epoch
+<code>T</code>.
+
+The proof is straightforward and is given here.
+
+Next we show that all steps of a transaction with epoch <code>T</code>
+have epoch <code>T</code>.
+And we show that all requests sent by clients, all requests accepted
+by servers, all replies sent by servers, and all replies accepted by
+clients in a transaction with epoch <code>T</code> have epoch
+<code>T</code>. 
+
+<p class="w3-text-teal">Client starts transaction with epoch
+<code>T</code>.</p>
+
+A client <code>p</code> starts a transaction  with epoch
+<code>T</code>
+by setting <code>p.t = T</code>, and
+sending a read request <code>m</code> with <code>m.t = T</code> to each
+server.
+
+
+<p class="w3-text-teal">Server accepts a read request in epoch
+<code>T</code> in a step in epoch <code>T</code>.</p>
+
+The read request is treated as lost by a server <code>q</code> if
+<code>T</code> \(<\) <code>q.t</code>.
+
+If <code>T</code> \(\geq\) <code>q.t</code>, then the server accepts
+the request and sets <code>q.t = T</code>, and
+the server replies with a message in epoch <code>T</code>.
+The accepted request, the step, and the reply have the same epoch
+<code>T</code>. 
+
+<p class="w3-text-teal">Client accepts a reply with epoch
+<code>T</code> in a step in epoch <code>T</code>.</p>
+
+A client <code>p</code> ignores a reply with epoch <code>T</code> if
+the client is processing a transaction with a later epoch, i.e.,
+(i.e. <code>T</code> \(<\) <code>p.T</code>).
+
+A client <code>p</code> accepts a reply with epoch <code>T</code> only if the client is
+processing the transaction with epoch <code>T</code> (i.e. <code>p.t =
+T</code>).
+
+Whe a client accepts a reply with epoch <code>T</code> the client
+sends a write request with the same epoch.
+
+The reply, the step, and the write request  have the same epoch
+<code>T</code>.
+
+
+
+<p class="w3-text-teal">Servers accepts a write request with epoch
+<code>T</code> in a step in epoch <code>T</code>.</p>
+The write request is treated as lost by a server <code>q</code> if
+<code>T</code> \(<\) <code>q.t</code>.
+
+If <code>T</code> \(\geq\) <code>q.t</code>, then the server accepts
+the write request and sets <code>q.t = T</code>, and carries out the
+write operation.
+
+The request received and the step have the same epoch <code>T</code>.
+
+<p class="w3-text-teal">Messages between epochs</p>
+The only message from an epoch to another is a clock tick message.
+
+A clock tick is not part of the transaction.
+
+
+<p>
+Therefore, all requests and replies and steps in a transaction in
+epoch <code>T</code> are in epoch <code>T</code>.
+
+
+<!----------------------------------------------->
+<h5 class="w3-text-teal">Performance Issues</h5>
+<!----------------------------------------------->
+
+Each client is either executing a receive or is waiting to receive a
+message.
+
+Clients execute transactions concurrently; however, the algorithm
+ensures that the dataflow represents a sequence of transaction
+executions, one transaction at a time.
+
+
+<p>
+There may be computations with an infinite number of transactions in
+which shared variables are never assigned values.
+
+For example, requests may be lost, or there may fewer than
+<code>M</code> replies to read requests.
+
+<p>
+Another scenario in which shared variables are never assigned values
+is as follows.
+
+Two transactions can collide with each other so that neither
+transaction sends write requests.
+
+For example, suppose clock ticks arrive every millisecond while
+the time taken for a request to reach a server is 5 milliseconds.
+
+In this case, clients start new transactions every millisecond
+and never receive replies to any transaction.
+
+So, the interval selected for clock ticks depends on the delays of
+requests and replies.
+
+<p>
+For more on performance issues, see <a href="">here</a>.
+
+
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+
+</body>
+</html>
