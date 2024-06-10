@@ -198,12 +198,31 @@ Next, let's develop OS agents and OS messages to record a global snapshot.
 <!----------------------------------------------------------------------------->
 <h4 class="w3-text-teal">How Should You Solve the Problem?</h4>
 <!----------------------------------------------------------------------------->
+<p>
+Let \(S_{init}\) and \(S_{fini}\) be the states in which the snapshot
+algorithm starts and finishes, respectively.
+
+A global snapshot algorithm records a state \(S_{snap}\) such that
+there exists a computation that starts at \(S_{init}\), then visits
+\(S_{snap}\) and later visits \(S_{fini}\).
 
 <p>
+What
+<a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+properties of computations</a>
+come to mind that are helpful in determining \(S_{snap}\)?
+
+<p>
+Let's use the property "Computations along Increasing Cuts" that tells
+us that the state at any cut of the dataflow of the algorithm is a
+global snapshot. So, our tasks reduce to (1) identifying a cut, and
+(2) recording the state at the cut.
+
+<h5 class="w3-text-teal">Identifying a Cut</h5>
 Each agent has to record its own state because an agent's state is not
 accessible to other agents.
 
-The state of an agent that it records is called a local snapshot.
+The state of an agent that it records is called a <i>local snapshot</i>.
 
 <p>
 Define <code>past</code> as the set of events at each agent before the
@@ -214,7 +233,7 @@ agent takes its local snapshot
 <p>
 Let's use
 <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html"> the following property of
-<code>past</code> and <code>future</code>:</a>
+<code>past</code>, <code>future</code> and cuts:</a>
 <p>
 The partition <code>(past, future)</code> is a cut exactly when every
 message received in <code>past</code> is sent in <code>past</code>.
