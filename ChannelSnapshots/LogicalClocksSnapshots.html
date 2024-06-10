@@ -1,0 +1,335 @@
+<title>ChannelSnapshots/LogicalClocksSnapshots.html</title>
+
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+  
+  <!--------------------------------------------------------->
+  <h2 class="w3-text-teal">Logical Clocks and Global Snapshots</h2>
+  <!--------------------------------------------------------->
+  
+  <p class="w3-text-red">
+  The state at which all agents are at the same logical time \(t\) is
+  a global snapshot. 
+
+  The state when local physical clocks
+  of all agents are at the same time \(t\) may not be a global snapshot.
+
+  Combining physical and logical clocks results in clocks that tick
+  forward and where the state when all local clocks are at the same
+  time is a global snapshot.
+
+  Examples of algorithms that use such clocks are given later.
+
+  </p>
+
+   
+  <!-----------------------------------------------------------------------------> 
+  <h3 class="w3-text-teal">Problem: Global Snapshots at Logical Times</h3> 
+  <!----------------------------------------------------------------------------->
+  <p>
+  Design an algorithm that computes global snapshots using logical
+  clocks.
+
+  
+   
+<!----------------------------------------------------------------------------->
+<h4 class="w3-text-teal">How Should You Solve the Problem?</h4>
+  <!----------------------------------------------------------------------------->
+  Sequences of events in increasing logical time are computations.
+  
+  So, we use local clocks to determine cuts <code>(past,
+  future)</code>.
+
+  Our problem reduces to (1) using logical time to identify a cut and
+  (2) recording the state at the cut.
+
+  <h5 class="w3-text-teal">The Cut at Logical Time \(t\)</h5>
+  The <code>past</code> at logical time \(t\) is defined as the set of
+  events with logical time at most \(t\).
+
+  So, the <code>future</code> at logical \(t\)</i> is the set of events  with
+  logical time greater than \(t\).
+
+
+  <h5 class="w3-text-teal">System State at Logical Time \(t\)</h5>
+  The state of an agent \(A\) at logical time \(t\) is its state after
+  events with logical time \(t\) or less and before events with
+  logical time greater than \(t\).
+
+  <p>
+  The state of a channel at logical time \(t\) is the sequence of
+  messages sent along the channel in events with logical time at most
+  \(t\), but not received in these events.
+
+
+<!---------------------------------------------------------->
+  <h4 style="color:red;">Example: State at Logical Time \(t\)</h4>
+<!---------------------------------------------------------->
+Figure 1 illustrates the state at logical time 6.5 of the
+computation shown in figure 1.
+
+  The curved purple line represents the cut.
+
+  The cut separates the past of the cut from its future.
+
+  Past events are colored black while future events are colored
+green.
+
+The states of agents and channels at logical time \(t = 6.5\) are
+given by the labels of the edges that cut the purple line.
+
+<figure>
+    <img src="Timelines/Timelines.002.jpeg"
+alt="Fig2" style="width:100%">
+<figcaption>Fig. 1: Cut at Logical Time 6.5. Past is Set of Events
+    with Logical Time at most 6.5</figcaption>
+</figure>
+
+<p>
+The point at which the purple line cuts the timeline for agent \(A\)
+can be thought of as the point in \(A\)'s computation at which the
+logical time is exactly 6.5.
+
+This cut is on the edge from the event at \(A\) with
+  logical time at most 6.5 to the event with logical time greater
+  than 6.5.
+
+  In this example the cut is on the edge from event 3 to event 5.
+
+  <p>
+  The message edge from event 3 to event 7 represents a message sent
+  along the channel from \(A\) to \(B\) in the past that is received
+  in the future.
+
+In this example, the state of the channel \((A, B)\) is the sequence
+consisting of a 
+single message which is the label of this edge.
+
+
+
+
+<h4 class="w3-text-teal">
+Global snapshot algorithm to record the state at logical time \(t\)
+</h4>
+
+An algorithm to record the state at logical time \(t\) follows
+directly from the definition of the state at logical time \(t\).
+
+<ol>
+  <li>
+Each agent takes its local snapshot -- i.e. records its state -- after
+an event with logical time at most \(t\) and before an
+  event with logical time greater than \(t\).
+  </li>
+  <li>
+An agent records the state of an input channel as the sequence of
+messages with timestamps atmost \(t\) that the agent
+  receives when its logical clock exceeds \(t\).
+  </li>
+</ol>
+
+The purple line in figure 2 represents the global snapshot at logical
+time 6.5.
+
+
+  <!--------------------------------------------->
+  <h3 class="w3-text-teal">Using Imperfect Clocks in Distributed Algorithms</h3>
+<!--------------------------------------------->
+
+  <p class="w3-text-teal">Intuition</p>
+  We will design some algorithms using 
+logical time to play the role of real time.
+Figure 3 shows the computation in figure 2 with the horizontal axis
+representing real time.
+The position of an event with logical time \(t\) is at a distance of
+\(t\) units from the origin.
+
+<figure>
+    <img src="Timelines/Timelines.003.jpeg"
+  alt="Fig3" style="width:80%"> 
+    <figcaption>Fig. 3: Computation with Logical Time as Real Time</figcaption>
+</figure>
+
+
+<p>
+Think of logical time as continuous, just as real time is continuous.
+In this example, points at logical times \(6.5\) and \(6.6\), at agent
+\(A\), refer to the same edge.
+
+It helps intuition, however, to think
+of the point at logical time \(6.6\) as a location to the right of the
+point at logical time \(6.5\) on the same edge.
+
+Imagine that logical time \(6.6\) is 0.1 time units to the right of
+logical time \(6.5\). 
+
+<p>
+The cut at logical time \(6.5\) is represented by the vertical line
+at time \(6.5\).
+The left of the line is the past at logical time \(6.5\), and the
+right side of the line is the future at that time. 
+
+
+<p class="w3-text-teal">Physical and Logical Clocks</p>
+<p>
+Operating systems maintain clocks. Some have atomic clocks or other
+  high-fidelity clocks that use Precision or Network Time Protocols
+(PTP, NTP).
+
+With high-fidelity clocks, a message sent when the sender's clock is
+at \(t\) will almost always be received when the receiver's
+clock is later than \(t\).
+
+So physical clocks almost always obey the logical clock requirement.
+
+<p>
+We cannot rule out the possibility that a message sent when the
+sender's clock is at \(t\) is received when the receiver's clock is
+earlier than \(t\) or equal to \(t\).
+
+We can use physical clocks, but correct them so that messages are
+received only after they are sent, where the times are determined by
+corrected physical clocks.
+
+<p>
+Such clocks have the following properties that we use in
+designing algorithms:
+
+<ol>
+
+  <li>
+
+  Clocks tick forward forever: For all \(t\), there is a point in
+  an infinite computation at which clocks of all agents exceed \(t\).
+  </li>
+
+  <li>
+
+  Sequences of events in ascending order of time are computations.
+  </li>
+</ol>
+<p>
+
+<h4 class="w3-text-teal">Next</h4>
+
+The next few pages describe applications of global snapshots.
+We begin with
+<a href="TerminationDetection.html">Termination Detection</a>.
+
+
+
+
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
