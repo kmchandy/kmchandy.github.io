@@ -98,9 +98,9 @@ hr.new1 {
   <!--------------------------------------------------------------->
   The only concept of time in dataflow is that of before and after.
   
-  Recall that a vertex \(v\) is <i>before</i> a vertex \(v'\) in the
-  dataflow graph exactly when there is a path from \(v\) to \(v'\).
-  And \(v'\) is <i>after</i> \(v\) exactly when \(v\) is before \(v'\).
+  Recall that a vertex \(v\) is before a vertex \(w\) in the
+  dataflow graph exactly when there is a path from \(v\) to \(w\).
+  And \(w\) is after \(v\) exactly when \(v\) is before \(w\).
 
   <p>
   A <i>cut</i> of a dataflow graph is a partition of the set of vertices of
@@ -199,6 +199,19 @@ exists exists a dataflow consisting only of <code>future</code>
   </li>
 </ol>
 
+From these two results we get the following result which is used in
+the global snapshot algorithm.
+
+<h4 class="w3-text-teal">Computations along Increasing
+Cuts</h4>
+Let \(S_{i}\) be the state at a cut <code>(past</code>\(_{i}\) <code>,
+future</code>\(_{i}\)), for \(i = 0, 1, \ldots\) where:
+<p>
+For all \(i\): <code> past</code>\(_{i}\) \(\subseteq\) <code>past</code>\(_{i+1}\),
+
+<p>
+There exists a computation from state \(S_{0}\) that visits the states
+\(S_{i}\) in increasing order of \(i\).
 
 <!------------------------------------->
 <h4 class="w3-text-teal">Cuts at Initial Sequences of Agent Steps.</h4>
