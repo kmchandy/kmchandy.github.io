@@ -1,0 +1,326 @@
+<title>ChannelSnapshots/ChannelSnapshotsDetails.html</title>
+
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+
+
+<!--------------------------------------------------------->
+<h1 class="w3-text-teal">A Global Snapshot Algorithm</h1>
+<!--------------------------------------------------------->
+
+
+  
+  <!------------------------------------------------------------------->
+  
+  <p class="w3-text-red">
+  A global snapshot algorithm records a state of the system that can
+  occur during a computation.
+
+  The state obtained by the algorithm is called a global snapshot.
+
+  Systems are monitored by taking repeated global snapshots.
+
+  When a transient error is detected, a rollback and recovery
+  algorithm restarts the computation from the most recent snapshot
+  instead of starting it from the initial state.
+
+  
+
+  
+
+  </p>
+ 
+  <!-----------------------------------------------------------------------------> 
+  <h4 class="w3-text-teal">Global Snapshot: Details</h4> 
+  <!----------------------------------------------------------------------------->
+
+  This webpage gives a code outline for the global snapshot algorithm
+  and gives examples of steps in the algorithm.
+
+<h5 class="w3-text-teal">Code Structure</h5>
+The code outline is given below in Python.
+
+<i>channels_recorded</i> is a dict (dictionary), where
+<i>channels_recorded[sender]</i> becomes True when the snapshot for
+the channel from this sender has finished being recorded.
+<i>channel_snapshots</i> is a dict where
+<i>channel_snapshots[sender]</i> is the ongoing recording of the
+snapshot of the channel from the sender.
+
+<pre>
+taken_local_snapshot = False
+channel_snapshots = {key: [] for key in predecessors}
+channels_recorded = {key: False for key in predecessors}
+
+start()
+def receive(message, sender):
+   if isinstance(message, Marker) and not taken_local_snapshot:
+        local_snapshot = record_state()
+        taken_local_snapshot = True
+        channels_recorded[sender] = True
+        output_message = Marker()
+        for receiver in successors:
+            send(output_message, receiver)
+   elif isinstance(message, Marker) and taken_local_snapshot:
+        channels_recorded[sender] = True
+   else: 
+        if taken_local_snapshot and not channels_recorded[sender]:
+           channel_snapshots[sender] = \\ 
+                       channel_snapshots[sender].append(message)
+</pre>
+
+
+The remainder of this webpage consists of examples.
+
+<!--------------------------------------------------------->
+<center>
+<h2 style="color:red;">Examples</h2>
+</center>
+<!--------------------------------------------------------->
+
+
+<!--------------------------------------------------------->
+<h4 style="color:red;">Example: Snapshots may change a Client's Computation
+</h4>
+<!--------------------------------------------------------->
+This example shows that the OS algorithm may change a client's
+computation though it does not change the client's dataflow.
+
+<p>
+Figure 2 is a representation of a computation with event sequence
+\([0, 1, 2, \ldots, ]\) and agents \(X, Y, Z\) without a concurrent OS
+algorithm, and figure 3 shows how the OS changes this computation.
+
+Events later in the computation are placed to the
+right of earlier events.
+
+
+<figure>
+    <img src="ChannelSnapshots/ChannelSnapshots.002.jpeg" alt="Fig2"
+    style="width:80%"> 
+<figcaption>
+Fig.2: Representation of a Computation without Snapshots
+</figcaption> 
+</figure> 
+
+
+<p>
+Figure 3 shows how a client's computation is changed when the OS takes
+snapshots. 
+
+The local snapshots taken by agents are shown as a yellow
+circle on the agents' timelines.
+
+The OS delays event 3 so that it occurs after events 4, 5, 6, and 7,
+as shown in the figure.
+
+The OS changes the computation, but it does not change the dataflow.
+
+<figure>
+    <img src="ChannelSnapshots/ChannelSnapshots.003.jpeg" alt="Fig2"
+    style="width:80%"> 
+    <figcaption>Fig.3: The OS changes a Client's Computation</figcaption>
+</figure> 
+
+In figure 3, the pre-snapshot events are 0, 1, 2, 4, 6.
+
+There is only one message received in a pre-snapshot
+event, namely the message represented by the edge (0, 2).
+
+So, every message received in a pre-snapshot event is sent in a
+pre-snapshot event.
+
+The figure shows that the set of pre-snapshot events is closed.
+
+
+<!---------------------------------------------------------->
+<h4 style="color:red;">Example: Steps in a Global Snapshot
+Algorithm: Initiation</h4>
+<!---------------------------------------------------------->
+
+Figure 4 illustrates the first step of the algorithm.
+
+<figure>
+    <img src="ChannelSnapshots/ChannelSnapshots.005.jpeg" alt="Fig4"
+    style="width:100%"> 
+    <figcaption>Fig.4: Agent Sends Markers when it Takes its Local
+    Snapshot</figcaption> 
+</figure>
+
+Agent Y takes its local snapshot shown as a yellow vertex on Y's
+timeline.
+
+When Y takes its snapshot it sends markers on its output channels.
+
+The markers are shown as green edges in the figure.
+
+
+<p>
+When agents X and Z each receive the markers, they take their local
+snapshots because they haven't taken snapshots earlier.
+
+<figure>
+    <img src="ChannelSnapshots/ChannelSnapshots.006.jpeg" alt="Fig5"
+    style="width:100%"> 
+<figcaption>
+Fig.5: Agents Take Local Snapshots when they Receive Markers
+</figcaption>
+</figure>
+
+The actions by X and Z of taking their snapshots are shown as yellow
+vertices on their timelines in figure 5.
+
+
+<!--------------------------------------------------->
+<h4 style="color:red;">Example: Agents take Snapshots upon Receiving Markers</h4> 
+<!--------------------------------------------------->
+<p>
+When X and Z take their snapshots they send markers out on their
+output channels.
+
+The markers sent by X are shown in figure 7.
+
+The markers sent by Z are not shown in the figure.
+
+<figure>
+    <img src="ChannelSnapshots/ChannelSnapshots.007.jpeg" alt="Fig6"
+    style="width:100%"> 
+    <figcaption>Fig.6: When an Agent takes its Snapshot it sends Markers.
+    </figcaption>
+</figure>
+
+
+
+<!--------------------------------------------------->
+<h4 style="color:red;">Example: Snapshot of a Channel</h4> 
+<!--------------------------------------------------->
+<p>
+Figure 8 shows how agent Y determines the state of the channel from X
+to Y in the global snapshot.
+
+Y starts recording the messages it receives along this channel after Y
+takes its snapshot and stops the recording when it receives a marker
+on this channel
+
+The only message in this interval is the message corresponding to edge
+(6, 7).
+
+
+<figure>
+    <img src="ChannelSnapshots/ChannelSnapshots.008.jpeg" alt="Fig7"
+    style="width:100%"> 
+<figcaption>
+Fig.7: Example: Recording a Channel State
+</figcaption>
+</figure> 
+
+The message corresponding to edge \((0, 2)\) is from X to Y but is not
+in the snapshot of 
+the channel because both \(0\) and \(2\) are pre-snapshot events.
+
+Likewise, the message corresponding to edge \((12, 13)\) is from X to
+Y but is not in the snapshot of
+the channel because both \(12\) and \(13\) are post-snapshot events.
+
+The message corresponding to edge \((6, 7)\) was sent in a
+pre-snapshot event and received in a post-snapshot event, and so it is
+in the snapshot of the channel.
+
+
+<h4 class="w3-text-teal">Next</h4>
+Next  
+<a href="LogicalClocks.html">logical clocks</a>.
+
+  
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+
+
+</body>
+</html>
