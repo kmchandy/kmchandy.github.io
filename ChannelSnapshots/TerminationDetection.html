@@ -88,7 +88,6 @@ hr.new1 {
   A termination detection algorithm is executed by the operating
   system to determine whether a client computation has terminated.
 
-  Detection algorithms are based on global snapshots.
   </p>
   
   
@@ -99,9 +98,8 @@ hr.new1 {
   A computation terminates in states in which all
   channels are empty and all agents are waiting to receive messages.
 
-  A channel \(C\) is empty exactly when \(\; C_{s} = C_{r}\), where
-  \(C_{s}\) and \(C_{r}\) are the numbers of messages 
-  sent and received (respectively) on \(C\).
+  Let \(C_{s}\) and \(C_{r}\) be the numbers of messages 
+  sent and received (respectively) on channel \(C\).
 
   <p>
   A computation is in a terminated state exactly
@@ -115,49 +113,75 @@ hr.new1 {
     </li>
   </ol>
 
+  The problem is to design an algorithm that detects whether the
+  computation is in a terminated state.
   
 <!----------------------------------------------------------------------------->
-<h4 class="w3-text-teal">How Should You Approach the Problem?</h4>
+<h4 class="w3-text-teal">How Should You Solve the Problem?</h4>
 <!----------------------------------------------------------------------------->
 
-<h6 class="w3-text-teal">General Method: Monitor System with Repeated Snapshots</h6>
+  A strategy to solve all detection problems is to start with the
+  <a href="ChannelSnapshots.html">general method for detection</a> and
+  then explore optimizations.
 
-<p>
-In the general method, the OS  monitors a system by taking repeated global
-  snapshots.
-  If a global snapshot is a state in which the computation has
-  terminated then the computation has indeed terminated.
-  And if a computation has terminated then repeated snapshots ensure
-  that a snapshot is taken after computation terminates.
+  <p>
+  The general method is to take repeated global snapshots; agents send
+  local information to an observer; the observer builds a global
+  snapshot by putting local information together and then checks
+  whether the specified condition holds in the global state.
 
-<h6 class="w3-text-teal">An Alternate Method</h6>
+  <p>
+  Next let's explore optimizations of the general method.
 
-<p>
-The algorithm uses an OS agent called an observer.
+  The algorithm detects when all agents are waiting.
 
-Let  \(C_{s}\) and \(C_{r}\) be the numbers of messages sent and
-received (respectively) on channel \(C\).
+  So, an agent need not initiate global snapshots repeatedly but only
+  needs to do so when the agent starts to wait.
 
-Each time an agent completes executing a <code>receive</code> it sends
-a message to an observer.
+  <p>
+  The information that an agent sends to the observer is the agent's
+  local state and the state recorded on each of the agent's input
+  channels.
 
-This message contains \(C_{s}\)
-for each of that agent's outgoing channels \(C\),
-and \(C_{r}\) for each of the agent's incoming channels \(C\).
+  The algorithm only detects whether a channel is empty or not.
+  So the only information that an agent needs to send the observer is
+  about numbers of messages rather than content of messages.
 
-<p>
-The agent keeps only the latest message that it receives from each
-agent.
-Let \(C_{s}^{*}, C_{r}^{*}\) be the last value of \(C_{s}, C_{r}\)
-(respectively) that the observer has received.
-Initially \(C_{s}^{*} = 0, C_{r}^{*} = -1\) for all channels \(C\) so
-as to ensure \(C_{s}^{*} \neq C_{r}^{*}\).
+  <p>
+  Let's design an algorithm in which agents do not execute the global
+  snapshot algorithm and use numbers of messages sent and
+  received when agents become idle.
 
-<p style="color:blue;">
-The observer detects computation has terminated if:
-for all channels \(C\): \(C_{s}^{*} = C_{r}^{*}\).
+
+  <h4 class="w3-text-teal">A Termination Detection Algorithm</h4>
+  Let  \(C_{s}\) and \(C_{r}\) be the numbers of messages sent and
+  received (respectively) on channel \(C\).
+
+  <p class="w3-text-teal">Agent Actions</p>
+  When an agent starts to wait it sends a message to the observer.
+
+  This message contains \(C_{s}\) for each output channel and
+  \(C_{r}\) for each input channel of the agent.
+
+
+  <p class="w3-text-teal">Observer Actions</p>
+  The observer keeps only the latest message that it receives from
+  each agent.
+  
+  For each channel \(C\), let \(C_{s}^{*}\) and \(C_{r}^{*}\) be the
+  latest value of \(C_{s}\) and \(C_{r}\), respectively, that the
+  observer has received.
+  
+  <p>
+  Initially \(C_{s}^{*} = 0, C_{r}^{*} = -1\), and therefore
+  \(C_{s}^{*} =\neq C_{r}^{*}\) for all \(C\). 
+
+<hr class="new2">  
+  <p style="color:blue;">
+  The observer detects computation has terminated if
+  for all channels \(C\): \(C_{s}^{*} = C_{r}^{*}\).
 </p>
-
+<hr class="new2">  
 
 <!-------------------------------------------------------->
 <h5 class="w3-text-teal">Proof of Correctness</h5>
