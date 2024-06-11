@@ -96,19 +96,27 @@ hr.new1 {
   <!--------------------------------------------------------------->
   <h3 class="w3-text-teal">Cuts of a Dataflow Graph</h3>
   <!--------------------------------------------------------------->
-  The only concept of time in dataflow is that of before and after.
+  The only concept of time in dataflow is that of
+  <a href="DISTRIBUTED_SYSTEM_MODELS/Model.html">
+  before and after.<a>
   
   Recall that a vertex \(v\) is before a vertex \(w\) in the
   dataflow graph exactly when there is a path from \(v\) to \(w\).
   And \(w\) is after \(v\) exactly when \(v\) is before \(w\).
 
-  <p>
+  <hr class="new2">  
+  <p style="color:blue;">
   A <i>cut</i> of a dataflow graph is a partition of the set of vertices of
   the graph into subsets <code>past</code> and <code>future</code>
   such that all events before <code>past</code> events are
-  <code>past</code> events, or equivalently
-  all events after <code>future</code> events are <code>future</code>
-  events.
+  <code>past</code> events.
+  </p>
+  <hr class="new2"> 
+  
+  The cut requirement can also be specified as all events after
+  <code>future</code> events are <code>future</code> events, or
+  equivalently as: There is not <code>past</code> event after a
+  <code>future</code> event. 
 
   <p>
   A cut of a dataflow graph is an instance of the general
@@ -181,8 +189,8 @@ The proofs of these properties are straigtforward and are given
 <a href="TimelinesProofs.html">here.</a>
 
 <!------------------------------------->
-<h4 class="w3-text-teal">Dataflows of past events and
-future events.</h4>
+<h5 class="w3-text-teal">Dataflows and Computations of Past events
+before Future events.</h5>
 
 Given a cut <code>(past, future)</code>:
 <ol>
@@ -199,56 +207,64 @@ exists exists a dataflow consisting only of <code>future</code>
   </li>
 </ol>
 
-From these two results we get the following result which is used in
-the global snapshot algorithm.
 
-<h4 class="w3-text-teal">Computations along Increasing
-Cuts</h4>
+
+<h5 class="w3-text-teal">Cut based on Messages Sent and Received</h5>
+
+There exists a cut <code>(past, future)</code> exactly when:
+<ol>
+  <li>
+  Every message received in <code>past</code> is sent in
+  <code>past</code>, and
+  </li>
+  <li>
+  if a step \(x\) of an agent is in <code>past</code> then steps at
+  that agent before \(x\) are in <code>past</code>.
+  </li>
+</ol>
+
+<h5 class="w3-text-teal">Cut based on Counts of Messages Sent and Received</h5>
+A version of this property that uses only counts of messages is used
+in some algorithms and is as follows.
+
+<p>
+There exists a cut <code>(past, future)</code> exactly when:
+<ol>
+  <li>With \(C_{s}\) and \(C_{r}\) as the numbers of messages sent and
+  received, respectively, on a channel \(C\), in <code>past</code>:
+
+  For all \(C\):  \(\; C_{s} \geq C_{r}\), and
+  </li>
+  <li>
+  if a step \(x\) of an agent is in <code>past</code> then steps at
+  that agent before \(x\) are in <code>past</code>.
+  </li>
+</ol>
+
+
+<!-------------------------------------------------->
+<h5 class="w3-text-teal">Computations along Increasing
+Cuts</h5>
+
+Let \(S^{*}\) be the state at a cut of a dataflow that starts in state
+\(S_{init}\) and ends in state \(S_{fini}\).
+
+There exists a computation that starts in \(S_{init}\), visits
+\(S^{*}\), and ends in \(S_{fini}\).
+
+
+<p>
+A general version of this results is as follows.
+
+<p>
 Let \(S_{i}\) be the state at a cut <code>(past</code>\(_{i}\) <code>,
 future</code>\(_{i}\)), for \(i = 0, 1, \ldots\) where:
 <p>
 For all \(i\): <code> past</code>\(_{i}\) \(\subseteq\) <code>past</code>\(_{i+1}\),
 
 <p>
-There exists a computation from state \(S_{0}\) that visits the states
+There exists a computation that visits states
 \(S_{i}\) in increasing order of \(i\).
-
-<!------------------------------------->
-<h4 class="w3-text-teal">Cuts at Initial Sequences of Agent Steps.</h4>
-Next, we assume that agents are indexed \(i\)
-for \(0 \leq i < N\).
-
-We restrict attention to a cut 
-<code>(past, future)</code> specified by a vector \(n\)
-where <code>past</code> consists of the
-first \(n[k]\) steps of agent \(k\).
-
-
-
-<p>
-For a channel \(c\), let \(c_{sent}\) and \(c_{rcvd}\) be the numbers
-of messages sent and received along the channel at each point in a
-computation.
-
-<h5 class="w3-text-teal">Properties used in Detection Algorithms</h5>
-
-There exists a cut <code>(past, future)</code>
-specified by a vector \(n\),
-where <code>past</code>
-consists of the first \(n[k]\) steps of agent \(k\),
-exactly when:
-<ol>
-  <li>
-  Every message received in <code>past</code> is sent in
-  <code>past</code>,
-  </li>
-  <li>
-  which is equivalent to:
-  for all channels \(c\): \(c_{sent} \geq c_{rcvd}\).
-  </li>
-</ol>
-
-  
 
 
 
