@@ -361,9 +361,54 @@ timestamps.
 
 <p>
 Some algorithms carry out distributed computations on local snapshots
-without forming a global snapshot.
+without using an observer to collect local snapshots.
 
-We give examples of such algorithms.
+Later, we give examples of such algorithms.
+
+
+
+<!---------------------------------------------------->
+<h3 class="w3-text-teal">A General Detection Algorithm</h3>
+A detection algorithm determines if a computation has a property such
+as the computation is deadlocked.
+
+We start with these general approaches to designing detection
+algorithms to solve problems in this chapter.
+
+<h5 class="w3-text-teal">A General Detection Algorithm with an Observer</h3>
+A general detection algorithm that uses an observer is as follows.
+
+The system executes repeated global snapshot
+algorithms.
+
+Agents send information to an observer which creates a global state --
+a global snapshot.
+
+The observer executes an algorithm on the snapshot to determine if the
+snapshot has the specified property.
+
+
+<p>
+The observer operates on <i>static</i> data -- the snapshot -- though the
+system state may continue to change.
+
+The observer can use a sequential algorithm to inspect the snapshot.
+
+This is the simplest design of a detection algorithm.
+
+<h5 class="w3-text-teal">A General Detection Algorithm without an Observer</h3>
+A general detection algorithm, without an observer, operates in two phases.
+
+First execute a global snapshot algorithm and store information about
+each agent and its incoming channels locally, at the agent, without
+sending the information to an observer.
+
+Second execute a distributed algorithm to determine if the local
+information at agents satisfies a specified global property.
+
+The two phases can be executed concurrently in many applications.
+
+
 
 
 <h4 class="w3-text-teal">Next</h4>
