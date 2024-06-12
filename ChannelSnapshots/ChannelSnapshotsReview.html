@@ -1,0 +1,173 @@
+<title>ChannelSnapshots/ChannelSnapshotsReview.html</title>
+
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+
+  <!---------------------------------------------------------------->
+    <h1 class="w3-text-teal">Global Snapshots: Review</h1>
+  <!----------------------------------------------------------------->
+  Answer these questions to review the webpage on the global snapshot
+    algorithm. 
+
+
+
+  <ol>
+    <li>
+    What can agents in a distributed operating system do? 
+    </li>
+    <li>
+    The global snapshot algorithm uses messages called markers. Are
+    these messages visible to clients of the distributed OS?
+    </li>
+    <li>
+    What is a global snapshot? How is it different from a local
+    snapshot? 
+    </li>
+    <li>
+    Show how the global snapshot rule follows from properties of cuts.
+    </li>
+    <li>
+    Consider a system consisting of two agents \(x\) and \(y\) and
+    channels in both directions between them. What is the sequence of
+    actions of the global snapshot algorithm if (i) only \(x\)
+    initiates the algorithm and (ii) both \(x\) and \(y\) initiate the
+    algorithm? Are the snapshots necessarily identical? Necessarily
+    different? 
+    </li>
+    <li>
+    Let's look at the system in the previous question.
+    Suppose an invariant of the system is that there is always a
+    message in the channel \((x, y)\).
+    If \(x\) initiates the algorithm and
+    \(y\) takes its local snapshot when it receives a marker from
+    \(x\) then the state of channel \((x, y)\) recorded by the
+    algorithm is the empty sequence.
+    Isn't that an error because the invariant tells us that the state
+    of the channel cannot be the empty sequence?
+    </li>
+    
+ </ol>
+    
+    
+    
+ 
+
+Next  
+<a href="LogicalClocks.html">logical clocks</a>.
+
+
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
