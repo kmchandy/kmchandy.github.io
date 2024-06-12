@@ -172,10 +172,10 @@ traps these messages so that the client does not see them.
 
   <p>
   Execution of an OS agent on a processor may delay a client's
-  events on the same processor, and thus change the order in which the
-  client's events are executed. 
+  steps on the same processor, and thus change the order in which the
+  client's steps are executed. 
 
-<i>The OS may change a client's computation -- the event order -- but
+<i>The OS may change a client's computation -- the order of steps -- but
 the OS must not change the client's dataflow.</i>
   
   <p>
@@ -193,30 +193,54 @@ OS.
 
 
 <p>
-Next, let's develop OS agents and OS messages to record a global snapshot.
+Next, let's develop OS agents and OS messages to record a global
+snapshot.
+
+
+<!----------------------------------------------------------------------------->
+<h4 class="w3-text-teal">The Problem</h4>
+<!----------------------------------------------------------------------------->
  
+<p>
+Let \(S_{init}\) and \(S_{fini}\) be the states in which the
+algorithm starts and finishes, respectively.
+
+Design an algorithm that records a state \(S^{*}\) such that
+there exists a computation that starts at \(S_{init}\), then visits
+\(S^{*}\) and then visits \(S_{fini}\).
+
+
 <!----------------------------------------------------------------------------->
 <h4 class="w3-text-teal">How Should You Solve the Problem?</h4>
 <!----------------------------------------------------------------------------->
-<p>
-Let \(S_{init}\) and \(S_{fini}\) be the states in which the snapshot
-algorithm starts and finishes, respectively.
 
-A global snapshot algorithm records a state \(S_{snap}\) such that
-there exists a computation that starts at \(S_{init}\), then visits
-\(S_{snap}\) and later visits \(S_{fini}\).
 
-<p>
-What
-<a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-properties of computations</a>
-come to mind that are helpful in determining \(S_{snap}\)?
+<p class="w3-text-teal">Strategy</p>
+A general strategy for designing algorithms dealing with intermediate
+states is to find a helpful <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+property of cuts</a>.
+
+What property helps to determine \(S^{*}\)?
 
 <p>
-Let's use the property "Computations along Increasing Cuts" that tells
-us that the state at any cut of the dataflow of the algorithm is a
-global snapshot. So, our tasks reduce to (1) identifying a cut, and
-(2) recording the state at the cut.
+The property "Computations of Past before Future," given below, tells
+us that \(S^{*}\) can be the state at any cut.
+
+<!------------------------------------->
+<p class="w3-text-teal">Computations of Past before Future.</p> 
+
+<p>
+Let computation \(X\) start in state \(S_{init}\) and end in state
+\(S_{fini}\).
+
+Let \(S^{*}\) be the state at a cut <code>(past, future)</code> of \(X\).
+
+There exists a computation \(Y\) that starts in \(S_{init}\), visits
+\(S^{*}\), and ends in \(S_{fini}\).
+
+<p>
+Using this strategy, our tasks reduce to (1) identifying a cut, and
+(2) recording the state, \(S^{*}\), at the cut.
 
 <h5 class="w3-text-teal">Identifying a Cut</h5>
 Each agent has to record its own state because an agent's state is not
@@ -225,10 +249,12 @@ accessible to other agents.
 The state of an agent that it records is called a <i>local snapshot</i>.
 
 <p>
-Define <code>past</code> as the set of events at each agent before the
+Define <code>past</code> as the set of steps at each agent before the
 agent takes its local snapshot, and
-define <code>future</code> as the set of events at each agent after the
-agent takes its local snapshot
+define <code>future</code> as the set of steps at each agent after the
+agent takes its local snapshot.
+So, if a step \(x\) at an agent is in <code>past</code> then all steps
+at that agent before \(x\) are also in <code>past</code>.
 
 <p>
 Let's use
@@ -249,12 +275,7 @@ is sent before the sender takes its local snapshot.
 <hr class="new2">
 
 Design an algorithm yourself before reading further, and compare your
-algorithm with the one below.
-
-<p>
-Hint: Use the global snapshot rule and use an OS message to distinguish
-messages sent before and after the sender takes its local snapshot.
-
+algorithm with the one given below.
 
 
 
