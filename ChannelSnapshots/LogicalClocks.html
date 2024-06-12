@@ -77,12 +77,12 @@ hr.new1 {
 <div class="w3-twothird w3-container">
   
   <!--------------------------------------------------------->
-  <h2 class="w3-text-teal">Local Clocks and Logical Time</h2>
+  <h2 class="w3-text-teal">Logical Clocks</h2>
   <!--------------------------------------------------------->
   
   <p class="w3-text-red">
   A logical clock algorithm assigns a value, called the logical time,
-  to each event in a computation so that all sequences of events in
+  to each step in a computation so that all sequences of steps in
   ascending logical time are computations.
 
   </p>
@@ -93,27 +93,39 @@ hr.new1 {
   <!----------------------------------------------------------------------------->
   <p>
   Design an algorithm that assigns a value,  called the <i>logical
-  time</i>, to each event in a computation so that all sequences of
-  events in ascending logical time are computations.
+  time</i>, to each step in a computation so that all sequences of
+  steps in ascending logical time are computations.
 
+  <p>
+  This
+  <a href="https://en.wikipedia.org/wiki/Logical_clock">
+  definition is different</a> from that given in the paper that
+  introduces the concept.
 
    
 <!----------------------------------------------------------------------------->
-<h5 class="w3-text-teal">How Should You Approach the Problem?</h5>
+<h5 class="w3-text-teal">How Should You Solve the Problem?</h5>
 <!----------------------------------------------------------------------------->
 
+  <p class="w3-text-teal">Strategy</p>
   <p>
+  A strategy for assigning attributes to steps in computations is to
+  find a 
+  <a href="DISTRIBUTED_SYSTEM_MODELS/Computations.html">
+  property of computations</a>
+  that can help.
 
-  A
-  <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-  computation</a> is a sequence of events in which for all edges
-  \((e, e')\) in the dataflow graph:
-  <center>\(e\) occurs before \(e'\) in the
-  sequence.
+  <p>
+  We use the following property:
+
+  A computation is a sequence of steps in which for all edges
+  \((e, e')\) in the dataflow graph corresponding to the computation:
+  <center>\(e\) occurs before \(e'\) in the sequence.
   </center>
 
   <p>
-  So, the algorithm assigns logical time \(t(e)\) to event \(e\) such that:
+  This property suggests the following algorithm to assign logical
+  time \(t(e)\) to step \(e\).
 
   
 
@@ -130,43 +142,45 @@ hr.new1 {
 
 
   <!---------------------------------------------------------->
-  <h5 style="color:red;">Example: Logical Times of Events</h5>
+  <h5 style="color:red;">Example: Logical Times of Steps</h5>
   <!---------------------------------------------------------->
   
   Figure 1 shows the dataflow graph of a computation with agents
-  \(A, B, C\) and an event sequence \([0, 1, 2, \ldots, ]\).
+  \(A, B, C\) and an step sequence \([0, 1, 2, \ldots, ]\).
 
-  The numbers inside the vertices are the event ids which show the
-  position of the event in the computation.
+  The numbers inside the vertices are the step ids which show the
+  position of the step in the computation.
 
-  The red numbers outside the events are logical times assigned to
-  events.
+  The red numbers outside the steps are logical times assigned to
+  steps.
 
   <p>
   Logical times are arbitrary provided
   every edge is directed from a lower to a higer logical time.
   <figure>
     <img src="Timelines/Timelines.001.jpeg" alt="Fig1" style="width:100%"> 
-    <figcaption>Fig. 1: Logical Times of Events: Edges Directed from
+    <figcaption>Fig. 1: Logical Times of Steps: Edges Directed from
   Lower to Higher Logical Times</figcaption>
   </figure>
 
-Verify that every edge in figure 1 is from an event with a lower
-logical time to an event with a higher logical time.
+Verify that every edge in figure 1 is from an step with a lower
+logical time to an step with a higher logical time.
 
  
 <!-------------------------------------------------------->
-<h4 class="w3-text-teal">Events in Increasing Order of Logical Time</h4>
+<h4 class="w3-text-teal">Steps in Increasing Order of Logical Time</h4>
 <!-------------------------------------------------------->
-<i>All sequences of events in increasing order of logical time are
+<i>All sequences of steps in increasing order of logical time are
 computations.</i>
 
 <p>
-This result follows from the fact that all topological sorts of dataflow
-graphs are computations, and sequences of of events in increasing
+This result follows from the fact that
+<a href="DISTRIBUTED_SYSTEM_MODELS/Computations.html">
+all topological sorts of dataflow graphs are computations</a>, and
+sequences of of steps in increasing 
 logical time are topological sorts.
 
-<p>For example, a sequence of events in increasing logical time in
+<p>For example, a sequence of steps in increasing logical time in
 figure 1 is:
 [1, 2, 4, 3, 5, 6, 7, 8, 9], and this sequence is a computation.
   
@@ -177,13 +191,13 @@ figure 1 is:
 <!-------------------------------------------------------->
 The following algorithm is suggested by the logical time property.
 
-Let \(t(e)\) be the logical time assigned to event \(e\).
+Let \(t(e)\) be the logical time assigned to step \(e\).
 
-A message sent in an event \(e\) is assigned a timestamp \(t(e)\).
+A message sent in an step \(e\) is assigned a timestamp \(t(e)\).
 
 <hr class="new2">
 <p style="color:blue;">
-Let \(e'\) be the event immediately preceding an event \(e\) at an
+Let \(e'\) be the step immediately preceding an step \(e\) at an
 agent, and let the timestamp of the message received in \(e\) be
 \(T\).
 <p style="color:blue;">
@@ -194,173 +208,9 @@ Set \(t(e)\) to be any value greater than max(t(e'), T).
 The correctness of the algorithm is self evident.
 
 
-  
-  <!-------------------------------------------------------->
-  <h5 class="w3-text-teal">The Past and Future at Logical Time \(t\)</h5>
-  <!-------------------------------------------------------->
-
-
-  <p>
-  The <i>past at logical time \(t\)</i> is defined as the set of events  with logical
-time at most \(t\).
-
-So, the <i>future at logical \(t\)</i> is the set of events  with logical
-time greater than \(t\).
-
-
-  <h5 class="w3-text-teal">System State at Logical Time \(t\)</h5>
-  The state of an agent \(A\) at logical time \(t\) is the label of the
- edge for \(A\) from the past at \(t\) to the future at \(t\).
-
-Equivalently, the state of an agent \(A\) at logical time \(t\) is its state after
-the event at \(A\) with the highest logical time less than or equal to \(t\)
-and before the event at \(A\) with the lowest logical time greater than \(t\).
-
-<p>
-The state of a channel at logical time \(t\) is the sequence of messages sent along the
-channel in the past and received in the future.
-
-Equivalently, the state of a channel at logical time \(t\) is the
-sequence of messages sent in events with logical time at most \(t\)
-that are received in events with logical time greater than \(t\).
-
-
-<!---------------------------------------------------------->
-  <h4 style="color:red;">Example: State at Logical Time \(t\)</h4>
-<!---------------------------------------------------------->
-Figure 2 illustrates the state at logical time 6.5 of the
-computation shown in figure 1.
-
-  The curved purple line represents the slice.
-
-  The slice separates the past of the slice from its future.
-
-  Past events are colored black while future events are colored
-green.
-
-The states of agents and channels at logical time \(t = 6.5\) are
-given by the labels of the edges that cut the purple line.
-
-<figure>
-    <img src="Timelines/Timelines.002.jpeg"
-alt="Fig2" style="width:100%">
-<figcaption>Fig. 2: Slice at Logical Time 6.5. Past is Set of Events
-    with Logical Time at most 6.5</figcaption>
-</figure>
-
-<p>
-The point at which the purple line cuts the timeline for agent \(A\)
-can be thought of as the point in \(A\)'s computation at which the
-logical time is exactly 6.5.
-
-This cut is on the edge from the event at \(A\) with
-  logical time at most 6.5 to the event with logical time greater
-  than 6.5.
-
-  In this example the cut is on the edge from event 3 to event 5.
-
-  <p>
-  The message edge from event 3 to event 7 represents a message sent
-  along the channel from \(A\) to \(B\) in the past that is received
-  in the future.
-
-In this example, the state of the channel \((A, B)\) is the sequence
-consisting of a 
-single message which is the label of this edge.
-
-
-
-
-<h4 class="w3-text-teal">
-Global snapshot algorithm to record the state at logical time \(t\)
-</h4>
-
-An algorithm to record the state at logical time \(t\) follows
-directly from the definition of the state at logical time \(t\).
-
-<ol>
-  <li>
-Each agent takes its local snapshot -- i.e. records its state -- after
-an event with logical time at most \(t\) and before an
-  event with logical time greater than \(t\).
-  </li>
-  <li>
-An agent records the state of an input channel as the sequence of
-messages with timestamps atmost \(t\) that the agent
-  receives when its logical clock exceeds \(t\).
-  </li>
-</ol>
-
-The purple line in figure 2 represents the global snapshot at logical
-time 6.5.
-
-
-  <!--------------------------------------------->
-  <h3 class="w3-text-teal">Using Imperfect Clocks in Distributed Algorithms</h3>
-<!--------------------------------------------->
-
-  <p class="w3-text-teal">Intuition</p>
-  We will design some algorithms using 
-logical time to play the role of real time.
-Figure 3 shows the computation in figure 2 with the horizontal axis
-representing real time.
-The position of an event with logical time \(t\) is at a distance of
-\(t\) units from the origin.
-
-<figure>
-    <img src="Timelines/Timelines.003.jpeg"
-  alt="Fig3" style="width:80%"> 
-    <figcaption>Fig. 3: Computation with Logical Time as Real Time</figcaption>
-</figure>
-
-
-<p>
-Thinks of logical time as continuous, just as real time is continuous.
-In this example, points at logical time \(6.5\) and \(6.6\) at agent
-\(A\) refer to the same edge; however, it helps intuition to think
-of the point at logical time \(6.6\) as a location to the right of the
-point at logical time \(6.5\) on the same edge.
-
-<p>
-The slice at logical time \(6.5\) is represented by the vertical line
-at time \(6.5\).
-The left of the line is the past, and the right side of the line is
-the future at that time.
-
-
-<p class="w3-text-teal">Physical and Logical Clocks</p>
-<p>
-Operating systems maintain clocks. Some have atomic clocks or other
-  high-fidelity clocks that use Precision or 
-Network Time Protocols (PTP, NTP).
-With high-fidelity clocks, it is unlikely -- though not impossible -- that a message sent when
-the sender's clock is at \(t\) will be received when the receiver's
-clock is \(t\) or earlier.
-We will use OS clocks, but correct them using the logical clock
-algorithm.
-Such clocks have the following properties that we use in
-designing many algorithms:
-
-<ol>
-
-  <li>
-
-  Clocks tick forward forever: For all \(t\), there is a point in
-  an infinite computation at which clocks of all agents exceed \(t\).
-  </li>
-
-  <li>
-
-  Sequences of events in ascending order of time are computations.
-  </li>
-</ol>
-<p>
-
 <h4 class="w3-text-teal">Next</h4>
-
-The next few pages describe applications of global snapshots.
-We begin with
-<a href="TerminationDetection.html">Termination Detection</a>.
+Logical clocks are used to record global snapshots
+<a href="LogicalClocksSnapshots.html">as described here.</a>
 
 
 
