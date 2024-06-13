@@ -105,34 +105,31 @@ hr.new1 {
 
   
    
-<!----------------------------------------------------------------------------->
-<h4 class="w3-text-teal">How Should You Solve the Problem?</h4>
   <!----------------------------------------------------------------------------->
-  Sequences of events in increasing logical time are computations.
+  <h4 class="w3-text-teal">How Should You Solve the Problem?</h4>
+  <!----------------------------------------------------------------------------->
+  <p class="w3-text-teal">Strategy</p>
+  Use properties of logical times and computations.
   
-  So, we use local clocks to determine cuts <code>(past,
-  future)</code>.
+  <p>
+  Sequences of steps in increasing logical time are computations.
 
-  Our problem reduces to (1) using logical time to identify a cut and
-  (2) recording the state at the cut.
+  Therefore, the sequence of steps with logical time at most  \(t\) is
+  a computation, for all  \(t\).
 
-  <h5 class="w3-text-teal">The Cut at Logical Time \(t\)</h5>
-  The <code>past</code> at logical time \(t\) is defined as the set of
-  events with logical time at most \(t\).
+  This suggests the following definition of the state at logical time
+  \(t\).
+  
 
-  So, the <code>future</code> at logical \(t\)</i> is the set of events  with
-  logical time greater than \(t\).
-
-
-  <h5 class="w3-text-teal">System State at Logical Time \(t\)</h5>
+  <h5 class="w3-text-teal">State at Logical Time \(t\)</h5>
   The state of an agent \(A\) at logical time \(t\) is its state after
-  events with logical time \(t\) or less and before events with
+  steps with logical time \(t\) or less and before steps with
   logical time greater than \(t\).
 
   <p>
   The state of a channel at logical time \(t\) is the sequence of
-  messages sent along the channel in events with logical time at most
-  \(t\), but not received in these events.
+  messages sent along the channel in steps with logical time at most
+  \(t\), but not received in these steps.
 
 
 <!---------------------------------------------------------->
@@ -145,7 +142,7 @@ computation shown in figure 1.
 
   The cut separates the past of the cut from its future.
 
-  Past events are colored black while future events are colored
+  Past steps are colored black while future steps are colored
 green.
 
 The states of agents and channels at logical time \(t = 6.5\) are
@@ -154,7 +151,7 @@ given by the labels of the edges that cut the purple line.
 <figure>
     <img src="Timelines/Timelines.002.jpeg"
 alt="Fig2" style="width:100%">
-<figcaption>Fig. 1: Cut at Logical Time 6.5. Past is Set of Events
+<figcaption>Fig. 1: Cut at Logical Time 6.5. Past is Set of Steps
     with Logical Time at most 6.5</figcaption>
 </figure>
 
@@ -163,14 +160,14 @@ The point at which the purple line cuts the timeline for agent \(A\)
 can be thought of as the point in \(A\)'s computation at which the
 logical time is exactly 6.5.
 
-This cut is on the edge from the event at \(A\) with
-  logical time at most 6.5 to the event with logical time greater
+This cut is on the edge from the step at \(A\) with
+  logical time at most 6.5 to the step with logical time greater
   than 6.5.
 
-  In this example the cut is on the edge from event 3 to event 5.
+  In this example the cut is on the edge from step 3 to step 5.
 
   <p>
-  The message edge from event 3 to event 7 represents a message sent
+  The message edge from step 3 to step 7 represents a message sent
   along the channel from \(A\) to \(B\) in the past that is received
   in the future.
 
@@ -180,9 +177,9 @@ single message which is the label of this edge.
 
 
 
-
+<!----------------------------------------------->
 <h4 class="w3-text-teal">
-Global snapshot algorithm to record the state at logical time \(t\)
+Global Snapshot Algorithm to Record the State at a Logical Time
 </h4>
 
 An algorithm to record the state at logical time \(t\) follows
@@ -191,8 +188,8 @@ directly from the definition of the state at logical time \(t\).
 <ol>
   <li>
 Each agent takes its local snapshot -- i.e. records its state -- after
-an event with logical time at most \(t\) and before an
-  event with logical time greater than \(t\).
+a step with logical time at most \(t\) and before a
+  step with logical time greater than \(t\).
   </li>
   <li>
 An agent records the state of an input channel as the sequence of
@@ -214,7 +211,7 @@ time 6.5.
 logical time to play the role of real time.
 Figure 3 shows the computation in figure 2 with the horizontal axis
 representing real time.
-The position of an event with logical time \(t\) is at a distance of
+The position of a step with logical time \(t\) is at a distance of
 \(t\) units from the origin.
 
 <figure>
@@ -278,7 +275,7 @@ designing algorithms:
 
   <li>
 
-  Sequences of events in ascending order of time are computations.
+  Sequences of steps in ascending order of time are computations.
   </li>
 </ol>
 <p>
