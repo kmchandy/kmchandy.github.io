@@ -108,15 +108,15 @@ hr.new1 {
   <p style="color:blue;">
   A <i>cut</i> of a dataflow graph is a partition of the set of vertices of
   the graph into subsets <code>past</code> and <code>future</code>
-  such that all events before <code>past</code> events are
-  <code>past</code> events.
+  such that all steps before <code>past</code> steps are
+  <code>past</code> steps.
   </p>
   <hr class="new2"> 
   
-  The cut requirement can also be specified as all events after
-  <code>future</code> events are <code>future</code> events, or
-  equivalently as: There is not <code>past</code> event after a
-  <code>future</code> event. 
+  The cut requirement can also be specified as all steps after
+  <code>future</code> steps are <code>future</code> steps, or
+  equivalently as: There is no <code>past</code> step after a
+  <code>future</code> step. 
 
   <p>
   A cut of a dataflow graph is an instance of the general
@@ -150,16 +150,16 @@ hr.new1 {
     <figcaption>Fig.1: Example - A Cut of a Dataflow Graph</figcaption>
 </figure>
 
-  In figure 1 all edges to <code>past</code> events are from <code>past</code>
-  events, and 
+  In figure 1 all edges to <code>past</code> steps are from <code>past</code>
+  steps, and 
 
-  all edges from <code>future</code> events are to <code>future</code>
-  events.
+  all edges from <code>future</code> steps are to <code>future</code>
+  steps.
 
   <p>
-  The state <code>S*</code> after completion of <code>past</code> events and before
+  The state <code>S*</code> after completion of <code>past</code> steps and before
   initiation of 
-  <code>future</code> events is given by the labels of
+  <code>future</code> steps is given by the labels of
   edges from <code>past</code> to <code>future</code>.
 
   These are the
@@ -168,10 +168,10 @@ hr.new1 {
 
   <p>
   <code>S*</code> is
-  the final state of the sub-dataflow of <code>past</code> events.
+  the final state of the sub-dataflow of <code>past</code> steps.
 
   <code>S*</code> is also the initial state of the sub-dataflow of
-  <code>future</code> events.
+  <code>future</code> steps.
 
 <p>
 See the lower diagram in figure 1.
@@ -183,80 +183,100 @@ See the lower diagram in figure 1.
 
   
  <!--------------------------------------------------------------->
-<h3 class="w3-text-teal">Properties of Cuts of Dataflow</h3>
+<h4 class="w3-text-teal">Cuts of Computations</h4>
+<!--------------------------------------------------------------->
+
+Associated with a computation is
+<a href="Computations.html">
+exactly one dataflow graph</a>
+consisting of the steps of the computation.
+
+We define a cut of a computation as a cut of the dataflow of the
+computation.
+
+<p>
+
+
+
+
+ <!--------------------------------------------------------------->
+<h3 class="w3-text-teal">Properties of Cuts</h3>
 <!--------------------------------------------------------------->
 The proofs of these properties are straigtforward and are given
 <a href="TimelinesProofs.html">here.</a>
 
+
 <!------------------------------------->
-<h5 class="w3-text-teal">Dataflows and Computations of Past events
-before Future events.</h5>
+<h5 class="w3-text-teal">Dataflows of Past steps before Future
+steps.</h5> 
 
-Given a cut <code>(past, future)</code>:
-<ol>
-  <li>
+Given a cut <code>(past, future)</code> of a dataflow graph:
   There exists exists a
-dataflow consisting only of <code>past</code> events, and there
+dataflow consisting only of <code>past</code> steps, and there
 exists exists a dataflow consisting only of <code>future</code>
-  events.
-  </li>
-  <li>
-  There exists a computation that starts at the initial
-  state of the dataflow, executes the events in
-  <code>past</code> and then executes events in <code>future</code>.
-  </li>
-</ol>
+steps.
 
 
+<!------------------------------------->
+<h5 class="w3-text-teal">Computations of Past before Future.</h5> 
 
-<h5 class="w3-text-teal">Cut based on Messages Sent and Received</h5>
+<p>
+Let computation \(X\) start in state \(S_{init}\) and end in state
+\(S_{fini}\).
 
-There exists a cut <code>(past, future)</code> exactly when:
+Let \(S^{*}\) be the state at a cut <code>(past, future)</code> of \(X\).
+
+There exists a computation \(Y\) that starts in \(S_{init}\), visits
+\(S^{*}\), and ends in \(S_{fini}\).
+
+<p>
+All steps in <code>past</code> are
+executed before all steps in <code>future</code> in \(Y\).
+
+
+<h5 class="w3-text-teal">Cut based on Message is Received only after
+it is Sent</h5>
+
+There exists a cut <code>(past, future)</code> exactly when the
+following two conditions hold:
 <ol>
   <li>
   Every message received in <code>past</code> is sent in
-  <code>past</code>, and
+  <code>past</code>.
   </li>
   <li>
-  if a step \(x\) of an agent is in <code>past</code> then steps at
-  that agent before \(x\) are in <code>past</code>.
+  If a step \(x\) of an agent is in <code>past</code> then steps at
+  that agent before \(x\) are also in <code>past</code>.
   </li>
 </ol>
 
 <h5 class="w3-text-teal">Cut based on Counts of Messages Sent and Received</h5>
 A version of this property that uses only counts of messages is used
-in some algorithms and is as follows.
+in termination detection and is as follows.
 
 <p>
-There exists a cut <code>(past, future)</code> exactly when:
-<ol>
-  <li>With \(C_{s}\) and \(C_{r}\) as the numbers of messages sent and
-  received, respectively, on a channel \(C\), in <code>past</code>:
+There exists a cut <code>(past, future)</code> exactly when the
+following two conditions hold:
 
-  For all \(C\):  \(\; C_{s} \geq C_{r}\), and
+<ol>
+  <li>
+  For all \(C\):  \(\; C_{s} \geq C_{r}\),
+  <p>
+  where
+  \(C_{s}\) and \(C_{r}\) are the numbers of messages sent and
+  received, respectively, on channel \(C\), in <code>past</code>.
   </li>
   <li>
-  if a step \(x\) of an agent is in <code>past</code> then steps at
-  that agent before \(x\) are in <code>past</code>.
+  If a step \(x\) of an agent is in <code>past</code> then steps at
+  that agent before \(x\) are also in <code>past</code>.
   </li>
 </ol>
 
 
+
 <!-------------------------------------------------->
-<h5 class="w3-text-teal">Computations along Increasing
-Cuts</h5>
+<h5 class="w3-text-teal">Computations through Increasing Cuts</h5>
 
-Let \(S^{*}\) be the state at a cut of a dataflow that starts in state
-\(S_{init}\) and ends in state \(S_{fini}\).
-
-There exists a computation that starts in \(S_{init}\), visits
-\(S^{*}\), and ends in \(S_{fini}\).
-
-
-<p>
-A general version of this results is as follows.
-
-<p>
 Let \(S_{i}\) be the state at a cut <code>(past</code>\(_{i}\) <code>,
 future</code>\(_{i}\)), for \(i = 0, 1, \ldots\) where:
 <p>
