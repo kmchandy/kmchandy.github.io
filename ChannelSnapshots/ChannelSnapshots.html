@@ -389,44 +389,123 @@ Later, we give examples of such algorithms.
 
 
 <!---------------------------------------------------->
-<h3 class="w3-text-teal">A General Detection Algorithm</h3>
-A detection algorithm determines if a computation has a property such
-as the computation is deadlocked.
+<h3 class="w3-text-teal">Applications of Global Snapshots</h3>
 
-We start with these general approaches to designing detection
-algorithms to solve problems in this chapter.
+<h4 class="w3-text-teal">System Monitoring</h4>
+Systems can be monitored by taking global snapshots repeatedly.
 
-<h5 class="w3-text-teal">A General Detection Algorithm with an Observer</h3>
-A general detection algorithm that uses an observer is as follows.
+Let \(S_{0}, S_{1}, S_{2}, \ldots, \) be the sequence of states
+recorded by the system.
 
-The system executes repeated global snapshot
-algorithms.
+From the property
+<a href="DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+Computations through Increasing Cuts
+</a>
+there exists a computation that visits each state \(S_{i}\) in order
+of increasing \(i\).
 
-Agents send information to an observer which creates a global state --
-a global snapshot.
+The system monitor checks the sequence of snapshots to determine if
+some action is required.
 
-The observer executes an algorithm on the snapshot to determine if the
-snapshot has the specified property.
+
+<h4 class="w3-text-teal">Rollback and Recover</h4>
+
+
+Let \(S^{*}\) be the most recent snapshot recorded by a system monitor.
+
+From the property,
+<a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+"Computations of Past before Future"</a>
+there exists a computation that starts at the initial state and later
+visits \(S^{*}\).
+
+So, if an error is detected in a computation then the computation can be
+restarted from \(S^{*}\) rather than rolling all the way back to the
+initial state. 
+
+
+
+<h4 class="w3-text-teal">Detecting Stable Predicates</h4>
+
+A <i>stable predicate</i> is a predicate with the following property: If the
+predicate holds at any point in any computation then it continues to
+hold forever thereafter in that computation. Equivalently, if a stable
+predicate holds in a state \(s\) then it holds in all states reachable
+from \(s\).
+
+<p>
+Examples of stable predicates are: "The computation has
+terminated," and "The computation is deadlocked."
+
+If a computation has terminated at some point then it remains 
+terminated.
+
+Likewise if a computation has deadlocked then it remains deadlocked.
+
+<h5 class="w3-text-teal">Specification of Detection Algorithms</h5>
+An algorithm to detect a stable property \(P\) has the following
+specification.
+<ol>
+  <li>
+  If \(P\) holds when the algorithm is initiated then the algorithm
+  detects that \(P\) holds.
+  </li>
+  <li>
+  If the algorithm detects that \(P\) holds then \(P\) holds when the
+  algorithm terminates.
+  </li>
+</ol>
+
+
+<h5 class="w3-text-teal">General Detection Algorithms</h5>
+A general solution is for the operating system to monitor a client
+computation by taking repeated snapshots of the computation.
+
+The OS checks whether a specified stable property holds in each
+snapshot.
+
+From the property,
+<a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+"Computations of Past before Future"</a>
+this general solution satisfies the specification of detection
+algorithms. 
+
+<p class="w3-text-teal">Detection with Observers</p>
+The OS can construct a global snapshot by having an observer collect
+local snapshots.
+
+The OS can also use multiple observers each of which collects
+local information from subnetworks; the OS then carries out a
+distributed algorithm on its collection of observers.
+
+<p>
+The OS can also execute a distributed algorithm on local
+snapshots without having observers collect local information, as
+described next.
+
+
+<!-------------------------------------------------------->
+<p class="w3-text-teal">Detection without Observers: Distributed
+Algorithms on Local Snapshots</p>
+
+Distributed algorithms on local snapshots operate in two phases.
+
+In the first phase a global snapshot algorithm is executed.
+
+The local snapshot of each agent and its incoming channels are stored
+locally, at the agent, without sending the information to observers.
+
+<p>
+In the second phase a distributed algorithm is executed to determine
+if the local information stored at agents satisfies a specified global
+property, such as "computation has deadlocked."
+
+The algorithm in the second phase operates on unchanging data.
+
+These algorithms are often distributed graph algorithms.
 
 
 <p>
-The observer operates on <i>static</i> data -- the snapshot -- though the
-system state may continue to change.
-
-The observer can use a sequential algorithm to inspect the snapshot.
-
-This is the simplest design of a detection algorithm.
-
-<h5 class="w3-text-teal">A General Detection Algorithm without an Observer</h3>
-A general detection algorithm, without an observer, operates in two phases.
-
-First execute a global snapshot algorithm and store information about
-each agent and its incoming channels locally, at the agent, without
-sending the information to an observer.
-
-Second execute a distributed algorithm to determine if the local
-information at agents satisfies a specified global property.
-
 The two phases can be executed concurrently in many applications.
 
 
