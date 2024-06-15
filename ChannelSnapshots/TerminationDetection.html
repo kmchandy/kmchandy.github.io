@@ -116,41 +116,55 @@ hr.new1 {
   The problem is to design an algorithm that detects whether the
   computation is in a terminated state.
   
-<!----------------------------------------------------------------------------->
-<h4 class="w3-text-teal">How Should You Solve the Problem?</h4>
-<!----------------------------------------------------------------------------->
+  <!----------------------------------------------------------------------------->
+  <h4 class="w3-text-teal">How Should You Solve the Problem?</h4>
+  <!----------------------------------------------------------------------------->
 
-  A strategy to solve all detection problems is to start with the
-  <a href="ChannelSnapshots.html">general method for detection</a> and
-  then explore optimizations.
+  <p class="w3-text-teal">Strategy</p>
 
-  <p>
-  The general method is to take repeated global snapshots; agents send
-  local information to an observer; the observer builds a global
-  snapshot by putting local information together and then checks
-  whether the specified condition holds in the global state.
-
-  <p>
-  Next let's explore optimizations of the general method.
-
-  The algorithm detects when all agents are waiting.
-
-  So, an agent need not initiate global snapshots repeatedly but only
-  needs to do so when the agent starts to wait.
+  The strategy to solve detection problems is to start with the
+  <a href="ChannelSnapshots.html">general detection algorithm</a> and
+  then explore optimizations by using
+  <a href="DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+  properties of cuts.</a>
+  
+  Let's explore optimizations.
 
   <p>
-  The information that an agent sends to the observer is the agent's
-  local state and the state recorded on each of the agent's input
-  channels.
+  The algorithm detects whether a channel is empty and it can do so
+  given the numbers of messages sent and received on the channel
+  without information about message contents.
 
-  The algorithm only detects whether a channel is empty or not.
-  So the only information that an agent needs to send the observer is
-  about numbers of messages rather than content of messages.
+  What <a href="DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+  properties of cuts</a>
+  come to mind to help us design an algorithm based on message counts?
 
   <p>
-  Let's design an algorithm in which agents do not execute the global
-  snapshot algorithm and use numbers of messages sent and
-  received when agents become idle.
+  We use
+  <a href="DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+  "Cut based on Counts of Messages Sent and Received,"</a>
+  which is given again below.
+
+<p>
+There exists a cut <code>(past, future)</code> exactly when the
+following two conditions hold:
+
+<ol>
+  <li>
+  For all \(C\):  \(\; C_{s} \geq C_{r}\),
+  <p>
+  where
+  \(C_{s}\) and \(C_{r}\) are the numbers of messages sent and
+  received, respectively, on channel \(C\), in <code>past</code>.
+  </li>
+  <li>
+  If a step \(x\) of an agent is in <code>past</code> then steps at
+  that agent before \(x\) are also in <code>past</code>.
+  </li>
+</ol>
+
+The property suggests the following algorithm.
+
 
 
   <h4 class="w3-text-teal">A Termination Detection Algorithm</h4>
@@ -189,28 +203,43 @@ hr.new1 {
 
   <p>
   We first prove that if the observer detects that the computation has
-  terminated then the computation has indeed terminated.
-Define the local snapshot of an agent as the state at which it sends
-\(C_{s} = C_{s}^{*}\) for each of its output channels \(s\), and
-\(C_{r} = C_{r}^{*}\) for each of its input channels \(r\).
+terminated then the computation has indeed terminated.
+Since the observer has detected termination it has received messages
+  containing counts \(C_{s}^{*}\) and \(C_{r}^{*}\) for the number of
+  messages sent and received, respectively, on channel \(C\) for all
+\(C\).
+<p>
+Consider a partition <code>(past, future)</code> of the steps of the
+  computation where <code>past</code> consists of steps at an agent
+  before the agent sends the messages containing \(C_{s}^{*}\) and
+\(C_{r}^{*}\) for channels \(C\) incident on the agent.
+
 
 <p>
-The local snapshots correspond to a
-<a href="ChannelSnapshots.html">global snapshot</a> exactly when all
-messages received in the <code>past</code> are sent in the
-<code>past</code>.
+From the property,
+<a href="DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+"Cut based on Counts of Messages Sent and
+Received,"</a> <code>(past, future)</code> is a cut.
 
-If \(C_{s}^{*} = C_{r}^{*}\) for all channels \(C\) then 
-messages received in the <code>past</code> are sent in the
-<code>past</code>.
+From the definition of terminated state it follows that the state at
+this cut is a terminated state.
+
+Termination is a stable property -- once computation has terminated it
+remains terminated.
+
+So, if the state at a cut of the computation
+is a terminated state then all succeeding states are terminated states.
 
 <p>
 Next we prove that if the computation terminates then the observer
 detects termination.
 
-The last message sent by each agent has \(C_{s} = C_{s}^{*}\) for each
-of its output channels \(s\), and 
-\(C_{r} = C_{r}^{*}\) for each of its input channels \(r\).
+The last message sent by each agent has counts \(C_{s}^{*}\) and
+\(C_{r}^{*}\) of the numbers of messages sent and received (respectively)
+for each of its output channels \(C\).
+
+Because these are the last messages sent when the algorithm terminates
+it follows that \(C_{s}^{*} = C_{r}^{*}\) for all \(C\).
 
 
 
