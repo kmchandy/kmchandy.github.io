@@ -272,7 +272,7 @@ All topological sorts of a dataflow graph are computations.
 </p>
 <hr class="new2">
 
-The initial state is the state after the initial event (event 0) at
+The initial state is the state after the initial step (step 0) at
 each agent.
 
 <p class="w3-text-teal">Proof</p>
@@ -286,9 +286,9 @@ The base case is \(n = 0\).
 
 Let the \(n+1\)-th element of \(z\) be vertex \(v\).
 
-Let this vertex represent an event at an agent \(a\) in which \(a\)
+Let this vertex represent a step at an agent \(a\) in which \(a\)
 receives a message \(m\) on a channel \(c\), and the state of \(a\)
-before the event is \(s\).
+before the step is \(s\).
 
 <p>
 Because \(z\) is a topological sort:
@@ -306,10 +306,20 @@ Because \(z\) is a topological sort:
 </ol>
 
 <p>
-Therefore there is an event in  which \(a\)
+Therefore there is a step in  which \(a\)
 receives a message \(m\) on a channel \(c\), and the state of \(a\)
-before the event is \(s\).
+before the step is \(s\).
 
+
+
+  <!----------------------------------------------->
+  <h5 class="w3-text-teal">Alternate Version of the Theorem</h5>
+<!----------------------------------------------->
+A computation</a> is a sequence of steps of a dataflow graph in which for all edges
+  \((e, e')\) in the graph:
+  <center>\(e\) occurs before \(e'\) in the
+  sequence.
+  </center>
 
 <!---------------------------------------->
 <h5 class="w3-text-teal">Next</h5>
