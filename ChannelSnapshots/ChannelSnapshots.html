@@ -471,8 +471,12 @@ this general solution satisfies the specification of detection
 algorithms. 
 
 <p class="w3-text-teal">Detection with Observers</p>
-The OS can construct a global snapshot by having an observer collect
-local snapshots.
+The OS uses an agent, the observer, to collect local snapshots and
+form a global snapshot.
+
+The observer inspects the global snapshot to determine if the property
+holds in the snapshot.
+
 
 The OS can also use multiple observers each of which collects
 local information from subnetworks; the OS then carries out a
