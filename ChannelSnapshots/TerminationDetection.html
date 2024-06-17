@@ -98,15 +98,21 @@ hr.new1 {
   A computation terminates in states in which all
   channels are empty and all agents are waiting to receive messages.
 
+  An agent is said to be <i>active</i> while it is processing a
+  message and <i>idle</i> while it is waiting to process a message.
+
+  A terminated state is one in which all agents are idle and all
+  channels are empty.
+
+  <p>
   Let \(C_{s}\) and \(C_{r}\) be the numbers of messages 
   sent and received (respectively) on channel \(C\).
 
-  <p>
   A computation is in a terminated state exactly
   when:
   <ol>
     <li>
-    All agents are waiting to receive messages and
+    All agents are idle and
     </li>
     <li>
     for all channels \(C\):  \(\; C_{s} = C_{r}\).
@@ -122,7 +128,7 @@ hr.new1 {
 
   <p class="w3-text-teal">Strategy</p>
 
-  The strategy to solve detection problems is to start with the
+  A strategy to solve detection problems is to start with the
   <a href="ChannelSnapshots.html">general detection algorithm</a> and
   then explore optimizations by using
   <a href="DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
@@ -168,11 +174,10 @@ The property suggests the following algorithm.
 
 
   <h4 class="w3-text-teal">A Termination Detection Algorithm</h4>
-  Let  \(C_{s}\) and \(C_{r}\) be the numbers of messages sent and
-  received (respectively) on channel \(C\).
 
   <p class="w3-text-teal">Agent Actions</p>
-  When an agent starts to wait it sends a message to the observer.
+  When an agent changes state from active to idle the agent sends a
+  message to the observer. 
 
   This message contains \(C_{s}\) for each output channel and
   \(C_{r}\) for each input channel of the agent.
@@ -184,11 +189,17 @@ The property suggests the following algorithm.
   
   For each channel \(C\), let \(C_{s}^{*}\) and \(C_{r}^{*}\) be the
   latest value of \(C_{s}\) and \(C_{r}\), respectively, that the
-  observer has received.
+observer has received.
+
+
   
-  <p>
-  Initially \(C_{s}^{*} = 0, C_{r}^{*} = -1\), and therefore
-  \(C_{s}^{*} =\neq C_{r}^{*}\) for all \(C\). 
+<p class="w3-text-teal">Initial Condition</p>
+All agents are idle.
+
+\(C_{s}^{*}\) and \(C_{r}^{*}\) are the numbers of messages sent and
+received (respectively) on channel \(C\) for all \(C\).
+
+<p class="w3-text-teal">Termination Detection</p>
 
 <hr class="new2">  
   <p style="color:blue;">
@@ -204,23 +215,30 @@ The property suggests the following algorithm.
   <p>
   We first prove that if the observer detects that the computation has
 terminated then the computation has indeed terminated.
-Since the observer has detected termination it has received messages
-  containing counts \(C_{s}^{*}\) and \(C_{r}^{*}\) for the number of
-  messages sent and received, respectively, on channel \(C\) for all
-\(C\).
-<p>
-Consider a partition <code>(past, future)</code> of the steps of the
-  computation where <code>past</code> consists of steps at an agent
-  before the agent sends the messages containing \(C_{s}^{*}\) and
-\(C_{r}^{*}\) for channels \(C\) incident on the agent.
 
+<p>
+Since the observer has detected termination, for each channel \(C\),
+either \(C_{s}^{*} = C_{r}^{*}\) initially, or the observer received
+messages containing \(C_{s}^{*}\) and \(C_{r}^{*}\) such that
+\(C_{s}^{*} = C_{r}^{*}\).
+
+
+<p>
+Let<code>(past, future)</code> be a partition of the steps of the
+  computation where <code>past</code> consists of steps at an agent
+  before the agent sent the messages to the observer containing
+\(C_{s}^{*}\) and 
+\(C_{r}^{*}\) for channels \(C\) incident on the agent. 
+(If the agent sends no messages to the observer 
+then the agent has no steps in <code>past</code>.)
 
 <p>
 From the property,
-<a href="DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+<a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
 "Cut based on Counts of Messages Sent and
 Received,"</a> <code>(past, future)</code> is a cut.
 
+<p>
 From the definition of terminated state it follows that the state at
 this cut is a terminated state.
 
