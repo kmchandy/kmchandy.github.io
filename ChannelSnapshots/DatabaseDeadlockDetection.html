@@ -81,67 +81,72 @@ hr.new1 {
   
   <!------------------------------------------------------------------->
   <p class="w3-text-red">
-  A database deadlock occurs when the system has a cycle of agents
-  where each agent in the cycle remains waiting forever for a
-  resource held and required by the next agent in the cycle.
+  A database deadlock occurs when each agent in a cycle remains
+  waiting forever for a resource held and required by the next agent
+  in the cycle. 
 
   A database deadlock detection algorithm is executed by the operating
   system to determine whether there exists a cycle of deadlocked agents.
 
-  Detection algorithms are based on global snapshots.
   </p>
   
   <h3 class="w3-text-teal">The Problem</h3>
 
   <p>
-  Agents in a system share a set of files.
-  A file can be accessed by at most one agent at a time.
-    <p>
-    An agent \(u\) is in one of the following states:
-    <ol>
-      <li>
-      State 1: Executing without holding shared files. It may remain in this
-  state for ever or it transits to state 2.
-      </li>
-      <li>
-      State 2: Waiting to acquire a nonempty set \(u.needs\) of
-      shared files. The agent remains in this state until it holds all
-  the files in \(u.needs\) at which point in transits to state 3.
-      </li>
-      <li>
-      State 3: Executing while holding all files in
-      \(u.needs\). It remains in this state for only finite time after
-  which it transits to state 1.
-      </li>
-    </ol>
+  The problem described here is a simplification of the database
+  deadlock problem.
 
+  The simplification focuses on the essentials of the problem.
 
-    
-    
-    <figure>
-    <img
-    src="DatabaseDeadlockDetection/DatabaseDeadlockDetection.001.jpeg"
-    alt="Fig1" style="width:100%">
-    <figcaption>Fig.1 - The Life Cycle of an Agent</figcaption>
-    </figure>
+  <p>
+  Agents in a system share a set of indivisible resources.
 
-<h3 class="w3-text-teal">Deadlock</h3>
-A cycle of waiting agents is in a deadlock if each agent in the cycle is waiting to
-acquire a file that is held and needed by the next agent in the cycle.
+  An example of such a resource is exclusive access to a file.
 
-    <h3  style="color:red;">Example</h3>
-    In the example, a file is identified by its color.
-A system has one red, one blue and one green file.
-Agents \(x\), \(y\) and \(z\) are deadlocked in the following state.
-    Agent \(x\) needs the red and blue file; it is
-holding the red file and is waiting
-    to acquire the blue file,
+  <p>
+  A deadlock arises when there is a cycle of agents,
+  \([x_{0}, x_{1}, \ldots, x_{n-1}, x_{0}]\) where for all \(i\):
+  <ol>
+    <li>
+    agent \(x_{i}\) holds a resource \(r_{i}\), and
+    </li>
+    <li>
+    agent \(x_{i}\) requires resources \(r_{i}\) and \(r_{(i+1)}\) to
+    continue executing.
+    </li>
+  </ol>
 
-    Agent \(y\) needs the blue and green files; it holds the blue file and is waiting
-    to acquire the green file.
+  
+    (Operations on indices of agents are taken mod \(n\) and \(n >
+    1\).) 
 
-    Agent \(z\) needs the green and red files; it holds the green file and is waiting
-    to acquire the red file.
+  <!-------------------------------------------------->
+  <h3  style="color:red;">Example</h3>
+  <!-------------------------------------------------->
+  
+  In the example, a resource is identified by its color.
+  
+  A system has one red, one blue, and one green resource.
+  
+  Agents \(x\), \(y\) and \(z\) are deadlocked in the following
+  state.
+  <ol>
+    <li>
+  Agent \(x\) requires the red and blue resources to continue
+    executing; \(x\) is holding the red resource and is waiting to
+    acquire the blue resource.
+    </li>
+    <li>
+  Agent \(y\) requires the blue and green resources to continue
+    executing; \(y\) ; is holding the blue resource and is waiting to
+    acquire the green resource.
+    </li>
+    <li>
+  Agent \(z\) requires the green and red resources to continue
+  executing; \(z\) holds the green resource and is waiting to acquire
+    the red resource.
+    </li>
+  </ol>
     
     <figure>
   <img
@@ -150,211 +155,207 @@ holding the red file and is waiting
   <figcaption>Fig.2 - An Example of a Deadlock</figcaption>
 </figure>
 
-    <h5 class="w3-text-teal">Variables</h5>
-Associated with each agent \(v\) is a set of files <i>v.needs</i> that
-\(v\) must hold to continue execution and a set of files <i>v.holds</i> that \(v\)
-has.
-
-The set of files that \(v\) needs to continue executing is
-<i>v.waits</i> which is the set that \(v\) needs but does not
-    hold.
-
-    In the example \(z.needs = \{red, green\}\), \(z.holds =
-    \{green\}\), and \(z.waits = \{red\}\)
-
-    <p>
-    An agent \(v\) is executing without shared files when \(v.needs\) is the
-    empty set.
-    Agent \(v\) transits from executing without shared files to waiting
-    when \(v.needs\) becomes nonempty; if \(v.waits\) is empty then
-    \(v\) transits to the state in which it is executing while holding
-    the files in \(v.needs\).
-    If \(v.waits\) is not empty then \(v\) waits until \(v.waits\)
-    becomes nonempty.
  
-    <!----------------------------------------------------------------------------->
-    <h3 class="w3-text-teal">How Should You Approach the Problem?</h3>
-    <!----------------------------------------------------------------------------->
+  <!----------------------------------------------------------------------------->
+  <h3 class="w3-text-teal">How Should You Solve the Problem?</h3>
+  <!----------------------------------------------------------------------------->
+  
+  <p class="w3-text-teal">Strategy</p>
+
+  A strategy to solve detection problems is to start with the
+  <a href="ChannelSnapshots.html">general detection algorithm</a> and
+  then explore optimizations by using
+  <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
+  properties of cuts.</a>
+  
+  <p>
+  In the general detection algorithm, an observer gets global snapshots and
+  determines if there is a cycle of waiting agents in the snapshot.
+
+  Algorithms for determining cycles are found
+  <a href="https://en.wikipedia.org/wiki/Cycle_(graph_theory)">here</a>.
+
+  <p>
+  Next let's explore
+  <a href="ChannelSnapshots.html">
+  optimizations
+  </a>;
+  see "Detection without Observers: Distributed Algorithms on Local
+  Snapshots."
+
+  The optimized algorithm has two phases: (1) First a global snapshot
+  algorithm is executed. (2) After the global snapshot algorithm
+  terminates a distributed detection algorithm is executed on
+  the local snapshots recorded by the global snapshots.
+
+  <p>
+  The two phases can be merged for some problems, including this one.
 
 
-    <h4 class="w3-text-teal">General Method: Monitor System with Repeated Snapshots</h4>
-
-    <p>
-    In the general method, the OS  monitors a system by taking repeated global
-    snapshots.
-    If a global snapshot is a state in which there is a deadlock then
-    there is indeed a deadlock.
-    And if a computation is deadlocked then repeated snapshots ensure
-    that a snapshot is taken after computation deadlocks.
-
-    <h4 class="w3-text-teal">An Alternate Method</h4>
-    <p> Algorithms that use global snapshots operate in two phases:
-    (1) obtain a global snapshot, and (2) analyze the static structure of
-a global snapshot.  For deadlock detection, the problem is to detect
-cycles in a (static) graph obtained by the snapshot.
-
-    Next, we describe an algorithm that combines the two phases of the
-global snapshot algorithm into a single phase.
-
-We begin by describing an algorithm by which an agent determines if it
-is part of a cycle.
 
 
+  <!----------------------------------------------------->
+  <h4 class="w3-text-teal">
+  A Distributed Algorithm to Detect a Cycle of
+  Waiting Agents
+  </h4>
+  <!----------------------------------------------------->
+
+  <p>
+  Multiple detection algorithms and global snapshot algorithms may
+  execute concurrently.
+  
+  These algorithms are disambiguated by tagging each algorithm with
+  the initiator and a sequence id.
+
+  Next we describe a single detection algorithm which is executed after 
+  a single global snapshot algorithm terminates.
+
+  <p class="w3-text-teal">Local Constants</p>
+  In the detection algorithm, 
+each agent <code>v</code> has the following local constants:
+<ol>
+  <li> <code>v.waits</code> is the set
+  of resources that <code>v</code> has to acquire from other agents to start
+  execution.
+  </li>
+  <li>
+  <code>v.holds</code> is the set of resources that <code>v</code>
+  holds and must continue to hold
+  to start execution.
+  </li>
+</ol>
+
+<p style="color:red;">Example</p>
+In the example of the figure:
+<br>
+<code>x.waits = {blue}, x.holds = {red}</code>
+<br>
+<code>y.waits = {green}, y.holds = {blue}</code>
+<br>
+<code>z.waits = {red}, y.holds = {green}</code>
+  
+<p>
+<code>v.waits</code> and <code>v.holds</code> are constant for all <code>v</code> in the
+detection algorithm  because these values are
+specified in the global snapshot.
 
 
-<h5 class="w3-text-teal">
-A Distributed Algorithm to Determine if an Agent is in a Cycle
-</h5>
-Next we describe an algorithm by which an agent \(u\) determines if it is
-part of a cycle.
+  <p class="w3-text-teal">Messages</p>
+  The algorithm to detect waiting cycles is similar to the global
+  snapshot algorithm.
 
-A message is a list of vertices that represents a cycle-free path from the
-initiator.
-
-The initiator \(u\) sends a message \([u]\) -- a list consisting of
-the single element \(u\) on each of its output channels.
+Instead of the <code>marker</code> message used in global snapshots, a
+message in the detection identifies the set
+of resources for which the sender of the message is waiting.
 
 <p>
-When an agent, other than the initiator, receives a message it sends
-messages on its output 
-channels if it has not already done so.
+Each message <code>m</code> sent by an agent <code>v</code> has a
+field <code>m.waits</code> where:
+<center><code>m.waits</code> = <code>v.waits</code>.</center>
 
-When an agent \(w\) gets a message \([u, \ldots, v]\) it sends the
-message \([u, \ldots, v, w]\) on each of its output channels.
+  <p class="w3-text-teal">Initiating the Algorithm</p>
+  A waiting agent <code>u</code> initiates the algorithm by sending a message
+  <code>m</code> on each of its output channels where
+  <code>m.waits</code> = <code>u.waits</code>.
+  
+ <p class="w3-text-teal">Action by an Agent other than the
+Initiator</p>
+
+<p>
+When an agent <code>v</code> receives a message <code>m</code>:
+<ol>
+  <li>
+  If <code>v</code> has already sent messages then <code>v</code> takes no
+  action.
+  </li>
+  <li>
+  If <code>v</code> has not sent messages, and if there is a resource
+  common to <code>m.waits</code> and <code>v.holds</code> then
+  <code>v</code> sends a  message <code>m'</code> on each of its
+  output channels where <code>m'.waits</code> = <code>v.waits</code>.
+  </li>
+</ol>
+
+<p class="w3-text-teal">Cycle Detection</p>
+If the initiator <code>u</code> receives a message <code>m</code>
+where there is a resource common to <code>m.waits</code> and
+<code>u.holds</code> then <code>u</code> detects a cycle of waiting
+agents.
+
+<h4 class="w3-text-teal">Proof of Correctness</h4>
+The proof outline is as follows.
+
+An agent <code>v</code> sends messages only if there is a path of waiting
+processes from <code>u</code> to <code>v</code>.
+
+So, <code>u</code> detects a cycle of waiting processes only if there
+exists a cycle of waiting processes.
+
+<p>
+If there exists a cycle of waiting processes from <code>u</code>  to
+<code>u</code>  then 
+messages are sent along one such cycle, and so
+<code>u</code> detects a cycle.
+
+<p>
+The algorithm terminates because it sends at most one message on each
+channel. 
 
 
-If the initiator receives a message \([u, \ldots, v]\)  then the
-initiator is part of the cycle \([u, \ldots, v, u]\).
 
+
+<!----------------------------------->
+<h4 style="color:red;">Example</h4>
+<!----------------------------------->
+
+This example shows steps in the case of the cycle of waiting processes shown in
+figure 2.
+
+The algorithm is initiated by agent <code>x</code> by broadcasting a
+message <code>m</code> where <code>m.waits = x.waits = {blue}</code>.
+
+<p>
+
+When <code>y</code> receives a message <code>m</code> where
+<code>m.waits = {blue}</code>, there is a resource in both <code>m.waits</code> and
+<code>y.holds</code>, and so <code>y</code> broadcasts message
+<code>m'</code> where <code>m'.waits = y.waits = {green}</code>.
+
+<p>
+When <code>z</code> receives a message <code>m</code> where
+<code>m.waits = {blue}</code>, <code>z</code> takes no action because
+there is no resource in both <code>m.waits</code> and
+<code>z.holds</code>.
+
+
+<p>
+When <code>z</code> receives a message <code>m</code> where
+<code>m.waits = {green}</code>, <code>z</code> broadcasts message
+<code>m'</code> where <code>m'.waits = z.waits = {red}</code>.
+
+
+<p>
+When the initiator <code>x</code> receives a message <code>m</code> where
+<code>m.waits = {red}</code>, <code>x</code> detects a deadlock
+because there is a resource common to <code>m.waits</code> and
+<code>x.holds</code>. 
 
 <h5 class="w3-text-teal">Combining Cycle Detection and Snapshot
 Algorithms</h5>
 
+We can use a a marker in the snapshot algorithm as a message in cycle
+detection.
+
+Modify a marker <code>m</code> to have the field
+<code>m.waits</code> used in cycle detection.
+
+Then the snapshot algorithm is the same as the cycle detection
+algorithm except that the snapshot algorithm records states of
+channels which are not used in cycle detection.
 
 <p>
-A marker, in the extension of the global snapshot algorithm, has
-fields <i>m</i> has fields <i>m.waits</i> and <i>m.path</i>.
-The field <i>m.path</i>
-plays the same role as a message in the algorithm to detect cycles --
-<i>m.path</i> is a path of waiting agents.
-When an agent \(v\) sends a marker \(m\) it sets \(m.waits = v.waits\).
-
-<p>
-A waiting agent \(u\) initiates the
-algorithm by taking its local snapshot (recording \(u.waits\)) and
-sending markers \(m\) on its output channels where \(m.waits = u.waits\).
-Algorithms initiated by different agents are disambiguated by the
-identity of the initiator which is the first vertex in \(m.path\).
-
-
-
-<p>
-If an agent \(v\) receives a marker \(m\) while \(v\) is waiting and \(v\) has
-not sent markers already then \(v\) carries out the following steps.
-If there is an element common to both \(m.waits\) and \(v.waits\) then
-\(v\) takes its local snapshot and
-sends a marker \(m'\) on each of its outgoing channels where
-\(m'.waits = v.waits\).
-
-
-<p>
-If the initiator \(u\) receives a marker \(m\) where there is an
-element common to \(m.waits\) and the recorded snapshot value
-\(u.waits\), then \(u\) is part of the deadlocked cycle specified by
-the path \(m.path\). 
-
-
-<p class="w3-text-teal">Proof of correctness</p>
-The algorithm is essentially the same as the global snapshot
-algorithm, and the proof is similar to that of the
-snapshot algorithm.
-
-
-
-
-<h5 style="color:red;">Example</h5>
-The example shows the deadlock detection algorithm for the cycle of
-waiting processes shown in figure 2.
-
-<p>
-Agent \(x\) initiates the algorithm when \(x\) is waiting
-by sending a marker \(m\) where
-\(m.waits\) is the set consisting of the blue file.
-
-<p>
-When \(y\) receives the message, \(y\) is waiting and
-\(y\) is holding a file that is in \(m.waits\) and that \(y\) needs; so,
-\(y\) sends markers \(m'\) with a waits field that contains the green
-file.
-
-<p>
-When \(z\) receives \(m'\), \(z\) is waiting, and
-\(z\) is holding a file that is in \(m'.waits\) and that \(z\) needs;
-so \(z\) sends markers \(m''\) with a waits field that has the red
-file.
-
-<p>
-When \(x\) receives \(m''\), \(x\) detects deadlock because \(x\) is
-waiting and there is a file in the \(m''.waits\) that
-\(x\) holds and needs.
-
-<p class="w3-text-teal">Optimization</p>
-File managers keep track of which agent holds a given file.
-So, an agent waiting for a file sends markers only to the agent
-holding that file instead of sending markers to all agents.
-
-
-
-<pre>
-finished = False
-
-start()
-def receive(path, sender):
-   if not finished:
-       path.append(my_id)
-       for receiver in successor_list:
-           send(path, receiver)
-       finished = True
-</pre>
-
-
-
-<p>
-
-The algorithm for the initiator is given below.
-
-<pre>
-finished = False
-path = [my_id]
-for receiver in successor_list:
-   send(path, receiver)
-
-start()
-def receive(path, sender):
-   if not finished:
-      path.append(my_id)
-      print(path)
-      finished = True
-</pre>
-
-<pre>
-finished = False
-
-start()
-def receive(message, sender):
-   waits = needs - holds
-   waiting = (waits != {})
-   if message.isinstance(Marker) and waiting and not finished:
-      if message.waits & holds & needs:
-         extended_path = message.path.append(my_id)
-         new_message = Marker(waits, extended_path)
-         for receiver in successors:
-            send(new_message, receiver)
-</pre>
-   
-
-
-
+Write the algorithm for the combined algorithm as an exercise.
 
 
 <!--Start Footer--------------------------------------->
