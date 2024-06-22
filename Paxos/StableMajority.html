@@ -99,295 +99,507 @@ hr.new1 {
   will be reached in such systems. 
 
 
-  A consensus algorithm may not terminate; however,
-  consensus is reached in most situations.
-
-  <p>
-  This webpage is a continuation of
-  <a href="ReadWriteLossyChannels.hmtl">
-  Serializable Computations in Faulty Systems</a>
-
-  The description of the system and algorithm are summarized next.
-
-  A distributed system has agents, called <i>clients</i> that send
-  requests to agents, called <i>servers</i>, to read and
-  write local variables of servers.
-
-  Each server <code>q</code> has a local variable <code>q.v</code>
-  which has two fields: <code>q.v.s</code>, the state of
-  <code>q</code>, and <code>q.v.t</code>, the epoch in which
-  <code>q.v</code> was last written.
-
-  <p>
-  In each transaction, a single client <code>p</code> sends requests
-  to read <code>q.v</code> for all servers <code>q</code>, and 
-  <code>p</code>  receives replies from some of the servers, and then sends
-  requests to write <code>q.v</code> for all servers <code>q</code>.
-  Though the system is faulty, and though multiple clients and servers
-  execute concurrently, the collection of servers come to a consensus regarding
-  a common value to be assigned to the servers' variables.
+  Paxos may not terminate. 
+  We will discuss ways to improve the likelihood of termination.
 
 
   <p>
-  In this page, the state, <code>q.v.s</code>, of a server
-  <code>q</code> is a sequence.
+  Consider the problem of maintaining a ledger consisting
+  of a sequence of transfers of funds into and out of accounts.
+  Assume that 
+  the ledger is implemented using copies at multiple agents.
 
-  An example of such a sequence is a ledger that keeps track of the
-  sequence of transactions on a bank account.
+  The copies may not be synchronized; however there must exist a
+  consensus copy. 
 
-A client gets the consensus value of the ledger and then proposes a
-transaction that extends the ledger.
+  We call the sequence of operations on the ledger a <i>chain</i> of
+  operations and we call the the consensus value a <i>consensus chain</i>.
 
-Servers come to a consensus about the extended ledger.
+  <p>
+  Suppose two clients
+  simultaneously request extensions to a consensus chain by transferring funds
+  from an account x to two different accounts.
 
-We call the sequence of values assigned to server variables a
-<i>chain</i> of values, using a term from block chain algorithms.
+  Account x may not have funds to allow both transfers, and so the
+  consensus chain can be extended by at most one of the transfers.
+
+  Clearly, the system must maintain a consensus regarding the order of
+  operations in the chain.
+
+  <p>
+
+  Agents that propose extensions to consensus chains are called <i>clients</i>.
+
+  Copies of the chain are stored at agents called
+  <i>servers</i>.
+
+  <p class="w3-text-teal">Notation: prefix</p>
+  A <i>prefix</i> of a sequence S is an initial subsequence
+  of S.
+  For example, [A, B] is a prefix of [A, B, C] but [A, C] is not a
+prefix of [A, B, C].
+
+<p>
+The empty sequence is a prefix of all sequences.
+A sequence is a prefix of itself.
+
+We use the notation \(\leq\) for prefix, as in: 
+[A, B] \(\leq \) [A, B, C]
 
 
-
-
-  <!--------------------------------------------------------->
-  <h4 class="w3-text-teal">Specification</h4>
+<!--------------------------------------------------------->
+<h3 class="w3-text-teal">Specification of Consensus</h3>
 <!--------------------------------------------------------->
 
-<p class="w3-text-teal">1. Every element of a consensus chain is
-proposed by a client.</p>
-
-
-<p>
-If \(c\) is a consensus chain then for each \(i\), the extension of
-the chain from \(c[0], \ldots, c[i-1]\) to \(c[0], \ldots, c[i-1],
-c[i]\) is proposed by a client.
-
-
-<p class="w3-text-teal">2. A consensus remains a consensus for ever.</p>
-
-If \(c\) is a consensus chain at a point in a computation and 
-\(c'\) is a consensus chain at a later point, then \(c\) is a prefix
-of \(c'\), i.e., \(c\) is an initial subsequence of \(c'\).
-
-<p>
-For example, if \(c' = [a, b, c, d]\) and \(c\) has two elements then
-\(c\) must be \([a, b]\).
-
-  <!--------------------------------------------------------->
-  <h4 class="w3-text-teal">Using the Algorithm for Serializing Transactions</h4>
+<!--------------------------------------------------------->
+<h4 class="w3-text-teal">1. A consensus isn't changed.</h4>
 <!--------------------------------------------------------->
 
-We use the
-<a href="ReadWriteLossyChannels.hmtl">
-algorithm for serializing transactions</a> to reach a consensus.
 
+ For all consensus chains \(c\) and \(d\) in a computation: either
+\(c\) is a prefix of \(d\) or \(d\) is a prefix of \(c\).
 
 <p>
-We showed that 
-  the timeline of each server <code>q</code> -- i.e., the sequence of
-  values assigned to <code>q.v</code> -- is the same in each
-  computation of the distributed algorithm as in an execution of the
-  following nondeterministic sequential algorithm:
+\( (c \leq d) \; \vee \; (d \leq c) \)
 
+<p>
+For example, a consensus chain [A, B] can be extended to form a
+consensus chain [A, B, C].
+
+<p>
+[A, B] and [A, C, B] cannot both be consensus chains in
+the same computation.
+
+
+
+
+<!--------------------------------------------------------->
+<h4 class="w3-text-teal">2. Every consensus chain is proposed by a
+client</h4>
+<!--------------------------------------------------------->
+
+For all consensus chains \(c\) in a computation:
+There exists a client that proposed \(c\) in the computation.
+
+<p>
+
+This part of the specification merely says that consensus chains cannot be
+arbitrary.
+
+Later, we define the specification in terms of algorithm
+variables.
+
+<p>
+Next, we describe the agents -- servers and clients -- in the system. 
+
+<!--------------------------------------------------------->
+<h3 class="w3-text-teal">Servers</h3>
+<!--------------------------------------------------------->
   
-<pre>
-while True:
-   select a client p.
-   select a subset R of M or more servers
-   select a nonempty subset W 
+  Each server <code>q</code> has a local variable <code>q.v</code>
+which has two fields:
+<ol>
+  <li>
+  <code>q.v.s</code>: the chain stored at <code>q</code>, and
+  </li>
+  <li>
+  <code>q.v.t</code>: a sequence number that indicates when
+  <code>q.v</code> was last written.
+  </li>
+</ol>
 
-   t = t + arbitrary positive value
+<p>
+A server <code>q</code> receives requests to read or write
+<code>q.v</code>.
+
+The only actions of a server are to respond to requests from clients.
+
+
+
+
+<!--------------------------------------------------------->
+<h3 class="w3-text-teal">Clients</h3>
+<!--------------------------------------------------------->
+
+Each client receives a sequence of <i>clock tick</i> messages.
+
+The intervals between successive clock ticks are irrelevant for
+the correctness of the algorithm but impact performance.
+
+  A client avoids waiting forever for a reply from a server by only accepting replies
+that the client receives before it receives its next clock tick message.
+
+
+
+<p>
+A client repeatedly executes actions in which it reads and then writes
+copies of chains stored at servers.
+
+
+<!---------------------------------------->
+<h5 class="w3-text-teal">Read</h5>
+A client sends read requests to all servers.
+
+Let <code>R</code> be the set of servers from which the client
+receives replies before the client receives its next clock tick.
+
+If <code>R</code> has fewer than <code>M</code> elements, where
+<code>M</code> is a given constant,
+then the action terminates without executing the write step.
+
+If <code>R</code> has <code>M</code> or more elements then a client
+proceeds to the write step.
+
+
+<!---------------------------------------->
+<h5 class="w3-text-teal">Write</h5>
+A client <code>p</code> 
+sends a request to all servers to write:
+<pre>
+p.f(q.v for q in R)
+</pre>
+where <code>f</code> is a given function, and the argument of the function
+is the set of replies that <code>p</code> received.
+
+<p>
+Write requests may get lost.
+
+Let <code>W</code> be the set of servers that execute write requests.
+
+
+
+
+<!-------------------------------------------------->
+  <h3 class="w3-text-teal">A Sequential Representation of Paxos</h3>
+<!-------------------------------------------------->
+We develop Paxos in stages.
+
+We begin by proving properties of the following nondeterministic
+sequential program \(P\).
+
+Nondeterminism in the sequential program represents nondeterminism in
+both the distributed program and in failures of agents and channels.
+
+
+<hr class="new2">
+<p style="color:blue;">Nondeterministic Sequential Program \(P\)</p>
+<pre>
+for n = 1 to infinity:
+   select a client p and subsets R, W of servers
+
    for q in W:
-        q.v.s = p.f(q.v for q in R)
-        q.v.t = t
+      q.v.s = p.f(q.v for q in R)
+      q.v.t = n
 </pre>
+<hr class="new2">
 
-
-The selections of <code>p, R, W</code> and the increment to
-<code>t</code> are nondeterministic.
 
 <p>
-Initially, <code>q.v.s = [init]</code> for all servers <code>q</code>
-where <code>init</code> is a state common to all servers, and
-<code>[init]</code> is a sequence consisting of the single element
-<code>init</code>.
+Many clients and servers execute concurrently in Paxos.
 
+By contrast, exactly one client executes an action at a time in
+program \(P\).
+
+We will show that certain properties of \(P\) are
+also properties of Paxos.
+
+<p>
+We prove properties of sequences of server state changes.
+
+We now restrict attention to iterations of \(P\) in which at least one
+server changes state.
+
+So, hereafter we only consider iterations in which <code>R</code> has
+at least <code>M</code> elements, and <code>W</code> is nonempty.
+
+
+<!-------------------------------------------------->
 <h3 class="w3-text-teal">The Problem</h3>
-We use the sequential algorithm to implement the specification.
+<!-------------------------------------------------->
+The problem is to specify the following values so that the
+specification for consensus is satisfied.
+<ol>
+  <li>
+  <code>M</code>: A client proceeds from the read step to the write
+  step only if it receives at least <code>M</code> replies to its read
+  requests. What should <code>M</code> be?
+  </li>
+  <li>
+  Consensus: How is a consensus chain defined in terms of the server variable
+  <code>q.v</code> for all servers <code>q</code>?
+  </li>
+  <li>
+  <code>f</code>: A client executes a function <code>f</code> on the <code>M</code> or
+  more replies that it receives. What is <code>f</code>?
+  </li>
+</ol>
 
-To solve the problem we need to (1) determine what a consensus is in the sequential
-algorithm; (2) specify the value of <code>M</code> and (3) design the
-function <code>p.f</code>. 
+<!-------------------------------------------------->
+<h3 class="w3-text-teal">How Should You Solve The Problem?</h3>
+<!-------------------------------------------------->
 
+<!-------------------------------------------------->
+<h5 class="w3-text-teal"><code>M</code>: Number of Replies</h5>
 
-<h4 class="w3-text-teal">How Should You Approach the Problem</h4>
+A client needs to receive at least <code>M</code> copies of chains
+to proceed to the write step.
 
-<p class="w3-text-teal">How many replies before a client writes?</p>
-What should <code>M</code> be?
-A reasonable first guess is that a consensus among servers
-requires at least a majority of servers to agree.
-
-So, if <code>N</code> is the number of servers then <code>M =
-int(N/2)+1</code>.
-
-<p class="w3-text-teal">What is a consensus?</p>
-When do servers reach a consensus?
-
-Let's try the following definition.
-
-<p>
-<code>s*</code> is a consensus exactly when there exists a
-majority <code>W</code> of servers and an epoch <code>t*</code> such
-that:
-<p>
-for all <code>q</code> in <code>W</code>: <code>q.v.s, q.v.t =
-v*, t*</code>
-
-<p>
-Servers are in a consensus <code>v.s, v.t = init, 0</code> in the
-initial state.
-
-Consensus values are written in iterations in which
-<code>W</code> is a majority.
-
+What is a reasonable value of <code>M</code>?
 
 <p>
-All that remains for us is to design function <code>p.f</code> and
-then show that the algorithm is correct.
+Let <code>N</code> be the total number of servers.
 
+We could set <code>M = N</code>, and in this case a client proceeds
+from the read step
+to the write step only if the client receives chains from all servers.
 
-<p class="w3-text-teal">What should the client propose?</p>
+This seems safe; however, a client may never proceed to the write
+step because the client may not receive a reply from a failed server.
 
-The client proposes the value returned by the function <code>f</code>
-which appears only in the line:
-<pre>
-q.v.s = p.f(q.v for q in R)
-</pre>
-
-The function has a single argument which is a list of <code>M</code>
-elements.
-
-Let's call this list <code>list_of_s_t</code> because element of the
-list is a pair <code>s, t</code> where <code>s</code> is a state and
-<code>t</code> is an epoch.
+The smaller the value of <code>M</code> the greater the likelihood of
+the algorithm terminating sooner.
 
 <p>
-If all elements of the list are identical then each element of the
-list is a consensus <code>v*, t*</code>, and so the client proposes an
-extension to the consensus chain <code>v*</code>.
+Setting <code>M = int(N/2) + 1</code>, a majority, is reasonable
+because any two majorities have at least one element in
+common. So, if two clients both proceed to the write step then both
+clients have received replies from at least one common server.
 
-The servers come to a consensus about the extensions proposed by clients.
+
+<!-------------------------------------------------->
+<h5 class="w3-text-teal">Consensus in terms of Server Variables</h5>
+We define consensus as a value agreed upon by some number of
+servers. How many?
 
 <p>
-If not all elements of the list are identical then the client does not
-extend the chain.
+We can define a consensus as a value agreed upon by all <code>N</code>
+servers.
 
-In this case, the client proposes a chain that has already been
-proposed.
+Here again, the smaller the number of servers required, the greater
+the likelihood that a consensus will be reached.
 
-The client proposes the
-element of <code>list_of_s_t</code> that was written in the most recent epoch.
+Using the same argument that we used for setting <code>M</code> to be
+a majority, let's define consensus as a value agreed upon by a
+majority. 
+
+
+
+
+<hr class="new2">
+<p style="color:blue;">
+Consensus: Majority of Servers Agree on a Consensus Value
+<code>p</code></p>
+<p style="color:blue;">
+<code>c</code> is a consensus chain in a computation of \(P\) exactly
+when there exists a majority <code>W</code> of servers and an
+iteration number <code>m</code>  where for all <code>q</code> in
+<code>W</code>:
+<center>
+<p style="color:blue;">
+<code>(q.v.s = c)</code> and <code>(q.v.t = m)</code>
+</center>
+</p>
+<hr class="new2">
+
+So, <code>c</code> is a consensus chain exactly when in the
+<code>m</code>-th iteration, for some <code>m</code>: 
+the set <code>W</code>
+of servers written
+is a majority and  <code>c</code> is the chain assigned to
+<code>q.v.s</code> 
+for all <code>q</code> in <code>W</code>.
+
+
+<!-------------------------------------------------->
+<h5 class="w3-text-teal"><code>f</code>: Client's Write Requests</h5>
+
+The argument of <code>f</code> is a list <code>lst</code>
+<code>
+[q.v for q in R]
+</code>
+which is a list of <code>M</code> or more elements.
+
+
+<!-------------------------------------------------->
+<p class="w3-text-teal">Case 1: All elements of <code>lst</code> are
+identical</p>
+
+If all elements of <code>lst</code> are identical then every element of
+<code>lst</code> is a consensus chain.
+
+Let <code>c</code> be any element of <code>lst</code> such as
+<code>lst[0]</code>.
+
+In this case the function returns the consensus chain <code>c</code>
+appended with some value <code>h()</code>.
+
+
+
+<!-------------------------------------------------->
+<p class="w3-text-teal">Case 2: Not all elements of <code>lst</code> are
+identical</p>
+
+If not all elements of <code>lst</code> are identical then let
+<code>max_t</code> be the element of <code>lst</code> with the largest
+<code>t</code> value.
+
+Return the chain <code>max_t.s</code>.
 
 <p>
 The algorithm is given below.
 
+<hr class="new2">
 <pre>
-def f(list_of_s_t):
-  if all elements of list_of_s_t are identical:
-     # e is any element of list_of_s_t
-     e = list_of_s_t[0]
-     return e + propose_next_element(e)
+def f(lst):
+  # if all elements of lst are identical:
+  if all(lst[0] == c for c in lst):
+     c = lst[0].s
+     return c.append(h())
 
   else:
-     # propose y in list_of_s_t with largest epoch
-     y = list_of_s_t[0]
-     for x in list_of_s_t:
-        if x.t > y.t: y = x
-     return y.s
+     # max_t is element with largest t
+     max_t = max(lst, key=lambda c: c.t)
+     return max_t.s
 </pre>
+<hr class="new2">
 
 
 
   <!--------------------------------------------------------->
   <!--------------------------------------------------------->
-  <h4 class="w3-text-teal">Proof of Correctness</h4>
+  <h4 class="w3-text-teal">Theorem: The Algorithm Satisfies the Specification</h4>
 <!--------------------------------------------------------->
   <!--------------------------------------------------------->
-Part 1 of the specification follows directly from the algorithm
-  because the only assignments to server variables occur when servers
-implement write requests from clients.
+Part 2 of the specification follows directly from the algorithm
+  because the only assignments to <code>q.v.s</code> is
+  <code>p.f()</code>. 
 
-Next,  we prove part 2. 
-
-<h5 class="w3-text-teal">Theorem</h5>
-
-Let <code>s*, t*</code> be any consensus in a computation.
-
-If <code>q.v.t</code> \(\geq\) <code>t*</code> then <code>s*</code> is
-a prefix of <code>q.v.s</code>.
+Next,  we prove part 1. We will show that if <code>c</code> is a
+consensus chain after an iteration and <code>d</code> is a
+consensus chain after a later iteration then <code>c</code> is a
+prefix of <code>d</code>.
 
 <p>
-Using the notation \(\leq\) for prefix, the theorem is: for all
-servers <code>q</code>, and consensus <code>s*, t*</code>:
+Let <code>c</code> be a consensus at some point in a computation of
+\(P\).
+
+Then there exists an <code>m</code> such that at the end of the
+<code>m</code>-th iteration there exists a majority <code>W</code> of
+servers such that:
+<br>
+For all <code>q</code> in
+<code>W: </code> <code>q.v.s = c</code> and <code>q.v.t = m</code>. 
+
 <p>
-(<code>q.v.t</code> \(<\) <code>t*</code>) \(\; \vee \;\)
-(<code>s*</code> \(\leq\) <code>q.v.s</code>)
+Because <code>q.v.t</code> does not decrease, for the
+<code>n</code>-th iteration, where <code>n</code> \(>\) <code>m</code>,
+there exists a majority <code>W</code> of servers
+such that:
+<br>
+For all <code>q</code> in
+<code>W: </code> <code>q.v.t</code> \(\geq\)  <code>m</code>
 
-<h5 class="w3-text-teal">Proof of the Theorem</h5>
+<p>
+We will prove that the following is an invariant.
 
-<p class="w3-text-teal">Base Case</p>
+<p class="w3-text-teal">Invariant</p>
+ For all
+servers <code>q</code>: if <code>q.v.t</code> is <code>m</code> or
+greater than <code>c</code> is a prefix of <code>q.v.s</code>.
 
-Consider the iteration in which the epoch is <code>t*</code>.
+<p>
+This can be written as:
+<p>
+For all servers <code>q: </code>
 
-If <code>q.v</code> is modified in this iteration then
-<code>q.v.s</code> \(=\) <code>s*</code>.
+(<code>q.v.t</code> \(<\) <code>m</code>) \(\; \vee \;\)
+(<code>c</code> \(\leq\) <code>q.v.s</code>)
+<h5 class="w3-text-teal">Proof of the Invariant</h5>
 
-If <code>q.v</code> is not modified in this iteration then
-<code>q.v.t</code> \(<\) <code>t*</code>.
+<p class="w3-text-teal">Base Case: <code>n</code>-th Iteration where
+<code>n</code> \(\leq\) <code>m</code></p>
 
-So, the condition holds for <code>t = t*</code>
+
+<p>
+The condition trivially holds for iteration <code>n</code> where
+<code>n</code> \(<\) <code>m</code>
+because <code>q.v.t</code> \(<\) <code>m</code> in
+these iterations.
+
+<p>
+Next, consider the case where <code>n</code> \(=\) <code>m</code>.
+If <code>q.v</code> is modified in the iteration then
+<code>q.v.s</code> \(=\) <code>c</code>.
+
+If <code>q.v</code> is not modified in the iteration then
+<code>q.v.t</code> \(<\) <code>m</code>.
+
+So, the condition holds.
 
 <p class="w3-text-teal">Induction Step</p>
 
-Assume that the condition holds before an iteration with epoch
-<code>T</code> where <code>T</code>
-\(>\) <code>t*</code> and show that the condition
-continues to hold when the iteration ends.
+Assume that the condition holds before iteration <code>m</code> and
+show that it holds after the iteration.
 
 <p>
-By the induction hypothesis, for all <code>s, t</code> in
-<code>list_of_s_t</code>:
+The argument <code>lst</code> of <code>f</code> is
 <p>
-(<code>t</code> \(<\) <code>t*</code>) \(\; \vee \;\)
-(<code>s*</code> \(\leq\) <code>s</code>).
+<code>q.v for q in R</code>
+<p>
+where <code>R</code> is a majority.
 
+We first show that there exists a <code>q*</code> in <code>R</code> such
+that <code>c</code> \(\leq\) <code>q*.v.s</code>.
 
 <p>
-There is a majority of servers <code>q</code> with <code>q.v.t =
-t*</code> in the iteration with epoch <code>t*</code> because
-<code>s*, t*</code> is a consensus.
+Any two majorities have at least one element in common, so there is an
+element that is in both <code>R</code> and <code>W</code>.
 
-Epochs do not decrease as iterations proceed.
-
-Therefore for any epoch
-<code>T</code> where <code>T</code> \(>\) <code>t*</code>,
-there is a majority of servers <code>q</code>
-with <code>q.v.t</code> \(\geq\) t*</code>, and from the induction hypothesis 
-<code>s*</code> \(\leq\) <code>q.v.s</code>.
+Let this element be <code>q*</code>.
 
 
 <p>
-In each iteration, the set <code>R</code> of values that are read by a client is a
-majority.
+By the induction hypothesis:
 
-There is at least one element in common between any two majorities.
+(<code>q*.v.t</code> \(<\) <code>m</code>) \(\; \vee \;\)
+(<code>c</code> \(\leq\) <code>q*.v.s</code>).
 
-So, there exists at least one element <code>s, t</code> in
-<code>list_of_s_t</code> such that <code>t</code> \(\geq\)
-<code>t*</code>, and therefore <code>s*</code> \(\leq\)
-<code>s</code>.
+<p>
+Because <code>q*</code> is in <code>W</code> it follows that
+<code>q*.v.t</code> \(\geq\) <code>m</code>.
 
-Therefore, function <code>f</code> either returns <code>s*</code> or
-returns <code>s*</code> appended with a proposed next value.
+<p>
+From the above two formulae, 
+<code>c</code> \(\leq\) <code>q*.v.s</code>.
 
-So, the condition continues to hold at the end of the iteration.
+<p>
+Let function <code>f</code> return <code>d</code>.
+
+We will show that <code>c</code> \(\leq\) <code>d</code>.
+
+<p>
+Consider the two cases of <code>lst</code>.
+
+<p>
+Case 1: All elements of <code>lst</code> are identical.
+<p>
+If all elements of <code>lst</code> are identical then <code>c</code>
+is a prefix of all the elements.
+So <code>c</code> is also a prefix of <code>d</code>.
+
+<p>
+Case 2: Not all element of <code>lst</code> are identical.
+<p>
+If not all elements of <code>lst</code> are identical then the
+function returns <code>q.v.s</code> where <code>q.v</code> is the element
+with the highest iteration number <code>q.v.t</code>.
+There is an element <code>q*</code> of <code>lst</code> with iteration number at least
+<code>m</code>.
+So the function returns <code>v.s</code> where <code>v.t</code>
+\(\geq\) <code>m</code>.
+By the induction hypothesis <code>s*</code> is a prefix of the
+returned value.
+
 
 
 
