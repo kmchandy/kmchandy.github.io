@@ -81,6 +81,19 @@ hr.new1 {
   <h2 class="w3-text-teal">Paxos: Consensus in Faulty Systems</h2> 
   <!--------------------------------------------------------->
 
+  
+  <!------------------------------------------------------------------->
+  <p class="w3-text-red">
+  Algorithms by which agents reach a consensus on a value are central
+  in many applications.
+
+  Paxos is an algorithm by which agents attempt to reach a consensus
+  in distributed systems in which agents may halt, be arbitrarily
+  slow, and messages may be duplicated, lost, and delivered out of
+  order. 
+
+
+
   <!-------------------------------------------------->
   <h3 class="w3-text-teal">Introduction</h3>
   <!-------------------------------------------------->
@@ -609,6 +622,16 @@ So the function returns <code>q.v.s</code> where <code>q.v.t</code>
 \(\geq\) <code>t*</code>.
 From the induction hypothesis <code>s*</code> is a prefix of the
 returned value <code>d</code>.
+
+
+<!------------------------------------------>
+<h3 class="w3-text-teal">Next</h3>
+
+Next we develop Paxos, a distributed consensus algorithm, and prove
+that Paxos satisfies the specifications for consensus by showing the
+relationship between the distributed algorithm and the
+nondeterministic sequential algorithm.
+
 
 
 
