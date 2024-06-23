@@ -78,7 +78,8 @@ hr.new1 {
 
   
   <!--------------------------------------------------------->
-  <h2 class="w3-text-teal">Paxos: Consensus in Faulty Systems</h2> 
+  <h2 class="w3-text-teal">Paxos: Consensus in Faulty Systems</h2>
+  <h3 class="w3-text-teal">Part 1</h3>
   <!--------------------------------------------------------->
 
   
@@ -280,6 +281,46 @@ Write requests may get lost.
 Let <code>W</code> be the set of servers that execute write requests.
 
 
+<!-------------------------------------------------->
+  <h3 class="w3-text-teal">Designing Paxos in Stages</h3>
+<!-------------------------------------------------->
+We develop the algorithm in two stages.
+
+<!----------------------------------------------->
+<h5 class="w3-text-teal">Paxos as a Nondeterministic Sequential
+Algorithm</h5>
+
+First we represent Paxos as nondeterministic sequential algorithm
+\(P\).
+
+Exactly one client executes actions at a time in the sequential
+program.
+
+Failures of agents and channels are represented by nondeterministic
+selection of servers that read and write values.
+
+We will prove that \(P\) satisfies specifications of consensus.
+
+
+<!----------------------------------------------->
+<h5 class="w3-text-teal">Paxos as a Serializable Distributed
+Algorithm</h5>
+In the second stage we develop a distributed algorithm.
+
+Clients and servers execute concurrently, and so the action of one
+client may interfere with the action of another.
+
+A client <code>p</code> may read server values and another client may
+modify these values before <code>p</code> writes these values.
+
+<p>
+We will develop a serializable distributed algorithm: for every
+computation \(x\) there exists a computation \(y\) with the same
+steps as \(x\) where exactly one client takes actions at a time in
+\(y\).
+
+We will show that the proof of the sequential program is also a proof
+of the distributed program.
 
 
 <!-------------------------------------------------->
@@ -401,26 +442,25 @@ majority.
 <hr class="new2">
 <p style="color:blue;">
 Consensus: Majority of Servers Agree on a Consensus Value
-<code>p</code></p>
+
 <p style="color:blue;">
-<code>c</code> is a consensus chain in a computation of \(P\) exactly
-when there exists a majority <code>W</code> of servers and an
-iteration number <code>m</code>  where for all <code>q</code> in
-<code>W</code>:
+<code>s*</code> is a consensus chain in a computation of \(P\) exactly
+when there exists a majority <code>W*</code> of servers and an
+iteration number <code>t*</code>  where for all <code>q</code> in
+<code>W*</code>:
 <center>
 <p style="color:blue;">
-<code>(q.v.s = c)</code> and <code>(q.v.t = m)</code>
+<code>(q.v.s = s*)</code> and <code>(q.v.t = t*)</code>
 </center>
 </p>
 <hr class="new2">
 
-So, <code>c</code> is a consensus chain exactly when in the
-<code>m</code>-th iteration, for some <code>m</code>: 
-the set <code>W</code>
-of servers written
-is a majority and  <code>c</code> is the chain assigned to
+So, <code>s*</code> is a consensus chain exactly when in iteration
+<code>t*</code>, for some <code>t*</code>: 
+The set <code>W</code> of servers written in the iteration
+is a majority and  <code>s*</code> is the chain assigned to
 <code>q.v.s</code> 
-for all <code>q</code> in <code>W</code>.
+for all <code>q</code> in <code>W</code>..
 
 
 <!-------------------------------------------------->
@@ -440,10 +480,10 @@ identical</p>
 If all elements of <code>lst</code> are identical then every element of
 <code>lst</code> is a consensus chain.
 
-Let <code>c</code> be any element of <code>lst</code> such as
-<code>lst[0]</code>.
+Let <code>c</code> be any element of <code>lst</code>, for example
+<code>c = lst[0]</code>.
 
-In this case the function returns the consensus chain <code>c</code>
+The function returns the consensus chain <code>c</code>
 appended with some value <code>h()</code>.
 
 
@@ -456,7 +496,7 @@ If not all elements of <code>lst</code> are identical then let
 <code>max_t</code> be the element of <code>lst</code> with the largest
 <code>t</code> value.
 
-Return the chain <code>max_t.s</code>.
+Return <code>max_t.s</code>.
 
 <p>
 The algorithm is given below.
@@ -470,8 +510,9 @@ def f(lst):
      return c.append(h())
 
   else:
-     # max_t is the element c of lst with largest c.t
-     max_t = max(lst, key=lambda c: c.t)
+     max_t = lst[0]
+     for c in lst:
+        if c.t > max_t.t:  max_t = c 
      return max_t.s
 </pre>
 <hr class="new2">
