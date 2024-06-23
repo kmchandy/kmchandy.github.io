@@ -457,7 +457,7 @@ def f(lst):
      return c.append(h())
 
   else:
-     # max_t is element with largest t
+     # max_t is the element c of lst with largest c.t
      max_t = max(lst, key=lambda c: c.t)
      return max_t.s
 </pre>
@@ -467,9 +467,13 @@ def f(lst):
 
   <!--------------------------------------------------------->
   <!--------------------------------------------------------->
-  <h4 class="w3-text-teal">Theorem: The Algorithm Satisfies the Specification</h4>
+  <h3 class="w3-text-teal">Theorem: The Algorithm Satisfies the Specification</h3>
 <!--------------------------------------------------------->
-  <!--------------------------------------------------------->
+<!--------------------------------------------------------->
+
+<!--------------------------------------------------------->
+
+  <h4 class="w3-text-teal">Proof</h4>
 Part 2 of the specification follows directly from the algorithm
   because the only assignments to <code>q.v.s</code> is
   <code>p.f()</code>. 
@@ -480,125 +484,131 @@ consensus chain after a later iteration then <code>c</code> is a
 prefix of <code>d</code>.
 
 <p>
-Let <code>c</code> be a consensus at some point in a computation of
+Let <code>s*</code> be a consensus at some point in a computation of
 \(P\).
 
-Then there exists an <code>m</code> such that at the end of the
-<code>m</code>-th iteration there exists a majority <code>W</code> of
-servers such that:
+Then there exists  <code>t*</code> such that at the end of the
+<code>n</code>-th iteration,
+<code>n</code> \(=\) <code>t*</code>,
+there exists a majority <code>W*</code> of servers such that:
 <br>
 For all <code>q</code> in
-<code>W: </code> <code>q.v.s = c</code> and <code>q.v.t = m</code>. 
+<code>W*: </code> <code>q.v.s = s*</code> and <code>q.v.t = t*</code>. 
 
 <p>
-Because <code>q.v.t</code> does not decrease, for the
-<code>n</code>-th iteration, where <code>n</code> \(>\) <code>m</code>,
-there exists a majority <code>W</code> of servers
-such that:
-<br>
+Because <code>q.v.t</code> does not decrease the following equation holds.
+
+<p class="w3-text-teal">Equation 1</p>
+For all
+<code>n</code> where <code>n</code> \(\geq\) <code>t*</code>:
+
 For all <code>q</code> in
-<code>W: </code> <code>q.v.t</code> \(\geq\)  <code>m</code>
+<code>W*: </code> <code>q.v.t</code> \(\geq\)  <code>t*</code>
 
 <p>
-We will prove that the following is an invariant.
+Next, we prove the following:
 
-<p class="w3-text-teal">Invariant</p>
+<h5 class="w3-text-teal">Invariant</h5>
  For all
-servers <code>q</code>: if <code>q.v.t</code> is <code>m</code> or
-greater than <code>c</code> is a prefix of <code>q.v.s</code>.
+servers <code>q</code>: if <code>q.v.t</code> \(\geq\) <code>t*</code>
+then <code>s*</code> is a prefix of <code>q.v.s</code>.
 
 <p>
 This can be written as:
 <p>
 For all servers <code>q: </code>
 
-(<code>q.v.t</code> \(<\) <code>m</code>) \(\; \vee \;\)
-(<code>c</code> \(\leq\) <code>q.v.s</code>)
+(<code>q.v.t</code> \(<\) <code>t*</code>) \(\; \vee \;\)
+(<code>s*</code> \(\leq\) <code>q.v.s</code>)
+
+<!--------------------------------------------------->
 <h5 class="w3-text-teal">Proof of the Invariant</h5>
 
 <p class="w3-text-teal">Base Case: <code>n</code>-th Iteration where
-<code>n</code> \(\leq\) <code>m</code></p>
+<code>n</code> \(\leq\) <code>t*</code></p>
 
 
 <p>
 The condition trivially holds for iteration <code>n</code> where
-<code>n</code> \(<\) <code>m</code>
-because <code>q.v.t</code> \(<\) <code>m</code> in
+<code>n</code> \(<\) <code>t*</code>
+because <code>q.v.t</code> \(<\) <code>t*</code> in
 these iterations.
 
 <p>
-Next, consider the case where <code>n</code> \(=\) <code>m</code>.
+Next, consider the case where <code>n</code> \(=\) <code>t*</code>.
 If <code>q.v</code> is modified in the iteration then
-<code>q.v.s</code> \(=\) <code>c</code>.
+<code>q.v.s</code> \(=\) <code>s*</code>.
 
 If <code>q.v</code> is not modified in the iteration then
-<code>q.v.t</code> \(<\) <code>m</code>.
+<code>q.v.t</code> \(<\) <code>t*</code>.
 
 So, the condition holds.
 
 <p class="w3-text-teal">Induction Step</p>
 
-Assume that the condition holds before iteration <code>m</code> and
+Assume that the condition holds before iteration <code>n</code> for
+<code>n</code> \(>\) <code>t*</code> and 
 show that it holds after the iteration.
 
 <p>
+From property 1 and the induction hypothesis, the following holds
+before iteration <code>n</code>.
+<p>
+For all <code>q</code> in
+<code>W*: </code> (<code>q.v.t</code> \(\geq\)  <code>t*</code>)
+\(\; \wedge \; \)
+(<code>s*</code> \(\leq\) <code>q.v.s</code>)
+
+<p>
 The argument <code>lst</code> of <code>f</code> is
-<p>
-<code>q.v for q in R</code>
-<p>
+
+<code>[q.v for q in R]</code>
 where <code>R</code> is a majority.
 
-We first show that there exists a <code>q*</code> in <code>R</code> such
-that <code>c</code> \(\leq\) <code>q*.v.s</code>.
 
 <p>
-Any two majorities have at least one element in common, so there is an
-element that is in both <code>R</code> and <code>W</code>.
+Any two majorities have at least one element in common.
+So there is an
+element that is in both <code>R</code> and <code>W*</code>.
 
 Let this element be <code>q*</code>.
 
-
+Because <code>q*</code> is an element of <code>W*</code>:
 <p>
-By the induction hypothesis:
-
-(<code>q*.v.t</code> \(<\) <code>m</code>) \(\; \vee \;\)
-(<code>c</code> \(\leq\) <code>q*.v.s</code>).
-
+(<code>q*.v.t</code> \(\geq\)  <code>t*</code>)
+\(\: \wedge \;\)
+(<code>s*</code> \(\leq\) <code>q*.v.s</code>)
 <p>
-Because <code>q*</code> is in <code>W</code> it follows that
-<code>q*.v.t</code> \(\geq\) <code>m</code>.
-
-<p>
-From the above two formulae, 
-<code>c</code> \(\leq\) <code>q*.v.s</code>.
-
-<p>
-Let function <code>f</code> return <code>d</code>.
+Let the value returned by function <code>f</code> be <code>d</code>.
 
 We will show that <code>c</code> \(\leq\) <code>d</code>.
 
-<p>
 Consider the two cases of <code>lst</code>.
 
-<p>
+<p class="w3-text-teal">
 Case 1: All elements of <code>lst</code> are identical.
+</p>
 <p>
-If all elements of <code>lst</code> are identical then <code>c</code>
-is a prefix of all the elements.
-So <code>c</code> is also a prefix of <code>d</code>.
+Because
+<code>q*.v</code> is an element of <code>lst</code>, every element of <code>lst</code>
+is identical to <code>q*.v</code>.
 
-<p>
-Case 2: Not all element of <code>lst</code> are identical.
+So <code>s*</code> is a prefix of the value <code>d</code>
+returned by the function.
+
+<p class="w3-text-teal">
+Case 2: Not all elements of <code>lst</code> are identical.
+</p>
 <p>
 If not all elements of <code>lst</code> are identical then the
 function returns <code>q.v.s</code> where <code>q.v</code> is the element
 with the highest iteration number <code>q.v.t</code>.
-There is an element <code>q*</code> of <code>lst</code> with iteration number at least
-<code>m</code>.
-So the function returns <code>v.s</code> where <code>v.t</code>
-\(\geq\) <code>m</code>.
-By the induction hypothesis <code>s*</code> is a prefix of the
-returned value.
+There is an element <code>q*</code> of <code>lst</code> where
+<code>q*.v.t</code> \(\geq\) <code>t*</code>.
+So the function returns <code>q.v.s</code> where <code>q.v.t</code>
+\(\geq\) <code>t*</code>.
+From the induction hypothesis <code>s*</code> is a prefix of the
+returned value <code>d</code>.
 
 
 
