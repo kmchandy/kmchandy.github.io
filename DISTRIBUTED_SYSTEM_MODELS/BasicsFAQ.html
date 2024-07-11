@@ -92,10 +92,70 @@ hr.new1 {
 
   We use the simplest model adequate for the problem at hand.
 
-  <p>
-  We point out the model's weaknesses and we introduce other models as
-  needed to deal with different problems.
 
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">What are the weaknesses of the model?</p>
+  <!----------------------------------------------------------------->
+  The model has many weaknesses, only some of which are described
+  here.
+
+  <p>
+  The network of agents and messages in the model is static.
+
+  In contrast, distributed systems evolve; agents and channels may be
+  added and deleted; agents may change; channel protocols may be modified.
+
+  <p>
+  The model only considers channels in which messages are delivered in
+  the order sent.
+
+  Some distributed systems have channels in which messages may be
+  duplicated and delivered out of order.
+
+  <p>
+  Distributed systems are (usually) fault tolerant, whereas the model
+  does not deal with faults.
+
+  
+
+  
+  
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">Can you describe channels in more detail?</p>
+  <!----------------------------------------------------------------->
+  Channels in our model are asynchronous (non-blocking) and
+  unidirectional.
+
+  A sender can send messages on a channel regardless of how many
+  messages have been sent in the past and how many messages have been
+  received on that channel.
+
+  The model assumes that the queue of messages in the channel has
+  infinite capacity.
+
+  <p>
+A channel is unidirectional.
+
+It is represented by a directed edge in a directed graph.
+
+Messages can be sent by an agent <code>P</code> to an agent
+<code>Q</code> along a channel <code>(P, Q)</code>.
+
+<p>
+A system may have a channel <code>(P, Q)</code> and may or may not have a channel
+<code>(Q, P)</code>.
+
+Some systems have bidirectional channels but our model does not allow
+for bidirectional channels.
+
+<p>
+In our model, 
+a channel is directed from exactly one agent to exactly one agent.
+
+In some systems, multiple agents can send messages on the same
+channel, and multiple agents can receive messages on the same channel.
+
+Our model does not allow for such channels.
 
   
   <!----------------------------------------------------------------->
@@ -199,6 +259,13 @@ receives.
 When an agent is executing a receive it is not interrupted by the
 arrival of another message.
 
+<p>
+There are systems in which messages have different priorities, and the
+arrival of high-priority messages interrupts the execution of
+low-priority messages.
+
+Our model does not allow for interruptions.
+
 
   
   <!----------------------------------------------------------------->
@@ -291,6 +358,14 @@ the files.
   Representing internal state changes in this way is an artifice;
   however, the artifice allows us to use a simple model in which a
   state change occurs only when a message is delivered.
+
+
+
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">Is an agent the same as a process? </p>
+<!----------------------------------------------------------------->
+Yes, some documents use "process" instead of "agent."
+
 
 
   <!----------------------------------------------------------------->
