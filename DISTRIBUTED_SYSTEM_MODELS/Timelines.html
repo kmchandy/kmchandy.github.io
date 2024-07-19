@@ -77,7 +77,7 @@ hr.new1 {
 <div class="w3-twothird w3-container">
 
   <!--------------------------------------------------------------->
-  <h2 class="w3-text-teal">Past, Future and Cuts in Dataflow</h2>
+  <h2 class="w3-text-teal">Cuts of Dataflow Graphs</h2>
   <!--------------------------------------------------------------->
   
   <p class="w3-text-red">
@@ -91,46 +91,23 @@ hr.new1 {
   such as deadlock detection and for global snapshot algorithms that
   determine states of distributed systems.
   </p>
-
-  
-  <!--------------------------------------------------------------->
-  <h3 class="w3-text-teal">Cuts of a Dataflow Graph</h3>
-  <!--------------------------------------------------------------->
-  The only concept of time in dataflow is that of
-  <a href="DISTRIBUTED_SYSTEM_MODELS/Model.html">
-  before and after.<a>
-  
-  Recall that a vertex \(v\) is before a vertex \(w\) in the
-  dataflow graph exactly when there is a path from \(v\) to \(w\).
-  And \(w\) is after \(v\) exactly when \(v\) is before \(w\).
-
-  <hr class="new2">  
-  <p style="color:blue;">
-  A <i>cut</i> of a dataflow graph is a partition of the set of vertices of
-  the graph into subsets <code>past</code> and <code>future</code>
-  such that all steps before <code>past</code> steps are
-  <code>past</code> steps.
-  </p>
-  <hr class="new2"> 
-  
-  The cut requirement can also be specified as all steps after
-  <code>future</code> steps are <code>future</code> steps, or
-  equivalently as: There is no <code>past</code> step after a
-  <code>future</code> step. 
+ 
+  A <i>cut</i> of a dataflow graph is a subset of vertices of the
+  graph where all paths to vertices in the cut are from vertices in
+  the cut.
 
   <p>
-  A cut of a dataflow graph is an instance of the general
+  Equivalently, a <i>cut of a computation</i> is a subset of steps such that
+  for every step \(e\) in the cut, all steps from which data flows to
+  \(e\) are also in the cut.
+  <p>
+  A cut of a dataflow graph is an instance of a
   <a href="https://en.wikipedia.org/wiki/Cut_(graph_theory)">cut of a
-  graph</a>, and more specifically a cut of a flow network where the
-  source is an initial vertex and the sink is a final vertex.
+  flow network</a>.
 
-    
-  <!--------------------------------------------------------------->
-  <h3 class="w3-text-teal">The State at a Cut</h3>
-  <!--------------------------------------------------------------->
-  The state of the system at a cut <code>(past, future)</code>
-  is specified by the labels of edges from
-  <code>past</code> to <code>future</code>.
+
+
+
 
 
    
@@ -138,11 +115,11 @@ hr.new1 {
   <p style="color:red;">Example</p>
   
   The top diagram of figure 1 shows a cut in which vertices in
-  <code>past</code> are 
-  colored red and vertices in <code>future</code> are green.
+  <code>cut</code> are 
+  colored red and vertices not in <code>cut</code> are green.
 
-  The curved black line is the boundary separating <code>past</code>
-  from <code>future</code>.
+  The curved black line is the boundary separating <code>cut</code>
+  from vertices outside it.
 
   <figure>
     <img src="Model/Model.005.jpeg"
@@ -150,144 +127,52 @@ hr.new1 {
     <figcaption>Fig.1: Example - A Cut of a Dataflow Graph</figcaption>
 </figure>
 
-  In figure 1 all edges to <code>past</code> steps are from <code>past</code>
-  steps, and 
 
-  all edges from <code>future</code> steps are to <code>future</code>
-  steps.
+  
+  <!--------------------------------------------------------------->
+  <h3 class="w3-text-teal">Theorem: Computations and Cuts</h3>
+  <!--------------------------------------------------------------->
+Let \(E\) be a computation and \(C\) be a cut of the computation.
+
+There exists a computation \(E'\), which is a permutation of \(E\), in
+which all steps in the cut are executed before any step that is not in
+the cut.
+
+<p class="w3-text-teal">Proof</p>
+Obtain \(E'\) from \(E\) as follows.
+
+Let <code>pre</code> be the sequence of steps obtained from \(E\) by
+deleting all steps in the cut.
+
+Let <code>post</code> be the sequence of steps obtained from \(E\) by
+deleting all steps not in the cut.
+
+Then \(E'\) consists of <code>pre</code> followed by
+<code>post</code>.
+
+<p>
+The proof that data flows forwards in \(E'\) is straightforward.
+
+
+  
+  <!--------------------------------------------------------------->
+  <h4 class="w3-text-teal">Theorem: State at a Cut</h4>
+  <!--------------------------------------------------------------->
 
   <p>
-  The state <code>S*</code> after completion of <code>past</code> steps and before
-  initiation of 
-  <code>future</code> steps is given by the labels of
-  edges from <code>past</code> to <code>future</code>.
+  The state after execution of steps in a
+  cut and before execution of steps that are not in 
+  cut steps is given by the labels of
+edges from vertices in the cut to vertices outside the cut.
 
-  These are the
-  edges that cross the boundary line separating <code>past</code>
-  from <code>future</code>.
-
-  <p>
-  <code>S*</code> is
-  the final state of the sub-dataflow of <code>past</code> steps.
-
-  <code>S*</code> is also the initial state of the sub-dataflow of
-  <code>future</code> steps.
 
 <p>
 See the lower diagram in figure 1.
-<code>S*</code> is shown as final vertices (which are labeled
-<code>N</code>) of <code>past</code> dataflow, 
+The state <code>S*</code> after the cut is shown as final vertices (which are labeled
+<code>N</code>) of <code>cut</code> 
  and <code>S*</code> is shown as as initial vertices (which
-  are labeled <code>0</code>) of <code>future</code> dataflow.
+  are labeled <code>0</code>) of steps outside <code>cut</code>.
   
-
-  
- <!--------------------------------------------------------------->
-<h4 class="w3-text-teal">Cuts of Computations</h4>
-<!--------------------------------------------------------------->
-
-Associated with a computation is
-<a href="Computations.html">
-exactly one dataflow graph</a>
-consisting of the steps of the computation.
-
-We define a cut of a computation as a cut of the dataflow of the
-computation.
-
-<p>
-
-
-
-
- <!--------------------------------------------------------------->
-<h3 class="w3-text-teal">Properties of Cuts</h3>
-<!--------------------------------------------------------------->
-The proofs of these properties are straigtforward and are given
-<a href="TimelinesProofs.html">here.</a>
-
-
-<!------------------------------------->
-<h5 class="w3-text-teal">Dataflows of Past steps before Future
-steps.</h5> 
-
-Given a cut <code>(past, future)</code> of a dataflow graph:
-  There exists a
-dataflow consisting only of <code>past</code> steps, and there
-exists exists a dataflow consisting only of <code>future</code>
-steps.
-
-
-<!------------------------------------->
-<h5 class="w3-text-teal">Computations of Past before Future.</h5> 
-
-<p>
-Let computation \(X\) start in state \(S_{init}\) and end in state
-\(S_{fini}\).
-
-Let \(S^{*}\) be the state at a cut <code>(past, future)</code> of \(X\).
-
-There exists a computation \(Y\) that starts in \(S_{init}\), visits
-\(S^{*}\), and ends in \(S_{fini}\).
-
-<p>
-All steps in <code>past</code> are
-executed before all steps in <code>future</code> in \(Y\).
-
-
-<h5 class="w3-text-teal">Cut based on Message is Received only after
-it is Sent</h5>
-
-There exists a cut <code>(past, future)</code> exactly when the
-following two conditions hold:
-<ol>
-  <li>
-  Every message received in <code>past</code> is sent in
-  <code>past</code>.
-  </li>
-  <li>
-  If a step \(x\) of an agent is in <code>past</code> then steps at
-  that agent before \(x\) are also in <code>past</code>.
-  </li>
-</ol>
-
-<h5 class="w3-text-teal">Cut based on Counts of Messages Sent and Received</h5>
-A version of this property that uses only counts of messages is used
-in termination detection and is as follows.
-
-<p>
-There exists a cut <code>(past, future)</code> exactly when the
-following two conditions hold:
-
-<ol>
-  <li>
-  For all \(C\):  \(\; C_{s} \geq C_{r}\),
-  <p>
-  where
-  \(C_{s}\) and \(C_{r}\) are the numbers of messages sent and
-  received, respectively, on channel \(C\), in <code>past</code>.
-  </li>
-  <li>
-  If a step \(x\) of an agent is in <code>past</code> then steps at
-  that agent before \(x\) are also in <code>past</code>.
-  </li>
-</ol>
-
-
-
-<!-------------------------------------------------->
-<h5 class="w3-text-teal">Computations through Increasing Cuts</h5>
-
-Let \(S_{i}\) be the state at a cut <code>(past</code>\(_{i}\) <code>,
-future</code>\(_{i}\)), for \(i = 0, 1, \ldots\) where:
-<p>
-For all \(i\): <code> past</code>\(_{i}\) \(\subseteq\) <code>past</code>\(_{i+1}\),
-
-<p>
-There exists a computation that visits states
-\(S_{i}\) in increasing order of \(i\).
-
-
-
 
 <!---------------------------------------->
 <h5 class="w3-text-teal">Next</h5>
