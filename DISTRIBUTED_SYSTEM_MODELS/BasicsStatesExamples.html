@@ -239,6 +239,167 @@ nX = 0, nY = 1, (X, Y) = 1, (Y, X) = 1
 
 
 
+  <!--------------------------------------------------------------->
+  <h2 class="w3-text-teal">Invariants</h2>
+
+  We reason about the correctness of many distributed algorithms in
+  in the same way that we reason about sequential
+  <code>while</code> loops, by using invariants and loop variants.
+
+
+
+
+  <!--------------------------------------------------------------->
+  <h3 class="w3-text-teal">Loop Invariant of a Sequential While Loop</h3>
+  
+  A <a href="https://en.wikipedia.org/wiki/Loop_invariant">
+  loop invariant</a>
+  is an assertion about the state of the program that holds before and
+  after each iteration of the loop.
+
+  You can look up
+
+  <a
+  href="https://www.cs.cornell.edu/courses/cs2112/2020fa/lectures/lecture.html?id=loopinv">
+  many examples</a> of loop invariants on the web.
+
+
+  <!----------------------------------------------->
+  <h5 style="color:red;">Example</h5>
+  
+  A loop invariant in the following greatest common
+  divisor (gcd) program is shown in the body of the loop as the
+  assertion <code>gcd(x, y) = gcd(X, Y)</code>.
+  
+    <pre>
+x, y = X, Y
+while x != y:
+  # assertion: gcd(x, y) = gcd(X, Y)
+  if x > y: x = x - y
+  else: y = y - x
+  </pre>
+
+  
+  <!--------------------------------------------------------------->
+  <h3 class="w3-text-teal">Invariant of a Distributed System</h3>
+  
+  An invariant of a distributed system is a
+  predicates that holds in all states reachable from initial states.
+
+  An invariant of a distributed system is the loop invariant of the
+  following while loop.
+
+  An invariant <code>Inv</code> is shown
+  as an assertion in the body of the loop.
+  
+  <pre>
+while there exists a nonempty input channel in the system:
+   # assertion: Inv
+   select a nonempty channel (u, v) in the system
+   let the head of channel (u, v) be msg
+   v executes receive(msg, u)
+  </pre>
+
+  The remainder of this webpage consists of examples of invariants.
+
+  
+<!----------------------------------------------->
+<center>
+<h2 style="color:red;">Examples</h2>
+</center>
+  
+  <!----------------------------------------------->
+  <h5 style="color:red;">Example</h5>
+  
+  We are given a strongly connected network of agents -- i.e.,
+  there is a path from each agent to every other agent.
+
+  Each agent has a local variable <code>n</code>, which is initialized
+  as a positive integer.
+  
+  Let GCD be the gcd (greatest commond divisor) of the
+  initial values of <code>X.n</code> of all agents <code>X.n</code>.
+
+  The following distributed algorithm terminates and at termination
+  <code>X.n = GCD</code> for all agents <code>X.n</code>.
+
+In the code, <code>successors</code> is the list of successor agents
+in a network of agents.
+
+<pre>
+def receive(message, sender):
+   if n != gcd(n, message):
+      n = gcd(n, message)
+      for successor in successors:
+         send(n, successor)
+</pre>
+
+An invariant of the distributed algorithm is as follows.
+The gcd of all messages in channels and 
+<code>X.n</code> for all agents <code>X</code>
+is equal to GCD.
+
+  
+  <!----------------------------------------------->
+  <p style="color:red;">Proof</p>
+  
+The proof that the assertion holds initially is trivial.
+
+Prove that if the assertion holds before any event 
+then it continues to hold after the event.
+
+<p>
+Let the event be agent <code>A</code> receiving a message
+<code>m</code>.
+After the event, <code>m</code> is no longer in the channel;
+<code>n = gcd(n, m)</code>; and messages with the new value of
+<code>n</code> are in the output channels from <code>A</code>.
+The proof that the assertion continues to hold in the post-event state
+is straightforward.
+
+
+  <!----------------------------------------------->
+<h5 style="color:red;">Example</h5>
+
+Another invariant for the gcd example, given earlier, is as follows.
+For all channels <code>(X, Y)</code> in the network:
+<ol>
+  <li>
+  Channel <code>(X, Y)</code> is empty and <code>X.n</code> is a
+  multiple of <code>Y.n</code>, or
+  </li>
+  <li>
+  The last message in channel <code>(X, Y)</code> is <code>m</code>
+  where <code>m = X.n</code>.
+  </li>
+</ol>
+
+  <!----------------------------------------------->
+  <p style="color:red;">Proof</p>
+  
+The assertion holds initially because the second condition holds. 
+
+Prove that if the assertion holds before any event
+then it continues to hold after the event.
+
+<p>
+When agent <code>X</code> executes a receive that changes
+<code>X.n</code> the agent sends a message <code>m</code> to
+<code>Y</code> where <code>m = X.n</code>, and so the second condition
+holds.
+
+<p>
+When agent <code>Y</code> receives <code>m</code> the agent sets
+<code>Y.n = gcd(Y.n, m)</code>, and so <code>m</code> is a multiple of
+the new value of <code>Y.n</code>.
+
+If channel <code>(X, Y)</code> remains nonempty then the second
+condition holds.
+
+If <code>(X, Y)</code> becomes empty then the first condition holds
+because <code>m = X.n</code> and <code>m</code> is a multiple of
+<code>Y.n</code>.
+
 
 
 <h5 class="w3-text-teal">Next</h5>
