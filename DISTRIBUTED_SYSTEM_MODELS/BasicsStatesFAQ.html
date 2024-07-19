@@ -1,0 +1,275 @@
+<title>DistributedSystemModels/BasicsStatesFAQ.html</title>
+
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+
+<!---------------------------------------------------------------->
+    <h1 class="w3-text-teal">States: FAQ</h1>
+  <!----------------------------------------------------------------->
+
+  
+
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">Exactly what is a state?</p>
+  <!----------------------------------------------------------------->
+The future behavior of a system, given its state, is independent of
+  the past behavior of the system.
+
+  A system may enter the same state by executing different behaviors,
+  but the future behavior of a system, given its state, doesn't depend
+  on what happened before the state was entered.
+
+  See a
+  <a href="https://en.wikipedia.org/wiki/State_(computer_science)">
+  comprehensive description of states in computer
+  systems.</a>
+  
+  
+
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">Don't agents change states continuously?</p>
+  <!----------------------------------------------------------------->
+  Yes, agent states may change continuously.
+  
+  The complete state of an agent includes its program counter which
+  points to the next statement to be executed by the agent.
+
+  Our model ignores continuous changes in state of an agent while it
+  is executing a <code>receive</code> and restricts
+  attention to the state of an agent when it is waiting.
+
+  <p>
+  In our model, an agent is waiting for a message or processing a
+  message that it received.
+
+  We only deal with the state of the agent after it has finished
+  processing the message and is back in the waiting state.
+
+  The changes that occur while a <code>receive</code> is being
+  executed are ignored by the model.
+
+  
+
+  
+  
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">What happens if an agent goes to sleep
+  during a <code>receive</code>? </p>
+  <!----------------------------------------------------------------->
+  An example that helps to answer this question is as follows.
+  <pre>
+def receive(message, sender):
+   send ("hello", receiver_1)
+   time.sleep(1000)
+   send ("world", receiver_2)
+  </pre>
+
+  The agent sends a message "hello" to <code>receiver_1</code> then sleeps for
+  1000 seconds and then sends a message to <code>receiver_2</code>.
+
+  We may expect enough time to elapse between the messages to allow
+  <code>receiver_1</code> to send a message to <code>receiver_2</code>
+  before the "world" message gets to <code>receiver_2</code>.
+
+  <p>
+  Our model does not deal with time.
+  It treats the execution of the <code>receive</code> as an atomic
+  operation.
+
+  The effect of the following <code>receive</code> with the
+  <code>sleep</code> removed is the same as the previous
+<code>receive</code>.
+
+<pre>
+def receive(message, sender):
+   send ("hello", receiver_1)
+   send ("world", receiver_2)
+  </pre>
+
+Time is important in the behavior of distributed systems.
+
+We don't use time in reasoning about the correctness of distributed
+systems because it's safer not to depend on clock accuracy.
+
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">Can two agents receive messages at exactly
+  the same time? Won't that result in a state transition in which two
+  agents change state?</p>
+<!----------------------------------------------------------------->
+If two agents receive messages at exactly the same time then the
+  events at which the messages are received are independent and so
+they can be executed in arbitrary order.
+
+<p>
+Suppose agent \(v\) receives a message \(m\) from agent \(u\) at exactly the
+same time that \(u\) receives a message \(m'\) from \(v\).
+
+Then before the steps, the channel from \(v\) to \(u\) contained
+message \(m\) and the channel from \(u\) to \(v\) contained
+message \(m'\).
+
+<p>
+If \(u\) receives \(m'\) first it makes no difference to \(m\) being
+at the head of the channel from \(v\) to \(u\).
+So, the order in which the steps occur is irrelevant.
+
+<p>
+Many agents are changing state and sending and receiving messages
+concurrently.
+
+We ignore these concurrent changes and restrict attention state
+changes in which one agent receives one message.
+
+We can analyze systems with concurrent changes using our simple model.
+
+
+
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">Can an agent receive multiple messages in a
+  single state transition? Can an agent send multiple messages to
+  another agent in a single state transition?</p>
+<!----------------------------------------------------------------->
+
+Our model only allows one message to be received in a state transition
+and one message to be sent to an agent in the transition.
+
+<p>
+Extending the model to allow a sequence of messages to be sent to an
+agent in a single transition isn't necessary for the algorithms that
+we discuss; however, extending the model to do so is straightforward
+and you should try to do so.
+
+<p>
+The model does not fully capture reality.
+
+A model is an engineering choice. It is an abstraction of reality that
+helps us develop algorithms.
+
+<h5 class="w3-text-teal">Next</h5>
+
+
+<a href="BasicsStates.html">
+States of a Distributed System.</a>
+
+
+<p>
+<a href="BasicsReview.html">Review material for this page</a>
+
+
+
+
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
