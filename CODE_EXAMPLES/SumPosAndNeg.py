@@ -1,22 +1,22 @@
 from Engine import engine, Agent
 
-import random
-
-class PositiveNumbersSource(Agent):
-    def __init__(self, n, receiver):
+class DataSource(Agent):
+    def __init__(self, my_data, receiver):
         Agent.__init__(self)
-        self.n = n
+        self.my_data = my_data
         self.receiver = receiver
+        self.n = 0
 
     def receive(self, message, sender):
-        if self.n > 0:
-            self.n = self.n - 1
-            message = random.randint(1, 10)
-            self.send(message, self.receiver)
-            self.send("wakeup", self)
+        self.send(message=self.my_data[self.n],
+                  receiver=self.receiver)
+        self.n += 1
+        if self.n < len(self.my_data):
+            self.send(message="wakeup", receiver=self)
 
 
-class SumPosNeg(Agent):
+            
+class Total(Agent):
     def __init__(self, pos, neg, results):
         Agent.__init__(self)
         self.pos = pos
@@ -29,6 +29,8 @@ class SumPosNeg(Agent):
             self.sum += message
         else:
             self.sum -= message
+            if self.sum < 0: self.sum = 0
+                
         print ("Agent =", self.name, " sender =", sender.name, 
             "  message =", message, "  sum =", self.sum)
         self.send(self.sum, self.results)
@@ -48,16 +50,17 @@ class PrintMessages(Agent):
 
 #-------------------------------------------
 def test():
+    # Create agents
     print_messages = PrintMessages()
-    pos = PositiveNumbersSource(n=3, receiver=None)
-    neg = PositiveNumbersSource(n=3, receiver=None)
-    sum_pos_neg = \
-      SumPosNeg(pos=pos, neg=neg, results=print_messages)
+    pos = DataSource(my_data=[3, 5], receiver=None)
+    neg = DataSource(my_data=[2, 4], receiver=None)
+    total = \
+      Total(pos=pos, neg=neg, results=print_messages)
+    pos.receiver = total
+    neg.receiver = total
     pos.name = "pos"
     neg.name = "neg"
-    sum_pos_neg.name = "sum_pos_neg"
-    pos.receiver = sum_pos_neg
-    neg.receiver = sum_pos_neg
+    total.name = "total"
     
     pos.send("wakeup", pos)
     neg.send("wakeup", neg)
