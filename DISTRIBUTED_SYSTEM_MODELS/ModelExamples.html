@@ -1,0 +1,321 @@
+<title>DistributedSystemModels/ModelExamples.html</title>
+
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+
+<!---------------------------------------------------------------->
+    <h1 class="w3-text-teal">Dataflow: Examples</h1>
+<!----------------------------------------------------------------->
+
+   <!----------------------------------------------------------------->
+  <h3 class="w3-text-teal">A Simple Example (continued)</h3>
+<!----------------------------------------------------------------->
+  This example is a continuation from the example in
+  <a href="BasicsStatesExamples">States</a>.
+
+  
+Two children, X and Y, are tossing balloons to each other.
+
+A balloon that has been tossed by X, while in the air to Y, is a
+message in the channel (X, Y\).
+
+When a child gets a balloon it tosses the balloon back immediately.
+
+Initially there is a balloon tossed by X on its way to Y and there is
+also a balloon tossed by Y on its way to X.
+
+<p>
+  Each child has a countdown of the number of times it tosses balloons.
+
+  Each time a child tosses a balloon it decrements its countdown value.
+
+After a child's countdown reaches 0 the child pops balloons that it receives
+(and doesn't toss popped balloons). 
+
+<h4 class="w3-text-teal">State</h4>
+The state of a channel is the number of balloons in it.
+
+The state of an agent (X or Y) is the countdown value nX or nY, respectively.
+
+<h4 class="w3-text-teal">A Computation: A Sequence of States</h4>
+An example of a sequence of state changes is as follows.
+<ol>
+  <li>
+  Initial State: Channel (X, Y) has one balloon and channel (Y, X) has
+  one balloon. And the countdown for X is 2 and the countdown for Y is
+  3. We represent this state by:
+  <br>
+  nX = 1, nY = 2, (X, Y) = 1, (Y, X) = 1
+  </li>
+  <li>
+  Y receives a balloon and sends it back. So the state
+  becomes:
+  <br>
+  nX = 1, nY = 1, (X, Y) = 0, (Y, X) = 2
+  </li>
+  <li>
+  X receives a balloon and  sends it back. So the state
+  becomes
+  <br>
+  nX = 0, nY = 1, (X, Y) = 1, (Y, X) = 1
+  </li>
+  <li>
+  Y receives a balloon and sends it back. So the state
+  becomes 
+  <br>
+  nX = 0, nY = 0, (X, Y) = 0, (Y, X) = 2
+  </li>
+  <li>
+  X receives a balloon and pops it. So the state
+  becomes 
+  <br>
+  nX = 0, nY = 0, (X, Y) = 0, (Y, X) = 1
+  </li>
+  <li>
+  Y receives a balloon and pops it. So the state
+  becomes 
+  <br>
+  nX = 0, nY = 0, (X, Y) = 0, (Y, X) = 0
+  </li>
+  <li>There are no further steps in this computation
+  </li>
+</ol>
+
+
+   <!----------------------------------------------------------------->
+  <h3 class="w3-text-teal">Dataflow of the Computation</h3>
+<!----------------------------------------------------------------->
+Agent X has an fictitious step that initializes X's state and X's
+  output channels. We write
+X_init for this fictitious step.
+X also steps 3, 5, and 7 in the above computation.
+X also has a fictitious final step that identifies X's final state and
+the final state of X's input channels.
+We call this fictitious final step X_fini.
+
+
+  <!----------------------------------------------------------------->
+  <h4 class="w3-text-teal">Agent Edges for Agent X</h4>
+<!----------------------------------------------------------------->
+<p>
+The horizontal line consisting of steps at X consists of the following
+directed edges.
+<ol>
+  <li>
+  X_init to step 3 with label nX = 1. The label is the initial state of X
+  </li>
+  <li>
+  Step 3 to step 5 with label nx = 0.
+  </li>
+  <li>
+  Step 5 to step 7 with label nx = 0.
+  </li>
+  <li>
+  Step 7 to X_fini with label nx = 0. This label is the final state of
+  X in the computation.
+  </li>
+</ol>
+
+
+
+  <!----------------------------------------------------------------->
+  <h4 class="w3-text-teal">Agent Edges for Agent Y</h4>
+<!----------------------------------------------------------------->
+Likewise the horizontal line cconsisting of steps at Y and consists of the following
+directed edges.
+<ol>
+  <li>
+  Y_init to step 2 with label nY = 2. The label is the initial state of Y
+  </li>
+  <li>
+  Step 2 to step 4 with label nY = 1.
+  </li>
+  <li>
+  Step 4 to step 6 with label nY = 0.
+  </li>
+  <li>
+  Step 6 to Y_fini with label nY = 0. This label is the final state of
+  Y in the computation.
+  </li>
+</ol>
+
+
+
+
+
+  <!----------------------------------------------------------------->
+  <h4 class="w3-text-teal">Message Edges for Channel (X, Y)</h4>
+<!----------------------------------------------------------------->
+
+<p>
+The message edges representing messages on channel (X, Y) are as
+follows.
+All the messages have label "1" because each message represents a
+single balloon.
+<ol>
+  <li>
+  X_init to step 2. This is the message in the channel in the initial
+  state of the computation.
+  </li>
+  <li>
+  Step 3 to step 4. 
+  </li>
+</ol>
+There are no message edges to Y_fini because the channel (X, Y) is
+empty in the final state.
+
+
+
+
+
+  <!----------------------------------------------------------------->
+  <h4 class="w3-text-teal">Message Edges for Channel (Y, X)</h4>
+<!----------------------------------------------------------------->
+<p>
+The message edges representing messages on channel (Y, X) are as
+follows.
+All the messages have label "1" because each message represents a
+single balloon.
+<ol>
+  <li>
+  Y_init to step 3. This is the message in the channel in the initial
+  state of the computation.
+  </li>
+  <li>
+  Step 2 to step 5. 
+  </li>
+  <li>
+  Step 4 to step 7. 
+  </li>
+</ol>
+There are no message edges to X_fini because the channel (Y, X) is
+empty in the final state.
+
+<h5 class="w3-text-teal">Next</h5>
+
+
+<a href="BasicsStates.html">
+States of a Distributed System.</a>
+
+
+<p>
+<a href="BasicsReview.html">Review material for this page</a>
+
+
+
+
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
