@@ -1,4 +1,4 @@
-<title>DistributedSystemModels/BasicsFAQ.html</title>
+<title>DistributedSystemModels/ModelFAQ.html</title>
 
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
@@ -78,79 +78,90 @@ hr.new1 {
 
 
 <!---------------------------------------------------------------->
-    <h1 class="w3-text-teal">Timelines and Dataflow: FAQ</h1>
-<!----------------------------------------------------------------->
-
+    <h1 class="w3-text-teal">Dataflow: FAQ</h1>
   <!----------------------------------------------------------------->
-  <p class="w3-text-teal">Dataflow doesn't have the concept of
-  time. Does that mean that we cannot use time in our algorithms?</p>
+
+
+  
   <!----------------------------------------------------------------->
-  You can use the local clock of an agent in its <code>receive</code>
-  function. Indeed, it can be helpful to do so.
+  <h5 class="w3-text-teal">What are the edges incident on a vertex in
+  a dataflow graph? Does each vertex have two input edges and two
+  output edges?</h6>
+  <!----------------------------------------------------------------->
+  A vertex, other than a vertex representing a fictitious
+  initialization step or a final step, has
+  <ol>
+    <li>
+    one input agent edge which is labeled with the state of the agent
+    before the event, and
+    </li>
+    <li>
+    one input message edge which is labeled with the pair <code>(m,
+  w)</code> where <code>m</code> is the message received in the event
+    and <code>m</code> is the sender of the message, and
+    </li>
+    <li>
+    the number of output message edges is 0 if the step sends no
+  messages. A vertex have any number of output message edges. It has
+    one output message edge for each message sent in the event.
+    </li>
+  </ol>
 
-  For example, you can have a sleep statement in a
-  <code>receive</code>.
+  An initialization vertex has no input edges; it only has output
+  edges.
 
+  The output edges of an initialization vertex are exactly the same as
+  the output edges of the vertices that represent real (as opposed to
+  fictional) steps.
   
   <p>
-  Properties of all dataflows of a system are properties of all
-  timelines of the system.
+  A final vertex has no output edges; it only has input edges.
 
-  Dataflow doesn't make any assumptions about time, and so it works for
-  all possible evaluations over time.
+  The input edges of a final vertex are exactly the same as
+  the input edges of the vertices that represent real (as opposed to
+  fictional) steps.
+
+   <!----------------------------------------------------------------->
+  <h5 class="w3-text-teal">Exactly how are initial states of channels
+  represented? If there are two messages m1, m2 in a channel from u to
+  v and the messages are received by v in steps 1 and 2 then how is
+  this represented in a dataflow graph?</h6>
+  <!----------------------------------------------------------------->
+
+  The initial states of channels from an agent u are represented by
+  message edges from the vertex representing the fictitious
+  initialization step of agent u.
 
   <p>
-  You may be able to determine more properties of a system by making
-  assumptions about local clocks; however, properties that you prove
-  without making assumptions are properties that hold for any
-  assumptions that you make.
-
+  In the example, there are two message edges from the initialization
+  vertex of u. The first message edge is to the
+  vertex representing step 1 of v, and this edge is labeled m1.
+  The second message is to the vertex representing step 1 of v.
 
   
+
+   <!----------------------------------------------------------------->
+  <h5 class="w3-text-teal">How many dataflow graphs are associated
+  with a computation? How many computations are associated with a
+  dataflow graph?</h6> 
   <!----------------------------------------------------------------->
-  <p class="w3-text-teal">Does dataflow assume that events are instantaneous?</p>
-  <!----------------------------------------------------------------->
 
-  Dataflow makes no assumptions about the duration of an event.
-  
-  The only states of an agent that appear in dataflow are the states
+  A computation has <i>exactly one</i> dataflow graph that shows the flow of
+  data in the computation.
 
-  You can, however, think of a vertex in a dataflow as an event in
-  which a <code>receive</code> is executed in an infitisimally small
-  time. 
+  <p>
+  All topological sorts of dataflow graphs are computations.
 
+  The number of computations that a dataflow graph represents is the
+  number of topological sorts of the dataflow graph.
 
+  <p>
+  What is the number of topological sorts of a dataflow graph? That
+  depends on the graph.
 
-  <!----------------------------------------------------------------->
-  <p class="w3-text-teal">Local clocks can be synchronized using NTP
-  and other protocols. Why do you assume that clocks aren't synchronized? </p>
-<!----------------------------------------------------------------->
-Local clocks can, indeed, be synchronized very accurately; however, we
-  do not assume that they are perfect.
+  You can construct a graph with 1 topological sort and a graph with
+  n! topological sorts where n is the number of vertices.
 
-<p>
-We use agents' local clocks for evaluating algorithm performance but
-not for proving correctness because even a small drift can cause race
-conditions. 
-
-<p>
-Consider an algorithm in which one agent carries out a computation
-starting at 1pm and another agent carries out a computation starting at 2pm.
-
-When we prove the correctness of our algorithms, we allow for the
-unlikely possibility that that the agent starting its 
-computation at 2pm does so before the agent that starts a 1pm.
-
-For evaluating performance, however, we assume that the agent that starts a 1pm
-usually does so before the agent that starts at 2pm.
-
-
-<h5 class="w3-text-teal">Next</h5>
-<p>
-<a href="Computations.html">Computations
-</a>
-shows how a while loop of a sequential program can be used to analyze
-distributed algorithms.
 
 
 
