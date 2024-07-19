@@ -1,4 +1,4 @@
-<title>DistributedSystemModels/Models.html</title>
+<title>DistributedSystemModels/Computations.html</title>
 
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
@@ -81,266 +81,119 @@ hr.new1 {
 <h2 class="w3-text-teal">Computations</h2>
 <!-------------------------------------------------------------->
   <p class="w3-text-red">
-  A computation is a sequential representation of the execution of a
-  distributed system.
+  A computation of a system is a sequence of states of the system where there exists an
+event of the system that causes a transition from each state in the
+  sequence to the next.
 
   We use techniques for proving sequential programs to prove
-  properties of computations and thus prove properties of distributed
-  systems.
-
-
-
+  properties of computations.
 
  
   <!----------------------------------------------->
-  <h3 class="w3-text-teal">A Sequential Programming Representation</h3>
-  <!----------------------------------------------->
-A timeline is representation of an execution of a distributed system;
-a dataflow is an abstraction of a timeline.
-Next, we look at a sequential programming abstraction of a distributed
-  system.
-
-  <p>
-  Consider a sequential program consisting of an initialization (not
-  shown) and the following <code>while</code> loop.
-
-
-<pre>
-while there exists a nonempty channel in the system:
-   select a nonempty channel (u, v)
-   let the head of channel (u, v) be msg
-   v executes receive(msg, u)
-</pre>
-
-
-<p>
-Execution of the while loop terminates in a state in which all
-channels are empty.
-
-If there are multiple nonempty channels in an iteration then any
-nonempty channel is selected.
-
-  We discuss fairness in selection later in the course.
-
-  Each iteration of the while loop executes a single event.
-
-  Another representation of the loop is:
-  
-<pre>
-while there exists an event that can be executed:
-   execute any executable event
-  </pre>
-  
-  Each iteration of the while loop causes a state transition by
-  changing the state of one 
-  agent and the states of channels incident on that agent.
-
-  Next we define computations and relate the sequential program to
-  computations. 
-
-
-   
-  <!----------------------------------------------->
-  <h3 class="w3-text-teal">Computations</h3>
+  <h3 class="w3-text-teal">Definition</h3>
 <!----------------------------------------------->
 
   A computation is a sequence of one or more states,
-\([S_{0}, S_{1}, S_{2}, \ldots]\) where the initial state, \(S_{0}\) of the
-sequence is an initial state of the system and where there exists an
-event at an agent of the system that causes a transition from each
+\([S_{0}, S_{1}, S_{2}, \ldots]\) where there exists an
+event that causes a transition from each
 state in the sequence to the next.
 
-A computation may be finite or infinite.
+  <p>
+  A computation may be finite or infinite.
 
+  A computation may start in any state.
+
+  We will often prove properties of computations that start in an
+  initial state of the system; however, a computation is not
+  restricted to starting in an initial system state.
+  
 <p>
-A computation can also be specified by an initial state, \(S_{0}\), and a sequence
-of events \([e_{0}, e_{1}, \ldots, ]\) where execution of the \(i\)-th
-event \(e_{i}\) causes a transition from the \(i\)-th to the \(i+1\)-th state of the
-computation.
+  A computation \([S_{0}, S_{1}, S_{2}, \ldots]\)
+  can also be specified by the initial state, \(S_{0}\), of the
+  computation and a sequence 
+of events \([e_{0}, e_{1}, \ldots, ]\) where execution of 
+ \(e_{i}\) causes a transition from \(S_{i}\)  to \(S_{i+1}\).
+
+
 
 
 <p>
 A <i>step</i> of the computation is an execution of a single event in this
-sequence.
-
-The same event -- specified by the 4-tuple that defines a state
-transition -- can occur multiple times in a computation.
-
-So, different steps may be executions of the same event.
-
-
-
-
-<h4 class="w3-text-teal">Relationship between Computations and a While Loop</h4>
-Let \(S_{0}\) be the state before execution of the while loop and let
-\(S_{i}\) be the state upon completion of the \(i\)-th iteration of
-the loop for \(i > 0\).
-
-<pre>
-while there exists an event that can be executed:
-   execute any executable event
-  </pre>
-
-The sequence of states \([S_{0}, S_{1}, \ldots, ]\)
-is a computation.
-
-The while loop may not terminate and a computation may be infinite.
-
-<p>
-The advantage of using a while loop to generate the states 
-of a computation is that we can use familiar techniques for reasoning about
-while loops to reason about distributed algorithms.
-
-
-<p class="w3-text-teal">Reasoning about While Loops: Loop Invariants and Loop Variants</p>
-
-A <a href="https://en.wikipedia.org/wiki/Loop_invariant">
-  loop invariant</a>
-  is an assertion about the state of the program that holds before and
-after each iteration of the loop.
-
-We use invariants to prove that all states in an execution of a
-distributed system have some property, such as all states are safe.
-
-<p>
-We prove that some desired property holds at some point in the
-execution of a while loop by using
-<a href="https://en.wikipedia.org/wiki/Loop_variant">
-loop variants</a>, also called variant functions or metrics.
-Methods for proving progress properties are given later.
-
-
-
-
-  
-  <!----------------------------------------------->
-  <h3 class="w3-text-teal">Relationship between Computations and Dataflow</h3>
-<!----------------------------------------------->
-
-Associated with each computation is a dataflow that has the same steps
-as the computation.
-
-A computation is a <i>sequence</i> of steps whereas a dataflow is a <i>partial
-ordering</i> on steps.
-
-A computation has exactly one dataflow associated with it.
-
-A dataflow may have multiple computations associated with it.
-
-<p>
-We adopt the following convention in diagrams of of computations.
-
-We depict a computation by a dataflow graph with earlier steps in the
-computation appearing to the left of later steps in the computation.
-
-Figure 4 shows computations \([1, 2, 3, 4]\) and \([2, 1, 3, 4]\).
-Both computations have the same dataflow.
-
-    <figure>
-    <img
-    src="Model/Model.004.jpeg"
-    alt="Fig4" style="width:100%"> 
-    <figcaption>Fig.4: Example: Different Computations with the same Dataflow</figcaption>
-</figure>
-
-
-
-  <!----------------------------------------------->
-  <p class="w3-text-teal">Topological Sorts of Directed Acyclic Graphs</p>
-<!----------------------------------------------->
-A <a href="https://en.wikipedia.org/wiki/Topological_sorting">
-  topological sort</a> of a directed acyclic graph is a sequence of
-  vertices of the graph where every edge \((e, e')\) in the graph,
-\(e\) appears before \(e'\) in the sequence.
-
-<p>
-For example, \([0, 1, 2, 3, 4, N]\) and \([0, 2, 1, 3, 4, N]\) are
-topological sorts of the graph shown in figure 4.
-\([0, 1, 3, 2, 4, N]\) is not a topological sort because the graph has
-an edge \((2, 3)\) and \(3\) appears before \(2\) in the sequence.
-For similar reasons, \([0, 1, 2, 4, 3, N]\) is not a topological sort.
-
-
-<hr class="new2">  
-  <!----------------------------------------------->
-  <h4 style="color:blue;">Theorem</h4>
-<!----------------------------------------------->
-
-<p style="color:blue;">
-
-All topological sorts of a dataflow graph are computations.
-</p>
-<hr class="new2">
-
-The initial state is the state after the initial step (step 0) at
-each agent.
-
-<p class="w3-text-teal">Proof</p>
-
-Let \(z\) be a topological sort of  a dataflow graph \(G\).
-
-We will prove by induction on \(n\) that \(z_{n}\), the sequence
-consisting of the first \(n\) elements of \(z\) is a computation.
-
-The base case is \(n = 0\).
-
-Let the \(n+1\)-th element of \(z\) be vertex \(v\).
-
-Let this vertex represent a step at an agent \(a\) in which \(a\)
-receives a message \(m\) on a channel \(c\), and the state of \(a\)
-before the step is \(s\).
-
-<p>
-Because \(z\) is a topological sort:
-<ol>
-  <li>
-  \(z_{n}\) consists of vertices with paths to \(v\). So the state of
-  agent \(a\) before \(v\) in \(G\) is \(s\).
-  </li>
-  <li>
-  The step in which message \(m\) is sent is in \(z_{n}\), and all
-  messages received by \(a\) on channel \(c\) prior to \(m\) are also
-  in \(z_{n}\). So after \(z_{n}\) the state of \(c\) has \(m\) at its
-  head.
-  </li>
-</ol>
-
-<p>
-Therefore there is a step in  which \(a\)
-receives a message \(m\) on a channel \(c\), and the state of \(a\)
-before the step is \(s\).
-
-
-
-  <!----------------------------------------------->
-  <h5 class="w3-text-teal">Alternate Version of the Theorem</h5>
-<!----------------------------------------------->
-A computation</a> is a sequence of steps of a dataflow graph in which for all edges
-  \((e, e')\) in the graph:
-  <center>\(e\) occurs before \(e'\) in the
   sequence.
-  </center>
+
+  The same event can occur multiple times in a computation.
+
+  Each occurrence of an event, even if the event has occurred before,
+  is a separate step of the computation.
+
+ 
+  <!----------------------------------------------->
+  <h4 class="w3-text-teal">A Sequential Programming Representation of Computations</h4>
+
+  <p>
+Consider a sequential program consisting of an initialization
+and the following <code>while</code> loop.
+  
+<pre>
+n = 0
+S[n] is an initial state
+
+while there exists an event that can be executed:
+   # state is S[n]
+   execute any executable event
+   n = n + 1
+</pre>
+
+The loop terminates when there are no executable events.
+
+If there exists an executable event then the selection of which
+event to execute in an iteration is nondeterministic -- <i>any</i> executable
+event can be selected.
+
+<h6 class="w3-text-teal">States in the Loop and in a Computation</h6>
+
+The sequence of states <code>S[0], S[1], S[2], ...S[k]</code> that occur
+in the loop, for any <code>k</code> \(\geq\) 0, is a computation.
+
+The <code>n</code>-th iteration of the loop is the <code>n</code>-th step in the
+computation, and this step causes a transition from state
+<code>S[n]</code> to state <code>S[n+1]</code>, for <code>n</code>
+\(\geq\) 0.
+
+
+
+<!-------------------------------------------------------->
+<h4 class="w3-text-teal"> Properties of Loops and
+Distributed Systems</h4>
+
+
+The benefit of using the states in a while loop to represent the states 
+of a computation is that we can use familiar techniques for reasoning about
+while loops ---
+<a href="https://en.wikipedia.org/wiki/Loop_invariant">
+loop invariant</a> and
+<a href="https://en.wikipedia.org/wiki/Loop_variant">
+loop variants</a> ---
+to reason about distributed algorithms.
+See <a href="https://dl.acm.org/doi/book/10.1145/3568325">
+Effective Theories in Programming Practice</a> by Jayadev Misra for
+examples of these techniques
+
 
 <!---------------------------------------->
 <h5 class="w3-text-teal">Next</h5>
 <!---------------------------------------->
-This page describes the model of distributed systems that we use to
-design most of the algorithms in this course.
 
-You may wonder how a model as simple as a sequential while loop that
-ignores critical features of time evolution of system state
-can be useful.
-
-This course give examples of algorithms designed using this
-and other models.
 
 <p>
-The next webpage discusses the concepts of
-<a href="Timelines.html">past and future</a>
-in computations and dataflow.
+The next webpage discusses
+<a href="Model.html">data flow in computations</a>.
 
 <p>
-<a href="ModelFAQ.html">Frequenty Asked Questions</a>
+<a href="ComputationsExamples.html">Examples</a>
+
+<p>
+<a href="ComputationsFAQ.html">Frequenty Asked Questions</a>
 
 
 <!--Start Footer--------------------------------------->
