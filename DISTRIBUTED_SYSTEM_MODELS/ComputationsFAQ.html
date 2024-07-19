@@ -77,73 +77,173 @@ hr.new1 {
 <div class="w3-twothird w3-container">
 
 
-<!---------------------------------------------------------------->
-    <h1 class="w3-text-teal">Timelines and Dataflow: FAQ</h1>
-<!----------------------------------------------------------------->
-
+  <!---------------------------------------------------------------->
+    <h1 class="w3-text-teal">Computations: FAQ</h1>
   <!----------------------------------------------------------------->
-  <p class="w3-text-teal">Dataflow doesn't have the concept of
-  time. Does that mean that we cannot use time in our algorithms?</p>
-  <!----------------------------------------------------------------->
-  You can use the local clock of an agent in its <code>receive</code>
-  function. Indeed, it can be helpful to do so.
-
-  For example, you can have a sleep statement in a
-  <code>receive</code>.
+  
 
   
-  <p>
-  Properties of all dataflows of a system are properties of all
-  timelines of the system.
-
-  Dataflow doesn't make any assumptions about time, and so it works for
-  all possible evaluations over time.
+  <!----------------------------------------------------------------->
+  <h5 class="w3-text-teal">Exactly what is the difference between an
+  event and a step of a computation?</h6>
+  <!----------------------------------------------------------------->
 
   <p>
-  You may be able to determine more properties of a system by making
-  assumptions about local clocks; however, properties that you prove
-  without making assumptions are properties that hold for any
-  assumptions that you make.
+  An event is a 4-tuple which specifies a state transition.
 
+  The same event can occur multiple times in a computation.
+
+  Each occurrence of the event is a separate step of the computation.
+
+  The following example illustrates the difference between a step and
+  an event.
+  
+  <p>
+  Consider an agent that receives numbers on an input
+  channel and sends squares of the numbers on an output channel.
+
+  The agent may receive the message 3 and send the message 9 multiple
+  times in a computation.
+
+  The specification of an execution of a <code>receive</code> function
+  which receives 3 and sends 9 is specified by an event -- a 4-tuple.
+
+  Each execution in which the agent receives 3 and sends 9 is the
+  execution of the same event.
+
+  Each execution in which the agent receives 3 and sends 9 is a
+  different step of the computation.
+
+
+
+  <!----------------------------------------------------------------->
+  <h5 class="w3-text-teal">Don't computations have to start in an
+  initial state of the system?</h6>
+  <!----------------------------------------------------------------->
+
+  We define computations as a sequence of state transitions that can
+  start in <i>any</i> state.
+
+  When we prove properties of a system we prove properties of
+  computations that start in the initial state of the system.
+
+  Some papers on distributed systems restrict computations to start in
+  an initial state of the system but we don't do so in this course.
 
   
   <!----------------------------------------------------------------->
-  <p class="w3-text-teal">Does dataflow assume that events are instantaneous?</p>
-  <!----------------------------------------------------------------->
-
-  Dataflow makes no assumptions about the duration of an event.
-  
-  The only states of an agent that appear in dataflow are the states
-
-  You can, however, think of a vertex in a dataflow as an event in
-  which a <code>receive</code> is executed in an infitisimally small
-  time. 
-
-
-
-  <!----------------------------------------------------------------->
-  <p class="w3-text-teal">Local clocks can be synchronized using NTP
-  and other protocols. Why do you assume that clocks aren't synchronized? </p>
+  <h5 class="w3-text-teal">What is a loop invariant?</h6>
 <!----------------------------------------------------------------->
-Local clocks can, indeed, be synchronized very accurately; however, we
-  do not assume that they are perfect.
+Read 
+See <a href="https://dl.acm.org/doi/book/10.1145/3568325">
+Effective Theories in Programming Practice</a> by Jayadev Misra for
+many beautiful examples.
+See the Wikipedia page and links from the page to sources on the web for a definition and
+many examples.
+<p>
+A loop invariant is a predicate (a boolean formula) that holds at the
+beginning and end of each step of a computation.
+
+The following example illustrates the concept.
 
 <p>
-We use agents' local clocks for evaluating algorithm performance but
-not for proving correctness because even a small drift can cause race
-conditions. 
+The algorithm computes the GCD (greatest common divisor) of positive
+integers <code>X</code> and <code>Y</code>.
+
+<pre>
+x, y = X, Y
+# gcd(x, y) = gcd(X, Y)
+
+while x != y:
+   # gcd(x, y) = gcd(X, Y)
+
+   if x > y: x = x- y
+   if y > x: y = y - x
+
+    # gcd(x, y) = gcd(X, Y)
+
+return x
+</pre>
+
+The invariant is:
+<pre>
+gcd(x, y) = gcd(X, Y)
+</pre>
+
+It holds before each step.
 
 <p>
-Consider an algorithm in which one agent carries out a computation
-starting at 1pm and another agent carries out a computation starting at 2pm.
+If the algorithm terminates then we have
+<pre>
+x == y
+</pre>
+and so at termination:
+<pre>
+gcd(x, y) = gcd(x, x) = x = gcd(X, Y)
+</pre>
 
-When we prove the correctness of our algorithms, we allow for the
-unlikely possibility that that the agent starting its 
-computation at 2pm does so before the agent that starts a 1pm.
+    <!----------------------------------------------------------------->
+  <h5 class="w3-text-teal">How does the idea of loop invariant work
+  for a distributed computation when we don't know which event will be
+  executed at each step?</h6>
+<!----------------------------------------------------------------->
+The loop invariant for a distributed computation has the form
 
-For evaluating performance, however, we assume that the agent that starts a 1pm
-usually does so before the agent that starts at 2pm.
+<pre>
+set up initial state of the system
+# loop invariant holds
 
+while there exists an event that can be executed:
+   # loop invariant holds
+   execute any executable event
+   # loop invariant holds
+</pre>
+
+So, we have to prove that the invariant holds in all initial states,
+and if the invariant holds before <i>any</i> event that is executable then it
+continues to hold after the event is executed.
+
+
+
+
+
+
+  <!----------------------------------------------------------------->
+  <h5 class="w3-text-teal">What is a loop variant?</h6>
+<!----------------------------------------------------------------->
+As with loop invariants please read the link to Wikipedia and links in
+the Wikipedia page.
+See <a href="https://dl.acm.org/doi/book/10.1145/3568325">
+Effective Theories in Programming Practice</a> by Jayadev Misra for
+  many beautiful examples.
+
+A loop variant is used to prove that execution of a loop terminates.
+
+More generally, we use the idea of loop variants to prove that a
+computation eventually reaches a goal.
+
+<p>
+A loop variant is a function of the state (variables) of a program.
+The value of the function decreases at each iteration of a loop.
+The function is bounded below, and so the value of the function cannot
+decrease forever. 
+Therefore the loop terminates.
+
+<p>
+Let's look at the example given earlier to compute <code>gcd(X,
+Y)</code>.
+
+<p>
+A loop variant is <code>x + y</code>.
+
+Each iteration of the loop decreases <code>x + y</code>.
+
+It is bounded below by <code>2</code> -- the bound doesn't matter as
+long as there is a bound.
+
+<p>
+Because it is bounded below and cannot decrease forever the loop
+terminates.
 
 <h5 class="w3-text-teal">Next</h5>
 <p>
