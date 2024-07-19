@@ -81,6 +81,210 @@ hr.new1 {
     <h1 class="w3-text-teal">Basics: FAQ</h1>
 <!----------------------------------------------------------------->
 
+
+  
+  <!----------------------------------------------------------------->
+  <h2 class="w3-text-teal">What are weaknesses and limitations of the model?</h2>
+  <!----------------------------------------------------------------->
+  The model has many weaknesses, only some of which are described
+  here.
+
+  
+<!-------------------------------------------------------->
+<h3 class="w3-text-teal">Model Limitations: Fairness and Progress</h3>
+In the model, a computation progresses by delivering a message on <i>any</i>
+  channel.
+
+  This allows for infinite computations in which some messages remain
+  in a channel forever.
+
+  <p>
+  Consider the
+  <a href="DistributedSystemModels.html">example of two agents sending
+  tokens</a> to each other.
+
+  Each agent sends a token that it holds to the other agent.
+
+  So there is a computation in which tokens go back and forth between
+  the agents forever. 
+
+  Let's call this distributed system <code>D</code>.
+
+  <p>
+  Now, consider a system consisting of two identical, and totally
+  independent, copies of <code>D</code>.
+
+  There is no connection between the two copies.
+
+  Surely, the behavior of <code>D</code> shouldn't change because of
+  the presence of a completely independent network of agents.
+
+  But, with our model, it does.
+
+  <p>
+  A computation progresses by delivering a message from <i>any</i>
+  nonempty channel.
+
+  So, there is an infinite computation in which messages are delivered
+  in channels in one copy of <code>D</code>, and no messages are
+  delivered from nonempty channels in the other copy
+
+
+  <p>
+  The problem is that the selection of the nonempty channel in each
+  iteration of the while loop may be unfair -- the same set of
+  channels could be selected forever while other nonempty channels are
+  never selected.
+
+  The model has no provision for ensuring that a message in a channel
+  will be delivered eventually.
+
+  We will introduce fair selection,
+  <a href="https://en.wikipedia.org/wiki/UNITY_(programming_language)">eventuality</a>, and
+  <a href="<code>D</code">temporal logic</a> later in the course.
+
+
+
+<!-------------------------------------------------------->
+<h3 class="w3-text-teal">Model Limitations: No Construct for Time</h3>
+<!-------------------------------------------------------->
+
+The only representation of time in our model is that some events occur
+after others.
+
+An event in which a message is received occurs after an event in which
+that message is sent.
+
+Time plays a critical role in the performance of algorithms even
+though we never use time in proving the correctness of algorithms.
+
+<p>
+There are many algorithms in which an agent sends itself a <code>Timeout(T)</code>
+message where ideally the message would be received approximately <code>T</code>
+seconds after it is sent.
+
+
+Though we never use <code>T</code> in proving the correctness of algorithms we will use
+timeout messages in analyzing their performance.
+
+
+<p>
+Agents can maintain accurate clocks by using atomic clocks, Precision Time
+Protocols (PTP) in local area networks, and Network Time Protocol
+(NTP) servers.
+
+Accurate clocks have the property that the time at which an event is
+sent, as determined by the sender's clock, is (almost always) earlier
+than the time of the event in which the message is received.
+
+We do not, however, rule out the possibility that clocks drift apart
+so that the sender's clock is far ahead of the receiver's.
+
+<p>
+Some algorithms for systems with perfect clocks are simpler than those
+with imperfect clocks, as we shall see.
+
+
+<!-------------------------------------------------------->
+<h3 class="w3-text-teal">Model Limitations: Start Up, Shutdown, Failure</h3>
+<!-------------------------------------------------------->
+
+The model assumes that all agents and channels are initialized and
+then agents start receiving messages.
+
+The model has a <a
+href="https://en.wikipedia.org/wiki/Barrier_(computer_science)">
+barrier </a>
+between the point at which initialization takes place and the point at
+which messages are delivered.
+
+The barrier isn't necessary in most algorithms, though it assuming its
+existence helps us to focus on more important parts of the algorithm.
+
+<p>
+The model does not specify how termination is detected if the
+computation does terminate.
+
+Nor does the notation have primitives for shutting down agents and
+channels gracefully so that they don't continue to hold resources
+after computation has terminated.
+
+Protocols such as AMQP do have primitives for starting up and shutting
+down distributed systems, but we won't discuss them here.
+
+<p>
+We will describe algorithms that execute on faulty systems in which
+messages may be lost, duplicated, or delivered out of order, and where
+agents may stop forever or halt and restart.
+
+We also describe algorithms with Byzantine agents.
+
+These algorithms are based on models that are different from those
+given so far.
+
+
+
+<!-------------------------------------------------------------->
+<h3 class="w3-text-teal">Model Limitations: Discrete State Space</h3>
+<!-------------------------------------------------------------->
+The state space is discrete in most of the algorithms described here.
+
+The state space of some distributed systems has both discrete and
+continuous components.
+
+The state space of a fleet of drones has continuous components.
+
+<p>
+Later, we study algorithms in which the state space is
+continuous.
+
+Systems with continuous state spaces may have discrete or continuous
+state transitions.
+
+
+
+<!-------------------------------------------------------------->
+<h3 class="w3-text-teal">Model Limitations: Static</h3>
+<!-------------------------------------------------------------->
+  The network of agents and messages in the model is static.
+
+  In contrast, distributed systems evolve; agents and channels may be
+  added and deleted; agents may change; channel protocols may be
+modified.
+
+
+
+  <
+
+<!-------------------------------------------------------------->
+<h3 class="w3-text-teal">Model Limitations: Simple Channels</h3>
+<!-------------------------------------------------------------->
+  The model only considers channels in which messages are delivered in
+  the order sent.
+
+  Some distributed systems have channels in which messages may be
+duplicated and delivered out of order.
+
+<p>
+Many models deal with channels in which senders are blocked when a
+channel gets full.
+
+Our model has no concept of a channel being full.
+
+
+
+<!-------------------------------------------------------------->
+<h3 class="w3-text-teal">Model Limitations: Summary</h3>
+<!-------------------------------------------------------------->
+Models and notations in this course are not comprehensive -- they do not capture
+most aspects of distributed systems.
+We use a model that is appropriate for describing the algorithm at
+hand.
+The choice of a model is an engineering decision.
+
+
+
+  
   <!----------------------------------------------------------------->
   <p class="w3-text-teal">Why use such a simplistic model?</p>
   <!----------------------------------------------------------------->
@@ -92,35 +296,6 @@ hr.new1 {
 
   We use the simplest model adequate for the problem at hand.
 
-
-  <!----------------------------------------------------------------->
-  <p class="w3-text-teal">What are the weaknesses of the model?</p>
-  <!----------------------------------------------------------------->
-  The model has many weaknesses, only some of which are described
-  here.
-
-  <p>
-  The network of agents and messages in the model is static.
-
-  In contrast, distributed systems evolve; agents and channels may be
-  added and deleted; agents may change; channel protocols may be modified.
-
-  <p>
-  The model only considers channels in which messages are delivered in
-  the order sent.
-
-  Some distributed systems have channels in which messages may be
-  duplicated and delivered out of order.
-
-  <p>
-  Distributed systems are (usually) fault tolerant, whereas the model
-  does not deal with faults.
-
-  <p>
-  The model makes no provision for time or clocks.
-
-  Atomic clocks and GPS provide great accuracy, and many distributed
-  systems such as those that monitor the electric grid use clocks.
 
   
   <!----------------------------------------------------------------->
