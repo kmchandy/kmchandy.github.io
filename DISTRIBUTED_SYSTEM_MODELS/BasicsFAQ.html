@@ -116,8 +116,31 @@ hr.new1 {
   Distributed systems are (usually) fault tolerant, whereas the model
   does not deal with faults.
 
-  
+  <p>
+  The model makes no provision for time or clocks.
 
+  Atomic clocks and GPS provide great accuracy, and many distributed
+  systems such as those that monitor the electric grid use clocks.
+
+  
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">How many channels are there in a system?</p>
+  <!----------------------------------------------------------------->
+  In the model there is a channel from every agent to every agent.
+
+  So, if there are \(N\) agents there are \(N^{2}\) channels.
+
+With a thousand agents there are a million channels.
+
+That's a lot of channels!
+
+<p>
+The model allows channels between every pair of agents.
+
+In practice very few of these channels are used.
+
+When we implement an algorithm using AMQP, for instance, we will
+declare channels.
   
   
   <!----------------------------------------------------------------->
@@ -140,6 +163,9 @@ It is represented by a directed edge in a directed graph.
 
 Messages can be sent by an agent <code>P</code> to an agent
 <code>Q</code> along a channel <code>(P, Q)</code>.
+
+Agent <code>Q</code> cannot send a message to agent <code>P</code>
+along channel <code>(P, Q)</code>.
 
 <p>
 A system may have a channel <code>(P, Q)</code> and may or may not have a channel
@@ -194,20 +220,17 @@ In our model, agent <code>X</code> has to receive the message from
 In the model a sender is never blocked from sending a message.
 
 <p>
-How could this model be used to analyze a system in which a channel
-has a maximum size, and
-when a channel is full it cannot accept messages?
-
-<p>
 Our model assumes that channels have unlimited capacity.
 
 We can represent a situation in which channels have limited capacity
 in the following way.
 
-An agent has a local output queue into which the agent puts messages
-when the channel is full.
+An agent has a local output queue of unlimited size.
 
-Messages from this output queue are sent on the channel when the
+The agent puts messages into this queue when it cannot send messages
+on a channel because the channel is full.
+
+Messages from this queue are sent on the channel when the
 channel stops being full.
 
 
@@ -221,14 +244,6 @@ channel stops being full.
   The model doesn't have features that allow agents to be created and
   deleted.
 
-<p>
-  You may want to implement a system in which agents are created and
-  deleted infinitely often. 
-
-  In this case the network of agents changes over time in an arbitrary
-  fashion. 
-
-  The model doesn't represent such systems.
 
 <p>
 A work around for the case in which agents are created or deleted a
@@ -238,10 +253,22 @@ The network of agents in the model is made large enough to include
 agents that have not been created as yet and also include agents that
 have been deleted.
 
+<p>
 An agent that has not been created is represented by an agent that is
-idle, i.e., one that doesn't receive messages.
+idle, i.e., one is waiting for a message. It never receives a message
+until the agent is created. The message is created by the operating
+system sending a "create" message to the agent and informing other
+agents that this agent has been created.
 
+<p>
 An agent this is deleted is represented in the same way.
+
+The operating system deletes an agent by sending a "delete" message to
+the agent.
+
+A deleted agent discards messages that it receives without
+taking action.
+
   
 
 
@@ -253,11 +280,7 @@ An agent this is deleted is represented in the same way.
 
 No, there are no interruptions in the model.
 
-After an agent is initiated it does nothing but execute receives or wait to execute
-receives.
-
-When an agent is executing a receive it is not interrupted by the
-arrival of another message.
+When an agent is executing a receive it is not interrupted.
 
 <p>
 There are systems in which messages have different priorities, and the
@@ -330,34 +353,19 @@ simulated by an agent sending itself a message and carrying out the
 transition when it receives a message from itself.
 
 <p>
-Some books on distributed systems allow agents to make <i>internal</i>
-  state transitions -- these are transitions without receiving
-messages.
 
 For example, an agent that is computing using a set of files may
   transition to a state in which it no longer needs those files; this
 transition occurs without the agent receiving a message.
 
-Can the model represent such internal state transitions?
-
-<p>
-Internal state transitions are represented by transitions in which an
-agent receives a message from itself.
-
-  We represent an internal state change by having the agent
-  send a message to itself; the agent makes a state change when it
-receives the message.
-
-<p>
-For example, an agent that is computing using a set of files sends a
-message "<i>finished using files</i>" to itself, and when the message
-arrives, the agent changes state to one in which it no longer using
-the files.
+We model this event by having the agent send itself a message when it
+starts using the set of files, and it transits to a state in which it
+no longer needs the files when it receives the message from itself.
 
   <p>
   Representing internal state changes in this way is an artifice;
-  however, the artifice allows us to use a simple model in which a
-  state change occurs only when a message is delivered.
+  however, the artifice allows us to use a very simple model in which a
+  state change occurs when, and only when, a message is delivered.
 
 
 
@@ -392,12 +400,47 @@ For evaluating performance, however, we assume that the agent that starts a 1pm
 usually does so before the agent that starts at 2pm.
 
 
-<h5 class="w3-text-teal">Next</h5>
-The next three webpages continue the description of a model of
-distributed systems and point out its strengths and limitations.
 
-The next page introduces <a href="Model.html">
-Timelines and Dataflow.</a> 
+  <!----------------------------------------------------------------->
+  <p class="w3-text-teal">What are other examples of models? </p>
+<!----------------------------------------------------------------->
+The model we use is an
+<a href="https://en.wikipedia.org/wiki/Actor_model">actor model.</a>
+
+For more general asynchronous models of concurrent systems see
+<a
+href="https://books.google.com/books/about/Parallel_Program_Design.html?id=QYlQAAAAMAAJ">
+UNITY
+</a>
+and
+<a href="https://en.wikipedia.org/wiki/TLA%2B">
+TLA
+</a>.
+
+<p>
+Perhaps the most widely used model is
+<a href="https://en.wikipedia.org/wiki/Communicating_sequential_processes">
+CSP -- Communicating Sequential Processes</a>.
+
+<p>
+An overview of 
+<a href="https://en.wikipedia.org/wiki/Parallel_programming_model">
+models used in parallel programming<a/> describes models used in
+shared-memory and distributed computing.
+
+
+
+
+<h5 class="w3-text-teal">Next</h5>
+
+
+<a href="BasicsStates.html">
+States of a Distributed System.</a>
+
+
+<p>
+<a href="BasicsReview.html">Review material for this page</a>
+
 
 
 
