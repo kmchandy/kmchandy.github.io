@@ -1,0 +1,362 @@
+<title>DistributedSystemModels/BasicsStates.html</title>
+
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+
+<!---------------------------------------------------------------->
+    <h2 class="w3-text-teal">States of a Distributed System</h2>
+<!----------------------------------------------------------------->
+  </p>
+
+  <p class="w3-text-red">
+  This page describes the state of a system and changes to a system
+  state.
+
+  The model uses a simple abstraction of state and state transitions.
+  </p>
+
+    
+  <!----------------------------------------------------------------->
+  <h3 class="w3-text-teal">States</h3>
+  <!----------------------------------------------------------------->
+  The state of a distributed system is given by the states of its agents and
+  channels.
+
+  A system state is a tuple with an element of the tuple for each
+  agent and each channel.
+
+  <p>
+  The state of a channel is a queue consisting of the sequence of
+  messages sent on the channel that have not been delivered.
+
+  The state of an agent is given by the values of its variables.
+
+  
+  <!----------------------------------------------------------------->
+  <h3 class="w3-text-teal">State Transitions</h3>
+  <!----------------------------------------------------------------->
+  <p>
+  The state of a system changes when, and only when, a message is
+  delivered to an agent.
+
+
+  <!----------------------------------------------------------------->  
+  <h5 class="w3-text-teal">Execution of a <code>receive</code> is Atomic</h5>
+  We ignore the changes in the state of an agent while it is executing
+  a <code>receive</code>.
+
+  We only consider an agent's state before
+  it starts, and after it completes, executing a <code>receive</code>.
+  
+  We treat execution of a <code>receive</code> as an
+  <a href="https://en.wikipedia.org/wiki/Atomic_commit">atomic
+  operation.</a>
+
+  
+  <!----------------------------------------------------------------->  
+<h5 class="w3-text-teal">Event: Specification of a State Transition</h5>
+
+  A state change that occurs when an agent <code>u</code>
+  receives a message, <code>msg</code>, from an agent <code>v</code>
+  is specified by the 4-tuple:
+<ol>
+  <li>
+  <code>u</code>'s state <code>s</code>
+  before it executes the <code>receive</code>.
+  </li>
+  <li>
+  The sender, <code>v</code>, of the message, and the message,
+  <code>msg</code>, that is received,
+  </li>
+  <li>
+  <code>u</code>'s state <code>s'</code> after it completes execution
+  of the <code>receive</code>.
+  </li>
+  <li>
+  A list of ordered pairs <code>(m, w)</code>, where <code>m</code> is
+  the message sent to agent <code>w</code>,
+  during the execution of the <code>receive</code>. 
+  </li>
+</ol>
+The 4-tuple is called an <i>event.</i>
+The first two elements of the tuple are called the <i>inputs to the event</i>, and
+the last two elements are the <i>outputs of the event</i>.
+
+  <!----------------------------------------------------------------->  
+<h5 class="w3-text-teal">The Transition in State Caused by an Event</h5>
+
+The event specified by the above 4-tuple
+can be executed in a state <code>S</code> 
+ if the inputs to the event are as specified by <code>S</code>,
+i.e., in state <code>S</code>
+the state of <code>u</code> is <code>s</code>, and the message at the head of the
+channel <code>(v, u)</code> is <code>msg</code>.
+
+<p>
+The occurrence of the event causes a transition to a state
+<code>S'</code> which is specified as follows.
+The state of <code>u</code> in <code>S'</code> is
+<code>s'</code>.
+The change in the states of <code>u</code>'s output channels are
+specified by the list in part 4 of the 4-tuple:
+message <code>m</code> is appended to the tail of
+the sequence of messages in channel <code>(v, w)</code>, for all
+<code>(m, w)</code> in the list.
+
+<p>
+The states of other agents and channels are the same in
+<code>S</code> and <code>S'</code>.
+
+
+<p>
+Each execution of an agent's <code>receive</code> function is
+specified by an event.
+
+We say that an agent <code>u</code>  "executes event e",
+or "event e occurs at agent <code>u</code>"
+to mean that the agent executes a <code>receive</code> that is
+specified by <i>e</i>. 
+
+
+<!---------------------------------------------------->
+<h4 class="w3-text-teal">State Transitions are Local</h4>
+The states of all other channels remain unchanged.
+
+<p>
+The state of only one agent and the channels incident on that agent
+may change state in a state transition -- all other agents and
+channels remain unchanged.
+
+
+<p>
+A system changes state when exactly one agent executes an event.
+
+If multiple agents change state concurrently then we treat the state
+changes as occurring one at a time in any order.
+
+
+
+<!---------------------------------------------------->
+<h4 class="w3-text-teal">Specifying a <code>receive</code> function by
+a Set of Events</h4>
+
+A <code>receive</code> function in our examples is specified as a
+program.
+
+The state transition that occurs during a single execution of a
+<code>receive</code> is specified by an event. 
+
+<p>
+We can specify a <code>receive</code> by the set of all state
+transitions that can occur during execution of the
+<code>receive</code>.
+
+It is helpful to specify a <code>receive</code> as a set
+of events, and to 
+specify a single execution of a <code>receive</code> as the selection of one
+event from the set.
+
+Doing so allows us to describe systems independent of programming
+languages. 
+
+<p>
+We won't list all elements in the set of events that specifies a
+<code>receive</code>. This set can be infinite.
+
+For example, an execution of <code>receive</code> by agent
+<code>total</code> may receive any value from agent <code>pos</code>
+or any value from agent <code>neg</code>.
+
+There is an event for every possible message from <code>pos</code> and
+from <code>neg</code>, and so we can't list all possible events.
+
+Later, we will show how <code>receive</code> is specified concisely in terms of
+pre- and post-conditions.
+
+<p>
+A state transition occurs when a <code>receive</code> is executed by
+exactly one agent.
+
+So, the possible state transitions of a system can be specified by the
+specifications of the <code>receive</code> functions of its agents.
+
+
+
+<!----------------------------------------------->
+<h4 style="color:red;">Example of an Event</h4>
+
+This is an example of an event at agent, <code>pos</code>.
+
+In this example,
+the state of <code>pos</code> before the event is given by the values
+of its variables <code>my_data = [3, 5]</code>  and <code>n =
+0</code>.
+
+In the event, <code>pos</code> receives a "wakeup" message from
+itself.
+
+<p>
+<code>pos</code>'s state after the event is <code>my_data = [3,
+5]</code>  and <code>n  = 1</code>.
+
+During the event <code>pos</code> sends a "wakeup" message to itself
+and 3 to agent <code>total</code>.
+
+
+The event is specified by the following tuple:
+<ol>
+  <li>
+  <code>pos</code>'s state before it executes the <code>receive</code>
+  is given by the values of its variables <code>my_data = [3,
+  5]</code> and <code>n = 0</code>. 
+  </li>
+  <li>
+  The sender of the message that is received is <code>pos</code>, and
+  the message is "wakeup".
+  </li>
+  <li>
+  <code>pos</code>'s state after it completes execution
+  of the <code>receive</code> is given by <code>my_data = [3,
+  5]</code> and <code>n = 1</code>. 
+  </li>
+  <li>
+  The messages sent during the execution of <code>receive</code> are
+  (i) "wakeup" to <code>pos</code> and  (ii) <code>3</code> to
+  <code>total</code>. 
+  </li>
+</ol>
+
+
+<!---------------------------------------->
+<h5 class="w3-text-teal">Next</h5>
+<!---------------------------------------->
+
+
+The next page discusses <a href="Computations.html">
+computations of distributed systems.</a>
+
+<p>
+<a href="BasicsStatesExamples.html">Examples</a>
+
+<p>
+<a href="BasicsStatesFAQ.html">Frequenty Asked Questions</a>
+
+
+
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+
+
