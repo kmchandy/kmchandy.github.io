@@ -78,392 +78,323 @@ hr.new1 {
 
 
 <!-------------------------------------------------------------->
-<h2 class="w3-text-teal">Timelines and Dataflow</h2>
+<h2 class="w3-text-teal">Data Flow in Computations</h2>
 <!-------------------------------------------------------------->
   <p class="w3-text-red">
-  A <i>timeline</i> shows how the state of a system changes over time.
+  A dataflow graph of a computation is a labeled directed acyclic
+  graph that shows the flow of data between agents during the
+  computation. 
 
-  A <i>dataflow graph</i> (dataflow for short) is an abstraction of a timeline; this
-  abstraction has no concept of time other than an ordering of
-  <i>before</i> and <i>after</i>.
-
-  We discuss the advantages and disadvantages of using a time-free
-  model. 
+  All <a href="https://en.wikipedia.org/wiki/Topological_sorting">
+  topological sorts</a> of a dataflow graph are computations.
   </p>
-  
-  <!----------------------------------------------->
-  <h3 class="w3-text-teal">Timelines</h3>
-  <!----------------------------------------------->
-
-  <a href="https://en.wikipedia.org/wiki/Timeline">
-  Timelines</a> are used to describe the interactions of nations, animal
-  species, and ideas, over time.
-
-  Here timelines describe the interactions of agents over time.
-
-  
-  <p>
-  While an agent executes a  <code>receive()</code> the agent's state
-  changes over time and the agent may send messages at different
-  points in time.
-
-  The evolution of the state of a system over time is depicted by a
-  timeline diagram in which the horizontal axis is the time axis or t-axis.
-
-  <p>
-  Figure 1 shows states of a system with two agents \(u\) and
-  \(v\).
-  
-  Each horizontal line shows the state of an agent at each point in
-  time. 
-
-  The lower horizontal line shows the states of agent v
-  and the upper horizontal line shows the states of agent u.
-
-
-    <figure>
-    <img
-    src="Model/Model.001.jpeg"
-    alt="Fig1" style="width:100%"> 
-    <figcaption>Fig.1: Example: Timeline</figcaption>
-</figure>
-
-  
-
-  <p class="w3-text-teal">Representation of execution of a receive</p>
-  
-An execution of a receive is represented by a rectangle, and
-the length of the rectangle represents the time to execute the
-  receive.
-
-For example, rectangles 1 and 4 represent receives executed by agent
-<code>u</code>, while rectangles 2 and 3 represent receives executed by 
-<code>v</code>.
-
-  The state of the agent changes as the receive is executed and is
-specified at each point in the rectangle.
-
-<p>
-Horizontal edges between successive executions of receives on the
-timeline of an agent are labeled with the 
-state of the agent at those points.
-
-For example, the state of agent <code>v</code> between its second and
-third <code>receives</code> is <code>v2</code>.
-
-
-  <p class="w3-text-teal">Representation of a message</p>
-  Each message is represented by a line which is labeled with the
-message.
-
-The line starts from the point on the sender's timeline at the time that the
-message is sent.
-
-The line ends at the point on the receiver's timeline at the time that the
-receiver starts executing the <code>receive()</code> which receives
-  the message.
-
-For example, messages m2 and m3 are sent by \(u\) while it is executing its
-  first <code>receive</code>.
-
-
-<p class="w3-text-teal">Representation of an instant in time</p>
-An instant at time T is represented by a vertical line T units to the
-right of the origin.
-
-The state of an agent at time T is the state where the vertical line
-at T intersects the horizontal line representing the agent's state.
-
-The state of a channel at T is shown by the labels of the channels' message lines
-that intersect the vertical line at T.
-
-<p>
-In figure 1, time T is represented by the dotted red line.
-At T, agent
-<code>u</code> is executing its first receive and <code>v</code> is
-executing its second; channel
-<code>(v, u)</code> contains a single message; <code>m4</code>, and 
-channel <code>(u, v)</code> is empty. 
-
-<p>
-The initial state of the timeline is given by the initial states of
-agents and channels and is shown by the labels of the edges
-representing agent states and messages from the point at time 0 -- the
-point at which execution starts.
-
-
-
-<p class="w3-text-teal">A system may have many timelines</p>
-The hardware on which a distributed algorithm executes may be unspecified.
-
-The operating system executing a distributed algorithm may interrupt
-an agent executing a <code>receive</code> and restart it later.
-
-Some agents may execute on slower processors than others.
-
-The communication mechanism may get congested causing message
-delays to change.
-
-We can determine properties of the timelines of a distributed
-algorithm only if we have specifications of the operating system and
-hardware on which the algorithm executes, and we often don't have the
-information. 
-
-
-
-<p class="w3-text-teal">The passage of time</p>
-The passage of time, as determined by an agent's local clock, may play
-a role in the behavior of a system.
-
-For example, a receive function of an agent may have a sleep statement
-(e.g., <code>time.sleep(t)</code> in Python).
-
-The system behavior may depend on the fact that one agent sleeps for 1
-second while another agent sleeps for 10 seconds.
-
-Local clocks are not perfectly synchronized; however, a system
-designer may know that clocks are usually accurate and may use clocks
-in designing the system.
-
-<p>
-Next, we describe a model that ignores time and makes no assumptions
-about how far local clocks may drift from each other and from true
-time.
-
-Later, we discuss the advantages and disadvantages of using our weak
-model.
+ 
 
 
 
   <!----------------------------------------------->
-  <!----------------------------------------------->
-<h3 class="w3-text-teal">Events</h3>
+  <h4 class="w3-text-teal">Dataflow Graph</h4>
 <!----------------------------------------------->
 
-The top diagram of figure 2 depicts an execution of
-<code>receive</code> as time progresses, and the lower diagram ignores
-time and restricts attention to the states of the agent before and
-after execution of the receive.
 
-    <figure>
-    <img
-    src="Model/Model.002.jpeg"
-    alt="Fig1" style="width:100%"> 
-    <figcaption>Fig.2: Representation of receive with and without time</figcaption>
-</figure>
+A dataflow graph of a computation is a labeled, directed, acyclic
+  graph  that shows the flow of data between agents during the
+  computation. 
 
-An execution of a <code>receive</code> by an agent
-<code>u</code> is specified by an <i>event at <code>u</code></i>.
+  The vertices of the graph represent steps of the computation.
 
-An event in which an agent <code>u</code> executes
-  <code>receive(msg, v)</code> is a 4-tuple:
-<ol>
+  The edges of a dataflow graph are as follows.
+
+  <ol>
   <li>
-  <code>u</code>'s state before it executes the <code>receive</code>,
+There is an edge from a step at an agent to the next step at that
+agent; this edge is labeled with the state of the agent between the
+events and is called an <i>agent edge</i>.
   </li>
   <li>
-  the message, <code>msg</code>, received and the sender, <code>v</code>, of the message,
-  </li>
-  <li>
-  <code>u</code>'s state after it completes execution of the <code>receive</code>, and  
-  </li>
-  <li>
-  for each output channel of <code>u</code>, the sequence of messages
-  sent and the receivers of the messages.
+There is an edge from a step in which a message is sent
+to the step at which the message is received; this edge is called a
+  <i>message edge</i>. The edge is labeled with a pair \((m, w)\)
+  where \(m\) is the message and \(w\) is the sender of the message.
   </li>
 </ol>
-The first two elements of the tuple are called the <i>inputs to the event</i>, and
-the last two elements are the <i>outputs of the event</i>.
 
-An event does not specify the duration of a receive, or the state of
-an agent while it executes a receive, or when messages are sent during
-execution of a receive.
+<h5 class="w3-text-teal">Representing Initial and Final States by
+Fictitious Steps</h5>
+A computation is specified by its initial state and a sequence of
+events.
+
+For convenience, we represent the initial state of an agent \(u\) and
+the initial states of \(u\)'s output channels be a fictitious step,
+\(u_{init}\).
+
+The vertex representing this step has no inputs.
 
 <p>
-An agent's <code>receive</code> function can be specified by the set
-of events at that agent.
+The agent edge from this step is labeled with \(u\)'s initial state.
 
-We say that an agent <i>executes event e</i> to mean that the agent executes a
-<code>receive</code> that is specified by <i>e</i>.
+The message edges from this step to steps of an agent \(v\) are
+labeled with the messages in the channel \((u, v)\) in the initial
+state of the computation.
 
-An agent changes state by executing a sequence of events where the
-agent's state after the \(i\)-th event is its state before the
-\(i+1\)-th, for all \(i\).
+<p>
+By symmetry, we use a fictitious step \(u_{fini}\) to represent the final
+state of \(u\) and the final states of channels to \(u\).
+
+With the introduction of fictitious initial and final steps for each
+agent we can treat a computation as a sequence of steps where the
+initial state is specified by initial steps.
+
+
+<p>
+We adopt the convention that agent edges are horizontal.
+
+So, all edges of the same agent are on the same horizontal line.
+
+<p>
+We use <i>step</i> of a computation and <i>vertex</i> of its dataflow
+graph interchangeably, with the meaning understood by context.
 
 
 
+<h6 class="w3-text-teal">Dataflow Graphs are Acyclic</h6>
+A dataflow graph of a computation is acyclic because each edge is directed from a step
+to a later step of the computation.
 
-  <!----------------------------------------------->
-  <h3 class="w3-text-teal">Dataflow</h3>
+<!---------------------------------------->
+<h4 class="w3-text-teal">Flow of Data in a Computation</h4>
+The edges of the dataflow graph of a computation show the flow of data
+into and out of each step of a
+computation.
+
+Data -- in the form of the agent's state -- flows from a step of an
+agent to the next step at that agent.
+
+Data -- in the form of message contents -- flows from a step in which
+a message is sent to the step in which the message is received.
+
+<h6 class="w3-text-teal">The Relation: "data flows from" between Steps
+of a Computation</h6>
+We define a relation "data flows from" between steps of a computation
+as follows: for steps \(x, y\) of a computation, data flows from
+\(x\) to \(y\) exactly when there is a path in the computation's dataflow graph
+from \(x\) to \(y\).
+
+<p>
+We say that steps \(x\) and \(y\) are <i>independent</i> if data does not
+flow from  \(x\) to \(y\) or from \(y\) to \(x\).
+
 <!----------------------------------------------->
-A dataflow graph is an abstraction of a timeline diagram.
-
-An execution of a receive is represented by a vertex in the dataflow
-graph whereas it is represented by an evolution of the agent's state
-in a timeline.
-
-The lower diagram of figure 3 is the dataflow abstraction of the
-timeline shown in the upper diagram.
-
+<h4 style="color:red;">Example of Dataflow</h4>
 
   
     <figure>
     <img
     src="Model/Model.003.jpeg"
     alt="Fig3" style="width:100%"> 
-    <figcaption>Fig.3: Example: Dataflow Graph</figcaption>
+    <figcaption>Figure Dataflow_1: Example: Dataflow Graph</figcaption>
 </figure>
 
-<h5 class="w3-text-teal">Vertices in Dataflow</h5>
+<p>
+The figure Dataflow_1 shows the dataflow graph for a computation of a
+system consisting of two agents <code>u</code> and <code>v</code>, and
+with two channels <code>(u, v)</code> and <code>(v, u)</code>.
 
-A dataflow graph of a system is a labeled, directed, acyclic graph.
-
-Each vertex represents the execution of an event at an agent.
-
-The inputs and outputs of each vertex in a dataflow graph are
-specified by the event that the vertex represents.
+The computation is defined by its initial state and event sequence [1,
+2, 3, 4]. The initial states are represented by steps 0.
 
 <p>
-For example, vertex 1 in the graph represents execution of an event at agent
-<code>u</code> specified by the 4-tuple: (1) the state before the event is
-<code>u1</code>; (2) a single message is received in the event and the
-message is <code>m1</code> from <code>v</code>; (3) the state after
-the event is <code>u2</code>; (4) a single message <code>m3</code> is
-sent in the event and this message is  sent to <code>v</code>.
+The top horizontal edges represent data flow between steps at agent
+<code>u</code> and the lower horizontal edges represent data flow
+between steps at agent <code>v</code>.
 
-<h5 class="w3-text-teal">Edges in Dataflow</h5>
+For example, the labels <code>u1, u2, u3</code> are the states of
+agent <code>u</code> initially and after steps 1 and 4, respectively.
 
-The edges are in the same as in a timeline and are as follows:
+Likewise, the labels <code>v1, v2, v3</code> are the states of
+agent <code>v</code> initially and after steps 2 and 3, respectively.
+
+
+
+<p>
+Message edges are labeled <code>m1, m2, m3, m4</code>.
+
+Initially channel <code>(u, v)</code> contains message <code>m2</code>
+and channel <code>(v, u)</code> contains message <code>m1</code>.
+
+Message <code>m3</code> is sent in step 1 and received in step 3, and
+message <code>m4</code> is sent in step 3 and received in step 4.
+
+<p>
+Vertex 1 in the graph represents execution of a step at agent
+<code>u</code>.
+This step is the execution of an event specified by the following
+4-tuple:
 <ol>
   <li>
-There is an edge from an event at an agent to the next event at that
-agent; this edge is labeled with the state of the agent between the
-events and is called an <i>agent edge</i>.
+  The state of \(u\) before the event is <code>u1</code>.
   </li>
   <li>
-There is an edge from an event in which a message is sent
-to the edge at which the message is received; this edge is labeled
-  with the message and is called a <i>message edge</i>.
+  The message received in the event is <code>m1</code> from agent
+  <code>v</code>.
+  </li>
+  <li>
+  The state  of \(u\) after the event is <code>u2</code>.
+  </li>
+  <li>
+  A single message <code>m3</code> is sent in the event and this
+  message is  sent to agent <code>v</code>.
   </li>
 </ol>
 
+The input and output edges of the vertex are the inputs and outputs
+(respectively) of the event.
+
+
 
 
   <!----------------------------------------------->
-  <h5 class="w3-text-teal">Initial and Final States</h5>
+  <h3 class="w3-text-teal">Computations and Dataflow Graphs</h3>
 <!----------------------------------------------->
 
+<i>Data flows forwards in a computation</i> -- i.e. If data flows from a step \(x\)
+to a step \(y\) in a computation then \(x\) appears before \(y\) in
+the computation.
 
 <p>
-A dataflow graph starts in an initial state of the system.
+It is sometimes helpful to use the negated version of this observation
+-- Data does not flow backward in a computation. If \(x\) appears before \(y\) in
+a computation then there is no data flow from \(y\) to \(x\)
+<p>
+Next we prove properties about sequences of steps in which data flows forwards.
 
-A dataflow graph may be finite or infinite.
+We start with the following lemma.
 
-A dataflow graph has an initial vertex, labeled <i>O</i>, for each
-agent.
 
-The output edges from an initial vertex at an agent <code>u</code>
-specify <code>u</code>'s initial state and the states of
-<code>u</code>'s output channels.
+
+<h5 class="w3-text-teal">Lemma: Switching Order of Adjacent
+Independent Steps</h5>
+
+Given a computation specified by  a sequence of
+steps \(E = [e_{0}, \ldots, e_{i}, e_{i+1}, \ldots, e_{N}]\),
+
+let \(E' = [e_{0}, \ldots, e_{i+1}, e_{i}, \ldots, e_{N}]\) be the
+permutation of \(E\) obtained by switching the order of \(e_{i+1}\) and
+\(e_{i}\).
+
+If data flows forward in \(E'\) then \(E'\) is a computation.
+
+<p class="w3-text-teal">Proof</p>
+
+
+Because \(e_{i}\) precedes \(e_{i+1}\) in E there is no data flow from
+\(e_{i+1}\) to \(e_{i}\).
+
+So the inputs to \(e_{i}\) remain the same whether
+\(e_{i+1}\) is executed before or after \(e_{i}\).
+
+<p>
+Because data flows forwards in \(E'\) there is no data flow from
+\(e_{i}\) to \(e_{i+1}\).
+
+So the inputs to \(e_{i+1}\) remain the same whether
+\(e_{i}\) is executed before or after \(e_{i+1}\).
+
+<p>
+So events \(e_{i}\) and \(e_{i+1}\) are independent.
+Switching the order in which they are executed does not change
+the inputs and outputs of steps in the computation. 
+
+
+
+<hr class="new2">
+<h4 style="color:blue;">Theorem: Permutations of Computations</h4>
+<p style="color:blue;">
+Given a computation specifed by a sequence of
+steps \(E\), all permutations of \(E\) in which data flows forwards
+are also computations.
+</p>
+<hr class="new2">
+
+
+
+<h5 class="w3-text-teal">Proof</h5>
+Let \(E'\) be a permutation of \(E\) where data flows forwards in
+\(E'\).
+
+The theorem holds trivially if \(E\) and \(E'\) are identical.
+
+<p>
+If \(E\) and \(E'\) are not identical then there exists an adjacent
+pair of steps \(x, y\) in \(E\) where \(x\) occurs before \(y\) in
+\(E\), and \(y\) occurs before \(x\) in \(E'\).
+
+<p>
+Because \(E\) is a computation, data flows forwards in \(E\) and
+therefore there is no data flow from \(y\) to \(x\).
+
+<p>
+We are given that data flows forwards in \(E'\). So there is no
+data flow from \(x\) to \(y\).
 
 
 <p>
-The graph representing a finite execution of a system has a vertex labeled
-<i>N</i> for each agent, representing the final state.
+Therefore \(x\) and \(y\) are independent.
+Let \(H\) be the sequence of steps obtained from \(E\) by switching
+the order of \(x\) and \(y\).
 
-This vertex is called the final vertex of the agent.
-
-The input edges to a final vertex at an agent <code>u</code>
-specify <code>u</code>'s final state and the final states of
-<code>u</code>'s input channels.
-
-The initial and final vertices do not represent events.
+From the lemma "Switching Order of Adjacent Steps" it follows
+that \(H\) is also a computation.
 
 <p>
-A finite dataflow graph represents an execution of the system from the
-initial state to the final state of the graph.
+The number of out of order pairs between \(H\) and \(E'\) is less than
+that between \(E\) and \(E'\).
+
+By repeatedly switching of independent adjacent out of order pairs
+the sequence \(E'\) is reached.
 
 
- 
+
+
+
   <!----------------------------------------------->
-  <h4 class="w3-text-teal">Events and Steps</h4>
+  <h4 class="w3-text-teal">Relationship to Topological Sorts</h4>
 <!----------------------------------------------->
+The theorem on permutations of event sequences can be expressed in
+terms of topological sorts.
 
-An agent can execute multiple receives specified by the same event.
-
-An event is a 4-tuple that specifies a state transition of an agent.
-
-Each execution of an event by an agent is called a <i>step</i> taken by the
-agent to distinguish an execution of an event from the event itself.
-
-Each vertex in a dataflow is a step taken by an agent.
+A <a href="https://en.wikipedia.org/wiki/Topological_sorting">
+  topological sort</a> of a directed acyclic graph is a sequence of
+  vertices of the graph where for every edge \((x, y)\) in the graph,
+\(x\) appears before \(y\) in the sequence.
 
 
- 
+<hr class="new2">
   <!----------------------------------------------->
-  <h4 class="w3-text-teal">Time in Dataflow: Before and After</h4>
-<!----------------------------------------------->
-The only concept of time in a dataflow is that some steps occur before
-other steps.
-
-A message is sent <i>before</i> it is received.
-
-Equivalently, a message is received <i>after</i> it is sent.
-
-Later steps at an agent occur after earlier steps at the agent.
-
-<i>before</i> and <i>after</i> are partial orders on steps in a dataflow.
-
-<p>
-A step \(v\) occurs before a step \(v'\) in a dataflow exactly when
-there is a path from \(v\) to \(v'\).
-
-For example, steps 0, 1 and 2 occur before step 3.
-
-Likewise steps 4 and N occur after step 3.
-
-Step 1 is neither before nor after step 2.
-
-
-
- 
-  <!----------------------------------------------->
-  <h3 class="w3-text-teal">Advantages and Disadvantages of the
-  Dataflow Model</h3>
+  <h4 style="color:blue;">Theorem: Topological Sorts of Dataflow</h4>
 <!----------------------------------------------->
 
-<p class="w3-text-teal">Disadvantages</p>
-The obvious disadvantage of dataflow is that ignores time which can
-play a role in ensuring that a system behaves correctly.
+<p style="color:blue;">
 
-Moreover a model that doesn't deal with time cannot deal with
-specifications that include time.
+All topological sorts of a dataflow graph are computations.
+</p>
+<hr class="new2">
 
-Also time plays a critical role in system performance.
-
-<p class="w3-text-teal">Advantages</p>
-Analyzing simpler models is easier than analyzing complex ones.
-
-A single dataflow represents all timelines with the same flow
-structure and arbitrary timing; so, a property of the dataflow is also
-a property of all timelines that the dataflow represents.
-
-We will prove properties of all dataflows of a system, and these
-properties also hold for all timelines.
-
-<p>
-We use the simplest model adequate for the task at hand.
 
 
 
 <!---------------------------------------->
 <h5 class="w3-text-teal">Next</h5>
 <!---------------------------------------->
+The next pages describes
 <p>
-<a href="Computations.html">Computations
+<a href="Timelines.html">Cuts in Dataflow Graphs
 </a>
-shows how a while loop of a sequential program can be used to analyze
-distributed algorithms.
+which are used in developing detection algorithms such as termination
+detection and deadlock detection.
+
+<p>
+<a href="ModelExamples.html">Examples</a>
 
 <p>
 <a href="ModelFAQ.html">Frequenty Asked Questions</a>
@@ -510,3 +441,5 @@ function w3_close() {
 
 </body>
 </html>
+
+
