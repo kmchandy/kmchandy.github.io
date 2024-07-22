@@ -82,10 +82,10 @@ hr.new1 {
 <!----------------------------------------------------------------->
 
    <!----------------------------------------------------------------->
-  <h3 class="w3-text-teal">A Simple Example (continue)</h3>
+  <h3 class="w3-text-teal">A Simple Example (continued)</h3>
 <!----------------------------------------------------------------->
   This example is a continuation from the example in
-  <a href="BasicsStatesExamples">States</a>.
+  <a href="BasicsStatesExamples.html">States</a>.
 
   
 Two children, X and Y, are tossing balloons to each other.
@@ -111,8 +111,61 @@ The state of a channel is the number of balloons in it.
 
 The state of an agent (X or Y) is the countdown value nX or nY, respectively.
 
-<h4 class="w3-text-teal">A Computation: A Sequence of States</h4>
-An example of a sequence of state changes is as follows.
+<h4 class="w3-text-teal">An Example of a Computation</h4>
+An example of a sequence of state changes is as follows, and is also
+  shown in the diagrams below where the computation is State 1 to
+  State 2 to .. State 6.
+
+  <h6 class="w3-text-teal">A Computation shown as a Sequence of Diagrams</h6>
+      <figure>
+    <img
+    src="BasicsStatesExamples.001.jpeg"
+    alt="Fig1" style="width:40%"> 
+    <figcaption>Figure State 1: Initial State</figcaption>
+  </figure>
+  
+      <figure>
+    <img
+    src="BasicsStatesExamples.002.jpeg"
+    alt="Fig2" style="width:40%"> 
+    <figcaption>Figure State 2. Y receives balloon. nY becomes 1</figcaption>
+</figure>
+
+  
+      <figure>
+    <img
+    src="BasicsStatesExamples.003.jpeg"
+    alt="Fig3" style="width:40%"> 
+    <figcaption>Figure State 3. X receives balloon. nX becomes 0</figcaption>
+</figure>
+
+  
+      <figure>
+    <img
+    src="BasicsStatesExamples.004.jpeg"
+    alt="Fig4" style="width:40%"> 
+    <figcaption>Figure State 4.  Y receives balloon. nY becomes 0</figcaption>
+</figure>
+
+  
+      <figure>
+    <img
+    src="BasicsStatesExamples.005.jpeg"
+    alt="Fig5" style="width:40%"> 
+    <figcaption>Figure State 5. X pops balloon. nX becomes 1</figcaption>
+</figure>
+
+  
+      <figure>
+    <img
+    src="BasicsStatesExamples.006.jpeg"
+    alt="Fig6" style="width:40%"> 
+    <figcaption>Figure State 6. X pops balloon. nX becomes 0</figcaption>
+</figure>
+
+<h4 class="w3-text-teal">An Example of a Computation</h4>
+
+
 <ol>
   <li>
   Initial State: Channel (X, Y) has one balloon and channel (Y, X) has
@@ -194,8 +247,18 @@ to this event:
 So, this event can be executed in the initial state.
 
 <p>
-You can now construct the following computation.
+You can now construct a different computation where the transition
+from the initial state is to a state shown in the following diagram:
 
+ 
+      <figure>
+    <img
+    src="BasicsStatesExamples.007.jpeg"
+    alt="Fig6" style="width:40%"> 
+    <figcaption>Figure State 6. X pops balloon. nX becomes 0</figcaption>
+</figure>
+
+<h6 class="w3-text-teal">Example of a Different Computation</h4>
 <ol>
   <li>
   Initial State: Channel (X, Y) has one balloon and channel (Y, X) has
@@ -238,6 +301,11 @@ You can now construct the following computation.
   </li>
 </ol>
 
+Some states (e.g. State 2) in the first example of a computation don't occur in the
+second example, and vice versa.
+
+
+
 <p>
 A system may have many computations.
 
@@ -261,20 +329,46 @@ An invariant of this system is:
 <p>
 Number of balloons is at most 2
 <p>
-which is equivalent to: <code>nX + nY + (X, Y) + (Y, X) <= 2</code>
+which is equivalent to: <code>(X, Y) + (Y, X) <= 2</code>
 <p>
 (Here we are abusing notation using (X, Y) for a channel and also for
 the state of the channel.)
 
 <p>
-To prove that this predicate (Boolean formula on variables of the
-program) is an invariant we prove that (1) this predicate holds initially
-(i.e., the formula is true initially) and (2) if it holds before any
-step then it holds after the step.
+To prove that this condition is an invariant we prove that (1) it holds initially
+and (2) if it holds before any
+event of the system then it holds after the event.
+The proof is straightforward.
+
+
+<h5 class="w3-text-teal">Another Invariant</h5>
+Another invariant is:
+<p>
+if nX and nY are both positive then there are two balloons in the
+system
+</p>
+which can be written as:
+<p>
+\(
+((X, Y) + (Y, X) = 2) \vee (nX \leq 0) \vee (nY \leq 0)
+\)
+<p>
+The proof is straightforward.
+The condition holds initially.
+The execution of any event in which agent Y receives a balloon leaves the
+number of balloons unchanged if nY > 0.
+Similarly for X.
+
+
+<h5 class="w3-text-teal">Yet another Invariant</h5>
+The following invariant is proved easily: nX and nY are nonnegative. 
+
 
 <h5 class="w3-text-teal">Loop Variant</h5>
 To prove that the function terminates we use the loop variant:
+<center>
 <code>nX + nY + (X, Y) + (Y, X)</code>
+</center>
 
 <p>
 The loop variant is a function of the variables of the system.
@@ -284,20 +378,372 @@ integers and is bounded below.
 
 The bound is not important. In our example, a bound is 0.
 
+
 <p>
-We prove that the computation terminates by showing that each step
-reduces the variant function.
+We show that execution of any event reduces the variant function.
+When agent Y receives a balloon if nY is positive then nY
+decreases thus decreasing the variant function, and if nY is 0 then
+(X, Y) decreases thus decreasing the variant function.
+
+Similarly for X.
+
+<h5 class="w3-text-teal">Termination Condition</h5>
+We have shown that computations terminate and we given examples of
+invariants.
+
+What can we prove about the state of the system when computation
+terminates?
+
+<p>
+Let's prove that nX or nY is 0 at termination.
+
+<p>
+All channels are empty at termination.
+
+From the invariant if <code>(X, Y) + (Y, X)</code> \(\neq) 0 then nX
+or nY is 0.
 
 
+
+  <!--------------------------------------------------------------->
+  <h3 class="w3-text-teal">More Examples of Invariants and Loop Variants</h3>
+
+  We reason about the correctness of many distributed algorithms in
+  in the same way that we reason about sequential
+  <code>while</code> loops, by using invariants and loop variants.
+
+
+
+
+  <!--------------------------------------------------------------->
+  <h3 class="w3-text-teal">Loop Invariant of a Sequential While Loop</h3>
+  
+  A <a href="https://en.wikipedia.org/wiki/Loop_invariant">
+  loop invariant</a>
+  is an assertion about the state of the program that holds before and
+  after each iteration of the loop.
+
+  You can look up
+
+  <a
+  href="https://www.cs.cornell.edu/courses/cs2112/2020fa/lectures/lecture.html?id=loopinv">
+  many examples</a> of loop invariants on the web.
+
+
+  <!----------------------------------------------->
+  <h5 class="w3-text-teal">Example</h5>
+  
+  A loop invariant in the following greatest common
+  divisor (gcd) program is shown in the body of the loop as the
+  assertion <code>gcd(x, y) = gcd(X, Y)</code>.
+  
+    <pre>
+x, y = X, Y
+while x != y:
+  # assertion: gcd(x, y) = gcd(X, Y)
+  if x > y: x = x - y
+  else: y = y - x
+  </pre>
+
+
+
+
+
+
+  <!--------------------------------------------------------------->
+  <h3 class="w3-text-teal">Invariant of a Distributed System</h3>
+  
+  An invariant of a distributed system is a
+  predicates that holds in all states reachable from initial states.
+
+  An invariant of a distributed system is the loop invariant of the
+  following while loop.
+
+  An invariant <code>Inv</code> is shown
+  as an assertion in the body of the loop.
+  
+  <pre>
+while there exists a nonempty input channel in the system:
+   # assertion: Inv
+   select a nonempty channel (u, v) in the system
+   let the head of channel (u, v) be msg
+   v executes receive(msg, u)
+  </pre>
+
+
+
+  
+  <!----------------------------------------------->
+  <h5 class="w3-text-teal">Example</h5>
+  
+  We are given a strongly connected network of agents -- i.e.,
+  there is a path from each agent to every other agent.
+
+  Each agent has a local variable <code>n</code>, which is initialized
+  as a positive integer.
+  
+  Let GCD be the gcd (greatest commond divisor) of the
+  initial values of <code>X.n</code> of all agents <code>X.n</code>.
+
+  The following distributed algorithm terminates and at termination
+  <code>X.n = GCD</code> for all agents <code>X.n</code>.
+
+In the code, <code>successors</code> is the list of successor agents
+in a network of agents, and the agent only sends messages to its
+successors. 
+
+<pre>
+def receive(message, sender):
+   if n != message:
+      n = gcd(n, message)
+      for successor in successors:
+         send(n, successor)
+</pre>
+
+An invariant of the distributed algorithm is as follows.
+The gcd of:
+<br>
+<i>all messages in channels and 
+<code>X.n</code> for all agents <code>X</code></i>
+<br>
+is GCD.
+
+  
+  <!----------------------------------------------->
+  <p class="w3-text-teal">Proof</p>
+  
+The proof that the assertion holds initially is trivial.
+
+Prove that if the assertion holds before any event 
+then it continues to hold after the event.
+
+<p>
+Let the event be agent <code>A</code> receiving a message
+<code>m</code>.
+After the event, <code>m</code> is no longer in the channel;
+<code>n = gcd(n, m)</code>; and messages with the new value of
+<code>n</code> are in the output channels from <code>A</code>.
+The proof that the assertion continues to hold in the post-event state
+is straightforward.
+
+
+  <!----------------------------------------------->
+<h5 class="w3-text-teal">Example</h5>
+
+Another invariant for the gcd example, given earlier, is as follows.
+For all channels <code>(X, Y)</code> in the network:
+<ol>
+  <li>
+  Channel <code>(X, Y)</code> is empty and <code>X.n</code> is a
+  multiple of <code>Y.n</code>, or
+  </li>
+  <li>
+  The last message in channel <code>(X, Y)</code> is <code>m</code>
+  where <code>m = X.n</code>.
+  </li>
+</ol>
+
+  <!----------------------------------------------->
+  <p class="w3-text-teal">Proof</p>
+  
+The assertion holds initially because the second condition holds. 
+
+Prove that if the assertion holds before any event
+then it continues to hold after the event.
+
+<p>
+When agent <code>X</code> executes a receive that changes
+<code>X.n</code> the agent sends a message <code>m</code> to
+<code>Y</code> where <code>m = X.n</code>, and so the second condition
+holds.
+
+<p>
+When agent <code>Y</code> receives <code>m</code> the agent sets
+<code>Y.n = gcd(Y.n, m)</code>, and so <code>m</code> is a multiple of
+the new value of <code>Y.n</code>.
+
+If channel <code>(X, Y)</code> remains nonempty then the second
+condition holds.
+
+If <code>(X, Y)</code> becomes empty then the first condition holds
+because <code>m = X.n</code> and <code>m</code> is a multiple of
+<code>Y.n</code>.
+
+
+
+  <!--------------------------------------------------------------->
+<h3 class="w3-text-teal">Loop Variant</h3>
+
+<h5 class="w3-text-teal">Question about Loop Variants</h3>
+What is an example of a loop variant for the following loop?
+    <pre>
+x, y = X, Y
+while x != y:
+  # assertion: gcd(x, y) = gcd(X, Y)
+  if x > y: x = x - y
+  else: y = y - x
+  </pre>
+
+<h5 class="w3-text-teal">Answer</h3>
+<code>f(x, y) = x + y</code> is an example of a loop variant for the
+following reasons.
+<ol>
+  <li>
+  <code>f</code> is a function of the state of the program.
+  </li>
+  <li>
+<code>f</code> has integer values.
+  </li>
+  <li>
+<code>f</code> is bounded below. The bound is 2 because <code>x</code>
+  and <code>y</code> are bounded below because of the invariants
+  <code>x</code> \(\geq\) 1, and <code>y</code> \(\geq\) 1.
+  The precise bounds don't matter.
+  </li>
+  <li>
+  Each execution of the loop decreases <code>f</code>.
+</ol>
+We can carry out an induction on <code>f</code> because <code>f</code>
+has integer values and is bounded below.
+
+
+
+<h4 class="w3-text-teal">Question about Loop Variants in Distributed Algorithms</h4>
+Let's look at the example of the distributed algorithm given
+earlier? The example is repeated below.
+
+<p>
+  
+  We are given a strongly connected network of agents -- i.e.,
+  there is a path from each agent to every other agent.
+
+  Each agent has a local variable <code>n</code>, which is initialized
+  as a positive integer.
+  
+  Let GCD be the gcd (greatest commond divisor) of the
+  initial values of <code>X.n</code> of all agents <code>X.n</code>.
+
+In the code, <code>successors</code> is the list of successor agents
+in a network of agents, and the agent only sends messages to its
+successors. 
+
+<pre>
+def receive(message, sender):
+   if n != message):
+      n = gcd(n, message)
+      for successor in successors:
+         send(n, successor)
+</pre>
+
+<h5 class="w3-text-teal">Question</h5>
+What is an example of a loop variant for the distributed algorithm?
+
+<h5 class="w3-text-teal">Answer</h5>
+Let <code>f</code> be the tuple <code>(N, M)</code> where
+<code>N</code> is the sum of <code>X.n</code> for all agents
+<code>X</code>, and <code>M</code> is the total number of messages in
+channels.
+
+<p>
+Comparisons of tuples are made lexicographically.
+
+For example (2, 1) > (1, 10), and (2, 1) < (2, 2).
+
+<p>
+<code>f</code> is bounded below by (0, 0).
+
+<p>
+An induction can be carried out on a tuple of integers.
+
+Next we show that the execution of each event reduces <code>f</code>.
+
+<p>
+When an agent <code>X</code> receives a message <code>m</code>, 
+
+<ol>
+  <li>
+  if <code>X.n</code> \(\neq\) <code>m</code> then <code>X.n</code>
+  becomes <code>gcd(X.n, m)</code>, and so the new value of
+  <code>X.n</code> is less than its previous value, and so execution
+  of the event decreases <code>N</code> which decreases <code>f</code>.
+  </li>
+  <li>
+  if <code>X.n</code> \(=\) <code>m</code> then the event removes
+  message <code>m</code> from a channel and does not add messages to
+  channels. So the event decreases <code>M</code> which decreases
+  <code>f</code>.
+  </li>
+</ol>
+
+
+
+  <!--------------------------------------------------------------->
+<h3 class="w3-text-teal">Termination Condition of a While Loop</h3>
+What can we say about the state at termination of the while loop in
+the gcd example:
+
+    <pre>
+x, y = X, Y
+while x != y:
+  # assertion: gcd(x, y) = gcd(X, Y)
+  if x > y: x = x - y
+  else: y = y - x
+  </pre>
+
+The while loop terminates when <code>x = y</code>.
+From the invariant, at termination:
+<pre>
+gcd(x, y) = gcd(x, x) = x = gcd(X, Y)
+</pre>
+Therefore <code>x</code> and <code>y</code> are <code>gcd(X, Y)</code>
+at termination of the while loop.
+
+  <!--------------------------------------------------------------->
+<h3 class="w3-text-teal">Termination Condition of a Distributed Algorithm</h3>
+
+What is the termination condition of the distributed gcd algorithm in
+which the <code>receive</code> of each agent is as follows?
+<pre>
+def receive(message, sender):
+   if n != message:
+      n = gcd(n, message)
+      for successor in successors:
+         send(n, successor)
+</pre>
+
+At termination all channels are empty.
+
+From the invariant, if channel (X, Y) is empty then X.n is a multiple
+of Y.n.
+
+<p>
+Therefore when all channels are empty, for every channel (X, Y) in the
+system X.n is a multiple of Y.n.
+
+Because the directed graph of agents and edges specified as
+<code>successors</code> of agents is strongly
+connected:
+<br>
+<i> for all agents X, Y in the system: X.n is a multiple of Y.n</i>
+
+<p>
+Therefore X.n = Y.n for all agents X, Y.
+From the invariant, X.n is GCD.
+
+<p>
+
+
+<!---------------------------------------->
 <h5 class="w3-text-teal">Next</h5>
-
-
-<a href="BasicsStates.html">
-States of a Distributed System.</a>
+<!---------------------------------------->
 
 
 <p>
-<a href="BasicsReview.html">Review material for this page</a>
+The next webpage discusses
+<a href="Model.html">data flow in computations</a>.
+
+<p>
+<a href="ComputationsFAQ.html">Frequenty Asked Questions</a>
 
 
 
