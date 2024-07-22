@@ -1,4 +1,4 @@
-<title>DistributedSystemModels/Basics.html</title>
+<title>DistributedSystemModels/BasicsEExamples.html</title>
 
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
@@ -77,60 +77,306 @@ hr.new1 {
 <div class="w3-twothird w3-container">
 
 
+
+
 <!---------------------------------------------------------------->
-    <h1 class="w3-text-teal">Basics Examples</h1>
+    <h2 class="w3-text-teal">Basics: Examples</h2>
 <!----------------------------------------------------------------->
+  Please look at the
+  <a href="../CODE_EXAMPLES">Python examples that use the Agent
+  class</a> in addition to the examples below.
+
+
+
+<!---------------------------------------------------------------->
+    <h4 class="w3-text-teal">Basics: Examples Movies</h4>
+  <!----------------------------------------------------------------->
+  <a href="BasicsExamplesChannels_1.MP4">10-second MP4 movie</a>:
+  Messages sent in different
+    channels may be delivered out of order.</a>
+
+  <!----------------------------------------------------------------->
+  <h4 class="w3-text-teal">Channels 1</h4>
+  <!----------------------------------------------------------------->
+  A system has agents \(A\), \(B\), and \(C\).
+
+  Initially the channel from \(A\) to \(A\) contains a "wakeup" message.
+
+  All other channels are empty.
+
+  <p>
+  Ignore the states of agents for the purposes of this question.
+
+  <h5 class="w3-text-teal">Question</h5>
+  Is the following scenario possible?
+  <ol>
+    <li>
+    Agent \(A\) receives a wakeup message and sends a message \(m_{1}\) to \(C\) and a
+  wakeup to itself.
+    </li>
+    <li>
+    Agent \(A\) receives a wakeup message and sends a message \(m_{2}\) to \(B\).
+    </li>
+    <li>
+    Agent \(B\) receives \(m_{1}\) from \(A\) and sends a message \(m_{3}\) to \(C\).
+    </li>
+    <li>
+    Agent \(C\) receives \(m_{3}\) from \(B\).
+    </li>
+    <li>
+    Agent \(C\) receives \(m_{2}\) from \(A\).
+    </li>
+  </ol>
+
+  <h5 class="w3-text-teal">Answer</h5>
+  Yes, the scenario is possible.
+
+  Messages sent on a channel are delivered in the order sent on that
+  channel.
+
+  Messages sent on <i>different</i> channels may not be received in
+  the order sent on those channels.
+
+  
+  
+  <!----------------------------------------------------------------->
+  <h4 class="w3-text-teal">Channels 2</h4>
+  <!----------------------------------------------------------------->
+  A system has agents \(A\) and \(B\).
+
+  Initially the channel from \(A\) to \(A\) contains a "wakeup" message.
+
+  All other channels are empty.
+
+  <p>
+  Ignore the states of agents for the purposes of this question.
+
+  <h5 class="w3-text-teal">Question</h5>
+  Is the following scenario possible?
+  <ol>
+    <li>
+    Agent \(A\) receives a wakeup message and sends a message \(m_{1}\) to \(B\) and a
+  wakeup to itself.
+    </li>
+    <li>
+    Agent \(A\) receives a wakeup message and sends a message \(m_{2}\) to \(B\) and a
+  wakeup to itself.
+    </li>
+    <li>
+    Agent \(B\) receives  \(m_{2}\) from \(A\)
+    </li>
+    <li>
+    Agent \(B\) receives  \(m_{1}\) from \(A\)
+    </li>
+ </ol>
+
+  <h5 class="w3-text-teal">Answer</h5>
+  No, the scenario is not possible.
+
+  Messages sent on a channel are delivered in the order sent on that
+ channel.
+
+ So \(A\) receives \(m_{1}\) from \(B\) before it receives \(m_{2}\)
+ from \(B\). 
+
+
+<!----------------------------------------------->
+<h4 style="color:red;">Example of a System</h4>
+Consider the example given in <a href="Basics.html">the previous
+ page.</a>
+
+ Assume that agent <code>neg</code> is the same as agent
+ <code>pos</code> except that <code>neg.my_data = [2, 4]</code>
+
+ At some point message 3 is in channel <code>(pos, total)</code> and
+ message 2 is <code>(neg, total)</code>, and these are the only
+ messages in the channel.
+
+ <p>
+ See Figure Agents and Channels Example 1.1
+
  
-  <!---------------------------------------------------->
-  <h4 style="color:red;">Example: Agent Network</h4>
-  <!---------------------------------------------------->
   
-  The figure below shows an agent network with agents \(A, B, C\).
-
     <figure>
     <img
-    src="DistributedSystemModels/DistributedSystemModels.001.jpeg"
-    alt="Fig1" style="width:50%"> 
-    <figcaption>Fig.1: Example: An Agent Network</figcaption>
-    </figure>
-
-
-
-  <!--------------------------------------------------->
-  <h4 style="color:red;">Example of Channel States</h4>
-  <!--------------------------------------------------->
-  
-The figure below shows a sequence of states <code>S0, S1, S2,
-S3</code> of a channel from agent <code>A</code> to agent
-<code>B</code>.
-
-    <figure>
-    <img
-    src="DistributedSystemModels/DistributedSystemModels.019.jpeg"
+    src="Basics_Diagram_2.001.jpeg"
     alt="Fig1" style="width:100%"> 
-    <figcaption>Fig.2: Example: States of a Channel</figcaption>
+    <figcaption>Figure Agents and Channels Example 1.1</figcaption>
 </figure>
 
-In state <code>S0</code> the channel is empty, i.e., its state is the
-empty queue.
+ <h5 class="w3-text-teal">Question</h5>
+ What changes occur if agent <code>total</code> receives the message
+ from <code>pos</code> and this is the first message that
+ <code>total</code> receives?
 
-When agent <code>A</code> sends message <code>M1</code> the state of
-the channel changes to <code>S1</code>, a queue consisting of the
-single message <code>M1</code>.
+ <h5 class="w3-text-teal">Answer</h5>
+ The message 3 on channel <code>(pos, total)</code> is removed from
+ the channel.
+ Agent <code>total</code>'s variable <code>sum</code> becomes 3 and
+ channel <code>(total, X)</code> contains message 3.
 
-The states after <code>A</code> sends <code>M2</code> and
-<code>B</code> receives a message are shown in the figure.
+ <p>
+ See Figure Agents and Channels Example 1.2
 
+ 
+    <figure>
+    <img
+    src="Basics_Diagram_2.002.jpeg"
+    alt="Fig2" style="width:100%"> 
+    <figcaption>Figure Agents and Channels Example 1.2</figcaption>
+</figure>
+
+ 
+<h5 class="w3-text-teal">Question</h5>
+ Same initial state as in the previous question.
+ Message 3 in channel <code>(pos, total)</code>,
+ message 5 in channel <code>(neg, total)</code>.
+
+ What changes occur if agent <code>total</code> receives the message
+ from <code>neg</code> and this is the first message that
+ <code>total</code> receives?
+
+ <h5 class="w3-text-teal">Answer</h5>
+ The message 2 on channel <code>(neg, total)</code> is removed from
+ the channel.
+ Agent <code>total</code>'s variable <code>sum</code> becomes 0 and
+ channel <code>(total, X)</code> contains message 0.
+
+
+ <p>
+ See Figure Agents and Channels Example 1.3
+
+ 
+    <figure>
+    <img
+    src="Basics_Diagram_2.003.jpeg"
+    alt="Fig2" style="width:100%"> 
+    <figcaption>Figure Agents and Channels Example 1.3</figcaption>
+</figure>
+
+
+ <h5 class="w3-text-teal">Question</h5>
+ Same starting state as in the previous two questions.
+ 
+ What changes occur if agent <code>total</code> receives the message
+ from <code>pos</code> and then from <code>neg</code>?
+
+ <h5 class="w3-text-teal">Answer</h5>
+ After agent <code>total</code> receives the message
+ from <code>pos</code> and then from <code>neg</code> the channels
+ from <code>pos</code> and <code>neg</code> to <code>total</code> are
+ empty, and the channel from <code>total</code> to <code>X</code> contains message 3
+ followed by message 1, and agent <code>total</code>'s 
+ variable <code>sum</code> is 1. 
+
+
+ <p>
+ See Figure Agents and Channels Example 1.4
+
+ 
+    <figure>
+    <img
+    src="Basics_Diagram_2.004.jpeg"
+    alt="Fig4" style="width:100%"> 
+    <figcaption>Figure Agents and Channels Example 1.4</figcaption>
+</figure>
+ 
+ <h5 class="w3-text-teal">Question</h5>
+ What changes occur if agent <code>total</code> receives the message
+ from <code>neg</code> and then from <code>pos</code>?
+
+ <h5 class="w3-text-teal">Answer</h5>
+ After agent <code>total</code> receives the message
+ from <code>neg</code> and then from <code>pos</code> the channels
+ from <code>pos</code> and <code>neg</code> to <code>total</code> are
+ empty, and the channel from <code>total</code> to <code>X</code> contains message 0
+ followed by message 3, and agent <code>total</code>'s 
+ variable, <code>sum</code>, is 3. 
+
+
+ <p>
+ See Figure Agents and Channels Example 1.5
+
+ 
+    <figure>
+    <img
+    src="Basics_Diagram_2.005.jpeg"
+    alt="Fig5" style="width:100%"> 
+    <figcaption>Figure Agents and Channels Example 1.5</figcaption>
+</figure>
+
+<h5 class="w3-text-teal">Question</h5>
+Agent <code>X</code> prints the messages that it receives. What does
+<code>X</code> print?
+
+<h5 class="w3-text-teal">Answer</h5>
+
+<code>X</code> may print
+<ol>
+  <li>
+  3, 8, 6, 2. <p> If <code>total</code> receives 3, 5 from
+  <code>pos</code> and then receives 2, 4 from <code>neg</code>.
+  </li>
+  <li>
+  3, 1, 6, 2. <p> If <code>total</code> receives 3 from
+  <code>pos</code>, then 2 from <code>neg</code>, then 5 from
+  <code>pos</code>, then 4 from <code>neg</code>
+  </li>
+  <li>
+  3, 1, 0, 5.<p> If <code>total</code> receives 3 from
+  <code>pos</code>, then 2 from <code>neg</code>,
+  then 4 from <code>neg</code>,
+  then 5 from <code>pos</code>.
+  </li>
+  <li>
+  0, 3, 8, 4. <p>If <code>total</code> receives
+  2 from <code>neg</code>,
+  then 3 from <code>pos</code>,
+  then 5 from <code>pos</code>,
+  then 4 from <code>neg</code>.
+  </li>
+  <li>
+  0, 3, 0, 5. <p> If <code>total</code> receives
+  2 from <code>neg</code>,
+  then 3 from <code>pos</code>,
+  then 4 from <code>neg</code>,
+  then 5 from <code>pos</code>.
+  </li>
+  <li>
+  0, 0, 3, 8. <p> If <code>total</code> receives
+  2 from <code>neg</code>,
+  then 4 from <code>neg</code>,
+  then 3 from <code>pos</code>,
+  then 5 from <code>pos</code>.
+  </li>
+</ol>
+  
+  
+  
+
+
+<!---------------------------------------->
 <h5 class="w3-text-teal">Next</h5>
-The next two webpages continue the description of a model of
-distributed systems and point out its strengths and limitations.
+<!---------------------------------------->
+The next page defines
+<a href="BasicsStates.html">
+states of a distributed system.</a>
 
 <p>
-The next page defines <a href="DistributedSystemModels.html">
-States, Transitions and Computations.</a> 
+<a href="../CODE_EXAMPLES/SumPosAndNeg.py">Examples</a>
+
 
 <p>
 <a href="BasicsFAQ.html">Frequenty Asked Questions</a>
+
+<p>
+<a href="BasicsReview.html">Review material for this page</a>
+
+
+<!-- END MAIN -->
+
+</body>
+</html>
 
 
 
@@ -175,3 +421,6 @@ function w3_close() {
 
 </body>
 </html>
+
+
+
