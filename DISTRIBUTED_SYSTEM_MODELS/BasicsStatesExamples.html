@@ -101,12 +101,79 @@ also a balloon tossed by Y on its way to X.
   Each time a child tosses a balloon it decrements its countdown value.
 
 After a child's countdown reaches 0 the child pops balloons that it receives
-(and doesn't toss popped balloons). 
+  (and doesn't toss popped balloons).
+
+      <figure>
+    <img
+    src="BasicsStatesExamples.001.jpeg"
+    alt="Fig1" style="width:40%"> 
+    <figcaption>Figure State 1: Initial State</figcaption>
+  </figure>
+  
+      <figure>
+    <img
+    src="BasicsStatesExamples.002.jpeg"
+    alt="Fig2" style="width:40%"> 
+    <figcaption>Figure State 2. Y receives balloon. nY becomes 1</figcaption>
+</figure>
+
+  
+      <figure>
+    <img
+    src="BasicsStatesExamples.003.jpeg"
+    alt="Fig3" style="width:40%"> 
+    <figcaption>Figure State 3. X receives balloon. nX becomes 0</figcaption>
+</figure>
+
+  
+      <figure>
+    <img
+    src="BasicsStatesExamples.004.jpeg"
+    alt="Fig4" style="width:40%"> 
+    <figcaption>Figure State 4.  Y receives balloon. nY becomes 0</figcaption>
+</figure>
+
+  
+      <figure>
+    <img
+    src="BasicsStatesExamples.005.jpeg"
+    alt="Fig5" style="width:40%"> 
+    <figcaption>Figure State 5. X pops balloon. nX becomes 1</figcaption>
+</figure>
+
+  
+      <figure>
+    <img
+    src="BasicsStatesExamples.006.jpeg"
+    alt="Fig6" style="width:40%"> 
+    <figcaption>Figure State 6. X pops balloon. nX becomes 0</figcaption>
+</figure>
+
 
 <h4 class="w3-text-teal">State</h4>
 The state of a channel is the number of balloons in it.
 
-The state of an agent (X or Y) is the countdown value nX or nY, respectively.
+The states of agent X and Y are the countdown values nX and nY,
+respectively.
+
+For simplicity we will abuse notation and use (X, Y) to represent both
+the channel and the state of the channel, i.e., the number of messages
+in the channel.
+
+<h4 class="w3-text-teal">Algorithm for X</h4>
+
+<pre>
+# Initial State
+nX = 1
+
+# Callback function
+def receive(message=m, sender=Y):
+   if nX > 0:
+      nX = nX - 1
+      send(message=m, receiver=Y)
+</pre>
+
+The algorithm for Y is identical except that initially nY = 2.
 
 <h4 class="w3-text-teal">Sequence of State Changes</h4>
 An example of a sequence of state changes is as follows.
@@ -184,7 +251,12 @@ to
 nX = 1, nY = 1, (X, Y) = 0, (Y, X) = 2
 
 
-<h5 class="w3-text-teal">In what States can the Event be Executed?</h5>
+<h5 class="w3-text-teal">In what States can the Event be
+Executed?</h5>
+In what states can the event specified by the 4-tuple given in the
+previous paragraphs be executed?
+
+<p>
 This event can be executed in any state S in which the inputs to the
 event are specified by the state, i.e., in S:
 <ol>
@@ -239,166 +311,68 @@ nX = 0, nY = 1, (X, Y) = 1, (Y, X) = 1
 
 
 
-  <!--------------------------------------------------------------->
-  <h2 class="w3-text-teal">Invariants</h2>
-
-  We reason about the correctness of many distributed algorithms in
-  in the same way that we reason about sequential
-  <code>while</code> loops, by using invariants and loop variants.
 
 
+   <!----------------------------------------------------------------->
+  <h3 class="w3-text-teal">Example from <a href="Basics.html">Previous</a>
+  Pages</h3>
+<!----------------------------------------------------------------->
+
+<h5 class="w3-text-teal">Question about State Transitions</h5>
+What transitions are possible from the state shown in the following
+diagram from the  <a href="Basics.html">example given earlier?</a>
+
+   <figure>
+    <img
+    src="Basics_Diagram_2.001.jpeg"
+    alt="Fig1" style="width:100%"> 
+    <figcaption>Figure State S_0</figcaption>
+</figure>
+
+There are four transitions possible corresponding to the four
+non-empty channels.
+
+The transitions from state <code>S_0</code> are to states <code>S_1,
+S_2, S_3, S_4</code> shown below in Figure State S_1, Figure State
+S_2, Figure State S_3, and Figure State S_4, respectively. 
+
+They are shown in the following diagrams.
+  <figure>
+    <img
+    src="Basics_Diagram_2.002.jpeg"
+    alt="Fig2" style="width:100%"> 
+    <figcaption>Figure State S_1: event <code>total</code> receives 3
+  from <code>pos</code></figcaption>
+</figure>
+
+<figure>
+    <img
+    src="Basics_Diagram_2.003.jpeg"
+    alt="Fig3" style="width:100%"> 
+    <figcaption>Figure State S_2: event <code>total</code> receives 2
+  from <code>neg</code></figcaption>
+</figure>
 
 
-  <!--------------------------------------------------------------->
-  <h3 class="w3-text-teal">Loop Invariant of a Sequential While Loop</h3>
+<figure>
+    <img
+    src="Basics_Diagram_3.006.jpeg"
+    alt="Fig6" style="width:100%"> 
+    <figcaption>Figure State S_3: event <code>pos</code> receives wakeup
+  from <code>pos</code></figcaption>
+</figure>
+
+
+<figure>
+    <img
+    src="Basics_Diagram_3.007.jpeg"
+    alt="Fig7" style="width:100%"> 
+    <figcaption>Figure State S_4: event <code>neg</code> receives wakeup
+  from <code>neg</code></figcaption>
+</figure>
+
+ 
   
-  A <a href="https://en.wikipedia.org/wiki/Loop_invariant">
-  loop invariant</a>
-  is an assertion about the state of the program that holds before and
-  after each iteration of the loop.
-
-  You can look up
-
-  <a
-  href="https://www.cs.cornell.edu/courses/cs2112/2020fa/lectures/lecture.html?id=loopinv">
-  many examples</a> of loop invariants on the web.
-
-
-  <!----------------------------------------------->
-  <h5 style="color:red;">Example</h5>
-  
-  A loop invariant in the following greatest common
-  divisor (gcd) program is shown in the body of the loop as the
-  assertion <code>gcd(x, y) = gcd(X, Y)</code>.
-  
-    <pre>
-x, y = X, Y
-while x != y:
-  # assertion: gcd(x, y) = gcd(X, Y)
-  if x > y: x = x - y
-  else: y = y - x
-  </pre>
-
-  
-  <!--------------------------------------------------------------->
-  <h3 class="w3-text-teal">Invariant of a Distributed System</h3>
-  
-  An invariant of a distributed system is a
-  predicates that holds in all states reachable from initial states.
-
-  An invariant of a distributed system is the loop invariant of the
-  following while loop.
-
-  An invariant <code>Inv</code> is shown
-  as an assertion in the body of the loop.
-  
-  <pre>
-while there exists a nonempty input channel in the system:
-   # assertion: Inv
-   select a nonempty channel (u, v) in the system
-   let the head of channel (u, v) be msg
-   v executes receive(msg, u)
-  </pre>
-
-  The remainder of this webpage consists of examples of invariants.
-
-  
-<!----------------------------------------------->
-<center>
-<h2 style="color:red;">Examples</h2>
-</center>
-  
-  <!----------------------------------------------->
-  <h5 style="color:red;">Example</h5>
-  
-  We are given a strongly connected network of agents -- i.e.,
-  there is a path from each agent to every other agent.
-
-  Each agent has a local variable <code>n</code>, which is initialized
-  as a positive integer.
-  
-  Let GCD be the gcd (greatest commond divisor) of the
-  initial values of <code>X.n</code> of all agents <code>X.n</code>.
-
-  The following distributed algorithm terminates and at termination
-  <code>X.n = GCD</code> for all agents <code>X.n</code>.
-
-In the code, <code>successors</code> is the list of successor agents
-in a network of agents.
-
-<pre>
-def receive(message, sender):
-   if n != gcd(n, message):
-      n = gcd(n, message)
-      for successor in successors:
-         send(n, successor)
-</pre>
-
-An invariant of the distributed algorithm is as follows.
-The gcd of all messages in channels and 
-<code>X.n</code> for all agents <code>X</code>
-is equal to GCD.
-
-  
-  <!----------------------------------------------->
-  <p style="color:red;">Proof</p>
-  
-The proof that the assertion holds initially is trivial.
-
-Prove that if the assertion holds before any event 
-then it continues to hold after the event.
-
-<p>
-Let the event be agent <code>A</code> receiving a message
-<code>m</code>.
-After the event, <code>m</code> is no longer in the channel;
-<code>n = gcd(n, m)</code>; and messages with the new value of
-<code>n</code> are in the output channels from <code>A</code>.
-The proof that the assertion continues to hold in the post-event state
-is straightforward.
-
-
-  <!----------------------------------------------->
-<h5 style="color:red;">Example</h5>
-
-Another invariant for the gcd example, given earlier, is as follows.
-For all channels <code>(X, Y)</code> in the network:
-<ol>
-  <li>
-  Channel <code>(X, Y)</code> is empty and <code>X.n</code> is a
-  multiple of <code>Y.n</code>, or
-  </li>
-  <li>
-  The last message in channel <code>(X, Y)</code> is <code>m</code>
-  where <code>m = X.n</code>.
-  </li>
-</ol>
-
-  <!----------------------------------------------->
-  <p style="color:red;">Proof</p>
-  
-The assertion holds initially because the second condition holds. 
-
-Prove that if the assertion holds before any event
-then it continues to hold after the event.
-
-<p>
-When agent <code>X</code> executes a receive that changes
-<code>X.n</code> the agent sends a message <code>m</code> to
-<code>Y</code> where <code>m = X.n</code>, and so the second condition
-holds.
-
-<p>
-When agent <code>Y</code> receives <code>m</code> the agent sets
-<code>Y.n = gcd(Y.n, m)</code>, and so <code>m</code> is a multiple of
-the new value of <code>Y.n</code>.
-
-If channel <code>(X, Y)</code> remains nonempty then the second
-condition holds.
-
-If <code>(X, Y)</code> becomes empty then the first condition holds
-because <code>m = X.n</code> and <code>m</code> is a multiple of
-<code>Y.n</code>.
 
 
 
