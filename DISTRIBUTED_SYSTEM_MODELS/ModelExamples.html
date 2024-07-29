@@ -91,7 +91,7 @@ hr.new1 {
 Two children, X and Y, are tossing balloons to each other.
 
 A balloon that has been tossed by X, while in the air to Y, is a
-message in the channel (X, Y\).
+message in the channel (X, Y).
 
 When a child gets a balloon it tosses the balloon back immediately.
 
@@ -112,15 +112,18 @@ The state of a channel is the number of balloons in it.
 The state of an agent (X or Y) is the countdown value nX or nY, respectively.
 
 <h4 class="w3-text-teal">A Computation: A Sequence of States</h4>
-An example of a sequence of state changes is as follows.
-<ol>
-  <li>
-  Initial State: Channel (X, Y) has one balloon and channel (Y, X) has
+  An example of a sequence of state changes is as follows.
+  
+  <i>Initial State</i>: Channel (X, Y) has one balloon and channel (Y, X) has 
   one balloon. And the countdown for X is 2 and the countdown for Y is
   3. We represent this state by:
   <br>
   nX = 1, nY = 2, (X, Y) = 1, (Y, X) = 1
-  </li>
+
+  <p>
+  The sequence of steps from the initial state are as follows.
+  
+<ol>
   <li>
   Y receives a balloon and sends it back. So the state
   becomes:
@@ -146,26 +149,39 @@ An example of a sequence of state changes is as follows.
   nX = 0, nY = 0, (X, Y) = 0, (Y, X) = 1
   </li>
   <li>
-  Y receives a balloon and pops it. So the state
+  X receives a balloon and pops it. So the state
   becomes 
   <br>
   nX = 0, nY = 0, (X, Y) = 0, (Y, X) = 0
   </li>
-  <li>There are no further steps in this computation
-  </li>
 </ol>
+There are no further steps in this computation.
 
 
    <!----------------------------------------------------------------->
   <h3 class="w3-text-teal">Dataflow of the Computation</h3>
 <!----------------------------------------------------------------->
-Agent X has an fictitious step that initializes X's state and X's
-  output channels. We write
-X_init for this fictitious step.
-X also steps 3, 5, and 7 in the above computation.
-X also has a fictitious final step that identifies X's final state and
+The dataflow graph of the computation is shown in the figure.
+
+   <figure>
+    <img
+    src="DataflowExamples.001.jpeg"
+    alt="Fig1" style="width:100%"> 
+    <figcaption>Figure The Dataflow Graph for the Example</figcaption>
+</figure>
+
+Agent X has a fictitious step, X_init, that initializes X's state and X's
+  output channels. 
+X also steps 2, 4, and 5 in the above computation.
+X also has a fictitious final step, X_fini, that identifies X's final state and
 the final state of X's input channels.
-We call this fictitious final step X_fini.
+
+<p>
+Likewise, agent Y has a fictitious step, Y_init, that initializes Y's state and Y's
+  output channels. 
+Y also steps 3, and 5 in the above computation.
+Y also has a fictitious final step, Y_fini, that identifies Y's final state and
+the final state of Y's input channels.
 
 
   <!----------------------------------------------------------------->
@@ -176,16 +192,17 @@ The horizontal line consisting of steps at X consists of the following
 directed edges.
 <ol>
   <li>
-  X_init to step 3 with label nX = 1. The label is the initial state of X
+  X_init to step 2 with label nX = 1. The label is the initial state
+  of X
   </li>
   <li>
-  Step 3 to step 5 with label nx = 0.
+  Step 2 to step 4 with label nx = 0.
   </li>
   <li>
-  Step 5 to step 7 with label nx = 0.
+  Step 4 to step 5 with label nx = 0.
   </li>
   <li>
-  Step 7 to X_fini with label nx = 0. This label is the final state of
+  Step 5 to X_fini with label nx = 0. This label is the final state of
   X in the computation.
   </li>
 </ol>
@@ -199,16 +216,13 @@ Likewise the horizontal line cconsisting of steps at Y and consists of the follo
 directed edges.
 <ol>
   <li>
-  Y_init to step 2 with label nY = 2. The label is the initial state of Y
+  Y_init to step 1 with label nY = 2. The label is the initial state of Y
   </li>
   <li>
-  Step 2 to step 4 with label nY = 1.
+  Step 1 to step 3 with label nY = 1.
   </li>
   <li>
-  Step 4 to step 6 with label nY = 0.
-  </li>
-  <li>
-  Step 6 to Y_fini with label nY = 0. This label is the final state of
+  Step 3 to Y_fini with label nY = 0. This label is the final state of
   Y in the computation.
   </li>
 </ol>
@@ -228,14 +242,14 @@ All the messages have label "1" because each message represents a
 single balloon.
 <ol>
   <li>
-  X_init to step 2. This is the message in the channel in the initial
+  X_init to step 1. This is the message in the channel in the initial
   state of the computation.
   </li>
   <li>
-  Step 3 to step 4. 
+  Step 2 to step 3. 
   </li>
 </ol>
-There are no message edges to Y_fini because the channel (X, Y) is
+There are no message edges from steps at X to Y_fini because the channel (X, Y) is
 empty in the final state.
 
 
@@ -252,28 +266,114 @@ All the messages have label "1" because each message represents a
 single balloon.
 <ol>
   <li>
-  Y_init to step 3. This is the message in the channel in the initial
+  Y_init to step 2. This is the message in the channel in the initial
   state of the computation.
   </li>
   <li>
-  Step 2 to step 5. 
+  Step 1 to step 4. 
   </li>
   <li>
-  Step 4 to step 7. 
+  Step 2 to step 5. 
   </li>
 </ol>
 There are no message edges to X_fini because the channel (Y, X) is
 empty in the final state.
 
-<h5 class="w3-text-teal">Next</h5>
+
+   <!----------------------------------------------------------------->
+<h3 class="w3-text-teal">Example from <a href="Basics.html">
+Previous Pages</a></h3>
+<!----------------------------------------------------------------->
+The following dataflow diagram is for the computation given in
+<a href="ComputationsExamples.html">examples of computations</a>.
+
+The computation starting at the initial state executes steps 
+<code>p1</code>, <code>n1</code>, <code>t1</code>, <code>p2</code>,
+<code>t2</code>, <code>n2</code>, <code>t3</code>, <code>X1</code>
+where the steps are shown in the dataflow diagram.
 
 
-<a href="BasicsStates.html">
-States of a Distributed System.</a>
+   <figure>
+    <img
+    src="DataflowExamples.002.jpeg"
+    alt="Fig2" style="width:100%"> 
+    <figcaption>Figure The Dataflow Diagram</figcaption>
+</figure>
+
+
+In the dataflow diagram, <code>p1</code> and <code>p2</code> are
+steps at agent <code>pos</code>; <code>n1</code> and <code>n2</code> are
+steps at agent <code>neg</code>, <code>t1, t2, t3</code> are
+steps at agent <code>total</code>, and <code>X1</code> is an
+step at agent <code>X</code>.
+
+<p>
+Steps <code>p0, n0, t0, X0</code> are the fictitious initial steps
+at agents <code>pos, neg, total, X</code> (respectively)
+that specify the initial state of the computation.
+
+Likewise, steps <code>p*, n*, t*, X*</code> are the fictitious final steps
+that specify the final state of the computation.
+
+<p>
+Let's look at <code>p0</code> as an example of an initial step.
+
+There is an agent edge from <code>p0</code> to <code>p1</code> labeled
+with the state of agent <code>pos</code> in the initial state of the
+computation.
+
+The state of <code>pos</code> is given by its variable <code>n</code>
+which is initially 2; so the edge from <code>p0</code> to
+<code>p1</code> is labeled <code>n = 2</code> which is abbreviated to
+2.
+
+<p>
+Agent X has no state; it merely prints messages that it receives.
+
+So agent edges at X have no label (or equivalently the empty label).
 
 
 <p>
-<a href="BasicsReview.html">Review material for this page</a>
+Let's look at <code>X*</code> as an example of a final step.
+
+There are message edges labeled 1, 0, and 5 from steps at
+<code>total</code> to <code>X*</code>.
+
+This represents the state of channel <code>(total, X*)</code> in the
+final state of the computation.
+
+<p>
+Let's look at step <code>p1</code> at agent <code>pos</code>.
+
+The state of <code>pos</code> changes from <code>n = 2</code> to
+<code>n = 1</code>.
+
+So the output agent edge from <code>p1</code> is labeled <code>n =
+1</code>.
+
+<p>
+In step <code>p1</code>, <code>pos</code> sends a message 3 to
+<code>total</code> and a wakeup message to itself.
+
+So the output message edges from step <code>p1</code> are labeled
+wakeup (shown as a star) and 3; these message edges are to steps step
+<code>p2</code> and step <code>t1</code>, respectively, because the
+messages are received in those steps.
+
+
+<h5 class="w3-text-teal">Next</h5>
+The next page describes
+<p>
+<a href="Timelines.html">Cuts in Dataflow Graphs
+</a>
+which are used in developing detection algorithms such as termination
+detection and deadlock detection.
+
+<p>
+<a href="ModelExamples.html">Examples</a>
+
+<p>
+<a href="ModelFAQ.html">Frequenty Asked Questions</a>
 
 
 
