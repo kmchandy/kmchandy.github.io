@@ -88,7 +88,7 @@ hr.new1 {
 Two children, X and Y, are tossing balloons to each other.
 
 A balloon that has been tossed by X, while in the air to Y, is a
-message in the channel (X, Y\).
+message in the channel (X, Y).
 
 When a child gets a balloon it tosses the balloon back immediately.
 
@@ -102,6 +102,8 @@ also a balloon tossed by Y on its way to X.
 
 After a child's countdown reaches 0 the child pops balloons that it receives
   (and doesn't toss popped balloons).
+
+  Let nX and nY be the countdown values of X and Y, respectively.
 
       <figure>
     <img
@@ -150,15 +152,22 @@ After a child's countdown reaches 0 the child pops balloons that it receives
 </figure>
 
 
-<h4 class="w3-text-teal">State</h4>
+<h4 class="w3-text-teal">Question</h4>
+
+How is the state specified for this system?</h4>
+
+<h5 class="w3-text-teal">Answer</h5>
 The state of a channel is the number of balloons in it.
 
 The states of agent X and Y are the countdown values nX and nY,
 respectively.
 
+<p>
 For simplicity we will abuse notation and use (X, Y) to represent both
 the channel and the state of the channel, i.e., the number of messages
 in the channel.
+
+So the state of the system is the tuple: [nX, nY, (X, Y), (Y, X)].
 
 <h4 class="w3-text-teal">Algorithm for X</h4>
 
@@ -175,16 +184,26 @@ def receive(message=m, sender=Y):
 
 The algorithm for Y is identical except that initially nY = 2.
 
-<h4 class="w3-text-teal">Sequence of State Changes</h4>
-An example of a sequence of state changes is as follows.
-<ol>
-  <li>
-  Initial State: Channel (X, Y) has one balloon and channel (Y, X) has
+<h4 class="w3-text-teal">Question</h4>
+A computation is specified as a sequence of states with a transition
+from each state to the next. What is the sequence of states
+corresponding to the diagrams: Figure State 1 to Figure State 6?
+
+<h4 class="w3-text-teal">Answer</h4>
+
+The sequence of states corresponding to the diagrams is as follows.
+<p>
+  
+  <i>Initial State</i>: Channel (X, Y) has one balloon and channel (Y, X) has 
   one balloon. And the countdown for X is 2 and the countdown for Y is
   3. We represent this state by:
   <br>
   nX = 1, nY = 2, (X, Y) = 1, (Y, X) = 1
-  </li>
+
+  <p>
+  The sequence of steps from the initial state are as follows.
+  
+<ol>
   <li>
   Y receives a balloon and sends it back. So the state
   becomes:
@@ -210,20 +229,21 @@ An example of a sequence of state changes is as follows.
   nX = 0, nY = 0, (X, Y) = 0, (Y, X) = 1
   </li>
   <li>
-  Y receives a balloon and pops it. So the state
+  X receives a balloon and pops it. So the state
   becomes 
   <br>
   nX = 0, nY = 0, (X, Y) = 0, (Y, X) = 0
   </li>
-  <li>There are no further steps in this computation
-  </li>
 </ol>
+There are no further steps in this computation.
 
-<h5 class="w3-text-teal">Events</h5>
-The state transition caused by the first event is specified by the
-following 4-tuple
+<h4 class="w3-text-teal">Question</h4>
+What is the event that causes the first state transition?
+This is the event in which Y receives a balloon for the first time.
 
-<h5 class="w3-text-teal">Event: Y receives a balloon for the first time</h5>
+<h4 class="w3-text-teal">Answer</h4>
+
+<p class="w3-text-teal">Event: Y receives a balloon for the first time</p>
 This event is specified by the 4-tuple:
 <ol>
   <li>
@@ -241,7 +261,11 @@ This event is specified by the 4-tuple:
   </li>
 </ol>
 
-<h5 class="w3-text-teal">State Transition Caused by the Event</h5>
+<h4 class="w3-text-teal">Question</h4>
+Specify the state transition caused by the event in which Y receives a
+balloon for the first time.
+
+<h4 class="w3-text-teal">Answer</h4>
 The execution of this event at Y causes a state transition from 
 <br>
 nX = 1, nY = 2, (X, Y) = 1, (Y, X) = 1
@@ -251,12 +275,12 @@ to
 nX = 1, nY = 1, (X, Y) = 0, (Y, X) = 2
 
 
-<h5 class="w3-text-teal">In what States can the Event be
-Executed?</h5>
-In what states can the event specified by the 4-tuple given in the
-previous paragraphs be executed?
+<h4 class="w3-text-teal">Question</h4>
+In what states can the event in which Y receives the balloon for the
+first time be executed?
 
-<p>
+
+<h4 class="w3-text-teal">Answer</h4><p>
 This event can be executed in any state S in which the inputs to the
 event are specified by the state, i.e., in S:
 <ol>
@@ -268,22 +292,12 @@ event are specified by the state, i.e., in S:
   </li>
 </ol>
 
-<h5 class="w3-text-teal">Details of the State Transition Caused by the
-Event</h5>
-This event causes a transition from S to a state S' where
-<ol>
-  <li>
-  Y's state in S' is nY = 1
-  </li>
-  <li>
-  The message at the head of channel (X, Y) in state S is removed from the channel
-  </li>
-  <li>
-  A message "1" is appended to the tail of channel (Y, X) in state S.
-</ol>
 
+<h4 class="w3-text-teal">Question</h4>
 
-<h5 class="w3-text-teal">Event: X receives a balloon for the first time</h5>
+Specify the event in which X receives a balloon for the first time.
+
+<h4 class="w3-text-teal">Answer</h4>
 This event is specified by the 4-tuple:
 <ol>
   <li>
@@ -301,6 +315,12 @@ This event is specified by the 4-tuple:
   </li>
 </ol>
 
+
+<h4 class="w3-text-teal">Question</h4>
+What is the state transition caused by the event in which X receives a
+balloon for the first time?
+
+<h4 class="w3-text-teal">Answer</h4>
 The execution of this event at X causes a state transition from 
 <br>
 nX = 1, nY = 1, (X, Y) = 0, (Y, X) = 2
@@ -324,7 +344,7 @@ diagram from the  <a href="Basics.html">example given earlier?</a>
 
    <figure>
     <img
-    src="Basics_Diagram_2.001.jpeg"
+    src="Basics_Diagram.001.jpeg"
     alt="Fig1" style="width:100%"> 
     <figcaption>Figure State S_0</figcaption>
 </figure>
@@ -339,7 +359,7 @@ S_2, Figure State S_3, and Figure State S_4, respectively.
 They are shown in the following diagrams.
   <figure>
     <img
-    src="Basics_Diagram_2.002.jpeg"
+    src="Basics_Diagram.002.jpeg"
     alt="Fig2" style="width:100%"> 
     <figcaption>Figure State S_1: event <code>total</code> receives 3
   from <code>pos</code></figcaption>
@@ -347,7 +367,7 @@ They are shown in the following diagrams.
 
 <figure>
     <img
-    src="Basics_Diagram_2.003.jpeg"
+    src="Basics_Diagram.003.jpeg"
     alt="Fig3" style="width:100%"> 
     <figcaption>Figure State S_2: event <code>total</code> receives 2
   from <code>neg</code></figcaption>
@@ -356,7 +376,7 @@ They are shown in the following diagrams.
 
 <figure>
     <img
-    src="Basics_Diagram_3.006.jpeg"
+    src="Basics_Diagram.006.jpeg"
     alt="Fig6" style="width:100%"> 
     <figcaption>Figure State S_3: event <code>pos</code> receives wakeup
   from <code>pos</code></figcaption>
@@ -365,7 +385,7 @@ They are shown in the following diagrams.
 
 <figure>
     <img
-    src="Basics_Diagram_3.007.jpeg"
+    src="Basics_Diagram.007.jpeg"
     alt="Fig7" style="width:100%"> 
     <figcaption>Figure State S_4: event <code>neg</code> receives wakeup
   from <code>neg</code></figcaption>
@@ -379,8 +399,8 @@ They are shown in the following diagrams.
 <h5 class="w3-text-teal">Next</h5>
 
 
-<a href="BasicsStates.html">
-States of a Distributed System.</a>
+<a href="Computations.html">
+Computations of a Distributed System.</a>
 
 
 <p>

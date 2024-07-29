@@ -89,10 +89,11 @@ hr.new1 {
   The model uses a simple abstraction of state and state transitions.
   </p>
 
-    
+  <a name="States"></a>
   <!----------------------------------------------------------------->
   <h3 class="w3-text-teal">States</h3>
   <!----------------------------------------------------------------->
+
   The state of a distributed system is given by the states of its agents and
   channels.
 
@@ -105,7 +106,7 @@ hr.new1 {
 
   The state of an agent is given by the values of its variables.
 
-  
+  <a name="StateTransitions"></a>
   <!----------------------------------------------------------------->
   <h3 class="w3-text-teal">State Transitions</h3>
   <!----------------------------------------------------------------->
@@ -126,11 +127,16 @@ hr.new1 {
   <a href="https://en.wikipedia.org/wiki/Atomic_commit">atomic
   operation.</a>
 
-  
-  <!----------------------------------------------------------------->  
-<h5 class="w3-text-teal">Event: Specification of a State Transition</h5>
+  A state transition occurs when one agent gets one message on one of
+  its input channels and executes its <code>receive</code> function on
+  that message.
 
-  A state change that occurs when an agent <code>u</code>
+  <a name="Events"></a>
+  <!----------------------------------------------------------------->  
+<h5 class="w3-text-teal">Event: Specification of the Change in State
+  during a State Transition</h5>
+
+  The change in state that occurs when an agent <code>u</code>
   receives a message, <code>msg</code>, from an agent <code>v</code>
   is specified by the 4-tuple:
 <ol>
@@ -157,7 +163,7 @@ The first two elements of the tuple are called the <i>inputs to the event</i>, a
 the last two elements are the <i>outputs of the event</i>.
 
   <!----------------------------------------------------------------->  
-<h5 class="w3-text-teal">The Transition in State Caused by an Event</h5>
+<h5 class="w3-text-teal">The State Transition Caused by an Event</h5>
 
 The event specified by the above 4-tuple
 can be executed in a state <code>S</code> 
@@ -191,71 +197,42 @@ or "event e occurs at agent <code>u</code>"
 to mean that the agent executes a <code>receive</code> that is
 specified by <i>e</i>. 
 
-
-<!---------------------------------------------------->
-<h4 class="w3-text-teal">State Transitions are Local</h4>
-The states of all other channels remain unchanged.
-
 <p>
-The state of only one agent and the channels incident on that agent
-may change state in a state transition -- all other agents and
-channels remain unchanged.
-
-
-<p>
-A system changes state when exactly one agent executes an event.
-
 If multiple agents change state concurrently then we treat the state
 changes as occurring one at a time in any order.
 
 
-
 <!---------------------------------------------------->
-<h4 class="w3-text-teal">Specifying a <code>receive</code> function by
-a Set of Events</h4>
+<h4 class="w3-text-teal">Events and State Transitions</h4>
+An event is a 4-tuple that specifies the <i>change</i> in state during
+a state transition.
 
-A <code>receive</code> function in our examples is specified as a
-program.
-
-The state transition that occurs during a single execution of a
-<code>receive</code> is specified by an event. 
+An event provides no information about the agents and channels that do
+not change state in the state transition.
 
 <p>
-We can specify a <code>receive</code> by the set of all state
-transitions that can occur during execution of the
-<code>receive</code>.
-
-It is helpful to specify a <code>receive</code> as a set
-of events, and to 
-specify a single execution of a <code>receive</code> as the selection of one
-event from the set.
-
-Doing so allows us to describe systems independent of programming
-languages. 
+An event is different from a state transition because a state
+transition specifies the states, before and after the transition, of
+<i>all</i> agents and channels, including the states of agents and
+channels that remain unchanged in the transition.
 
 <p>
-We won't list all elements in the set of events that specifies a
-<code>receive</code>. This set can be infinite.
+For example, when an online customer deposits money into an account, the event
+describing the action specifies the amount in the account before and
+after the transition, the check that is deposited, and the
+acknowledgment that is sent.
 
-For example, an execution of <code>receive</code> by agent
-<code>total</code> may receive any value from agent <code>pos</code>
-or any value from agent <code>neg</code>.
-
-There is an event for every possible message from <code>pos</code> and
-from <code>neg</code>, and so we can't list all possible events.
-
-Later, we will show how <code>receive</code> is specified concisely in terms of
-pre- and post-conditions.
-
-<p>
-A state transition occurs when a <code>receive</code> is executed by
-exactly one agent.
-
-So, the possible state transitions of a system can be specified by the
-specifications of the <code>receive</code> functions of its agents.
+The event does not describe the states of all the other accounts in
+the bank.
 
 
 
+
+
+
+
+
+<a name="Example"></a>
 <!----------------------------------------------->
 <h4 style="color:red;">Example of an Event</h4>
 

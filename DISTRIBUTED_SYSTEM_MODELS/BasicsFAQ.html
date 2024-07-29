@@ -82,26 +82,47 @@ hr.new1 {
 <!----------------------------------------------------------------->
 
 
+   
+  <!----------------------------------------------------------------->
+  <h5 class="w3-text-teal">What is a model?</h5>
+  <!----------------------------------------------------------------->
+  A model of a system is an
+  <a href="Basics.html#WhatIsAModel">abstraction that ignores aspects of the
+  system</a> but which helps in developing algorithms.
+
+
+     
+  <!----------------------------------------------------------------->
+  <h5 class="w3-text-teal">What model does this course use?</h5>
+  <!----------------------------------------------------------------->
+
+  The choice of a model is an engineering decision, and we use
+  different models to solve different problems.
+
+  We begin <a href="Basics.html#ASimpleModel">with a simple actor
+  model.</a> 
+
+  
   
   <!----------------------------------------------------------------->
-  <h2 class="w3-text-teal">What are weaknesses and limitations of the model?</h2>
+  <h5 class="w3-text-teal">What are weaknesses and limitations of the model?</h5>
   <!----------------------------------------------------------------->
   The model has many weaknesses, only some of which are described
   here.
 
   
 <!-------------------------------------------------------->
-<h3 class="w3-text-teal">Model Limitations: Fairness and Progress</h3>
-In the model, a computation progresses by delivering a message on <i>any</i>
-  channel.
+  <h6 class="w3-text-teal">Model Limitations: Fairness and
+  Progress</h6>
+  In the model, a computation progresses by delivering a message on
+<i>any</i> channel.
 
   This allows for infinite computations in which some messages remain
   in a channel forever.
 
   <p>
-  Consider the
-  <a href="DistributedSystemModels.html">example of two agents sending
-  tokens</a> to each other.
+  Consider an example of two agents sending
+  tokens to each other.
 
   Each agent sends a token that it holds to the other agent.
 
@@ -146,7 +167,7 @@ In the model, a computation progresses by delivering a message on <i>any</i>
 
 
 <!-------------------------------------------------------->
-<h3 class="w3-text-teal">Model Limitations: No Construct for Time</h3>
+<h6 class="w3-text-teal">Model Limitations: No Construct for Time</h6>
 <!-------------------------------------------------------->
 
 The only representation of time in our model is that some events occur
@@ -186,7 +207,7 @@ with imperfect clocks, as we shall see.
 
 
 <!-------------------------------------------------------->
-<h3 class="w3-text-teal">Model Limitations: Start Up, Shutdown, Failure</h3>
+<h6 class="w3-text-teal">Model Limitations: Start Up, Shutdown, Failure</h6>
 <!-------------------------------------------------------->
 
 The model assumes that all agents and channels are initialized and
@@ -225,7 +246,7 @@ given so far.
 
 
 <!-------------------------------------------------------------->
-<h3 class="w3-text-teal">Model Limitations: Discrete State Space</h3>
+<h6 class="w3-text-teal">Model Limitations: Discrete State Space</h6>
 <!-------------------------------------------------------------->
 The state space is discrete in most of the algorithms described here.
 
@@ -244,7 +265,7 @@ state transitions.
 
 
 <!-------------------------------------------------------------->
-<h3 class="w3-text-teal">Model Limitations: Static</h3>
+<h6 class="w3-text-teal">Model Limitations: Static</h6>
 <!-------------------------------------------------------------->
   The network of agents and messages in the model is static.
 
@@ -257,7 +278,7 @@ modified.
 
 
 <!-------------------------------------------------------------->
-<h3 class="w3-text-teal">Model Limitations: Simple Channels</h3>
+<h6 class="w3-text-teal">Model Limitations: Simple Channels</h6>
 <!-------------------------------------------------------------->
   The model only considers channels in which messages are delivered in
   the order sent.
@@ -274,7 +295,7 @@ Our model has no concept of a channel being full.
 
 
 <!-------------------------------------------------------------->
-<h3 class="w3-text-teal">Model Limitations: Summary</h3>
+<h6 class="w3-text-teal">Model Limitations: Summary</h6>
 <!-------------------------------------------------------------->
 Models and notations in this course are not comprehensive -- they do not capture
 most aspects of distributed systems.
@@ -286,7 +307,7 @@ The choice of a model is an engineering decision.
 
   
   <!----------------------------------------------------------------->
-  <p class="w3-text-teal">Why use such a simplistic model?</p>
+  <h5 class="w3-text-teal">Why use such a simplistic model?</h5>
   <!----------------------------------------------------------------->
   The model is indeed simplistic; however, it is adequate for describing
   and reasoning about many of the algorithms described in the first
@@ -299,7 +320,7 @@ The choice of a model is an engineering decision.
 
   
   <!----------------------------------------------------------------->
-  <p class="w3-text-teal">How many channels are there in a system?</p>
+  <h5 class="w3-text-teal">How many channels are there in a system?</h5>
   <!----------------------------------------------------------------->
   In the model there is a channel from every agent to every agent.
 
@@ -319,8 +340,11 @@ declare channels.
   
   
   <!----------------------------------------------------------------->
-  <p class="w3-text-teal">Can you describe channels in more detail?</p>
-  <!----------------------------------------------------------------->
+  <h5 class="w3-text-teal">Can you describe channels in more detail?</h5>
+<!----------------------------------------------------------------->
+Our <a href="Basics.html#Channels">basic description of channels is
+  found here.</a> 
+
   Channels in our model are asynchronous (non-blocking) and
   unidirectional.
 
@@ -360,7 +384,7 @@ Our model does not allow for such channels.
 
   
   <!----------------------------------------------------------------->
-  <p class="w3-text-teal">Can an agent refuse to receive a message?</p>
+  <h5 class="w3-text-teal">Can an agent refuse to receive a message?</h5>
 <!----------------------------------------------------------------->
   In this model an agent cannot refuse to receive a message.
 
@@ -389,8 +413,8 @@ In our model, agent <code>X</code> has to receive the message from
 
   
   <!----------------------------------------------------------------->
-  <p class="w3-text-teal">Can a full channel block a sender from
-  sending more messages?</p>
+  <h5 class="w3-text-teal">Can a full channel block a sender from
+  sending more messages?</h5>
 <!----------------------------------------------------------------->
 In the model a sender is never blocked from sending a message.
 
@@ -413,8 +437,8 @@ channel stops being full.
 
     
   <!----------------------------------------------------------------->
-  <p class="w3-text-teal">Can you represent systems in which agents
-  are created and deleted in the model?</p>
+  <h5 class="w3-text-teal">Can you represent systems in which agents
+  are created and deleted in the model?</h5>
   <!----------------------------------------------------------------->
   The model doesn't have features that allow agents to be created and
   deleted.
@@ -449,8 +473,8 @@ taking action.
 
     
   <!----------------------------------------------------------------->
-  <p class="w3-text-teal">Can an agent process background jobs that
-  are interrupted when messages arrive?</p>
+  <h5 class="w3-text-teal">Can an agent process background jobs that
+  are interrupted when messages arrive?</h5>
 <!----------------------------------------------------------------->
 
 No, there are no interruptions in the model.
@@ -467,8 +491,8 @@ Our model does not allow for interruptions.
 
   
   <!----------------------------------------------------------------->
-  <p class="w3-text-teal">How do you represent channels that are not
-  first in first out?</p>
+  <h5 class="w3-text-teal">How do you represent channels that are not
+  first in first out?</h5>
   <!----------------------------------------------------------------->
 We use queues to represent states of first in first out channels, and
   we use other data structures -- such as multisets -- to represent
@@ -492,8 +516,8 @@ Later we describe algorithms with different types of channels.
 
         
   <!----------------------------------------------------------------->
-  <p class="w3-text-teal">Can the model represent sequential
-  composition of distributed computations?</p>
+  <h5 class="w3-text-teal">Can the model represent sequential
+  composition of distributed computations?</h5>
   <!----------------------------------------------------------------->
 Yes.
 
@@ -517,8 +541,8 @@ After detecting termination of <code>P</code> the coordinator sends
 messages to all agents to start <code>Q</code>.
   
   <!----------------------------------------------------------------->
-  <p class="w3-text-teal">Can the model represent agents that make state transitions
-  without receiving messages? </p>
+  <h5 class="w3-text-teal">Can the model represent agents that make state transitions
+  without receiving messages? </h5>
 <!----------------------------------------------------------------->
 No, the model does not represent agents that make state transitions
 without receiving messages.
@@ -545,15 +569,24 @@ no longer needs the files when it receives the message from itself.
 
 
   <!----------------------------------------------------------------->
-  <p class="w3-text-teal">Is an agent the same as a process? </p>
+  <h5 class="w3-text-teal">What is an agent? </h5>
 <!----------------------------------------------------------------->
-Yes, some documents use "process" instead of "agent."
+In our model,
+<a href=Basics.html#Agents">an agent is an object that sends and
+receives messages.</a>
 
+Some papers refer to an agent as an <i>actor</i> or as a
+<i>process</i>. 
 
 
   <!----------------------------------------------------------------->
-  <p class="w3-text-teal">Local clocks can be synchronized using NTP
-  and other protocols. Why do you assume that clocks aren't synchronized? </p>
+  <h5 class="w3-text-teal">What is a simple example of the notation? </h5>
+<!----------------------------------------------------------------->
+See <a href="Basics.html#Example">an example of the notation</a>.
+
+  <!----------------------------------------------------------------->
+  <h5 class="w3-text-teal">Local clocks can be synchronized using NTP
+  and other protocols. Why do you assume that clocks aren't synchronized? </h5>
 <!----------------------------------------------------------------->
 Local clocks can, indeed, be synchronized very accurately; however, we
   do not assume that they are perfect.
@@ -577,7 +610,7 @@ usually does so before the agent that starts at 2pm.
 
 
   <!----------------------------------------------------------------->
-  <p class="w3-text-teal">What are other examples of models? </p>
+  <h5 class="w3-text-teal">What are other examples of models? </h5>
 <!----------------------------------------------------------------->
 The model we use is an
 <a href="https://en.wikipedia.org/wiki/Actor_model">actor model.</a>

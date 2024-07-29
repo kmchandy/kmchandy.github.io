@@ -189,8 +189,11 @@ Consider the example given in <a href="Basics.html">the previous
  <code>pos</code> except that <code>neg.my_data = [2, 4]</code>
 
  At some point message 3 is in channel <code>(pos, total)</code> and
- message 2 is <code>(neg, total)</code>, and these are the only
- messages in the channel.
+ message 2 is in channel <code>(neg, total)</code>, and these are the only
+ messages in these channels.
+
+ There is a wakeup message in channel <code>(pos, pos)</code> and in
+ channel <code>(neg, neg)</code>.
 
  <p>
  See Figure Agents and Channels Example 1.1
@@ -199,7 +202,7 @@ Consider the example given in <a href="Basics.html">the previous
   
     <figure>
     <img
-    src="Basics_Diagram_2.001.jpeg"
+    src="Basics_Diagram.001.jpeg"
     alt="Fig1" style="width:100%"> 
     <figcaption>Figure Agents and Channels Example 1.1</figcaption>
 </figure>
@@ -221,7 +224,7 @@ Consider the example given in <a href="Basics.html">the previous
  
     <figure>
     <img
-    src="Basics_Diagram_2.002.jpeg"
+    src="Basics_Diagram.002.jpeg"
     alt="Fig2" style="width:100%"> 
     <figcaption>Figure Agents and Channels Example 1.2</figcaption>
 </figure>
@@ -229,8 +232,6 @@ Consider the example given in <a href="Basics.html">the previous
  
 <h5 class="w3-text-teal">Question</h5>
  Same initial state as in the previous question.
- Message 3 in channel <code>(pos, total)</code>,
- message 5 in channel <code>(neg, total)</code>.
 
  What changes occur if agent <code>total</code> receives the message
  from <code>neg</code> and this is the first message that
@@ -249,7 +250,7 @@ Consider the example given in <a href="Basics.html">the previous
  
     <figure>
     <img
-    src="Basics_Diagram_2.003.jpeg"
+    src="Basics_Diagram.003.jpeg"
     alt="Fig2" style="width:100%"> 
     <figcaption>Figure Agents and Channels Example 1.3</figcaption>
 </figure>
@@ -276,14 +277,14 @@ Consider the example given in <a href="Basics.html">the previous
  
     <figure>
     <img
-    src="Basics_Diagram_2.004.jpeg"
+    src="Basics_Diagram.004.jpeg"
     alt="Fig4" style="width:100%"> 
     <figcaption>Figure Agents and Channels Example 1.4</figcaption>
 </figure>
  
  <h5 class="w3-text-teal">Question</h5>
- What changes occur if agent <code>total</code> receives the message
- from <code>neg</code> and then from <code>pos</code>?
+ What changes occur if agent <code>total</code> receives its first message
+ from <code>neg</code> and its second from <code>pos</code>?
 
  <h5 class="w3-text-teal">Answer</h5>
  After agent <code>total</code> receives the message
@@ -300,7 +301,7 @@ Consider the example given in <a href="Basics.html">the previous
  
     <figure>
     <img
-    src="Basics_Diagram_2.005.jpeg"
+    src="Basics_Diagram.008.jpeg"
     alt="Fig5" style="width:100%"> 
     <figcaption>Figure Agents and Channels Example 1.5</figcaption>
 </figure>
