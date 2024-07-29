@@ -80,10 +80,29 @@ hr.new1 {
 <!---------------------------------------------------------------->
     <h1 class="w3-text-teal">Computation: Examples</h1>
 <!----------------------------------------------------------------->
+  Examples of computations:
+  <ol>
+    <li>
+    <a href="#SimpleExample">Simple examples of balloons tossed between two children.</a>
+    </li>
+    <li>
+    <a href="#TotalExample">Example from previous pages.</a>
+  </ol>
 
+Examples of invariants, loop variants, and termination condition:
+  <ol>
+    <li>
+    <a href="#InvariantsBalloon">Balloon example.</a>
+    </li>
+    <li>
+    <a href="#GCDExample">Distributed Greatest Common Divisor.</a>
+  </ol>
+
+  
    <!----------------------------------------------------------------->
-  <h3 class="w3-text-teal">A Simple Example (continued)</h3>
+  <h3 class="w3-text-teal">A Simple Example: Tossing Balloons  (continued)</h3>
 <!----------------------------------------------------------------->
+<a name="SimpleExample"></a>
   This example is a continuation from the example in
   <a href="BasicsStatesExamples.html">States</a>.
 
@@ -106,13 +125,22 @@ also a balloon tossed by Y on its way to X.
 After a child's countdown reaches 0 the child pops balloons that it receives
 (and doesn't toss popped balloons). 
 
-<h4 class="w3-text-teal">State</h4>
+  <h4 class="w3-text-teal">Question</h4>
+  How is a state of this system specified?
+
+  <h4 class="w3-text-teal">Answer</h4>
 The state of a channel is the number of balloons in it.
 
-The state of an agent (X or Y) is the countdown value nX or nY, respectively.
+The state of an agent (X or Y) is the countdown value nX or nY,
+  respectively.
 
-<h4 class="w3-text-teal">An Example of a Computation</h4>
-An example of a sequence of state changes is as follows, and is also
+  The state of the system is given by the states of its agents and channels.
+
+  <h4 class="w3-text-teal">Question</h4>
+  What is an example of a computation of the system?
+
+  <h4 class="w3-text-teal">Answer</h4>
+An example of a computation is
   shown in the diagrams below where the computation is State 1 to
   State 2 to .. State 6.
 
@@ -163,17 +191,29 @@ An example of a sequence of state changes is as follows, and is also
     <figcaption>Figure State 6. X pops balloon. nX becomes 0</figcaption>
 </figure>
 
-<h4 class="w3-text-teal">An Example of a Computation</h4>
+<h4 class="w3-text-teal">Question</h4>
+Specify the computation which is shown above as a sequence of diagrams
+as a sequence of states.
+
+<h4 class="w3-text-teal">Answer</h4>
+The sequence of states, shown below, is the computation shown in the
+diagrams above. You can verify that there exists a transition from
+each state in the sequence to the next. Also see that each
+transition is caused by exactly one agent receiving exactly one
+message on one of the agent's input channels.
 
 
-<ol>
-  <li>
-  Initial State: Channel (X, Y) has one balloon and channel (Y, X) has
+  <p>
+  <i>Initial State</i>: Channel (X, Y) has one balloon and channel (Y, X) has 
   one balloon. And the countdown for X is 2 and the countdown for Y is
   3. We represent this state by:
   <br>
   nX = 1, nY = 2, (X, Y) = 1, (Y, X) = 1
-  </li>
+
+  <p>
+  The sequence of steps from the initial state are as follows.
+  
+<ol>
   <li>
   Y receives a balloon and sends it back. So the state
   becomes:
@@ -199,23 +239,23 @@ An example of a sequence of state changes is as follows, and is also
   nX = 0, nY = 0, (X, Y) = 0, (Y, X) = 1
   </li>
   <li>
-  Y receives a balloon and pops it. So the state
+  X receives a balloon and pops it. So the state
   becomes 
   <br>
   nX = 0, nY = 0, (X, Y) = 0, (Y, X) = 0
   </li>
-  <li>There are no further steps in this computation
-  </li>
 </ol>
+There are no further steps in this computation.
 
-<h4 class="w3-text-teal">Another Computation</h4>
-What are other computations of the system?
 
-<p>
-Let's look at the event in step 3 of the above computation. The event
+<h4 class="w3-text-teal">Question</h4>
+What are other transitions from the initial state of the computation?
+
+<h4 class="w3-text-teal">Answer</h4>
+Let's look at the event in step 2 of the above computation. The event
 is as follows.
 
-<h5 class="w3-text-teal">Event: X receives a balloon for the first time</h5>
+<p class="w3-text-teal">Event: X receives a balloon for the first time</p>
 This event is specified by the 4-tuple:
 <ol>
   <li>
@@ -247,26 +287,34 @@ to this event:
 So, this event can be executed in the initial state.
 
 <p>
-You can now construct a different computation where the transition
-from the initial state is to a state shown in the following diagram:
+The execution of this event causes a transition
+from the initial state to a state shown in the following diagram:
 
  
       <figure>
     <img
     src="BasicsStatesExamples.007.jpeg"
-    alt="Fig6" style="width:40%"> 
-    <figcaption>Figure State 6. X pops balloon. nX becomes 0</figcaption>
+    alt="Fig6" style="width:80%"> 
+<figcaption>Figure Another Transition from the Initial State
+</figcaption>
 </figure>
 
-<h6 class="w3-text-teal">Example of a Different Computation</h4>
-<ol>
-  <li>
-  Initial State: Channel (X, Y) has one balloon and channel (Y, X) has
+
+<!------------------------------------------------------------->
+<h4 class="w3-text-teal">Question</h4>
+Can you give examples of other computations starting in the same
+state?
+
+<h4 class="w3-text-teal">Answer</h4>
+
+  <i>Initial State</i>: Channel (X, Y) has one balloon and channel (Y, X) has
   one balloon. And the countdown for X is 2 and the countdown for Y is
   3. We represent this state by:
   <br>
-  nX = 1, nY = 2, (X, Y) = 1, (Y, X) = 1
-  </li>
+nX = 1, nY = 2, (X, Y) = 1, (Y, X) = 1
+
+
+<ol>
   <li>
   X receives a balloon and sends it back. So the state
   becomes:
@@ -297,35 +345,116 @@ from the initial state is to a state shown in the following diagram:
   <br>
   nX = 0, nY = 0, (X, Y) = 0, (Y, X) = 0
   </li>
-  <li>There are no further steps in this computation
-  </li>
 </ol>
-
+There are no further steps in this computation.
+<p>
 Some states (e.g. State 2) in the first example of a computation don't occur in the
 second example, and vice versa.
 
 
 
-<p>
-A system may have many computations.
+<!------------------------------------------------------------->
+<a name="TotalExample"></a>
+<h3 class="w3-text-teal">A Computation of the System from
+<a href="Basics.html#Example">Previous Pages</a></h3>
 
-All the states of the computations of the system are states in the
-<code>while</code> loop:
 
-<pre>
-Initial State
+<h4 class="w3-text-teal">Question</h4>
+What is an example of a computation, starting from the initial state,
+of the <a href="Basics.html#Example">example</a>?
 
-while there exists an executable event:
-   execute any executable event
-</pre>
+<h4 class="w3-text-teal">Answer</h4>
+The following sequence of diagrams shows a computation of the example.
+Each diagram shows a state of the system. There is a
+transition from state S_k to state S_(k+1)
 
-In this example, after the initial state there were two executable
-events: an event at X and an event at Y.
-Either of these two events could have been selected as the next event
-to be executed.
 
-<h5 class="w3-text-teal">Invariant</h5>
-An invariant of this system is:
+
+      <figure>
+    <img
+    src="ComputationExamples.001.jpeg"
+    alt="Fig1" style="width:75%"> 
+    <figcaption>Figure State S_0: Initial State</figcaption>
+</figure>
+
+
+
+      <figure>
+    <img
+    src="ComputationExamples.002.jpeg"
+    alt="Fig2" style="width:75%"> 
+    <figcaption>Figure State S_1</figcaption>
+</figure>
+
+      <figure>
+    <img
+    src="ComputationExamples.003.jpeg"
+    alt="Fig3" style="width:75%"> 
+    <figcaption>Figure State S_2</figcaption>
+</figure>
+
+      <figure>
+    <img
+    src="ComputationExamples.004.jpeg"
+    alt="Fig4" style="width:75%"> 
+    <figcaption>Figure State S_3</figcaption>
+</figure>
+
+      <figure>
+    <img
+    src="ComputationExamples.005.jpeg"
+    alt="Fig5" style="width:75%"> 
+    <figcaption>Figure State S_4</figcaption>
+</figure>
+
+
+
+      <figure>
+    <img
+    src="ComputationExamples.006.jpeg"
+    alt="Fig6" style="width:75%"> 
+    <figcaption>Figure State S_5</figcaption>
+</figure>
+
+      <figure>
+    <img
+    src="ComputationExamples.007.jpeg"
+    alt="Fig7" style="width:75%"> 
+    <figcaption>Figure State S_6</figcaption>
+</figure>
+
+      <figure>
+    <img
+    src="ComputationExamples.008.jpeg"
+    alt="Fig8" style="width:75%"> 
+    <figcaption>Figure State S_7</figcaption>
+</figure>
+
+      <figure>
+    <img
+    src="ComputationExamples.009.jpeg"
+    alt="Fig9" style="width:75%"> 
+    <figcaption>Figure State S_8</figcaption>
+  </figure>
+
+      <figure>
+    <img
+    src="ComputationExamples.010.jpeg"
+    alt="Fig10" style="width:75%"> 
+    <figcaption>Figure State S_9</figcaption>
+  </figure>
+
+<!------------------------------------------------------------->
+<a name="InvariantsBalloon"></a>
+<h3 class="w3-text-teal">Invariants, Loop Variants and Termination in
+the Simple Balloon Example</h3>
+
+
+<h4 class="w3-text-teal">Question</h4>
+Give an example of an invariant for the balloon example.
+
+<h4 class="w3-text-teal">Answer</h4>
+An invariant of the system is:
 <p>
 Number of balloons is at most 2
 <p>
@@ -334,78 +463,162 @@ which is equivalent to: <code>(X, Y) + (Y, X) <= 2</code>
 (Here we are abusing notation using (X, Y) for a channel and also for
 the state of the channel.)
 
+<h4 class="w3-text-teal">Question</h4>
+How do you prove that this condition is invariant?
+
+<h4 class="w3-text-teal">Answer</h4>
+To prove that this predicate (Boolean condition) is an invariant we
+prove that (1) it holds initially 
+and (2) and for all state transitions, if the invariant holds in the
+state before the transition then it holds in the state after the transition.
+
 <p>
-To prove that this condition is an invariant we prove that (1) it holds initially
-and (2) if it holds before any
-event of the system then it holds after the event.
-The proof is straightforward.
+Initially: <code>(X, Y) = 1</code> and <code>(Y, X) = 1</code>
 
+So, the predicate holds initially.
 
-<h5 class="w3-text-teal">Another Invariant</h5>
-Another invariant is:
 <p>
-if nX and nY are both positive then there are two balloons in the
-system
-</p>
-which can be written as:
+A state transition in which a balloon is returned does not change the value
+of <code>(X, Y) + (Y, X)</code>.
+
 <p>
-\(
-((X, Y) + (Y, X) = 2) \vee (nX \leq 0) \vee (nY \leq 0)
-\)
+A state transition in which a balloon is popped decreases <code>(X, Y)
++ (Y, X)</code>.
+
 <p>
-The proof is straightforward.
-The condition holds initially.
-The execution of any event in which agent Y receives a balloon leaves the
-number of balloons unchanged if nY > 0.
-Similarly for X.
+Therefore if the predicate holds before a state
+transition then it holds after the transition.
+
+<h4 class="w3-text-teal">Question</h4>
+
+Is the following an invariant of the system?
+<p>
+((X, Y) + (Y, X) = 2) or (nX = 0) or (nY = 0)
 
 
-<h5 class="w3-text-teal">Yet another Invariant</h5>
-The following invariant is proved easily: nX and nY are nonnegative. 
+<h4 class="w3-text-teal">Answer</h4>
+Yes, this predicate is an invariant.
+
+<p>
+To prove that this predicate is an invariant we
+prove that (1) it holds initially 
+and (2) and for all state transitions, if the invariant holds in the
+state before the transition then it holds in the state after the
+transition.
+
+<p>
+Initially, <code>(X, Y) = 1</code> and <code>(Y, X) = 1</code>.
+
+Therefore the predicate holds initially.
 
 
-<h5 class="w3-text-teal">Loop Variant</h5>
-To prove that the function terminates we use the loop variant:
+<p>
+Let S be the state before a transition to a state S'.
+We will prove that if the predicate holds in S then the predicate
+holds in S'.
+
+<p>
+Consider two cases:
+<ol>
+  <li>
+  nX = 0 or nY = 0 in S.
+  <p>
+  Because nX and nY do not increase,
+  and nX and nY do not become negative,
+  in the execution of an event, it follows that nX = 0 or nY = 0 in S'.
+  Therefore the predicate holds in S'.
+  </li>
+  <li>
+  nX > 0 and nY > 0 in S.
+  <p>
+  Because the invariant holds in S it follows that <code>(X, Y) + (Y,
+  X) = 2</code> in S.
+  <p>
+  Because nY > 0 the execution of an event in which Y receives a
+  balloon leaves <code>(X, Y) + (Y, X)</code> unchanged.
+  <p>
+  Because nX > 0 the execution of an event in which X receives a
+  balloon leaves <code>(X, Y) + (Y, X)</code> unchanged.
+  <p>
+  Therefore <code>(X, Y) + (Y, X) = 2</code> in S'.
+  So, the predicate holds in S'.
+  </li>
+</ol>
+
+
+
+
+
+<h3 class="w3-text-teal">Example of a Loop Variant</h3>
+
+<h4 class="w3-text-teal">Question</h4>
+How do you prove that the algorithm terminates?
+
+<h4 class="w3-text-teal">Answer</h4>
+To prove that the algorithm terminates we use the loop variant:
 <center>
 <code>nX + nY + (X, Y) + (Y, X)</code>
 </center>
 
 <p>
-The loop variant is a function of the variables of the system.
+The loop variant is a function of the state (i.e. variables) of the system.
 
-We can carry out an induction on this function because it returns
-integers and is bounded below.
-
-The bound is not important. In our example, a bound is 0.
-
+In this example, the loop variant maps states of the program to
+integers.
 
 <p>
-We show that execution of any event reduces the variant function.
-When agent Y receives a balloon if nY is positive then nY
-decreases thus decreasing the variant function, and if nY is 0 then
-(X, Y) decreases thus decreasing the variant function.
+We must show that  (1) the loop variant is bounded below and we can
+<a href="https://en.wikipedia.org/wiki/Well-founded_relation">carry
+out induction</a> on the values of the loop variant, i.e., it can
+decrease only a finite number of times before it reaches a lower
+bound, and (2) the executions of all steps in all computations that
+start at initial states reduce the value of the loop variant.
 
-Similarly for X.
+The specific lower bound is irrelevant for the proof of termination.
 
-<h5 class="w3-text-teal">Termination Condition</h5>
+<p>
+In this example, 0 is (obviously) a lower bound.
+
+Next we show that the execution of any event in any state reduces the
+value of the loop variant.
+
+<p>
+When Y receives a balloon if nY is positive then nY
+decreases which the loop variant, and if nY is 0 then
+(X, Y) which decreases the loop variant.
+<p>
+Similarly every event in which X receives a balloon also reduces the
+loop variant. Thus the executions of all events reduce the loop variant.
+
+<p>
+Therefore the algorithm terminates execution.
+
+<h4 class="w3-text-teal">Question</h4>
+What can you prove about the state of the system when the computation
+terminates? 
+
 We have shown that computations terminate and we given examples of
 invariants.
 
-What can we prove about the state of the system when computation
-terminates?
+<h4 class="w3-text-teal">Answer</h4>
 
 <p>
+At termination all channels are empty.
+
 Let's prove that nX or nY is 0 at termination.
 
 <p>
-All channels are empty at termination.
-
-From the invariant if <code>(X, Y) + (Y, X)</code> \(\neq) 0 then nX
+From the invariants if:
+<br>
+<code>(X, Y) + (Y, X)</code> \(\neq\) 2 then nX
 or nY is 0.
+<p>
+At termination, <code>(X, Y) + (Y, X)</code> \(=\) 0, and the result follows.
 
 
 
-  <!--------------------------------------------------------------->
+<!--------------------------------------------------------------->
+<a name="GCDExample"></a>
   <h3 class="w3-text-teal">More Examples of Invariants and Loop Variants</h3>
 
   We reason about the correctness of many distributed algorithms in
@@ -416,7 +629,7 @@ or nY is 0.
 
 
   <!--------------------------------------------------------------->
-  <h3 class="w3-text-teal">Loop Invariant of a Sequential While Loop</h3>
+  <h3 class="w3-text-teal">Example: GCD using a While Loop</h3>
   
   A <a href="https://en.wikipedia.org/wiki/Loop_invariant">
   loop invariant</a>
@@ -431,7 +644,7 @@ or nY is 0.
 
 
   <!----------------------------------------------->
-  <h5 class="w3-text-teal">Example</h5>
+  <h5 class="w3-text-teal">Example: Invariant</h5>
   
   A loop invariant in the following greatest common
   divisor (gcd) program is shown in the body of the loop as the
@@ -451,7 +664,7 @@ while x != y:
 
 
   <!--------------------------------------------------------------->
-  <h3 class="w3-text-teal">Invariant of a Distributed System</h3>
+  <h3 class="w3-text-teal">Invariant of a Distributed System for GCD</h3>
   
   An invariant of a distributed system is a
   predicates that holds in all states reachable from initial states.
@@ -474,7 +687,7 @@ while there exists a nonempty input channel in the system:
 
   
   <!----------------------------------------------->
-  <h5 class="w3-text-teal">Example</h5>
+  <h5 class="w3-text-teal">Example of a Distributed GCD</h5>
   
   We are given a strongly connected network of agents -- i.e.,
   there is a path from each agent to every other agent.
@@ -528,7 +741,7 @@ is straightforward.
 
 
   <!----------------------------------------------->
-<h5 class="w3-text-teal">Example</h5>
+<h5 class="w3-text-teal">Example of an Invariant</h5>
 
 Another invariant for the gcd example, given earlier, is as follows.
 For all channels <code>(X, Y)</code> in the network:
@@ -574,7 +787,8 @@ because <code>m = X.n</code> and <code>m</code> is a multiple of
   <!--------------------------------------------------------------->
 <h3 class="w3-text-teal">Loop Variant</h3>
 
-<h5 class="w3-text-teal">Question about Loop Variants</h3>
+<h5 class="w3-text-teal">Question about Loop Variant in the Sequential
+GCD</h3>
 What is an example of a loop variant for the following loop?
     <pre>
 x, y = X, Y
@@ -723,7 +937,7 @@ system X.n is a multiple of Y.n.
 Because the directed graph of agents and edges specified as
 <code>successors</code> of agents is strongly
 connected:
-<br>
+<p>
 <i> for all agents X, Y in the system: X.n is a multiple of Y.n</i>
 
 <p>

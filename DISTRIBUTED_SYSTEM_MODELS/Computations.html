@@ -93,8 +93,8 @@ event of the system that causes a transition from each state in the
   <h3 class="w3-text-teal">Definition</h3>
 <!----------------------------------------------->
 
-  A computation is a sequence of one or more states,
-\([S_{0}, S_{1}, S_{2}, \ldots]\) where there exists an
+  A computation is a sequence of states,
+ where there exists an
 event that causes a transition from each
 state in the sequence to the next.
 
@@ -123,8 +123,7 @@ A <i>step</i> of the computation is an execution of a single event in this
 
   The same event can occur multiple times in a computation.
 
-  Each occurrence of an event, even if the event has occurred before,
-  is a separate step of the computation.
+  Each occurrence of an event is a separate step of the computation.
 
  
   <!----------------------------------------------->
@@ -146,7 +145,7 @@ while there exists an event that can be executed:
 
 The loop terminates when there are no executable events.
 
-If there exists an executable event then the selection of which
+The selection of which
 event to execute in an iteration is nondeterministic -- <i>any</i> executable
 event can be selected.
 
@@ -167,16 +166,18 @@ computation, and this step causes a transition from state
 Distributed Systems</h4>
 
 
-The benefit of using the states in a while loop to represent the states 
-of a computation is that we can use familiar techniques for reasoning about
-while loops ---
+A benefit of using the states in a while loop to represent the states 
+of a computation is that we can use familiar techniques
+--- 
 <a href="https://en.wikipedia.org/wiki/Loop_invariant">
 loop invariant</a> and
 <a href="https://en.wikipedia.org/wiki/Loop_variant">
 loop variants</a> ---
-to reason about distributed algorithms.
+for reasoning about loops in sequential programming to reason about
+distributed algorithms too.
+
 See <a href="https://dl.acm.org/doi/book/10.1145/3568325">
-Effective Theories in Programming Practice</a> by Jayadev Misra for
+Effective Theories in Programming Practice</a> for
 examples of these techniques
 
 
