@@ -77,27 +77,24 @@ hr.new1 {
 <div class="w3-twothird w3-container">
   
   <!--------------------------------------------------------->
-  <h2 class="w3-text-teal">Logical Clocks and Global Snapshots</h2>
+  <h2 class="w3-text-teal">Using Logical Clocks To Take Global Snapshots</h2>
   <!--------------------------------------------------------->
   
   <p class="w3-text-red">
+  This page describes an algorithm that uses logical time to determine
+  global snapshots.
   The state at which all agents are at the same logical time \(t\) is
-  a global snapshot. 
-
-  The state when local physical clocks
-  of all agents are at the same time \(t\) may not be a global snapshot.
+  a global snapshot.
 
   Combining physical and logical clocks results in clocks that tick
   forward and where the state when all local clocks are at the same
   time is a global snapshot.
 
-  Examples of algorithms that use such clocks are given later.
-
   </p>
 
    
   <!-----------------------------------------------------------------------------> 
-  <h3 class="w3-text-teal">Problem: Global Snapshots at Logical Times</h3> 
+  <h3 class="w3-text-teal">The Problem</h3> 
   <!----------------------------------------------------------------------------->
   <p>
   Design an algorithm that computes global snapshots using logical
@@ -108,32 +105,39 @@ hr.new1 {
   <!----------------------------------------------------------------------------->
   <h4 class="w3-text-teal">How Should You Solve the Problem?</h4>
   <!----------------------------------------------------------------------------->
-  <p class="w3-text-teal">Strategy</p>
-  Use properties of logical times and computations.
+  <h5 class="w3-text-teal">Strategy</h5>
+  A strategy to develop any
+  algorithm that deals with global snapshots is: Start with definition
+  of cuts.
   
-  <p>
-  Sequences of steps in increasing logical time are computations.
-
-  Therefore, the sequence of steps with logical time at most  \(t\) is
-  a computation, for all  \(t\).
-
-  This suggests the following definition of the state at logical time
+  <h5 class="w3-text-teal">Observation</h5>
+  For any \(t\), define the <i><code>past</code> at \(t\)</i> in a
+  computation as the set of events with logical time at most \(t\),
+  and define <i><code>future</code> at \(t\)</i>
+  as the set of events with logical time greater than
   \(t\).
-  
-
-  <h5 class="w3-text-teal">State at Logical Time \(t\)</h5>
-  The state of an agent \(A\) at logical time \(t\) is its state after
-  steps with logical time \(t\) or less and before steps with
-  logical time greater than \(t\).
-
   <p>
-  The state of a channel at logical time \(t\) is the sequence of
-  messages sent along the channel in steps with logical time at most
-  \(t\), but not received in these steps.
+  (<code>past</code> at logical time \(t\), <code>future</code> at
+  logical time \(t\)) is a cut.
+  
+  <h6 class="w3-text-teal">Proof</h6>
+  From the <a href=:LogicalClocks.html">definition of logical time</a>
+  data flows forwards in logical time, i.e., from smaller to higher
+  logical times.
+  Therefore all data flows to steps in <code>past</code> at logical
+  time \(t\) are from steps in <code>past</code> at logical
+  time \(t\).
+
+  <h4 class="w3-text-teal">State at Logical Time \(t\)</h4>
+The <i>state at logical time \(t\)</i> is the state at the cut
+ (<code>past</code> at logical time \(t\), <code>future</code> at
+logical time \(t\)), and is given by the labels of edges from steps in
+<code>past</code> at logical time \(t\) to steps in
+<code>future</code> at logical time \(t\).
 
 
 <!---------------------------------------------------------->
-  <h4 style="color:red;">Example: State at Logical Time \(t\)</h4>
+  <h5 style="color:red;">Example: State at Logical Time \(t\)</h5>
 <!---------------------------------------------------------->
 Figure 1 illustrates the state at logical time 6.5 of the
 computation shown in figure 1.
@@ -149,7 +153,7 @@ The states of agents and channels at logical time \(t = 6.5\) are
 given by the labels of the edges that cut the purple line.
 
 <figure>
-    <img src="Timelines/Timelines.002.jpeg"
+    <img src="Timelines/Timelines.019.jpeg"
 alt="Fig2" style="width:100%">
 <figcaption>Fig. 1: Cut at Logical Time 6.5. Past is Set of Steps
     with Logical Time at most 6.5</figcaption>
@@ -215,7 +219,7 @@ The position of a step with logical time \(t\) is at a distance of
 \(t\) units from the origin.
 
 <figure>
-    <img src="Timelines/Timelines.003.jpeg"
+    <img src="Timelines/Timelines.018.jpeg"
   alt="Fig3" style="width:80%"> 
     <figcaption>Fig. 3: Computation with Logical Time as Real Time</figcaption>
 </figure>
@@ -254,12 +258,20 @@ So physical clocks almost always obey the logical clock requirement.
 
 <p>
 We cannot rule out the possibility that a message sent when the
-sender's clock is at \(t\) is received when the receiver's clock is
-earlier than \(t\) or equal to \(t\).
+sender's clock is later than \(t\) is received when the receiver's clock is
+earlier than \(t\).
 
-We can use physical clocks, but correct them so that messages are
-received only after they are sent, where the times are determined by
-corrected physical clocks.
+If this happens the logical clock requirement is violated because data
+flows from later to earlier in time.
+
+<p>
+To prevent physical clocks from violating the logical clock
+requirement we correct physical clocks using the logical clock algorithm.
+
+If an agent receives a message with timestamp
+\(T\) when the agent's clock is at \(T'\), then if \(T' < T\), the
+agent corrects its clock -- i.e. moves its clock forward to a value
+greater that \(T\).
 
 <p>
 Such clocks have the following properties that we use in
@@ -275,7 +287,8 @@ designing algorithms:
 
   <li>
 
-  Sequences of steps in ascending order of time are computations.
+  Sequences of steps in ascending order of time -- where time at each
+  agent is determined by the agent's clock -- are computations.
   </li>
 </ol>
 <p>

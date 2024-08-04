@@ -162,33 +162,25 @@ hr.new1 {
   
   <p class="w3-text-teal">Strategy</p>
 
-  A strategy to solve detection problems is to start with the
-  <a href="ChannelSnapshots.html">general detection algorithm</a> and
-  then explore optimizations by using
-  <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-  properties of cuts.</a>
-  
-  <p>
-  In the general detection algorithm, an observer gets global snapshots and
-  determines if there is a cycle of waiting agents in the snapshot.
+  Some <a href="GlobalSnapshotApplications.html">strategies are given
+  here</a>.
 
-  Algorithms for determining cycles are found
-  <a href="https://en.wikipedia.org/wiki/Cycle_(graph_theory)">here</a>.
+  Let's use the strategy "Detection without Observers: Distributed
+  Algorithms on Local Snapshots." 
 
   <p>
-  Next let's explore
-  <a href="ChannelSnapshots.html">
-  optimizations
-  </a>;
-  see "Detection without Observers: Distributed Algorithms on Local
-  Snapshots."
 
-  The optimized algorithm has two phases: (1) First a global snapshot
+  The algorithm has two phases: (1) First a global snapshot
   algorithm is executed. (2) After the global snapshot algorithm
   terminates a distributed detection algorithm is executed on
   the local snapshots recorded by the global snapshots.
 
+  
   <p>
+  Algorithms for the second phase -- determining cycles are found
+  <a
+  href="https://en.wikipedia.org/wiki/Cycle_(graph_theory)">here</a>.
+  
   The two phases can be merged for some problems, including this one.
 
 
@@ -242,17 +234,10 @@ specified in the global snapshot.
 
 
   <p class="w3-text-teal">Messages</p>
-  The algorithm to detect waiting cycles is similar to the global
-  snapshot algorithm.
-
-Instead of the <code>marker</code> message used in global snapshots, a
-message in the detection identifies the set
-of resources for which the sender of the message is waiting.
-
 <p>
 Each message <code>m</code> sent by an agent <code>v</code> has a
 field <code>m.waits</code> where:
-<center><code>m.waits</code> = <code>v.waits</code>.</center>
+<code>m.waits</code> = <code>v.waits</code>.
 
   <p class="w3-text-teal">Initiating the Algorithm</p>
   A waiting agent <code>u</code> initiates the algorithm by sending a message

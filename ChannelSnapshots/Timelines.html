@@ -1,0 +1,289 @@
+
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+  <!--------------------------------------------------------------->
+  <h2 class="w3-text-teal">Cuts of Dataflow Graphs</h2>
+  <!--------------------------------------------------------------->
+  
+  <p class="w3-text-red">
+  This page introduces the concept of a <i>cut</i> of a dataflow
+  graph.
+
+  Cuts of dataflow are key to developing algorithms to detect deadlock
+  and termination and other conditions, and cuts are the basis for the
+  global snapshot algorithm.
+  </p>
+
+
+    <!--------------------------------------------------------------->
+  <h3 class="w3-text-teal">Definition of a Cut of a Computation</h3>
+  <!--------------------------------------------------------------->
+  
+  <p>
+  A <i>cut of a computation</i> is a partition of the steps of the
+  computation into <i>past</i> and <i>future</i> such that all data
+  flow to steps in <code>past</code> are from steps in
+  <code>past</code>.
+
+  A cut is specified by the ordered pair of sets
+  (<code>past</code>, <code>future</code>).
+
+  <p>
+  Equivalent definitions of a cut are (1) all data flows from
+  <code>future</code> steps are to 
+  <code>future</code> steps, and (2) no data flows from
+  <code>future</code> to <code>past</code>. 
+
+  <p>
+  From the definition, it follows that a <i>cut</i> of a dataflow
+  graph is a partition of the vertices of 
+  the graph into subsets <i>past</i> and <i>future</i> such that all
+  paths to vertices in <code>past</code> are from vertices in
+  <code>past</code>. 
+
+  <p>
+  Therefore, a partition of the vertices of a dataflow graph into sets
+  <i>past</i> and <i>future</i>  is a cut if and only if all edges to
+  vertices in <i>past</i> are from vertices in <i>past</i>.
+
+  
+  A cut of a dataflow graph is an instance of a
+  <a href="https://en.wikipedia.org/wiki/Cut_(graph_theory)">cut of a
+  flow network</a>.
+
+
+
+
+
+
+   
+  <!----------------------------------------------->
+  <p style="color:red;">Example</p>
+  
+  The top diagram of figure 1 shows a cut in which vertices in
+  <code>cut</code> are 
+  colored red and vertices not in <code>cut</code> are green.
+
+  The curved black line is the boundary separating <code>cut</code>
+  from vertices outside it.
+
+  <figure>
+    <img src="Model.005.jpeg"
+    alt="Fig1" style="width:100%"> 
+    <figcaption>Fig.1: Example - A Cut of a Dataflow Graph</figcaption>
+</figure>
+
+
+  <a name="TheoremComputationsAndCuts">
+  <!--------------------------------------------------------------->
+  <h3 class="w3-text-teal">Theorem: Computations and Cuts</h3>
+  <!--------------------------------------------------------------->
+Let \(E\) be a computation and let <code>(past, future)</code> be a
+  cut of the computation. 
+
+There exists a computation \(E'\), which is a permutation of \(E\), in
+which all steps in <code>past</code> are executed before
+ all steps in <code>future.</code>
+
+<p class="w3-text-teal">Proof</p>
+<p>
+Let <code>pre</code> be the sequence of steps obtained from \(E\) by
+retaining only steps in <code>past</code> and deleting steps in
+<code>future</code>. 
+<p>
+Let <code>post</code> be the sequence of steps obtained from \(E\) by
+retaining only steps in <code>future</code> and deleting steps in
+<code>past</code>. 
+<p>
+Let \(E'\) be the sequence consisting of <code>pre</code> followed by
+<code>post</code>.
+
+<p>
+The proof that data flows forwards in \(E'\) is straightforward.
+
+<a href="../DISTRIBUTED_SYSTEM_MODELS/Model.html#TheoremPermutations">
+We proved the theorem:</a> any permutation of a computation, where
+ data flows forward in the permutation, is also a
+computation.
+
+Therefore \(E'\) is also a computation.
+
+
+  <a name="StateAtCut">
+  <!--------------------------------------------------------------->
+  <h4 class="w3-text-teal">Theorem: State at a Cut</h4>
+  <!--------------------------------------------------------------->
+
+<p>
+Let <code>(past, future)</code> be a cut of a computation \(E\).
+
+Let <code>pre</code> be the sequence of steps obtained from \(E\) by
+retaining only steps in <code>past</code> and deleting steps in
+<code>future</code>.
+
+The state at the cut <code>(past, future)</code> is defined as
+as the state at the end of computation <code>pre</code>.
+
+<p>
+The state at a cut <code>(past, future)</code> of a computation \(E\)
+is given by labels of 
+the edges from <code>past</code> to <code>future</code> in the
+dataflow graph of \(E\).
+
+<p>
+The state of an agent <code>X</code> at the cut 
+is given by the label of the agent edge for
+<code>X</code> from a step in the <code>past</code> to a step in the
+<code>future</code>. 
+The state of a channel at the cut is the sequence of messages sent on
+the channel in the <code>past</code> and received in the <code>future</code>.
+
+
+<p>
+See the lower diagram in figure 1.
+The state <code>S*</code> after the cut is shown as final vertices (which are labeled
+<code>N</code>) of <code>cut</code> 
+ and <code>S*</code> is shown as as initial vertices (which
+  are labeled <code>0</code>) of steps outside <code>cut</code>.
+  
+
+<!---------------------------------------->
+<h5 class="w3-text-teal">Next</h5>
+<!---------------------------------------->
+The next page describes 
+<a href="ChannelSnapshots.html">global snapshot algorithms by
+which agents record the 
+states of distributed systems</a>.
+
+<p>
+<a href="TimelinesExamples.html">
+Examples
+</a>
+
+
+<p>
+<a href="TimelinesFAQ.html">
+Questions
+</a>
+
+<p>
+<a href="TimelinesReview.html">
+Review
+</a>
+
+
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>

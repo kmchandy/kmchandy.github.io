@@ -126,61 +126,73 @@ hr.new1 {
   <h4 class="w3-text-teal">How Should You Solve the Problem?</h4>
   <!----------------------------------------------------------------------------->
 
-  <p class="w3-text-teal">Strategy</p>
+  <h5 class="w3-text-teal">Strategy</h5>
 
-  A strategy to solve detection problems is to start with the
-  <a href="ChannelSnapshots.html">general detection algorithm</a> and
-  then explore optimizations by using
-  <a href="DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-  properties of cuts.</a>
-  
-  Let's explore optimizations.
+  Using the <a href="GlobalSnapshotApplications.html">
+  different strategies described earlier</a> gives us different
+  termination detection algorithms.
 
-  <p>
-  The algorithm detects whether a channel is empty and it can do so
-  given the numbers of messages sent and received on the channel
-  without information about message contents.
+  Let's use <i>observers</i> and optimize the global snapshot
+  algorithm for the special case of termination detection.
+ 
 
-  What <a href="DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-  properties of cuts</a>
-  come to mind to help us design an algorithm based on message counts?
 
   <p>
-  We use
-  <a href="DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-  "Cut based on Counts of Messages Sent and Received,"</a>
-  which is given again below.
+  There exists a cut <code>(past, future)</code> of a dataflow graph
+  exactly when every edge to a <code>past</code> vertex is from a
+  <code>past</code> vertex.
 
-<p>
-There exists a cut <code>(past, future)</code> exactly when the
-following two conditions hold:
+  In our algorithms, <code>past</code> is the set of steps (vertices)
+  at each agent before the agent takes its local snapshot.
 
-<ol>
-  <li>
-  For all \(C\):  \(\; C_{s} \geq C_{r}\),
-  <p>
-  where
-  \(C_{s}\) and \(C_{r}\) are the numbers of messages sent and
-  received, respectively, on channel \(C\), in <code>past</code>.
-  </li>
-  <li>
-  If a step \(x\) of an agent is in <code>past</code> then steps at
-  that agent before \(x\) are also in <code>past</code>.
-  </li>
-</ol>
+  This guarantees that every agent edge to a <code>past</code> vertex
+  is from a <code>past</code> vertex.
 
-The property suggests the following algorithm.
+  Let's look at ways of guaranteeing that every message edge to a
+  <code>past</code> vertex is from a <code>past</code> vertex.
+
+
+
+  <a name="Observation">
+  <hr class="new2">
+  <h5 style="color:blue;">Observation</h5>
+  <p style="color:blue;">
+  Let <code>past</code> be any set of steps in a computation.
+
+  For a channel \(C\), let \(C_{s}\) and \(C_{r}\) be the numbers of
+  messages sent and received, respectively, on channel \(C\), in
+  <code>past</code>. 
+  <p style="color:blue;">
+  Every message received along \(C\) in a step in
+  <code>past</code> is sent in a step in <code>past</code> exactly
+  when:
+  <center>
+  <p style="color:blue;">
+  \(\; C_{s} \geq C_{r}\)
+  <p style="color:blue;">
+  </center>
+  </p>
+  <hr class="new2">
+
+
+The observation suggests the following algorithm.
 
 
 
   <h4 class="w3-text-teal">A Termination Detection Algorithm</h4>
 
   <p class="w3-text-teal">Agent Actions</p>
-  When an agent changes state from active to idle the agent sends a
+  When an agent changes state from active to idle (i.e., the agent
+  starts waiting to receive a message) the agent sends a
   message to the observer. 
 
-  This message contains \(C_{s}\) for each output channel and
-  \(C_{r}\) for each input channel of the agent.
+  The message to the observer contains \(C_{s}\) for each output channel \(C\) where
+  \(C_{s}\) is the number of messages sent on channel \(C\) up to the
+point at which the agent becomes idle.
+
+The message also contains \(C_{r}\) for each input channel of the
+agent where \(C_{r}\) is the number of messages received on channel \(C\) up to this
+point.
 
 
   <p class="w3-text-teal">Observer Actions</p>
@@ -199,12 +211,15 @@ All agents are idle.
 \(C_{s}^{*}\) and \(C_{r}^{*}\) are the numbers of messages sent and
 received (respectively) on channel \(C\) for all \(C\).
 
-<p class="w3-text-teal">Termination Detection</p>
 
-<hr class="new2">  
+
+<hr class="new2">
+<h5 style="color:blue;">The Termination Detection Condition:</h5>
   <p style="color:blue;">
-  The observer detects computation has terminated if
-  for all channels \(C\): \(C_{s}^{*} = C_{r}^{*}\).
+  The observer detects that computation has terminated if
+
+<p style="color:blue;">
+For all channels \(C\): \(C_{s}^{*} = C_{r}^{*}\).
 </p>
 <hr class="new2">  
 
@@ -217,7 +232,9 @@ received (respectively) on channel \(C\) for all \(C\).
 terminated then the computation has indeed terminated.
 
 <p>
-Since the observer has detected termination, for each channel \(C\),
+Assume that the observer has detected termination.
+
+Then for each channel \(C\),
 either \(C_{s}^{*} = C_{r}^{*}\) initially, or the observer received
 messages containing \(C_{s}^{*}\) and \(C_{r}^{*}\) such that
 \(C_{s}^{*} = C_{r}^{*}\).
@@ -233,10 +250,9 @@ Let<code>(past, future)</code> be a partition of the steps of the
 then the agent has no steps in <code>past</code>.)
 
 <p>
-From the property,
-<a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-"Cut based on Counts of Messages Sent and
-Received,"</a> <code>(past, future)</code> is a cut.
+Because \(C_{s}^{*} \geq C_{r}^{*}\) for all channels \(C\)
+<a href="#Observation">it follows
+that</a> <code>(past, future)</code> is a cut.
 
 <p>
 From the definition of terminated state it follows that the state at
@@ -252,9 +268,11 @@ is a terminated state then all succeeding states are terminated states.
 Next we prove that if the computation terminates then the observer
 detects termination.
 
+Assume that the computation has terminated.
+
 The last message sent by each agent has counts \(C_{s}^{*}\) and
 \(C_{r}^{*}\) of the numbers of messages sent and received (respectively)
-for each of its output channels \(C\).
+for each of its incident channels \(C\).
 
 Because these are the last messages sent when the algorithm terminates
 it follows that \(C_{s}^{*} = C_{r}^{*}\) for all \(C\).
