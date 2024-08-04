@@ -322,22 +322,17 @@ The choice of a model is an engineering decision.
   <!----------------------------------------------------------------->
   <h5 class="w3-text-teal">How many channels are there in a system?</h5>
   <!----------------------------------------------------------------->
-  In the model there is a channel from every agent to every agent.
+The number of channels in the model is arbitrary.
 
-  So, if there are \(N\) agents there are \(N^{2}\) channels.
+In the model, there can be a channel from any agent to any agent.
 
-With a thousand agents there are a million channels.
-
-That's a lot of channels!
+  So, if there are \(N\) agents there can be a maximum of \(N^{2}\) channels.
 
 <p>
-The model allows channels between every pair of agents.
+Other models allow for multiple channels from an agent \(X\) to an
+agent \(Y\).
 
-In practice very few of these channels are used.
-
-When we implement an algorithm using AMQP, for instance, we will
-declare channels.
-  
+In our model, however, there can be at most one channel from \(X\) to \(Y\).
   
   <!----------------------------------------------------------------->
   <h5 class="w3-text-teal">Can you describe channels in more detail?</h5>
@@ -370,8 +365,10 @@ along channel <code>(P, Q)</code>.
 A system may have a channel <code>(P, Q)</code> and may or may not have a channel
 <code>(Q, P)</code>.
 
-Some systems have bidirectional channels but our model does not allow
-for bidirectional channels.
+Some systems have bidirectional channels in which messages can be sent
+in both directions on the same channel.
+
+Our model does not allow for bidirectional channels.
 
 <p>
 In our model, 

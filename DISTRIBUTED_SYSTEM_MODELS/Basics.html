@@ -239,21 +239,26 @@ Messages sent on <i>different</i> channels may not be delivered in the
 order sent.
 
 <p>
-The following scenario is possible.
+The following scenario is possible with different agents \(A, B, C\).
 
 <ol>
   <li>
-  An agent \(A\) sends message \(m_{1}\) to an agent \(C\).
+  \(A\) sends message \(m_{1}\) to \(C\).
   </li>
   <li>
-Later, an agent \(B\) (different from \(A\)) sends message \(m_{2}\) to an
-agent \(C\).
+  Then \(A\) sends message \(m_{2}\) to \(B\).
+  <li>
+  When \(B\) receives \(m_{2}\), \(B\) sends a message \(m_{3}\) to
+  \(C\).
   </li>
   <li>
-Agent \(C\) receives \(m_{2}\) from \(B\) before \(C\) receives
-  \(m_{1}\) from \(A\).
+  \(C\) receives \(m_{3}\) before \(C\) receives \(m_{2}\).
   </li>
 </ol>
+In the example, message \(m_{3}\) is sent to \(C\) after message
+\(m_{1}\) is sent to \(C\), but \(C\) receives \(m_{3}\) before
+  \(m_{1}\). 
+
 
 <a name="Agents"></a>
 <!---------------------------------------------------->
