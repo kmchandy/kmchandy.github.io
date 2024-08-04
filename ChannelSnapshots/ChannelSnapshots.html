@@ -117,7 +117,8 @@ hr.new1 {
   A state of the system is a tuple with an element of the tuple for each agent and
   each channel.
 
-  A system state is also called a global state to distinguish it from
+  The state of a system is also called a <i>global state</i> or a
+  <i>system state</i> to distinguish it from
   states of agents and states of channels.
   
 
@@ -186,7 +187,7 @@ client computation.
 Our goal is to design an algorithm that does not stop the client.
 
 <p>
-Hereafter, when we refer to an agent we mean an OS agent.
+Hereafter, when we refer to an agent in this webpage we mean an OS agent.
 
 Likewise, by messages we mean those that are sent and received by the
 OS.
@@ -198,50 +199,42 @@ snapshot.
 
 
 <!----------------------------------------------------------------------------->
-<h4 class="w3-text-teal">The Problem</h4>
+<h4 class="w3-text-teal">Specification of a Global Snapshot Algorithm</h4>
 <!----------------------------------------------------------------------------->
  
 <p>
 Let \(S_{init}\) and \(S_{fini}\) be the states in which the
-algorithm starts and finishes, respectively.
+global snapshot algorithm starts and finishes, respectively.
 
-Design an algorithm that records a state \(S^{*}\) such that
+The global snapshot algorithm records a state \(S^{*}\) such that
 there exists a computation that starts at \(S_{init}\), then visits
 \(S^{*}\) and then visits \(S_{fini}\).
+
+
 
 
 <!----------------------------------------------------------------------------->
 <h4 class="w3-text-teal">How Should You Solve the Problem?</h4>
 <!----------------------------------------------------------------------------->
 
-
 <p class="w3-text-teal">Strategy</p>
-A general strategy for designing algorithms dealing with intermediate
-states is to find a helpful <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-property of cuts</a>.
+A strategy for developing algorithms dealing with global snapshots is
+to use a <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html"> 
+properties of cuts</a>.
 
-What property helps to determine \(S^{*}\)?
+The theorem
+<a href="Timelines.html#TheoremComputationsAndCuts">"Computations and Cuts," </a>
+tells us that \(S^{*}\) can be the state at any cut.
 
-<p>
-The property "Computations of Past before Future," given below, tells
-us that \(S^{*}\) can be the state at any cut.
-
-<!------------------------------------->
-<p class="w3-text-teal">Computations of Past before Future.</p> 
-
-<p>
-Let computation \(X\) start in state \(S_{init}\) and end in state
-\(S_{fini}\).
-
-Let \(S^{*}\) be the state at a cut <code>(past, future)</code> of \(X\).
-
-There exists a computation \(Y\) that starts in \(S_{init}\), visits
-\(S^{*}\), and ends in \(S_{fini}\).
-
-<p>
-Using this strategy, our tasks reduce to (1) identifying a cut, and
+Our tasks reduce to (1) identifying a cut, and
 (2) recording the state, \(S^{*}\), at the cut.
 
+
+
+
+
+
+<!------------------------------------------------->
 <h5 class="w3-text-teal">Identifying a Cut</h5>
 Each agent has to record its own state because an agent's state is not
 accessible to other agents.
@@ -249,23 +242,22 @@ accessible to other agents.
 The state of an agent that it records is called a <i>local snapshot</i>.
 
 <p>
-Define <code>past</code> as the set of steps at each agent before the
-agent takes its local snapshot, and
-define <code>future</code> as the set of steps at each agent after the
+A partition of the steps of a computation into <code>past</code> and
+<code>future</code> is a cut <code>(past, future)</code> exactly when
+all edges to vertices in <code>past</code> are from vertices in
+<code>past</code>.
+
+In our algorithm, let <code>past</code> be the set of steps at each agent before the
 agent takes its local snapshot.
-So, if a step \(x\) at an agent is in <code>past</code> then all steps
-at that agent before \(x\) are also in <code>past</code>.
+It follows that if a step \(x\) at an agent is in <code>past</code> then the agent
+edge to that step is also in <code>past</code>.
+Therefore we need only prove that all message edges to vertices in
+<code>past</code> are from vertices 
+in <code>past</code>.
+And this condition is guaranteed by the following rule
 
-<p>
-Let's use
-<a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html"> the following property of
-<code>past</code>, <code>future</code> and cuts:</a>
-<p>
-The partition <code>(past, future)</code> is a cut exactly when every
-message received in <code>past</code> is sent in <code>past</code>.
 
-<p>
-Therefore, <code>(past, future)</code> is a cut exactly when:
+
 <hr class="new2">
 <p style="color:blue;">Global Snapshot Rule</p>
 <p style="color:blue;">
@@ -274,8 +266,7 @@ is sent before the sender takes its local snapshot.
 <p>
 <hr class="new2">
 
-Design an algorithm yourself before reading further, and compare your
-algorithm with the one given below.
+We now use the global snapshot rule to develop an algorithm.
 
 
 
@@ -291,15 +282,17 @@ channel are messages sent in the <code>past</code> -- i.e. before the
 sender takes its local snapshot -- and messages sent
 after the marker are sent in the <code>future</code>.
 
-<p class="w3-text-teal">The algorithm</p>
+<p class="w3-text-teal">Steps of the global snapshot algorithm</p>
 <ol>
   <li>
   The algorithm begins by one or more agents taking their local
-  snapshots.
+  snapshots. Any number of agents can initiate the global snapshot
+  algorithm. 
   </li>
   <li>
   When an agent takes its local snapshot it sends a marker on each
-  of its outgoing channels. 
+  of its outgoing channels. An agent takes its local snapshot only
+  once. For each channel, only one marker is sent on the channel.
   </li>
   <li>
   When an agent receives a marker, the agent takes its local snapshot
@@ -307,7 +300,7 @@ after the marker are sent in the <code>future</code>.
   </li>
   <li>
   The snapshot of a channel is the sequence of messages received on
-  the channel after the receiver takes its snapshot and before the
+  the channel after the receiver takes its local snapshot and before the
   receiver receives a marker on the channel.
   </li>
 </ol>
@@ -368,159 +361,18 @@ So, a marker is sent on a channel at most once.
 
 The computation terminates when all markers are received.
 
-<!---------------------------------------------------->
-<h5 class="w3-text-teal">Collecting Local Snapshots to form Global
-Snapshots</h5>
-One way to collect local snapshots is to have an OS agent act as an
-observer.
-
-Each agent sends its local snapshots to the observer which puts the
-local snapshots together to form the global snapshots.
-
-Successive snapshots are disambiguated by using sequence numbers or
-timestamps.
-
-<p>
-Some algorithms carry out distributed computations on local snapshots
-without using an observer to collect local snapshots.
-
-Later, we give examples of such algorithms.
-
-
-
-<!---------------------------------------------------->
-<h3 class="w3-text-teal">Applications of Global Snapshots</h3>
-
-<h4 class="w3-text-teal">System Monitoring</h4>
-Systems can be monitored by taking global snapshots repeatedly.
-
-Let \(S_{0}, S_{1}, S_{2}, \ldots, \) be the sequence of states
-recorded by the system.
-
-From the property
-<a href="DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-Computations through Increasing Cuts
-</a>
-there exists a computation that visits each state \(S_{i}\) in order
-of increasing \(i\).
-
-The system monitor checks the sequence of snapshots to determine if
-some action is required.
-
-
-<h4 class="w3-text-teal">Rollback and Recover</h4>
-
-
-Let \(S^{*}\) be the most recent snapshot recorded by a system monitor.
-
-From the property,
-<a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-"Computations of Past before Future"</a>
-there exists a computation that starts at the initial state and later
-visits \(S^{*}\).
-
-So, if an error is detected in a computation then the computation can be
-restarted from \(S^{*}\) rather than rolling all the way back to the
-initial state. 
-
-
-
-<h4 class="w3-text-teal">Detecting Stable Predicates</h4>
-
-A <i>stable predicate</i> is a predicate with the following property: If the
-predicate holds at any point in any computation then it continues to
-hold forever thereafter in that computation. Equivalently, if a stable
-predicate holds in a state \(s\) then it holds in all states reachable
-from \(s\).
-
-<p>
-Examples of stable predicates are: "The computation has
-terminated," and "The computation is deadlocked."
-
-If a computation has terminated at some point then it remains 
-terminated.
-
-Likewise if a computation has deadlocked then it remains deadlocked.
-
-<h5 class="w3-text-teal">Specification of Detection Algorithms</h5>
-An algorithm to detect a stable property \(P\) has the following
-specification.
-<ol>
-  <li>
-  If \(P\) holds when the algorithm is initiated then the algorithm
-  detects that \(P\) holds.
-  </li>
-  <li>
-  If the algorithm detects that \(P\) holds then \(P\) holds when the
-  algorithm terminates.
-  </li>
-</ol>
-
-
-<h5 class="w3-text-teal">General Detection Algorithms</h5>
-A general solution is for the operating system to monitor a client
-computation by taking repeated snapshots of the computation.
-
-The OS checks whether a specified stable property holds in each
-snapshot.
-
-From the property,
-<a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html">
-"Computations of Past before Future"</a>
-this general solution satisfies the specification of detection
-algorithms. 
-
-<p class="w3-text-teal">Detection with Observers</p>
-The OS uses an agent, the observer, to collect local snapshots and
-form a global snapshot.
-
-The observer inspects the global snapshot to determine if the property
-holds in the snapshot.
-
-
-The OS can also use multiple observers each of which collects
-local information from subnetworks; the OS then carries out a
-distributed algorithm on its collection of observers.
-
-<p>
-The OS can also execute a distributed algorithm on local
-snapshots without having observers collect local information, as
-described next.
-
-
-<!-------------------------------------------------------->
-<p class="w3-text-teal">Detection without Observers: Distributed
-Algorithms on Local Snapshots</p>
-
-Distributed algorithms on local snapshots operate in two phases.
-
-In the first phase a global snapshot algorithm is executed.
-
-The local snapshot of each agent and its incoming channels are stored
-locally, at the agent, without sending the information to observers.
-
-<p>
-In the second phase a distributed algorithm is executed to determine
-if the local information stored at agents satisfies a specified global
-property, such as "computation has deadlocked."
-
-The algorithm in the second phase operates on unchanging data.
-
-These algorithms are often distributed graph algorithms.
-
-
-<p>
-The two phases can be executed concurrently in many applications.
-
-
-
-
 <h4 class="w3-text-teal">Next</h4>
 
 <p>
+See strategies for developing
+<a href="GlobalSnapshotApplications.html">
+algorithms that us global snapshots</a> and for examples of
+applications of global snapshots and cuts.
+
+<p>
 A code skeleton of the algorithm and examples of the global snapshot
-algorithm are provided
-<a href="ChannelSnapshotDetails.html">here</a>.
+algorithm 
+<a href="ChannelSnapshotsDetails.html">are provided here</a>.
 
 Next  
 <a href="LogicalClocks.html">logical clocks</a>.
