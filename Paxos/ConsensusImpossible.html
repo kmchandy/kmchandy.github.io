@@ -82,53 +82,65 @@ hr.new1 {
 
   
 <!--------------------------------------------------------->
-  <h1 class="w3-text-teal">Consensus</h1>
+  <h2 class="w3-text-teal">Consensus Algorithms</h2>
 <!--------------------------------------------------------->
 
 
-  
-<!------------------------------------------------------------------->
-<h4 class="w3-text-red">
-  <i>Central Ideas</i></h4>
-
+   
+  <!-------------------------------------------------------------------> 
   <p class="w3-text-red">
-  (1) Importance of consensus (2) Impossibility of consensus in
-  distributed systems with a faulty agent.
+  This page outlines the idea behind the proof that consensus is
+  impossible in distributed systems that may have faulty agents and in
+  which message delays are arbitrary.
 
 
-<h3 class="w3-text-teal">Importance of Consensus</h3>
+<h3 class="w3-text-teal">Importance of Consensus Algorithms</h3>
 
 <p>
 Algorithms by which groups of agents <a
 href="https://en.wikipedia.org/wiki/Consensus_(computer_science)">
-come to a consensus </a> are among the most fundamental problems in
+come to a consensus </a> are among the most fundamental in
 distributed computing.
 
 <p>
-Why is consensus important? There are many
+  Why is consensus important?
+
+  There are many
 problems in which messages are sent to groups of agents who
-collectively maintain a common <i>consensus</i> state. A bank may use
+  collectively maintain a common <i>consensus</i> state.
+
+  Multiple agents reduce the possibility of system-wide
+failure due to the failure of a single agent. 
+
+  For example, a bank may use
 a group of agents, rather than a single agent, to maintain bank
-balances. Multiple agents reduce the possibility of system-wide
-failure due to the failure of a single agent.  Managing replicated
+  balances.
+
+  <p>
+  Managing replicated
 databases requires the replications to come to a consensus on the
 sequence of transactions that is applied to the
-database. Cryptocurrency transactions also require collections of
-agents to come to a consensus about sequences of the transactions.
+database. Cryptocurrency transactions require of
+agents to come to a consensus about sequences of transactions that use
+  crypto coins.
 
 <p>
 In a control system with multiple and actuators, the actuators have to
 come to a consensus about the state of the environment so that they
 can operate in concert. A vehicle would crash if some actuators caused
 the vehicle to accelerate while other actuators applied brakes.  In
-some applications, multiple agents have to elect a single leader.
+some applications, multiple agents have to come to a consensus and
+  elect a single leader. 
 There are many problems in which a collection of agents have to come
-to a <i>consensus</i> about something.
+to a consensus about something.
 
     <h3 class="w3-text-teal">Consensus: Impossible with a
     faulty agent</h3>
     Consensus is impossible with even a single faulty agent. This was
-    proved in a paper published by Fischer, Lynch and Patterson.
+proved by
+<a href="https://dl.acm.org/doi/10.1145/3149.214121">
+Fischer, Lynch and Patterson.
+</a>
 
     <p>
     You can get the idea of why consensus is not possible by
@@ -171,36 +183,23 @@ problem. We'll look at consensus in such systems later.
 <h2 class="w3-text-teal">Best Effort Consensus</h3>
 The theorem says that there is no algorithm that guarentees that
 consensus can be reached in all scenarios; 
-however, consensus can be reached in most practical situations. An idea
-to overcome the counterexample given above is:
-Agents keep trying repeatedly until they reach consensus. The theorem tells us
+however, consensus can be reached in most practical situations.
+
+An idea to overcome the counterexample given above is that
+agents keep trying repeatedly until they reach consensus. The theorem tells us
 that the agents may have to keep trying for ever. We expect, however,
 that in most practical situations their attempts will succeed at some point.
 
 <p>
-What does keep trying mean? When does one trial
+What does "keep trying" mean? When does one trial
 end and the next one begin? If agents use timeouts to end a trial,
 then --- because clocks aren't synchronized --- the timeouts may complete
 at different times.
 We'll see that we can use the idea of time, even though clocks aren't
-synchronized. We've done that before with logical clocks. The Paxos
-algorithm shows how the idea of increasing values of timestamps (or
-ids) are used for best-effort consensus.
+synchronized. We've used the concept of time before with logical
+clocks.
 
 
-
-<!--------------------------------------------->
-<h4 class="w3-text-red">
-<i>Central Ideas: Review</i></h4>
-<p class="w3-text-red">
-Many applications of distributed systems require agents to come to a
-consensus.
-Agents cannot come to a consensus if an agent is faulty.
-
-<!--------------------------------------------->
-<p class="w3-text-red">
-<i>Concepts</i>:
-Consensus -> impossibility with faulty agents
 
 
 <h4 class="w3-text-teal">Next</h4>
