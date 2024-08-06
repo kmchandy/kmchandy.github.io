@@ -83,17 +83,17 @@ hr.new1 {
   
   <!------------------------------------------------------------------->
   <p class="w3-text-red">
-  In this webpage we develop algorithms for systems in which agents
-  may halt or be arbitrarily slow, the same message may be
-  delivered multiple times,
-  messages may be delivered out of order, and messages
+  In this webpage we develop algorithms for systems in which: Agents
+  may halt or be arbitrarily slow; the same message may be
+  delivered multiple times;
+  messages may be delivered out of order; and messages
   may be lost.
 
-  A transaction consists of two steps: a client reads and the writes
+  A transaction consists of two steps: a client (1) reads and (2) then writes
   shared variables.
 
   This page shows how a proxy for time can be used to develop
-  algorithms in which computations can be serialized: each agent
+  algorithms in which computations can be serialized: Each agent
   starts and completes a transaction before executing steps of another
   transaction. 
 
@@ -105,7 +105,7 @@ hr.new1 {
   <h3 class="w3-text-teal">Overview</h3>
   <!--------------------------------------------------------->
   
-  In this webpage we develop algorithms for systems in which agents
+  In this webpage we develop algorithms for systems in which: Agents
   may halt or be arbitrarily slow, the same message may be
   delivered multiple times,
   messages may be delivered out of order, and messages
@@ -167,7 +167,7 @@ the correctness of the algorithm.
 The intervals do, however, impact performance.
 
 There are many ways of generating clock tick messages and we
-postpone discussion of them.
+postpone a discussion of them.
 
 <p>
 A read request and a reply to the request may get lost or be delayed for an arbitrary
@@ -235,11 +235,12 @@ Write requests may get lost.
 Let <code>W</code> be the set of servers that receive write requests.
 
 <p>
-A transaction consists of the step in which a client <code>p</code>
-broadcasts read requests to all servers, the steps in which servers
-receive read requests and send replies, the steps in which
-<code>p</code> receives replies, the step in which <code>p</code>
-sends write requests, and the steps in which servers
+A transaction consists of: (1) the step in which a client <code>p</code>
+broadcasts read requests to all servers, (2) the steps in which servers
+receive read requests and send replies, (3) the steps in which
+<code>p</code> receives replies, (4) if <code>p</code> sends write
+requests, then the step in which <code>p</code>
+sends write requests, and (5) the steps in which servers
 receive and execute write requests.
 
 <p>
@@ -248,16 +249,19 @@ following statement in which <code>p.f</code> is a function executed
 by <code>p</code>.
 
 <hr class="new2">
-<h5 style="color:blue;">Transaction</h5>
+<h5 style="color:blue;">Transaction executed by a client
+<code>p</code></h5> 
 <pre>
+# R is the set of servers from which p receives
+# replies to read requests
 if len(R) >= M:
    for q in W: q.v = p.f(q.v for q in R)
 </pre>
 <hr class="new2">
 
 <p>
-Transactions are tailored to a specific application by specifying
-<code>M</code> and <code>p.f</code>.
+The parameters of the transaction are the number
+<code>M</code> and the function <code>p.f</code>.
 
 The selections of <code>R</code> and <code>W</code> are
 nondeterministic and they can be arbitrary sets of servers.
@@ -277,14 +281,14 @@ with each other as illustrated by the following example.
 <code>p'</code> both execute identical transactions concurrently.
 
 In a transaction a client reads <code>x</code> and if
-  <code>x</code> has at least $100 then the client transfers $100 out
-of  <code>x</code> to an account <code>y</code>.
+  <code>x</code> is at least $100 then the client transfers $100 from
+<code>x</code> to an account <code>y</code>.
 
 <p>
 Consider a computation in which both clients <code>p</code> and <code>p'</code>
-read <code>x</code> and verify that <code>x</code> has at least $100,
-and then both clients transfer $100 out of <code>x</code> and set the amount
-  in <code>x</code> to $10.
+read <code>x</code> and verify that <code>x</code> is at least $100,
+and then both clients transfer $100 out of <code>x</code> and both
+clients set the amount in <code>x</code> to $10.
 
 The computation transfers $200 out of <code>x</code> but 
 debits <code>x</code> by only $100.
@@ -297,7 +301,7 @@ transaction at a time.
 If <code>p</code> executes its transaction first then when
 <code>p</code> completes the transaction it sets the amount in <code>x</code> to $10. 
 If <code>p'</code> executes its transaction next then <code>p'</code>
-finds that <code>x</code> has only $10 and so <code>p'</code> does not
+finds that <code>x</code> is only $10 and so <code>p'</code> does not
 transfer $100 from <code>x</code>.
 
 
@@ -308,24 +312,34 @@ transfer $100 from <code>x</code>.
 <h3 class="w3-text-teal">Serializable Computations</h3>
 <!---------------------------------------------------->
 <!---------------------------------------------------->
-A system executes multiple transactions concurrently.
-
-  <i>A computation \(x\) is serializable</i> exactly when there exists a
+<hr class="new2">
+<p style="color:blue;">
+  A computation \(x\) is <i>serializable</i> exactly when:
+<p style="color:blue;">
+There exists a
 sequence of transactions \(Z_{i}, i \geq 0\), such that in  \(x\):
-For all agents \(v\), for all \(i\):
-
+<p style="color:blue;">
+For all agents \(v\), for all \(j\), and all \(i < j\), and all \(k > j\):
 <center>
-all steps of \(v\) in \(Z_{i}\) occur before any step
-of \(v\) in \(Z_{i+1}\).
+<p style="color:blue;">
+All steps of \(v\) in \(Z_{j}\) occur after all steps of \(v\) in
+\(Z_{i}\), and before all steps of \(v\) in \(Z_{k}\).
 </center>
-
+<hr class="new2">
 
 <p>
-It is possible that in a serializable computation \(x\), an 
-agent \(u\) takes a step in \(Z_{j}\) before a <i>different</i> agent
-\(v\) takes a step in \(Z_{i}\), where \(j > i\).
+The definition of serializability allows for the possibility that a
+computation is serializable with a sequence of transactions \(Z_{i}, i
+\geq 0\), where the computation has a step of transaction
+\(Z_{1}\) followed by a step of transaction \(Z_{0}\) followed by
+another step of transaction \(Z_{1}\).
+An example of this situation is where an agent \(u\) has steps in
+transaction \(Z_{1}\) and no steps in transaction \(Z_{0}\).
 
-
+<p>
+A computation is not serializable if the same agent executes a step in
+a transaction \(X\) and then executes a step in a different
+transaction \(Y\) and then executes another step in transaction \(X\). 
 <!---------------------------------------------------->
 <p class="w3-text-teal">Transactions and Serializability in
 Databases</p>
@@ -340,7 +354,7 @@ transaction processing systems</a> and
 online transaction processing</a>.
 In this webpage we provide a narrow definition of transactions and
 serializability
-that is adequate for describing algorithms such as
+that is adequate for describing consensus algorithms such as
 <a
 href="https://en.wikipedia.org/wiki/Paxos_(computer_science)">Paxos</a>.
 
@@ -350,30 +364,40 @@ href="https://en.wikipedia.org/wiki/Paxos_(computer_science)">Paxos</a>.
 <!-------------------------------------------------->
 The problem is to develop a distributed algorithm, with multiple
 clients and servers, in which computations are serializable, and in
-which the system may be faulty.
+which systems may be faulty.
 
 <!-------------------------------------------------->
 <h5 class="w3-text-teal">How Should You Solve The Problem?</h5>
 <!-------------------------------------------------->
 
-What method comes to mind to partition the sequence of steps at an
-agent into intervals where the agent completes all steps of exactly one
-transaction in each interval?
+What method comes to mind to partition the sequence of steps of a
+computation into intervals such that all agents complete all steps of
+the same transaction in each interval?
 
 <p>
-Logical time partitions computations into a past and a future.
+The logical time at \(t\) partitions steps of a computation into a cut
+specified by the <code>past</code> at \(t\) and the <code>future</code> at
+\(t\). 
 
 Let's use a mechanism, similar to logical time.
 
+<p>
 As with logical time, each step \(e\) in a computation is assigned a
 value \(t(e)\), called the  <i>epoch</i> of \(e\).
 For any step \(e\), steps with epochs less than, equal to, or greater
-than, \(t(e)\) are in the past, <i>current</i>, and future,
+than, \(t(e)\) are in the <code>past</code> at \(t\),
+<i>current</i> at \(t\), and <code>future</code> at \(t\)
 respectively.
-We specify epochs such that the <i> steps in 
-current consists of all the steps of exactly one
-transaction.</i> 
 
+<p>
+We specify epochs such that:
+<hr class="new2">
+<center>
+<p style="color:blue;">
+Steps with the same epoch are steps of exactly one
+transaction.
+</center>
+<hr class="new2">
 
 
 
