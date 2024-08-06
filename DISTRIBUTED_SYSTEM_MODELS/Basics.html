@@ -152,6 +152,10 @@ channels.
 
 A channel is directed from exactly one agent to exactly one agent.
 
+The network of agents and channels that constitute a distributed
+system can be represented by a directed graph in which the vertices
+represent agents and the directed edges represent channels.
+
 <p>
 The ordered pair <code>(P, Q)</code> represents the channel directed from
 <code>P</code> to <code>Q</code>.
@@ -160,24 +164,13 @@ A channel <code>(P, Q)</code> is
 called an <i>output</i> of <code>P</code> and an <i>input</i> of
 <code>Q</code>.
 
-An agent can send messages on its output channels and receive
-messages on its input channels.
+An agent can send messages only on its output channels and receive
+messages only on its input channels.
 
 The <i>sender</i> and <i>receiver</i> of a channel <code>(P, Q)</code> are
 <code>P</code> and <code>Q</code>, respectively.
 
-<p>
-The system has a channel <code>(P, Q)</code> for all agents
-<code>P</code>, <code>Q</code> of the system. 
 
-There is a channel from each agent to itself
-
-So, if there are \(N\) agents then there are \(N^{2}\) channels.
-
-An agent can send messages to any agent including itself.
-
-In almost all algorithms described in this course very few of the
-\(N^{2}\) channels are used.
 
 <p>
 A distributed system is initiated with sets of agents and channels
@@ -202,35 +195,10 @@ An agent sends a message by appending the message to the tail (rear)
 of the queue.
 
 A message from a nonempty queue is delivered to an agent by removing
-the message from the head (front) of the queue, and calling a function
-of the agent.
+the message from the head (front) of the queue, and passing the message
+to the agent.
 
-<p>
-Messages are not lost or modified in channels.
-Every message sent is received.
-Message delays are arbitrary.
 
-<p>
-Channels have the following properties:
-<ol>
-  <li>
-  <i>Messages are delivered in the order sent.</i>
-  <p>
-  For all \(n\), the \(n\)-th message received on a channel is the
-  \(n\)-th message sent on the channel.
-  </li>
-  <li>
-  <i>A message is received only after it is sent.</i>
-  <p>
-  The \(n\)-th message is received on a channel only after the
-  \(n\)-th message is sent on the channel.
-  </li>
-</ol>
-
-There is no limit to the size of the queue of messages in a channel.
-
-An agent can append a message to a channel independent of the size of
-the channel.
 
 <h6 class="w3-text-teal">Messages Sent on Different Channels may be
 Delivered out of Order</h6>
@@ -252,12 +220,14 @@ The following scenario is possible with different agents \(A, B, C\).
   \(C\).
   </li>
   <li>
-  \(C\) receives \(m_{3}\) before \(C\) receives \(m_{2}\).
+  \(C\) receives \(m_{3}\) before \(C\) receives \(m_{1}\).
   </li>
 </ol>
-In the example, message \(m_{3}\) is sent to \(C\) after message
-\(m_{1}\) is sent to \(C\), but \(C\) receives \(m_{3}\) before
-  \(m_{1}\). 
+In the example, message \(m_{3}\) is sent to \(C\) <i>after</i> message
+\(m_{1}\) is sent to \(C\), but \(C\) receives \(m_{3}\) <i>before</i>
+\(m_{1}\).
+This can happen because \(m_{3}\) is sent on channel \((B, C)\)
+  whereas \(m_{1}\) is sent on a <i>different</i> channel \((A, C)\).
 
 
 <a name="Agents"></a>
@@ -296,9 +266,10 @@ message queuing libraries.
 </a>
 
 <p>
-If a waiting agent <code>u</code> has a nonempty input channel then the
-system selects <i>any</i> nonempty channel <code>(v, u)</code>, 
-removes the message <code>m</code> at the head of the channel from the channel, and calls 
+If the system has a waiting agent <code>u</code> with a nonempty
+input channel <code>(v, u)</code> then the system may
+remove the message <code>m</code> at the head of  
+ <code>(v, u)</code>, and call
 the <code>receive(message, sender)</code> function of <code>u</code>
 where <code>message</code> is <code>m</code> and <code>sender</code>
 is <code>v</code>.
@@ -352,22 +323,16 @@ The remainder of this page consists of an example.
 <h4 style="color:red;">Example of a System</h4>
 A system consists of 4 agents, <code>pos</code>, <code>neg</code>,
 <code>total</code>, and <code>X</code>, and the channels between
-them. See "Figure Agents and Channels."
+them. See "Figure Agents and Channels" which shows the network of
+agents and channels represented as a directed graph.
 
-In this example, only 5 of the 16 channels are used.
-
-The channels that are used are
+<p>
+The channels in the system are
 <code>(pos, pos)</code>,
 <code>(neg, neg)</code>,
 <code>(pos, total)</code>,
 <code>(neg, total)</code>, and
 <code>(total, X)</code>.
-
-<p>
-The flow of messages is shown by a directed graph in which vertices
-represent agents and the directed edges represent the channels that
-are used.
-
   
     <figure>
     <img
@@ -375,15 +340,6 @@ are used.
     alt="Fig1" style="width:100%"> 
     <figcaption>Figure Agents and Channels</figcaption>
 </figure>
-
-<p>
-The system is started by specifying agents and initial channel states
-and then starting the system.
-
-In this example there is a message "wakeup" in the channel from
-<code>pos</code> to itself and from <code>neg</code> to itself.
-
-All other channels are empty.
 
 
 
@@ -424,24 +380,24 @@ def receive(message, sender):
    send(sum, X)
 </pre>
 
-If the agent receives a message from agent <code>pos</code> then the
-agent increments <code>sum</code> by the contents of the message.
 
-If the agent receives a message from
-<code>neg</code> the agent decrements <code>sum</code> by the
+If <code>total</code> receives a message from <code>pos</code> then
+<code>total</code> 
+ increments <code>sum</code> by the contents of the message.
+
+If <code>total</code> receives a message from an agent other than
+<code>pos</code> then <code>total</code> decrements <code>sum</code> by the
 contents of the message, and if the resulting value of
 <code>sum</code> is negative then <code>sum</code> is set to 0.
 
 <p>
-The agent sends the
-resulting value of <code>sum</code> to the agent <code>X</code>.
+<code>total</code> sends the
+resulting value of <code>sum</code> to agent <code>X</code>.
 
 
 <!----------------------------------------------->
 <h4 style="color:red;">Example of an Agent</h4>
-This agent sends <code>my_data[n]</code> to agent <code>total</code>
-for each element in <code>my_data</code>.
-
+This is an example of agent <code>pos</code>.
 <pre>
 # Initial values of agent's variables.
 my_data = [3, 5]
@@ -457,42 +413,41 @@ def receive(message, sender):
 </pre>
 
 
-The agent has variables <code>my_data</code> and <code>n</code>
+<code>pos</code> has variables <code>my_data</code> and <code>n</code>
 which are initially <code>[3, 5]</code> and <code>0</code>,
-respectively. 
+respectively.
+
 
 <p>
 When <code>pos</code> receives a message it sends
-<code>my_data[n]</code> to the agent <code>total</code> and then
+<code>my_data[n]</code> to agent <code>total</code> and then
 increments <code>n</code>.
 
 If <code>n</code> is less than the number of elements in
-<code>my_data</code> then <code>pos</code> sends itself a wakeup message.
+<code>my_data</code> then <code>pos</code> sends itself a "wakeup" message.
 
 <p>
-The system is initialized with a message in the channel from
+The system is initialized with a "wakeup" message in the channel from
 <code>pos</code>  to itself.
 
-When <code>pos</code> receives the message it sends
+When <code>pos</code> receives the first message it sends
 <code>my_data[0]</code> to agent <code>total</code>,
 increments <code>n</code> to 1
-and <code>pos</code> sends a message to itself, and
+and <code>pos</code> sends another "wakeup" message to itself.
 
 <p>
 When <code>pos</code> receives the next message it sends
-<code>my_data[1]</code> to agent <code>total</code>,
-increments <code>n</code> to 2 and then waits.
+<code>my_data[1]</code> to agent <code>total</code>, and
+increments <code>n</code> to 2, and does not send itself a message.
+
+So, in this example, <code>pos</code> waits forever after this point
+because it receives no further messages.
+
 
 <p>
-So <code>pos</code> sends 3 and then 5 to <code>total</code> and then
-<code>pos</code> waits forever.
-
-<p>
-Agent <code>neg</code> is identical to <code>pos</code> except that it
-may have different values of <code>my_data</code>.
-
-<p>
-Agent <code>X</code> has no variables. It merely prints
+In this example, agent <code>neg</code> is identical to <code>pos</code> except that it
+may have different values of <code>my_data</code>, 
+and agent <code>X</code> has no variables. It merely prints
 messages that it receives.
 
 <!---------------------------------------->
