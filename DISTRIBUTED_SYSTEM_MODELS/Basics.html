@@ -78,7 +78,8 @@ hr.new1 {
 
 
 
-
+<div class="INDEX model distributed system agent channel send receive
+  actor basic python">
 <!---------------------------------------------------------------->
     <h2 class="w3-text-teal">A Model of Distributed Systems</h2>
 <!----------------------------------------------------------------->
@@ -155,6 +156,7 @@ A channel is directed from exactly one agent to exactly one agent.
 The network of agents and channels that constitute a distributed
 system can be represented by a directed graph in which the vertices
 represent agents and the directed edges represent channels.
+</p>
 
 <p>
 The ordered pair <code>(P, Q)</code> represents the channel directed from
@@ -169,6 +171,7 @@ messages only on its input channels.
 
 The <i>sender</i> and <i>receiver</i> of a channel <code>(P, Q)</code> are
 <code>P</code> and <code>Q</code>, respectively.
+</p>
 
 
 
@@ -177,6 +180,7 @@ A distributed system is initiated with sets of agents and channels
   that remain unchanged. 
 
 Agents and channels are not created or deleted during a computation.
+</p>
 
 
 <a name="Channels"></a>
@@ -197,6 +201,7 @@ of the queue.
 A message from a nonempty queue is delivered to an agent by removing
 the message from the head (front) of the queue, and passing the message
 to the agent.
+</p>
 
 
 
@@ -208,6 +213,8 @@ order sent.
 
 <p>
 The following scenario is possible with different agents \(A, B, C\).
+</p>
+
 
 <ol>
   <li>
@@ -244,6 +251,7 @@ receives a message.
 
 An agent that is processing a message transitions to the waiting state
 when the agent finishes processing the message.
+</p>
 
 <p>
 Each agent has a set of variables.
@@ -252,9 +260,13 @@ An agent's variables are local to the agent -- they cannot be accessed
 by other agents.
 
 The state of an agent is specified by the values of its variables.
+</p>
+
+
 <p>
 An agent is specified by (1) a program that initializes the agent's
 variables and (2) a function
+</p>
 
 <pre>
 receive(message, sender)
@@ -273,6 +285,7 @@ remove the message <code>m</code> at the head of
 the <code>receive(message, sender)</code> function of <code>u</code>
 where <code>message</code> is <code>m</code> and <code>sender</code>
 is <code>v</code>.
+</p>
 
 
 <p>
@@ -281,16 +294,19 @@ receive a new message while it is executing a receive on a previous
 message.
 
 Every execution of <code>receive</code> must terminate.
+</p>
 
 <p>
 An agent may have many nonempty input channels but the agent processes
 only one message at a time. An agent is not interrupted while it
 is executing a <code>receive</code>. Messages that arrive while an
 agent is executing a <code>receive</code> remain in channels.
+</p>
 
 <p>
 After an agent completes execution of a <code>receive</code> the agent
 returns to waiting state.
+</p>
 
 
 <p>
@@ -364,6 +380,7 @@ initial values of variables.
 
 In this example, the initial state of <code>total</code> is given by
 <code>sum = 0</code>. 
+</p>
 
 
 <pre>
@@ -393,6 +410,7 @@ contents of the message, and if the resulting value of
 <p>
 <code>total</code> sends the
 resulting value of <code>sum</code> to agent <code>X</code>.
+</p>
 
 
 <!----------------------------------------------->
@@ -425,6 +443,7 @@ increments <code>n</code>.
 
 If <code>n</code> is less than the number of elements in
 <code>my_data</code> then <code>pos</code> sends itself a "wakeup" message.
+</p>
 
 <p>
 The system is initialized with a "wakeup" message in the channel from
@@ -434,6 +453,7 @@ When <code>pos</code> receives the first message it sends
 <code>my_data[0]</code> to agent <code>total</code>,
 increments <code>n</code> to 1
 and <code>pos</code> sends another "wakeup" message to itself.
+</p>
 
 <p>
 When <code>pos</code> receives the next message it sends
@@ -442,6 +462,7 @@ increments <code>n</code> to 2, and does not send itself a message.
 
 So, in this example, <code>pos</code> waits forever after this point
 because it receives no further messages.
+</p>
 
 
 <p>
@@ -449,7 +470,7 @@ In this example, agent <code>neg</code> is identical to <code>pos</code> except 
 may have different values of <code>my_data</code>, 
 and agent <code>X</code> has no variables. It merely prints
 messages that it receives.
-
+</p>
 <!---------------------------------------->
 <h5 class="w3-text-teal">Next</h5>
 <!---------------------------------------->
@@ -459,17 +480,26 @@ states of a distributed system.</a>
 
 <p>
 <a href="BasicsExamples.html">Examples</a>
+</p>
 
 <p>
 <a href="../CODE_EXAMPLES/SumPosAndNeg.py">Examples: Code</a>
+</p>
 
 
 <p>
 <a href="BasicsFAQ.html">Frequenty Asked Questions</a>
+</p>
 
 <p>
 <a href="BasicsReview.html">Review material for this page</a>
+</p>
 
+
+
+</div>
+</div>
+</div>
 
 <!-- END MAIN -->
 
@@ -490,7 +520,7 @@ states of a distributed system.</a>
 
 
 <!-- END MAIN -->
-</div>
+
 
 <script>
 // Get the Sidebar
