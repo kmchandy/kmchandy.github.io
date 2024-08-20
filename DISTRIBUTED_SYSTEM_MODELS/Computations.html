@@ -90,7 +90,7 @@ event of the system that causes a transition from each state in the
 
  
   <!----------------------------------------------->
-  <h3 class="w3-text-teal">Definition</h3>
+  <h3 class="w3-text-teal">Definition of Computations</h3>
 <!----------------------------------------------->
 
   A computation is a sequence of states,
@@ -117,13 +117,25 @@ of events \([e_{0}, e_{1}, \ldots, ]\) where execution of
 
 
 
-<p>
-A <i>step</i> of the computation is an execution of a single event in this
-  sequence.
+  <h5 class="w3-text-teal">Step of a Computation</h5>
+  <p>
+A <i>step</i> of the computation is an execution of a single event in
+  the computation.
+
+  Each step of a computation is a single state change in the
+  computation. 
 
   The same event can occur multiple times in a computation.
 
   Each occurrence of an event is a separate step of the computation.
+
+  <p>
+  An event is a 4-tuple that specifies a state change.
+
+  An event is not defined in terms of a specific computation.
+
+  By contrast, a step is a single state change in a specific
+  computation. 
 
  
   <!----------------------------------------------->
