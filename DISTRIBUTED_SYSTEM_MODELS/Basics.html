@@ -77,9 +77,6 @@ hr.new1 {
 <div class="w3-twothird w3-container">
 
 
-
-<div class="INDEX model distributed system agent channel send receive
-  actor basic python">
 <!---------------------------------------------------------------->
     <h2 class="w3-text-teal">A Model of Distributed Systems</h2>
 <!----------------------------------------------------------------->
@@ -105,33 +102,35 @@ hr.new1 {
 
   An earthquake monitoring system has thousands of sensors and agents
   carrying out complex calculations.
-  
-<p>
+
+  <div class="Models">
   <a name="WhatIsAModel"></a>
-  A model of a distributed system is an abstraction that ignores some
-  features.
+  <p class="w3-text-teal">Models</p>
 
-  The choice of a model is an engineering decision: We work with
-  a model that is adequate to solve our problem.
+  <p> A model of a system is an abstraction of the system.
 
-  Different models are used to design algorithms in different
-  settings;
+    A model ignores some features of the system and retains features
+    that are necessary to solve the problem at hand.
 
-  for example, a model of a system in which messages may be
-  corrupted is different from one in which messages are incorruptible.
+    The choice of a model is an engineering decision: We choose a
+    model that is adequate to solve our problem.
 
+    Different models are used to design algorithms in different
+    settings; for example, a model of a system in which messages may
+    be corrupted is different from one in which messages are
+  incorruptible.
+  </p>
+    </div>
 
-  <p>
-  We begin with a
-  <a href="https://en.wikipedia.org/wiki/Actor_model">
-  simple actor model and notation</a>.
-
-  The model and its mathematical properties are critical for
+    <p class="w3-text-teal">Notation</p>
+    <p>
+    The model and its mathematical properties are critical for
   describing and proving the correctness of algorithms;
-  the programming notation is not important but is necessary to
-  provide examples.
-  Examples of some distributed algorithms are given in Python using a
-  simulator and using software libraries such as a
+  a programming notation is not important.
+  We need a notation, however, to provide examples.
+  Examples of some algorithms are given in Python using a
+  simulator of distributed systems and also by using software
+    libraries such as a 
   <a
   href="https://www.rabbitmq.com/tutorials/tutorial-one-python.html">
   Python implementation</a>
@@ -140,15 +139,27 @@ hr.new1 {
   href="https://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol">
   Advanced Message Queuing Protocol (AMQP).
   </a>
+    </p>
+    
 
-  
-  <a name="ASimpleModel"></a>
+
+
+    <a name="ASimpleModel"></a>
+
+    <div class="SimpleModel">
   <!----------------------------------------------------------------->
   <h4 class="w3-text-teal">A Simple Model: A Network of Agents and Channels</h4>
-  <!----------------------------------------------------------------->
-<p>
+      <!----------------------------------------------------------------->
+      <p>
+  We begin with a
+  <a href="https://en.wikipedia.org/wiki/Actor_model">
+      simple <i>actor</i> model and notation</a>.
+      We call this model the <i>simple model</i>.
 
-A distributed system consists of a set of agents and a set of
+</p>
+
+
+In the simple model, a distributed system consists of a set of agents and a set of
 channels.
 
 A channel is directed from exactly one agent to exactly one agent.
@@ -203,6 +214,13 @@ the message from the head (front) of the queue, and passing the message
 to the agent.
 </p>
 
+<p>
+Channels have unlimited capacity.
+
+The queue that represents the state of a channel has unbounded size.
+
+A sender is never blocked from sending messages on a channel.
+
 
 
 <h6 class="w3-text-teal">Messages Sent on Different Channels may be
@@ -249,8 +267,8 @@ message that it has received.
 An agent that is waiting starts processing a message when the agent
 receives a message.
 
-An agent that is processing a message transitions to the waiting state
-when the agent finishes processing the message.
+When an agent finishes processing a message it waits for the next
+message. 
 </p>
 
 <p>
@@ -287,6 +305,14 @@ where <code>message</code> is <code>m</code> and <code>sender</code>
 is <code>v</code>.
 </p>
 
+<p>
+An agent does not choose the channel from which the agent receives its
+next message.
+The system chooses any nonempty channel from which it delivers a
+message to the receiver of that channel, and this choice is arbitrary.
+A waiting agent cannot refuse to accept a message.
+</p>
+
 
 <p>
 A <code>receive</code> function must not be recursive: an agent cannot
@@ -301,9 +327,7 @@ An agent may have many nonempty input channels but the agent processes
 only one message at a time. An agent is not interrupted while it
 is executing a <code>receive</code>. Messages that arrive while an
 agent is executing a <code>receive</code> remain in channels.
-</p>
 
-<p>
 After an agent completes execution of a <code>receive</code> the agent
 returns to waiting state.
 </p>
@@ -320,6 +344,7 @@ and the second paramenter is the agent to which the message is sent.
 
 Execution of this statement places the message in the output channel
 directed from the sender to the receiver.
+</p>
 
 
 <p>
@@ -328,6 +353,7 @@ See <a href="BasicsExamples">examples</a> and see
 
 
 The remainder of this page consists of an example.
+</p>
 
 <a name="Example"></a>
 <!----------------------------------------------->
