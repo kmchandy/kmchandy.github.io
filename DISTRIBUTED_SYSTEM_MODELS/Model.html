@@ -94,14 +94,22 @@ hr.new1 {
 
   <!----------------------------------------------->
   <h4 class="w3-text-teal">Dataflow Graph</h4>
-<!----------------------------------------------->
+  <!----------------------------------------------->
+  <p>
+<a href="https://en.wikipedia.org/wiki/Dataflow_programming">Data flow</a>
+  is a concept used in computer science for over 60 years.
 
+  Next we show how data flow helps in developing distributed
+  algorithms.
+  </p>
 
+  <p>
 A dataflow graph of a computation is a labeled, directed, acyclic
   graph  that shows the flow of data between agents during the
   computation. 
 
   The vertices of the graph represent steps of the computation.
+  </p>
 
 <!------------------------------->
 <h6 class="w3-text-red">Example of a Vertex in a Dataflow Graph</h6>
@@ -173,8 +181,8 @@ message <code>m2</code>.
 
 
 <p>
-By symmetry, we use a fictitious step \(u_{fini}\) to represent the final
-state of \(u\) and the final states of channels to \(u\).
+By symmetry, we use a fictitious step <code>u_init</code> to represent the final
+state of <code>u</code> and the final states of channels to <code>u</code>.
 
 With the introduction of fictitious initial and final steps for each
 agent we can treat a computation as a sequence of steps where the
@@ -300,13 +308,20 @@ dataflow graph from \(x\) to \(y\).
 
 
 <p>
+If there are paths in a dataflow graph from \(x\) to \(y\) and from
+\(y\) to \(z\), then there is a path in the graph from \(x\) to \(z\).
+
+So, if data flows from \(x\) to \(y\), and data flows from \(y\) to
+\(z\) then data flows from \(x\) to \(z\).
+
 The set of steps of a computation with the relation "data flows from"
 is a
 <a
 href="https://en.wikipedia.org/wiki/Partially_ordered_set#Partial_order">
 strict partial order</a>.
 
-We say that steps \(x\) and \(y\) are <i>independent</i> if data does
+<p>
+We say that different steps \(x\) and \(y\) are <i>independent</i> if data does
 not flow from  \(x\) to \(y\) or from \(y\) to \(x\).
 
 <h6 class="w3-text-red">Example of data flows from a step to a
@@ -403,8 +418,8 @@ before or after step 2.
 Data Flows Forwards</h5>
 <p style="color:blue;">
 Given a computation specifed by a sequence of
-steps \(E\), all permutations of \(E\) in which data flows forwards
-are also computations.
+steps \(E\), all permutations of \(E\) in which data flows forwards in
+the permutations are also computations.
 </p>
 <hr class="new2">
 
@@ -476,6 +491,16 @@ All topological sorts of a dataflow graph are computations.
 <hr class="new2">
 
 
+
+  <!----------------------------------------------->
+  <h5 class="w3-text-teal">Relationship to Causality</h5>
+<!----------------------------------------------->
+Some articles use the relation "\(x\) causes \(y\)" instead of
+"data flows from \(x\) to \(y\)."
+
+Causality and data flow have been widely used concepts for decades and
+we will see the next pages how we use them to develop distributed
+algorithms. 
 
 
 <!---------------------------------------->
