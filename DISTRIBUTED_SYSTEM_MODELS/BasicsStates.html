@@ -116,20 +116,49 @@ hr.new1 {
 
 
   <!----------------------------------------------------------------->  
-  <h5 class="w3-text-teal">Execution of a <code>receive</code> is Atomic</h5>
-  We ignore the changes in the state of an agent while it is executing
+  <h5 class="w3-text-teal">Execution of a <code>receive</code> is
+  Atomic</h5>
+  <p>
+  The simple model ignores the changes in the state of an agent while
+  it is executing 
   a <code>receive</code>.
 
-  We only consider an agent's state before
+  The model only consider an agent's state before
   it starts, and after it completes, executing a <code>receive</code>.
-  
-  We treat execution of a <code>receive</code> as an
+  </p>
+
+  <p>
+  The model treats execution of a <code>receive</code> as an
   <a href="https://en.wikipedia.org/wiki/Atomic_commit">atomic
   operation.</a>
 
   A state transition occurs when one agent gets one message on one of
   its input channels and executes its <code>receive</code> function on
   that message.
+  </p>
+
+  <p>
+  A <code>receive</code> function may include a <code>sleep</code>
+  statement which causes the agent to execute no further statements in
+the <code>receive</code> for a specified period of time.
+
+The <code>sleep</code> statement has no effect on state
+transitions because state transitions do not deal with changes in the
+state of an agent while it is executing a <code>receive</code>.
+</p>
+
+<p>
+Of course, <code>sleep</code> statements in <code>receive</code>
+functions impact system performance.
+
+The model does not deal with time and so the model does not deal with
+performance.
+
+We will discuss performance later.
+</p>
+
+
+<p>
 
   <a name="Events"></a>
   <!----------------------------------------------------------------->  
@@ -183,9 +212,9 @@ message <code>m</code> is appended to the tail of
 the sequence of messages in channel <code>(v, w)</code>, for all
 <code>(m, w)</code> in the list.
 
-<p>
-The states of other agents and channels are the same in
+The states of all other agents and channels are the same in
 <code>S</code> and <code>S'</code>.
+</p>
 
 
 <p>
@@ -195,11 +224,20 @@ specified by an event.
 We say that an agent <code>u</code>  "executes event e",
 or "event e occurs at agent <code>u</code>"
 to mean that the agent executes a <code>receive</code> that is
-specified by <i>e</i>. 
+specified by <i>e</i>.
 
 <p>
-If multiple agents change state concurrently then we treat the state
-changes as occurring one at a time in any order.
+In a state transition due to an event at agent <code>u</code>:
+exactly one agent -- namely <code>u</code> -- changes state; 
+exactly one message is delivered from exactly one input channel of <code>u</code>;
+and messages may be appended to arbitrarily many output channels of
+<code>u</code>.
+The states of all other agents and channels remain unchanged by the
+transition. 
+
+<p>
+If multiple agents change state concurrently then the model treats the state
+changes as occurring one event at one agent at a time, in any order.
 
 
 <!---------------------------------------------------->
