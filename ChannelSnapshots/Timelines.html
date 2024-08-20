@@ -76,11 +76,11 @@ hr.new1 {
 <div class="w3-twothird w3-container">
 
   <!--------------------------------------------------------------->
-  <h2 class="w3-text-teal">Cuts of Dataflow Graphs</h2>
+  <h2 class="w3-text-teal">Consistent Cuts of Dataflow Graphs</h2>
   <!--------------------------------------------------------------->
   
   <p class="w3-text-red">
-  This page introduces the concept of a <i>cut</i> of a dataflow
+  This page introduces the concept of a <i>consistent cut</i> of a dataflow
   graph.
 
   Cuts of dataflow are key to developing algorithms to detect deadlock
@@ -95,56 +95,62 @@ hr.new1 {
   
   <p>
   A <i>cut of a computation</i> is a partition of the steps of the
-  computation into <i>past</i> and <i>future</i> such that all data
-  flow to steps in <code>past</code> are from steps in
-  <code>past</code>.
+  computation into <i>past</i> and <i>future</i>.
 
   A cut is specified by the ordered pair of sets
   (<code>past</code>, <code>future</code>).
+  </p>
 
-  <p>
-  Equivalent definitions of a cut are (1) all data flows from
-  <code>future</code> steps are to 
-  <code>future</code> steps, and (2) no data flows from
-  <code>future</code> to <code>past</code>. 
-
-  <p>
-  From the definition, it follows that a <i>cut</i> of a dataflow
-  graph is a partition of the vertices of 
-  the graph into subsets <i>past</i> and <i>future</i> such that all
-  paths to vertices in <code>past</code> are from vertices in
-  <code>past</code>. 
-
-  <p>
-  Therefore, a partition of the vertices of a dataflow graph into sets
-  <i>past</i> and <i>future</i>  is a cut if and only if all edges to
-  vertices in <i>past</i> are from vertices in <i>past</i>.
-
+  <hr class="new2">
+<h5 style="color:blue;">
+  A <i>consistent</i> cut of a computation is a cut
+  (<code>past</code>, <code>future</code>) in which all data
+  flow to steps in <code>past</code> are from steps in
+  <code>past</code>.
+  </h5>
+  <hr class="new2">
   
+  <p>
+  Equivalent definitions of a consistent cut are:
+  <ol>
+    <li>
+    All data flows from <code>future</code> steps are to
+    <code>future</code> steps.
+    </li>
+    <li>
+    No data flows from <code>future</code> steps to
+    <code>past</code> steps.
+    </li>
+    <li>
+    All edges in the dataflow graph to <code>past</code> vertices are
+  from <code>past</code> vertices.
+    </li>
+    <li>
+    All edges in the dataflow graph from <code>future</code> vertices are
+    to <code>future</code> vertices.
+    </li>
+  </ol>
+    
+
+  <p>
   A cut of a dataflow graph is an instance of a
   <a href="https://en.wikipedia.org/wiki/Cut_(graph_theory)">cut of a
   flow network</a>.
-
-
-
-
-
-
    
   <!----------------------------------------------->
-  <p style="color:red;">Example</p>
+  <h5 style="color:red;">Example of a Consistent Cut</h5>
   
-  The top diagram of figure 1 shows a cut in which vertices in
-  <code>cut</code> are 
-  colored red and vertices not in <code>cut</code> are green.
+  The top diagram of figure 1 shows a consistent cut in which vertices in
+  <code>past</code> are 
+  colored red and vertices in <code>future</code> are green.
 
-  The curved black line is the boundary separating <code>cut</code>
-  from vertices outside it.
+  The curved black line is the boundary separating <code>past</code>
+  from <code>future</code>.
 
   <figure>
     <img src="Model.005.jpeg"
     alt="Fig1" style="width:100%"> 
-    <figcaption>Fig.1: Example - A Cut of a Dataflow Graph</figcaption>
+    <figcaption>Fig.1: Example - A Consistent Cut of a Dataflow Graph</figcaption>
 </figure>
 
 
@@ -152,8 +158,8 @@ hr.new1 {
   <!--------------------------------------------------------------->
   <h3 class="w3-text-teal">Theorem: Computations and Cuts</h3>
   <!--------------------------------------------------------------->
-Let \(E\) be a computation and let <code>(past, future)</code> be a
-  cut of the computation. 
+Let \(E\) be a computation and let <code>(past, future)</code> be any
+  consistent cut of the computation. 
 
 There exists a computation \(E'\), which is a permutation of \(E\), in
 which all steps in <code>past</code> are executed before
@@ -185,23 +191,34 @@ Therefore \(E'\) is also a computation.
 
   <a name="StateAtCut">
   <!--------------------------------------------------------------->
-  <h4 class="w3-text-teal">Theorem: State at a Cut</h4>
+  <h4 class="w3-text-teal">The State at a Consistent Cut</h4>
   <!--------------------------------------------------------------->
 
 <p>
-Let <code>(past, future)</code> be a cut of a computation \(E\).
+Let <code>(past, future)</code> be a consistent cut of a computation \(E\).
 
 Let <code>pre</code> be the sequence of steps obtained from \(E\) by
 retaining only steps in <code>past</code> and deleting steps in
 <code>future</code>.
-
-The state at the cut <code>(past, future)</code> is defined as
-as the state at the end of computation <code>pre</code>.
+Let <code>post</code> be the sequence of steps obtained from \(E\) by
+retaining only steps in <code>future</code> and deleting steps in
+<code>pre</code>.
+</p>
 
 <p>
-The state at a cut <code>(past, future)</code> of a computation \(E\)
-is given by labels of 
-the edges from <code>past</code> to <code>future</code> in the
+The sequence of steps consisting of <code>pre</code> followed by
+<code>post</code>  is a computation. 
+
+The state at the consistent cut <code>(past, future)</code> is defined as
+as the state after computation <code>pre</code> and before
+<code>post</code>.
+</p>
+
+
+<p>
+The state at a consistent cut <code>(past, future)</code> of a
+computation \(E\) 
+is given by labels of the edges from <code>past</code> to <code>future</code> in the
 dataflow graph of \(E\).
 
 <p>
@@ -211,14 +228,25 @@ is given by the label of the agent edge for
 <code>future</code>. 
 The state of a channel at the cut is the sequence of messages sent on
 the channel in the <code>past</code> and received in the <code>future</code>.
+</p>
 
+<!----------------------------------------------->
+<h5 style="color:red;">Pictorial Example of a Consistent Cut</h5>
 
 <p>
-See the lower diagram in figure 1.
-The state <code>S*</code> after the cut is shown as final vertices (which are labeled
-<code>N</code>) of <code>cut</code> 
- and <code>S*</code> is shown as initial vertices (which
-  are labeled <code>0</code>) of steps outside <code>cut</code>.
+Pictorially, the state <code>S*</code> at a consistent cut
+<code>(past, future)</code> is given by the labels of edges that cross
+the boundary separating <code>past</code> from <code>future</code>.
+In the upper diagram of figure 1, these are are the edges that cross
+the curved black line.
+</p>
+<p>
+In the lower diagram of figure 1,
+the state <code>S*</code> at the cut is shown as final vertices
+(labeled 
+<code>N</code>) of <code>past</code>.
+<code>S*</code> is alsoshown as initial vertices (
+  labeled <code>0</code>) of  <code>future</code>.
   
 
 <!---------------------------------------->
