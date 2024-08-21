@@ -88,7 +88,11 @@ event of the system that causes a transition from each state in the
   We use techniques for proving sequential programs to prove
   properties of computations.
 
- 
+   
+  <!--------------START ANSWER: Computations ---------------------->
+  <div ID="ANSWER">
+    <a name="Computations"></a>
+    
   <!----------------------------------------------->
   <h3 class="w3-text-teal">Definition of Computations</h3>
 <!----------------------------------------------->
@@ -116,7 +120,10 @@ of events \([e_{0}, e_{1}, \ldots, ]\) where execution of
 
 
 
-
+  
+  <!--------------START ANSWER: Step ---------------------->
+  <div ID="ANSWER">
+    <a name="Step"></a>
   <h5 class="w3-text-teal">Step of a Computation</h5>
   <p>
 A <i>step</i> of the computation is an execution of a single event in
@@ -135,8 +142,16 @@ A <i>step</i> of the computation is an execution of a single event in
   An event is not defined in terms of a specific computation.
 
   By contrast, a step is a single state change in a specific
-  computation. 
+    computation.
 
+      
+    <!--------------END ANSWER: Step ---------------------->
+    </div>
+
+      
+  <!--------------START ANSWER: LoopRepresentation--------------------->
+  <div ID="ANSWER">
+    <a name="LoopRepresentation"></a>
  
   <!----------------------------------------------->
   <h4 class="w3-text-teal">A Sequential Programming Representation of Computations</h4>
@@ -171,7 +186,13 @@ computation, and this step causes a transition from state
 <code>S[n]</code> to state <code>S[n+1]</code>, for <code>n</code>
 \(\geq\) 0.
 
-
+      
+    <!--------------END ANSWER: LoopRepresentation--------------------->
+    </div>
+      
+  <!--------------START ANSWER: Invariants --------------------->
+  <div ID="ANSWER">
+    <a name="Invariants"></a>
 
 <!-------------------------------------------------------->
 <h4 class="w3-text-teal"> Properties of Loops and
@@ -192,6 +213,13 @@ See <a href="https://dl.acm.org/doi/book/10.1145/3568325">
 Effective Theories in Programming Practice</a> for
 examples of these techniques
 
+          
+  <!--------------END ANSWER: Invariants --------------------->
+  </div>
+
+           
+  <!--------------END ANSWER: Computations --------------------->
+  </div>
 
 <!---------------------------------------->
 <h5 class="w3-text-teal">Next</h5>
@@ -223,30 +251,6 @@ The next webpage discusses
 <!-- END MAIN -->
 </div>
 
-<script>
-// Get the Sidebar
-var mySidebar = document.getElementById("mySidebar");
-
-// Get the DIV with overlay effect
-var overlayBg = document.getElementById("myOverlay");
-
-// Toggle between showing and hiding the sidebar, and add overlay effect
-function w3_open() {
-  if (mySidebar.style.display === 'block') {
-    mySidebar.style.display = 'none';
-    overlayBg.style.display = "none";
-  } else {
-    mySidebar.style.display = 'block';
-    overlayBg.style.display = "block";
-  }
-}
-
-// Close the sidebar with the close button
-function w3_close() {
-  mySidebar.style.display = "none";
-  overlayBg.style.display = "none";
-}
-</script>
 
 </body>
 </html>
