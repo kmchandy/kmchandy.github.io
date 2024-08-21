@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 
 <html lang="en">
-<meta charset="UTF-8">
+<meta charset="UTF-8"></div>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link rel="stylesheet"
@@ -89,6 +89,9 @@ hr.new1 {
   The model uses a simple abstraction of state and state transitions.
   </p>
 
+  
+  <!--------------START ANSWER: States ---------------------->
+  <div ID="Answer">
   <a name="States"></a>
   <!----------------------------------------------------------------->
   <h3 class="w3-text-teal">States</h3>
@@ -104,8 +107,13 @@ hr.new1 {
   The state of a channel is a queue consisting of the sequence of
   messages sent on the channel that have not been delivered.
 
-  The state of an agent is given by the values of its variables.
+    The state of an agent is given by the values of its variables.
+  </div>
 
+  
+
+    <!--------------START ANSWER: StateTransitions ---------------------->
+  <div ID="Answer">
   <a name="StateTransitions"></a>
   <!----------------------------------------------------------------->
   <h3 class="w3-text-teal">State Transitions</h3>
@@ -114,7 +122,9 @@ hr.new1 {
   The state of a system changes when, and only when, a message is
   delivered to an agent.
 
-
+   <!--------------START ANSWER: receive ---------------------->
+  <div ID="Answer">
+  <a name="receive"></a>
   <!----------------------------------------------------------------->  
   <h5 class="w3-text-teal">Execution of a <code>receive</code> is
   Atomic</h5>
@@ -156,10 +166,12 @@ performance.
 
 We will discuss performance later.
 </p>
-
+  <!--------------END ANSWER: receive ---------------------->
+  </div>
 
 <p>
-
+  <!--------------START ANSWER: Events ---------------------->
+  <div ID="Answer">
   <a name="Events"></a>
   <!----------------------------------------------------------------->  
 <h5 class="w3-text-teal">Event: Specification of the Change in State
@@ -263,7 +275,12 @@ acknowledgment that is sent.
 The event does not describe the states of all the other accounts in
 the bank.
 
+  <!--------------END ANSWER: Events ---------------------->
+</div>
 
+
+  <!--------------END ANSWER: StateTransitions ---------------------->
+  </div>
 
 
 
