@@ -90,30 +90,39 @@ hr.new1 {
   </p>
 
   
-  <!--------------START ANSWER: States ---------------------->
-  <div ID="Answer">
+  <!--------------START SECTION: States ---------------------->
+  <div ID="SECTION">
   <a name="States"></a>
   <!----------------------------------------------------------------->
   <h3 class="w3-text-teal">States</h3>
   <!----------------------------------------------------------------->
-
+    <p>
   The state of a distributed system is given by the states of its agents and
   channels.
-
   A system state is a tuple with an element of the tuple for each
-  agent and each channel.
+    agent and each channel.
+    </p>
 
   <p>
   The state of a channel is a queue consisting of the sequence of
   messages sent on the channel that have not been delivered.
-
     The state of an agent is given by the values of its variables.
+    </p>
+
+    <p>
+    A system may enter the same state by executing different
+    behaviors.
+    The future behavior of a system, given its state,
+    doesn't depend on the system's behavior before the state was
+    entered.
+    </p>
   </div>
+  <!--------------END SECTION: States ---------------------->
 
   
 
-    <!--------------START ANSWER: StateTransitions ---------------------->
-  <div ID="Answer">
+    <!--------------START SECTION: StateTransitions ---------------------->
+  <div ID="SECTION">
   <a name="StateTransitions"></a>
   <!----------------------------------------------------------------->
   <h3 class="w3-text-teal">State Transitions</h3>
@@ -121,57 +130,35 @@ hr.new1 {
   <p>
   The state of a system changes when, and only when, a message is
   delivered to an agent.
-
-   <!--------------START ANSWER: receive ---------------------->
-  <div ID="Answer">
-  <a name="receive"></a>
-  <!----------------------------------------------------------------->  
-  <h5 class="w3-text-teal">Execution of a <code>receive</code> is
-  Atomic</h5>
-  <p>
   The simple model ignores the changes in the state of an agent while
-  it is executing 
-  a <code>receive</code>.
-
-  The model only consider an agent's state before
-  it starts, and after it completes, executing a <code>receive</code>.
+  the agent is processing a message.
+  The model only deals with an agent's state before
+  it starts, and after it completes, processing a message.
   </p>
 
   <p>
-  The model treats execution of a <code>receive</code> as an
+  The model treats the processing of a single message as an
   <a href="https://en.wikipedia.org/wiki/Atomic_commit">atomic
   operation.</a>
-
   A state transition occurs when one agent gets one message on one of
-  its input channels and executes its <code>receive</code> function on
-  that message.
+  its input channels and completes processing that messages,
+  i.e. when the agent completes execution of the agent's
+  <code>receive</code> function on that message.
   </p>
 
   <p>
   A <code>receive</code> function may include a <code>sleep</code>
   statement which causes the agent to execute no further statements in
-the <code>receive</code> for a specified period of time.
-
+    the <code>receive</code> for a specified period of time.
 The <code>sleep</code> statement has no effect on state
 transitions because state transitions do not deal with changes in the
 state of an agent while it is executing a <code>receive</code>.
-</p>
-
+Of course, <code>sleep</code> statements impact system performance.
+We discuss performance later.
+    </p>
 <p>
-Of course, <code>sleep</code> statements in <code>receive</code>
-functions impact system performance.
-
-The model does not deal with time and so the model does not deal with
-performance.
-
-We will discuss performance later.
-</p>
-  <!--------------END ANSWER: receive ---------------------->
-  </div>
-
-<p>
-  <!--------------START ANSWER: Events ---------------------->
-  <div ID="Answer">
+  <!--------------START SECTION: Events ---------------------->
+  <div ID="SECTION">
   <a name="Events"></a>
   <!----------------------------------------------------------------->  
 <h5 class="w3-text-teal">Event: Specification of the Change in State
@@ -206,12 +193,13 @@ the last two elements are the <i>outputs of the event</i>.
   <!----------------------------------------------------------------->  
 <h5 class="w3-text-teal">The State Transition Caused by an Event</h5>
 
-The event specified by the above 4-tuple
-can be executed in a state <code>S</code> 
- if the inputs to the event are as specified by <code>S</code>,
-i.e., in state <code>S</code>
-the state of <code>u</code> is <code>s</code>, and the message at the head of the
+<p>
+The event specified by the above 4-tuple can be executed in a state
+<code>S</code> if the inputs to the event are as specified by
+<code>S</code>, i.e., in state <code>S</code> the state of
+<code>u</code> is <code>s</code>, and the message at the head of the
 channel <code>(v, u)</code> is <code>msg</code>.
+</p>
 
 <p>
 The occurrence of the event causes a transition to a state
@@ -223,20 +211,18 @@ specified by the list in part 4 of the 4-tuple:
 message <code>m</code> is appended to the tail of
 the sequence of messages in channel <code>(v, w)</code>, for all
 <code>(m, w)</code> in the list.
-
 The states of all other agents and channels are the same in
 <code>S</code> and <code>S'</code>.
 </p>
 
-
 <p>
 Each execution of an agent's <code>receive</code> function is
 specified by an event.
-
 We say that an agent <code>u</code>  "executes event e",
 or "event e occurs at agent <code>u</code>"
 to mean that the agent executes a <code>receive</code> that is
 specified by <i>e</i>.
+</p>
 
 <p>
 In a state transition due to an event at agent <code>u</code>:
@@ -245,20 +231,23 @@ exactly one message is delivered from exactly one input channel of <code>u</code
 and messages may be appended to arbitrarily many output channels of
 <code>u</code>.
 The states of all other agents and channels remain unchanged by the
-transition. 
+transition.
+</p>
 
 <p>
 If multiple agents change state concurrently then the model treats the state
 changes as occurring one event at one agent at a time, in any order.
+</p>
 
 
 <!---------------------------------------------------->
 <h4 class="w3-text-teal">Events and State Transitions</h4>
+<p>
 An event is a 4-tuple that specifies the <i>change</i> in state during
 a state transition.
-
 An event provides no information about the agents and channels that do
 not change state in the state transition.
+</p>
 
 <p>
 An event is different from a state transition because a state
@@ -271,44 +260,55 @@ For example, when an online customer deposits money into an account, the event
 describing the action specifies the amount in the account before and
 after the transition, the check that is deposited, and the
 acknowledgment that is sent.
-
 The event does not describe the states of all the other accounts in
 the bank.
 
-  <!--------------END ANSWER: Events ---------------------->
+  <!--------------END SECTION: Events ---------------------->
 </div>
+    </div>
+  <!--------------END SECTION: StateTransitions ----------------->
 
-
-  <!--------------END ANSWER: StateTransitions ---------------------->
-  </div>
-
-
-
-
-
-
-<a name="Example"></a>
+    
+    <!--------------START SECTION: Example ---------------------->
+    <div ID="SECTION">
+    <a name="Example"></a>
 <!----------------------------------------------->
 <h4 style="color:red;">Example of an Event</h4>
+    <p>
+    This example is of an event at agent, <code>pos</code> from the <a
+    href="Basics.html#Example">previous page.</a> In this example,the
+    state of <code>pos</code> before the event is given by the values
+    of its variables <code>my_data = [3, 5]</code> and <code>n =
+    0</code>.  In the event, <code>pos</code> receives a "wakeup"
+    message from itself. A wakeup message is shown as a star in the
+    diagram. 
+    </p>
+    
+      <figure>
+    <img
+    src="ComputationExamples.001.jpeg"
+    alt="Fig1" style="width:75%"> 
+    <figcaption>Figure State S_0: Initial State</figcaption>
+    </figure>
 
-This is an example of an event at agent, <code>pos</code>.
+    <p>
+    The execution of the event causes a state transition from state
+    S_0, shown in the figure above, to state S_1, shown in the figure
+    below. 
+    </p>
 
-In this example,
-the state of <code>pos</code> before the event is given by the values
-of its variables <code>my_data = [3, 5]</code>  and <code>n =
-0</code>.
-
-In the event, <code>pos</code> receives a "wakeup" message from
-itself.
-
+      <figure>
+    <img
+    src="ComputationExamples.002.jpeg"
+    alt="Fig2" style="width:75%"> 
+    <figcaption>Figure State S_1</figcaption>
+    </figure>
+    
 <p>
 <code>pos</code>'s state after the event is <code>my_data = [3,
 5]</code>  and <code>n  = 1</code>.
-
 During the event <code>pos</code> sends a "wakeup" message to itself
 and 3 to agent <code>total</code>.
-
-
 The event is specified by the following tuple:
 <ol>
   <li>
@@ -331,6 +331,9 @@ The event is specified by the following tuple:
   <code>total</code>. 
   </li>
 </ol>
+</p>
+    </div>
+    <!--------------END SECTION: Example ----------------->
 
 
 <!---------------------------------------->
@@ -362,32 +365,7 @@ computations of distributed systems.</a>
 
 <!-- END MAIN -->
 </div>
-
-<script>
-// Get the Sidebar
-var mySidebar = document.getElementById("mySidebar");
-
-// Get the DIV with overlay effect
-var overlayBg = document.getElementById("myOverlay");
-
-// Toggle between showing and hiding the sidebar, and add overlay effect
-function w3_open() {
-  if (mySidebar.style.display === 'block') {
-    mySidebar.style.display = 'none';
-    overlayBg.style.display = "none";
-  } else {
-    mySidebar.style.display = 'block';
-    overlayBg.style.display = "block";
-  }
-}
-
-// Close the sidebar with the close button
-function w3_close() {
-  mySidebar.style.display = "none";
-  overlayBg.style.display = "none";
-}
-</script>
-
+</div>
 </body>
 </html>
 
