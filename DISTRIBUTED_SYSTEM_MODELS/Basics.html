@@ -102,8 +102,8 @@ hr.new1 {
   An earthquake monitoring system has thousands of sensors and agents
   carrying out complex calculations.
 
-    <!--------------START ANSWER: WhatIsAModel ---------------------->
-  <div id="ANSWER">
+    <!--------------START SECTION: WhatIsAModel ---------------------->
+  <div id="SECTION">
   <a name="WhatIsAModel"></a>
   <p class="w3-text-teal">Models</p>
 
@@ -121,7 +121,7 @@ hr.new1 {
   incorruptible.
   </p>
   </div>
-  <!--------------END ANSWER WhatIsAModel ---------------------->
+  <!--------------END SECTION WhatIsAModel ---------------------->
 
     <p class="w3-text-teal">Notation</p>
     <p>
@@ -144,8 +144,8 @@ hr.new1 {
     
 
 
-   <!--------------START ANSWER: ASimpleModel ---------------------->
-  <div id="ANSWER">
+   <!--------------START SECTION: ASimpleModel ---------------------->
+  <div id="SECTION">
     <a name="ASimpleModel"></a>
 
   <!----------------------------------------------------------------->
@@ -168,15 +168,6 @@ in which the vertices represent agents and the directed edges
 represent channels.
 </p>
 
-<p>
-The ordered pair <code>(P, Q)</code> represents the channel directed
-from <code>P</code> to <code>Q</code>.  A channel <code>(P, Q)</code>
-is called an <i>output</i> of <code>P</code> and an <i>input</i> of
-<code>Q</code>.  An agent can send messages only on its output
-channels and receive messages only on its input channels.  The
-<i>sender</i> and <i>receiver</i> of a channel <code>(P, Q)</code> are
-<code>P</code> and <code>Q</code>, respectively.
-</p>
 
 
 <p>
@@ -186,32 +177,64 @@ A distributed system is initiated with sets of agents and channels
 </p>
 
 
-  <!--------------START ANSWER: Channels ---------------------->
-  <div id="ANSWER">
+  <!--------------START SECTION: Channels ---------------------->
+  <div id="SECTION">
 <a name="Channels"></a>
 <!---------------------------------------------------->
 <h4 class="w3-text-teal">Message Communication: Channels</h4>
 <!----------------------------------------------------------------->
+    <p>
+    In the simple model, a channel is directed from exactly one agent
+    to exactly one agent.
+    A channel from an agent <code>P</code> to an agent <code>Q</code>
+    is represented by the ordered pair <code>(P, Q)</code>.
+    In the simple model, there exists at most one channel from an
+    agent <code>P</code> to an agent <code>Q</code>.
+    There are models that allow more than one channel from one agent
+    to another; however, for the time being we restrict ourselves to
+    the simple model.
+    </p>
 
-The state of a channel is a
-<a href="https://en.wikipedia.org/wiki/Queue_(abstract_data_type)">
-queue</a> consisting of the sequence of
-messages in the channel -- these are the messages that have been sent
-on the channel and that have not been received.
+    <p>
+    A channel <code>(P, Q)</code> is called an <i>output</i> of agent
+    <code>P</code> and an <i>input</i> of agent <code>Q</code>.
+    The <i>sender</i> and <i>receiver</i> of a channel <code>(P,
+    Q)</code> are <code>P</code> and <code>Q</code>, respectively.
+    An agent can send messages only on its output channels and receive
+    messages only on its input channels. 
+    </p>
 
-<p>
-An agent sends a message by appending the message to the tail (rear)
-of the queue.
-A message from a nonempty queue is delivered to an agent by removing
-the message from the head (front) of the queue, and passing the message
-to the agent.
-</p>
+    <p>
+    The <i>state of a channel</i> is a
+    <a href="https://en.wikipedia.org/wiki/Queue_(abstract_data_type)">
+    queue</a> of messages -- these are the messages that have been sent
+    on the channel and that have not been received.
+    </p>
 
-<p>
-Channels have unlimited capacity.
-The queue that represents the state of a channel has unbounded size.
-A sender is never blocked from sending messages on a channel.
-</p>
+    <p>
+    An agent sends a message on a channel by appending the message to
+    the tail (rear) of the queue of messages in transit along the
+    channel.
+    A message from a nonempty channel is delivered to an agent by
+    removing the message from the head (front) of the queue of
+    messages in the channel, and passing the message to the agent.
+    </p>
+
+    <p>
+    Channels have unlimited capacity.
+    The queue that represents the state of a channel has unbounded size.
+    A sender is never blocked from sending messages on a channel.
+    </p>
+
+    <p>
+    Messages sent on the same channel are delivered in the order
+sent.
+If an agent <code>P</code> sends a message <code>M1</code> on a
+    channel <code>(P, Q)</code>, and later sends a message
+    <code>M2</code> on the same channel, then agent <code>Q</code>
+    receives <code>M1</code> on channel <code>(P, Q)</code> before
+    <code>Q</code> receives <code>M2</code> on the channel.
+
 
 
 <h6 class="w3-text-teal">Messages Sent on Different Channels may be
@@ -246,11 +269,11 @@ This can happen because \(m_{3}\) is sent on channel \((B, C)\)
   whereas \(m_{1}\) is sent on a <i>different</i> channel \((A, C)\).
 </div>
 
-  <!--------------END ANSWER: Channels ---------------------->
+  <!--------------END SECTION: Channels ---------------------->
 
 
-<!--------------START ANSWER: Agents ---------------------->
-<div id="ANSWER">
+<!--------------START SECTION: Agents ---------------------->
+<div id="SECTION">
 <a name="Agents"></a>
 <!---------------------------------------------------->
 <h4 class="w3-text-teal">Agents</h4>
@@ -261,23 +284,20 @@ An agent is either waiting to receive a message or is processing a
 message that it has received.
 An agent that is waiting starts processing a message when the agent
 receives a message.
-When an agent finishes processing a message it waits for the next
-message. 
+When an agent finishes processing a message the waits for the next
+message to be delivered to it.
 </p>
 
 <p>
 Each agent has a set of variables.
 An agent's variables are local to the agent -- they cannot be accessed
 by other agents.
-The state of an agent is specified by the values of its variables.
 </p>
 
 
 <p>
 An agent is specified by (1) a program that initializes the agent's
 variables and (2) a function
-</p>
-
 <pre>
 receive(message, sender)
 </pre>
@@ -285,7 +305,8 @@ called a callback function in
 <a href=
 "https://www.rabbitmq.com/tutorials/tutorial-one-python.html">
 message queuing libraries.
-</a>
+  </a>
+  </p>
 
 <p>
 If the system has a waiting agent <code>u</code> with a nonempty
@@ -297,26 +318,27 @@ where <code>message</code> is <code>m</code> and <code>sender</code>
 is <code>v</code>.
 </p>
 
-<p>
-An agent does not choose the channel from which the agent receives its
-next message.
-The system chooses any nonempty channel from which it delivers a
-message to the receiver of that channel, and this choice is arbitrary.
-A waiting agent cannot refuse to accept a message.
+  <p>
+  In the simple model, an agent does not choose the channel from which
+  the agent receives its  next message.
+  The system chooses <i>any</i> nonempty channel from which it delivers a
+  message to the receiver of that channel, and this choice is arbitrary.
+  A waiting agent cannot refuse to accept a message.
 </p>
 
 
-<p>
-A <code>receive</code> function must not be recursive: an agent cannot
-receive a new message while it is executing a receive on a previous
-message.
-Every execution of <code>receive</code> must terminate.
+  <p>
+  A <code>receive</code> function must not be recursive: an agent cannot
+  receive a new message while it is executing a receive on a previous
+  message.
+  Every execution of <code>receive</code> must terminate.
+  An agent is not interrupted while it is executing a
+  <code>receive</code>. 
 </p>
 
 <p>
 An agent may have many nonempty input channels but the agent processes
-only one message at a time. An agent is not interrupted while it
-is executing a <code>receive</code>. Messages that arrive while an
+only one message at a time.  Messages that arrive while an
 agent is executing a <code>receive</code> remain in channels.
 After an agent completes execution of a <code>receive</code> the agent
 returns to waiting state.
@@ -335,12 +357,17 @@ Execution of this statement places the message in the output channel
 directed from the sender to the receiver.
 </p>
 
-<!--------------END ANSWER: Agents ---------------------->
+<p>
+An agent in a distributed system is also called a <i>process</i> in
+some books.
+We use the term agent throughout these notes.
+
+<!--------------END SECTION: Agents ---------------------->
 </div>
 
 
   </div>
-  <!--------------END ANSWER ASimpleModel ---------------------->
+  <!--------------END SECTION ASimpleModel ---------------------->
   
 <p>
 See <a href="BasicsExamples">examples</a> and see
@@ -350,6 +377,8 @@ See <a href="BasicsExamples">examples</a> and see
 The remainder of this page consists of an example.
 </p>
 
+  <!--------------START SECTION: Example of a System  ------>
+<div id="SECTION">
 <a name="Example"></a>
 <!----------------------------------------------->
 <center>
