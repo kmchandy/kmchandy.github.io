@@ -84,73 +84,70 @@ hr.new1 {
   A computation of a system is a sequence of states of the system where there exists an
 event of the system that causes a transition from each state in the
   sequence to the next.
-
   We use techniques for proving sequential programs to prove
   properties of computations.
+  </p>
 
-   
-  <!--------------START ANSWER: Computations ---------------------->
-  <div ID="ANSWER">
+<!--------------START SECTION: Computations ---------------------->
+  <div ID="SECTION">
     <a name="Computations"></a>
     
+    <!--------------START SECTION: Definition of Computations -------------->
+  <div ID="SECTION">
+    <a name="DefinitionOfComputations"></a>
   <!----------------------------------------------->
   <h3 class="w3-text-teal">Definition of Computations</h3>
 <!----------------------------------------------->
-
-  A computation is a sequence of states,
- where there exists an
-event that causes a transition from each
-state in the sequence to the next.
+    <p>
+    A computation is a sequence of states, where there exists an event
+    that causes a transition from each state in the sequence to the next.
+    </p>
 
   <p>
   A computation may be finite or infinite.
-
   A computation may start in any state.
-
   We will often prove properties of computations that start in an
   initial state of the system; however, a computation is not
-  restricted to starting in an initial system state.
+    restricted to starting in an initial system state.
+    </p>
   
 <p>
   A computation \([S_{0}, S_{1}, S_{2}, \ldots]\)
   can also be specified by the initial state, \(S_{0}\), of the
   computation and a sequence 
 of events \([e_{0}, e_{1}, \ldots, ]\) where execution of 
- \(e_{i}\) causes a transition from \(S_{i}\)  to \(S_{i+1}\).
+    \(e_{i}\) causes a transition from \(S_{i}\)  to \(S_{i+1}\).
+    </p>
+    </div>
+    <!--------------END SECTION: Definition of Computations -------------->
 
 
-
-  
-  <!--------------START ANSWER: Step ---------------------->
-  <div ID="ANSWER">
+  <!--------------START SECTION: Step ---------------------->
+  <div ID="SECTION">
     <a name="Step"></a>
   <h5 class="w3-text-teal">Step of a Computation</h5>
   <p>
 A <i>step</i> of the computation is an execution of a single event in
   the computation.
-
   Each step of a computation is a single state change in the
   computation. 
-
   The same event can occur multiple times in a computation.
-
-  Each occurrence of an event is a separate step of the computation.
+    Each occurrence of an event is a separate step of the computation.
+    </p>
 
   <p>
   An event is a 4-tuple that specifies a state change.
-
   An event is not defined in terms of a specific computation.
-
   By contrast, a step is a single state change in a specific
     computation.
-
-      
-    <!--------------END ANSWER: Step ---------------------->
+    </p>
     </div>
+    <!--------------END SECTION: Step ---------------------->
+
 
       
-  <!--------------START ANSWER: LoopRepresentation--------------------->
-  <div ID="ANSWER">
+  <!--------------START SECTION: LoopRepresentation--------------------->
+  <div ID="SECTION">
     <a name="LoopRepresentation"></a>
  
   <!----------------------------------------------->
@@ -159,7 +156,6 @@ A <i>step</i> of the computation is an execution of a single event in
   <p>
 Consider a sequential program consisting of an initialization
 and the following <code>while</code> loop.
-  
 <pre>
 n = 0
 S[n] is an initial state
@@ -169,36 +165,36 @@ while there exists an event that can be executed:
    execute any executable event
    n = n + 1
 </pre>
-
 The loop terminates when there are no executable events.
-
 The selection of which
 event to execute in an iteration is nondeterministic -- <i>any</i> executable
-event can be selected.
+    event can be selected.
+    </p>
 
 <h6 class="w3-text-teal">States in the Loop and in a Computation</h6>
-
+<p>
 The sequence of states <code>S[0], S[1], S[2], ...S[k]</code> that occur
 in the loop, for any <code>k</code> \(\geq\) 0, is a computation.
 
 The <code>n</code>-th iteration of the loop is the <code>n</code>-th step in the
 computation, and this step causes a transition from state
 <code>S[n]</code> to state <code>S[n+1]</code>, for <code>n</code>
-\(\geq\) 0.
+    \(\geq\) 0.
+    </p>
 
       
-    <!--------------END ANSWER: LoopRepresentation--------------------->
+    <!--------------END SECTION: LoopRepresentation--------------------->
     </div>
       
-  <!--------------START ANSWER: Invariants --------------------->
-  <div ID="ANSWER">
+  <!--------------START SECTION: Invariants --------------------->
+  <div ID="SECTION">
     <a name="Invariants"></a>
 
 <!-------------------------------------------------------->
 <h4 class="w3-text-teal"> Properties of Loops and
 Distributed Systems</h4>
 
-
+<p>
 A benefit of using the states in a while loop to represent the states 
 of a computation is that we can use familiar techniques
 --- 
@@ -208,17 +204,17 @@ loop invariant</a> and
 loop variants</a> ---
 for reasoning about loops in sequential programming to reason about
 distributed algorithms too.
-
 See <a href="https://dl.acm.org/doi/book/10.1145/3568325">
 Effective Theories in Programming Practice</a> for
-examples of these techniques
+    examples of these techniques.
+    </p>
 
           
-  <!--------------END ANSWER: Invariants --------------------->
+  <!--------------END SECTION: Invariants --------------------->
   </div>
 
            
-  <!--------------END ANSWER: Computations --------------------->
+  <!--------------END SECTION: Computations --------------------->
   </div>
 
 <!---------------------------------------->
