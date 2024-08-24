@@ -187,13 +187,12 @@ which all steps in <code>past</code> are executed before
 Let <code>pre</code> be the sequence of steps obtained from \(E\) by
 retaining only steps in <code>past</code> and deleting steps in
 <code>future</code>. 
-<p>
 Let <code>post</code> be the sequence of steps obtained from \(E\) by
 retaining only steps in <code>future</code> and deleting steps in
 <code>past</code>. 
-<p>
 Let \(E'\) be the sequence consisting of <code>pre</code> followed by
-<code>post</code>.
+    <code>post</code>.
+    </p>
 
 <p>
 The proof that data flows forwards in \(E'\) is straightforward.
@@ -202,9 +201,8 @@ The proof that data flows forwards in \(E'\) is straightforward.
 We proved the theorem:</a> any permutation of a computation, where
  data flows forward in the permutation, is also a
 computation.
-
 Therefore \(E'\) is also a computation.
-
+</p>
 
   <a name="StateAtCut">
   <!--------------------------------------------------------------->
@@ -214,18 +212,10 @@ Therefore \(E'\) is also a computation.
 <p>
 Let <code>(past, future)</code> be a consistent cut of a computation \(E\).
 
-Let <code>pre</code> be the sequence of steps obtained from \(E\) by
-retaining only steps in <code>past</code> and deleting steps in
-<code>future</code>.
-Let <code>post</code> be the sequence of steps obtained from \(E\) by
-retaining only steps in <code>future</code> and deleting steps in
-<code>pre</code>.
-</p>
-
-<p>
+Let <code>pre</code> and <code>past</code> be sequences of steps
+    defined in the previous paragraph.
 The sequence of steps consisting of <code>pre</code> followed by
 <code>post</code>  is a computation. 
-
 The state at the consistent cut <code>(past, future)</code> is defined as
 as the state after computation <code>pre</code> and before
 <code>post</code>.
@@ -237,6 +227,7 @@ The state at a consistent cut <code>(past, future)</code> of a
 computation \(E\) 
 is given by labels of the edges from <code>past</code> to <code>future</code> in the
 dataflow graph of \(E\).
+</p>
 
 <p>
 The state of an agent <code>X</code> at the cut 
@@ -244,7 +235,10 @@ is given by the label of the agent edge for
 <code>X</code> from a step in the <code>past</code> to a step in the
 <code>future</code>. 
 The state of a channel at the cut is the sequence of messages sent on
-the channel in the <code>past</code> and received in the <code>future</code>.
+the channel in the <code>past</code> and received in the
+<code>future</code>.
+The state of the system at a consistent cut is given by the labels of
+edges that cross the cut boundary.
 </p>
 
 </div>
