@@ -113,7 +113,9 @@ hr.new1 {
 A dataflow graph of a computation is a labeled, directed, acyclic
   graph  that shows the flow of data between agents during the
   computation. 
-  The vertices of the graph represent steps of the computation.
+    The vertices of the graph represent steps of the computation.
+We use <i>step</i> of a computation and <i>vertex</i> of its dataflow
+graph interchangeably.
   </p>
 
 <!------------------------------->
@@ -125,6 +127,7 @@ A dataflow graph of a computation is a labeled, directed, acyclic
     <figcaption>Figure Example of a Vertex in a Dataflow Graph</figcaption>
 </figure>
 
+    <h6 class="w3-text-teal">Edges of a Dataflow Graph</h6>
   <p>
   The edges of a dataflow graph are as follows.
   <ol>
@@ -140,6 +143,18 @@ to the step at which the message is received; this edge is called a
   where \(m\) is the message and \(w\) is the sender of the message.
   </li>
 </ol>
+</p>
+
+    
+<h6 class="w3-text-teal">Dataflow Graphs are Acyclic</h6>
+<p>
+A dataflow graph of a computation is acyclic because each edge is
+directed from a step to a later step of the computation.
+</p>
+
+<p>
+We adopt the convention that agent edges are horizontal.
+    So, all edges of the same agent are on the same horizontal line.
 </p>
 </div>
 <!--------END SECTION: Dataflow Definition ----------------->
@@ -200,16 +215,7 @@ initial state is specified by initial steps.
     </figure>
     </div>
     <!------END SECTION: Initial And Final States ------------>
-    
-<p>
-We adopt the convention that agent edges are horizontal.
-    So, all edges of the same agent are on the same horizontal line.
-    </p>
-
-<p>
-We use <i>step</i> of a computation and <i>vertex</i> of its dataflow
-graph interchangeably, with the meaning understood by context.
-</p>
+ 
 
 <!---------------START SECTION: Example ------------------------------>
   <div ID="SECTION">
@@ -289,15 +295,10 @@ The input and output edges of the vertex are the inputs and outputs
 <!-------------START SECTION: Computations and Dataflow ------------->
   <div ID="SECTION">
     <a name="ComputationsAndDataflow"></a>
-    
-<h6 class="w3-text-teal">Dataflow Graphs are Acyclic</h6>
-<p>
-A dataflow graph of a computation is acyclic because each edge is
-directed from a step to a later step of the computation.
-</p>
+
 
 <!---------------------------------------->
-<h4 class="w3-text-teal">Flow of Data in a Computation</h4>
+<h3 class="w3-text-teal">Flow of Data in a Computation</h3>
 <p>
 The edges of the dataflow graph of a computation show the flow of data
 into and out of each step of a computation.
@@ -319,12 +320,11 @@ dataflow graph from \(x\) to \(y\).
 </p>
 
 <p>
-If there are paths in a dataflow graph from \(x\) to \(y\) and from
+If there are paths in a graph from \(x\) to \(y\) and from
 \(y\) to \(z\), then there is a path in the graph from \(x\) to \(z\).
 So, if data flows from \(x\) to \(y\), and data flows from \(y\) to
 \(z\) then data flows from \(x\) to \(z\).
-The set of steps of a computation with the relation "data flows from"
-is a
+The relation "data flows from" is a
 <a
 href="https://en.wikipedia.org/wiki/Partially_ordered_set#Partial_order">
 strict partial order</a>.
@@ -336,8 +336,8 @@ not flow from  \(x\) to \(y\) or from \(y\) to \(x\).
 </p>
 
 
-<h6 class="w3-text-red">Example of data flows from a step to a
-step</h6>
+<h5 class="w3-text-red">Example of data flows from a step to a
+step</h5>
 <p>
 The figure "Example -- Data Flows from Step 2 to Step 4" shows
 examples of data flow as red edges in the graph.
