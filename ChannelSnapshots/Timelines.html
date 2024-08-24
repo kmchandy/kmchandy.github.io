@@ -88,6 +88,15 @@ hr.new1 {
   global snapshot algorithm.
   </p>
 
+    <!-----START SECTION: Consistent Cuts of Dataflow Graphs ------------>
+  <div id="SECTION">
+    <a name="ConsistentCutsOfDataflowGraphs"></a>
+
+    
+    <!-----START SECTION: DefinitionOfCut ------------>
+  <div id="SECTION">
+  <a name="DefinitionOfCut"></a>
+
 
     <!--------------------------------------------------------------->
   <h3 class="w3-text-teal">Definition of a Cut of a Computation</h3>
@@ -96,7 +105,6 @@ hr.new1 {
   <p>
   A <i>cut of a computation</i> is a partition of the steps of the
   computation into <i>past</i> and <i>future</i>.
-
   A cut is specified by the ordered pair of sets
   (<code>past</code>, <code>future</code>).
   </p>
@@ -130,22 +138,28 @@ hr.new1 {
     to <code>future</code> vertices.
     </li>
   </ol>
+  </p>
     
 
   <p>
   A cut of a dataflow graph is an instance of a
   <a href="https://en.wikipedia.org/wiki/Cut_(graph_theory)">cut of a
   flow network</a>.
+  </p>
+</div>
+
+<!-----END SECTION: DefinitionOfCut ------------>
+
    
   <!----------------------------------------------->
   <h5 style="color:red;">Example of a Consistent Cut</h5>
-  
+  <p>
   The top diagram of figure 1 shows a consistent cut in which vertices in
   <code>past</code> are 
   colored red and vertices in <code>future</code> are green.
-
   The curved black line is the boundary separating <code>past</code>
-  from <code>future</code>.
+from <code>future</code>.
+</p>
 
   <figure>
     <img src="Model.005.jpeg"
@@ -154,6 +168,9 @@ hr.new1 {
 </figure>
 
 
+   
+    <!-----START SECTION: Computations and Cuts ------------>
+  <div id="SECTION">
   <a name="TheoremComputationsAndCuts">
   <!--------------------------------------------------------------->
   <h3 class="w3-text-teal">Theorem: Computations and Cuts</h3>
@@ -230,6 +247,10 @@ The state of a channel at the cut is the sequence of messages sent on
 the channel in the <code>past</code> and received in the <code>future</code>.
 </p>
 
+</div>
+<!-----END SECTION: Computations and Cuts ------------>
+
+
 <!----------------------------------------------->
 <h5 style="color:red;">Pictorial Example of a Consistent Cut</h5>
 
@@ -247,7 +268,9 @@ the state <code>S*</code> at the cut is shown as final vertices
 <code>N</code>) of <code>past</code>.
 <code>S*</code> is alsoshown as initial vertices (
   labeled <code>0</code>) of  <code>future</code>.
-  
+
+</div>
+    <!-----END SECTION: Consistent Cuts of Dataflow Graphs ------------>
 
 <!---------------------------------------->
 <h5 class="w3-text-teal">Next</h5>
@@ -288,30 +311,6 @@ Review
 <!-- END MAIN -->
 </div>
 
-<script>
-// Get the Sidebar
-var mySidebar = document.getElementById("mySidebar");
-
-// Get the DIV with overlay effect
-var overlayBg = document.getElementById("myOverlay");
-
-// Toggle between showing and hiding the sidebar, and add overlay effect
-function w3_open() {
-  if (mySidebar.style.display === 'block') {
-    mySidebar.style.display = 'none';
-    overlayBg.style.display = "none";
-  } else {
-    mySidebar.style.display = 'block';
-    overlayBg.style.display = "block";
-  }
-}
-
-// Close the sidebar with the close button
-function w3_close() {
-  mySidebar.style.display = "none";
-  overlayBg.style.display = "none";
-}
-</script>
 
 </body>
 </html>
