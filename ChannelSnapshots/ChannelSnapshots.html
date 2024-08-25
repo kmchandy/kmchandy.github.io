@@ -98,72 +98,78 @@ hr.new1 {
   algorithm restarts the computation from the most recent snapshot
   instead of starting it from the initial state.
 
-  
-
-  
-
   </p>
- 
+
+  
+    <!-----START SECTION: Global Snapshots ------------>
+  <div id="SECTION">
+    <a name="GlobalSnapshots"></a>
+
+    
+    <!-----START SECTION: DefinitionOfGlobalSnapshot ------------>
+  <div id="SECTION">
+
+    
   <!-----------------------------------------------------------------------------> 
   <h4 class="w3-text-teal">Global Snapshot</h4> 
   <!----------------------------------------------------------------------------->
+    
   <p>
-  A global snapshot algorithm records a state of the system that
-  occurs during a computation of the system.
-
-  A state obtained by the algorithm is called a global snapshot.
-
-  <p>
-  A state of the system is a tuple with an element of the tuple for each agent and
-  each channel.
-
-  The state of a system is also called a <i>global state</i> or a
-  <i>system state</i> to distinguish it from
+  A state of the system is a tuple with an element of the tuple for
+  each agent and each channel.
+  In this page, we also call the state of a system a <i>global
+  state</i> or a <i>system state</i> to distinguish it from
   states of agents and states of channels.
-  
+    </p>
 
-  <p>
-  An algorithm to record the state of a system is not instantaneous
+    <p>
+    A global snapshot algorithm is an algorithm that records the
+    global state of a system.
+  An algorithm to record the global state of a system is not instantaneous
   because the algorithm records the states of multiple agents and
   channels.
+  A global snapshot algorithm starts in some state \(S_{init}\) and terminates
+  later at a state \(S_{fini}\).
+  A global snapshot is a state <code>S*</code> such that there exists a
+    computation that starts at \(S_{init}\), then visits
+    \(S^{*}\) and then visits \(S_{fini}\).
+    </p>
 
-  The algorithm starts at some point and terminates at a later point.
-
-  A global snapshot is a state that occurs in a computation from the
-  state in which the algorithm starts to the state in which the algorithm ends.
 
   <p>
   The global snapshot algorithm is an example of an algorithm that is
   executed by a distributed operating system (OS) on behalf of a
-  client.
-
+    client.
+    </div>
+    <!-----END SECTION: DefinitionOfGlobalSnapshot ------------>
   Next, we describe features of the OS that are relevant to the
   snapshot algorithm.
 
+        <!-----START SECTION: Distributed Operating System ------------>
+  <div id="SECTION">
+    <a name="DistributedOperatingSystem"></a>
+
+    
   <!-----------------------------------------------------------------------------> 
   <h4 class="w3-text-teal">A Distributed Operating System</h4>
   <!-----------------------------------------------------------------------------> 
   
-  
+  <p>
   Each client agent has an OS agent that supervises it.
-
   OS agents use the same processors and channels as clients do.
-  
   OS agents can record, but not modify, states of their clients.
-  
   OS agents can send and receive OS messages that are not seen
-by clients.
+    by clients.
+    </p>
 
 <p>
 Figure 1 is a representation of two OS agents that manage their
 client agents.
-
 Messages sent by a client are recorded by the OS and passed through
 to destination clients.
-
 The OS sends messages on the same channels as clients, but the OS
 traps these messages so that the client does not see them.
-
+</p>
 
 <figure>
     <img src="ChannelSnapshots/ChannelSnapshots.001.jpeg" alt="Fig1"
@@ -175,29 +181,36 @@ traps these messages so that the client does not see them.
   Execution of an OS agent on a processor may delay a client's
   steps on the same processor, and thus change the order in which the
   client's steps are executed. 
-
 <i>The OS may change a client's computation -- the order of steps -- but
-the OS must not change the client's dataflow.</i>
+    the OS must not change the client's dataflow.</i>
+    </p>
   
   <p>
   One way to record a global snapshot is for the OS to stop a client
   computation, then take a global snapshot, and then  restart the
 client computation.
-
-Our goal is to design an algorithm that does not stop the client.
+    Our goal is to design an algorithm that does not stop the client.
+    </p>
 
 <p>
 Hereafter, when we refer to an agent in this webpage we mean an OS agent.
-
 Likewise, by messages we mean those that are sent and received by the
-OS.
+    OS.
+    </p>
 
 
 <p>
 Next, let's develop OS agents and OS messages to record a global
-snapshot.
+    snapshot.
+    </p>
+    
+  </div>
+        <!-----END SECTION: Distributed Operating System ------------>
 
 
+       <!-----START SECTION: Global Snapshot Algorithm ------------>
+  <div id="SECTION">
+    <a name="Algorithm"></a>
 <!----------------------------------------------------------------------------->
 <h4 class="w3-text-teal">Specification of a Global Snapshot Algorithm</h4>
 <!----------------------------------------------------------------------------->
@@ -205,49 +218,45 @@ snapshot.
 <p>
 Let \(S_{init}\) and \(S_{fini}\) be the states in which the
 global snapshot algorithm starts and finishes, respectively.
-
-The global snapshot algorithm records a state \(S^{*}\) such that
+The problem is to design a global snapshot algorithm that records a
+  state \(S^{*}\) such that 
 there exists a computation that starts at \(S_{init}\), then visits
 \(S^{*}\) and then visits \(S_{fini}\).
-
-
+</p>
 
 
 <!----------------------------------------------------------------------------->
 <h4 class="w3-text-teal">How Should You Solve the Problem?</h4>
 <!----------------------------------------------------------------------------->
 
-<p class="w3-text-teal">Strategy</p>
+  <p class="w3-text-teal">Strategy</p>
+  <p>
 A strategy for developing algorithms dealing with global snapshots is
-to use a <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html"> 
-properties of cuts</a>.
-
+to use <a href="Timelines.html#DefinitionOfCut"> 
+properties of consistent cuts</a>.
 The theorem
 <a href="Timelines.html#TheoremComputationsAndCuts">"Computations and Cuts," </a>
 tells us that \(S^{*}\) can be the state at any cut.
-
-Our tasks reduce to (1) identifying a cut, and
+Our tasks reduce to (1) identifying a consistent cut, and
 (2) recording the state, \(S^{*}\), at the cut.
-
-
-
-
+</p>
 
 
 <!------------------------------------------------->
-<h5 class="w3-text-teal">Identifying a Cut</h5>
+  <h5 class="w3-text-teal">Identifying a Cut</h5>
+  <p>
 Each agent has to record its own state because an agent's state is not
 accessible to other agents.
-
 The state of an agent that it records is called a <i>local snapshot</i>.
-
+  </p>
+  
 <p>
 A partition of the steps of a computation into <code>past</code> and
-<code>future</code> is a cut <code>(past, future)</code> exactly when
+<code>future</code> is a consistent cut <code>(past, future)</code> exactly when
 all edges to vertices in <code>past</code> are from vertices in
 <code>past</code>.
-
-In our algorithm, let <code>past</code> be the set of steps at each agent before the
+In our algorithm, let <code>past</code> be the set of steps at each
+  agent before the 
 agent takes its local snapshot.
 It follows that if a step \(x\) at an agent is in <code>past</code> then the agent
 edge to that step is also in <code>past</code>.
@@ -255,7 +264,7 @@ Therefore we need only prove that all message edges to vertices in
 <code>past</code> are from vertices 
 in <code>past</code>.
 And this condition is guaranteed by the following rule
-
+</p>
 
 
 <hr class="new2">
@@ -265,22 +274,21 @@ Each message received before the receiver takes its local snapshot
 is sent before the sender takes its local snapshot.
 <p>
 <hr class="new2">
-
+<p>
 We now use the global snapshot rule to develop an algorithm.
-
-
+</p>
 
 <!----------------------------------------------------------------------------->
 <h4 class="w3-text-teal">The Global Snapshot Algorithm</h4>
 <!----------------------------------------------------------------------------->
-
+<p>
 A special OS message called a <code>marker</code> is used to distinguish
 pre-snapshot from post-snapshot messages.
-
 Messages sent on a channel before a <code>marker</code> is sent on the
 channel are messages sent in the <code>past</code> -- i.e. before the
 sender takes its local snapshot -- and messages sent
 after the marker are sent in the <code>future</code>.
+</p>
 
 <p class="w3-text-teal">Steps of the global snapshot algorithm</p>
 <ol>
@@ -291,8 +299,8 @@ after the marker are sent in the <code>future</code>.
   </li>
   <li>
   When an agent takes its local snapshot it sends a marker on each
-  of its outgoing channels. An agent takes its local snapshot only
-  once. For each channel, only one marker is sent on the channel.
+  of its outgoing channels. An agent takes its local snapshot exactly
+  once. For each channel, exactly one marker is sent on the channel.
   </li>
   <li>
   When an agent receives a marker, the agent takes its local snapshot
@@ -305,62 +313,76 @@ after the marker are sent in the <code>future</code>.
   </li>
 </ol>
 
+</div>
+       <!-----END SECTION: Global Snapshot Algorithm ------------>
+
+    
+       <!-----START SECTION: Proof of Correctness ------------>
+  <div id="SECTION">
+    <a name="Proof"></a>
+    
 <h5 class="w3-text-teal">Proof of correctness</h5>
 
 <p>
-
 From rule 3, each message received by an agent \(r\) on a channel
 \(c\) before \(r\) takes its 
 local snapshot is a message received by \(r\) before \(r\) receives a
 marker on channel \(c\).
+</p>
 
 <p>
 Because channels are first in first out, each message received by
  \(r\) on \(c\) before \(r\) receives a
 marker on \(c\) is sent on \(c\) before a marker is
 sent on \(c\).
-
+    </p>
+    
 <p>
 From rule 2 each message sent on \(c\) before a marker is sent on
 \(c\) is sent before the sender takes its local snapshot.
-
+    </p>
+    
 <p>
 From the three paragraphs above it follows that the global snapshot
 rule holds for the algorithm.
+</p>
 
-
-<p class="w3-text-teal">Proof about States of Channels</p>
+    <p class="w3-text-teal">Proof about States of Channels</p>
+    <p>
 The messages in a channel at the cut are the
 messages sent in <code>past</code> and received in <code>future</code>.
 These are messages sent before the sender takes its snapshot and
 received after the receiver takes its snapshot.
-
 So, the state of a channel is the sequence of
 messages received along the channel after the receiver takes its
 snapshot and before the receiver receives a marker along the channel.
-
+    </p>
+    
 <p>
 Note: If an agent takes its local snapshot when it receives a marker
 along a channel, then the snapshot of the channel is the empty
-sequence of messages.
+    sequence of messages.
+    </p>
 
 <!---------------------------------------------------->
 <h5 class="w3-text-teal">Termination of the Algorithm</h5>
-
+<p>
 After any agent \(v\) initiates the algorithm, all agents that are
 reachable from \(v\) will receive a marker and take their local
 snapshots.
-
 If every agent is reachable from an initiator then all agents take
 local snapshots. 
-
+    </p>
+    
 <p>
 Each agent takes its local snapshot at most once.
-
 So, a marker is sent on a channel at most once.
-
 The computation terminates when all markers are received.
+    </p>
 
+    </div>
+<!-----END SECTION: Proof of Correctness ------------>
+    
 <h4 class="w3-text-teal">Next</h4>
 
 <p>
@@ -395,7 +417,8 @@ algorithm
 
 <!-- END MAIN -->
 </div>
-
+</div>
+</div>
 
 
 </body>
