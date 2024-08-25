@@ -79,111 +79,141 @@ hr.new1 {
 
 
 <!--------------------------------------------------------->
-<h1 class="w3-text-teal">Applications of Global Snapshots</h1>
+<h2 class="w3-text-teal">Applications of Global Snapshots</h2>
 <!--------------------------------------------------------->
 
 
-  
   <!------------------------------------------------------------------->
   
   <p class="w3-text-red">
   This webpage discusses a few of the many applications of global
   snapshots.
 
+  <!-----START SECTION: Applications of Global Snapshots ------------>
+  <div id="SECTION">
 
+    <!-----START SECTION: Collecting Local Snapshots ------------>
+  <div id="SECTION">
+    <a name="CollectingLocalSnapshots"></a>
+
+    
   <!---------------------------------------------------->
-  <h3 class="w3-text-teal">Collecting Local Snapshots to form Global
-  Snapshots</h3>
+  <h4 class="w3-text-teal">Collecting Local Snapshots to form Global
+  Snapshots</h4>
 
+  <p>
   The global snapshot algorithm shows how each agent records its own
   local state and the states of its input channels.
-
-  These local snapshots are collected together to form a global
-  snapshot in some applications.
-
+  The global snapshot algorithm does not specify how
+  local snapshots are put together to form a global
+  snapshot.
+  </p>
+  
   <p>
-  One way to collect local snapshots is to have a special OS agent act
-  as an observer.
-
+  One way to collect local snapshots to form a global snapshot is to
+  have an operating systems agent act 
+  as an <i>observer.</i>
   Each agent sends its local snapshot to the observer which puts the
   local snapshots together to form the global snapshots.
-
-  Successive global snapshots are disambiguated by using sequence
-  numbers or timestamps.
-
+  </p>
+  
   <p>
-  Messages sent in a global snapshot initiated by an agent
+  Successive global snapshot algorithms are disambiguated by using
+  timestamps. 
+  Messages sent in a global snapshot algorithm initiated by an agent
   <code>X</code> when the local clock at <code>X</code> is at
   <code>t</code> have a timestamp <code>(t, X)</code>.
-
   Snapshot algorithms initiated by the same agent at different times
-  have different timestamps, and snapshot algorithms initiated by
-  different agents have different timestamps.
+  or by different agents have different timestamps.
+    </p>
+    </div>
+        <!-----END SECTION: Collecting Local Snapshots ------------>
 
 
-
+    <!-----START SECTION: System Monitoring ------------>
+  <div id="SECTION">
+    <a name="SystemMonitoring"></a>
+    
 <!---------------------------------------------------->
 
   <h3 class="w3-text-teal">System Monitoring</h3>
+  <p>
+  Systems are monitored by taking global snapshots repeatedly.
+  System monitoring is based on the following observation.
+  </p>
 
-  <h4 class="w3-text-teal">Observation</h4>
+  <h5 class="w3-text-teal">Observation</h5>
+  <p>
   Let \(S_{0}, S_{1}, S_{2}, \ldots, \) be the sequence of states
   of global snapshots recorded by the system.
-
   There exists a computation that visits each state \(S_{i}\) in order
-  of increasing \(i\).
+of increasing \(i\).
+</p>
 
   <p class="w3-text-teal">Proof</p>
   The proof is essentially the same as
 <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html#TheoremComputationsAndCuts">
 the proof of the theorem
 </a>
-  "Computations and Cuts."
-
+"Computations and Cuts."
+</p>
 
   <p>
-  Systems are monitored by taking global snapshots repeatedly.
- The system monitor checks the sequence of snapshots to determine if
+  System monitoring has many applications.
+ A system monitor takes global snapshots repeatedly and checks a
+  sequence of snapshots to determine if 
 some action is required.
-The action may be breaking a deadlock or rolling back steps of a
-  computation. 
+Examples of actions are breaking a deadlock or rolling back steps of a
+computation and restarting the computation from a snapshot.
+    </p>
+    </div>
+    <!-----END SECTION: System Monitoring ------------>
 
 
+        <!-----START SECTION: Rollback and Recovery ------------>
+  <div id="SECTION">
+    <a name="RollbackAndRecovery"></a>
+
+    
 <h4 class="w3-text-teal">Rollback and Recovery</h4>
-
-
+<p>
 Let \(S^{*}\) be the most recent snapshot recorded by a system monitor.
-
 From,
 <a href="../DISTRIBUTED_SYSTEM_MODELS/Timelines.html#TheoremComputationsAndCuts">
 the theorem "Computations and Cuts"
 </a>
 there exists a computation that starts at the initial state and 
 visits \(S^{*}\).
-
 So, if an error is detected in a computation then the computation can be
 restarted from \(S^{*}\) rather than rolling all the way back to the
 initial state. 
+</p>
+       <!-----END SECTION: Rollback and Recovery ------------>
 
 
 
+    <!-----START SECTION: Detecting Stable Predicates ------------>
+  <div id="SECTION">
+    <a name="DetectingStablePredicates"></a>
+    
 <h3 class="w3-text-teal">Detecting Stable Predicates</h3>
-
+<p>
 A <i>stable predicate</i> is a predicate with the following property: If the
 predicate holds at any point in any computation then it continues to
 hold forever thereafter in that computation. Equivalently, if a stable
 predicate holds in a state \(s\) then it holds in all states reachable
 from \(s\).
-
+    </p>
+    
 <p>
 Examples of stable predicates are: "The computation has
 terminated," and "The computation is deadlocked."
-
 If a computation has terminated at some point then it remains 
 terminated.
-
 Likewise if a computation has deadlocked then it remains deadlocked.
+    </p>
 
+    
 <h5 class="w3-text-teal">Specification of Detection Algorithms</h5>
 An algorithm to detect a stable property \(P\) has the following
 specification.
@@ -218,58 +248,49 @@ deadlocked must satisfy the following conditions.
 </ol>
 
 
-<h4 class="w3-text-teal">A Strategy for Developing Detection Algorithms</h4>
+<h4 class="w3-text-teal">A Strategy for Developing Detection
+Algorithms</h4>
+<p>
 A general strategy for developing algorithms that detect stable
 properties is as follows.
-
 The operating system takes repeated snapshots of the computation and
 determines that the specified stable property holds if it holds in any
 snapshot.
-
-
-<!-------------------------------------------------------->
-<h4 class="w3-text-teal">Detection without Observers: Distributed
-Algorithms on Local Snapshots</h4>
-
-A general strategy is to use observers -- agents send their local
-snapshots to an observer that puts the local snapshots together to get
-a global snapshot and analyzes the global snapshot.
-
-For some applications, a more efficient strategy is for agents to
-exchange information about their local snapshots without sending the
-information to a single observer.
+</p>
 
 <p>
+An alternative strategy is for agents to
+exchange information about their local snapshots without sending the
+information to an observer.
 Distributed algorithms on local snapshots operate in two phases.
-
 In the first phase a global snapshot algorithm is executed.
-
 The local snapshot of each agent and its incoming channels are stored
 locally, at the agent, without sending the information to observers.
+</p>
 
 <p>
 In the second phase a distributed algorithm is executed to determine
 if the local information stored at agents satisfies a specified global
 property, such as "computation has deadlocked."
-
 These algorithms are often distributed graph algorithms.
+</p>
 
 <p>
-Detecting properties of computations is hard because states in the
-computatin change while the detection algorithm is running.
-
+The development of algorithms that detect properties of states of computations
+appear to be difficult because states in the
+computation change while the detection algorithm is running.
 The two-phases separate the problem into two simpler parts: In phase 1, record
 local states during the computation using a global snapshot algorithm.
 In phase 2 analyze the <i>static</i> local snapshots.
-
 The algorithm in the second phase operates on unchanging data, and
 this simplifies the design of the algorithm.
-
-
-<p>
 The two phases can be executed concurrently in many applications.
+</p>
+</div>
+<!-----END SECTION: Detecting Stable Predicates ------------>
+</div>
 
-
+<!-----END SECTION: Applications of Global Snapshots ------------>
 
 
 <h4 class="w3-text-teal">Next</h4>
