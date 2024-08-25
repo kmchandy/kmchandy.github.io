@@ -82,27 +82,37 @@ hr.new1 {
   
   <p class="w3-text-red">
   A logical clock algorithm assigns a value, called the logical time,
-  to each step in a computation so that data flows from steps with
+  to each step in a computation so that data flows only from steps with
   smaller logical times to steps with higher logical times.
-  And so all sequences of steps in ascending logical time are
+  So all sequences of steps in ascending logical time are
   computations. 
-
   </p>
 
    
+  <!-----START SECTION: Logical Clocks ------------>
+  <div id="SECTION">
+
+    <!-----START SECTION: Specification of Logical Clocks ------------>
+  <div id="SECTION">
+    <a name="SpecificationOfLogicalClocks"></a>
+
+    
   <!-----------------------------------------------------------------------------> 
   <h4 class="w3-text-teal">The Problem</h4> 
   <!----------------------------------------------------------------------------->
   <h6 class="w3-text-teal">Data flows forward in logical time</h6>
+  <p>
   Design an algorithm that assigns a value, called <i>logical
   time</i>, to each step in a computation so that all data flows from
   steps at smaller logical times to steps at higher logical times.
+  </p>
 
   <p>
   For all steps \(e\) of a computation,
   let \(t(e)\) be a value assigned to step \(e\), all \(e\).
   Then \(t(e)\) is a logical time of \(e\), all \(e\), exactly
-  when: 
+  when:
+  </p>
    
   <hr class="new2">
   <p style="color:blue;">
@@ -119,33 +129,37 @@ hr.new1 {
    causality</a> rather than data flow, but
   the definitions are equivalent with "step \(e\) causes step \(e'\)" as
   the same as "data flows from \(e\) to \(e'\)."
+  </p>
 
   <!---------------------------------------------------------->
   <h5 style="color:red;">Example: Logical Times of Steps</h5>
   <!---------------------------------------------------------->
-  
+  <p>
   Figure 1 shows the dataflow graph of a computation with agents
   \(A, B, C\) and an step sequence \([0, 1, 2, \ldots, ]\).
-
-  The numbers inside the vertices are the step ids which show the
+  The white numbers inside the black vertices are the step ids which show the
   position of the step in the computation.
-
   The red numbers outside the steps are logical times assigned to
-  steps.
+steps.
+</p>
 
   <p>
   Logical times are arbitrary provided
-  every edge is directed from a lower to a higer logical time.
+every edge is directed from a lower to a higer logical time.
+</p>
   <figure>
     <img src="Timelines/Timelines.020.jpeg" alt="Fig1" style="width:100%"> 
     <figcaption>Fig. 1: Logical Times of Steps: Edges Directed from
   Lower to Higher Logical Times</figcaption>
-  </figure>
+</figure>
+</div>
 
-Verify that every edge in figure 1 is from an step with a lower
-logical time to an step with a higher logical time.
+    <!-----END SECTION: Specification of Logical Clocks ------------>
 
- 
+
+    <!-----START SECTION: The Logical Clock Algorithm ------------>
+  <div id="SECTION">
+    <a name="LogicalClockAlgorithm"></a>
   
 <!-------------------------------------------------------->
 <h3 class="w3-text-teal">A Logical Clock Algorithm</h3>
@@ -159,11 +173,15 @@ A message sent in an step \(e\) is assigned a timestamp \(t(e)\).
 <hr class="new2">
 <h5 style="color:blue;">Assigning Logical Times to Steps</h5>
 <p style="color:blue;">
-Let \(e'\) be the step immediately preceding an step \(e\) at an
-agent, and let the timestamp of the message received in \(e\) be
+For any step \(e\) at any agent \(x\), let \(e'\) be the step immediately preceding \(e\)
+at \(x\) and let the timestamp of the message received in \(e\) be
 \(T\).
+</p>
+<center>
 <p style="color:blue;">
 Set \(t(e)\) to be any value greater than max(t(e'), T).
+</p>
+</center>
 <hr class="new2">
 
 <p>
@@ -172,8 +190,14 @@ times than earlier steps at that agent, and (2) a message is received
 in a step with a higher logical time than the logical time of the step
 in which the message is sent.
 <p>
-The correctness of the algorithm is self evident.
+    The correctness of the algorithm is self evident.
+    <a name="SpecificationOfLogicalClocks"></a>
 
+    </div>
+    <!-----END SECTION: The Logical Clock Algorithm ------------>
+
+    </div>
+  <!-----END SECTION: Logical Clocks ------------>
 
 <h4 class="w3-text-teal">Next</h4>
 Logical clocks are used to record global snapshots
