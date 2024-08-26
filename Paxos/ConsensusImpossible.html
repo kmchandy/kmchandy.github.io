@@ -89,10 +89,19 @@ hr.new1 {
    
   <!-------------------------------------------------------------------> 
   <p class="w3-text-red">
+  <p>
   This page outlines the idea behind the proof that consensus is
   impossible in distributed systems that may have faulty agents and in
   which message delays are arbitrary.
+  </p>
 
+  
+   <!-----START SECTION: Consensus ------------>
+  <div id="SECTION">
+
+    <!-----START SECTION: Importance of Consensus ------------>
+  <div id="SECTION">
+    <a name="Importance"></a>
 
 <h3 class="w3-text-teal">Importance of Consensus Algorithms</h3>
 
@@ -101,28 +110,22 @@ Algorithms by which groups of agents <a
 href="https://en.wikipedia.org/wiki/Consensus_(computer_science)">
 come to a consensus </a> are among the most fundamental in
 distributed computing.
+  </p>
 
 <p>
-  Why is consensus important?
-
-  There are many
-problems in which messages are sent to groups of agents who
-  collectively maintain a common <i>consensus</i> state.
-
-  Multiple agents reduce the possibility of system-wide
-failure due to the failure of a single agent. 
-
-  For example, a bank may use
-a group of agents, rather than a single agent, to maintain bank
-  balances.
+  There are many problems in which messages are sent to groups of
+agents who collectively maintain a common <i>consensus</i> state.
+Multiple agents reduce the possibility of system-wide failure due to
+the failure of a single agent.  For example, a bank may use a group of
+agents, rather than a single agent, to maintain bank balances.
+  </p>
 
   <p>
-  Managing replicated
-databases requires the replications to come to a consensus on the
-sequence of transactions that is applied to the
-database. Cryptocurrency transactions require of
-agents to come to a consensus about sequences of transactions that use
-  crypto coins.
+  Managing replicated databases requires the replications to come to a
+consensus on the sequence of transactions that is applied to the
+database. Cryptocurrency transactions require agents to cometo a
+consensus about sequences of transactions that use crypto coins.
+  </p>
 
 <p>
 In a control system with multiple and actuators, the actuators have to
@@ -131,9 +134,17 @@ can operate in concert. A vehicle would crash if some actuators caused
 the vehicle to accelerate while other actuators applied brakes.  In
 some applications, multiple agents have to come to a consensus and
   elect a single leader. 
-There are many problems in which a collection of agents have to come
-to a consensus about something.
+There are many problems in which agents have to reach a consensus.
+    </p>
 
+    </div>
+    <!-----END SECTION: Importance of Consensus ------------>
+
+    
+    <!-----START SECTION: Importance of Consensus ------------>
+  <div id="SECTION">
+    <a name="Impossibility"></a>
+    
     <h3 class="w3-text-teal">Consensus: Impossible with a
     faulty agent</h3>
     Consensus is impossible with even a single faulty agent. This was
@@ -145,16 +156,21 @@ Fischer, Lynch and Patterson.
     <p>
     You can get the idea of why consensus is not possible by
     considering the following problem in which
-    when message delays are finite but arbitrarily long.
+message delays are finite but arbitrarily long, and in which agents
+may fail by halting forever.
+</p>
+
+<p>
     A collection of 2N + 1 agents want to
     come to a consensus about a color. N of the agents pick blue and
     N+1 pick red. One of the red agents is arbitrarily slow. The
     2N non-slow agents exchange messages among each other, and each of
     these 2N agents gets N votes for red and N votes for blue. Agents
     decide to take a majority vote, and in the event of a tie pick
-    blue.
+blue.
+</p>
 
-<p>
+
 <figure>
     <img src="./Slide01.jpg" alt="Fig1" style="width:80%">
     <figcaption>Fig.1: Problem with a slow agent</figcaption>
@@ -162,6 +178,7 @@ Fischer, Lynch and Patterson.
 
     <p>
     How long should they wait for the slow agent?
+</p>
 
     <p>
     Consider an algorithm in which agent waits until its local clock
@@ -172,23 +189,42 @@ Fischer, Lynch and Patterson.
     red vote from the slow agent for a total of N+1 red votes, before
     Z's clock shows an elapsed time of T. So Z determines that the
     consensus is red. The algorithm fails because Y and Z have not
-    come to a consensus. 
+come to a consensus.
+</p>
 
 <p>
 No algorithm is guaranteed to come to a consensus in finite time if
-messages can be arbitrarily slow or if agents can be arbitrarily slow.
-Systems with synchronized clocks don't have this particular
-problem. We'll look at consensus in such systems later.
+messages or agents can be arbitrarily slow because algorithms cannot
+distinguish between slow agents and agents that have halted.
+Systems with synchronized clocks don't have this 
+problem. Later, we'll look at consensus algorithms for systems in which
+agents operate in synchronized rounds.
+</p>
 
+</div>
+<!-----END SECTION: Importance of Consensus ------------>
+
+
+    <!-----START SECTION: Best Effort Consensus ------------>
+  <div id="SECTION">
+    <a name="BestEffort"></a>
 <h2 class="w3-text-teal">Best Effort Consensus</h3>
+<p>
 The theorem says that there is no algorithm that guarentees that
 consensus can be reached in all scenarios; 
 however, consensus can be reached in most practical situations.
+</p>
 
-An idea to overcome the counterexample given above is that
-agents keep trying repeatedly until they reach consensus. The theorem tells us
-that the agents may have to keep trying for ever. We expect, however,
-that in most practical situations their attempts will succeed at some point.
+<p>
+An idea to overcome the problem identified in the counterexample given
+above is as follows: Agents keep trying repeatedly until they reach
+consensus. The theorem tells us that the agents may have to keep
+trying for ever. We expect, however, that in most practical situations
+their attempts will succeed at some point.
+A "best effort" algorithm may not terminate; but, if it does terminate
+then it terminates in a state in which the collection of agents have
+reached a consensus.
+</p>
 
 <p>
 What does "keep trying" mean? When does one trial
@@ -196,10 +232,13 @@ end and the next one begin? If agents use timeouts to end a trial,
 then --- because clocks aren't synchronized --- the timeouts may complete
 at different times.
 We'll see that we can use the idea of time, even though clocks aren't
-synchronized. We've used the concept of time before with logical
-clocks.
+synchronized.
+    </p>
+    </div>
+        <!-----END SECTION: Best Effort Consensus ------------>
 
-
+    </div>
+   <!-----END SECTION: Consensus ------------>
 
 
 <h4 class="w3-text-teal">Next</h4>
@@ -225,31 +264,5 @@ Byzantine consensus</a> and
 
 <!-- END MAIN -->
 </div>
-
-<script>
-// Get the Sidebar
-var mySidebar = document.getElementById("mySidebar");
-
-// Get the DIV with overlay effect
-var overlayBg = document.getElementById("myOverlay");
-
-// Toggle between showing and hiding the sidebar, and add overlay effect
-function w3_open() {
-  if (mySidebar.style.display === 'block') {
-    mySidebar.style.display = 'none';
-    overlayBg.style.display = "none";
-  } else {
-    mySidebar.style.display = 'block';
-    overlayBg.style.display = "block";
-  }
-}
-
-// Close the sidebar with the close button
-function w3_close() {
-  mySidebar.style.display = "none";
-  overlayBg.style.display = "none";
-}
-</script>
-
 </body>
 </html>
