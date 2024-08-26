@@ -85,22 +85,23 @@ hr.new1 {
   global snapshots.
   The state at which all agents are at the same logical time \(t\) is
   a global snapshot.
-
-  Combining physical and logical clocks results in clocks that tick
-  forward and where the state when all local clocks are at the same
-  time is a global snapshot.
-
   </p>
 
-   
+      
+  <!-----START SECTION: Logical Clocks for Snapshots ------------>
+  <div id="SECTION">
+
+    <!-----START SECTION: Problem Definition ------------>
+  <div id="SECTION">
+    <a name="SpecificationOfLogicalClocksSnapshots"></a>
+    
   <!-----------------------------------------------------------------------------> 
   <h3 class="w3-text-teal">The Problem</h3> 
   <!----------------------------------------------------------------------------->
   <p>
   Design an algorithm that computes global snapshots using logical
   clocks.
-
-  
+  </p>
    
   <!----------------------------------------------------------------------------->
   <h4 class="w3-text-teal">How Should You Solve the Problem?</h4>
@@ -108,50 +109,69 @@ hr.new1 {
   <h5 class="w3-text-teal">Strategy</h5>
   A strategy to develop any
   algorithm that deals with global snapshots is: Start with definition
-  of cuts.
-  
+  of consistent cuts.
+  </p>
+
   <h5 class="w3-text-teal">Observation</h5>
+  <p>
   For any \(t\), define the <i><code>past</code> at \(t\)</i> in a
   computation as the set of events with logical time at most \(t\),
   and define <i><code>future</code> at \(t\)</i>
   as the set of events with logical time greater than
   \(t\).
+  </p>
+  
   <p>
   (<code>past</code> at logical time \(t\), <code>future</code> at
-  logical time \(t\)) is a cut.
+  logical time \(t\)) is a consistent cut.
+  </p>
   
   <h6 class="w3-text-teal">Proof</h6>
-  From the <a href=:LogicalClocks.html">definition of logical time</a>
+  From the <a href="LogicalClocks.html#SpecificationOfLogicalClocks">
+  definition of logical time</a>
   data flows forwards in logical time, i.e., from smaller to higher
   logical times.
   Therefore all data flows to steps in <code>past</code> at logical
   time \(t\) are from steps in <code>past</code> at logical
   time \(t\).
 
-  <h4 class="w3-text-teal">State at Logical Time \(t\)</h4>
-The <i>state at logical time \(t\)</i> is the state at the cut
+    </div>
+    <!-----END SECTION: Problem Definition ------------>
+
+
+       <!-----START SECTION: State at Logical Time ------------>
+  <div id="SECTION">
+    <a name="StateAtLogicalTime"></a>
+    
+    <h4 class="w3-text-teal">State at Logical Time \(t\)</h4>
+    <p>
+The <i>state at logical time \(t\)</i> is the state at the consistent cut
  (<code>past</code> at logical time \(t\), <code>future</code> at
 logical time \(t\)), and is given by the labels of edges from steps in
 <code>past</code> at logical time \(t\) to steps in
-<code>future</code> at logical time \(t\).
+    <code>future</code> at logical time \(t\).
+    </p>
+    </div>
+       <!-----END SECTION: State at Logical Time ------------>
 
 
+  <!-----START SECTION: Example of State at Logical Time ------------>
+  <div id="SECTION">
+    <a name="ExampleStateAtLogicalTime"></a>
+    
 <!---------------------------------------------------------->
   <h5 style="color:red;">Example: State at Logical Time \(t\)</h5>
 <!---------------------------------------------------------->
+<p>
 Figure 1 illustrates the state at logical time 6.5 of the
 computation shown in figure 1.
-
-  The curved purple line represents the cut.
-
-  The cut separates the past of the cut from its future.
-
+  The curved purple line represents the boundary that
+  separates the past of the cut from its future.
   Past steps are colored black while future steps are colored
 green.
-
 The states of agents and channels at logical time \(t = 6.5\) are
 given by the labels of the edges that cut the purple line.
-
+</p>
 <figure>
     <img src="Timelines/Timelines.019.jpeg"
 alt="Fig2" style="width:100%">
@@ -160,15 +180,16 @@ alt="Fig2" style="width:100%">
 </figure>
 
 <p>
-The point at which the purple line cuts the timeline for agent \(A\)
+The point at which the cut boundary -- the purple line -- intersects
+the timeline for agent \(A\) 
 can be thought of as the point in \(A\)'s computation at which the
 logical time is exactly 6.5.
-
-This cut is on the edge from the step at \(A\) with
+The cut boundary intersects the edge from the step at \(A\) with
   logical time at most 6.5 to the step with logical time greater
   than 6.5.
-
-  In this example the cut is on the edge from step 3 to step 5.
+  In this example, the cut boundary intersects the edge on \(A\)'s
+timeline from step 3 to step 5.
+</p>
 
   <p>
   The message edge from step 3 to step 7 represents a message sent
@@ -179,15 +200,22 @@ In this example, the state of the channel \((A, B)\) is the sequence
 consisting of a 
 single message which is the label of this edge.
 
+    </div>
+  <!-----END SECTION: Example of State at Logical Time ------------>
 
-
+    
+  <!-----START SECTION: Global Snapshot Algorithm for State at Logical Time ------------>
+  <div id="SECTION">
+    <a name="GlobalSnapshotForStateAtLogicalTime"></a>
+    
 <!----------------------------------------------->
 <h4 class="w3-text-teal">
 Global Snapshot Algorithm to Record the State at a Logical Time
 </h4>
-
+<p>
 An algorithm to record the state at logical time \(t\) follows
-directly from the definition of the state at logical time \(t\).
+    directly from the definition of the state at logical time \(t\).
+    </p>
 
 <ol>
   <li>
@@ -201,47 +229,53 @@ messages with timestamps atmost \(t\) that the agent
   receives when its logical clock exceeds \(t\).
   </li>
 </ol>
+</div>
+  <!-----END SECTION: Global Snapshot Algorithm for State at Logical Time ------------>
 
-The purple line in figure 2 represents the global snapshot at logical
-time 6.5.
+The labels of edges that cross the cut boundary -- the purple line --
+in figure 1 represents the global snapshot at logical time 6.5.
 
-
+  <!-----START SECTION: Imperfect Clocks ------------>
+  <div id="SECTION">
+    <a name="ImperfectClocks"></a>
+    
   <!--------------------------------------------->
   <h3 class="w3-text-teal">Using Imperfect Clocks in Distributed Algorithms</h3>
 <!--------------------------------------------->
 
-  <p class="w3-text-teal">Intuition</p>
-  We will design some algorithms using 
-logical time to play the role of real time.
-Figure 3 shows the computation in figure 2 with the horizontal axis
-representing real time.
-The position of a step with logical time \(t\) is at a distance of
-\(t\) units from the origin.
+<p class="w3-text-teal">Intuition</p>
+<p>
+  We will design some algorithms with 
+logical time playing the role of real time.
+Figure 2 shows the computation in figure 1 with the horizontal axis
+representing logical time.
+The dataflow graphs are identical in figures 1 and 2; however, in
+figure 2 the position of a step with logical time \(t\) is shown
+at a distance of \(t\) units from steps at time \(0\).
+</p>
 
 <figure>
     <img src="Timelines/Timelines.018.jpeg"
   alt="Fig3" style="width:80%"> 
-    <figcaption>Fig. 3: Computation with Logical Time as Real Time</figcaption>
+    <figcaption>Fig. 2: Computation with Logical Time as Real Time</figcaption>
 </figure>
 
 
 <p>
 Think of logical time as continuous, just as real time is continuous.
 In this example, points at logical times \(6.5\) and \(6.6\), at agent
-\(A\), refer to the same edge.
-
+\(A\), refer to the same edge -- the edge from step 3 to step 5.
 It helps intuition, however, to think
-of the point at logical time \(6.6\) as a location to the right of the
-point at logical time \(6.5\) on the same edge.
-
-Imagine that logical time \(6.6\) is 0.1 time units to the right of
-logical time \(6.5\). 
+of the point at logical time \(6.6\) at agent \(A\) as a point 0.1 time units to the right of
+of the point with logical time \(6.5\) at \(A\).
+</p>
 
 <p>
-The cut at logical time \(6.5\) is represented by the vertical line
+The consistent cut at logical time \(6.5\) is represented in figure 2 by the vertical line
 at time \(6.5\).
-The left of the line is the past at logical time \(6.5\), and the
-right side of the line is the future at that time. 
+The steps to the left of the line is the past at logical time \(6.5\),
+and the steps to the
+right of the line is the future at that time. 
 
 
 <p class="w3-text-teal">Physical and Logical Clocks</p>
@@ -249,56 +283,55 @@ right side of the line is the future at that time.
 Operating systems maintain clocks. Some have atomic clocks or other
   high-fidelity clocks that use Precision or Network Time Protocols
 (PTP, NTP).
-
 With high-fidelity clocks, a message sent when the sender's clock is
 at \(t\) will almost always be received when the receiver's
 clock is later than \(t\).
-
-So physical clocks almost always obey the logical clock requirement.
+High-fidelity clocks almost always obey the logical clock requirement.
+</p>
 
 <p>
 We cannot rule out the possibility that a message sent when the
 sender's clock is later than \(t\) is received when the receiver's clock is
 earlier than \(t\).
-
 If this happens the logical clock requirement is violated because data
-flows from later to earlier in time.
+flows from a step at a later time to a step at an earlier time.
+</p>
 
 <p>
 To prevent physical clocks from violating the logical clock
 requirement we correct physical clocks using the logical clock algorithm.
-
 If an agent receives a message with timestamp
 \(T\) when the agent's clock is at \(T'\), then if \(T' < T\), the
 agent corrects its clock -- i.e. moves its clock forward to a value
 greater than \(T\).
+</p>
 
 <p>
-Such clocks have the following properties that we use in
+Such "logically-corrected physical clocks" have the following properties that we use in
 designing algorithms:
-
 <ol>
-
   <li>
-
   Clocks tick forward forever: For all \(t\), there is a point in
   an infinite computation at which clocks of all agents exceed \(t\).
   </li>
-
   <li>
-
-  Sequences of steps in ascending order of time -- where time at each
-  agent is determined by the agent's clock -- are computations.
+  Sequences of steps in ascending order of time are computations where
+  the time of a step is determined by the local clock of the agent in
+  which the step occurs. 
   </li>
 </ol>
 <p>
+</div>
+<!-----END SECTION: Imperfect Clocks ------------>
+</div>
+  <!-----END SECTION: Logical Clocks for Snapshots ------------>
 
 <h4 class="w3-text-teal">Next</h4>
-
+<p>
 The next few pages describe applications of global snapshots.
 We begin with
 <a href="TerminationDetection.html">Termination Detection</a>.
-
+</p>
 
 
 
