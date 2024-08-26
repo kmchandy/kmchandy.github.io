@@ -82,34 +82,40 @@ hr.new1 {
 
   <!------------------------------------------------------------------->
   <p class="w3-text-red">
-  A distributed computation has terminated when all agents are idle
-  and all channels are empty.
-
+  A distributed computation has terminated in a state in which all
+  agents are waiting to receive messages and all channels are empty.
   A termination detection algorithm is executed by the operating
   system to determine whether a client computation has terminated.
 
   </p>
   
   
+ 
+    <!-----START SECTION: Termination Detection ------------>
+  <div id="SECTION">
+
+    
+    <!-----START SECTION: DefinitionOfTerminationDetection ------------>
+  <div id="SECTION">
+    <a name="TerminationDetectionSpecification"></a>
 
 
-  <h3 class="w3-text-teal">Problem Definition</h3>
+  <h3 class="w3-text-teal">The Problem</h3>
 <p>
   A computation terminates in states in which all
   channels are empty and all agents are waiting to receive messages.
-
   An agent is said to be <i>active</i> while it is processing a
   message and <i>idle</i> while it is waiting to process a message.
-
   A terminated state is one in which all agents are idle and all
   channels are empty.
+  </p>
 
   <p>
   Let \(C_{s}\) and \(C_{r}\) be the numbers of messages 
   sent and received (respectively) on channel \(C\).
-
   A computation is in a terminated state exactly
   when:
+  </p>
   <ol>
     <li>
     All agents are idle and
@@ -118,39 +124,44 @@ hr.new1 {
     for all channels \(C\):  \(\; C_{s} = C_{r}\).
     </li>
   </ol>
-
+<p>
   The problem is to design an algorithm that detects whether the
   computation is in a terminated state.
-  
+  </p>
+</div>
+    <!-----END SECTION: DefinitionOfTerminationDetection ------------>
+
+
+
+   
+    <!-----START SECTION: TerminationDetectionStrategy ------------>
+  <div id="SECTION">
+    <a name="TerminationDetectionStrategy"></a>
+    
   <!----------------------------------------------------------------------------->
   <h4 class="w3-text-teal">How Should You Solve the Problem?</h4>
   <!----------------------------------------------------------------------------->
 
   <h5 class="w3-text-teal">Strategy</h5>
 
-  Using the <a href="GlobalSnapshotApplications.html">
-  different strategies described earlier</a> gives us different
-  termination detection algorithms.
-
-  Let's use <i>observers</i> and optimize the global snapshot
-  algorithm for the special case of termination detection.
- 
-
+  <p>
+  Use one of the <a href="GlobalSnapshotApplications.html">
+  strategies described earlier</a>.
+  Let's use <i>observers</i> and optimize the observer-based global
+  snapshot algorithm for the special case of termination detection.
+ </p>
 
   <p>
-  There exists a cut <code>(past, future)</code> of a dataflow graph
+  There exists a consistent cut <code>(past, future)</code> of a dataflow graph
   exactly when every edge to a <code>past</code> vertex is from a
   <code>past</code> vertex.
-
   In our algorithms, <code>past</code> is the set of steps (vertices)
   at each agent before the agent takes its local snapshot.
-
   This guarantees that every agent edge to a <code>past</code> vertex
   is from a <code>past</code> vertex.
-
-  Let's look at ways of guaranteeing that every message edge to a
+  The algorithm must also ensure that every message edge to a
   <code>past</code> vertex is from a <code>past</code> vertex.
-
+</p>
 
 
   <a name="Observation">
@@ -172,13 +183,20 @@ hr.new1 {
   <p style="color:blue;">
   </center>
   </p>
-  <hr class="new2">
+    <hr class="new2">
 
+    </div>
+    <!-----END SECTION: TerminationDetectionStrategy ------------>
 
 The observation suggests the following algorithm.
 
 
+  
+    <!-----START SECTION: TerminationDetectionAlgorithm ------------>
+  <div id="SECTION">
+    <a name="TerminationDetectionAlgorithm"></a>
 
+    
   <h4 class="w3-text-teal">A Termination Detection Algorithm</h4>
 
   <p class="w3-text-teal">Agent Actions</p>
@@ -206,12 +224,12 @@ observer has received.
 
   
 <p class="w3-text-teal">Initial Condition</p>
+<p>
 All agents are idle.
-
 \(C_{s}^{*}\) and \(C_{r}^{*}\) are the numbers of messages sent and
 received (respectively) on channel \(C\) for all \(C\).
-
-
+Some channels may contain messages.
+</p>
 
 <hr class="new2">
 <h5 style="color:blue;">The Termination Detection Condition:</h5>
@@ -221,8 +239,15 @@ received (respectively) on channel \(C\) for all \(C\).
 <p style="color:blue;">
 For all channels \(C\): \(C_{s}^{*} = C_{r}^{*}\).
 </p>
-<hr class="new2">  
+    <hr class="new2">
+</div>
+    <!-----END SECTION: TerminationDetectionAlgorithm ------------>
 
+
+   <!-----START SECTION: TerminationDetectionProof ------------>
+  <div id="SECTION">
+    <a name="TerminationDetectionProof"></a>
+    
 <!-------------------------------------------------------->
 <h5 class="w3-text-teal">Proof of Correctness</h5>
 <!-------------------------------------------------------->
@@ -230,14 +255,15 @@ For all channels \(C\): \(C_{s}^{*} = C_{r}^{*}\).
   <p>
   We first prove that if the observer detects that the computation has
 terminated then the computation has indeed terminated.
+</p>
 
 <p>
 Assume that the observer has detected termination.
-
 Then for each channel \(C\),
 either \(C_{s}^{*} = C_{r}^{*}\) initially, or the observer received
 messages containing \(C_{s}^{*}\) and \(C_{r}^{*}\) such that
 \(C_{s}^{*} = C_{r}^{*}\).
+</p>
 
 
 <p>
@@ -247,37 +273,40 @@ Let<code>(past, future)</code> be a partition of the steps of the
 \(C_{s}^{*}\) and 
 \(C_{r}^{*}\) for channels \(C\) incident on the agent. 
 (If the agent sends no messages to the observer 
-then the agent has no steps in <code>past</code>.)
+then the agent has no steps in <code>past</code> other than the
+initialization step.)
 
 <p>
 Because \(C_{s}^{*} \geq C_{r}^{*}\) for all channels \(C\)
 <a href="#Observation">it follows
-that</a> <code>(past, future)</code> is a cut.
+that</a> <code>(past, future)</code> is a consistent cut.
+</p>
 
 <p>
 From the definition of terminated state it follows that the state at
-this cut is a terminated state.
-
+this consistent cut is a terminated state.
 Termination is a stable property -- once computation has terminated it
 remains terminated.
-
-So, if the state at a cut of the computation
+So, if the state at a consistent cut of the computation
 is a terminated state then all succeeding states are terminated states.
+<p>
+
 
 <p>
 Next we prove that if the computation terminates then the observer
 detects termination.
-
 Assume that the computation has terminated.
-
 The last message sent by each agent has counts \(C_{s}^{*}\) and
 \(C_{r}^{*}\) of the numbers of messages sent and received (respectively)
 for each of its incident channels \(C\).
-
 Because these are the last messages sent when the algorithm terminates
 it follows that \(C_{s}^{*} = C_{r}^{*}\) for all \(C\).
-
-
+    </p>
+    </div>
+    <!-----END SECTION: TerminationDetectionProof ------------>
+    
+    </div>
+    <!-----END SECTION: Termination Detection ------------>
 
 
 <h3 class="w3-text-teal">Next</h3>
