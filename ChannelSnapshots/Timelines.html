@@ -90,8 +90,6 @@ hr.new1 {
 
     <!-----START SECTION: Consistent Cuts of Dataflow Graphs ------------>
   <div id="SECTION">
-    <a name="ConsistentCutsOfDataflowGraphs"></a>
-
     
     <!-----START SECTION: DefinitionOfCut ------------>
   <div id="SECTION">
@@ -174,13 +172,14 @@ from <code>future</code>.
   <a name="TheoremComputationsAndCuts">
   <!--------------------------------------------------------------->
   <h3 class="w3-text-teal">Theorem: Computations and Cuts</h3>
-  <!--------------------------------------------------------------->
+    <!--------------------------------------------------------------->
+    <p<
 Let \(E\) be a computation and let <code>(past, future)</code> be any
   consistent cut of the computation. 
-
 There exists a computation \(E'\), which is a permutation of \(E\), in
 which all steps in <code>past</code> are executed before
- all steps in <code>future.</code>
+    all steps in <code>future.</code>
+    </p>
 
 <p class="w3-text-teal">Proof</p>
 <p>
@@ -196,7 +195,6 @@ Let \(E'\) be the sequence consisting of <code>pre</code> followed by
 
 <p>
 The proof that data flows forwards in \(E'\) is straightforward.
-
 <a href="../DISTRIBUTED_SYSTEM_MODELS/Model.html#TheoremPermutations">
 We proved the theorem:</a> any permutation of a computation, where
  data flows forward in the permutation, is also a
