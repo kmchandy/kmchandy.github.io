@@ -1,4 +1,4 @@
-
+<title>DatabaseDeadlockDetection</title>
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
 
@@ -84,52 +84,56 @@ hr.new1 {
   A database deadlock occurs when each agent in a cycle remains
   waiting forever for a resource held and required by the next agent
   in the cycle. 
-
   A database deadlock detection algorithm is executed by the operating
   system to determine whether there exists a cycle of deadlocked agents.
-
   </p>
+
+   <!-----START SECTION: Database Deadlock Detection ------------>
+  <div id="SECTION">
+
+    <!-----START SECTION: TheProblem ------------>
+  <div id="SECTION">
+    <a name="Problem"></a>
   
   <h3 class="w3-text-teal">The Problem</h3>
-
   <p>
   The problem described here is a simplification of the database
   deadlock problem.
-
-  The simplification focuses on the essentials of the problem.
+  The simplification captures the essentials of deadlock detection but
+  ignores aspects of databases.
+  </p>
 
   <p>
   Agents in a system share a set of indivisible resources.
-
   An example of such a resource is exclusive access to a file.
-
+  </p>
+  
   <p>
   A deadlock arises when there is a cycle of agents,
   \([x_{0}, x_{1}, \ldots, x_{n-1}, x_{0}]\) where for all \(i\):
-  <ol>
-    <li>
-    agent \(x_{i}\) holds a resource \(r_{i}\), and
-    </li>
-    <li>
-    agent \(x_{i}\) requires resources \(r_{i}\) and \(r_{(i+1)}\) to
-    continue executing.
-    </li>
-  </ol>
+    Agent \(x_{i}\) is waiting to acquire resource \(r_{(i+1)}\) while
+  agent \(x_{i}\) holds on to resource \(r_{i}\).
+  Agent \(x_{i}\) has to hold resources \(r_{i}\) and \(r_{(i+1)}\) to
+  continue executing.
+    Operations on indices of agents are taken mod \(n\) and \(n >
+  1\).
+    </p>
+    </div>
+        <!-----END SECTION: TheProblem ------------>
 
-  
-    (Operations on indices of agents are taken mod \(n\) and \(n >
-    1\).) 
-
+       <!-----START SECTION: Example ------------>
+  <div id="SECTION">
+    <a name="Example"></a>
+    
   <!-------------------------------------------------->
   <h3  style="color:red;">Example</h3>
   <!-------------------------------------------------->
-  
+  <p>
   In the example, a resource is identified by its color.
-  
   A system has one red, one blue, and one green resource.
-  
   Agents \(x\), \(y\) and \(z\) are deadlocked in the following
   state.
+  </p>
   <ol>
     <li>
   Agent \(x\) requires the red and blue resources to continue
@@ -153,37 +157,43 @@ hr.new1 {
     src="DatabaseDeadlockDetection/DatabaseDeadlockDetection.002.jpeg"
     alt="Fig2" style="width:100%">
   <figcaption>Fig.2 - An Example of a Deadlock</figcaption>
-</figure>
+  </figure>
+  </div>
+        <!-----END SECTION: Example ------------>
 
  
+
+       <!-----START SECTION: Algorithm ------------>
+  <div id="SECTION">
+    <a name="Algorithm"></a>
+    
+  
   <!----------------------------------------------------------------------------->
   <h3 class="w3-text-teal">How Should You Solve the Problem?</h3>
   <!----------------------------------------------------------------------------->
   
   <p class="w3-text-teal">Strategy</p>
 
-  Some <a href="GlobalSnapshotApplications.html">strategies are given
+  <p>
+  Strategies for detecting stable properties are given
+  <a href="GlobalSnapshotApplications.html#DetectingStablePredicates">
   here</a>.
-
-  Let's use the strategy "Detection without Observers: Distributed
-  Algorithms on Local Snapshots." 
+  Let's use the strategy of detection without observers.
+  </p>
 
   <p>
-
-  The algorithm has two phases: (1) First a global snapshot
+  The detection algorithm has two phases: (1) First a global snapshot
   algorithm is executed. (2) After the global snapshot algorithm
   terminates a distributed detection algorithm is executed on
   the local snapshots recorded by the global snapshots.
-
+  </p>
   
   <p>
   Algorithms for the second phase -- determining cycles are found
   <a
   href="https://en.wikipedia.org/wiki/Cycle_(graph_theory)">here</a>.
-  
   The two phases can be merged for some problems, including this one.
-
-
+  </p>
 
 
   <!----------------------------------------------------->
@@ -196,12 +206,11 @@ hr.new1 {
   <p>
   Multiple detection algorithms and global snapshot algorithms may
   execute concurrently.
-  
   These algorithms are disambiguated by tagging each algorithm with
   the initiator and a sequence id.
-
   Next we describe a single detection algorithm which is executed after 
   a single global snapshot algorithm terminates.
+  </p>
 
   <p class="w3-text-teal">Local Constants</p>
   In the detection algorithm, 
@@ -222,15 +231,21 @@ each agent <code>v</code> has the following local constants:
 In the example of the figure:
 <br>
 <code>x.waits = {blue}, x.holds = {red}</code>
+</br>
 <br>
 <code>y.waits = {green}, y.holds = {blue}</code>
+</br>
 <br>
 <code>z.waits = {red}, y.holds = {green}</code>
+</br>
   
 <p>
-<code>v.waits</code> and <code>v.holds</code> are constant for all <code>v</code> in the
-detection algorithm  because these values are
-specified in the global snapshot.
+<code>v.waits</code> and <code>v.holds</code> are determined in the
+first phase of the detection algorithm in which agents take local
+snapshots.
+In the second phase <code>v.waits</code> and <code>v.holds</code> are
+constant.
+</p>
 
 
   <p class="w3-text-teal">Messages</p>
@@ -238,6 +253,7 @@ specified in the global snapshot.
 Each message <code>m</code> sent by an agent <code>v</code> has a
 field <code>m.waits</code> where:
 <code>m.waits</code> = <code>v.waits</code>.
+</p>
 
   <p class="w3-text-teal">Initiating the Algorithm</p>
   A waiting agent <code>u</code> initiates the algorithm by sending a message
@@ -249,6 +265,7 @@ Initiator</p>
 
 <p>
 When an agent <code>v</code> receives a message <code>m</code>:
+</p>
 <ol>
   <li>
   If <code>v</code> has already sent messages then <code>v</code> takes no
@@ -267,82 +284,94 @@ If the initiator <code>u</code> receives a message <code>m</code>
 where there is a resource common to <code>m.waits</code> and
 <code>u.holds</code> then <code>u</code> detects a cycle of waiting
 agents.
+</p>
+</div>
+       <!-----END SECTION: Algorithm ------------>
 
+<!-----START SECTION: Correctness ------------>
+  <div id="SECTION">
+    <a name="Correctness"></a>
+    
 <h4 class="w3-text-teal">Proof of Correctness</h4>
+<p>
 The proof outline is as follows.
-
 An agent <code>v</code> sends messages only if there is a path of waiting
 processes from <code>u</code> to <code>v</code>.
-
 So, <code>u</code> detects a cycle of waiting processes only if there
 exists a cycle of waiting processes.
+</p>
 
 <p>
 If there exists a cycle of waiting processes from <code>u</code>  to
 <code>u</code>  then 
 messages are sent along one such cycle, and so
 <code>u</code> detects a cycle.
+</p>
+
 
 <p>
 The algorithm terminates because it sends at most one message on each
-channel. 
+channel.
+    </p>
+    </div>
+<!-----END SECTION: Correctness ------------>
 
-
-
-
+    
+    <!-----START SECTION: Example 2 ------------>
+  <div id="SECTION">
+    <a name="Example2"></a>
 <!----------------------------------->
 <h4 style="color:red;">Example</h4>
 <!----------------------------------->
-
+<p>
 This example shows steps in the case of the cycle of waiting processes shown in
 figure 2.
-
 The algorithm is initiated by agent <code>x</code> by broadcasting a
 message <code>m</code> where <code>m.waits = x.waits = {blue}</code>.
+</p>
 
 <p>
-
 When <code>y</code> receives a message <code>m</code> where
 <code>m.waits = {blue}</code>, there is a resource in both <code>m.waits</code> and
 <code>y.holds</code>, and so <code>y</code> broadcasts message
 <code>m'</code> where <code>m'.waits = y.waits = {green}</code>.
+</p>
 
 <p>
 When <code>z</code> receives a message <code>m</code> where
 <code>m.waits = {blue}</code>, <code>z</code> takes no action because
 there is no resource in both <code>m.waits</code> and
 <code>z.holds</code>.
-
+</p>
 
 <p>
 When <code>z</code> receives a message <code>m</code> where
 <code>m.waits = {green}</code>, <code>z</code> broadcasts message
 <code>m'</code> where <code>m'.waits = z.waits = {red}</code>.
-
+</p>
 
 <p>
 When the initiator <code>x</code> receives a message <code>m</code> where
 <code>m.waits = {red}</code>, <code>x</code> detects a deadlock
 because there is a resource common to <code>m.waits</code> and
-<code>x.holds</code>. 
+<code>x.holds</code>.
+    </p>
+    </div>
+        <!-----END SECTION: Example 2 ------------>
 
 <h5 class="w3-text-teal">Combining Cycle Detection and Snapshot
 Algorithms</h5>
-
+<p>
 We can use a a marker in the snapshot algorithm as a message in cycle
 detection.
-
 Modify a marker <code>m</code> to have the field
 <code>m.waits</code> used in cycle detection.
-
 Then the snapshot algorithm is the same as the cycle detection
 algorithm except that the snapshot algorithm records states of
 channels which are not used in cycle detection.
-
-<p>
-Write the algorithm for the combined algorithm as an exercise.
-
-
+    </p>
+    </div>
+  <!-----END SECTION: Database Deadlock Detection ------------>
 
 <h4 class="w3-text-teal">Next</h4>
 
@@ -366,36 +395,8 @@ chapter on consensus algorithms.</a>
       California Institute of Technology</p>
     
 </footer>
-    
-
 
 <!-- END MAIN -->
 </div>
-
-<script>
-// Get the Sidebar
-var mySidebar = document.getElementById("mySidebar");
-
-// Get the DIV with overlay effect
-var overlayBg = document.getElementById("myOverlay");
-
-// Toggle between showing and hiding the sidebar, and add overlay effect
-function w3_open() {
-  if (mySidebar.style.display === 'block') {
-    mySidebar.style.display = 'none';
-    overlayBg.style.display = "none";
-  } else {
-    mySidebar.style.display = 'block';
-    overlayBg.style.display = "block";
-  }
-}
-
-// Close the sidebar with the close button
-function w3_close() {
-  mySidebar.style.display = "none";
-  overlayBg.style.display = "none";
-}
-</script>
-
 </body>
 </html>
