@@ -91,11 +91,11 @@ hr.new1 {
 
     
   <!--------------START SECTION: States ----------------->
-  <div ID="SECTION">
+  <div ID="SECTION", class="States">
     <a name="States"></a>
     
   <!--------------START SECTION: States Definition ----------------->
-  <div ID="SECTION">
+  <div ID="SECTION", class="StatesDefinition">
   <a name="StatesDefinition"></a>
   <!----------------------------------------------------------------->
   <h3 class="w3-text-teal">States</h3>
@@ -103,8 +103,8 @@ hr.new1 {
     <p>
   The state of a distributed system is given by the states of its agents and
   channels.
-  A system state is a tuple with an element of the tuple for each
-    agent and each channel.
+  A system state is a tuple with an element of the tuple for the state
+  of each agent and each channel.
     </p>
 
   <p>
@@ -117,7 +117,7 @@ hr.new1 {
     A system may enter the same state by executing different
     behaviors.
     The future behavior of a system, given its state,
-    doesn't depend on the system's behavior before the state was
+    is independent of the system's behavior before the state was
     entered.
     </p>
   </div>
@@ -126,7 +126,7 @@ hr.new1 {
   
 
     <!--------------START SECTION: StateTransitions ---------------------->
-  <div ID="SECTION">
+  <div ID="SECTION", class="StateTransitions">
   <a name="StateTransitions"></a>
   <!----------------------------------------------------------------->
   <h3 class="w3-text-teal">State Transitions</h3>
@@ -134,10 +134,12 @@ hr.new1 {
   <p>
   The state of a system changes when, and only when, a message is
   delivered to an agent.
-  The simple model ignores the changes in the state of an agent while
+  The simple model ignores the changes in the state of an agent that occur while
   the agent is processing a message.
   The model only deals with an agent's state before
-  it starts, and after it completes, processing a message.
+    it starts, and after it completes, processing a message.
+    So, the model only considers an agent's state when the agent is
+  waiting to receive a message.
   </p>
 
   <p>
@@ -145,9 +147,7 @@ hr.new1 {
   <a href="https://en.wikipedia.org/wiki/Atomic_commit">atomic
   operation.</a>
   A state transition occurs when one agent gets one message on one of
-  its input channels and completes processing that messages,
-  i.e. when the agent completes execution of the agent's
-  <code>receive</code> function on that message.
+  its input channels and completes processing that message.
   </p>
 
   <p>
@@ -162,7 +162,7 @@ We discuss performance later.
     </p>
 <p>
   <!--------------START SECTION: Events ---------------------->
-  <div ID="SECTION">
+  <div ID="SECTION", class="Events">
   <a name="Events"></a>
   <!----------------------------------------------------------------->  
 <h5 class="w3-text-teal">Event: Specification of the Change in State
@@ -229,18 +229,19 @@ specified by <i>e</i>.
 </p>
 
 <p>
-In a state transition due to an event at agent <code>u</code>:
+In a state transition due to an event at agent <code>u</code>
 exactly one agent -- namely <code>u</code> -- changes state; 
 exactly one message is delivered from exactly one input channel of <code>u</code>;
-and messages may be appended to arbitrarily many output channels of
+and a message may be appended to each output channel of
 <code>u</code>.
 The states of all other agents and channels remain unchanged by the
 transition.
 </p>
 
 <p>
-If multiple agents change state concurrently then the model treats the state
-changes as occurring one event at one agent at a time, in any order.
+If multiple agents change state concurrently then the model treats the
+concurrent state changes as occurring sequentially, one event at one
+agent at a time, in any order.
 </p>
 
 
@@ -274,7 +275,7 @@ the bank.
 
     
     <!--------------START SECTION: Example ---------------------->
-    <div ID="SECTION">
+    <div ID="SECTION", class="Example">
     <a name="Example"></a>
 <!----------------------------------------------->
 <h4 style="color:red;">Example of an Event</h4>
@@ -312,7 +313,7 @@ the bank.
 <code>pos</code>'s state after the event is <code>my_data = [3,
 5]</code>  and <code>n  = 1</code>.
 During the event <code>pos</code> sends a "wakeup" message to itself
-and 3 to agent <code>total</code>.
+and sends 3 to agent <code>total</code>.
 The event is specified by the following tuple:
 <ol>
   <li>
@@ -321,7 +322,7 @@ The event is specified by the following tuple:
   5]</code> and <code>n = 0</code>. 
   </li>
   <li>
-  The sender of the message that is received is <code>pos</code>, and
+  The sender of the message that is received in this event is <code>pos</code>, and
   the message is "wakeup".
   </li>
   <li>
