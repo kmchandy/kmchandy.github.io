@@ -103,7 +103,7 @@ hr.new1 {
   carrying out complex calculations.
 
     <!--------------START SECTION: WhatIsAModel ---------------------->
-  <div id="SECTION">
+  <div id="SECTION", class="WhatIsAModel">
   <a name="WhatIsAModel"></a>
   <p class="w3-text-teal">Models</p>
 
@@ -145,7 +145,7 @@ hr.new1 {
 
 
    <!--------------START SECTION: ASimpleModel ---------------------->
-  <div id="SECTION">
+  <div id="SECTION", class="ASimpleModel">
     <a name="ASimpleModel"></a>
 
   <!----------------------------------------------------------------->
@@ -178,7 +178,7 @@ A distributed system is initiated with sets of agents and channels
 
 
   <!--------------START SECTION: Channels ---------------------->
-  <div id="SECTION">
+  <div id="SECTION", class="Channels">
 <a name="Channels"></a>
 <!---------------------------------------------------->
 <h4 class="w3-text-teal">Message Communication: Channels</h4>
@@ -213,15 +213,15 @@ A distributed system is initiated with sets of agents and channels
 
     <p>
     An agent sends a message on a channel by appending the message to
-    the tail (rear) of the queue of messages in transit along the
+    the tail of the queue of messages in transit along the
     channel.
     A message from a nonempty channel is delivered to an agent by
-    removing the message from the head (front) of the queue of
+    removing the message from the head of the queue of
     messages in the channel, and passing the message to the agent.
     </p>
 
     <p>
-    Channels have unlimited capacity.
+    In the simple model, channels have unlimited capacity.
     The queue that represents the state of a channel has unbounded size.
     A sender is never blocked from sending messages on a channel.
     </p>
@@ -273,7 +273,7 @@ This can happen because \(m_{3}\) is sent on channel \((B, C)\)
 
 
 <!--------------START SECTION: Agents ---------------------->
-<div id="SECTION">
+<div id="SECTION", class="Agents">
 <a name="Agents"></a>
 <!---------------------------------------------------->
 <h4 class="w3-text-teal">Agents</h4>
@@ -284,7 +284,7 @@ An agent is either waiting to receive a message or is processing a
 message that it has received.
 An agent that is waiting starts processing a message when the agent
 receives a message.
-When an agent finishes processing a message the waits for the next
+When an agent finishes processing a message the agent waits for the next
 message to be delivered to it.
 </p>
 
@@ -329,8 +329,7 @@ is <code>v</code>.
 
   <p>
   A <code>receive</code> function must not be recursive: an agent cannot
-  receive a new message while it is executing a receive on a previous
-  message.
+  receive a new message while it is processing a message.
   Every execution of <code>receive</code> must terminate.
   An agent is not interrupted while it is executing a
   <code>receive</code>. 
@@ -362,12 +361,13 @@ An agent in a distributed system is also called a <i>process</i> in
 some books.
 We use the term agent throughout these notes.
 
-<!--------------END SECTION: Agents ---------------------->
 </div>
+<!--------------END SECTION: Agents ---------------------->
 
 
-  </div>
-  <!--------------END SECTION ASimpleModel ---------------------->
+
+</div>
+<!--------------END SECTION ASimpleModel ---------------------->
   
 <p>
 See <a href="BasicsExamples">examples</a> and see
@@ -376,7 +376,7 @@ The remainder of this page consists of an example.
 </p>
 
   <!--------------START SECTION: Example of a System  ------>
-<div id="SECTION">
+<div id="SECTION", class="Example">
 <a name="Example"></a>
 <!----------------------------------------------->
 <center>
