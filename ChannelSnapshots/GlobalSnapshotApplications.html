@@ -90,10 +90,10 @@ hr.new1 {
   snapshots.
 
   <!-----START SECTION: Applications of Global Snapshots ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="ApplicationsOfGlobalSnapshots">
 
     <!-----START SECTION: Collecting Local Snapshots ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="CollectingLocalSnapshots">
     <a name="CollectingLocalSnapshots"></a>
 
     
@@ -123,7 +123,7 @@ hr.new1 {
   Messages sent in a global snapshot algorithm initiated by an agent
   <code>X</code> when the local clock at <code>X</code> is at
   <code>t</code> have a timestamp <code>(t, X)</code>.
-  Snapshot algorithms initiated by the same agent at different times
+  So snapshot algorithms initiated by the same agent at different times
   or by different agents have different timestamps.
     </p>
     </div>
@@ -131,7 +131,7 @@ hr.new1 {
 
 
     <!-----START SECTION: System Monitoring ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="SystemMonitoring">
     <a name="SystemMonitoring"></a>
     
 <!---------------------------------------------------->
@@ -171,7 +171,7 @@ computation and restarting the computation from a snapshot.
 
 
         <!-----START SECTION: Rollback and Recovery ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="RollbackAndRecovery">
     <a name="RollbackAndRecovery"></a>
 
     
@@ -187,13 +187,14 @@ visits \(S^{*}\).
 So, if an error is detected in a computation then the computation can be
 restarted from \(S^{*}\) rather than rolling all the way back to the
 initial state. 
-</p>
+    </p>
+    </div>
        <!-----END SECTION: Rollback and Recovery ------------>
 
 
 
     <!-----START SECTION: Detecting Stable Predicates ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="DetectingStablePredicates">
     <a name="DetectingStablePredicates"></a>
     
 <h3 class="w3-text-teal">Detecting Stable Predicates</h3>
@@ -259,7 +260,7 @@ snapshot.
 </p>
 
 <p>
-An alternative strategy is for agents to
+An alternate strategy is for agents to
 exchange information about their local snapshots without sending the
 information to an observer.
 Distributed algorithms on local snapshots operate in two phases.
@@ -277,8 +278,7 @@ These algorithms are often distributed graph algorithms.
 
 <p>
 The development of algorithms that detect properties of states of computations
-appear to be difficult because states in the
-computation change while the detection algorithm is running.
+appear to be difficult because states while the detection algorithm is running.
 The two-phases separate the problem into two simpler parts: In phase 1, record
 local states during the computation using a global snapshot algorithm.
 In phase 2 analyze the <i>static</i> local snapshots.
@@ -288,8 +288,8 @@ The two phases can be executed concurrently in many applications.
 </p>
 </div>
 <!-----END SECTION: Detecting Stable Predicates ------------>
-</div>
 
+</div>
 <!-----END SECTION: Applications of Global Snapshots ------------>
 
 
