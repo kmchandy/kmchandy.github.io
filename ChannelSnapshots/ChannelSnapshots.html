@@ -87,7 +87,7 @@ hr.new1 {
   <!------------------------------------------------------------------->
   
   <p class="w3-text-red">
-  A global snapshot algorithm records a state of the system that can
+  A global snapshot algorithm records a state that can
   occur during a computation.
 
   The state obtained by the algorithm is called a global snapshot.
@@ -197,12 +197,6 @@ Hereafter, when we refer to an agent in this webpage we mean an OS agent.
 Likewise, by messages we mean those that are sent and received by the
     OS.
     </p>
-
-
-<p>
-Next, let's develop OS agents and OS messages to record a global
-    snapshot.
-    </p>
     
   </div>
         <!-----END SECTION: Distributed Operating System ------------>
@@ -231,12 +225,13 @@ there exists a computation that starts at \(S_{init}\), then visits
 
   <p class="w3-text-teal">Strategy</p>
   <p>
-A strategy for developing algorithms dealing with global snapshots is
+A strategy for developing algorithms dealing with states that occur
+  during a computation is
 to use <a href="Timelines.html#DefinitionOfCut"> 
 properties of consistent cuts</a>.
 The theorem
 <a href="Timelines.html#TheoremComputationsAndCuts">"Computations and Cuts," </a>
-tells us that \(S^{*}\) can be the state at any cut.
+tells us that \(S^{*}\) can be the state at any consistent cut.
 Our tasks reduce to (1) identifying a consistent cut, and
 (2) recording the state, \(S^{*}\), at the cut.
 </p>
@@ -247,7 +242,8 @@ Our tasks reduce to (1) identifying a consistent cut, and
   <p>
 Each agent has to record its own state because an agent's state is not
 accessible to other agents.
-The state of an agent that it records is called a <i>local snapshot</i>.
+The state of an agent <code>v</code> recorded by
+  <code>v</code> is called a <i>local snapshot</i> of <code>v</code>.
   </p>
   
 <p>
@@ -256,14 +252,15 @@ A partition of the steps of a computation into <code>past</code> and
 all edges to vertices in <code>past</code> are from vertices in
 <code>past</code>.
 In our algorithm, let <code>past</code> be the set of steps at each
-  agent before the 
-agent takes its local snapshot.
-It follows that if a step \(x\) at an agent is in <code>past</code> then the agent
-edge to that step is also in <code>past</code>.
-Therefore we need only prove that all message edges to vertices in
-<code>past</code> are from vertices 
+    agent <code>v</code> before <code>v</code> takes its local snapshot.
+</p>
+
+
+<p>
+To prove that the cut is consistent we need only prove that all
+messages to steps in <code>past</code> are from steps 
 in <code>past</code>.
-And this condition is guaranteed by the following rule
+And this condition is guaranteed by the following rule.
 </p>
 
 
@@ -321,31 +318,46 @@ after the marker are sent in the <code>future</code>.
   <div id="SECTION">
     <a name="Proof"></a>
     
-<h5 class="w3-text-teal">Proof of correctness</h5>
+    <h5 class="w3-text-teal">Proof of correctness</h5>
 
-<p>
-From rule 3, each message received by an agent \(r\) on a channel
-\(c\) before \(r\) takes its 
-local snapshot is a message received by \(r\) before \(r\) receives a
-marker on channel \(c\).
-</p>
+    <p>
+    We will prove that if an agent <code>v</code> received a message
+    <code>m</code>  on a channel <code>(u, v)</code> before
+    <code>v</code> took its local snapshot then agent <code>u</code>
+    sent <code>m</code> before <code>u</code> took its local
+    snapshot.
+    </p>
 
-<p>
-Because channels are first in first out, each message received by
- \(r\) on \(c\) before \(r\) receives a
-marker on \(c\) is sent on \(c\) before a marker is
-sent on \(c\).
+    <p>
+    Assume that agent <code>v</code> received a message
+    <code>m</code>  on a channel <code>(u, v)</code> before
+    <code>v</code> took its local snapshot.
+    We will prove that agent <code>u</code>
+    sent <code>m</code> before <code>u</code> took its local
+    snapshot.
+    </p>
+
+    <p>
+    From rule 3, <code>v</code> takes its local snapshot when it
+    receives its first marker (which may arrive on any channel).
+    So, <code>v</code> received <code>m</code> before <code>v</code>
+    received the marker on channel <code>(u, v)</code>.
     </p>
     
-<p>
-From rule 2 each message sent on \(c\) before a marker is sent on
-\(c\) is sent before the sender takes its local snapshot.
+    <p>
+    Channels are first in first out.
+    Because <code>v</code> received <code>m</code> before <code>v</code>
+    received the marker on channel <code>(u, v)</code>, it follows
+    that <code>u</code> sent <code>m</code> before <code>u</code>
+    sent the marker on channel <code>(u, v)</code>.
     </p>
     
-<p>
-From the three paragraphs above it follows that the global snapshot
-rule holds for the algorithm.
-</p>
+    <p>
+    From rule 2, <code>u</code> sent the marker on channel <code>(u,
+    v)</code> when <code>u</code> took its local snapshot.
+    So <code>u</code> sent <code>m</code> before <code>u</code> took
+    its local snapshot.
+    </p>
 
     <p class="w3-text-teal">Proof about States of Channels</p>
     <p>
