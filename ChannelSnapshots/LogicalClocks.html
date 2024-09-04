@@ -82,36 +82,29 @@ hr.new1 {
   
   <p class="w3-text-red">
   A logical clock algorithm assigns a value, called the logical time,
-  to each step in a computation so that data flows only from steps with
-  smaller logical times to steps with higher logical times.
-  So all sequences of steps in ascending logical time are
-  computations. 
+  to each step in a computation so that every edge in the dataflow
+  graph of the computation is from a vertex with a smaller logical
+  time to a vertex at a higher logical time.
+  So, all sequences of steps in ascending logical time are topological
+  sorts of the dataflow graph, and therefore all sequences of steps in
+  ascending logical time are computations.
   </p>
 
    
   <!-----START SECTION: Logical Clocks ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="LogicalClocks">
 
     <!-----START SECTION: Specification of Logical Clocks ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="SpecificationOfLogicalClocks">
     <a name="SpecificationOfLogicalClocks"></a>
 
     
   <!-----------------------------------------------------------------------------> 
   <h4 class="w3-text-teal">The Problem</h4> 
   <!----------------------------------------------------------------------------->
-  <h6 class="w3-text-teal">Data flows forward in logical time</h6>
   <p>
-  Design an algorithm that assigns a value, called <i>logical
-  time</i>, to each step in a computation so that all data flows from
-  steps at smaller logical times to steps at higher logical times.
-  </p>
-
-  <p>
-  For all steps \(e\) of a computation,
-  let \(t(e)\) be a value assigned to step \(e\), all \(e\).
-  Then \(t(e)\) is a logical time of \(e\), all \(e\), exactly
-  when:
+  Design an algorithm that assigns a value \(t(e)\), called the <i>logical
+  time</i> of \(e\), to each step \(e\) in a computation so that:
   </p>
    
   <hr class="new2">
@@ -136,7 +129,7 @@ hr.new1 {
   <!---------------------------------------------------------->
   <p>
   Figure 1 shows the dataflow graph of a computation with agents
-  \(A, B, C\) and an step sequence \([0, 1, 2, \ldots, ]\).
+  \(A, B, C\) and step sequence \([0, 1, 2, \ldots, ]\).
   The white numbers inside the black vertices are the step ids which show the
   position of the step in the computation.
   The red numbers outside the steps are logical times assigned to
@@ -151,24 +144,20 @@ every edge is directed from a lower to a higer logical time.
     <img src="Timelines/Timelines.020.jpeg" alt="Fig1" style="width:100%"> 
     <figcaption>Fig. 1: Logical Times of Steps: Edges Directed from
   Lower to Higher Logical Times</figcaption>
-</figure>
+    </figure>
+    
 </div>
-
     <!-----END SECTION: Specification of Logical Clocks ------------>
 
 
     <!-----START SECTION: The Logical Clock Algorithm ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="LogicalClockAlgorithm">
     <a name="LogicalClockAlgorithm"></a>
   
 <!-------------------------------------------------------->
 <h3 class="w3-text-teal">A Logical Clock Algorithm</h3>
 <!-------------------------------------------------------->
 The following algorithm is suggested by the logical time property.
-
-Let \(t(e)\) be the logical time assigned to step \(e\).
-
-A message sent in an step \(e\) is assigned a timestamp \(t(e)\).
 
 <hr class="new2">
 <h5 style="color:blue;">Assigning Logical Times to Steps</h5>
@@ -194,10 +183,29 @@ in which the message is sent.
     <a name="SpecificationOfLogicalClocks"></a>
 
     </div>
-    <!-----END SECTION: The Logical Clock Algorithm ------------>
+    <!-----END SECTION: The Logical Clock Algorithm ---------->
 
+    
+    <!-------------------------------------------------------->
+    <h5 class="w3-text-teal">Observation</h5>
+    <!-------------------------------------------------------->
+    All sequences of steps of a dataflow graph in ascending order of
+    logical time are computations.
+    
+    <p class="w3-text-teal">Proof</p>
+    <p>
+    For any edge \((e, e')\) in the dataflow graph, \(t(e) < t(e')\).
+    In a sequence of steps ascending in time, \(e\) appears before
+    \(e'\), and so the sequence is a topological sort of the
+    dataflow graph, and
+    <a href="../DISTRIBUTED_SYSTEM_MODELS/Model.html#TheoremTopologicalSort">
+    therefore the sequence is a computation.</a>
+    </p>
+    
+
+    
     </div>
-  <!-----END SECTION: Logical Clocks ------------>
+    <!-----END SECTION: The Logical Clock Algorithm ------------>
 
 <h4 class="w3-text-teal">Next</h4>
 Logical clocks are used to record global snapshots
