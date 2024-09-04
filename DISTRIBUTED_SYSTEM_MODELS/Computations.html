@@ -114,27 +114,25 @@ event of the system that causes a transition from each state in the
 <p>
   A computation \([S_{0}, S_{1}, S_{2}, \ldots]\)
   can also be specified by the initial state, \(S_{0}\), of the
-  computation and a sequence 
-of events \([e_{0}, e_{1}, \ldots, ]\) where execution of 
-    \(e_{i}\) causes a transition from \(S_{i}\)  to \(S_{i+1}\).
-    The \(i\)-th <i>step</i> of a computation \([S_{0}, S_{1}, S_{2},
-  \ldots]\) is the state transition from \(S_{i}\) to \(S_{i+1}\), for
-    \(i \geq 0\).
-    The \(i\)-th <i>event</i> of a computation is the event \(e_{i}\)
-  that causes the transtion from \(S_{i}\) to \(S_{i+1}\).
-    
-    </p>
+  computation and a sequence of events \([e_{0}, e_{1}, \ldots, ]\)
+  where execution of \(e_{i}\) causes a transition from \(S_{i}\)  to
+    \(S_{i+1}\).
+    The \(i\)-th <i>step</i> of the computation is event \(e_{i}\) --
+  the event that causes the state transition from \(S_{i}\) to
+    \(S_{i+1}\).
+
+    <p>
+    A step is different from an event.
+    A step is defined in terms of a given computation whereas the
+    specification of an event is independent computations.
+    An event at an agent specifies the states of the agent before and
+    after it processes a messages, and the changes in states of channels
+    incident on the agent.
+    The same event may occur multiple times in a computation.
+    Each occurrence of an event in a computation is a separate step
+    of the computation.
     </p>
 
-<!----------------------------------------------->
-  <h6 class="w3-text-teal">Computations and State-Transition Graphs</h6>
-<!----------------------------------------------->  
-    <p>
-    A state-transition graph is a directed graph in
-    which the vertices represent states of the system and edges
-    represent state transitions.
-    Computations are paths in the state-transition graph.
-  </p>
   </div>
     <!--------------END SECTION: Definition of Computations -------------->
 
