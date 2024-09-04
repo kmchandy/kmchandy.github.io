@@ -87,10 +87,10 @@ hr.new1 {
   </p>
 
     <!-----START SECTION: Consistent Cuts of Dataflow Graphs ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="ConsistentCuts">
     
     <!-----START SECTION: DefinitionOfCut ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="DefinitionOfCut">
   <a name="DefinitionOfCut"></a>
 
 
@@ -101,21 +101,21 @@ hr.new1 {
     <p>
     A computation is a sequence of states where there exists a
     transition from each state in the sequence to the next.
-    A computation can be specified as a sequence of events, including
-    initialization and finalization events, as described in the
+    A computation can be specified as a sequence of steps, including
+    initialization and finalization steps, as described in the
     <a href="../DISTRIBUTED_SYSTEM_MODELS/Model.html">page on
     data flow.</a>
-  A <i>cut of a computation</i> is a partition of the events of the
-  computation into <i>past</i> and <i>future</i> and is
+  A <i>cut of a computation</i> is a partition of the steps of the
+  computation into subsets <i>past</i> and <i>future</i> and is
   specified by the ordered pair of sets
   (<code>past</code>, <code>future</code>).
   </p>
 
   <hr class="new2">
 <h5 style="color:blue;">
-  A <i>consistent</i> cut of a computation is a cut
-  (<code>past</code>, <code>future</code>) in which all data
-  flow to steps in <code>past</code> are from steps in
+  A <i>consistent</i> cut of a computation is a partition of the steps
+    of the computation into subsets <i>past</i> and <i>future</i>
+    in which all paths to steps in <code>past</code> are from steps in
   <code>past</code>.
   </h5>
   <hr class="new2">
@@ -124,12 +124,7 @@ hr.new1 {
   Equivalent definitions of a consistent cut are:
   <ol>
     <li>
-    All data flows from <code>future</code> steps are to
-    <code>future</code> steps.
-    </li>
-    <li>
-    No data flows from <code>future</code> steps to
-    <code>past</code> steps.
+    <code>past</code> steps do not depend on <code>future</code> steps.
     </li>
     <li>
     All edges in the dataflow graph to <code>past</code> vertices are
@@ -172,12 +167,12 @@ from <code>future</code>.
 
    
     <!-----START SECTION: Computations and Cuts ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="TheoremComputationsAndCuts">
   <a name="TheoremComputationsAndCuts">
   <!--------------------------------------------------------------->
   <h3 class="w3-text-teal">Theorem: Computations and Cuts</h3>
     <!--------------------------------------------------------------->
-    <p<
+    <p>
 Let \(E\) be a computation and let <code>(past, future)</code> be any
   consistent cut of the computation. 
 There exists a computation \(E'\), which is a permutation of \(E\), in
@@ -198,12 +193,11 @@ Let \(E'\) be the sequence consisting of <code>pre</code> followed by
     </p>
 
 <p>
-The proof that data flows forwards in \(E'\) is straightforward.
-<a href="../DISTRIBUTED_SYSTEM_MODELS/Model.html#TheoremPermutations">
-We proved the theorem:</a> any permutation of a computation, where
- data flows forward in the permutation, is also a
-computation.
-Therefore \(E'\) is also a computation.
+    The proof that  \(E'\) is a topological sort is straightforward.
+    Therefore,
+    <a
+    href="../DISTRIBUTED_SYSTEM_MODELS/Model.html#TheoremPermutations">
+    \(E'\) is also a computation.
 </p>
 
   <a name="StateAtCut">
@@ -229,9 +223,6 @@ The state at a consistent cut <code>(past, future)</code> of a
 computation \(E\) 
 is given by labels of the edges from <code>past</code> to <code>future</code> in the
 dataflow graph of \(E\).
-</p>
-
-<p>
 The state of an agent <code>X</code> at the cut 
 is given by the label of the agent edge for
 <code>X</code> from a step in the <code>past</code> to a step in the
@@ -239,8 +230,6 @@ is given by the label of the agent edge for
 The state of a channel at the cut is the sequence of messages sent on
 the channel in the <code>past</code> and received in the
 <code>future</code>.
-The state of the system at a consistent cut is given by the labels of
-edges that cross the cut boundary.
 </p>
 
 </div>
@@ -259,10 +248,10 @@ the curved black line.
 </p>
 <p>
 In the lower diagram of figure 1,
-the state <code>S*</code> at the cut is shown as final vertices
+the state <code>S*</code> at the cut is shown as labels to final vertices
 (labeled 
 <code>N</code>) of <code>past</code>.
-<code>S*</code> is alsoshown as initial vertices (
+<code>S*</code> is also shown as labels from initial vertices (
   labeled <code>0</code>) of  <code>future</code>.
 
 </div>
