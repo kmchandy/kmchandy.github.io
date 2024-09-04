@@ -102,12 +102,12 @@ hr.new1 {
 
   
     <!-----START SECTION: Global Snapshots ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="GlobalSnapshots">
     <a name="GlobalSnapshots"></a>
 
     
     <!-----START SECTION: DefinitionOfGlobalSnapshot ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="DefinitionOfGlobalSnapshot">
 
     
   <!-----------------------------------------------------------------------------> 
@@ -142,11 +142,13 @@ hr.new1 {
     client.
     </div>
     <!-----END SECTION: DefinitionOfGlobalSnapshot ------------>
+
+    
   Next, we describe features of the OS that are relevant to the
   snapshot algorithm.
 
         <!-----START SECTION: Distributed Operating System ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="DistributedOperatingSystem">
     <a name="DistributedOperatingSystem"></a>
 
     
@@ -203,7 +205,7 @@ Likewise, by messages we mean those that are sent and received by the
 
 
        <!-----START SECTION: Global Snapshot Algorithm ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="Algorithm">
     <a name="Algorithm"></a>
 <!----------------------------------------------------------------------------->
 <h4 class="w3-text-teal">Specification of a Global Snapshot Algorithm</h4>
@@ -315,13 +317,14 @@ after the marker are sent in the <code>future</code>.
 
     
        <!-----START SECTION: Proof of Correctness ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="Proof">
     <a name="Proof"></a>
     
     <h5 class="w3-text-teal">Proof of correctness</h5>
 
     <p>
-    We will prove that if an agent <code>v</code> received a message
+    We will prove that the algorithm satisfies the global snapshot
+    rule: If an agent <code>v</code> received a message
     <code>m</code>  on a channel <code>(u, v)</code> before
     <code>v</code> took its local snapshot then agent <code>u</code>
     sent <code>m</code> before <code>u</code> took its local
@@ -393,7 +396,10 @@ The computation terminates when all markers are received.
     </p>
 
     </div>
-<!-----END SECTION: Proof of Correctness ------------>
+    <!-----END SECTION: Proof of Correctness ------------>
+
+    </div>
+    <!-----END SECTION: Global Snapshots ------------>
     
 <h4 class="w3-text-teal">Next</h4>
 
