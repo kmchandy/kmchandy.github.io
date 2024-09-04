@@ -82,10 +82,8 @@ hr.new1 {
   <p class="w3-text-red">
   This page introduces the concept of a <i>consistent cut</i> of a dataflow
   graph.
-
-  Cuts of dataflow are key to developing algorithms to detect deadlock
-  and termination and other conditions, and cuts are the basis for the
-  global snapshot algorithm.
+  This concept is the basis of global snapshot algorithms and
+  algorithms that detect deadlock and termination 
   </p>
 
     <!-----START SECTION: Consistent Cuts of Dataflow Graphs ------------>
@@ -100,10 +98,16 @@ hr.new1 {
   <h3 class="w3-text-teal">Definition of a Cut of a Computation</h3>
   <!--------------------------------------------------------------->
   
-  <p>
-  A <i>cut of a computation</i> is a partition of the steps of the
-  computation into <i>past</i> and <i>future</i>.
-  A cut is specified by the ordered pair of sets
+    <p>
+    A computation is a sequence of states where there exists a
+    transition from each state in the sequence to the next.
+    A computation can be specified as a sequence of events, including
+    initialization and finalization events, as described in the
+    <a href="../DISTRIBUTED_SYSTEM_MODELS/Model.html">page on
+    data flow.</a>
+  A <i>cut of a computation</i> is a partition of the events of the
+  computation into <i>past</i> and <i>future</i> and is
+  specified by the ordered pair of sets
   (<code>past</code>, <code>future</code>).
   </p>
 

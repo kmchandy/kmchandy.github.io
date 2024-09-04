@@ -92,7 +92,7 @@ hr.new1 {
 
 
   <!----------------------------------------------->
-  <h4 class="w3-text-teal">Dataflow Graph</h4>
+  <h3 class="w3-text-teal">Dataflow Graph</h3>
   <!----------------------------------------------->
   <p>
 <a href="https://en.wikipedia.org/wiki/Dataflow_programming">Data flow</a>
@@ -104,43 +104,46 @@ hr.new1 {
 
   
 <!--------------START SECTION: Dataflow ---------------------->
-  <div ID="SECTION">
-    <a name="Dataflow"></a>
+  <div ID="SECTION", class="Dataflow">
     <p>
     <!--------START SECTION: Dataflow Definition ----------------->
-  <div ID="SECTION">
+  <div ID="SECTION", class="DataflowDefinition">
     <a name="DataflowDefinition"></a>
 A dataflow graph of a computation is a labeled, directed, acyclic
-  graph  that shows the flow of data between agents during the
+  graph  that shows the flow of data between agents during the 
   computation. 
-    The vertices of the graph represent steps of the computation.
-We use <i>step</i> of a computation and <i>vertex</i> of its dataflow
-graph interchangeably.
+  The vertices of the graph represent events that occur in the computation.
   </p>
 
 <!------------------------------->
-<h6 class="w3-text-red">Example of a Vertex in a Dataflow Graph</h6>
+    <h5 class="w3-text-red">Diagrammatic Representation of an Event</h5>
+    The figure shows a diagrammatic representation of an event at an
+    agent <code>u</code>.
+    Each occurrence of an event in a computation is represented by a
+    vertex in the dataflow graph.
    <figure>
     <img
     src="Dataflow.001.jpeg"
-    alt="Fig11" style="width:100%"> 
-    <figcaption>Figure Example of a Vertex in a Dataflow Graph</figcaption>
+    alt="Fig1" style="width:80%"> 
+    <figcaption>Figure 1: Example of a Vertex in a Dataflow Graph</figcaption>
 </figure>
 
+
+    
     <h6 class="w3-text-teal">Edges of a Dataflow Graph</h6>
   <p>
   The edges of a dataflow graph are as follows.
   <ol>
   <li>
-There is an edge from a step at an agent to the next step at that
-agent; this edge is labeled with the state of the agent between the
+There is an edge from an event at an agent to the next event at that
+    agent in the computation.
+    This edge is labeled with the state of the agent between the
 events and is called an <i>agent edge</i>.
   </li>
   <li>
-There is an edge from a step in which a message is sent
-to the step at which the message is received; this edge is called a
-  <i>message edge</i>. The edge is labeled with a pair \((m, w)\)
-  where \(m\) is the message and \(w\) is the sender of the message.
+There is an edge from an event in which a message \(m\) is sent
+to the event at which \(m\) is received; this edge is called a
+  <i>message edge</i> and is labeled \(m\).
   </li>
 </ol>
 </p>
@@ -149,19 +152,24 @@ to the step at which the message is received; this edge is called a
 <h6 class="w3-text-teal">Dataflow Graphs are Acyclic</h6>
 <p>
 A dataflow graph of a computation is acyclic because each edge is
-directed from a step to a later step of the computation.
+directed from an to a later event of the computation.
 </p>
 
 <p>
-We adopt the convention that agent edges are horizontal.
-    So, all edges of the same agent are on the same horizontal line.
+We adopt the convention that agent edges are horizontal, and that
+later events in a computation are represented by vertices to the right
+of earlier events.
+So, all edges of the same agent are on the same horizontal line,
+and all edges have an orientation towards later times, i.e. towards
+the right.
+
 </p>
 </div>
 <!--------END SECTION: Dataflow Definition ----------------->
 
 
 <!------START SECTION: Initial And Final States ------------>
-  <div ID="SECTION">
+  <div ID="SECTION", class="InitialAndFinalStates">
     <a name="InitialAndFinalStates"></a>
 <h5 class="w3-text-teal">Representing Initial and Final States by
     Fictitious Steps</h5>
@@ -169,22 +177,22 @@ We adopt the convention that agent edges are horizontal.
 A computation is specified by its initial state and a sequence of
 events.
 For convenience, we represent the initial state of an agent \(u\) and
-the initial states of \(u\)'s output channels be a fictitious step,
+the initial states of \(u\)'s output channels be a fictitious event,
 \(u_{init}\).
     The vertex representing this step has no inputs.
     </p>
 
 <p>
-The agent edge from this step is labeled with \(u\)'s initial state.
-The message edges from this step to steps of an agent \(v\) are
+The agent edge from this event is labeled with \(u\)'s initial state.
+The message edges from this event to steps of an agent \(v\) are
 labeled with the messages in the channel \((u, v)\) in the initial
 state of the computation.
 </p>
    <figure>
     <img
     src="Dataflow.003.jpeg"
-    alt="Fig3" style="width:100%"> 
-    <figcaption>Figure Example of an Initial Vertex of a Dataflow
+    alt="Fig3" style="width:80%"> 
+    <figcaption>Figure 2: Example of an Initial Vertex of a Dataflow
     Graph </figcaption>
 </figure>
 <p>
@@ -200,17 +208,20 @@ state of the channel <code>(u, v)</code> consists of the single
 
 
 <p>
-By symmetry, we use a fictitious step <code>u_init</code> to represent the final
+By symmetry, we use a fictitious event <code>u_fini</code> to represent the final
 state of <code>u</code> and the final states of channels to <code>u</code>.
-With the introduction of fictitious initial and final steps for each
-agent we can treat a computation as a sequence of steps where the
-initial state is specified by initial steps.
+With the introduction of fictitious initial and final event for each
+agent we can treat a computation as a sequence of events where the
+    initial state is specified by initial events and where the
+    final state is specified by final events.
+    The figure below is an example of a final vertex of an agent
+    <code>v</code>.
 </p>
    <figure>
     <img
     src="Dataflow.004.jpeg"
-    alt="Fig4" style="width:100%"> 
-    <figcaption>Figure Example of a Final Vertex of a Dataflow
+    alt="Fig4" style="width:80%"> 
+    <figcaption>Figure 3: Example of a Final Vertex of a Dataflow
     Graph </figcaption>
     </figure>
     </div>
@@ -218,15 +229,15 @@ initial state is specified by initial steps.
  
 
 <!---------------START SECTION: Example ------------------------------>
-  <div ID="SECTION">
+  <div ID="SECTION", class="Example">
     <a name="Example"></a>
 <!------------------------------->
-<h6 class="w3-text-red">Example of a Dataflow Graph</h6>
+<h4 class="w3-text-red">Example of a Dataflow Graph</h4>
    <figure>
     <img
     src="Dataflow.002.jpeg"
     alt="Fig2" style="width:100%"> 
-    <figcaption>Figure Example of a Dataflow Graph</figcaption>
+    <figcaption>Figure 4: Example of a Dataflow Graph</figcaption>
 </figure>
 
 <p>
@@ -235,36 +246,36 @@ system consisting of two agents <code>u</code> and <code>v</code>, and
 with two channels <code>(u, v)</code> and <code>(v, u)</code>.
 The computation is defined by its initial state and event sequence [1,
 2, 3, 4]. The initial states at agents <code>u</code> and
-<code>v</code> are represented by outputs of steps <code>u_init</code>
+<code>v</code> are represented by outputs of events <code>u_init</code>
 and <code>v_init</code>, respectively, and final states by inputs to
 <code>u_fini</code>
 and <code>v_fini</code>, respectively.
     </p>
     
 <p>
-The top horizontal edges represent data flow between steps at agent
+The top horizontal edges represent data flow between events at agent
 <code>u</code> and the lower horizontal edges represent data flow
-between steps at agent <code>v</code>.
+between events at agent <code>v</code>.
 For example, the labels <code>u1, u2, u3</code> are the initial state
-of agent <code>u</code>, the state of <code>u</code> between steps 1
-and 4, and the state of <code>u</code> after step 4, respectively.
+of agent <code>u</code>, the state of <code>u</code> between events 1
+and 4, and the state of <code>u</code> after event 4, respectively.
 Likewise, the labels <code>v1, v2, v3</code> are the states of
-agent <code>v</code> initially and after steps 2 and 3, respectively.
+agent <code>v</code> initially and after events 2 and 3, respectively.
 </p>
 
 <p>
 Message edges are labeled <code>m1, m2, m3, m4, m5</code>.
 Initially channel <code>(u, v)</code> contains message <code>m2</code>
 and channel <code>(v, u)</code> contains message <code>m1</code>.
-Message <code>m3</code> is sent in step 1 and received in step 3, and
-message <code>m4</code> is sent in step 3 and received in step 4.
+Message <code>m3</code> is sent in event 1 and received in event 3, and
+message <code>m4</code> is sent in event 3 and received in event 4.
     </p>
     
 <p>
 Vertex 1 in the graph, see figure 1 -- example of a vertex in a
-dataflow graph -- represents the execution of a step at agent
+dataflow graph -- represents the execution of an event at agent
 <code>u</code>.
-This step is the execution of an event specified by the following
+This event is the execution of an event specified by the following
 4-tuple:
 <ol>
   <li>
@@ -293,7 +304,7 @@ The input and output edges of the vertex are the inputs and outputs
 
 
 <!-------------START SECTION: Computations and Dataflow ------------->
-  <div ID="SECTION">
+  <div ID="SECTION", class="ComputationsAndDataflow">
     <a name="ComputationsAndDataflow"></a>
 
 
@@ -301,198 +312,76 @@ The input and output edges of the vertex are the inputs and outputs
 <h3 class="w3-text-teal">Flow of Data in a Computation</h3>
 <p>
 The edges of the dataflow graph of a computation show the flow of data
-into and out of each step of a computation.
-Data -- in the form of the agent's state -- flows from a step of an
-agent to the next step at that agent.
-Data -- in the form of message contents -- flows from a step in which
-a message is sent to the step in which the message is received.
+into and out of each event of a computation.
+Data -- in the form of the agent's state -- flows from an event at an
+agent to the next event at that agent in the computation.
+Data -- in the form of message contents -- flows from an event in which
+a message is sent to the event in which the message is received.
 </p>
 
+    <p>
+    In a computation specified by a sequence of events \([e_{0},
+    e_{1}, e_{2}, \ldots]\), we define a relation <i>depends on</i>
+    between events as follows: \(e_{i}\) depends on \(e_{j}\) exactly
+    when there is a path in the dataflow graph of the computation from
+    \(e_{j}\) to \(e_{i}\).
 
-<h6 class="w3-text-teal">The Relation: "data flows from" between Steps
-of a Computation</h6>
-<p>
-We define a relation "data flows from" between steps of a
-computation 
-as follows: for steps \(x, y\) of a computation, data flows from
-\(x\) to \(y\) exactly when there is a path in the computation's
-dataflow graph from \(x\) to \(y\).
+    <p>
+    Events \(e_{i}\) and \(e_{j}\) in the computation are
+    <i>independent</i> exactly when neither event depends on the
+    other, i.e., when there is no path from \(e_{i}\) to \(e_{j}\) and
+    there is no path from \(e_{j}\) to \(e_{i}\).
 </p>
-
-<p>
-If there are paths in a graph from \(x\) to \(y\) and from
-\(y\) to \(z\), then there is a path in the graph from \(x\) to \(z\).
-So, if data flows from \(x\) to \(y\), and data flows from \(y\) to
-\(z\) then data flows from \(x\) to \(z\).
-The relation "data flows from" is a
-<a
-href="https://en.wikipedia.org/wiki/Partially_ordered_set#Partial_order">
-strict partial order</a>.
-</p>
-
-<p>
-We say that different steps \(x\) and \(y\) are <i>independent</i> if data does
-not flow from  \(x\) to \(y\) or from \(y\) to \(x\).
-</p>
-
-
-<h5 class="w3-text-red">Example of data flows from a step to a
-step</h5>
-<p>
-The figure "Example -- Data Flows from Step 2 to Step 4" shows
-examples of data flow as red edges in the graph.
-Steps 1 and 2 are independent because there is no path from step 1 to
-step 2, and there is no path from step 2 to step 1.
-</p>
-
-   <figure>
-    <img
-    src="Dataflow.005.jpeg"
-    alt="Fig5" style="width:100%"> 
-    <figcaption>Figure Example -- Data Flows from Step 2 to Step 4</figcaption>
-</figure>
 
   <!----------------------------------------------->
-  <h3 class="w3-text-teal">Computations and Dataflow Graphs</h3>
+  <h6 class="w3-text-teal">Topological Sorts</h6>
 <!----------------------------------------------->
 <p>
-Let a computation be specified by a sequence of steps \(E\), and
-let \(E'\) be any permutation of \(E\).
-<i>Data flows forwards in \(E\)</i> means that for all steps
-\(x\) and \(y\) in \(E\):
-<center>
-If data flows from \(x\) to \(y\) in \(E\)
-then \(x\) appears before \(y\) in
-\(E'\). 
-</center>
-</p>
-
-<p>
-Next we prove properties about sequences of steps in which data flows forwards.
-We start with the following lemma.
-</p>
-
-
-<h5 class="w3-text-teal">Lemma: Switching Order of Adjacent
-Independent Steps in a Computation</h5>
-
-Let a computation be specified by  a sequence of
-steps \(E\), and let \(E'\) be any permutation of \(E\)
-obtained by switching the order of a pair of adjacent elements in
-\(E\). 
-
-If data flows forward in \(E'\) then \(E'\) is a computation.
-
-<p class="w3-text-teal">Proof</p>
-
-Assume that the order of adjacent steps \(e_{i}\) and \(e_{i+1}\) are
-switched in \(E\) to get \(E'\).
-
-Because \(e_{i}\) precedes \(e_{i+1}\) in \(E\) there is no data flow
-from \(e_{i+1}\) to \(e_{i}\).
-Because data flows forwards in \(E'\) there is no data flow from
-\(e_{i}\) to \(e_{i+1}\).
-
-<p>
-Therefore \(e_{i}\) and \(e_{i+1}\) are adjacent independent steps.
-So, the inputs to \(e_{i}\) and \(e_{i+1}\) remain the same
-regardless of the order in which they are executed, and so \(E'\) is
-also a computation.
-
-<h6 class="w3-text-red">Example of Switching Adjacent Independent
-Steps</h6>
-The Figure "Example of Switching Adjacent Independent Steps" shows two
-diagrams with identical dataflow graphs. The upper and diagrams are 
-representations of computations starting at the same state and step
-sequences [1, 2, 3, 4], and [2, 1, 3, 4].
-The order in which vertices 1 and 2 appear, from left to right, in the
-diagrams have been switched.
-The graphs, however, are identical.
-<p>
-The inputs to step 1 remain the same whether step 2 is executed
-before or after step 1.
-Likewise, the inputs to step 2 remain the same whether step 1 is executed
-before or after step 2.
-
-   <figure>
-    <img
-    src="Dataflow.006.jpeg"
-    alt="Fig6" style="width:100%"> 
-<figcaption>Figure Example of Switching Adjacent Independent Steps
-</figcaption>
-</figure>
-
-<a name="TheoremPermutations">
-<hr class="new2">
-<h5 style="color:blue;">Theorem: Permutations of Computations in which
-Data Flows Forwards</h5>
-<p style="color:blue;">
-Given a computation specifed by a sequence of
-steps \(E\), all permutations of \(E\) in which data flows forwards in
-the permutations are also computations.
-</p>
-<hr class="new2">
-
-
-
-<h5 class="w3-text-teal">Proof</h5>
-<p>
-Let \(E'\) be a permutation of \(E\) where data flows forwards in
-\(E'\).
-The theorem holds trivially if \(E\) and \(E'\) are identical.
-</p>
-
-<p>
-If \(E\) and \(E'\) are not identical then there exists an adjacent
-pair of steps \(x, y\) in \(E\) where \(x\) occurs before \(y\) in
-\(E\), and \(y\) occurs before \(x\) in \(E'\).
-</p>
-
-<p>
-Because \(E\) is a computation, data flows forwards in \(E\) and
-therefore there is no data flow from \(y\) to \(x\).
-</p>
-
-<p>
-We are given that data flows forwards in \(E'\). So there is no
-data flow from \(x\) to \(y\).
-</p>
-
-<!-------------START SECTION: Computations and Dataflow ------------->
-  <div ID="SECTION">
-    <a name="ComputationsAndDataflow"></a>
-
-
-<p>
-Therefore \(x\) and \(y\) are independent.
-Let \(H\) be the sequence of steps obtained from \(E\) by switching
-the order of \(x\) and \(y\).
-From the lemma "Switching Order of Independent Adjacent Steps" it
-follows 
-    that \(H\) is also a computation.
-    </p>
-
-<p>
-The number of out of order pairs between \(H\) and \(E'\) is less than
-that between \(E\) and \(E'\).
-By repeatedly switching of independent adjacent out of order pairs
-the sequence \(E'\) is reached.
-    </p>
-</div>
-<!-------------END SECTION: Computations and Dataflow ------------->
-
-
-
-  <!----------------------------------------------->
-  <h4 class="w3-text-teal">Relationship to Topological Sorts</h4>
-<!----------------------------------------------->
-The theorem on permutations of event sequences can be expressed in
-terms of topological sorts.
-
 A <a href="https://en.wikipedia.org/wiki/Topological_sorting">
   topological sort</a> of a directed acyclic graph is a sequence of
   vertices of the graph where for every edge \((x, y)\) in the graph,
-\(x\) appears before \(y\) in the sequence.
+    \(x\) appears before \(y\) in the sequence.
+    </p>
+
+    <p>
+    An equivalent definition of a topological sort is a sequence of
+    vertices of the graph where each vertex v appears in the sequence
+    only after all vertices on which v depends.
+    </p>
+
+    <h5 class="w3-text-red">Examples</h5>
+    <p>
+    Figure 2, below, has two diagrams both of which show
+    dataflow graphs identical to that in figure 1.
+    The difference in the diagrams is the order in which vertices
+    appear in the sequence from left to right.
+    In figure 1, vertices appear from left to right in the sequence
+    [1, 2, 3, 4].
+    In the top diagram of figure 2, vertices appear from left to right
+    in the sequence [2, 1, 3, 4], whereas in the lower diagram the
+    sequence is [1, 2, 4, 3].
+</p>
+<p>
+Sequences [1, 2, 3, 4] and [2, 1, 3, 4] are topological sorts of the
+graph.
+Topological sorts are sequences in which all edges are directed from
+    earlier vertices in the sequence to later vertices in the sequence.
+Sequence [1, 2, 4, 3] is not a topological sort because there is an
+edge directed from a later vertex in the sequence (i.e, vertex 3) to
+an earlier vertex (4) in the sequence.
+</p>
+<p>
+Events 1 and 2 are independent because there is no path from either
+    event to the other.
+</p>
+   <figure>
+    <img
+    src="Dataflow.007.jpeg"
+    alt="Fig6" style="width:100%"> 
+<figcaption>Figure 5: Examples of Sequences that are, and are not,
+    topological sorts.
+</figcaption>
+</figure>
 
 
 
@@ -503,10 +392,105 @@ A <a href="https://en.wikipedia.org/wiki/Topological_sorting">
 <!----------------------------------------------->
 
 <p style="color:blue;">
-
-All topological sorts of a dataflow graph are computations.
+All topological sorts of a dataflow graph of a computation are
+computations. 
 </p>
 <hr class="new2">
+<p>
+An equivalent statement of the theorem is as follows.
+</p>
+<p>
+Let E = \([e_{0}, e_{1}, e_{2}, \ldots]\) be a sequence of events of a
+computation, and let E' be a permutation of E.
+Then E' is also a computation if
+for all \(i\), event \(e_{i}\) appears in E' after all events
+on which \(e_{i}\) depends.
+</p>
+<p>
+To prove the theorem we start with the following observation.
+</p>
+<p class="w3-text-teal">Observation</p>
+If E and E' are topological sorts, and x appears before y in E, and y
+appears before x in E', then x and y are independent.
+
+
+<h6 class="w3-text-teal">Lemma: Switching Order of Adjacent
+Independent Events in a Computation</h6>
+<p>
+Let \(G\) be the dataflow graph of a computation specified by a sequence of
+events \(E = [e_{0}, e_{1}, \ldots]\).
+Let \(E'\) be a permutation of \(E\)
+obtained by switching the order of a pair of adjacent elements
+\(e_{i}, e_{i+1}\) in \(E\). 
+If \(E'\) is a topological sort of \(G\) then \(E'\) is a computation.
+</p>
+
+<p class="w3-text-teal">Proof</p>
+<p>
+From the observation \(e_{i}\) and \(e_{i+1}\) are independent events,
+and therefore they are at different agents.
+</p>
+<p>
+Because \(e_{i}\) and \(e_{i+1}\) are independent, there is no message
+sent in  \(e_{i}\) that is received in \(e_{i+1}\), and there is no message
+sent in  \(e_{i+1}\) that is received in \(e_{i}\).
+Therefore, the inputs to \(e_{i}\) remain unchanged if \(e_{i+1}\) is
+executed before \(e_{i}\).
+Likewise, the inputs to \(e_{i+1}\) remain unchanged if \(e_{i}\) is
+executed after \(e_{i+1}\).
+So \(E'\) is also a computation.
+
+<h6 class="w3-text-red">Example of Switching Adjacent Independent
+Events</h6>
+The Figure "Example of Switching Adjacent Independent Events" shows two
+diagrams with identical dataflow graphs. The upper and diagrams are 
+representations of computations starting at the same state and event
+sequences [1, 2, 3, 4], and [2, 1, 3, 4].
+The order in which vertices 1 and 2 appear, from left to right, in the
+diagrams have been switched.
+The graphs, however, are identical.
+<p>
+The inputs to event 1 remain the same whether event 2 is executed
+before or after event 1.
+Likewise, the inputs to event 2 remain the same whether event 1 is executed
+before or after event 2.
+
+   <figure>
+    <img
+    src="Dataflow.006.jpeg"
+    alt="Fig6" style="width:100%"> 
+<figcaption>Figure Example of Switching Adjacent Independent Events
+</figcaption>
+</figure>
+
+
+<h6 class="w3-text-teal">Proof of the Theorem</h6>
+Let \(G\) be the dataflow graph of a computation specified by a
+sequence of events \(E = [e_{0}, e_{1}, \ldots]\).
+Let \(E'\) be a topological sort of \(G\).
+We will prove that \(E'\) is also a computation.
+
+<p>
+The theorem holds trivially if \(E'\) and \(E\) are identical.
+If \(E\) and \(E'\) are not identical then there exists an adjacent
+pair of events \(e_{i}, e_{i+1}\) in \(E\) where \(e_{i+1}\) occurs
+before \(e_{i}\) in \(E'\).
+From the observation, these events are independent.
+</p>
+
+<p>
+<p>
+Let \(H\) be the sequence of events identical to \(E\) except that the
+order of \(e_{i}\) and \(e_{i+1}\) is switched  in \(H\).
+From the lemma \(H\) is also a computation.
+The number of out of order pairs between \(H\) and \(E'\) is less than
+that between \(E\) and \(E'\).
+By repeatedly switching independent, adjacent, out-of-order pairs
+the sequence \(E'\) is reached.
+    </p>
+
+
+<!-------------END SECTION: Computations and Dataflow ------------->
 
 
 
@@ -514,11 +498,13 @@ All topological sorts of a dataflow graph are computations.
   <h5 class="w3-text-teal">Relationship to Causality</h5>
 <!----------------------------------------------->
 Some articles use the relation "\(x\) causes \(y\)" instead of
+"\(y\) depends on \(x\)" or
 "data flows from \(x\) to \(y\)."
 
 Causality and data flow have been widely used concepts for decades and
 we will see the next pages how we use them to develop distributed
 algorithms. 
+
 
 
 </div>

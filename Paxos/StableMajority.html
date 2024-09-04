@@ -107,46 +107,34 @@ hr.new1 {
   copies of a message may be delivered; messages may not be
   delivered in the order sent; agents may be arbitrarily slow; and
   agents may stop.
-  
   From
-  <a href="../ConsensusImpossible/ConsensusImpossible.html">the
+  <a href="ConsensusImpossible.html#Impossibility">the
   FLP theorem</a>,
-  
   there is no algorithm that guarantees that consensus among agents
   will be reached in such systems. 
-
-
   Paxos may not terminate; however, if it does terminate then a
   consensus will have been reached at termination.
-  
   We will discuss ways to improve the likelihood that the algorithm
   does terminate.
+  </p>
 
 
   <p>
   Consider the problem of maintaining a ledger consisting
   of a sequence of transfers of funds into and out of accounts.
-  
   To prevent a single point of failure
   the ledger may be implemented using copies at multiple agents.
-
-  The copies may not be synchronized; however, for a ledger to be
-  useful there must exist a 
-  consensus.
-
-  We call the sequence of operations on the ledger a <i>chain</i> of
-  operations and we call the the consensus value a <i>consensus chain</i>.
+</p>
 
   <p>
   Suppose two clients
   simultaneously request extensions to a consensus chain by transferring funds
   from an account x to two different accounts.
-
   Account x may not have funds to allow both transfers, and so the
   consensus chain can be extended by at most one of the transfers.
-
   Clearly, the system must maintain a consensus about the sequence of
-  operations in the chain.
+transactions on the account.
+</p>
 
   <p>
 
