@@ -98,10 +98,10 @@ hr.new1 {
 
   
    <!-----START SECTION: Consensus ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="Consensus">
 
     <!-----START SECTION: Importance of Consensus ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="Importance">
     <a name="Importance"></a>
 
 <h3 class="w3-text-teal">Importance of Consensus Algorithms</h3>
@@ -124,7 +124,7 @@ agents, rather than a single agent, to maintain bank balances.
   <p>
   Managing replicated databases requires the replications to come to a
 consensus on the sequence of transactions that is applied to the
-database. Cryptocurrency transactions require agents to cometo a
+database. Cryptocurrency transactions require agents to come to a
 consensus about sequences of transactions that use crypto coins.
   </p>
 
@@ -133,7 +133,7 @@ In a control system with multiple and actuators, the actuators have to
 come to a consensus about the state of the environment so that they
 can operate in concert. A vehicle would crash if some actuators caused
 the vehicle to accelerate while other actuators applied brakes.  In
-some applications, multiple agents have to come to a consensus and
+some applications, multiple agents have to come to a consensus to
   elect a single leader. 
 There are many problems in which agents have to reach a consensus.
     </p>
@@ -142,8 +142,8 @@ There are many problems in which agents have to reach a consensus.
     <!-----END SECTION: Importance of Consensus ------------>
 
     
-    <!-----START SECTION: Importance of Consensus ------------>
-  <div id="SECTION">
+    <!-----START SECTION: Impossibility of Consensus ------------>
+  <div id="SECTION", class="Impossibility">
     <a name="Impossibility"></a>
     
     <h3 class="w3-text-teal">Consensus: Impossible with a
@@ -203,11 +203,11 @@ agents operate in synchronized rounds.
 </p>
 
 </div>
-<!-----END SECTION: Importance of Consensus ------------>
+<!-----END SECTION: Impossibility of Consensus ------------>
 
 
     <!-----START SECTION: Best Effort Consensus ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="BestEffort">
     <a name="BestEffort"></a>
 <h2 class="w3-text-teal">Best Effort Consensus</h3>
 <p>
@@ -232,8 +232,9 @@ What does "keep trying" mean? When does one trial
 end and the next one begin? If agents use timeouts to end a trial,
 then --- because clocks aren't synchronized --- the timeouts may complete
 at different times.
-We'll see that we can use the idea of time, even though clocks aren't
-synchronized.
+In the next pages we will see that we can use the idea of time, even
+    though clocks aren't synchronized, to design a best-effort consensus
+    algorithm. 
     </p>
     </div>
         <!-----END SECTION: Best Effort Consensus ------------>
@@ -243,11 +244,16 @@ synchronized.
 
 
 <h4 class="w3-text-teal">Next</h4>
-Next look at <a href="ReadWriteLossyChannels.html">Paxos</a> an
-    important consensus algorithm that may not terminate.
-Later look at <a href="../Byzantine/ByzantineWritten.html">
-Byzantine consensus</a> and
-<a href="../Crypto/BitCoin.html">consensus using block chain</a>.
+    Next we see how ideas similar to logical times,
+    can be used to <a href="ReadWriteLossyChannels.html">
+    serialize transactions in faulty systems.</a>
+    </p>
+    <p>
+    Serializability plays a key role in the development of the
+    consensus algorithm, <a href="StableMajority.html">Paxos.</a>
+    Later, we will study <a href="../Byzantine/ByzantineWritten.html">
+    Byzantine consensus</a> and
+    <a href="../Crypto/BitCoin.html">consensus using block chain</a>. 
 
 
 
