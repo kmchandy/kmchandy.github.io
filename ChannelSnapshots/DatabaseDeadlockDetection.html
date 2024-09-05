@@ -89,10 +89,10 @@ hr.new1 {
   </p>
 
    <!-----START SECTION: Database Deadlock Detection ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="DatabaseDeadlockDetection">
 
     <!-----START SECTION: TheProblem ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="Problem">
     <a name="Problem"></a>
   
   <h3 class="w3-text-teal">The Problem</h3>
@@ -106,9 +106,6 @@ hr.new1 {
   <p>
   Agents in a system share a set of indivisible resources.
   An example of such a resource is exclusive access to a file.
-  </p>
-  
-  <p>
   A deadlock arises when there is a cycle of agents,
   \([x_{0}, x_{1}, \ldots, x_{n-1}, x_{0}]\) where for all \(i\):
     Agent \(x_{i}\) is waiting to acquire resource \(r_{(i+1)}\) while
@@ -122,7 +119,7 @@ hr.new1 {
         <!-----END SECTION: TheProblem ------------>
 
        <!-----START SECTION: Example ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="Example">
     <a name="Example"></a>
     
   <!-------------------------------------------------->
@@ -156,7 +153,7 @@ hr.new1 {
   <img
     src="DatabaseDeadlockDetection/DatabaseDeadlockDetection.002.jpeg"
     alt="Fig2" style="width:100%">
-  <figcaption>Fig.2 - An Example of a Deadlock</figcaption>
+  <figcaption>Fig.1 - An Example of a Deadlock</figcaption>
   </figure>
   </div>
         <!-----END SECTION: Example ------------>
@@ -164,7 +161,7 @@ hr.new1 {
  
 
        <!-----START SECTION: Algorithm ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="Algorithm">
     <a name="Algorithm"></a>
     
   
@@ -228,16 +225,15 @@ each agent <code>v</code> has the following local constants:
 </ol>
 
 <p style="color:red;">Example</p>
+<p>
 In the example of the figure:
 <br>
 <code>x.waits = {blue}, x.holds = {red}</code>
-</br>
 <br>
 <code>y.waits = {green}, y.holds = {blue}</code>
-</br>
 <br>
 <code>z.waits = {red}, y.holds = {green}</code>
-</br>
+</p>
   
 <p>
 <code>v.waits</code> and <code>v.holds</code> are determined in the
@@ -262,10 +258,6 @@ field <code>m.waits</code> where:
   
  <p class="w3-text-teal">Action by an Agent other than the
 Initiator</p>
-
-<p>
-When an agent <code>v</code> receives a message <code>m</code>:
-</p>
 <ol>
   <li>
   If <code>v</code> has already sent messages then <code>v</code> takes no
@@ -289,7 +281,7 @@ agents.
        <!-----END SECTION: Algorithm ------------>
 
 <!-----START SECTION: Correctness ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="Correctness">
     <a name="Correctness"></a>
     
 <h4 class="w3-text-teal">Proof of Correctness</h4>
@@ -318,14 +310,14 @@ channel.
 
     
     <!-----START SECTION: Example 2 ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="Example2">
     <a name="Example2"></a>
 <!----------------------------------->
 <h4 style="color:red;">Example</h4>
 <!----------------------------------->
 <p>
 This example shows steps in the case of the cycle of waiting processes shown in
-figure 2.
+figure 1.
 The algorithm is initiated by agent <code>x</code> by broadcasting a
 message <code>m</code> where <code>m.waits = x.waits = {blue}</code>.
 </p>
@@ -366,9 +358,8 @@ We can use a a marker in the snapshot algorithm as a message in cycle
 detection.
 Modify a marker <code>m</code> to have the field
 <code>m.waits</code> used in cycle detection.
-Then the snapshot algorithm is the same as the cycle detection
-algorithm except that the snapshot algorithm records states of
-channels which are not used in cycle detection.
+Then the snapshot algorithm is essentially the same as the cycle detection
+algorithm.
     </p>
     </div>
   <!-----END SECTION: Database Deadlock Detection ------------>
