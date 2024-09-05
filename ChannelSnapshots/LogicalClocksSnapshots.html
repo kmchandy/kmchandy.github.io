@@ -89,10 +89,10 @@ hr.new1 {
 
       
   <!-----START SECTION: Logical Clocks for Snapshots ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="LogicalClocksForSnapshots">
 
     <!-----START SECTION: Problem Definition ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="SpecificationOfLogicalClocksSnapshots">
     <a name="SpecificationOfLogicalClocksSnapshots"></a>
     
   <!-----------------------------------------------------------------------------> 
@@ -115,9 +115,9 @@ hr.new1 {
   <h5 class="w3-text-teal">Observation</h5>
   <p>
   For any \(t\), define the <i><code>past</code> at \(t\)</i> in a
-  computation as the set of events with logical time at most \(t\),
+  computation as the set of steps with logical time at most \(t\),
   and define <i><code>future</code> at \(t\)</i>
-  as the set of events with logical time greater than
+  as the set of steps with logical time greater than
   \(t\).
   </p>
   
@@ -128,10 +128,9 @@ hr.new1 {
   
   <h6 class="w3-text-teal">Proof</h6>
   From the <a href="LogicalClocks.html#SpecificationOfLogicalClocks">
-  definition of logical time</a>
-  data flows forwards in logical time, i.e., from smaller to higher
-  logical times.
-  Therefore all data flows to steps in <code>past</code> at logical
+  definition of logical time</a>, paths in the dataflow graph are from
+  from smaller to higher  logical times.
+  Therefore all paths to steps in <code>past</code> at logical
   time \(t\) are from steps in <code>past</code> at logical
   time \(t\).
 
@@ -140,7 +139,7 @@ hr.new1 {
 
 
        <!-----START SECTION: State at Logical Time ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="StateAtLogicalTime">
     <a name="StateAtLogicalTime"></a>
     
     <h4 class="w3-text-teal">State at Logical Time \(t\)</h4>
@@ -156,7 +155,7 @@ logical time \(t\)), and is given by the labels of edges from steps in
 
 
   <!-----START SECTION: Example of State at Logical Time ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="ExampleStateAtLogicalTime">
     <a name="ExampleStateAtLogicalTime"></a>
     
 <!---------------------------------------------------------->
@@ -205,7 +204,7 @@ single message which is the label of this edge.
 
     
   <!-----START SECTION: Global Snapshot Algorithm for State at Logical Time ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="GlobalSnapshotForStateAtLogicalTime">
     <a name="GlobalSnapshotForStateAtLogicalTime"></a>
     
 <!----------------------------------------------->
@@ -236,7 +235,7 @@ The labels of edges that cross the cut boundary -- the purple line --
 in figure 1 represents the global snapshot at logical time 6.5.
 
   <!-----START SECTION: Imperfect Clocks ------------>
-  <div id="SECTION">
+  <div id="SECTION", class="ImperfectClocks">
     <a name="ImperfectClocks"></a>
     
   <!--------------------------------------------->
@@ -348,6 +347,7 @@ We begin with
 
 <!-- END MAIN -->
 </div>
+
 
 </body>
 </html>
