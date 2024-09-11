@@ -1,5 +1,5 @@
 <title>ChannelSnapshots/LogicalClocksNew.html</title>
-
+<title>ChannelSnapshots/LogicalClocks.html</title>
 <!------------- Start Heading -------------------------------->
 <!DOCTYPE html>
 
@@ -77,7 +77,7 @@ hr.new1 {
 <div class="w3-twothird w3-container">
   
   <!--------------------------------------------------------->
-  <h2 class="w3-text-teal">Logical Clocks</h2>
+  <h2 class="w3-text-teal">Logical Clocks and Epochs</h2>
   <!--------------------------------------------------------->
   
   <p class="w3-text-red">
@@ -88,6 +88,9 @@ hr.new1 {
   So, all sequences of steps in ascending logical time are topological
   sorts of the dataflow graph, and therefore all sequences of steps in
   ascending logical time are computations.
+  An epoch is similar to logical time where there exists a computation
+  that is a sequence of steps in ascending epoch.
+  We use epochs in Paxos, a consensus algorithm.
   </p>
 
    
@@ -101,7 +104,8 @@ hr.new1 {
     
   <!-----------------------------------------------------------------------------> 
   <h4 class="w3-text-teal">The Problem</h4> 
-  <!----------------------------------------------------------------------------->
+    <!----------------------------------------------------------------------------->
+    We first describe logical time and later describe epochs.
   <p>
   Design an algorithm that assigns a value \(t(e)\), called the <i>logical
   time</i> of \(e\), to each step \(e\) in a computation so that:
@@ -187,7 +191,7 @@ in which the message is sent.
 
     
     <!-------------------------------------------------------->
-    <h5 class="w3-text-teal">Observation</h5>
+    <h5 class="w3-text-teal">Theorem</h5>
     <!-------------------------------------------------------->
     All sequences of steps of a dataflow graph in ascending order of
     logical time are computations.
@@ -207,6 +211,125 @@ in which the message is sent.
     </div>
     <!-----END SECTION: The Logical Clock Algorithm ------------>
 
+     
+    <!-------------------------------------------------------->
+    <h3 class="w3-text-teal">Epochs</h3>
+    <!-------------------------------------------------------->
+      <p>
+  Design an algorithm that assigns a value \(t(e)\), called the
+    <i>epoch</i> of \(e\), to each step \(e\) in a computation so that:
+  </p>
+   
+  <hr class="new2">
+  <p style="color:blue;">
+  <h4 style="color:blue;">The Epoch Property</h4>
+  <p style="color:blue;">
+  For all edges \((e, e')\) of the dataflow graph:
+\(t(e) \leq t(e')\).
+</p>
+    <hr class="new2">
+
+    <p>
+    The only difference between logical time and epochs is that the
+    strict inequality \(t(e) < t(e')\) has been replaced by the
+    non-strict inequality \(t(e) \leq t(e')\).
+    </p>
+
+      <p>
+    Epochs of steps are arbitrary provided every edge is directed from
+    a step to a step with the same or higher epoch.
+
+  <!---------------------------------------------------------->
+  <h5 style="color:red;">Example: Epochs of Steps</h5>
+    <!---------------------------------------------------------->
+    
+    Figure 2 shows an assignment of epochs to steps for the dataflow
+    graph that is also shown in figure 1.
+    <p>
+    The dataflow graph is for a computation C = [0, 1, 2, 3, 4, 5, 6, 7,
+    8] and the sequence of epochs for this computation is [0, 1, 2, 1,
+    1, 1, 2, 3, 2], which is not in ascending order.
+    An example of a permutation of the given computation, where the
+    permutation is in ascending order, is C' = [0, 1, 3, 4, 5, 2, 6, 8, 7]
+    and the sequence of epochs is [0, 1, 1, 1, 1, 
+    2, 2, 2, 3].
+</p>
+  <figure>
+    <img src="Timelines/Timelines.021.jpeg" alt="Fig1" style="width:100%"> 
+    <figcaption>Fig. 2: Epochs of Steps</figcaption>
+    </figure>
+    
+    <p>
+    Epochs are assignments \(t(e)\) to step \(e\) such that for
+    all steps \(e, e'\): 
+    <ol>
+      <li>
+      If \(e\) and \(e'\) occur at the same agent and \(e'\) occurs
+      after \(e\) then \(t(e) \leq t(e')\).
+      </li>
+      <li>
+      If \(e\) is a step in which a message is sent and \(e'\) is the
+      step in which that message is received then \(t(e) \leq t(e')\).
+      </li>
+    </ol>
+
+       <!-------------------------------------------------------->
+    <h5 class="w3-text-teal">Theorem</h5>
+    <!-------------------------------------------------------->
+    Let \(C\) be a computation and let \(t(e)\) be the epoch of step
+    \(e\) for each step \(e\) in the computation.
+    There exists a computation \(C'\) with the same steps as \(C\)
+    where steps in \(C'\) are in ascending order of epochs.
+
+    <p class="w3-text-teal">Proof</p>
+    Let \(G\) be the dataflow graph of \(C\).
+    We will identify a topological sort \(C'\) of \(G\) where steps in
+    \(C'\) are in ascending order of epochs.
+    Because all topological sorts of the dataflow graph are
+    computations it follows that \(C'\) is a computation.
+
+    <p>
+    Let \(C'\) be a permutation of \(C\) where steps in \(C'\) occur in ascending epochs
+    and where steps with the same epoch occur in the same order in
+    \(C\) and \(C'\).
+    Computation \(C'\) can be obtained from \(C\) by repeatedly switching the
+    order of adjacent steps in \(C\) that are not in order.
+    
+    <p>
+    Let \((e, e')\) be an edge of the dataflow graph of \(C\).
+    Then \(t(e) \leq t(e')\).
+    If \(t(e) < t(e')\) then \(e\) is before \(e'\) in \(C'\) because
+    events in \(C'\) are in ascending epochs.
+    If \(t(e) = t(e')\) then  \(e\) is before \(e'\) in \(C\), and
+    therefore \(e\) is before \(e'\) in \(C'\) because the order of
+    steps with the same epoch are identical in \(C\) and \(C'\).
+    So, \(C'\) is a topological sort of \(G\).
+
+   
+          <!-------------------------------------------------------->
+    <h5 class="w3-text-teal">Applications of Logical Time and Epochs</h5>
+    <!-------------------------------------------------------->
+
+    Sequences of steps in increasing logical time are computations.
+    Logical times simplifies the development of algorithms because we
+    can use this fact.
+    We will see how a global snapshot algorithm uses this result.
+
+    <p>
+    There exists a sequence of steps in ascending epochs where the
+sequence is a computation.
+So there is a computation in which all steps with epoch \(t\) occur
+    after all steps with epoch less than \(t\) and before all steps
+with epoch greater than \(t\).
+This fact simplifies the design of algorithms because we can work with
+    a computation that executes steps sequentially in ascending order
+of epoch.
+We will see how we use the idea of increasing order of epochs in the
+    consensus algorithm, Paxos.
+    
+
+
+    
 <h4 class="w3-text-teal">Next</h4>
 Logical clocks are used to record global snapshots
 <a href="LogicalClocksSnapshots.html">as described here.</a>
