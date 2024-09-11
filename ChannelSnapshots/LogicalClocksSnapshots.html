@@ -85,6 +85,7 @@ hr.new1 {
   global snapshots.
   The state at which all agents are at the same logical time \(t\) is
   a global snapshot.
+  The algorithm used for logical time can also be used with epochs.
   </p>
 
       
@@ -233,6 +234,30 @@ messages with timestamps atmost \(t\) that the agent
 
 The labels of edges that cross the cut boundary -- the purple line --
 in figure 1 represents the global snapshot at logical time 6.5.
+
+  
+  <!-----------------------------------------------------------------------------> 
+  <h3 class="w3-text-teal">Epochs</h3> 
+<!----------------------------------------------------------------------------->
+The algorithm used with logical time can also be used with epochs
+  because of the observation analogous to that of the observation we
+made for logical time.
+
+ <h5 class="w3-text-teal">Observation</h5>
+  <p>
+  For any \(t\), define the <i><code>past</code> at \(t\)</i> in a
+  computation as the set of steps with epoch at most \(t\),
+  and define <i><code>future</code> at \(t\)</i>
+  as the set of steps with epoch greater than
+  \(t\).
+  </p>
+  
+  <p>
+  (<code>past</code> at epoch \(t\), <code>future</code> at
+  epoch \(t\)) is a consistent cut.
+  </p>
+
+
 
   <!-----START SECTION: Imperfect Clocks ------------>
   <div id="SECTION", class="ImperfectClocks">
