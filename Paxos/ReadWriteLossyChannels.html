@@ -98,6 +98,7 @@ hr.new1 {
     
    <!-----START SECTION: Serializability ------------>
 <div id="SECTION">
+    <a name="Serializability"></a>
   
   
   <!--------------------------------------------------------->
@@ -198,10 +199,15 @@ while True:
 </pre>
 <hr class="new2">
 
+</div>
+    <!-----END SECTION: Transactions ------------>
 
 
 
-
+    <!-----START SECTION: Distributed Algorithm ------------>
+  <div id="SECTION">
+    <a name="DistributedAlgorithm"></a>
+    
 <!------------------------------------------------------>
 <h3 class="w3-text-teal">The Distributed Algorithm</h3>
 <!------------------------------------------------------>
@@ -471,16 +477,12 @@ and the epoch of the transaction in which the request is made.
 
 
 </div>
-<!-----END SECTION: Algorithm for Serializability ------------>
+<!-----END SECTION: Distributed Algorithm ------------>
 
 <!-----START SECTION: Correctness ------------>
 <div id="SECTION">
   <a name="Correctness"></a>
 
-
-<!-----START SECTION: Equivalence of Serial and Distributed ------------>
-<div id="SECTION">
-  <a name="Equivalence"></a>
 <!--------------------------------------------------->
 <h4 class="w3-text-teal">Equivalence of Distributed
 and Sequential Algorithms</h4>
@@ -511,8 +513,14 @@ and Sequential Algorithms</h4>
   receives replies, and 
   <code>W</code> is the set of servers that execute
   write requests, in the \(i\)-th transaction of the distributed
-  algorithm. 
+  algorithm.
+  
+  </div>
+  <!-----END SECTION: Correctness ------------>
 
+  <!-----START SECTION: Tracking ------------>
+<div id="SECTION">
+  <a name="Tracking"></a>
 <!--------------------------------------------------->
 <h4 class="w3-text-teal">Tracking when Values are Assigned</h4>
   <!--------------------------------------------------->
@@ -552,8 +560,9 @@ while True:
 Next we develop an algorithm for a faulty distributed system by
 developing an algorithm for the nondeterministic sequential program.
   </p>
-</div>
-<!-----END SECTION: Equivalence of Serial and Distributed ------>
+  </div>
+  <!-----END SECTION: Tracking ------------>
+
   
 </div>
 <!-----END SECTION: Serializability ------------>
