@@ -211,7 +211,10 @@ in which the message is sent.
     </div>
     <!-----END SECTION: The Logical Clock Algorithm ------------>
 
-     
+   <!-----START SECTION: Epochs ------------>
+  <div id="SECTION", class="Epochs">
+    <a name="Epochs"></a>
+    
     <!-------------------------------------------------------->
     <h3 class="w3-text-teal">Epochs</h3>
     <!-------------------------------------------------------->
@@ -230,9 +233,9 @@ in which the message is sent.
     <hr class="new2">
 
     <p>
-    The only difference between logical time and epochs is that the
-    strict inequality \(t(e) < t(e')\) has been replaced by the
-    non-strict inequality \(t(e) \leq t(e')\).
+    The only difference between logical time and epochs is that
+    strict inequality \(t(e) < t(e')\) in logical time has been
+    replaced by non-strict inequality \(t(e) \leq t(e')\) in epochs.
     </p>
 
       <p>
@@ -258,6 +261,29 @@ in which the message is sent.
     <img src="Timelines/Timelines.021.jpeg" alt="Fig1" style="width:100%"> 
     <figcaption>Fig. 2: Epochs of Steps</figcaption>
     </figure>
+
+    <p>
+    The sequence of steps C' is obtained from C by switching the order
+    of adjacent elements that are not in order.  For example, step 2
+    has a higher epoch than step 3, but step 2 appears before, and
+    adjacent to, step 3 in C.  Steps 2 and 3 are independent -- there is no
+    path between them in the dataflow graph -- and so switching them
+    gives a sequence of steps which is a computation.  Repeatedly
+    switching the order of adjacent elements that are not in order
+    gives C'.
+</p>
+
+<p>
+Observe that for each agent the sequence of steps at the agent is the
+same in C and C'. For example, the sequence of steps of agent A in
+both C and C' is [0, 1, 3, 5], and the sequence of steps of agent B in
+both C and C' is [0, 4, 7].
+</p>
+
+    
+    <!-------------------------------------------------------->
+    <h4 class="w3-text-teal">Rules for Epochs</h4>
+    <!-------------------------------------------------------->
     
     <p>
     Epochs are assignments \(t(e)\) to step \(e\) such that for
@@ -273,18 +299,22 @@ in which the message is sent.
       </li>
     </ol>
 
+       <!-----START SECTION: Epoch Theorem ------------>
+  <div id="SECTION", class="EpochTheorem">
+    <a name="EpochTheorem"></a>
        <!-------------------------------------------------------->
     <h5 class="w3-text-teal">Theorem</h5>
     <!-------------------------------------------------------->
     Let \(C\) be a computation and let \(t(e)\) be the epoch of step
-    \(e\) for each step \(e\) in the computation.
-    There exists a computation \(C'\) with the same steps as \(C\)
-    where steps in \(C'\) are in ascending order of epochs.
+    \(e\) for each step \(e\) in the computation.  There exists a
+    computation \(C'\) where: (1) For each
+    agent \(v\) the sequence of steps at \(v\) is the same in \(C\)
+    and \(C'\), and (2) steps in \(C'\) are in ascending order of epochs.
 
     <p class="w3-text-teal">Proof</p>
     Let \(G\) be the dataflow graph of \(C\).
-    We will identify a topological sort \(C'\) of \(G\) where steps in
-    \(C'\) are in ascending order of epochs.
+    We will identify a topological sort \(C'\) of \(G\) where
+    \(C'\) satisfies the condition of the theorem.
     Because all topological sorts of the dataflow graph are
     computations it follows that \(C'\) is a computation.
 
@@ -304,6 +334,12 @@ in which the message is sent.
     therefore \(e\) is before \(e'\) in \(C'\) because the order of
     steps with the same epoch are identical in \(C\) and \(C'\).
     So, \(C'\) is a topological sort of \(G\).
+
+    </div>
+    <!-----END SECTION: Epoch Theorem ------------>
+    
+    </div>
+    <!-----END SECTION: Epochs ------------>
 
    
           <!-------------------------------------------------------->
