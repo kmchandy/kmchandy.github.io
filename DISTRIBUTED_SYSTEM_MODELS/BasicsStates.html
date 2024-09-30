@@ -101,45 +101,41 @@ hr.new1 {
   <h3 class="w3-text-teal">States</h3>
   <!----------------------------------------------------------------->
     <p>
-  The state of a distributed system is given by the states of its agents and
-  channels.
-  A system state is a tuple with an element of the tuple for the state
-  of each agent and each channel.
-    </p>
-
-  <p>
-  The state of a channel is a queue consisting of the sequence of
-  messages sent on the channel that have not been delivered.
-    The state of an agent is given by the values of its variables.
+    The state of a distributed system is given by the states of its
+    agents and channels.  A system state is a tuple with an element of
+    the tuple for the state of each agent and each channel.
     </p>
 
     <p>
-    A system may enter the same state by executing different
-    behaviors.
-    The future behavior of a system, given its state,
-    is independent of the system's behavior before the state was
-    entered.
+    The state of a channel is a queue consisting of the sequence of
+    messages sent on the channel that have not been delivered.  The
+    state of an agent is given by the values of its variables.
     </p>
+
+    <p>
+    The future behavior of a system from its current state is
+    independent of the system's past behavior.
+    </p>
+
   </div>
   <!--------------END SECTION: States ---------------------->
 
   
 
-    <!--------------START SECTION: StateTransitions ---------------------->
+  <!--------------START SECTION: StateTransitions ---------------------->
   <div ID="SECTION", class="StateTransitions">
-  <a name="StateTransitions"></a>
-  <!----------------------------------------------------------------->
-  <h3 class="w3-text-teal">State Transitions</h3>
-  <!----------------------------------------------------------------->
-  <p>
+    <a name="StateTransitions"></a>
+    <!----------------------------------------------------------------->
+    <h3 class="w3-text-teal">State Transitions</h3>
+    <!----------------------------------------------------------------->
+    <p>
   The state of a system changes when, and only when, a message is
-  delivered to an agent.
-  The simple model ignores the changes in the state of an agent that occur while
-  the agent is processing a message.
-  The model only deals with an agent's state before
-    it starts, and after it completes, processing a message.
-    So, the model only considers an agent's state when the agent is
-  waiting to receive a message.
+  delivered to an agent.  The simple model ignores the changes in the
+  state of an agent that occur while the agent is processing a
+  message.  The model only deals with an agent's state before it
+  starts, and after it completes, processing a message.  So, the model
+  only considers an agent's state when the agent is waiting to receive
+  a message.
   </p>
 
   <p>
@@ -150,11 +146,11 @@ hr.new1 {
   its input channels and completes processing that message.
   </p>
 
-  <p>
+    <p>
   A <code>receive</code> function may include a <code>sleep</code>
-  statement which causes the agent to execute no further statements in
-    the <code>receive</code> for a specified period of time.
-The <code>sleep</code> statement has no effect on state
+    statement which causes the agent to wait for a specified period of
+  time before executing the next statement.
+    The <code>sleep</code> statement has no effect on state
 transitions because state transitions do not deal with changes in the
 state of an agent while it is executing a <code>receive</code>.
 Of course, <code>sleep</code> statements impact system performance.
