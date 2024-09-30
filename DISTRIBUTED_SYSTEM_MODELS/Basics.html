@@ -96,13 +96,15 @@ hr.new1 {
   <!----------------------------------------------------------------->
   <h4 class="w3-text-teal">Introduction</h4>
   <!----------------------------------------------------------------->
-  Distributed systems are complex.
-
-  A banking information system supports actions
-  in ATM machines, branch offices, and fraud analysis centers.
-
-  An earthquake monitoring system has thousands of sensors and agents
-  carrying out complex calculations.
+  <p>
+  Distributed systems are complex.  Banking systems support tens of thousands
+  of ATM machines, have thousands of branches offices, and serve millions
+  of customers.  An earthquake monitoring system has thousands of
+  sensors and agents carrying out complex calculations. Distributed
+  systems provide many services continuously at multiple
+  locations. This course describes algorithms that help in building
+  robust and efficient distributed systems.
+  </p>
 
     <!--------------START SECTION: WhatIsAModel ---------------------->
 <div id="SECTION", class="WhatIsAModel">
@@ -129,12 +131,11 @@ hr.new1 {
     <p class="w3-text-teal">Notation</p>
     <p>
     The model and its mathematical properties are critical for
-  describing and proving the correctness of algorithms;
-  a programming notation is not important.
-  We need a notation, however, to provide examples.
-  Examples of some algorithms are given in Python using a
+  describing and proving the correctness of algorithms; a programming
+  notation is not important.  We need a notation, however, to provide
+  examples.  Examples of some algorithms are given in Python using a
   simulator of distributed systems and also by using software
-    libraries such as a 
+  libraries such as a
   <a
   href="https://www.rabbitmq.com/tutorials/tutorial-one-python.html">
   Python implementation</a>
@@ -230,13 +231,12 @@ A distributed system is initiated with sets of agents and channels
     </p>
 
     <p>
-    Messages sent on the same channel are delivered in the order
-sent.
+    Messages sent on the same channel are delivered in the order sent.
 If an agent <code>P</code> sends a message <code>M1</code> on a
-    channel <code>(P, Q)</code>, and later sends a message
-    <code>M2</code> on the same channel, then agent <code>Q</code>
-    receives <code>M1</code> on channel <code>(P, Q)</code> before
-    <code>Q</code> receives <code>M2</code> on the channel.
+channel <code>(P, Q)</code>, and later sends a message <code>M2</code>
+on the same channel, then agent <code>Q</code> receives
+<code>M1</code> on channel <code>(P, Q)</code> before <code>Q</code>
+receives <code>M2</code> on the channel.
 
 
 
