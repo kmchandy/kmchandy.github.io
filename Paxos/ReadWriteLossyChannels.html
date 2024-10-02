@@ -624,9 +624,10 @@ for i in 0, 1, 2, ...:    execute transaction i
   the same transaction if and only if <code>q.v = q'.v</code>.
 
   <p>
-  The values assigned to server variables in the distributed algorithm
-  are the same as in the sequential algorithm in which the
-  <code>i</code>-th transaction to be executed is as follows.
+  The values assigned to server variables in a computation of the distributed algorithm
+  are the same as in an algorithm in which transactions are executed
+  sequentially in increasing order of epoch.
+  The <code>i</code>-th transaction to be executed is as follows.
 
   <pre>
 if len(R[i]) >= M:
