@@ -86,10 +86,13 @@ hr.new1 {
   may halt or be arbitrarily slow; the same message may be delivered
   multiple times; messages may be delivered out of order; and messages
   may be lost.  A transaction consists of two steps: a client (1)
-  reads and (2) then writes shared variables.  This page shows how a
-  proxy for time can be used to develop algorithms in which
-  computations can be serialized: Each agent starts and completes a
-  transaction before executing steps of another transaction.
+  reads and (2) then writes shared variables.  This page shows how
+  <a
+  href="../ChannelSnapshots/LogicalClocks.html">epochs</a>
+  -- a proxy for time -- can be used to develop algorithms in
+  which computations can be serialized: Each agent starts and
+  completes a transaction before executing steps of another
+  transaction.
   </p>
 
  
@@ -146,55 +149,94 @@ hr.new1 {
 <!--------------------------------------------------------->
 
     <p>
-    A transaction consists of the following steps.
-    A <i>single client</i>
-    <code>p</code> sends read requests to servers, gets replies from
-    servers and then sends write requests to servers.
-    Only one client participates in a transaction.
-    Later, we describe how the algorithm chooses a single client for
-    each transaction.
+    In a transaction, a <i>single</i> client reads and then writes server variables.
+    A client <code>p</code> sends read requests to
+    servers and receives replies from them.  Requests and replies may
+    get lost.  Let <code>R</code> be the set of servers from which
+    <code>p</code> receives replies.
+    If <code>p</code> receives at least <code>M</code> replies, where
+    <code>M</code> is a parameter of the algorithm, then
+    <code>p</code> proceeds to the write step of the transaction.
+    If <code>p</code> receives fewer than <code>M</code> replies, then
+    <code>p</code>  terminates the transaction without executing a
+    write step.
     </p>
 
     <p>
-    In a transaction a client <code>p</code> sends read requests to
-    servers and receives replies from them.  Requests and replies may
-    get lost.  Let <code>R</code> be the set of servers from which
-    <code>p</code> receives replies.  After receiving replies
-    <code>p</code> broadcasts requests to servers to write:
-    <pre> p.f(r.v for r in R) </pre>
-where <code>r.v for r in R</code> is the list of replies that client
-    <code>p</code> receives to its read requests and <code>p.f</code>
-    is a function (method) of client <code>p</code>.
+    Associated with each client <code>p</code> is a function
+    <code>f_p</code> which takes a list of server values as its
+    argument.  In the write step <code>p</code> broadcasts requests to
+    servers to write: <pre> f_p(r.v for r in R) </pre> where <code>r.v
+    for r in R</code> is the list of replies that client
+<code>p</code> receives to its read requests.
 </p>
 
 <p>
 Write requests may get lost.
 Let <code>W</code> be the set of servers that receive and execute
 the write requests.
-The following assignment statement shows how server variables are
-modified in a transaction executed by a client <code>p</code>.
 </p>
 
 
-<p class="w3-text-teal">Transaction executed by client <code>p</code></p>
+
+
+<hr class="new2">
+<p class="w3-text-teal">Transaction executed by client
+<code>p</code></p>
 <pre>
-for q in W:  q.v = p.f(r.v for r in R)
+if len(R) >= M:
+   for q in W:  q.v = f_p(r.v for r in R)
 </pre>
+<hr class="new2">
 
 
 <p>
 Next we develop a distributed algorithm in which the values assigned
 to server variables are the same as in a computation in which
 <i>exactly one transaction is executed at a time.</i>
-So, the sequence of values of server variable <code>q.v</code> for
-each server <code>q.v</code> in the distributed algorithm is the same
-as in the sequential program:
-<hr class="new2">
-<p style="color:blue;">Equivalent Nondeterministic Sequential Program</p>
+
+
+<p>Multiple clients
+may be executing transactions concurrently in a computation \(C\);
+however there exists a computation \(C'\), with the same steps as
+\(C\), where transactions are executed sequentially in \(C'\).
+Steps of the <code>j</code>-th transaction in the sequence occur in
+\(C'\) after steps  of the <code>i</code>-th transaction in
+the sequence, for all <code>i</code> \(<\) <code>j</code>.
+</p>
+
+<p>
+Given
+only the sequence of values of <code>q.v</code> for each server <code>q</code>,
+we cannot determine whether the values were generated in a computation
+in which steps of different transactions are interspersed or a
+computation \(C'\) in which transactions are executed sequentially.
+</p>
+
+<p>
+Let transaction <code>i</code> be the <code>i</code>-th transaction in
+the sequence in which transactions are executed in computation \(C'\).
+Let <code>p[i]</code> be the client that executes 
+transaction <code>i</code>, <code>R[i]</code> the set of servers from which
+<code>p[i]</code> receives replies, and
+<code>W[i]</code> the set of servers that receive write requests from
+<code>p[i]</code>.
+
+<p class="w3-text-teal">Transaction <code>i</code>
 <pre>
-while True:
-  nondeterministically select p, R, W
-  for q in W:  q.v = p.f(r.v for r in R)
+if len(R[i]) >= M:
+   for q in W[i]:  q.v = f_p[i](r.v for r in R[i])
+</pre>
+The sequence of values of each server variable <code>q.v</code>
+in the distributed algorithm is the same
+as in the following sequential program.
+
+
+<hr class="new2">
+<p class="w3-text-teal">Sequential program with same values assigned to
+server variables.</p>
+<pre>
+for i in 0, 1, 2, ...:    execute transaction i
 </pre>
 <hr class="new2">
 
@@ -215,20 +257,21 @@ while True:
 We use <a
 href="../ChannelSnapshots/LogicalClocks.html">epochs</a>
 in the distributed algorithm so that the values of server variables in
-each computation of the distributed algorithm is the same is in a
-computation of the nondeterministic sequential program in which
-<code>p, R, W</code> are selected appropriately.
-In the distributed algorithm each transaction
-    has a unique epoch and all steps of a transaction have the epoch
-of the transaction.
-
-<p>
+a computation of the distributed algorithm is the same is in the
+    sequential program shown above.
 We <a
     href="../ChannelSnapshots/LogicalClocks.html#EpochTheorem">showed
     that</a> given any computation \(C\), there exists a computation
-    \(C'\) where (1) for each agent \(v\) the sequence of steps at
-    \(v\) is the same in \(C\) and \(C'\), and (2) steps in \(C'\) are
-executed in ascending order of epochs.
+    \(C'\) where:
+    <ol>
+      <li>
+      For each agent \(v\) the sequence of steps at
+      \(v\) is the same in \(C\) and \(C'\), and
+      </li>
+      <li>
+      steps in \(C'\) are executed in ascending order of epochs.
+      </li>
+    </ol>
 </p>
 
 <p>
@@ -241,9 +284,8 @@ there exists a computation \(C'\) where:
   is the same in \(C\) and \(C'\), and
   </li>
   <li>
-  in \(C'\) transactions
-    are executed sequentially, one transaction at a time, in ascending
-order of epochs.
+   transactions are executed sequentially in \(C'\), one transaction
+  at a time, in ascending order of epochs.
   </li>
 </ol>
 
@@ -265,8 +307,6 @@ of transactions executed by different clients are different because
 their ids are different.
 Epochs of different transactions executed by the same client are
 different because the <code>t</code>-components are different.
-We assume that client ids are totally ordered and so 
-epochs are also totally ordered.
 </p>
 
 <p>
@@ -274,7 +314,8 @@ In the description of the algorithm we use the short form
 <code>t</code> for an epoch rather than <code>(t, p_id)</code>.
 We implicitly assume that an epoch has a <code>p_id</code>-component without
 writing it explicitly.
-Epochs are totally ordered and comparisons are made lexicographically.
+We assume that client ids are totally ordered and so 
+epochs are also totally ordered.
 </p>
 
 
@@ -295,6 +336,8 @@ The algorithm ensures that a message <code>m</code> is received by an
 agent <code>y</code> when <code>y.t = m.t</code>.
 So, for all messages, the epochs of the transactions in which the
 messages are sent and received are identical.
+The algorithm also ensures that the epoch <code>x.t</code> of every agent
+<code>x</code> does not decrease.
 </p>
 
 
@@ -330,11 +373,15 @@ for steps taken by a server <code>q</code> when it receives a request
   <code>r.t</code>  that is greater than the epoch <code>q.t</code> of
   the transaction that the server is processing then
   the server stops processing the transaction with epoch
-  <code>q.t</code>; it increases <code>q.t</code> to <code>r.t</code>
-  and it starts processing the transaction with the increased value of
-  <code>q.t</code>. 
+  <code>q.t</code>; it increases <code>q.t</code> to <code>r.t</code>,
+  it starts processing the transaction with the increased value of
+  <code>q.t</code>, and responds to the request.
   </li>
 </ol>
+Therefore the epoch <code>q.t</code> of a step in which a server
+<code>q</code> responds to a request <code>r</code> is the same as
+<code>r.t</code> -- the epoch of the request -- which is the same as
+the epoch of the step in which the request was sent.
 <p>
 A reply sent by <code>q</code> to a read request has fields
 <code>q.v</code> and <code>q.t</code>.
@@ -396,7 +443,7 @@ where <code>pos</code> returns an arbitrary positive value, and then
 <code>p.t</code>.  Client <code>p</code> continues executing the
 transaction with epoch <code>p.t</code> until <code>p</code> gets its
 next clock tick message at which <code>p</code> stops executing the
-transaction with with epoch <code>p.t</code>,
+transaction with with epoch <code>p.t</code>, and <code>p</code>
 increases <code>p.t</code> and starts a new transaction with the increased value of
 <code>p.t</code> as the epoch of the new transaction.
 </p>
@@ -408,10 +455,43 @@ A read request has a single field which is the epoch
 of the transaction that <code>p</code> is executing.
 A client waits to receive replies from servers and waits simultaneously for the
 next clock tick.
+</p>
+
+<p>
+An epoch uniquely identifies a transaction.
+If a client <code>p</code> receives a reply, <code>message</code>, where
+<code>message.t</code> \(\neq\) <code>p.t</code> then the reply
+was sent in a different transaction than the transaction that
+<code>p</code> is processing, and so
+<code>p</code> ignores the message.
+</p>
+
+<p>
+If <code>p</code> receives a reply, <code>message</code>, sent in the
+transaction that <code>p</code> is processing, i.e,
+if <code>message.t</code> \(=\) <code>p.t</code>,
+then <code>p</code> copies the value in the reply into <code>p.copy</code>.
+</p>
+
+<p>
+The algorithm has a parameter <code>M</code>.
 If the client receives at least <code>M</code> replies before it
 receives its next clock tick then the client proceeds to the write step.
 If the client receives its next clock tick before it receives
 <code>M</code> replies then the client does not execute a write step.
+</p>
+
+
+<p>
+In the write step, <code>p</code>
+broadcasts write requests to servers.
+The list of replies,
+<code>r.v for r in R</code>, that <code>p</code> received in this transaction is 
+<code>list(p.copy.values())
+</code>
+<p>
+A write request has two fields, the value <code>v</code> to be written
+and the epoch of the transaction in which the request is made.
 </p>
 
 <!------------------------------------------------>
@@ -436,43 +516,14 @@ def receive(message, sender):
       if message.t == p.t:
          p.copy[sender] = message.v
          if len(p.copy) >= M:
-            # v = p.f(r.v for r in R) 
-            v = p.f(list(p.copy.values()))
+            # v = f_p(r.v for r in R) 
+            v = f_p(list(p.copy.values()))
             # Send request to q to write v.
             for q in Q: send(WriteRequest(v, p.t), q)
 </pre>
 <hr class="new2">
 <!------------------------------------------------>
 
-
-<p>
-An epoch uniquely identifies a transaction.
-If <code>message.t</code> \(\neq\) <code>p.t</code> then the message
-was sent in a different transaction than the transaction that
-<code>p</code> is processing, and so
-<code>p</code> ignores the message.
-</p>
-
-<p>
-If <code>p</code> receives a reply <code>m</code> in the
-transaction that <code>p</code> is processing -- i.e. if <code>m.t ==
-p.t</code> -- then <code>p</code> copies the reply into a dictionary 
-<code>p.copy</code>.
-If <code>p</code> receives at least <code>M</code> replies then
-<code>p</code> proceeds to the write step.
-</p>
-
-<p>
-In the write step, <code>p</code>
-broadcasts write requests to servers.
-The list of replies
-<code>r.v for r in R</code> is 
-<code>list(p.copy.values())
-</code>
-<p>
-A write request has two fields, the value <code>v</code> to be written
-and the epoch of the transaction in which the request is made.
-</p>
 
 
 </div>
@@ -482,37 +533,48 @@ and the epoch of the transaction in which the request is made.
 <div id="SECTION">
   <a name="Correctness"></a>
 
-<!--------------------------------------------------->
-<h4 class="w3-text-teal">Equivalence of Distributed
-and Sequential Algorithms</h4>
   <!--------------------------------------------------->
-  The epochs assigned to steps satisfy the rules for epochs: the epoch
-  of an agent does not decrease and the epoch of a step in which a
-  message is received is greater than or equal to the epoch of the
-  step in which the message is sent.
-
-  <p>
-  From the theorem on epochs, there is a computation in which
-  transactions are executed sequentially in increasing order of
-  epochs.
-  The sequence of values assigned to server variables in a
+  <h4 class="w3-text-teal">Theorem on Correctness</h4>
+  <!--------------------------------------------------->
+  For all servers  <code>q</code>,
+  the sequence of values of  <code>q.v</code> in a
   computation of the distributed algorithm is the same as in the
-  sequential program in which <code>p, R, W</code> in each
-  iteration are selected as follows.
+  sequential algorithm
+<pre>
+for i in 0, 1, 2, ...:    execute transaction i
+  </pre>
+  where transaction <code>i</code> was described earlier.
+  
+  <!--------------------------------------------------->
+  <p class="w3-text-teal">Proof</p>
+  <!--------------------------------------------------->
+  The <a href="../ChannelSnapshots/LogicalClocks.html">two rules for assigning
+  epochs to steps</a>  are satisfied:
+  The epoch <code>x.t</code>
+  of an agent <code>x</code> does not decrease, and the epoch of a step in which a
+  message is received is greater than or equal to the epoch of the
+  step in which the message is sent. 
 
   <p>
-  In a computation of the distributed algorithm, let us call the
-  transaction with the \(i\)-th largest epoch the \(i\)-th
-  transaction.
-  The \(i\)-th iteration of the sequential program simulates the
-  \(i\)-th transaction in distributed algorithm in the following sense.
-  In the \(i\)-th iteration:
-  <code>p</code> is the client,
-  <code>R</code> is the set of servers from which the client
-  receives replies, and 
-  <code>W</code> is the set of servers that execute
-  write requests, in the \(i\)-th transaction of the distributed
-  algorithm.
+  From the theorem on epochs, given any computation \(C\) of the distributed algorithm
+  there exists a computation \(C'\) where:
+  <ol>
+  <li>
+  For each server
+    <code>q</code> the sequence of values assigned to <code>q.v</code>
+  is the same in \(C\) and \(C'\), and
+  </li>
+  <li>
+   transactions are executed sequentially in \(C'\), one transaction
+  at a time, in ascending order of epochs.
+  </li>
+</ol>
+
+  Therefore, the sequence of values assigned to server variables,
+  in a computation of the distributed algorithm is the same as in the sequential
+  algorithm in which the \(i\)-th transaction of the sequential algorithm is  the
+  transaction with the \(i\)-th largest epoch in the computation of
+  the distributed algorithm.
   
   </div>
   <!-----END SECTION: Correctness ------------>
@@ -520,45 +582,59 @@ and Sequential Algorithms</h4>
   <!-----START SECTION: Tracking ------------>
 <div id="SECTION">
   <a name="Tracking"></a>
-<!--------------------------------------------------->
-<h4 class="w3-text-teal">Tracking when Values are Assigned</h4>
   <!--------------------------------------------------->
-  In some algorithms we want to track the epochs in which server
-  variables are assigned values.
-  We do so by making a server variable a tuple <code>(value, t)</code>
-  where <code>t</code> is the epoch in which the variable is last
-  assigned (i.e. most recently assigned) a value.
-  The only change is in the client algorithm, replacing:
-  <pre>
-v = p.f(list(p.copy.values()))
-  </pre>
-  by
-  <pre>
-v = p.f(list(p.copy.values())), p.t
-  </pre>
-  where the second element of the tuple identifies the epoch in which
-the server variable was most recently assigned a value.
-<p>
-The sequence of values of server variables in the distributed
-algorithm is the same as in the following sequential algorithm in
-which <code>delta</code> is positive and  <code>t</code> on the
-\(i\)-th iteration of the sequential program is the epoch of the
-\(i\)-th transaction in the distributed algorithm.
-
-<hr class="new2">
-<p style="color:blue;">Equivalent Nondeterministic Sequential Program</p>
-<pre>
-t = 0
-while True:
-  nondeterministically select delta, p, R, W
-  t = t + delta
-  for q in W:  q.v = p.f(r.v for r in R), t
-</pre>
-<hr class="new2">
-<p>
-Next we develop an algorithm for a faulty distributed system by
-developing an algorithm for the nondeterministic sequential program.
+  <h4 class="w3-text-teal">Tracking when Values are Assigned</h4>
+  <!--------------------------------------------------->
+  <p>
+  In the next webpage we develop an algorithm that keeps track of the epoch
+  in which each server variable <code>q.v</code> is assigned a value.
+  We do so by making a server variable <code>q.v</code>
+  a tuple <code>(q.v.value, q.v.t)</code>
+  where <code>q.v.t</code> is the most recent epoch in which
+  <code>q</code> received a write request and assigned a value to
+  <code>q.v</code>.
   </p>
+
+  <p>
+  We change only one statement in the client algorithm to keep track of the
+  epoch in which a server variable is assigned a value.
+  There are no changes to the server algorithm.
+  The only change replaces the following statement in the client
+  algorithm
+  <br>
+  <code>
+  v = p.f(...)
+  </code>
+  <br>
+  by
+  <br>
+  <code>
+  v.value = p.f(...)
+  </code>
+  <br>
+  <code>
+  v.t = p.t
+  </code>
+  </p>
+
+  <p>
+  A client broadcasts the same value to all servers.
+  All servers that receive write requests write the same value.
+  Therefore, <code>q, q'</code> were assigned their values in
+  the same transaction if and only if <code>q.v = q'.v</code>.
+
+  <p>
+  The values assigned to server variables in the distributed algorithm
+  are the same as in the sequential algorithm in which the
+  <code>i</code>-th transaction to be executed is as follows.
+
+  <pre>
+if len(R[i]) >= M:
+   for q in W[i]:
+      q.v.value = f_p[i](r.v for r in R[i])
+      q.v.t = t[i]
+</pre>
+where <code>t[i]</code> is the epoch of the <code>i</code>-th transaction.
   </div>
   <!-----END SECTION: Tracking ------------>
 
