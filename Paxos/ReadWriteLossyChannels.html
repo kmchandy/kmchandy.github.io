@@ -179,7 +179,6 @@ the write requests.
 
 
 
-
 <hr class="new2">
 <p class="w3-text-teal">Transaction executed by client
 <code>p</code></p>
@@ -189,60 +188,18 @@ if len(R) >= M:
 </pre>
 <hr class="new2">
 
-
 <p>
-Next we develop a distributed algorithm in which the values assigned
+A transaction consists of a synchronous read of the values of a subset
+<code>R</code> of server variables followed by a synchronous write to
+a subset <code>W</code> of server variables.
+Next we use <a
+href="../ChannelSnapshots/LogicalClocks.html">epochs</a>
+in a distributed algorithm in which the values assigned
 to server variables are the same as in a computation in which
 <i>exactly one transaction is executed at a time.</i>
 
-
-<p>Multiple clients
-may be executing transactions concurrently in a computation \(C\);
-however there exists a computation \(C'\), with the same steps as
-\(C\), where transactions are executed sequentially in \(C'\).
-Steps of the <code>j</code>-th transaction in the sequence occur in
-\(C'\) after steps  of the <code>i</code>-th transaction in
-the sequence, for all <code>i</code> \(<\) <code>j</code>.
-</p>
-
-<p>
-Given
-only the sequence of values of <code>q.v</code> for each server <code>q</code>,
-we cannot determine whether the values were generated in a computation
-in which steps of different transactions are interspersed or a
-computation \(C'\) in which transactions are executed sequentially.
-</p>
-
-<p>
-Let transaction <code>i</code> be the <code>i</code>-th transaction in
-the sequence in which transactions are executed in computation \(C'\).
-Let <code>p[i]</code> be the client that executes 
-transaction <code>i</code>, <code>R[i]</code> the set of servers from which
-<code>p[i]</code> receives replies, and
-<code>W[i]</code> the set of servers that receive write requests from
-<code>p[i]</code>.
-
-<p class="w3-text-teal">Transaction <code>i</code>
-<pre>
-if len(R[i]) >= M:
-   for q in W[i]:  q.v = f_p[i](r.v for r in R[i])
-</pre>
-The sequence of values of each server variable <code>q.v</code>
-in the distributed algorithm is the same
-as in the following sequential program.
-
-
-<hr class="new2">
-<p class="w3-text-teal">Sequential program with same values assigned to
-server variables.</p>
-<pre>
-for i in 0, 1, 2, ...:    execute transaction i
-</pre>
-<hr class="new2">
-
 </div>
     <!-----END SECTION: Transactions ------------>
-
 
 
     <!-----START SECTION: Distributed Algorithm ------------>
@@ -253,12 +210,6 @@ for i in 0, 1, 2, ...:    execute transaction i
 <h3 class="w3-text-teal">The Distributed Algorithm</h3>
 <!------------------------------------------------------>
 
-<p>
-We use <a
-href="../ChannelSnapshots/LogicalClocks.html">epochs</a>
-in the distributed algorithm so that the values of server variables in
-a computation of the distributed algorithm is the same is in the
-    sequential program shown above.
 We <a
     href="../ChannelSnapshots/LogicalClocks.html#EpochTheorem">showed
     that</a> given any computation \(C\), there exists a computation
@@ -275,23 +226,12 @@ We <a
 </p>
 
 <p>
-Therefore given any computation \(C\) of the distributed algorithm
-there exists a computation \(C'\) where:
-<ol>
-  <li>
-  For each server
-    <code>q</code> the sequence of values assigned to <code>q.v</code>
-  is the same in \(C\) and \(C'\), and
-  </li>
-  <li>
-   transactions are executed sequentially in \(C'\), one transaction
-  at a time, in ascending order of epochs.
-  </li>
-</ol>
-
-<p>
   Next we describe an algorithm in which each transaction has a unique
-epoch and all steps a transaction have the epoch of the transaction.
+epoch and all steps of a transaction have the epoch of the
+    transaction.
+    Therefore in \(C'\) all steps of a transaction with epoch \(t\)
+  are executed after steps of transactions with epoch less than \(t\)
+  and before steps of transactions with epoch greater than \(t\).
 </p>
 
 <!------------------------------------------------------>
@@ -319,26 +259,27 @@ epochs are also totally ordered.
 </p>
 
 
+    
 <!------------------------------------------------------>
 <h6 class="w3-text-teal">All Steps of a Transaction have the Epoch of
 the Transaction</h6>
 <!------------------------------------------------------>
 <p>
-Each agent <code>x</code> has a field <code>x.t</code> which is the
-epoch of the transaction that <code>x</code> is processing.
-Likewise, each message <code>m</code> has a field <code>m.t</code> which is the
-epoch of the transaction in which <code>m</code> is sent.
-</p>
-<p>
-When an agent <code>x</code> sends a message <code>m</code> it sets
-<code>m.t</code> to <code>x.t</code>.
-The algorithm ensures that a message <code>m</code> is received by an
-agent <code>y</code> when <code>y.t = m.t</code>.
-So, for all messages, the epochs of the transactions in which the
-messages are sent and received are identical.
-The algorithm also ensures that the epoch <code>x.t</code> of every agent
-<code>x</code> does not decrease.
-</p>
+Each agent <code>x</code> has a field <code>x.t</code> where the epoch
+    of a step taken by <code>x</code> is <code>x.t</code>, and so
+    <code>x.t</code> is the epoch of the transaction that
+    <code>x</code> is processing.
+    Each message <code>m</code> has a field <code>m.t</code> called
+    the epoch of the message.
+    When an agent <code>x</code> sends a message <code>m</code> it sets
+    <code>m.t</code> to <code>x.t</code>.
+    When an agent <code>y</code> receives a message <code>m</code> the
+agent processes the message only if <code>m.t = y.t</code>.
+If <code>m.t</code> \(\neq\) <code>y.t</code> then <code>m</code> is
+discarded without being processed, and <code>m</code> has the same
+effect as a lost message. So all steps and messages in a transaction
+have the epoch of the transaction.
+
 
 
 <!-------------------------------------------------->
@@ -369,19 +310,19 @@ for steps taken by a server <code>q</code> when it receives a request
   <li>
   <code>r.t</code> \(>\) <code>q.t</code>:
   <p>
-  If a server <code>q</code> receives a request from a transaction with an epoch
+  If a server <code>q</code> receives a request from a transaction
+  with an epoch 
   <code>r.t</code>  that is greater than the epoch <code>q.t</code> of
   the transaction that the server is processing then
   the server stops processing the transaction with epoch
-  <code>q.t</code>; it increases <code>q.t</code> to <code>r.t</code>,
-  it starts processing the transaction with the increased value of
-  <code>q.t</code>, and responds to the request.
+  <code>q.t</code>; it increases <code>q.t</code> to <code>r.t</code>;
+  and it starts processing the transaction with the increased value of
+  <code>q.t</code> by responding to the request.
   </li>
 </ol>
 Therefore the epoch <code>q.t</code> of a step in which a server
 <code>q</code> responds to a request <code>r</code> is the same as
-<code>r.t</code> -- the epoch of the request -- which is the same as
-the epoch of the step in which the request was sent.
+<code>r.t</code> -- the epoch of the request.
 <p>
 A reply sent by <code>q</code> to a read request has fields
 <code>q.v</code> and <code>q.t</code>.
@@ -427,7 +368,7 @@ reply that it gets from a server <code>q</code> into
 Each client gets a sequence of messages called clock ticks.
 A clock tick message has no fields.
 A client initiates a new transaction when the client gets a clock tick
-message. This is the only way in which transactions are created.
+message. This is the only way in which a transaction is created.
 A clock tick has no function other than to make a client stop
 the transaction that it is processing and start a new transaction.
 
@@ -442,10 +383,10 @@ where <code>pos</code> returns an arbitrary positive value, and then
 <code>p</code> initiates a new transaction with epoch
 <code>p.t</code>.  Client <code>p</code> continues executing the
 transaction with epoch <code>p.t</code> until <code>p</code> gets its
-next clock tick message at which <code>p</code> stops executing the
-transaction with with epoch <code>p.t</code>, and <code>p</code>
-increases <code>p.t</code> and starts a new transaction with the increased value of
-<code>p.t</code> as the epoch of the new transaction.
+next clock tick message at which point <code>p</code> stops executing
+the transaction with with epoch <code>p.t</code>, it increases
+<code>p.t</code> and starts a new transaction with the increased value
+of <code>p.t</code> as the epoch of the new transaction.
 </p>
 
 <p>
@@ -457,28 +398,20 @@ A client waits to receive replies from servers and waits simultaneously for the
 next clock tick.
 </p>
 
-<p>
-An epoch uniquely identifies a transaction.
-If a client <code>p</code> receives a reply, <code>message</code>, where
-<code>message.t</code> \(\neq\) <code>p.t</code> then the reply
-was sent in a different transaction than the transaction that
-<code>p</code> is processing, and so
-<code>p</code> ignores the message.
-</p>
 
 <p>
 If <code>p</code> receives a reply, <code>message</code>, sent in the
-transaction that <code>p</code> is processing, i.e,
-if <code>message.t</code> \(=\) <code>p.t</code>,
-then <code>p</code> copies the value in the reply into <code>p.copy</code>.
+transaction that <code>p</code> is processing, i.e, if
+<code>message.t</code> \(=\) <code>p.t</code>, then <code>p</code>
+copies the value in the reply into <code>p.copy</code>.
 </p>
 
 <p>
-The algorithm has a parameter <code>M</code>.
 If the client receives at least <code>M</code> replies before it
-receives its next clock tick then the client proceeds to the write step.
-If the client receives its next clock tick before it receives
-<code>M</code> replies then the client does not execute a write step.
+receives its next clock tick then the client proceeds to the write
+step.  If the client receives its next clock tick before it receives
+<code>M</code> replies then the client does not execute a write step
+and the transaction terminates.
 </p>
 
 
@@ -534,17 +467,48 @@ def receive(message, sender):
   <a name="Correctness"></a>
 
   <!--------------------------------------------------->
-  <h4 class="w3-text-teal">Theorem on Correctness</h4>
+  <h3 class="w3-text-teal">Serializability</h3>
   <!--------------------------------------------------->
-  For all servers  <code>q</code>,
-  the sequence of values of  <code>q.v</code> in a
-  computation of the distributed algorithm is the same as in the
-  sequential algorithm
-<pre>
-for i in 0, 1, 2, ...:    execute transaction i
-  </pre>
-  where transaction <code>i</code> was described earlier.
+  Given a computation \(C\) of the distributed algorithm we will show
+  that the sequence of values of each server variable \(q.v\) is the
+  same as in a computation in which transactions are executed
+  sequentially in order of increasing epoch.
+  Let <code>t[i]</code> be the transaction in \(C\) with the
+  <code>i</code>-th largest epoch for <code>i</code> > 0.
+
+  <p>
+  Let <code>p[i]</code> be the client that executes the transaction
+  and let <code>R[i]</code> be the set of servers from which
+  <code>p[i]</code> receives replies to its read requests, and
+  <code>W[i]</code> the set of servers that receive write
+  requests in the transaction. So, <code>R[i]</code> is the set of
+  servers from which  
+  <code>p[i]</code> receives reply <code>r</code> where <code>r.t =
+  t[i]</code>, and <code>W[i]</code> is the set of
+  servers that receive write requests <code>w</code> where <code>m.t =
+  t[i]</code>. 
+
+
+  <!--------------------------------------------------->
+  <h4 class="w3-text-teal">Serializability Theorem</h4>
+  <!--------------------------------------------------->
+  For each server <code>q</code>, the sequence of values of
+  <code>q.v</code> in the distributed computation \(C\) is the same as
+  in the following sequential loop.
   
+  <hr class="new2">
+<pre>
+for i in positive_integers:
+   if len(R[i]) >= M:
+      for q in W[i]:  q.v = f_p(r.v for r in R[i])
+</pre>
+<hr class="new2">
+  <p>
+  Note: <code>for i in positive_integers</code> is the pseudo-code notation
+that generates the infinite sequence of positive integers, 1,
+2, 3.....
+  </p>
+ 
   <!--------------------------------------------------->
   <p class="w3-text-teal">Proof</p>
   <!--------------------------------------------------->
@@ -583,59 +547,47 @@ for i in 0, 1, 2, ...:    execute transaction i
 <div id="SECTION">
   <a name="Tracking"></a>
   <!--------------------------------------------------->
-  <h4 class="w3-text-teal">Tracking when Values are Assigned</h4>
+  <h3 class="w3-text-teal">Tracking Epochs in which Values are
+  Assigned to Server Variables</h3>
   <!--------------------------------------------------->
   <p>
-  In the next webpage we develop an algorithm that keeps track of the epoch
-  in which each server variable <code>q.v</code> is assigned a value.
-  We do so by making a server variable <code>q.v</code>
-  a tuple <code>(q.v.value, q.v.t)</code>
-  where <code>q.v.t</code> is the most recent epoch in which
-  <code>q</code> received a write request and assigned a value to
+  Next we describe an
+  algorithm that records the epoch in which a server variable is
+  assigned a value. A server variable <code>q.v</code>
+  a tuple <code>(q.v.s, q.v.t)</code>
+  where <code>q.v.t</code> is the latest epoch in which
+  <code>q</code> assigned a value to
   <code>q.v</code>.
-  </p>
-
-  <p>
-  We change only one statement in the client algorithm to keep track of the
-  epoch in which a server variable is assigned a value.
-  There are no changes to the server algorithm.
-  The only change replaces the following statement in the client
-  algorithm
+  Client and server algorithms are as given earlier
+  except for one change to the client algorithm: the statement
   <br>
   <code>
   v = p.f(...)
   </code>
   <br>
-  by
+  is replaced by
   <br>
   <code>
-  v.value = p.f(...)
-  </code>
-  <br>
-  <code>
-  v.t = p.t
+  v.s, v.t = p.f(...), p.t
   </code>
   </p>
+>q.v = q'.v</code>.
 
   <p>
-  A client broadcasts the same value to all servers.
-  All servers that receive write requests write the same value.
-  Therefore, <code>q, q'</code> were assigned their values in
-  the same transaction if and only if <code>q.v = q'.v</code>.
-
-  <p>
-  The values assigned to server variables in a computation of the distributed algorithm
-  are the same as in an algorithm in which transactions are executed
-  sequentially in increasing order of epoch.
-  The <code>i</code>-th transaction to be executed is as follows.
-
+  The values assigned to server variables in a computation of the
+  distributed algorithm is the same as in the following sequential
+  for-loop in which <code>t[i]</code> is the <code>i</code>-th largest
+  epoch in the computation.
+  
+<hr class="new2">
   <pre>
-if len(R[i]) >= M:
-   for q in W[i]:
-      q.v.value = f_p[i](r.v for r in R[i])
-      q.v.t = t[i]
-</pre>
-where <code>t[i]</code> is the epoch of the <code>i</code>-th transaction.
+for i in positive_integers:
+   if len(R[i]) >= M:
+      for q in W[i]:
+         q.v.s, q.v.t  =  f_p[i](r.v for r in R[i]), t[i]
+  </pre>
+  <hr class="new2">
+  
   </div>
   <!-----END SECTION: Tracking ------------>
 
