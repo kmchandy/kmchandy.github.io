@@ -506,17 +506,44 @@ iteration.
 The iteration continues to hold because 
 <code>f_p</code> returns <code>s*</code> or <code>g_p(s*)</code>.
 
-<h4 class="w3-text-teal">Theorem: The Distributed Algorithm is
-Correct</h4>
-In the distributed algorithm, with <code>M</code>, <code>f_p</code>,
-and <code>s*</code> as specified above, 
+<h4 class="w3-text-teal">Theorem</h4>
+In the system, with clients, servers, <code>M</code>, <code>f_p</code>,
+and <code>s*</code> as specified earlier, 
 <pre>
 (s* = x) or (exists p: s* = g_p(x))
 </pre>
 
 <p class="w3-text-teal">Proof</p>
-We first prove the result for transactions executed in epoch order.
+Let \(C\) be any computation of the system.
+There exists a computation \(C'\) where
+(1) for each agent \(x\) the sequence of steps executed at \(x\) is the same
+in \(C\) and \(C'\), and (2) transactions are executed
+in ascending order of epochs in \(C'\).
+We first prove the result for computation \(C'\).
 
+<p>
+The sequence of values of <code>q.v</code> of each server
+<code>q</code> in computation \(C'\) is the same as in an execution of
+the following
+sequence of of transactions (which was given above and is repeated
+here for convenience).
+
+<hr class="new2">
+<h4 class="w3-text-teal">Transactions in Epoch Order
+with Auxiliarly Variables</h4>
+<pre>
+for i in positive_integers:
+   if R[i] is a majority:
+      s = f_p[i](r.v for r in R[i])
+      for q in W[i]:
+         q.v.s, q.v.t  = s, t[i]
+         if W[i] is a majority:
+            s*, t* = s, t[i]
+            W*, p* = W[i], p[i]
+</pre>
+<hr class="new2">
+
+ 
 <p>
 The only step that changes <code>s*</code>
 assigns:
@@ -526,14 +553,13 @@ From the proof of invariant 3:
 the value assigned to <code>s*</code> is <code>s*</code> or
 <code>g_p[i](s*)</code>.
 Therefore the result holds for the computation in which transactions are
-executed in epoch order.
-
+executed in epoch order, and so it holds for \(C'\).
 
 <p>
+The sequence of steps at each agent is the same in \(C\) and \(C'\).
 <code>s*</code> is defined in terms of server variables which have the
-identical values in in the
-computation in which transactions are executed in epoch order and in \(C\).
-Therefore the result holds for computation \(C\).
+identical values in \(C\) and \(C'\).
+Therefore the result also holds for \(C\).
 
 <!--Start Footer--------------------------------------->
 
