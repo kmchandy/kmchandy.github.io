@@ -113,20 +113,21 @@ hr.new1 {
 
   <p>
   Maintaining a bank account requires keeping track of the
-  <i>sequence</i> of transactions on the account.  A sequence in which
-  a transaction that transfers funds out of an account before a
-  transaction that transfers funds into the account may incur an
-  insufficient funds penalty, whereas the penalty may not be incurred
-  if funds are transferred into the account first.
+  <i>sequence</i> of transactions on the account.
+  An insufficient fee penalty may be incurred if a transaction that
+  transfers funds out of an account occurs before a 
+  transaction that transfers funds into the account.
+  The penalty may not be incurred if the sequence of transactions is
+  reversed with funds transferred into the account before funds
+  are withdrawn from it.
   </p>
 
   
   <p>
-  Many systems keep copies of sequences of transactions at different
-  agents to improve resiliency. A bank must maintain a unique sequence
-  of transactions on an account though different agents propose
-  transactions concurrently. All agents must come to a
-  consensus about a single sequence.
+  Some systems improve resiliency by keeping copies of sequences of
+  transactions at different agents. All agents must come to a
+  consensus about a single sequence though multiple agents propose
+  transactions concurrently.
 
 <p>
 Sequences of transactions are stored at agents called
@@ -148,16 +149,21 @@ among proposals made by different clients.
 The algorithms for clients and servers in Paxos are the same
 as in <a href="ReadWriteLossyChannels.html#DistributedAlgorithm">
 the algorithm for serializable computations</a>.
+For any computation \(C\) of the distributed algorithm there exists a
+computation \(C'\) with the same steps as \(C\) and where transactions
+in \(C'\) are executed in increasing order of epochs. 
+
+<p>
 Associated with each server <code>q</code> is a variable
-<code>q.v</code>. The sequence of values assigned to
-<code>q.v</code> for each <code>q</code> in a computation \(C\) of the
-distributed algorithm is the same as in the
-following for-loop.
+<code>q.v</code>. For each server  <code>q</code>, the sequence of values assigned to
+<code>q.v</code> in computation \(C\) is the same as in a computation
+in which transactions are executed in epoch order.
 
 <hr class="new2">
+<h4 class="w3-text-teal">Transactions Executed in Epoch Order</h4>
 <pre>
+# Execute transactions in C in increasing order of epochs.
 for i in positive_integers:
-   # Transactions executed in increasing order of epochs.
    # Execute the transaction with epoch t[i]
    # This transaction is executed by client p[i]
    # In this transaction:
@@ -178,8 +184,9 @@ algorithm.
 <!--------------------------------------------------------->
 <h3 class="w3-text-teal">Specification of Consensus</h3>
 <!--------------------------------------------------------->
-The specification is that at each step of a computation, the consensus
-remains unchanged or a client extends the computation.
+The specification is that at each step of a computation, either the
+consensus sequence remains unchanged or a client extends the consensus
+sequence.
 
 <p>
 Let <code>s*</code> be the consensus sequence at a point in the
@@ -214,15 +221,12 @@ The problem is to obtain a consensus algorithm by specifying
   </li>
 </ol>
 
-
 <!-------------------------------------------------->
-<h3 class="w3-text-teal">How should Solve the Problem?</h3>
+<h4 class="w3-text-teal">How Should You Solve the Problem?</h4>
 <!-------------------------------------------------->
 
-
-<h5 class="w3-text-teal">Task 1: Specify <code>M</code></h5>
-<p>
-Let <code>N</code> be the number of servers.  If <code>M</code> is
+<h5 class="w3-text-teal">Task 1: Specify M</h5>
+Let <code>N</code> be the number of servers. If <code>M</code> is
 large, say <code>M = N</code>, then the likelihood that a client
 receives replies from all <code>M</code> servers is small, and so the
 likelihood that a transaction progresses to the write step is small.
@@ -242,7 +246,7 @@ element in common.
 
 <p> Let <code>N</code> be the number of servers.
 <pre>
-   M = int(M/N) + 1
+   M = int(N/2) + 1
 </pre>
 </p>
 
@@ -274,17 +278,16 @@ servers that are assigned values in this transaction.  <i>Then
 Variables <code>s*, W*, t*, p*</code> are used only
 for proving that the algorithm is correct.  They do not appear in the
 implementation of client or server algorithms. The values of these
-variables are given in the following loop.
+variables are given in a computation with transactions in epoch order.
+Variables used in proofs but not in
+implementations are called auxiliary variables or thought variables.
 </p>
 
 <hr class="new2">
+<h4 class="w3-text-teal">Transactions in Epoch Order
+with Auxiliarly Variables</h4>
 <pre>
-k = 0
 for i in positive_integers:
-   # Transactions executed in order of increasing epochs.
-   # Execute transaction with epoch t[i] in
-   # computation C of the distributed algorithm.
-
    if R[i] is a majority:
       s = f_p[i](r.v for r in R[i])
       for q in W[i]:
@@ -294,9 +297,6 @@ for i in positive_integers:
             W*, p* = W[i], p[i]
 </pre>
 <hr class="new2">
-
-
-
 
 
 <h4 class="w3-text-teal">Initially</h4>
@@ -310,12 +310,10 @@ values.
 <code>W*</code> is the set of all servers.
 
 </p>
+Next, we prove properties of computation \(C\) by proving
+properties of executions of transactions of \(C\) executed in epoch
+order. We begin by identifying invariants. 
 
-
-Next, we identify and prove properties of computation \(C\) by proving
-properties of the loop.
-
-<h3 class="w3-text-teal">Properties of the Computation</h3>
 
 
 <hr class="new2">
@@ -408,8 +406,9 @@ or
 </p>
 <hr class="new2">
 
-We first specify function <code>f_p()</code>. The design of
-<code>f_p()</code> is motivated by the invariant.
+<h5 class="w3-text-teal"><code>f_p()</code></h5>
+We first specify function <code>f_p()</code>.
+Consider two cases of the argument of the function.
 </p>
 <p class="w3-text-teal">Case 1: All elements of <code>[r.v for r in R[i]]</code> are
 identical</p>
@@ -437,7 +436,7 @@ We first prove the following lemma.
 
 <h6 class="w3-text-teal">Lemma</h6>
 Assuming that the invariant holds at the start of the iteration,
-<code>f_p</code> returns either the consensus
+<code>f_p</code> returns either
 <code>s*</code> or <code>g_p(s*)</code>.
 
 
@@ -453,7 +452,8 @@ For all <code>r</code> in <code>R[i]</code>:
 <code>r.v.s = s*</code> .
 </p>
 <p>
-Therefore <code>f_p</code> returns <code>g_p(s*)</code>.
+Therefore <code>f_p</code> returns <code>g_p(r.v.s)</code> which is
+<code>g_p(s*)</code>. 
 
 <p class="w3-text-teal">Case 2:  Not all elements of <code>[r.v for r in
 R[i]]</code> are identical</p>
@@ -506,23 +506,35 @@ iteration.
 The iteration continues to hold because 
 <code>f_p</code> returns <code>s*</code> or <code>g_p(s*)</code>.
 
-<h4 class="w3-text-teal">Theorem: The Distributed Algorithm is Correct</h4>
-We first show that in the sequential program.
+<h4 class="w3-text-teal">Theorem: The Distributed Algorithm is
+Correct</h4>
+In the distributed algorithm, with <code>M</code>, <code>f_p</code>,
+and <code>s*</code> as specified above, 
 <pre>
 (s* = x) or (exists p: s* = g_p(x))
 </pre>
-The only step that changes <code>s*</code> assigns <code>f_p[i](r.v
-for r in R[i]))</code> to it, and from the proof of invariant 3 the
-value assigned is <code>s*</code> or <code>g_p[i](s*)</code>.
+
+<p class="w3-text-teal">Proof</p>
+We first prove the result for transactions executed in epoch order.
 
 <p>
-Let \(C\) be any computation of the distributed algorithm
-Then there exists a computation \(C'\) with the same steps as \(C\) in
-which steps are executed as in the sequential program.
-Therefore the proof of \(C'\) applies to \(C\).
+The only step that changes <code>s*</code>
+assigns:
+<p><code>f_p[i](r.v for r in R[i]))</code> to <code>s*</code>.
 <p>
+From the proof of invariant 3:
+the value assigned to <code>s*</code> is <code>s*</code> or
+<code>g_p[i](s*)</code>.
+Therefore the result holds for the computation in which transactions are
+executed in epoch order.
 
-</pre>
+
+<p>
+<code>s*</code> is defined in terms of server variables which have the
+identical values in in the
+computation in which transactions are executed in epoch order and in \(C\).
+Therefore the result holds for computation \(C\).
+
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
