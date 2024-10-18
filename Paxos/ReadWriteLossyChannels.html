@@ -174,7 +174,8 @@ hr.new1 {
 <p>
 Write requests may get lost.
 Let <code>W</code> be the set of servers that receive and execute
-the write requests.
+the write requests. A transaction executed by a client
+<code>p</code></p> is as follows.
 </p>
 
 
@@ -191,12 +192,13 @@ if len(R) >= M:
 <p>
 A transaction consists of a synchronous read of the values of a subset
 <code>R</code> of server variables followed by a synchronous write to
-a subset <code>W</code> of server variables.
-Next we use <a
-href="../ChannelSnapshots/LogicalClocks.html">epochs</a>
-in a distributed algorithm in which the values assigned
-to server variables are the same as in a computation in which
+a subset <code>W</code> of server variables. Next, we develop a
+distributed algorithm in which values of variables in any computation
+are the same as in a computation in which 
 <i>exactly one transaction is executed at a time.</i>
+We use <a
+href="../ChannelSnapshots/LogicalClocks.html">epochs</a> for this
+purpose. 
 
 </div>
     <!-----END SECTION: Transactions ------------>
@@ -230,23 +232,23 @@ We <a
 epoch and all steps of a transaction have the epoch of the
     transaction.
     Therefore in \(C'\) all steps of a transaction with epoch \(t\)
-  are executed after steps of transactions with epoch less than \(t\)
-  and before steps of transactions with epoch greater than \(t\).
+  are executed after all steps of transactions with epoch less than \(t\)
+  and before all steps of transactions with epoch greater than \(t\).
 </p>
 
 <!------------------------------------------------------>
 <h6 class="w3-text-teal">Ensuring that each Epoch is Unique</h6>
 <!------------------------------------------------------>
 <p>
-To ensure that the epoch of each transaction is unique, an epoch is an
-ordered pair <code>(t, p_id)</code> where <code>p_id</code> is the id
-of client <code>p</code> and <code>t</code> is a number. A client
-<code>p</code> increases the <code>t</code>-component of an epoch at
-each successive transaction that <code>p</code> executes. Epochs
-of transactions executed by different clients are different because
-their ids are different.
-Epochs of different transactions executed by the same client are
-different because the <code>t</code>-components are different.
+An epoch is an ordered pair <code>(t, p_id)</code> where
+<code>p_id</code> is the id of client <code>p</code> and
+<code>t</code> is a number. A client <code>p</code> increases the
+<code>t</code>-component of an epoch at each successive transaction
+that <code>p</code> executes.  Epochs of different transactions
+executed by the same client are different because the
+<code>t</code>-components are different.  Epochs of transactions
+executed by different clients are different because their ids are
+different.
 </p>
 
 <p>
@@ -265,10 +267,9 @@ epochs are also totally ordered.
 the Transaction</h6>
 <!------------------------------------------------------>
 <p>
-Each agent <code>x</code> has a field <code>x.t</code> where the epoch
-    of a step taken by <code>x</code> is <code>x.t</code>, and so
-    <code>x.t</code> is the epoch of the transaction that
-    <code>x</code> is processing.
+    Each agent <code>x</code> has a field <code>x.t</code> which 
+    is the epoch of the transaction that <code>x</code> is processing.
+    The epoch of a step taken by <code>x</code> is <code>x.t</code>.
     Each message <code>m</code> has a field <code>m.t</code> called
     the epoch of the message.
     When an agent <code>x</code> sends a message <code>m</code> it sets
@@ -297,9 +298,9 @@ for steps taken by a server <code>q</code> when it receives a request
   If a server <code>q</code> receives a request <code>r</code> from a
   transaction with an epoch <code>r.t</code>
   that is smaller than the epoch <code>q.t</code> of the transaction
-  that <code>q</code> is processing then <code>q</code> ignores the
-  request. An ignored request has the same effect as a request that
-  is lost.
+  that <code>q</code> is processing then <code>q</code> discards the
+  request without processing it. A discarded request has the same
+  effect as a request that is lost.
   </li>
   <li>
   <code>r.t</code> \(=\) <code>q.t</code>:
@@ -324,10 +325,18 @@ Therefore the epoch <code>q.t</code> of a step in which a server
 <code>q</code> responds to a request <code>r</code> is the same as
 <code>r.t</code> -- the epoch of the request.
 <p>
-A reply sent by <code>q</code> to a read request has fields
-<code>q.v</code> and <code>q.t</code>.
+A reply sent by a server has two fields, <code>v</code> and
+<code>t</code>.
+When server <code>q</code> sends a reply to a read request it sets field
+<code>v</code> to <code>q.v</code> and field <code>t</code> to
+<code>q.t</code>.
+
+<p>
+A write request has two fields, <code>v</code> and
+<code>t</code> where <code>v</code> is the value to be written and
+<code>t</code> is the epoch of the request.
 A server <code>q</code> responds to a request to write a value
-<code>request.v</code> by assigning <code>request.v</code> to <code>q.v</code>.
+<code>v</code> by assigning <code>v</code> to <code>q.v</code>.
 </p>
 
 <hr class="new2">
@@ -384,13 +393,15 @@ where <code>pos</code> returns an arbitrary positive value, and then
 <code>p.t</code>.  Client <code>p</code> continues executing the
 transaction with epoch <code>p.t</code> until <code>p</code> gets its
 next clock tick message at which point <code>p</code> stops executing
-the transaction with with epoch <code>p.t</code>, it increases
-<code>p.t</code> and starts a new transaction with the increased value
+the transaction with with epoch <code>p.t</code>, it increments
+<code>p.t</code> by <code>pos()</code>, and starts a new transaction
+with the increased value 
 of <code>p.t</code> as the epoch of the new transaction.
 </p>
 
 <p>
-A client <code>p</code> starts a new transaction by setting <code>p.copy</code> to
+A client <code>p</code> starts a new transaction by setting
+<code>p.copy</code> to 
 empty and sending read requests to all servers.
 A read request has a single field which is the epoch
 of the transaction that <code>p</code> is executing.
@@ -419,8 +430,8 @@ and the transaction terminates.
 In the write step, <code>p</code>
 broadcasts write requests to servers.
 The list of replies,
-<code>r.v for r in R</code>, that <code>p</code> received in this transaction is 
-<code>list(p.copy.values())
+<code>r.v for r in R</code>, that <code>p</code> received in this
+transaction, in Pythonic notation is <code>list(p.copy.values())
 </code>
 <p>
 A write request has two fields, the value <code>v</code> to be written
@@ -469,14 +480,48 @@ def receive(message, sender):
   <!--------------------------------------------------->
   <h3 class="w3-text-teal">Serializability</h3>
   <!--------------------------------------------------->
-  Given a computation \(C\) of the distributed algorithm we will show
-  that the sequence of values of each server variable \(q.v\) is the
-  same as in a computation in which transactions are executed
-  sequentially in order of increasing epoch.
-  Let <code>t[i]</code> be the transaction in \(C\) with the
-  <code>i</code>-th largest epoch for <code>i</code> > 0.
+  We have
+  <a
+  href="../ChannelSnapshots/LogicalClocks.html#EpochTheorem">shown</a>
+  that given a computation \(C\) of there exists a computation \(C'\),
+  with the same steps as \(C\) and in which transactions in \(C'\) are executed
+  in increasing order of epochs.
 
   <p>
+  Steps may occur out of order in \(C\): A step \(s\)
+  with epoch \(t\) at an agent \(X\) 
+  may occur before a step \(s'\) with epoch \(t'\) at an
+  agent \(X'\), where
+  \(t > t'\), <i> if \(X'\) is different from \(X\).</i>
+  By contrast, in \(C'\) steps occur in order: Step \(s'\) occurs
+  before step \(s\).
+  
+  <p>
+  The intuition of the
+  <a
+  href="../ChannelSnapshots/LogicalClocks.html#EpochTheorem">
+  proof about epochs</a> is as follows.
+  If \(C\) has adjacent steps where a step
+  with epoch \(t\) at an agent \(X\) 
+  occurs before a step with epoch \(t'\) at an
+  agent \(X'\), and where \(t > t'\), then the steps are independent.
+  So, switching the
+  order of steps results in a sequence \(C'\) that is also
+  computation.
+
+  <p>
+  The sequence of steps at agent \(X\) remains the same in \(C\) and
+  \(C'\).
+  Likewise, the sequence of steps at agent \(X'\) remains the same in \(C\) and
+  \(C'\).
+  The sequence of steps at each agent
+  is the same in \(C\) and \(C'\).
+  The ordering of steps between <i>different</i> agents is altered to go from
+  \(C\) to \(C'\).
+
+  <p>
+  Let <code>t[i]</code> be the transaction in \(C\) with the
+  <code>i</code>-th largest epoch for <code>i</code> > 0.
   Let <code>p[i]</code> be the client that executes the transaction
   and let <code>R[i]</code> be the set of servers from which
   <code>p[i]</code> receives replies to its read requests, and
@@ -489,12 +534,11 @@ def receive(message, sender):
   t[i]</code>. 
 
 
-  <!--------------------------------------------------->
-  <h4 class="w3-text-teal">Serializability Theorem</h4>
-  <!--------------------------------------------------->
-  For each server <code>q</code>, the sequence of values of
-  <code>q.v</code> in the distributed computation \(C\) is the same as
-  in the following sequential loop.
+<p>
+  The sequence of values <code>q.v</code> for each server
+  <code>q</code>  in a computation \(C\) is the same as 
+  in the following execution of transactions in ascending epoch
+  order. 
   
   <hr class="new2">
 <pre>
@@ -509,37 +553,6 @@ that generates the infinite sequence of positive integers, 1,
 2, 3.....
   </p>
  
-  <!--------------------------------------------------->
-  <p class="w3-text-teal">Proof</p>
-  <!--------------------------------------------------->
-  The <a href="../ChannelSnapshots/LogicalClocks.html">two rules for assigning
-  epochs to steps</a>  are satisfied:
-  The epoch <code>x.t</code>
-  of an agent <code>x</code> does not decrease, and the epoch of a step in which a
-  message is received is greater than or equal to the epoch of the
-  step in which the message is sent. 
-
-  <p>
-  From the theorem on epochs, given any computation \(C\) of the distributed algorithm
-  there exists a computation \(C'\) where:
-  <ol>
-  <li>
-  For each server
-    <code>q</code> the sequence of values assigned to <code>q.v</code>
-  is the same in \(C\) and \(C'\), and
-  </li>
-  <li>
-   transactions are executed sequentially in \(C'\), one transaction
-  at a time, in ascending order of epochs.
-  </li>
-</ol>
-
-  Therefore, the sequence of values assigned to server variables,
-  in a computation of the distributed algorithm is the same as in the sequential
-  algorithm in which the \(i\)-th transaction of the sequential algorithm is  the
-  transaction with the \(i\)-th largest epoch in the computation of
-  the distributed algorithm.
-  
   </div>
   <!-----END SECTION: Correctness ------------>
 
