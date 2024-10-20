@@ -140,6 +140,8 @@ hr.new1 {
   href="https://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol">
   Advanced Message Queuing Protocol (AMQP).
   </a>
+  Algorithms are described in the main body of the text in plain text
+    and you can also look at some implementations using AMQP.
     </p>
     
 
@@ -173,12 +175,7 @@ represent channels.
     <p>
     A distributed system is initiated with sets of agents and channels
   that remain unchanged.  Agents and channels are not created or
-  deleted during a computation. An agent is not located a given point
-    in space.
-    The simple model does not adequately represent many distributed
-    systems including systems in which
-    agents and channels may be created and deleted and agents move in
-    space. 
+    deleted.
 </p>
 
 
@@ -291,7 +288,8 @@ This can happen because \(m_{3}\) is sent on channel \((B, C)\)
 <h4 class="w3-text-teal">Agents</h4>
 <!---------------------------------------------------->
 <p>
-An agent is an object that sends and receives messages.
+An agent is an object that can send messages to, and receives messages
+  from agents.
 An agent is either waiting to receive a message or is processing a
 message that it has received.
 An agent that is waiting starts processing a message when the agent
@@ -303,7 +301,9 @@ message to be delivered to it.
 <p>
 Each agent has a set of variables.
 An agent's variables are local to the agent -- they cannot be accessed
-by other agents.
+  by other agents.
+  An agent cannot access variables of other agents. A message
+sent by an agent cannot be a pointer into the agent's memory.
 </p>
 
 
@@ -369,11 +369,6 @@ directed from the sender to the receiver.
 </p>
 
 <p>
-An agent can send messages to, and receive messages from, other
-agents. An agent cannot access variables of other agents. A message
-sent by an agent cannot be a pointer into the agent's memory.
-
-<p>
 An agent in a distributed system is also called a <i>process</i> in
 some books.
 We use the term agent throughout these notes.
@@ -385,7 +380,17 @@ We use the term agent throughout these notes.
 
 </div>
 <!--------------END SECTION ASimpleModel ---------------------->
-  
+
+<p>
+We describe algorithms in plain text or pseudo code.
+A system is specified by a list of agents and channels.
+Each agent is specified by (1) a block of statements that specify the
+initial state of the agent and the initial messages in the agent's
+output channels and (2) a <code>receive</code> function.
+The initial state of a channel is empty unless specified by the
+initializing block of the agent that sends messages on the channel.
+
+
 <p>
 See <a href="BasicsExamples">examples</a> and see
 <a href="../CODE_EXAMPLES/">examples of code</a>
@@ -402,18 +407,19 @@ The remainder of this page consists of an example.
 
 <!----------------------------------------------->
 <h4 style="color:red;">Example of a System</h4>
-A system consists of 4 agents, <code>pos</code>, <code>neg</code>,
-<code>total</code>, and <code>X</code>, and the channels between
-them. See "Figure Agents and Channels" which shows the network of
-agents and channels represented as a directed graph.
-
-<p>
+A system has 4 agents, <code>pos</code>, <code>neg</code>,
+  <code>total</code>, and <code>X</code>.
 The channels in the system are
 <code>(pos, pos)</code>,
 <code>(neg, neg)</code>,
 <code>(pos, total)</code>,
 <code>(neg, total)</code>, and
 <code>(total, X)</code>.
+
+  See "Figure Agents and Channels" which shows the network of
+agents and channels represented as a directed graph.
+
+
   
     <figure>
     <img
@@ -440,10 +446,10 @@ The example below does not use classes so that the algorithm is easier
 
   <p>
   An agent is specified by a block of statements that initialize the
-  variables of the agent and set up the initial messages (if any) in
+  variables of the agent and the initial messages (if any) in
   the agent's output channels, and the <code>receive</code> function.
 
-The block statements before the <code>receive</code> function
+The block of statements before the <code>receive</code> function
   initialize the agent.
   
   In this example, the agent <code>total</code> has a single
@@ -452,9 +458,12 @@ The block statements before the <code>receive</code> function
 
 
 <pre>
-# Initialization
-total = 0
+# Algorithm for total
+# ------- Initialization --------------
+# Agent's variables with initial values.
+sum = 0
 
+# -------Callback function ----------
 # Callback function
 def receive(message, sender):
    if sender == pos:
@@ -474,25 +483,32 @@ If <code>total</code> receives a message from an agent other than
 <code>pos</code> then <code>total</code> decrements <code>sum</code> by the
 contents of the message, and if the resulting value of
 <code>sum</code> is negative then <code>sum</code> is set to 0.
-
-<p>
 <code>total</code> sends the
 resulting value of <code>sum</code> to agent <code>X</code>.
 </p>
+
+<p>
+Initially, the output channel of <code>total</code> to agent
+<code>X</code> is empty.
 
 
 <!----------------------------------------------->
 <h4 style="color:red;">Example of an Agent</h4>
 <p>
 This is an example of agent <code>pos</code>.
+
 </p>
 <pre>
-# Initial values of agent's variables.
+# Algorithm for pos
+# -------- Initialization --------------
+# Agent's variables with initial values.
 my_data = [3, 5]
 n = 0
+# Initially the channel from pos to pos
+# contains a single "wakeup" message.
+send(message="wakeup", receiver=pos)
 
-
-# Callback function
+# -------Callback function ----------
 def receive(message, sender):
    send(message=my_data[n], receiver=total)
    n = n + 1
@@ -504,6 +520,7 @@ def receive(message, sender):
 <code>pos</code> has variables <code>my_data</code> and <code>n</code>
 which are initially <code>[3, 5]</code> and <code>0</code>,
 respectively.
+There is a message "wakeup" in the channel from <code>pos</code> to itself.
 </p>
 
 <p>
@@ -533,9 +550,10 @@ because it receives no further messages.
 
 
 <p>
-In this example, agent <code>neg</code> is identical to <code>pos</code> except that it
+In this example, agent <code>neg</code> is identical to
+<code>pos</code> except that it 
 may have different values of <code>my_data</code>, 
-and agent <code>X</code> has no variables. It merely prints
+Agent <code>X</code> has no variables. It merely prints
 messages that it receives.
 </p>
 
