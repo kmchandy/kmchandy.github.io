@@ -129,33 +129,26 @@ hr.new1 {
     <h3 class="w3-text-teal">State Transitions</h3>
     <!----------------------------------------------------------------->
     <p>
-  The state of a system changes when, and only when, a message is
-  delivered to an agent.  The simple model ignores the changes in the
-  state of an agent that occur while the agent is processing a
-  message.  The model only deals with an agent's state before it
-  starts, and after it completes, processing a message.  So, the model
-  only considers an agent's state when the agent is waiting to receive
-  a message.
-  </p>
-
-  <p>
-  The model treats the processing of a single message as an
-  <a href="https://en.wikipedia.org/wiki/Atomic_commit">atomic
-  operation.</a>
-  A state transition occurs when one agent gets one message on one of
-  its input channels and completes processing that message.
-  </p>
+    The state of a system changes when, and only when, a message is
+    delivered to an agent.
 
     <p>
-  A <code>receive</code> function may include a <code>sleep</code>
-    statement which causes the agent to wait for a specified period of
-  time before executing the next statement.
-    The <code>sleep</code> statement has no effect on state
-transitions because state transitions do not deal with changes in the
-state of an agent while it is executing a <code>receive</code>.
-Of course, <code>sleep</code> statements impact system performance.
-We discuss performance later.
+    The simple model ignores the changes in the state of an agent that
+    occur while the agent is processing a message.  The model only
+    deals with an agent's state before it starts, and after it
+    completes, processing a message.  The model only considers an
+    agent's state when the agent is waiting to receive a message.
     </p>
+
+    <p>
+    The model treats the processing of a single message as an <a
+    href="https://en.wikipedia.org/wiki/Atomic_commit">atomic
+    operation.</a> A state transition occurs when one agent gets one
+    message on one of its input channels and completes processing that
+    message.
+    </p>
+
+
 <p>
   <!--------------START SECTION: Events ---------------------->
   <div ID="SECTION", class="Events">
@@ -186,6 +179,10 @@ We discuss performance later.
   during the execution of the <code>receive</code>. 
   </li>
 </ol>
+In the simple model, agent <code>u</code> sends at most one message to
+an agent <code>v</code> in the state transition.
+
+<p>
 The 4-tuple is called an <i>event.</i>
 The first two elements of the tuple are called the <i>inputs to the event</i>, and
 the last two elements are the <i>outputs of the event</i>.
@@ -204,13 +201,25 @@ channel <code>(v, u)</code> is <code>msg</code>.
 <p>
 The occurrence of the event causes a transition to a state
 <code>S'</code> which is specified as follows.
-The state of <code>u</code> in <code>S'</code> is
-<code>s'</code>.
-The change in the states of <code>u</code>'s output channels are
-specified by the list in part 4 of the 4-tuple:
-message <code>m</code> is appended to the tail of
-the sequence of messages in channel <code>(v, w)</code>, for all
-<code>(m, w)</code> in the list.
+<ol>
+  <li>
+  The state of <code>u</code> in <code>S'</code> is
+  <code>s'</code>.
+  </li>
+  <li>
+  The state of the input channel \((v, u)\) in <code>S'</code> is its
+  state in <code>S</code> with the message at the head of the channel
+  deleted.
+  </li>
+  <li>
+  The change in the states of <code>u</code>'s output channels are
+  specified by the list in part 4 of the 4-tuple:
+  The state of an output channel \((u, w)\) in <code>S'</code> is its
+  state in <code>S</code> with message <code>m</code> appended to the tail of
+  the sequence of messages in channel <code>(u, w)</code>.
+  </li>
+</ol>
+<p>
 The states of all other agents and channels are the same in
 <code>S</code> and <code>S'</code>.
 </p>
@@ -237,7 +246,7 @@ specified by <i>e</i>.
 In a state transition due to an event at agent <code>u</code>
 exactly one agent -- namely <code>u</code> -- changes state; 
 exactly one message is delivered from exactly one input channel of <code>u</code>;
-and a message may be appended to each output channel of
+and at most one message may be appended to each output channel of
 <code>u</code>.
 The states of all other agents and channels remain unchanged by the
 transition.
@@ -341,6 +350,13 @@ The event is specified by the following tuple:
   <code>total</code>. 
   </li>
 </ol>
+The states of the other agents -- <code>neg</code>,
+<code>total</code>, and <code>X</code> remain unchanged in this state
+transition. Likewise, the states of channels that are not incident on
+<code>pos</code> -- channels <code>(neg, neg)</code>, <code>(neg,
+total)</code>, and <code>(total, x)</code> --
+remain unchanged in the transition.
+
 </p>
     </div>
     <!--------------END SECTION: Example ----------------->
