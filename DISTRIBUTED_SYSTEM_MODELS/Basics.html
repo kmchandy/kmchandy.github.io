@@ -85,11 +85,7 @@ hr.new1 {
 
   <p class="w3-text-red">
   This page describes a simple model and notation for distributed
-  algorithms.
-
-  The model is adequate for describing a collection of algorithms.
-
-  Other models are introduced later.
+  algorithms. Other models are introduced later.
   </i>
   </p>
 
@@ -156,10 +152,10 @@ hr.new1 {
   <h4 class="w3-text-teal">A Simple Model: A Network of Agents and Channels</h4>
       <!----------------------------------------------------------------->
       <p>
-  We begin with a
+  We begin with a description of a
   <a href="https://en.wikipedia.org/wiki/Actor_model">
-      simple <i>actor</i> model and notation</a>.
-      We call this model the <i>simple model</i>.
+    simple actor</a> model and notation.
+    More powerful models are introduced later.
 
 </p>
 
@@ -174,10 +170,15 @@ represent channels.
 
 
 
-<p>
-A distributed system is initiated with sets of agents and channels
+    <p>
+    A distributed system is initiated with sets of agents and channels
   that remain unchanged.  Agents and channels are not created or
-  deleted during a computation.
+  deleted during a computation. An agent is not located a given point
+    in space.
+    The simple model does not adequately represent many distributed
+    systems including systems in which
+    agents and channels may be created and deleted and agents move in
+    space. 
 </p>
 
 
@@ -247,7 +248,15 @@ Messages sent on <i>different</i> channels may not be delivered in the
 order sent.
 
 <p>
-The following scenario is possible with different agents \(A, B, C\).
+The following scenario (see figure) is possible with different agents
+\(A, B, C\). 
+    <figure>
+    <img
+    src="MessageOrder.001.jpeg"
+    alt="Fig1" style="width:100%"> 
+    <figcaption>Messages on <i>Different</i> Channels may be Delivered out of
+Order</figcaption>
+</figure>
 </p>
 
 
@@ -325,7 +334,7 @@ is <code>v</code>.
   In the simple model, an agent does not choose the channel from which
   the agent receives its  next message.
   The system chooses <i>any</i> nonempty channel from which it delivers a
-  message to the receiver of that channel, and this choice is arbitrary.
+  message to the receiver of that channel.
   A waiting agent cannot refuse to accept a message.
 </p>
 
@@ -358,6 +367,11 @@ and the second paramenter is the agent to which the message is sent.
 Execution of this statement places the message in the output channel
 directed from the sender to the receiver.
 </p>
+
+<p>
+An agent can send messages to, and receive messages from, other
+agents. An agent cannot access variables of other agents. A message
+sent by an agent cannot be a pointer into the agent's memory.
 
 <p>
 An agent in a distributed system is also called a <i>process</i> in
@@ -422,21 +436,24 @@ See an <a href="../CODE_EXAMPLES/SumPosAndNeg.py">example
 of an implementation in Python using an Agent class.</a>
 
 The example below does not use classes so that the algorithm is easier
-to understand by readers who are not familiar with Python.
+  to understand by readers who are not familiar with Python.
 
-<p>
+  <p>
+  An agent is specified by a block of statements that initialize the
+  variables of the agent and set up the initial messages (if any) in
+  the agent's output channels, and the <code>receive</code> function.
 
-The statements before the <code>receive</code> function specify the
-initial values of variables.
-
-In this example, the initial state of <code>total</code> is given by
-<code>sum = 0</code>. 
+The block statements before the <code>receive</code> function
+  initialize the agent.
+  
+  In this example, the agent <code>total</code> has a single
+  variable <code>sum</code> which has value 0 initially.
 </p>
 
 
 <pre>
 # Initialization
-sum = 0
+total = 0
 
 # Callback function
 def receive(message, sender):
