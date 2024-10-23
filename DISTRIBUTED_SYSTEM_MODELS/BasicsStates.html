@@ -89,11 +89,7 @@ hr.new1 {
   The model uses a simple abstraction of state and state transitions.
   </p>
 
-    
-  <!--------------START SECTION: States ----------------->
-  <div ID="SECTION", class="States">
-    <a name="States"></a>
-    
+
   <!--------------START SECTION: States Definition ----------------->
   <div ID="SECTION", class="StatesDefinition">
   <a name="StatesDefinition"></a>
@@ -118,7 +114,7 @@ hr.new1 {
     </p>
 
   </div>
-  <!--------------END SECTION: States ---------------------->
+  <!--------------END SECTION: States Definition ---------------------->
 
   
 
@@ -148,15 +144,29 @@ hr.new1 {
     message.
     </p>
 
+    </div>
+    <!--------------END SECTION: StateTransitions ---------------------->
+ 
+
 
 <p>
   <!--------------START SECTION: Events ---------------------->
   <div ID="SECTION", class="Events">
   <a name="Events"></a>
   <!----------------------------------------------------------------->  
-<h5 class="w3-text-teal">Event: Specification of the Change in State
-  during a State Transition</h5>
+<h4 class="w3-text-teal">Event: Specification of the Change in State
+  during a State Transition</h4>
 
+       <p>
+    There exists a transition from a state <code>S</code> to a state
+    <code>S'</code> exactly when in state <code>S</code> there is
+    a nonempty channel <code>(v, u)</code> and the delivery of the
+    message <code>m</code> at the head of the channel to agent
+    <code>u</code> and the execution of
+    <code>receive(message=m, sender=v)</code>
+    by agent <code>u</code> causes a transition to state <code>S'</code>.
+
+    <p>
   The change in state that occurs when an agent <code>u</code>
   receives a message, <code>msg</code>, from an agent <code>v</code>
   is specified by the 4-tuple:
@@ -180,7 +190,8 @@ hr.new1 {
   </li>
 </ol>
 In the simple model, agent <code>u</code> sends at most one message to
-an agent <code>v</code> in the state transition.
+an agent <code>v</code> during an execution of <code>u</code>'s
+  <code>receive</code> function.
 
 <p>
 The 4-tuple is called an <i>event.</i>
@@ -188,12 +199,12 @@ The first two elements of the tuple are called the <i>inputs to the event</i>, a
 the last two elements are the <i>outputs of the event</i>.
 
   <!----------------------------------------------------------------->  
-<h5 class="w3-text-teal">The State Transition Caused by an Event</h5>
+<h4 class="w3-text-teal">The State Transition Caused by an Event</h4>
 
 <p>
-The event specified by the above 4-tuple can be executed in a state
-<code>S</code> if the inputs to the event are as specified by
-<code>S</code>, i.e., in state <code>S</code> the state of
+The event specified by the above tuple can be executed in a state
+<code>S</code> if and only if the inputs to the event are as specified in
+<code>S</code> -- in state <code>S</code> the state of
 <code>u</code> is <code>s</code>, and the message at the head of the
 channel <code>(v, u)</code> is <code>msg</code>.
 </p>
@@ -207,14 +218,14 @@ The occurrence of the event causes a transition to a state
   <code>s'</code>.
   </li>
   <li>
-  The state of the input channel \((v, u)\) in <code>S'</code> is its
+  The state of the input channel <code>(v, u)</code> in <code>S'</code> is its
   state in <code>S</code> with the message at the head of the channel
   deleted.
   </li>
   <li>
   The change in the states of <code>u</code>'s output channels are
   specified by the list in part 4 of the 4-tuple:
-  The state of an output channel \((u, w)\) in <code>S'</code> is its
+  The state of an output channel <code>(u, w)</code> in <code>S'</code> is its
   state in <code>S</code> with message <code>m</code> appended to the tail of
   the sequence of messages in channel <code>(u, w)</code>.
   </li>
@@ -222,72 +233,31 @@ The occurrence of the event causes a transition to a state
 <p>
 The states of all other agents and channels are the same in
 <code>S</code> and <code>S'</code>.
-</p>
-
-<p>
-The state <code>S'</code> after the transition is uniquely determined
-by the state <code>S</code> before the transition and the event that
-causes the transition from <code>S</code>.
-The converse also holds: The state <code>S</code> before the
-transition is uniquely determined by the state <code>S'</code> after
-the transition and the event that causes the transition to <code>S'</code>.
-</p>
-
-<p>
-Each execution of an agent's <code>receive</code> function is
-specified by an event.
-We say that an agent <code>u</code>  "executes event e",
-or "event e occurs at agent <code>u</code>"
-to mean that the agent executes a <code>receive</code> that is
-specified by <i>e</i>.
-</p>
-
-<p>
-In a state transition due to an event at agent <code>u</code>
-exactly one agent -- namely <code>u</code> -- changes state; 
-exactly one message is delivered from exactly one input channel of <code>u</code>;
-and at most one message may be appended to each output channel of
-<code>u</code>.
-The states of all other agents and channels remain unchanged by the
-transition.
-</p>
-
-<p>
-If multiple agents change state concurrently then the model treats the
-concurrent state changes as occurring sequentially, one event at one
-agent at a time, in any order.
-</p>
-
-
-<!---------------------------------------------------->
-<h4 class="w3-text-teal">Events and State Transitions</h4>
-<p>
-An event is a 4-tuple that specifies the <i>change</i> in state during
+An event specifies the <i>change</i> in state during
 a state transition.
 An event provides no information about the agents and channels that do
 not change state in the state transition.
 </p>
 
-<p>
-An event is different from a state transition because a state
-transition specifies the states, before and after the transition, of
-<i>all</i> agents and channels, including the states of agents and
-channels that remain unchanged in the transition.
 
 <p>
-For example, when an online customer deposits money into an account, the event
-describing the action specifies the amount in the account before and
-after the transition, the check that is deposited, and the
-acknowledgment that is sent.
-The event does not describe the states of all the other accounts in
-the bank.
+The state <code>S'</code> after the transition is uniquely determined
+by the state <code>S</code> before the transition and the event
+<code>e</code> that
+causes the transition from <code>S</code> to <code>S'</code>.
+We define a transition function <code>h</code> where, for a state
+<code>S</code> and an event <code>e</code> that can be executed
+in <code>S</code>, the next state after the execution of
+<code>e</code> in state <code>S</code> is <code>h(S, e)</code>.
+</p>
 
-  <!--------------END SECTION: Events ---------------------->
 </div>
-    </div>
-  <!--------------END SECTION: StateTransitions ----------------->
+<!--------------END SECTION: Events ---------------------->
+<!---------------------------------------------------------->
 
-    
+
+
+    <!---------------------------------------------------------->
     <!--------------START SECTION: Example ---------------------->
     <div ID="SECTION", class="Example">
     <a name="Example"></a>
@@ -350,33 +320,146 @@ The event is specified by the following tuple:
   <code>total</code>. 
   </li>
 </ol>
+
 The states of the other agents -- <code>neg</code>,
-<code>total</code>, and <code>X</code> remain unchanged in this state
+<code>total</code>, and <code>X</code> -- remain unchanged in this state
 transition. Likewise, the states of channels that are not incident on
 <code>pos</code> -- channels <code>(neg, neg)</code>, <code>(neg,
-total)</code>, and <code>(total, x)</code> --
-remain unchanged in the transition.
+total)</code>, and <code>(total, x)</code> -- remain unchanged in the
+transition.
 
 </p>
     </div>
     <!--------------END SECTION: Example ----------------->
+    <!---------------------------------------------------------->
+
+
+    
+    <!---------------------------------------------------------->
+    <!------START SECTION: receive set of events -------------->
+    <div ID="SECTION", class="receive_set_of_events">
+      <a name="receive_set_of_events"></a>
+      
+<h4 class="w3-text-teal"><code>receive</code> Function Specified by a Set of Events</h4>
+
+    <p>
+We use pseudo code to describe <code>receive</code> functions.  When
+we prove that an algorithm is correct we specify a
+<code>receive</code> function as a set <code>E</code> of events.  The
+change in state caused by an execution of a <code>receive</code>
+function is specified by an event.  The set of all possible executions
+of a <code>receive</code> function are specified by the set <code>E
+</code> of events.
+
+<p>
+      We do not enumerate <code>E</code> (which may be
+      infinite) and we don't use <code>E</code> in programs.
+      We specify a <code>receive</code> function as a set <code>E</code> of
+      events to help us develop theorems about systems. Though algorithms
+      are given in pseudo-code or in a programming language, we think
+      of a system as an initial state and a set of events for each of
+      its agents.
+
+      </div>
+      <!------END SECTION: receive set of events -------------->
+      <!---------------------------------------------------------->
+
+
+      
+      <!---------------------------------------------------------->
+      <!----------START SECTION: Computations -------------->
+    <div ID="SECTION", class="Computations">
+      <a name="Computations"></a>
+
+  <!----------------------------------------------->
+  <h3 class="w3-text-teal">Computations</h3>
+    <!----------------------------------------------->
+    <p>
+    A <i>computation</i> is a sequence of states, where there exists
+    a transition from each state in the sequence to the next.
+    </p>
+  
+  
+      <p>
+      For any computation \([S_{0}, S_{1}, S_{2}, \ldots]\) from a state
+      \(S_{0}\), for all \(i \geq 0\), there exists an event \(e_{i}\)
+      at an agent such that \(e_{i}\) can be executed in state
+      \(S_{i}\), and execution of \(e_{i}\) causes a transition from
+      from \(S_{i}\) to \(S_{i+1}\): 
+      <p>
+      For all \(i \geq 0\): exists event \(e_{i}\) where
+      \(S_{i+1} = h(S_{i}, e_{i})\).
+
+        
+      <p>
+      A computation may be finite or infinite.  A computation may
+      start in any state.  We will often prove properties of
+      computations that start in an initial state of the system;
+      however, a computation is not restricted to starting in an
+      initial system state.  All computations starting from a state
+      \(S_{0}\) are sequences of states generated in the following
+      while loop.
+
+      <hr class="new2">
+      <pre>
+# The initial state is S[0]
+while there exists a nonempty channel:
+   select any nonempty channel (v, u)
+   let m be the message at the head of (v, u)
+   deliver m to agent u which executes receive(m, v)
+</pre>
+      <hr class="new2">
+
+      <p>
+      The loop terminates when all channels are empty.  The selection
+      of the nonempty channel in an iteration is nondeterministic --
+      <i>any</i> nonempty channel can be selected.  Different
+      computations are generated by making different selections of the
+      nonempty channel in each iteration. When we prove properties of
+      computations we have to consider all possible selections of
+      nonempty channels.
+      </p>
+
+
+
+<p>
+A benefit of using the states in a while loop to represent the states 
+of a computation is that we can use familiar techniques
+---
+such as 
+<a href="https://en.wikipedia.org/wiki/Loop_invariant">
+loop invariant</a> and
+<a href="https://en.wikipedia.org/wiki/Loop_variant">
+loop variants</a> ---
+for reasoning about while loops to reason about
+    distributed algorithms as well.
+    </p>
 
     </div>
-  <!--------------END SECTION: States ----------------->
-<!---------------------------------------->
+  <!--------------END SECTION: Computations --------------------->
+    
+
+    
 <h5 class="w3-text-teal">Next</h5>
 <!---------------------------------------->
 
 
-The next page discusses <a href="Computations.html">
-computations of distributed systems.</a>
 
 <p>
-<a href="BasicsStatesExamples.html">Examples</a>
+The next webpage discusses
+<a href="Model.html">data flow in computations</a>.
 
 <p>
-<a href="BasicsStatesFAQ.html">Frequenty Asked Questions</a>
+<a href="BasicsStatesExamples.html">States: Examples</a>
 
+<p>
+<a href="BasicsStatesFAQ.html">States: Frequenty Asked Questions</a>
+
+    <p>
+<a href="ComputationsExamples.html">Computations Examples</a>
+
+<p>
+<a href="ComputationsFAQ.html">Computations: Frequenty Asked Questions</a>
 
 
 <!--Start Footer--------------------------------------->
