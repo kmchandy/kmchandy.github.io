@@ -140,8 +140,9 @@ hr.new1 {
   href="https://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol">
   Advanced Message Queuing Protocol (AMQP).
   </a>
-  Algorithms are described in the main body of the text in plain text
-    and you can also look at some implementations using AMQP.
+  Algorithms are described in plain text or pseudo code in a manner
+    that allows for straightforward implementations using message
+    queuing libraries.
     </p>
     
 
@@ -240,18 +241,15 @@ receives <code>M2</code> on the channel.
 
 <h6 class="w3-text-teal">Messages Sent on Different Channels may be
 Delivered out of Order</h6>
-Messages sent on the same channel are delivered in the order sent.
 Messages sent on <i>different</i> channels may not be delivered in the
 order sent.
-
-<p>
 The following scenario (see figure) is possible with different agents
 \(A, B, C\). 
     <figure>
     <img
     src="MessageOrder.001.jpeg"
     alt="Fig1" style="width:100%"> 
-    <figcaption>Messages on <i>Different</i> Channels may be Delivered out of
+    <figcaption>Figure 1. Messages on <i>Different</i> Channels may be Delivered out of
 Order</figcaption>
 </figure>
 </p>
@@ -298,12 +296,10 @@ When an agent finishes processing a message the agent waits for the next
 message to be delivered to it.
 </p>
 
-<p>
-Each agent has a set of variables.
-An agent's variables are local to the agent -- they cannot be accessed
-  by other agents.
-  An agent cannot access variables of other agents. A message
-sent by an agent cannot be a pointer into the agent's memory.
+  <p>
+  Each agent has a set of variables.  An agent's variables are local
+  to the agent -- they cannot be accessed by other agents.  A message
+  sent by an agent cannot be a pointer into the agent's memory.
 </p>
 
 
@@ -379,36 +375,18 @@ directed from the sender to the receiver.
 <!--------------END SECTION ASimpleModel ---------------------->
 
 <p>
-We present algorithms in pseudo code.
-An agent is specified by its initial state and  a <code>receive</code>
-function.
-The variables of an agent, their initial values, and initial messages
-(if any) in the agent's output channels are specified by a block of
-statements.
-Implementing an algorithm in Python using AMQP libraries starting with
-from pseudo code is straightforward.
-
-<p>
-<code>receive</code> functions implemented in most  programming
-    languages are deterministic. The state of an agent when
-execution of a  <code>receive</code> completes and the messages sent
-during the execution of the  <code>receive</code> depend only on the
-state of the agent when execution of the <code>receive</code> starts,
-the message received and the agent from which the message is received.
-Likewise, the statements that initialize an agent are deterministic
+Agents implemented in most  programming
+languages are deterministic.
+The statements that initialize an agent are deterministic
 and so an agent has a single initial state.
-
-<p>
+Multiple executions of a <code>receive</code> function with the same
+input produce the same output.
 The theory of distributed systems does not require agents to be
-deterministic -- an agent may be initialized in any one of a  set of
-states and different executions of the same <code>receive</code>
-function with the same inputs may produce different outputs. 
+deterministic.
 For the time being we consider only deterministic agents.
 See <a href="BasicsExamples">examples</a> and
 <a href="../CODE_EXAMPLES/">code</a>
 We discuss nondeterministic agents later.
-An agent is also called a <i>process</i> in some books.
-We use the term agent throughout these notes.
 
 </p>
 
@@ -440,7 +418,7 @@ agents and channels represented as a directed graph.
     <img
     src="Basics_Diagram.005.jpeg"
     alt="Fig1" style="width:100%"> 
-    <figcaption>Figure Agents and Channels</figcaption>
+    <figcaption>Figure 2: Example of a Graph showing Agents and Channels</figcaption>
 </figure>
 
 
