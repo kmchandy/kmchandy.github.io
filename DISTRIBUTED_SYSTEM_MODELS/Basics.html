@@ -368,10 +368,7 @@ Execution of this statement places the message in the output channel
 directed from the sender to the receiver.
 </p>
 
-<p>
-An agent in a distributed system is also called a <i>process</i> in
-some books.
-We use the term agent throughout these notes.
+
 
 </div>
 <!--------------END SECTION: Agents ---------------------->
@@ -392,24 +389,26 @@ Implementing an algorithm in Python using AMQP libraries starting with
 from pseudo code is straightforward.
 
 <p>
-<code>receive</code> functions implemented in Python and most other programming
+<code>receive</code> functions implemented in most  programming
     languages are deterministic. The state of an agent when
-execution of a  <code>receive</code> completes, and the messages sent
-during the execution of the  <code>receive</code>, depend only on the
+execution of a  <code>receive</code> completes and the messages sent
+during the execution of the  <code>receive</code> depend only on the
 state of the agent when execution of the <code>receive</code> starts,
 the message received and the agent from which the message is received.
 Likewise, the statements that initialize an agent are deterministic
 and so an agent has a single initial state.
+
+<p>
 The theory of distributed systems does not require agents to be
 deterministic -- an agent may be initialized in any one of a  set of
 states and different executions of the same <code>receive</code>
 function with the same inputs may produce different outputs. 
-
-<p>
 For the time being we consider only deterministic agents.
 See <a href="BasicsExamples">examples</a> and
 <a href="../CODE_EXAMPLES/">code</a>
-We discuss nondeterministic agents later. 
+We discuss nondeterministic agents later.
+An agent is also called a <i>process</i> in some books.
+We use the term agent throughout these notes.
 
 </p>
 
@@ -447,7 +446,7 @@ agents and channels represented as a directed graph.
 
 
 <!----------------------------------------------->
-<h4 style="color:red;">Example of an Agent</h4>
+<h4 style="color:red;">Examples of Agents</h4>
 
 This is an example of an agent, <code>total</code>,
 that receives messages from agents
@@ -470,17 +469,16 @@ The block of statements before the <code>receive</code> function
   
   In this example, the agent <code>total</code> has a single
   variable <code>sum</code> which has value 0 initially.
+  Initially, the output channel of <code>total</code> is empty
 </p>
 
 
 <pre>
 # Algorithm for total
 # ------- Initialization --------------
-# Agent's variables with initial values.
 sum = 0
 
-# -------Callback function ----------
-# Callback function
+# ------- receive function ----------
 def receive(message, sender):
    if sender == pos:
        sum = sum + message
@@ -503,13 +501,10 @@ contents of the message, and if the resulting value of
 resulting value of <code>sum</code> to agent <code>X</code>.
 </p>
 
-<p>
-Initially, the output channel of <code>total</code> to agent
-<code>X</code> is empty.
 
 
 <!----------------------------------------------->
-<h4 style="color:red;">Example of an Agent</h4>
+<p style="color:red;">Example of <code>pos</code></h4>
 <p>
 This is an example of agent <code>pos</code>.
 
@@ -517,14 +512,11 @@ This is an example of agent <code>pos</code>.
 <pre>
 # Algorithm for pos
 # -------- Initialization --------------
-# Agent's variables with initial values.
 my_data = [3, 5]
 n = 0
-# Initially the channel from pos to pos
-# contains a single "wakeup" message.
 send(message="wakeup", receiver=pos)
 
-# -------Callback function ----------
+# ------- receive function ----------
 def receive(message, sender):
    send(message=my_data[n], receiver=total)
    n = n + 1
@@ -536,7 +528,8 @@ def receive(message, sender):
 <code>pos</code> has variables <code>my_data</code> and <code>n</code>
 which are initially <code>[3, 5]</code> and <code>0</code>,
 respectively.
-There is a message "wakeup" in the channel from <code>pos</code> to itself.
+Initially there is a message "wakeup" in the channel from
+<code>pos</code> to itself. 
 </p>
 
 <p>
