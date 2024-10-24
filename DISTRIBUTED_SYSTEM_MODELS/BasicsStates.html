@@ -343,21 +343,22 @@ transition.
 <h4 class="w3-text-teal"><code>receive</code> Function Specified by a Set of Events</h4>
 
     <p>
-We use pseudo code to describe <code>receive</code> functions.  When
-we prove that an algorithm is correct we specify a
-<code>receive</code> function as a set <code>E</code> of events.  The
-change in state caused by an execution of a <code>receive</code>
-function is specified by an event.  The set of all possible executions
-of a <code>receive</code> function are specified by the set <code>E
-</code> of events.
+      We use programming languages or plain text to describe
+      <code>receive</code> functions.  When we prove that an algorithm
+      is correct we specify a <code>receive</code> function as a set
+      <code>E</code> of events.  The change in state caused by an
+      execution of a <code>receive</code> function is specified by an
+      event.  The set of all possible executions of a
+      <code>receive</code> function are specified by the set <code>E
+      </code> of events.
 
 <p>
       We do not enumerate <code>E</code> (which may be
       infinite) and we don't use <code>E</code> in programs.
       We specify a <code>receive</code> function as a set <code>E</code> of
       events to help us develop theorems about systems. Though algorithms
-      are given in pseudo-code or in a programming language, we think
-      of a system as an initial state and a set of events for each of
+      are given in a programming language, we also specify a
+      system by an initial state and a set of events for each of
       its agents.
 
       </div>
