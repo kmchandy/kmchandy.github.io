@@ -117,17 +117,14 @@ hr.new1 {
       e_{1}, \ldots, ]\) where \(e_{i}\) is an event at an agent that
     causes a transition from \(S_{i}\) to \(S_{i+1}\).
     A dataflow graph of the computation is a labeled, directed, acyclic
-    graph. The vertices of the graph are the steps \(e_{i}\).
-    In addition, state \(S_{0}\)  is represented by a vertex for each
-    agent <code>u</code> which specifies <code>u</code>'s
-    state in \(S_{0}\). Likewise, state \(S_{n}\)  is represented by a vertex for each
-    agent <code>u</code> which specifies <code>u</code>'s
-    state in \(S_{n}\).
-
+    graph. The vertices of the graph are the steps \(e_{i}\) of the
+    computation. 
+    In addition, the initial and final states \(S_{0}\) and \(S_{n}\)
+    are represented by vertices for each agent.
 
     <p>
     The edges of the dataflow graph of a computation are as follows.
-    There is an edge from (the vertex representing) a step in which a
+    There is an edge from a step in which a
     message is sent to the step in which that message is received; the
     edge is labeled with the message.
     There is an edge from a step at an agent to the next step at that
@@ -136,7 +133,7 @@ hr.new1 {
 
     <p>
     The vertex representing the state of an agent <code>u</code>
-    in \(S_{0}\) has an output edge labeled with the state of
+    in the initial state \(S_{0}\) has an output edge labeled with the state of
     <code>u</code> in \(S_{0}\) and an output edge labeled
     <code>m</code> for each message <code>m</code> which is in a
     channel <code>(u, v)</code> in state \(S_{0}\).
@@ -170,10 +167,7 @@ and <code>v_init</code>, respectively, and final states by inputs to
     </p>
     
 <p>
-The top horizontal edges represent data flow between steps at agent
-<code>u</code> and the lower horizontal edges represent data flow
-between steps at agent <code>v</code>.
-For example, the labels <code>u1, u2, u3</code> are: (1) the initial state
+The labels <code>u1, u2, u3</code> are: (1) the initial state
 of agent <code>u</code>, (2) the state of <code>u</code> between steps 1
 and 4, and (3) the state of <code>u</code> after step 4, respectively.
 Likewise, the labels <code>v1, v2, v3</code> are the states of
@@ -263,10 +257,9 @@ Figure 2 shows two
 diagrams with identical dataflow graphs. The upper and lower diagrams are 
 representations of computations starting at the same state and step
 sequences [1, 2, 3, 4], and [2, 1, 3, 4], respectively. Initial and
-final vertices are not shown. The sequence of events in a computation
-are shown in the diagram by placing the vertices representing the
-events in order with later events appearing to the right of earlier
-events.
+final vertices are not shown. The sequence of steps in a computation
+are shown in the diagram by placing steps later in the sequence to the
+right of steps earlier in the sequence.
 
 <p>
 The order in which vertices 1 and 2 appear, from left to right, in the
