@@ -238,12 +238,14 @@ agent <code>v</code> initially and after steps 2 and 3, respectively.
     <p>
     Because there is no edge from \(e_{i}\) to \(e_{i+1}\),
     agents <code>u</code> and <code>u'</code> are different and
-    messages <code>m</code> and <code>m'</code> are different.
+    the message received in step \(e_{i+1}\) was not sent in step
+    \(e_{i}\). Therefore message <code>m'</code> is at the head of
+    channel <code>(v', u')</code> before \(e_{i}\) is executed.
 
 
 <p>Therefore the inputs to \(e_{i}\)  -- namely state <code>s</code>
-of agent <code>u</code> and message <code>m</code> from agent
-<code>v</code>  -- do not change if \(e_{i+1}\) appears before
+of agent <code>u</code> and the message <code>m</code> at the head of channel
+<code>(v, u)</code>  -- do not change if \(e_{i+1}\) appears before
 \(e_{i}\). By the same argument the inputs to \(e_{i+1}\) do not
 change if \(e_{i+1}\) appears before \(e_{i}\). Therefore there exists
 a computation in which \(e_{i+1}\) appears before \(e_{i}\).
