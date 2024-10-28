@@ -107,17 +107,20 @@ hr.new1 {
     <a href="../DISTRIBUTED_SYSTEM_MODELS/Model.html">page on
     data flow.</a>
   A <i>cut of a computation</i> is a partition of the steps of the
-  computation into subsets <i>past</i> and <i>future</i> and is
-  specified by the ordered pair of sets
-  (<code>past</code>, <code>future</code>).
+  computation into subsets <i>past</i> and <i>future</i>.
   </p>
 
   <hr class="new2">
 <h5 style="color:blue;">
   A <i>consistent</i> cut of a computation is a partition of the steps
     of the computation into subsets <i>past</i> and <i>future</i>
-    in which all paths to steps in <code>past</code> are from steps in
-  <code>past</code>.
+    in which, in the dataflow graph of the computation,
+    <center>
+    <h5 style="color:blue;">
+    all paths to steps in <code>past</code> are from steps in
+    <code>past</code>.
+    </h5>
+    </center>
   </h5>
   <hr class="new2">
   
@@ -125,15 +128,16 @@ hr.new1 {
   Equivalent definitions of a consistent cut are:
   <ol>
     <li>
-    <code>past</code> steps do not depend on <code>future</code> steps.
+    There are no edges in the dataflow graph from <code>future</code>
+  steps to <code>past</code> steps. 
     </li>
     <li>
-    All edges in the dataflow graph to <code>past</code> vertices are
-  from <code>past</code> vertices.
+    All edges in the dataflow graph to <code>past</code> steps are
+  from <code>past</code> steps.
     </li>
     <li>
-    All edges in the dataflow graph from <code>future</code> vertices are
-    to <code>future</code> vertices.
+    All edges in the dataflow graph from <code>future</code> steps are
+    to <code>future</code> steps.
     </li>
   </ol>
   </p>
