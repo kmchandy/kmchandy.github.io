@@ -440,6 +440,40 @@ for reasoning about while loops to reason about
   <!--------------END SECTION: Computations --------------------->
     
 
+
+
+    <!---------------------------------------------------------->
+    <!----------START SECTION: Model Limitations -------------->
+    <div ID="SECTION", class="ModelLimitations">
+      <a name="ModelLimitations"></a>
+
+      <!----------------------------------------------->
+      <h3 class="w3-text-teal">Model Limitations</h3>
+      <!----------------------------------------------->
+
+      <p>
+      The states and computations of a model are helpful in designing
+      algorithms; however, they are fictitious. The model does not
+      consider changes in the variables of an agent while an agent is
+      executing its <code>receive</code> function. The model only
+      considers the state of an agent while it is not executing, i.e.,
+      while the agent is idle. So, in the model a system state
+      represents a state in which <i>all agents are idle.</i> But
+      there may be no instant in which all agents are idle during an
+      execution of the system.
+
+      <p>
+      A state transition represents a change from a state in which all
+      agents are idle to a state in which all agents are idle. The
+      transition captures the change in state of one agent when it
+      executes a <code>receive</code>. A computation represents a
+      sequence of state changes where each state change represents the
+      execution of exactly one agent while all other agents are
+      idle. States, transitions, and computations do not accurately
+      represent the instant-by-instant behavior of
+      systems. Nevertheless, we will see that the model is useful.
+
+      
     
 <h5 class="w3-text-teal">Next</h5>
 <!---------------------------------------->
