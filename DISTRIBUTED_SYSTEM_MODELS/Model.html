@@ -139,6 +139,9 @@ hr.new1 {
     channel <code>(u, v)</code> in state \(S_{0}\).
     State \(S_{n}\) is represented in a symmetric fashion.
 
+    </div>
+    <!--------END SECTION: Dataflow Definition ----------------->
+
 
 <!---------------START SECTION: Example ------------------------------>
   <div ID="SECTION", class="Example">
@@ -194,7 +197,7 @@ agent <code>v</code> initially and after steps 2 and 3, respectively.
 
 
 <!---------------------------------------->
-    <h5 class="w3-text-teal">Flow of Data in a Computation</h5>
+    <h4 class="w3-text-teal">Flow of Data in a Computation</h4>
     <p>
     The edges of the dataflow graph of a computation show the flow of
     data into and out of each step of a computation.  Data -- in the
@@ -207,7 +210,134 @@ agent <code>v</code> initially and after steps 2 and 3, respectively.
     sequence.
     </p>
 
+       
+  <!----------------------------------------------->
+  <h3 class="w3-text-teal">Logs of Distributed Computations</h3>
+<!----------------------------------------------->
+   An agent can log the sequence of steps at that agent during a
+    system computation.
+    In figure 1, agent <code>u</code> logs the 
+    sequence of steps <code>[u_init, 1, 4, u_fini]</code>, and agent
+    <code>v</code> logs <code>[v_init, 2, 3, v_fini]</code>.
+    A log of a distributed computation consists of a set of agent logs, one
+  for agent.
 
+
+    
+<!-------------------------------------->
+
+    <p>
+    We can construct the unique dataflow graph of a computation from
+    the set of agent logs made in the computation. The log of an agent
+    specifies the sequence of steps of that agent in the dataflow
+    graph. In figure 1 the log of agent <code>u</code>  has step 1
+    followed by step 4, and so the dataflow graph has an edge for
+    agent <code>u</code> from the step 1 to step 4.
+
+    <p>
+    The dataflow graph has a message edge from a step that sends the
+    \(n\)-th message on a channel to the step that receives the
+    \(n\)-th message on the channel.  In the log of agent
+    <code>u</code> in figure 1, the first message that <code>u</code>
+    sends to <code>v</code> is in step <code>u_init</code>. And the
+    first message that <code>v</code> receives from <code>u</code> is
+    in step 2. Therefore, the dataflow graph has a message edge from
+    step <code>u_init</code> to step 2.
+
+    <p>
+    A dataflow graph of a computation represents a set of agent
+    logs. And the set of agent logs made during a computation
+    represents the dataflow graph of the computation.
+
+<hr class="new2">
+<p style="color:blue;">
+A dataflow graph is uniquely represented by the logs of agents.
+</p>
+<hr class="new2">
+
+
+    <!----------------------------------------------->
+    <h5 class="w3-text-teal">Computation of an Agent</h5>
+    <!----------------------------------------------->
+A computation of an agent is a sequence of steps at that agent.
+If an agent keeps a log of the sequence of steps that it takes during a
+computation then the log is the agent's computation.
+The computation of an agent <code>u</code> is defined even if
+    <code>u</code> doesn't maintain a log.
+
+
+
+    <!----------------------------------------------->
+    <h4 class="w3-text-teal">Determining System States from Logs</h4>
+    <!----------------------------------------------->
+Can we construct the computation that generated a set of agent logs
+from the logs? Let's look at the example in the figure below.
+The top two diagrams show the same dataflow graph.
+The diagram at the top left shows system computation [a0, b0, a1, b1]
+    pictorially with steps in the computation appearing in order from left to
+right.
+The diagram at the top right is a pictorial representation of the
+computation [b0, a0, b1, a1].
+
+<p>
+The diagram at the bottom of the figure shows the logs of the agents.
+Both computations shown in the top two diagrams generate the same
+agent logs. Given the agent logs we cannot determine which computation
+generated them.
+
+   <figure>
+    <img
+    src="DISTRIBUTED_SYSTEM_MODELS_TIMELINES.001.jpeg"
+    alt="Fig7" style="width:100%"> 
+<figcaption>Figure 4: Constructing System Computations from Agent Computations
+</figcaption>
+</figure>
+
+<p>
+We can construct the unique dataflow graph of
+the computation that generated the logs but we cannot construct the
+computation that generated the logs.
+
+<p>
+Can we determine which systems states occurred given the agent logs?
+Let's look at the example shown in the figure below.
+
+<p>
+The figure shows two diagrams with the same
+dataflow graph. The diagram on the left shows the computation \([e,
+e']\) with step \(e\) to the left of step \(e'\), while the diagram on
+the right shows the computation \([e', e]\) with step \(e\) to the
+right of step \(e'\).
+
+   <figure>
+    <img
+    src="DISTRIBUTED_SYSTEM_MODELS_TIMELINES.002.jpeg"
+    alt="Fig7" style="width:100%"> 
+<figcaption>Figure 5: Cannot Determine which System States Occurred.
+</figcaption>
+</figure>
+The states before execution of both events in both computations is
+\(S\).
+Likewise, the states after execution of both event in both
+computations is \(S*\).
+The state after executing \(e\) and before executing \(e'\) in
+the computation \([e, e']\) is shown in the diagram on the left as
+\(S'\).
+The state after executing \(e'\) and before executing \(e\) in
+the computation \([e', e]\) iw shown in the diagram on the right as
+\(S''\).
+States \(S'\) and \(S''\) may be different and we cannot determine
+    which one occurred.
+
+<p>
+<i>We cannot determine which system states occurred in a computation
+given the agent logs of the computation.</i>
+
+<p>
+Next we present a few theorems about dataflow 
+
+
+    
     <!-------------------------------------------------->
     <h4 class="w3-text-teal">A Dataflow Lemma</h4>
     <!-------------------------------------------------->
@@ -348,6 +478,71 @@ the sequence \(E'\) is reached.
     </p>
 
 
+
+<a name="TheoremMessageOrdering">
+<hr class="new2">
+  <!----------------------------------------------->
+  <h4 class="w3-text-teal">Theorem: System Computations and Agent Computations</h4>
+<!----------------------------------------------->
+
+Let \(C\) be a computation of a system.
+Let \(C'\) be any
+permutation of \(C\) where:
+<ol>
+  <li>
+  The computation of each agent in \(C'\) is the same as in \(C\) and 
+  </li>
+  <li>
+  For each message, the step in which the message is received occurs
+  in \(C'\) after the step in which the message is sent.
+  </li>
+</ol>
+Then \(C'\) is also a computation of a system.
+</p>
+<hr class="new2">
+<p class="w3-text-teal">Proof</p>
+\(C'\) is a topological sort of the dataflow graph of \(C\).
+
+<p  class="w3-text-teal">From Logs to Computations</p>
+Given a computation \(C\) and a permutation \(C'\) of \(C\), we know
+that \(C'\) is also a computation if the agent logs are the same in
+\(C\) and \(C'\), and every message is received after it is sent in
+\(C'\).
+
+
+<!-------------START SECTION: Model Limitations ------------->
+<div ID="SECTION", class="ModelLimitations">
+  <a name="ModelLimitations"></a>
+  <h4 class="w3-text-teal">Model Limitations</h4>
+  <a href="BasicsStates.html#ModelLimitations">We described
+  limitations of the model earlier</a>.
+  States,
+  transitions, and computations are fictitious in the sense that they
+  do not accurately represent all system behaviors.
+  Exactly one agent is executing while all other agents are idle in a
+  state transition of the model, whereas multiple agents may be
+  executing concurrently.
+
+  <p>
+  When an agent logs the steps that it takes during an execution of
+  the system, the log faithfully represents 
+  the sequence of steps and the states of the agent in the execution.
+  The only aspect that the log does not capture is the changes in the
+  state of the agent while it is carrying out a step.
+  The dataflow graph is equivalent to the set of agent logs, and so
+  the dataflow graph faithfully represents the flow of data between
+  steps.
+
+
+  
+    
+
+
+
+  </div>
+  <!-------------END SECTION: Model Limitations ------------->
+  
+</div>
 <!-------------END SECTION: Computations and Dataflow ------------->
 
 <p class="w3-text-teal">Note</p>
