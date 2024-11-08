@@ -77,11 +77,16 @@ hr.new1 {
 <div class="w3-twothird w3-container">
 
 
+  
+  <!-----START SECTION: Bitcoin ------------>
+<div id="SECTION", class="Bitcoin">
+  <a name="Bitcoin"></a>
+  
 <h1 class="w3-text-teal">Introduction to Bitcoin</h1>
 
-<h4 class="w3-text-teal">
+ <p class="w3-text-red">
 This module introduces the algorithm underlying BitCoin.
-</h4>
+</p>
 
     Bitcoin is based on cryptography and distributed consensus. We
     discussed aspects of cryptography required for Bitcoin in an
@@ -738,6 +743,11 @@ receives a message to extend its copy of the block chain with a block
   Why is <i>double spending</i> unlikely to be successful?
   </li>
 </ol>
+
+
+</div>
+<!--------------END SECTION Bitcoin ------->
+
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">
@@ -751,31 +761,6 @@ receives a message to extend its copy of the block chain with a block
 
 <!-- END MAIN -->
 </div>
-
-<script>
-// Get the Sidebar
-var mySidebar = document.getElementById("mySidebar");
-
-// Get the DIV with overlay effect
-var overlayBg = document.getElementById("myOverlay");
-
-// Toggle between showing and hiding the sidebar, and add overlay effect
-function w3_open() {
-  if (mySidebar.style.display === 'block') {
-    mySidebar.style.display = 'none';
-    overlayBg.style.display = "none";
-  } else {
-    mySidebar.style.display = 'block';
-    overlayBg.style.display = "block";
-  }
-}
-
-// Close the sidebar with the close button
-function w3_close() {
-  mySidebar.style.display = "none";
-  overlayBg.style.display = "none";
-}
-</script>
 
 </body>
 </html>
