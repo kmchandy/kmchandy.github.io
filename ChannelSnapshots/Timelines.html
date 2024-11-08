@@ -257,10 +257,96 @@ the state <code>S*</code> at the cut is shown as labels to final vertices
 (labeled 
 <code>N</code>) of <code>past</code>.
 <code>S*</code> is also shown as labels from initial vertices (
-  labeled <code>0</code>) of  <code>future</code>.
+labeled <code>0</code>) of  <code>future</code>.
+
+
+  <a name="PointsAtAgentComputations">
+  <!--------------------------------------------------------------->
+  <h4 class="w3-text-teal">A Point at an Agent's Computation</h4>
+  <!--------------------------------------------------------------->
+
+A point in the computation of an agent in a dataflow graph is an
+edge between steps at the agent.
+
+<p>
+The figure below shows a dataflow graph with agents \(X, Y, Z\) and a
+computation with steps [0_x, 0_y, 0_z, 1, 2, .. 13] where 0_x, 0_y,
+0_z represent the initial states of agents \(X, Y, Z\) and their
+outgoing channels, respectively. The final states are not shown.
+In the dataflow graph,
+the computation of agent \(X\) is [0_x, 3, 5, 8, 11, 12];
+the computation of agent \(Y\) is [0_y, 2, 6, 7, 10, 13];
+and the computation of agent \(Z\) is [0_z, 1, 4, 9].
+<p>
+The figure shows points at agents as yellow circles.
+The figure shows a point in the computation of agent \(X\) after step
+5 and before step 8 -- this point is the edge (5, 8).
+Points in the computations of agents \(Y\) and \(Z\) are the edges (2,
+6) and (1, 4), respectively.
+  <figure>
+    <img src="PointsOnAgentTimelines.001.jpeg"
+    alt="Fig1" style="width:70%"> 
+    <figcaption>Fig.2: Example - Points at Agent Computations</figcaption>
+</figure>
+
+A set of points, with a point at each agent, specifies a cut
+<code>(past, future)</code>.
+For a point \((e, e')\) at an agent \(x\), the set of events at \(x\)
+in <code>past</code> consists of event \(e\) and events that appear
+before \(e\) in \(x\)'s computation. The set of events at \(x\)
+in <code>future</code> consists of event \(e'\) and events that appear
+after \(e'\) in \(x\)'s computation.
+For example, for the point (5, 8) the steps at agent \(x\) in
+<code>past</code> are 0_x, 3, 5,
+and the steps at agent \(x\) in <code>future</code> are 8, 11, 12.
+
+<p>
+In the figure <code>past</code> is the set of steps {0_x, 0_y, 0_z, 1, 2, 3, 5} and
+<code>future</code> consists of the remaining steps.
+  <figure>
+    <img src="PointsOnAgentTimelines.002.jpeg"
+    alt="Fig2" style="width:70%"> 
+    <figcaption>Fig.3: Example - Consistent Cut through Points at
+    Agent Computations</figcaption> 
+</figure>
+
+<p>
+Given a cut specified by points at each agent, by construction, every
+agent edge to a step in <code>past</code> is from a step in
+<code>past</code>. So:
+  <hr class="new2">
+<h5 style="color:blue;">
+A cut specified by points at each agent is consistent exactly when:
+<center>
+<h5 style="color:blue;">
+every message received in <code>past</code> is sent in <code>past</code>.
+</h5>
+</center>
+</h5>
+<hr class="new2">
+
+<p>
+The figure below shows an inconsistent cut. The cut is specified by
+points (0, 3), (6, 7) and (4, 9) at agents \(X, Y, Z\) respectively.
+<code>past</code> consists of steps 1, 2, 4, 6, and
+<code>future</code> consists of the remaining steps.
+The cut is inconsistent because a message sent in a step in
+<code>future</code> is received in a step in <code>past</code>.
+For example, step 3 is in <code>future</code>  and step 4 is in
+<code>past</code>. 
+  <figure>
+    <img src="PointsOnAgentTimelines.003.jpeg"
+    alt="Fig3" style="width:70%"> 
+    <figcaption>Fig.4: Example - Inconsistent Cut through Points at Agent Computations</figcaption>
+</figure>
+
+
 
 </div>
     <!-----END SECTION: Consistent Cuts of Dataflow Graphs ------------>
+
+
+
 
 <!---------------------------------------->
 <h5 class="w3-text-teal">Next</h5>
