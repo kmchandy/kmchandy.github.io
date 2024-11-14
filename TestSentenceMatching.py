@@ -28,8 +28,9 @@ section_embeddings_file = 'section_embeddings_file.pkl'
 section_texts_file = 'section_texts_file.json'
 
 # NUM_PAGES is thenumber of pages for which embeddings are calculated.
-NUM_PAGES = 1
+NUM_PAGES = 2
 
+# question is matched against sections in the text.
 question = "What is an epoch?"
 
 
@@ -115,6 +116,8 @@ def get_page_url_list(table_of_contents_url):
     # A page url is the url relative to the url of the website.
     # Each page url in table_of_contents_url is separated by 'href'
     # Each page url ends with .html, and starts with a letter.
+    # Skip a link such as <a href="./cross_reference.html"> which
+    #   starts with .
     page_url_list = []
     for page_soup in page_soup_list:
         page_url = page_soup['href']
@@ -183,7 +186,7 @@ def get_sections_embedding_dict():
             # Each section has anchor <a name=section_name>
             section_name = section_soup.a['name']
             section_notes = section_soup.notes
-            print(f'section_notes is {section_notes}')
+            # print(f'section_notes is {section_notes}')
              
             # section_url is the pointer to the section
             section_url = page_url + '#' + section_name
