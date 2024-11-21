@@ -224,9 +224,26 @@ there exists a computation that starts at \(S_{init}\), then visits
 
 <!----------------------------------------------------------------------------->
 <h4 class="w3-text-teal">How Should You Solve the Problem?</h4>
-<!----------------------------------------------------------------------------->
+    <!----------------------------------------------------------------------------->
 
   <p class="w3-text-teal">Strategy</p>
+    <p>
+    A straightforward strategy is as follows. Each agent logs its own
+    computation -- the steps that the agent takes. Agents send their
+    logs to an OS agent that stitches the logs together to get the
+    dataflow of the computation. The agent then determines a
+    consistent cut of the dataflow.
+
+    <p>
+    The strategy of sending agent logs to an agent for further
+    analysis is a general strategy for developing algorithms that
+    detect some property of a computation. More efficient strategies
+    can be obtained for specific applications.
+
+    <p>
+    Our problem is: Develop an algorithm to determine the state at a
+    consistent cut without requiring agents to log their steps.
+    
   <p>
 A strategy for developing algorithms dealing with states that occur
   during a computation is
