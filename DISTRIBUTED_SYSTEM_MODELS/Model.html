@@ -77,91 +77,291 @@ hr.new1 {
 <div class="w3-row w3-padding-64">
 <div class="w3-twothird w3-container">
 
-<!-------------------------------------------------------------->
-<h2 class="w3-text-teal">Data Flow in Computations</h2>
-<!-------------------------------------------------------------->
+  <!----------------------------------------------->
+  <h2 class="w3-text-teal">State Transitions of Distributed Systems</h2>
+  <!----------------------------------------------->
   <p class="w3-text-red">
-  A dataflow graph of a computation is a labeled directed acyclic
-  graph that shows the flow of data between agents during the
-  computation. 
-  All <a href="https://en.wikipedia.org/wiki/Topological_sorting">
-  topological sorts</a> of a dataflow graph are computations.
+  This page describes timelines that represent executions of a
+  distributed system, dataflow graph abstractions of timelines, and states and state
+  transitions of distributed systems.
   </p>
  
 
 
 
+  
+<!--------------START SECTION: Timelines ---------------------->
+<a name="Timelines"></a>
+
   <!----------------------------------------------->
-  <h3 class="w3-text-teal">The Dataflow Graph of a Computation</h3>
+  <h3 class="w3-text-teal">Timelines</h3>
   <!----------------------------------------------->
+
+  The diagram below shows the timeline of the execution of a
+  distributed system with agents X, Y, Z.
+  The horizontal axis represents time flowing from left to right.
+  Each horizontal line represents the state of one agent.
+  For example, the top horizontal line represents the state of agent X at
+  different points in time, the middle line shows the state of agent Y
+  over time, and the lowest line shows states of Z at all points in time.
+ 
+   
+      <figure>
+    <img
+    src="TimelineDiagram.001.jpeg"
+    alt="Fig1" style="width:100%"> 
+    <figcaption>Figure 1: Timeline Diagram</figcaption>
+  </figure>
+  
   <p>
-<a href="https://en.wikipedia.org/wiki/Dataflow_programming">Data flow</a>
-  is a concept that has been used in computer science for over 50
-  years. 
-  Next we show how data flow helps in developing distributed
-  algorithms.
-  </p>
+  The blue boxes represent executions of receive functions. The red
+  lines represent messages. A message to an agent is from another
+  agent or from itself. Each receive function receives and processes
+  exactly one message. So, each blue box has exactly one input red
+  line.
+
+  <p>
+  Each receive is labeled in the diagram. For example, the sequence of
+  receives for agent X are x1, x2, x3, x4. A message sent by agent Z
+  while it is executing receive z1 is received by agent X which causes
+  X to execute receive X2.
+
+  <p>
+  The state of an agent between successive receives is represented by
+  the label (not shown) of the edge between the receives. For example,
+  the state of agent X between receive x3 and x4 is the label of the
+  edge after the end of x3 and before the start of x4.
+
+  <p>
+  The initial states of agents and channels are shown by dangling
+  edges which have an end point but no start point. For example,
+  initially there is a message that is received by agent X in receive
+  x1 and this message is sent by agent Y. This message is shown by a
+  dangling edge. Similarly there are dangling edges with start points
+  but no end points to depict the final states of agents and channels
+  in this execution. The execution may continue but we are showing
+  only part of it.
+  
+<p>
+  The duration of time that an agent takes to
+  execute a receive varies.  When an agent executes a statement it may change the
+  agent's variables and change the agent's program counter.
+  So, an agent executes a receive the agent's state changes.
+  The state of an agent at time t is represented in the diagram by the
+  vertical line representing time t.
+
+  <p>
+  The state of the system consists of a tuple with an element of the
+  tuple for the state of each component of the system. The components
+  of the system are agents and channels. The state of a channel is a
+  queue representing the sequence of messages in transit along the
+  channel.
+
+  <p>
+  The state of the distributed system at time t is depicted by the
+  states of the agents and channels intersected by the vertical line
+  at time t. For example, the state of agent Y at time t is shown in
+  the diagram as the point where the vertical line representing time t
+  intersects the horizontal line representing the timeline of agent Y.
+
+  <p>
+  The state of a channel is shown in the diagram by the message lines
+  intersected by the vertical line at time t. For example, there is a
+  message from agent X to agent Y at time t.
+
+  <p>
+  Two important points to remember: (1) Message durations are positive
+  and finite but arbitrary. (2) Agent clocks may drift by arbitrary amounts.
+  We don't know how long it takes for a message to get to its
+  destination. We do know that a message will get to its destination
+eventually, and messages aren't received instantaneously.
+
+<p>
+An agent can timestamp a message with the time that the agent sends
+the message where the timestamp is determined by the agent's own
+clock. But that doesn't tell the receiver of the message when the
+message was sent as measured by the receiver's clock.
+
+<p>
+Later, we will look at systems that don't make the assumptions that
+message durations are unbounded or that agent clocks drift by
+arbitrary amounts. For the time being, we will see the important
+consequences of these two assumptions.
+
+<a name="AgentLogs"></a>
+
+  <!----------------------------------------------->
+  <h4 class="w3-text-teal">Agent Logs</h4>
+  <!----------------------------------------------->
+<p>
+Suppose each agent keeps a log of its state over time, as measured by
+the agent's clock. If each agent's clock is perfect then the agent's
+log is represented by the horizontal line of the agent in the timeline
+diagram. The next figures shows the logs of agents X, Y and Z
+
+   
+<figure>
+    <img
+    src="TimelineDiagram.002.jpeg"
+    alt="Fig2" style="width:100%"> 
+    <figcaption>Figure 2: Logs of Agents</figcaption>
+</figure>
+
+The top diagram of the figure shows the log of agent X, the middle
+diagram is the log of Y, and the lower diagram is the log of Z.
+
+<p>
+Now suppose the agents send their logs to another agent which puts the
+agent logs back together to obtain the timeline for the entire system.
+Can you get the timeline that generated the logs from the logs?
+
+<p>
+There are several problems. The duration of time for each receive as
+measured by the agent's clock may not be the true duration. So, we
+don't know how long each of those blue boxes really is. Okay, then
+let's simplify the problem assuming that duration of the execution of
+all receives are the same. 
+
+<p>
+Can we determine the order of receives executed by different agents?
+Given the logs of figure 2, can you determine whether executions y2
+and z2 of receive functions in figure 1 started at the same time, or
+did y2 start before z2, or z2 before y2?
+We don't know how long a message takes to get to its destination.
+So, it's possible that the message received in y2 has a short delay
+compared to the message received in z2, and so y2 may start before z2.
+It's also possible that the message delay for the message received in
+z2 takes less time than the one to y2. So, z2 may start before y2.
+
+<p>
+In the following diagram agents A and B have the same logs.
+
+   
+<figure>
+    <img
+    src="TimelineDiagram.003.jpeg"
+    alt="Fig3" style="width:100%"> 
+    <figcaption>Figure 3: Different orders of executions of receives with same logs</figcaption>
+</figure>
+
+In the diagram agent A executes two receives shown as vertices a0 and
+a1, and agent B executes two receives shown as vertices b0 and
+b1. Do the agent logs tell us if the receive a1 occurred before the
+receive b1, or at the same time, or afterwards?
+
+<p>
+The agent logs don't tell us. We do know that the receive b0 occurred
+before the receive a1 because a1 receives a message sent during the
+execution of a1. However, we don't know the relative ordering of a1
+and b1.
+
+<p>
+In figure 1, do we know that z1 occurred before y4?
+
+<p>
+It's possible that y4 occurs before z1. Here is a possible sequence of
+executions of receives: x1, y1, x2, x3, y2, y3, y4, x4, z1, z2, z3,
+z4. But it's also possible that z1 occurs before y4.
 
   
-<!--------------START SECTION: Dataflow ---------------------->
-<div ID="SECTION", class="Dataflow">
-<a name="Dataflow"></a>
-    <p>
-    <!--------START SECTION: Dataflow Definition ----------------->
-  <div ID="SECTION", class="DataflowDefinition">
-    <a name="DataflowDefinition"></a>
-    
-    <p>
-    A computation \([S_{0}, S_{1}, \ldots, S_{n}]\) from a state
-      \(S_{0}\) can be specified by \(S_{0}\) and a sequence \([e_{0},
-      e_{1}, \ldots, ]\) where \(e_{i}\) is an event at an agent that
-    causes a transition from \(S_{i}\) to \(S_{i+1}\).
-    A dataflow graph of the computation is a labeled, directed, acyclic
-    graph. The vertices of the graph are the steps \(e_{i}\) of the
-    computation. 
-    In addition, the initial and final states \(S_{0}\) and \(S_{n}\)
-    are represented by vertices for each agent.
+<!--------------START SECTION: Dataflow Graphs ---------------------->
+<a name="DataflowGraphs"></a>
 
-    <p>
-    The edges of the dataflow graph of a computation are as follows.
-    There is an edge from a step in which a
-    message is sent to the step in which that message is received; the
-    edge is labeled with the message.
-    There is an edge from a step at an agent to the next step at that
-    agent, and the edge is labeled with the state of the agent between the
-    steps.
+  <!----------------------------------------------->
+  <h3 class="w3-text-teal">Dataflow Graphs</h3>
+  <!----------------------------------------------->
 
-    <p>
-    The vertex representing the state of an agent <code>u</code>
-    in the initial state \(S_{0}\) has an output edge labeled with the state of
-    <code>u</code> in \(S_{0}\) and an output edge labeled
-    <code>m</code> for each message <code>m</code> which is in a
-    channel <code>(u, v)</code> in state \(S_{0}\).
-    State \(S_{n}\) is represented in a symmetric fashion.
+<p>
+So, what can we get about the execution of the entire system from the
+collection of agent logs? We can get the dataflow graph which shows
+the flow of information between agents. The dataflow graph for the
+timeline diagram of figure 1 is shown in the next diagram.
 
-    </div>
-    <!--------END SECTION: Dataflow Definition ----------------->
+   
+<figure>
+    <img
+    src="TimelineDiagram.004.jpeg"
+    alt="Fig4" style="width:100%"> 
+    <figcaption>Figure 4: Dataflow Graph Abstraction of Timeline</figcaption>
+</figure>
+
+<p class="w3-text-teal">Message Edges and Agent Edges</p>
+<p>
+A dataflow graph is a directed acyclic labeled graph.
+The vertices of the graph represent executions of receives. The graph
+has two types of edges: message edges and agent edges. A message edge
+is labeled with the contents of the messages and shows a message sent
+during a receive. A message edge is directed from the receive that
+causes the message to be sent to the receive in which the message is
+delivered. The labels of agent and message edges are illustrated in
+the diagram below.
+
+<figure>
+    <img
+    src="Dataflow.001.jpeg"
+    alt="Fig4" style="width:100%"> 
+    <figcaption>Figure 5: A Vertex with Labels of Agent and Message Edges</figcaption>
+</figure>
+
+<p>
+An agent edge is directed from a
+receive executed by an agent to the next receive executed by the same
+agent. An agent edge is labeled with the state of the agent between
+the receives. (This diagram doesn't show labels.)
+
+<p>
+<p class="w3-text-teal">Steps</p>
+We call the execution of each receive a <i>step</i> in the
+dataflow graph.
+Steps and vertices of a dataflow graph are identical.
+Later we will also use steps in computations.
+
+<p class="w3-text-teal">Fictitious Initial and Final Steps</p>
+<p>
+
+We have a fictitious initial step for each agent which represents the
+creation of the initial state of that agent.
+For example, in figure 4, x_init represents a step that creates the initial state of
+agent X and also the initial messages in the channels from agent X.
 
 
-<!---------------START SECTION: Example ------------------------------>
-  <div ID="SECTION", class="Example">
-    <a name="Example"></a>
+<figure>
+    <img
+    src="Dataflow.003.jpeg"
+    alt="Fig3" style="width:100%"> 
+    <figcaption>Figure 6: Fictitious Initial Event at Agent u</figcaption>
+</figure>
+
+<p>
+Likewise, we have a fictitious final step for each agent which represents
+the final state of the agent and the messages in transit to the agent
+in the final step. For example, in figure 4 there is a message from X to Y, and
+there is also a message from Z to Y in the final state.
+
+<figure>
+    <img
+    src="Dataflow.004.jpeg"
+    alt="Fig4" style="width:100%"> 
+    <figcaption>Figure 7: Fictitious Final Event at Agent v</figcaption>
+</figure>
+
+
+<!---------------START SECTION: ExampleDataflowGraph ------------------------------>
+    <a name="ExampleDataflowGraph"></a>
 <!------------------------------->
 <h4 class="w3-text-red">Example of a Dataflow Graph</h4>
    <figure>
     <img
     src="Dataflow.002.jpeg"
     alt="Fig2" style="width:100%"> 
-    <figcaption>Figure 1: Example of a Dataflow Graph</figcaption>
+    <figcaption>Figure 8: Example of a Dataflow Graph</figcaption>
 </figure>
 
 <p>
-Figure 1 shows the dataflow graph for a computation of a
+The figure shows the dataflow graph for a
 system consisting of two agents <code>u</code> and <code>v</code>, and
 with two channels <code>(u, v)</code> and <code>(v, u)</code>.
-The computation is defined by its initial state and step sequence [1,
-    2, 3, 4].
-    Steps 1 and 4 are at agent <code>u</code>, and steps 2 and 3 are
+    Steps 1 and 4 of the dataflow are at agent <code>u</code>, and steps 2 and 3 are
     at <code>v</code>.
     The initial states at agents <code>u</code> and
 <code>v</code> are represented by outputs of steps <code>u_init</code>
@@ -186,232 +386,490 @@ agent <code>v</code> initially and after steps 2 and 3, respectively.
     and received in step 4.
     </p>
 
-</div>
+
+
+<!---START SECTION: AnotherExampleDataflowGraph ---------------------->
+    <a name="AnotherExampleDataflowGraph"></a>
+<!------------------------------->
+
 <!---------------END SECTION: Example ------------------------------>
+<!------------------------------->
+<h4 class="w3-text-red">Another Example of Timelines and Dataflow
+Graphs</h4>
+
+The figure below is an example of a timeline with two agents u and v.
+Agent u executes two receives represented by rectangles labeled 1 and
+4, and agent v executes two receives represented by rectangles labeled
+2 and 3. While agent u is executing its first receive (rectangle 1),
+agent v is also concurrently executing its first receive (rectangle
+2). Agent v finishes executing its first receive while agent u is
+still continuing to execute its first receive. During this execution
+agent u sends message m3 which is received by agent v which executes
+its second receive (rectangle 4). Agent v finishes execution of both
+its receives while agent u is executing its first receive.
+
+   <figure>
+    <img 
+    src="Model/Model.001.jpeg"
+    alt="Fig1" style="width:100%"> 
+    <figcaption>Figure 9: Example of a Timeline</figcaption>
+</figure>
+
+The next diagram shows the abstraction in which an evolution over time
+ is represented by a single event.
+ <figure>
+    <img
+    src="Model/Model.002.jpeg"
+    alt="Fig2" style="width:100%"> 
+    <figcaption>Figure 10: Time and Dataflow Representation of a Receive</figcaption>
+</figure>
+
+The next diagram shows how a timeline is abstracted by a dataflow.
+ <figure>
+    <img
+    src="Model/Model.003.jpeg"
+    alt="Fig3" style="width:100%"> 
+    <figcaption>Figure 11: Timeline and its Dataflow Graph</figcaption>
+</figure>
+
+Timelines are important in distributed cyber-physical systems, and
+we'll look at them later.
 
 
+<p class="w3-text-teal">Changing the Granularity of States</p>
+<p>
+You may want to analyze system states that include states of an agent
+while it is 
+executing a receive because analyzing states before and after
+executing the receive may miss important aspects.
+For example, suppose the receive function has a
+while loop and you want to analyze the states of the distributed
+system after each iteration of the loop.
+You can make internal states of the receive function observable in the
+system state by having the agent generate a "next iteration
+message" from the agent to itself.
+When the agent receives a "next iteration message"
+the agent executes the next iteration of the loop.
+Messages that it receives from other agents are enqueued locally and
+processed later. So, the granularity of the
+state space is a design decision.
 
-<!-------------START SECTION: Computations and Dataflow ------------->
-  <div ID="SECTION", class="ComputationsAndDataflow">
-    <a name="ComputationsAndDataflow"></a>
+<p class="w3-text-teal">Flow of Data between Steps</p>
+<p>
+A dataflow graph is
+    acyclic because an edge is directed from execution of a receive
+    function by an agent to a later execution of a receive function by
+    the same agent or the edge is directed from the execution of a
+receive function in which a message is sent to an execution of a
+function that receives the message.
 
-
-<!---------------------------------------->
-    <h4 class="w3-text-teal">Flow of Data in a Computation</h4>
-    <p>
+<p>
     The edges of the dataflow graph of a computation show the flow of
-    data into and out of each step of a computation.  Data -- in the
+    data into and out of each step.  Data -- in the
     form of the agent's state -- flows from a step at an agent to the
-    next step at that agent in the computation.  Data -- in the form
+    next step at that agent.  Data -- in the form
     of message contents -- flows from a step in which a message is
-    sent to the step in which the message is received.  The graph is
-    acyclic because every edge is directed from a step earlier in the
-    sequence \([e_{0}, e_{1}, \ldots, e_{n}]\) to later in the
-    sequence.
-    </p>
-
-       
-  <!----------------------------------------------->
-  <h3 class="w3-text-teal">Logs of Distributed Computations</h3>
-<!----------------------------------------------->
-   An agent can log the sequence of steps at that agent during a
-    system computation.
-    In figure 1, agent <code>u</code> logs the 
-    sequence of steps <code>[u_init, 1, 4, u_fini]</code>, and agent
-    <code>v</code> logs <code>[v_init, 2, 3, v_fini]</code>.
-    A log of a distributed computation consists of a set of agent logs, one
-  for agent.
-
-
-    
-<!-------------------------------------->
-
-    <p>
-    We can construct the unique dataflow graph of a computation from
-    the set of agent logs made in the computation. The log of an agent
-    specifies the sequence of steps of that agent in the dataflow
-    graph. In figure 1 the log of agent <code>u</code>  has step 1
-    followed by step 4, and so the dataflow graph has an edge for
-    agent <code>u</code> from the step 1 to step 4.
-
-    <p>
-    The dataflow graph has a message edge from a step that sends the
-    \(n\)-th message on a channel to the step that receives the
-    \(n\)-th message on the channel.  In the log of agent
-    <code>u</code> in figure 1, the first message that <code>u</code>
-    sends to <code>v</code> is in step <code>u_init</code>. And the
-    first message that <code>v</code> receives from <code>u</code> is
-    in step 2. Therefore, the dataflow graph has a message edge from
-    step <code>u_init</code> to step 2.
-
-    <p>
-    A dataflow graph of a computation represents a set of agent
-    logs. And the set of agent logs made during a computation
-    represents the dataflow graph of the computation.
-
-<hr class="new2">
-<p style="color:blue;">
-A dataflow graph is uniquely represented by the logs of agents.
+sent to the step in which the message is received.
+We will say that "data flows from a step u to a step v"
+exactly when there is a path in the dataflow graph from u to v. Some
+papers use the phrase "u causes v" or "v depends on u."
+In the figure below, data flows from step 2 to step 4, or equivalently
+    step 4 depends on step 2.
 </p>
-<hr class="new2">
 
 
-    <!----------------------------------------------->
-    <h5 class="w3-text-teal">Computation of an Agent</h5>
-    <!----------------------------------------------->
-A computation of an agent is a sequence of steps at that agent.
-If an agent keeps a log of the sequence of steps that it takes during a
-computation then the log is the agent's computation.
-The computation of an agent <code>u</code> is defined even if
-    <code>u</code> doesn't maintain a log.
-
-
-
-    <!----------------------------------------------->
-    <h4 class="w3-text-teal">Determining System States from Logs</h4>
-    <!----------------------------------------------->
-Can we construct the computation that generated a set of agent logs
-from the logs? Let's look at the example in the figure below.
-The top two diagrams show the same dataflow graph.
-The diagram at the top left shows system computation [a0, b0, a1, b1]
-    pictorially with steps in the computation appearing in order from left to
-right.
-The diagram at the top right is a pictorial representation of the
-computation [b0, a0, b1, a1].
-
-<p>
-The diagram at the bottom of the figure shows the logs of the agents.
-Both computations shown in the top two diagrams generate the same
-agent logs. Given the agent logs we cannot determine which computation
-generated them.
-
-   <figure>
+<figure>
     <img
-    src="DISTRIBUTED_SYSTEM_MODELS_TIMELINES.001.jpeg"
-    alt="Fig7" style="width:100%"> 
-<figcaption>Figure 4: Constructing System Computations from Agent Computations
-</figcaption>
+    src="Dataflow.005.jpeg"
+    alt="Fig5" style="width:100%"> 
+    <figcaption>Figure 9: Data flows from step 2 to step 4</figcaption>
 </figure>
 
+We say that two vertices (steps) of a dataflow graph are independent
+exactly when there is no path between the vertices.
+
+<p class="w3-text-teal">Agent logs specify a unique dataflow graph but
+not the ordering among independent steps</p>
 <p>
-We can construct the unique dataflow graph of
-the computation that generated the logs but we cannot construct the
-computation that generated the logs.
-
-<p>
-Can we determine which systems states occurred given the agent logs?
-Let's look at the example shown in the figure below.
-
-<p>
-The figure shows two diagrams with the same
-dataflow graph. The diagram on the left shows the computation \([e,
-e']\) with step \(e\) to the left of step \(e'\), while the diagram on
-the right shows the computation \([e', e]\) with step \(e\) to the
-right of step \(e'\).
-
-   <figure>
-    <img
-    src="DISTRIBUTED_SYSTEM_MODELS_TIMELINES.002.jpeg"
-    alt="Fig7" style="width:100%"> 
-<figcaption>Figure 5: Cannot Determine which System States Occurred.
-</figcaption>
-</figure>
-The states before execution of both events in both computations is
-\(S\).
-Likewise, the states after execution of both event in both
-computations is \(S*\).
-The state after executing \(e\) and before executing \(e'\) in
-the computation \([e, e']\) is shown in the diagram on the left as
-\(S'\).
-The state after executing \(e'\) and before executing \(e\) in
-the computation \([e', e]\) iw shown in the diagram on the right as
-\(S''\).
-States \(S'\) and \(S''\) may be different and we cannot determine
-    which one occurred.
-
-<p>
-<i>We cannot determine which system states occurred in a computation
-given the agent logs of the computation.</i>
-
-<p>
-Next we present a few theorems about dataflow 
+Given the logs that agents make during an execution of a system, there
+is a <i>unique</i> dataflow graph that is consistent with the logs.
+The logs specify a unique dataflow graph but do not specify the order
+of execution of independent events. For example, 
+the logs in the figure below do not specify whether step 1 occurred before,
+after or during step 2.
 
 
-    
-    <!-------------------------------------------------->
-    <h4 class="w3-text-teal">A Dataflow Lemma</h4>
-    <!-------------------------------------------------->
-    
-    <p>
-    Let <code>G</code> be the dataflow graph of a computation specified by a sequence of
-    steps \(E = [e_{0}, e_{1}, \ldots, e_{n}]\).
-    Let \(E'\) be the permutation of \(E\)
-    obtained by switching the order of a pair of adjacent elements
-    \(e_{i}, e_{i+1}\) in \(E\).
-    <p>
-    If there is no edge from \(e_{i}\) to \(e_{i+1}\) in <code>G</code> then \(E'\) is
-    also a computation.
-</p>
-
-    <!-------------------------------------------------->
-    <p class="w3-text-teal">Proof</p>
-    <!-------------------------------------------------->
-    
-    <p>
-    Let \(e_{i}\) be an event in which agent <code>u</code> receives a
-    message <code>m</code> from agent <code>v</code> when the state of
-    <code>u</code> is <code>s</code>.
-    Let \(e_{i+1}\) be an event in which agent <code>u'</code> receives a
-    message <code>m'</code> from agent <code>v'</code> when the state of
-    <code>u'</code> is <code>s'</code>.
-
-    <p>
-    Because there is no edge from \(e_{i}\) to \(e_{i+1}\),
-    agents <code>u</code> and <code>u'</code> are different and
-    the message received in step \(e_{i+1}\) was not sent in step
-    \(e_{i}\). Therefore message <code>m'</code> is at the head of
-    channel <code>(v', u')</code> before \(e_{i}\) is executed.
-
-
-<p>Therefore the inputs to \(e_{i}\)  -- namely state <code>s</code>
-of agent <code>u</code> and the message <code>m</code> at the head of channel
-<code>(v, u)</code>  -- do not change if \(e_{i+1}\) appears before
-\(e_{i}\). By the same argument the inputs to \(e_{i+1}\) do not
-change if \(e_{i+1}\) appears before \(e_{i}\). Therefore there exists
-a computation in which \(e_{i+1}\) appears before \(e_{i}\).
-
-
-<!-------------------------------------------------->
-<h6 class="w3-text-red">Example of Switching Adjacent Independent
-Steps</h6>
-<p>
-Figure 2 shows two
-diagrams with identical dataflow graphs. The upper and lower diagrams are 
-representations of computations starting at the same state and step
-sequences [1, 2, 3, 4], and [2, 1, 3, 4], respectively. Initial and
-final vertices are not shown. The sequence of steps in a computation
-are shown in the diagram by placing steps later in the sequence to the
-right of steps earlier in the sequence.
-
-<p>
-The order in which vertices 1 and 2 appear, from left to right, in the
-diagrams have been switched.
-The dataflow lemma says that if there is a computation [1, 2, 3, 4]
-then [2, 1, 3, 4] is also a computation because there is no edge from
-vertex 1 to vertex 2.
-</p>
-
-
-   <figure>
+<figure>
     <img
     src="Dataflow.006.jpeg"
     alt="Fig6" style="width:100%"> 
-<figcaption>Figure 2: Example of Switching Adjacent Independent Steps
-</figcaption>
+    <figcaption>Figure 10: Switching order of independent events with
+    the same dataflow graph</figcaption>
 </figure>
 
+<p>
+The diagram on the top illustrates a sequence of steps 1, 2, 3, 4
+while the lower diagram illustrates sequence 2, 1, 3, 4. Both diagrams
+have the same agent logs, and therefore the same dataflow graph.
+
+
+     
+ 
+<!--------------START SECTION: States ---------------------->
+<a name="States"></a>
+
   <!----------------------------------------------->
-  <h3 class="w3-text-teal">Topological Sorts</h3>
+  <h3 class="w3-text-teal">States</h3>
+  <!----------------------------------------------->
+   <p>
+    The future behavior of a system from its current state is
+    independent of the system's past behavior.
+    </p>
+    <p>
+    The state of a distributed system is given by the states of its
+    agents and channels.  A system state is a tuple with an element of
+    the tuple for the state of each agent and each channel.
+
+
+    The state of a channel is a queue consisting of the sequence of
+    messages sent on the channel that have not been delivered.  The
+    state of an agent is given by the values of its variables.
+</p>
+
+<p>
+See <a href="BasicsStatesExamples.html"> examples of states and state
+transitions</a> and <a href="BasicsStatesFAQ.html">questions about
+states of distributed systems.</a>
+
+<!--------------START SECTION: State Transitions--------------->
+<a name="StateTransitions"></a>
+
+  <!----------------------------------------------->
+  <h3 class="w3-text-teal">State Transitions and Events</h3>
+  <!----------------------------------------------->
+
+       <p>
+    There exists a transition from a state <code>S</code> to a state
+    <code>S'</code> exactly when in state <code>S</code> there is
+    a nonempty channel <code>(v, u)</code> and the delivery of the
+    message <code>m</code> at the head of the channel to agent
+    <code>u</code> and the execution of
+    <code>receive(message=m, sender=v)</code>
+    by agent <code>u</code> causes a transition to state <code>S'</code>.
+
+   The change in state is specified by the 4-tuple:
+<ol>
+  <li>
+  <code>u</code>'s state <code>s</code>
+  before it executes the <code>receive</code>.
+  </li>
+  <li>
+  The sender, <code>v</code>, of the message, and the message,
+  <code>msg</code>, that is received,
+  </li>
+  <li>
+  <code>u</code>'s state <code>s'</code> after it completes execution
+  of the <code>receive</code>.
+  </li>
+  <li>
+  For each channel <code>(u, v)</code> from <code>u</code>, the
+  sequence of messages that <code>u</code> sends along the channel
+  while it executes the <code>receive</code>. The sequence of messages
+  is the empty sequence if <code>u</code> sends no messages along the
+  channel during the receive.
+  </li>
+</ol>
+<p>
+The 4-tuple is called an <i>event.</i>
+The first two elements of the tuple are called the <i>inputs to the
+event</i>, and 
+the last two elements are the <i>outputs of the event</i>.
+The states of all agents other than <code>u</code> remain unchanged in
+this transition.
+The states of channels not listed in the event also remain unchanged.
+The only changes in a state transition are changes to a single agent
+and the channels incident on that agent.
+
+<p>
+Each vertex of the dataflow graph represents the execution of an
+event.
+
+<figure>
+    <img
+    src="Dataflow.001.jpeg"
+    alt="Fig4" style="width:100%"> 
+    <figcaption>Figure 11: An Event is Represented by a Vertex of the
+    Dataflow Graph</figcaption>
+</figure>
+
+The same event can occur multiple times in a dataflow graph.
+This is because an
+agent may execute a receive function with the same input and in the
+same state multiple times.
+So, there may be multiple vertices of the dataflow graph with identical
+labels of inputs and outputs.
+Each execution of a receive function is a different step of the
+dataflow graph.
+So, there may be multiple vertices with identical inputs and outputs,
+and each of these vertices is a different step.
+
+
+<p>
+We assume that the receive function is <i>deterministic</i>.
+The output of an event is a function of its input.
+
+<p>
+If all channels are empty in a state S then there is no transition
+from S.
+
+
+
+<p class="w3-text-teal">Locality of Events</p>
+<p>
+An event specifies the state transition of a single agent and the
+edges incident on it when the agent executes its receive function;
+the event does not specify the states of other agents and channels.
+A transition from a state S to a state S' specifies the states of
+<i>all agents and all channels</i> in S and in S'.
+A state transition specifies the global (entire) state of a system
+before and after the transition.
+In contrast, an event specifies the local states of a single agent and its
+incident edges before and after the transition.
+
+
+<!----------------------------------------------->
+<h4 style="color:red;">Example of State Transitions and Events</h4>
+<!----------------------------------------------->
+    <p>
+    This example is of an event at agent, <code>pos</code> from the <a
+    href="Basics.html#Example">previous page.</a> In this example,the
+    state of <code>pos</code> before the event is given by the values
+    of its variables <code>my_data = [3, 5]</code> and <code>n =
+    0</code>.  In the event, <code>pos</code> receives a "wakeup"
+    message from itself. A wakeup message is shown as a star in the
+    diagram. 
+    </p>
+    
+      <figure>
+    <img
+    src="ComputationExamples.001.jpeg"
+    alt="Fig1" style="width:75%"> 
+    <figcaption>Figure State S_0: Initial State</figcaption>
+    </figure>
+
+    <p>
+The execution of the event (<code>receive('wakeup', pos)</code>)
+causes a state transition from state
+    S_0, shown in the figure above, to state S_1, shown in the figure
+    below. 
+    </p>
+
+      <figure>
+    <img
+    src="ComputationExamples.002.jpeg"
+    alt="Fig2" style="width:75%"> 
+    <figcaption>Figure State S_1</figcaption>
+    </figure>
+    
+<p>
+<code>pos</code>'s state after the event is <code>my_data = [3,
+5]</code>  and <code>n  = 1</code>.
+During the event <code>pos</code> sends a "wakeup" message to itself
+and sends 3 to agent <code>total</code>.
+The event is specified by the following tuple:
+<ol>
+  <li>
+  <code>pos</code>'s state before it executes the <code>receive</code>
+  is given by the values of its variables <code>my_data = [3,
+  5]</code> and <code>n = 0</code>. 
+  </li>
+  <li>
+  The sender of the message that is received in this event is <code>pos</code>, and
+  the message is "wakeup".
+  </li>
+  <li>
+  <code>pos</code>'s state after it completes execution
+  of the <code>receive</code> is given by <code>my_data = [3,
+  5]</code> and <code>n = 1</code>. 
+  </li>
+  <li>
+  The messages sent during the execution of <code>receive</code> are
+  (i) "wakeup" to <code>pos</code> and  (ii) <code>3</code> to
+  <code>total</code>. 
+  </li>
+</ol>
+
+The states of the other agents -- <code>neg</code>,
+<code>total</code>, and <code>X</code> -- remain unchanged in this state
+transition. Likewise, the states of channels that are not incident on
+<code>pos</code> -- channels <code>(neg, neg)</code>, <code>(neg,
+total)</code>, and <code>(total, x)</code> -- remain unchanged in the
+transition.
+
+</p>
+
+
+
+  <!----------------------------------------------->
+  <h3 class="w3-text-teal">Computations</h3>
+<!----------------------------------------------->
+   <p>
+    A <i>computation</i> is a sequence of states, where there exists
+    a transition from each state in the sequence to the next.
+
+      A computation may be finite or infinite.  A computation may
+      start in any state.  We will often prove properties of
+      computations that start in an initial state of the system;
+      however, a computation is not restricted to starting in an
+initial system state.
+
+<!----------------------------------------------->
+<h4 style="color:red;">Example of a Computation</h4>
+<!----------------------------------------------->
+The next series of figures shows a computation. Each figure shows a
+state. There is a transition from the state shown in a figure to the
+state shown in the next figure. There is a computation that starts in
+the state shown in the first figure below to the state shown in the
+last figure.
+
+<figure>
+  <img
+    src="ComputationExamples.001.jpeg"
+    alt="Fig1" style="width:60%"> 
+</figure>
+
+<figure>
+  <img
+    src="ComputationExamples.002.jpeg"
+    alt="Fig2" style="width:60%"> 
+</figure>
+<figure>
+  <img
+    src="ComputationExamples.003.jpeg"
+    alt="Fig3" style="width:60%"> 
+</figure>
+<figure>
+  <img
+    src="ComputationExamples.004.jpeg"
+    alt="Fig4" style="width:60%"> 
+</figure>
+<figure>
+  <img
+    src="ComputationExamples.005.jpeg"
+    alt="Fig5" style="width:60%"> 
+</figure>
+<figure>
+  <img
+    src="ComputationExamples.006.jpeg"
+    alt="Fig6" style="width:60%"> 
+</figure>
+<figure>
+  <img
+    src="ComputationExamples.007.jpeg"
+    alt="Fig7" style="width:60%"> 
+</figure>
+<figure>
+  <img
+    src="ComputationExamples.008.jpeg"
+    alt="Fig8" style="width:60%"> 
+</figure>
+<figure>
+  <img
+    src="ComputationExamples.009.jpeg"
+    alt="Fig9" style="width:60%"> 
+</figure>
+<figure>
+  <img
+    src="ComputationExamples.010.jpeg"
+    alt="Fig10" style="width:60%"> 
+</figure>
+
+Every subsequence of a computation is also a computation. For example,
+there is a computation that starts in the state shown in the second
+figure to the state shown in the fifth figure.
+
+
+<!----------------------------------------------->
+<h3 class="w3-text-teal">Sequential Program Representation of Computations</h3>
+<!----------------------------------------------->
+All computations starting from a state
+\(S_{0}\) are sequences \([S_{0}, S_{1}, S_{2}, \ldots, ]\)
+of states generated in the following while loop.
+
+      <hr class="new2">
+      <pre>
+# The initial state is S[0]
+step_number = 0
+while there exists a nonempty channel:
+   # state is S[step_number]
+   select any nonempty channel (v, u)
+   let m be the message at the head of (v, u)
+   deliver m to agent u which executes receive(m, v)
+   step_number = step_number + 1
+</pre>
+      <hr class="new2">
+
+      <p>
+      The loop terminates when all channels are empty.  The selection
+      of the nonempty channel in an iteration is nondeterministic --
+      <i>any</i> nonempty channel can be selected.  Different
+      computations are generated by making different selections of the
+      nonempty channel in each iteration. When we prove properties of
+      computations we have to consider all possible selections of
+      nonempty channels.
+      </p>
+
+
+
+<p>
+A benefit of using the states in a while loop to represent the states 
+of a computation is that we can use familiar techniques
+---
+such as 
+<a href="https://en.wikipedia.org/wiki/Loop_invariant">
+loop invariant</a> and
+<a href="https://en.wikipedia.org/wiki/Loop_variant">
+loop variants</a> ---
+for reasoning about sequential programs to reason about
+    distributed algorithms as well.
+    </p>
+
+
+<!----------------------------------------------->
+<h3 class="w3-text-teal">Dataflow Graph of a Computation</h3>
+<!----------------------------------------------->
+
+Each computation has a unique dataflow graph associated with it.
+The steps of the dataflow graph are executions of receive functions in
+the computations. The agent and message edges of the dataflow graph of
+the computation are as given before.
+<p>
+A computation is a <i>total</i> ordering of executions of receive
+functions. A dataflow graph is a <i>partial</i> ordering of executions
+of receive functions because the graph is acyclic. Many computations
+can have the same dataflow graph.
+
+
+<figure>
+  <img
+    src="ComputationExamples.011.jpeg"
+    alt="Fig11" style="width:100%"> 
+</figure>
+The figure above shows the dataflow graph for the computation shown in
+the previous diagrams. The black edges are agent edges and they are
+  labeled with the states of agents. The blue and red edges are
+  message edges and are labeled with the contents of messages. The red
+  edges show internal messages, i.e., messages from an agent to
+itself. The top row shows steps at agent pos, the next row shows steps
+  at agent neg, and the bottom two rows shows steps at agents total
+  and X. The numbers inside the steps for pos and neg are the value of
+  n at steps. The numbers inside the steps for total show the value of
+  sum. Not all labels on agent edges are shown in the diagram.
+
+
+
+  <!----------------------------------------------->
+  <h3 class="w3-text-teal">Topological Sorts of Directed Acyclic Graphs</h3>
 <!----------------------------------------------->
 <p>
 A <a href="https://en.wikipedia.org/wiki/Topological_sorting">
@@ -478,84 +936,75 @@ the sequence \(E'\) is reached.
     </p>
 
 
-
-<a name="TheoremMessageOrdering">
-<hr class="new2">
+<a name="TheoremTopologicalSort">
   <!----------------------------------------------->
-  <h4 class="w3-text-teal">Theorem: System Computations and Agent Computations</h4>
+  <h3 class="w3-text-teal">Equivalent Statements of the Theorem</h3>
 <!----------------------------------------------->
-
-Let \(C\) be a computation of a system.
-Let \(C'\) be any
-permutation of \(C\) where:
-<ol>
-  <li>
-  The computation of each agent in \(C'\) is the same as in \(C\) and 
-  </li>
-  <li>
-  For each message, the step in which the message is received occurs
-  in \(C'\) after the step in which the message is sent.
-  </li>
-</ol>
-Then \(C'\) is also a computation of a system.
+<hr class="new2">
+<p style="color:blue;">
+A sequence of steps of a dataflow graph is a computation exactly when:
+For all steps v, w in the graph where there is a path
+from v to w: v appears before w in the sequence.
 </p>
 <hr class="new2">
-<p class="w3-text-teal">Proof</p>
-\(C'\) is a topological sort of the dataflow graph of \(C\).
-
-<p  class="w3-text-teal">From Logs to Computations</p>
-Given a computation \(C\) and a permutation \(C'\) of \(C\), we know
-that \(C'\) is also a computation if the agent logs are the same in
-\(C\) and \(C'\), and every message is received after it is sent in
-\(C'\).
 
 
-<!-------------START SECTION: Model Limitations ------------->
-<div ID="SECTION", class="ModelLimitations">
-  <a name="ModelLimitations"></a>
-  <h4 class="w3-text-teal">Model Limitations</h4>
-  <a href="BasicsStates.html#ModelLimitations">We described
-  limitations of the model earlier</a>.
-  States,
-  transitions, and computations are fictitious in the sense that they
-  do not accurately represent all system behaviors.
-  Exactly one agent is executing while all other agents are idle in a
-  state transition of the model, whereas multiple agents may be
-  executing concurrently.
+Equivalently, a sequence of steps is a computation if for all steps v,
+w: if data flows from v to w then  v appears before w in the sequence.
 
-  <p>
-  When an agent logs the steps that it takes during an execution of
-  the system, the log faithfully represents 
-  the sequence of steps and the states of the agent in the execution.
-  The only aspect that the log does not capture is the changes in the
-  state of the agent while it is carrying out a step.
-  The dataflow graph is equivalent to the set of agent logs, and so
-  the dataflow graph faithfully represents the flow of data between
-  steps.
+<p>
+We may also use phrases such as "data flows forwards" in
+a computation or "each step depends only on earlier steps" of a
+computation. 
 
 
+<!-------------START SECTION: Model Strengths and Limitations ------------->
+  <a name="ModelStrengthsAndLimitations"></a>
+  <h4 class="w3-text-teal">Model Strengths and Limitations
+Limitations</h4>
+
+<p>
+Agents in many distributed systems have semi-synchronized clocks;
+though the clocks are not perfect, they do not drift apart by
+arbitrary amounts.
+The time that a message is in flight in some distributed systems can
+be bounded.
+Distributed cyber-physical systems have clocks that are synchronized
+(if imperfectly) and assume bounds on message delay.
+The model that we have described is inappropriate for such systems.
+Later we discuss models that do include clocks and bounded message
+delays. 
+
+<p>
+A dataflow graph faithfully represents the flow of data between
+steps; however, a dataflow graph is not a timeline.
+Dataflow is adequate for many distributed applications.
+
+<p>
+
+A state transition represents a change from a state in which all
+agents are idle to a state in which all agents are idle. The
+      transition captures the change in state of exactly one agent when it
+executes a <code>receive</code>.
+A computation is a sequence of states where  all agents are idle in
+every state in the sequence.
+Restricting consideration of states in which all agents are idle may
+seem a severe limitation of the model.
+
+
+<p>
+As we saw, the sequence of states of a computation are the states in a
+<i>sequential</i> nondeterministic while loop.
+It may appear that the model is weak because we are representing
+dynamic, multi-agent, concurrent systems by sequences.
+We will see that these limitations are not restrictive.
+
+
+
+
+<!-------------END SECTION: Model Limitations ------------->
   
-    
 
-
-
-  </div>
-  <!-------------END SECTION: Model Limitations ------------->
-  
-</div>
-<!-------------END SECTION: Computations and Dataflow ------------->
-
-<p class="w3-text-teal">Note</p>
-Some articles use the phrase "\(x\) causes \(y\)" for "there is a
-path in the dataflow graph from step \(x\) to step \(y\)."
-
-
-
-
-</div>
-<!--------------END SECTION: Dataflow ---------------------->
-
- 
 
     
 <!---------------------------------------->
@@ -589,7 +1038,7 @@ detection and deadlock detection.
 
 <!-- END MAIN -->
 </div>
-
+</div>
 </body>
 </html>
 
