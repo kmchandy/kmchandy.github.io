@@ -78,226 +78,203 @@ hr.new1 {
 
 
 <!---------------------------------------------------------------->
-    <h1 class="w3-text-teal">Dataflow: Examples</h1>
+    <h2 class="w3-text-teal">Consistent Cuts, Computations, States: Examples</h2>
 <!----------------------------------------------------------------->
+This example is of a system with two agents u and v, and four
+  channels.
+  The channels are between the agents and from each agent to itself.
+  The system has a red token and a blue token.
+  A token is either at an agent or in a channel between the agents.
+  An agent sends a "wakeup" message to itself when the agent has a
+  token. Wakeup messages are shown as W in the figure.
 
-   <!----------------------------------------------------------------->
-  <h3 class="w3-text-teal">A Simple Example (continue)</h3>
+  <p>
+  The figure shows two states. The diagram on the left-hand side shows
+  state S0 in which agent u holds the blue token and agent w holds the
+  red token. In S0 there is a wakeup message from each agent to
+  itself.
+
+  <p>
+  The diagram on the right-hand side shows state S1 in which the blue
+  token is in the channel (u, v), and the red token is at v. There is
+  a wakeup message from v to itself.
+
+  <p>
+  The transition from S0 to S1 occurs when agent u receives a wakeup
+  message from itself. In the transition agent u sends the blue token
+  to v.
+
+  <figure>
+    <img src="ExamplesTimelines/ExamplesTimelines.001.jpeg"
+    alt="Fig1" style="width:100%"> 
+    <figcaption>Fig.1: Example of a State Transition</figcaption>
+  </figure>
+
+  <p>
+  The event that describes the transition is shown in the figure
+  below.
+  The inputs to the event are the state of u before the transition and
+  the message received by u that causes the transition.
+  The outputs of the event are the state of u after the transition and
+  for each agent the sequence of messages sent by u to the agent in
+  the transition.
+  The input and output agent edges are labeled with the states of the
+  agent before and after the transition, respectively.
+  The message edges are labeled with the contents of the message.
+  (Here the wakeup message is identified by a star.)
+  <figure>
+    <img src="ExamplesTimelines/ExamplesTimelines.002.jpeg"
+    alt="Fig2" style="width:100%"> 
+    <figcaption>Fig.2: Example of an Event</figcaption>
+  </figure>
+
+
+<!---------------------------------------------------------------->
+    <h3 class="w3-text-teal">State Diagrams</h3>
 <!----------------------------------------------------------------->
-  This example is a continuation from the example in
-  <a href="BasicsStatesExamples">States</a>.
+State diagrams are labeled directed graphs in which the vertices
+    represent states and the labeled edges represent state
+transitions.
+The label of an edge is the channel on which the message is received
+    that causes the state transition. This diagram shows some (but not
+all) of the states and state transitions.
+The label "U_s" on an edge represents a transition in which agent U
+<i>s</i>ends a message.
+The label "V_r" on an edge represents a transition in which agent V
+<i>r</i>eceives a message.
 
-  
-Two children, X and Y, are tossing balloons to each other.
 
-A balloon that has been tossed by X, while in the air to Y, is a
-message in the channel (X, Y\).
+  <figure>
+    <img src="Timelines/Timelines.014.jpeg"
+    alt="Fig15" style="width:100%"> 
+    <figcaption>Fig.3: Example: State Diagram</figcaption>
+</figure>
 
-When a child gets a balloon it tosses the balloon back immediately.
 
-Initially there is a balloon tossed by X on its way to Y and there is
-also a balloon tossed by Y on its way to X.
-
-<p>
-  Each child has a countdown of the number of times it tosses balloons.
-
-  Each time a child tosses a balloon it decrements its countdown value.
-
-After a child's countdown reaches 0 the child pops balloons that it receives
-(and doesn't toss popped balloons). 
-
-<h4 class="w3-text-teal">State</h4>
-The state of a channel is the number of balloons in it.
-
-The state of an agent (X or Y) is the countdown value nX or nY, respectively.
-
-<h4 class="w3-text-teal">A Computation: A Sequence of States</h4>
-An example of a sequence of state changes is as follows.
-<ol>
-  <li>
-  Initial State: Channel (X, Y) has one balloon and channel (Y, X) has
-  one balloon. And the countdown for X is 2 and the countdown for Y is
-  3. We represent this state by:
-  <br>
-  nX = 1, nY = 2, (X, Y) = 1, (Y, X) = 1
-  </li>
-  <li>
-  Y receives a balloon and sends it back. So the state
-  becomes:
-  <br>
-  nX = 1, nY = 1, (X, Y) = 0, (Y, X) = 2
-  </li>
-  <li>
-  X receives a balloon and  sends it back. So the state
-  becomes
-  <br>
-  nX = 0, nY = 1, (X, Y) = 1, (Y, X) = 1
-  </li>
-  <li>
-  Y receives a balloon and sends it back. So the state
-  becomes 
-  <br>
-  nX = 0, nY = 0, (X, Y) = 0, (Y, X) = 2
-  </li>
-  <li>
-  X receives a balloon and pops it. So the state
-  becomes 
-  <br>
-  nX = 0, nY = 0, (X, Y) = 0, (Y, X) = 1
-  </li>
-  <li>
-  Y receives a balloon and pops it. So the state
-  becomes 
-  <br>
-  nX = 0, nY = 0, (X, Y) = 0, (Y, X) = 0
-  </li>
-  <li>There are no further steps in this computation
-  </li>
-</ol>
-
-<h4 class="w3-text-teal">Another Computation</h4>
-What are other computations of the system?
+<!---------------------------------------------------------------->
+    <h3 class="w3-text-teal">Nondeterministic Receive Functions</h3>
+<!----------------------------------------------------------------->
+  Throughout this course we will restrict attention to receive
+    functions that are deterministic. This example illustrates that
+    the model allows for nondeterministic functions. If agent u holds
+    a red token and a blue token when it receives a wakeup message the
+    agent can send either the red or the blue token. The upper line
+    shows transitions in which agent u first sends the blue and then
+    the red token. The lower line shows transitions in which u sends
+the red token before the blue one.
 
 <p>
-Let's look at the event in step 3 of the above computation. The event
-is as follows.
+This example merely illustrates nondeterminacy in receive functions.
+We will use deterministic functions in the future.
+  <figure>
+    <img src="Timelines/Timelines.015.jpeg"
+    alt="Fig15" style="width:100%"> 
+    <figcaption>Fig.4: Example: Nondeterminism in Execution of Receive
+    Function</figcaption>
+</figure>
 
-<h5 class="w3-text-teal">Event: X receives a balloon for the first time</h5>
-This event is specified by the 4-tuple:
-<ol>
-  <li>
-  X's state before the event is nX = 1
-  </li>
-  <li>
-  The message that is received is 1 (balloon) and the message is from
-  Y. 
-  </li>
-  <li>
-  X's state after the event is nX = 0
-  <li>
-  The message that is sent in the event is 1 (balloon) and the message is to
-  Y. 
-  </li>
-</ol>
 
-This event can be executed in any state S which satisfies the inputs
-to this event:
-<ol>
-  <li>
-  X's state before the event is nX = 1
-  </li>
-  <li>
-  The message at the head of channel (Y, X) is 1. 
-  </li>
-</ol>
+<!---------------------------------------------------------------->
+    <h3 class="w3-text-teal">Computations</h3>
+<!----------------------------------------------------------------->
+The figure below shows a computation consisting of the sequence of
+states [S0, S1, S2, ..., S8].
+A computation is a path through the state diagram.
+You can see the path in the figure below in the graph shown in figure 3.
 
-So, this event can be executed in the initial state.
+  <figure>
+    <img src="Timelines/Timelines.016.jpeg"
+    alt="Fig15" style="width:100%"> 
+    <figcaption>Fig.5: Example: Computation</figcaption>
+  </figure>
 
-<p>
-You can now construct the following computation.
 
-<ol>
-  <li>
-  Initial State: Channel (X, Y) has one balloon and channel (Y, X) has
-  one balloon. And the countdown for X is 2 and the countdown for Y is
-  3. We represent this state by:
-  <br>
-  nX = 1, nY = 2, (X, Y) = 1, (Y, X) = 1
-  </li>
-  <li>
-  X receives a balloon and sends it back. So the state
-  becomes:
-  <br>
-  nX = 0, nY = 2, (X, Y) = 2, (Y, X) = 0
-  </li>
-  <li>
-  Y receives a balloon and  sends it back. So the state
-  becomes
-  <br>
-  nX = 0, nY = 1, (X, Y) = 1, (Y, X) = 1
-  </li>
-  <li>
-  X receives a balloon and pops it. So the state
-  becomes 
-  <br>
-  nX = 0, nY = 1, (X, Y) = 1, (Y, X) = 0
-  </li>
-  <li>
-  Y receives a balloon sends it back. So the state
-  becomes 
-  <br>
-  nX = 0, nY = 0, (X, Y) = 0, (Y, X) = 1
-  </li>
-  <li>
-  X receives a balloon and pops it. So the state
-  becomes 
-  <br>
-  nX = 0, nY = 0, (X, Y) = 0, (Y, X) = 0
-  </li>
-  <li>There are no further steps in this computation
-  </li>
-</ol>
+<!---------------------------------------------------------------->
+    <h3 class="w3-text-teal">The State of the System at a Consistent Cut</h3>
+<!----------------------------------------------------------------->
+The state of the system at a consistent cut (past, future) is the
+    state after all the steps in past and before any of the steps in
+future.
+The state at a consistent cut is illustrated by the labels of edges
+that cross the boundary separating past from future.
+The figure below shows the dataflow graph for computation [S1, ..,
+S6].
+The initial and final events are labeled 0 and N respectively (rather
+than init and fini as we normally do).
 
 <p>
-A system may have many computations.
-
-All the states of the computations of the system are states in the
-<code>while</code> loop:
-
-<pre>
-Initial State
-
-while there exists an executable event:
-   execute any executable event
-</pre>
-
-In this example, after the initial state there were two executable
-events: an event at X and an event at Y.
-Either of these two events could have been selected as the next event
-to be executed.
-
-<h5 class="w3-text-teal">Invariant</h5>
-An invariant of this system is:
-<p>
-Number of balloons is at most 2
-<p>
-which is equivalent to: <code>nX + nY + (X, Y) + (Y, X) <= 2</code>
-<p>
-(Here we are abusing notation using (X, Y) for a channel and also for
-the state of the channel.)
+The steps of the computation are ordered from left to right in the
+figure.
+So, the consistent cut (past, future) where past consists of steps [1,
+.., i] is shown in the diagram by a vertical line between steps i and
+i+1, where past is the set of steps to the left of the vertical line.
 
 <p>
-To prove that this predicate (Boolean formula on variables of the
-program) is an invariant we prove that (1) this predicate holds initially
-(i.e., the formula is true initially) and (2) if it holds before any
-step then it holds after the step.
-
-<h5 class="w3-text-teal">Loop Variant</h5>
-To prove that the function terminates we use the loop variant:
-<code>nX + nY + (X, Y) + (Y, X)</code>
+Let's look at the state at the consistent cut (past={0,0, 1, 2, 3},
+future={4, 5, 6, N, N}). The state of agent u at the cut is the label
+of the agent edge for u that crosses the vertical line separating past
+from future. The label of this edge is E for "empty."
+The state of the agent edge for v is the blue token.
 
 <p>
-The loop variant is a function of the variables of the system.
+The state of a channel at a consistent cut is the sequence of message
+edges of messages sent on the channel that cross the boundary
+separating past from future. For example, the state of the channel (u,
+u) is the empty sequence because there is no message edge from u to
+itself that crosses the boundary.
+The state of the channel from v to u is the red token.
 
-We can carry out an induction on this function because it returns
-integers and is bounded below.
 
-The bound is not important. In our example, a bound is 0.
+
+  <figure>
+    <img src="ExamplesTimelines/ExamplesTimelines.003.jpeg"
+    alt="Fig3" style="width:100%"> 
+    <figcaption>Fig.6: Example: System States at Consistent Cuts</figcaption>
+  </figure>
+
+The dataflow graph of the figure above and the figure below are
+identical.
+The steps of the dataflow graph in the figure above are ordered from
+left to right in accordance with the computation [0, 0, 1, 2, 3, 4, 5,
+6, N, N] while the ordering of the steps from left to right in the
+figure below is [0, 0, 2, 1, 3, 5, 4, 6, N, N].
+This ordering helps us to pictorially represent consistent cuts in the
+lower figure that are different from those in the upper figure.
 
 <p>
-We prove that the computation terminates by showing that each step
-reduces the variant function.
-
-
-<h5 class="w3-text-teal">Next</h5>
-
-
-<a href="BasicsStates.html">
-States of a Distributed System.</a>
-
+For example, the state S'_1 at the consistent cut (past = {0, 0, 2}, future
+= {..}) is different from the state S_1 at the consistent cut (past = {0, 0, 1}, future
+= {..}).
+The states S_2 at the consistent cut (past = {0, 0, 1, 2}, future =
+..) is the same in both computations.
 
 <p>
-<a href="BasicsReview.html">Review material for this page</a>
+Suppose each agent logs its own computation, then can we tell whether
+S_1 or S'1 occurred?
+No we cannot, and it doesn't matter.
+
+
+  <figure>
+    <img src="ExamplesTimelines/ExamplesTimelines.004.jpeg"
+    alt="Fig4" style="width:100%"> 
+    <figcaption>Fig.7: Example: System States at Consistent Cuts in a
+    Different Computation</figcaption>
+  </figure>
+
+The figure below shows the dataflow graph of the previous two figures
+with steps ordered from left to right in the sequence 0, 0, 1, 2,..,
+6, N, N. And the figure shows the boundary of the consistent cut (past = {0, 0, 2},
+future = {..}) as a curved line. The state at this consistent cut is
+also given by the labels of edges that cross the boundary.
+
+
+  <figure>
+    <img src="ExamplesTimelines/ExamplesTimelines.005.jpeg"
+    alt="Fig5" style="width:100%"> 
+    <figcaption>Fig.9: Example: Consistent Cuts of the Dataflow Graph:
+    Past/Future</figcaption>
+</figure>
+
 
 
 
