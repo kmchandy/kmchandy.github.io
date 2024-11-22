@@ -831,6 +831,58 @@ trajectory, and \(\neg P\) holds at a later point \(t'\)
 then there must be path in the timeline diagram from point \(t\) on
 \(x\)'s timeline to point \(t'\) on \(z\)'s timeline.
 
+<h3 class="w3-text-teal">The Role of Time</h3>
+
+<p class="w3-text-teal">Loosely synchronized clocks</p>
+Next consider systems in which agent clocks are loosely synchronized.
+Each agent's clock drifts by at most \(\delta\) seconds from the true
+time.
+Suppose an agent \(x\) sends a message to an agent \(y\) where the
+message says that \(x\) will take an action -- say "turn the furnace
+on" -- at time \(T\) where \(T\) is determined by \(x\)'s clock, and
+that \(x\) will take a further action -- say "turn the furnace off" --
+at a later time \(T'\). Assume that \(\delta\) is much smaller than
+\(T' - T\).
+
+<p>
+Agent \(y\) can gain knowledge about agent \(x\) without receiving
+messages for each action that \(x\) takes. When \(x\)'s clock reads
+\(T'\) then the true time lies in the interval \([T'-\delta,
+T'+\delta]\).
+When the true time is in this interval, agent \(y\)'s clock lies in
+the interval \([T'-2 \delta, T'+ 2\delta]\).
+So, when \(x\)'s clock reads \(T'\) then
+\(y\)'s clock reads a value in the interval \([T'-2\delta,
+T'+2\delta]\).
+
+<p>
+Agent \(y\) knows that \(x\) has taken the action --
+"furnace is turned on" -- in the instant before \(T' - 2 \delta\). Agent
+\(y\) is unsure whether the action holds -- "is the the furnace on?"
+-- in the interval \([T' - 2\delta, T' + 2\delta]\). And \(y\) knows
+that the next action holds -- furnace is off -- at the instant after
+\(T'+2\delta\).
+
+<p class="w3-text-teal">Bounded message delay</p>
+Consider a system in which message delays are positive and are at most
+\(\tau\). If \(x\) sends a message to \(y\) when \(x\)'s clock
+reads \(T\) then \(x\) knows at time \(T + \tau + \delta\) that \(y\)
+has received the message, and \(x\) gains this knowledge without \(y\)
+sending \(x\) a message.
+
+<p>
+Distributed cyber-physical systems with multiple sensors and actuators
+are systems with synchronized clocks (even if synchronization is
+imperfect) and with bounded delays. The discussion of what agents know
+show us why time plays a critical role in such systems.
+
+<p>
+Read <a href="https://dl.acm.org/doi/10.1145/79147.79161">Knowledge and
+Common Knowledge in a Distributed Environment</a> and
+<a href="https://dl.acm.org/doi/pdf/10.1145/323596.323615">How Processes Learn</a>.
+
+
+
 <h3 class="w3-text-teal">Summary</h3>
 Many people working on distributed systems use the phrase "an agent
 knows." This module gives a definition of the concept that is
@@ -847,13 +899,13 @@ straightforward and are all based on consistent cuts of timelines.
   Is the following true? Why?
   <p>
   (\(z\) knows \(P\)) and (\(z\) knows \(Q\)) \(\equiv\) \(z\) knows
-  \(\(P \wedge Q\))
+  (\(P \wedge Q\))
   </li>
   <li>
   Is the following true? Why?
   <p>
   (\(z\) knows \(P\)) or (\(z\) knows \(Q\)) \(\equiv\) \(z\) knows
-  \(\( P \vee Q\))
+  (\( P \vee Q\))
   </li>
   <li>
   Suppose you and your friend communicate only using messages sent in
