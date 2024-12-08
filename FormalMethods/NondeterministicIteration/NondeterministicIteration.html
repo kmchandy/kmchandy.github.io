@@ -1,0 +1,278 @@
+<title>ReviewOfBasics/NondeterministicIteration/NondeterministicIteration.html</title>
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+
+<nav
+class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5
+w3-animate-left" 
+id="mySidebar">
+
+<a href="javascript:void(0)"
+onclick="w3_close()"
+class="w3-right w3-xlarge w3-padding-large w3-hover-black
+w3-hide-large"
+title="Close Menu">
+<i class="fa fa-remove"></i>
+</a>
+
+<!--END Heading  ---------------------------->
+ 
+<!-- Start Sidebar----------> 
+ 
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../Introduction/Introduction.html" > 
+CHAPTER: Review of Sequential Programming
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../NondeterministicIteration/NondeterministicIteration.html" > 
+Nondeterministic Iteration
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../NondeterministicIteration/NondeterministicIterationVideo.mp4" > 
+Video
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../NondeterministicIteration/NondeterministicIteration_Examples.html" > 
+Examples
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../NondeterministicIteration/NondeterministicIteration_Quiz.html" > 
+Quiz
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../Predicates/Predicates.html" > 
+Next
+</a>
+
+</nav>
+<!-- End Sidebar---------->
+ 
+<!-- Start overlay ---------------------------------->
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large"
+  onclick="w3_close()"
+  style="cursor:pointer"
+  title="close side menu"
+  id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+<!-- End overlay ---------------------------------->
+
+    <!------------------------------------------------------------>
+    <h1 class="w3-text-teal">Nondeterministic Iteration</h1>
+    <!------------------------------------------------------------>
+
+
+<h5 class="w3-text-teal">
+This module reviews <i>nondeterminism</i>
+in the form of 
+    <a href="https://en.wikipedia.org/wiki/Guarded_Command_Language">
+<i>do-od</i> loops</a>.
+The module describes states, transitions, and their graph
+representations. 
+</h5>
+
+
+<h4 class="w3-text-teal">do-od loops</h4>
+    A <i>do-od</i> loop consists of a set of <b>guarded commands</b>. A guarded
+    command consists of a <b>guard</b> and a <b>command</b> with the syntax:
+    <pre>
+guard -> command
+</pre>
+    The execution of the do-od loop is as follows: Execute <i>any</i> guarded command
+    of the loop for which the guard evaluates to True. Execution of the loop
+    terminates when all guards evaluate to False.
+    
+<h4 class="w3-text-teal">Nondeterministic Executions</h4>
+Most programming languages are <i>deterministic</i>; in a deterministic language the next
+statement to be executed is uniquely determined by the current state
+of the program.
+
+By contrast, a do-od loop is <i>nondeterministic</i> --- the
+next statement to be executed can be <i>any</i> guarded command with a true
+guard. So,
+different executions of the same do-od loop may execute commands in
+different orders and result in different outputs.
+
+    <h3 style="color:red;">Example: Sorting</h3>
+    Let \(X\) be an array of \(N\) numbers. The following loop sorts
+    the array in ascending order.  (We assume that indices
+    start at 0.)
+    <pre>
+for all i where 0 < i < N:
+   X[i-1] > X[i]   ->    X[i-1], X[i] = X[i], X[i-1]
+    </pre>
+    
+The loop has \(N-1\) guarded commands, where the <i>i</i>-th command
+is:
+<pre>
+X[i-1] > X[i]   ->    X[i-1], X[i] = X[i], X[i-1]
+</pre>
+Execution of the loop proceeds by 
+    flipping <i>any</i> adjacent pair of elements that is out of
+    order. Execution terminates when every adjacent pair is in order.
+
+<h3 class="w3-text-teal">States and Transitions in do-od Loops</h4>
+    The state of a <i>do-od</i> loop is given by the values of its
+    variables.
+    The execution of a guarded command, whose guard evaluates to true,
+    may change values of variables, and thus cause a transition from
+    one state to another.
+    There are no transitions from a state in which the guards of all
+    commands are false.
+    If the guards of multiple commands are true in a state \(s\) then
+    there can be transitions from \(s\) to multiple different states;
+    any of these transitions from \(s\) could be taken.
+
+    <p style="color:red;">Example</p>
+    Consider a do-od loop that sorts an array \(x[0, 1, 2,
+    3]\) in increasing order by flipping adjacent out-of-order
+    pairs. The loop has a guarded command for each adjacent pair of
+    elements; the guard evaluates to true when the pair is out
+    of order, and the command switches the pair.
+    <p>
+    If \(x =[10, 5, 1]\) then one of two commands can be executed:
+    either flip \(x[0], x[1]\) or flip \(x[1], x[2]\).
+    The state-transition graph has edges from state \(x =[10, 5, 1]\)
+    to state \(x =[5, 10, 1]\) and to state \(x =[10, 1, 5]\).
+
+    <h4 class="w3-text-teal">Graph Representation of States and Transitions</h4>
+    The states and state transitions of a system are represented by a
+    <a href="https://en.wikipedia.org/wiki/Directed_graph">
+    directed graph
+    </a>
+    in which vertices represent states and edges represent
+    transitions.
+    We call this graph the state-transition graph.
+
+<p>
+    A <i>computation</i> is a sequence of states where there exists a
+    transition from each state in the sequence to the next state of
+    the sequence.
+    A computation is represented by a path through the
+    state-transition graph. 
+    <p>
+    In this chapter, we treat the following as equivalent: vertex and
+state, edge and state transition, computation and path.
+
+<h4 style="color:blue;">Review</h4>
+<ol>
+  <li>What is a do-od loop? What does nondeterministic execution mean?</li>
+  <li>What are states of a program? How are states and transitions
+  represented as graphs?</li>
+</ol>
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
