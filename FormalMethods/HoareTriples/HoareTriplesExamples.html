@@ -1,0 +1,272 @@
+<title>ReviewOfBasics/HoareTriples/HoareTriplesExamples.html</title>
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+
+<nav
+class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5
+w3-animate-left" 
+id="mySidebar">
+
+<a href="javascript:void(0)"
+onclick="w3_close()"
+class="w3-right w3-xlarge w3-padding-large w3-hover-black
+w3-hide-large"
+title="Close Menu">
+<i class="fa fa-remove"></i>
+</a>
+
+<!--END Heading  ---------------------------->
+ 
+<!-- Start Sidebar----------> 
+ 
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../Introduction/Introduction.html" > 
+CHAPTER: Review Sequential Programming
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../HoareTriples/HoareTriples.html" > 
+Hoare Triples
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../HoareTriples/HoareTriplesExamples.html" > 
+Examples
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../HoareTriples/HoareTriplesVideo.mp4" > 
+Video
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../HoareTriples/HoareTriplesSelfTest.html" > 
+Quiz
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../Invariant/Invariant.html" > 
+Next
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../Predicates/Predicates.html" > 
+Previous
+</a>
+
+</nav>
+<!-- End Sidebar---------->
+ 
+<!-- Start overlay ---------------------------------->
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large"
+  onclick="w3_close()"
+  style="cursor:pointer"
+  title="close side menu"
+  id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+<!-- End overlay ---------------------------------->
+<h2 style="color:red;">Examples</h2>
+Consider the following Hoare triples.
+
+    <ol>
+      <li>
+\(
+\{x < 0\} \; c \; \{(x = 1) \vee (x = 2)\}
+\)
+</li>
+<li>
+\(
+\{x > 0\} \; c \; \{(x = 0) \vee (x = -1)\}
+\)
+</li>
+<li>
+\(
+\{x > 1\} \; c \; \{x < 0\}
+\)
+</li>
+</ol>
+
+
+
+What transitions
+are possible from a state in which \(x = -1\) by a command \(c\) that
+    satisfies <i>all</i> the above three Hoare triples?
+</p>
+
+<p>Since the state satisfies the
+    first precondition, \(x < 0\), the state after the transition must
+    satisfy the first postcondition, \((x = 1) \vee (x = 2)\). The
+    other two Hoare triples don't address the precondition \(x =
+-1\), and so the postconditions of these Hoare triples are irrelevant
+    for this question. Therefore, the transitions from \(x = -1\) are to 
+states \(x = 1\) or \(x = 2\).
+
+<p style="color:red;">Example</p>
+    What transitions
+are possible from a state in which \(x = 2\) that satisfy all of the
+    above Hoare triples?
+</p>
+
+<p>
+The first Hoare triple doesn't address the precondition \(x = 2\).
+<p>
+The precondition \(x > 0\) of the second triple holds when \(x = 2\)
+and therefore its postcondition, \((x = 0) \vee (x = -1)\), must hold in the
+next state.
+<p>
+The precondition \(x > 1\) of the third triple holds when \(x = 2\)
+and therefore its postcondition, \(x < 0\), must hold in the
+next state.
+<p>
+Both postconditions, \((x = 0) \vee (x = -1)\) and \(x <
+0\) must hold in the next state. So the only transition from \(x = 2\)
+is to state \(x = -1\).
+
+
+<p style="color:red;">Example</p>
+<p>
+    What transitions
+are possible from a state in which \(x = 0\)?
+</p>
+
+<p>
+None of the three preconditions hold when \(x = 0\), and therefore the
+next state can be <i>any</i> state. 
+
+
+<p style="color:red;">Example: Unimplementable Commands</p>
+What transitions satisfy all the following Hoare triples?
+<p>
+\(
+\{x = 0\} \; c \; \{x > 0\}, \quad \{x = 0\} \; c \; \{x < 0\}
+\)
+</p>
+<p>
+This command cannot be initiated in a state in which \(x = 0\) because
+both postconditions \(x > 0\) and \(x < 0\) must hold when the command
+terminates.
+
+<p>
+In this course we will ensure that the commands specified in our
+algorithms can be executed in every state.
+</p>
+
+<h3 class="w3-text-teal">Summary</h3>
+We may specify a command by sets of pre- and post-conditions that the
+command must specify.
+There may be many commands that satisfy these conditions, and we can
+use any command that satisfies these conditions in an
+implementation. Specifying commands in this way allows us to describe
+algorithms in terms of predicates rather than by using statements in a
+specific programming language.
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
