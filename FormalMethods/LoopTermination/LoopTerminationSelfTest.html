@@ -1,0 +1,260 @@
+<title>ReviewOfBasics/LoopTermination/LoopTerminationSelfTest.html</title>
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+
+<nav
+class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5
+w3-animate-left" 
+id="mySidebar">
+
+<a href="javascript:void(0)"
+onclick="w3_close()"
+class="w3-right w3-xlarge w3-padding-large w3-hover-black
+w3-hide-large"
+title="Close Menu">
+<i class="fa fa-remove"></i>
+</a>
+
+<!--END Heading  ---------------------------->
+ 
+<!-- Start Sidebar----------> 
+ 
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../Introduction/Introduction.html" > 
+CHAPTER: Review of Sequential Programming
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../LoopTermination/LoopTermination.html" > 
+MODULES
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../LoopTermination/LoopTermination.html" > 
+Loop Termination
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../LoopTermination/VariantFunctions.mp4" > 
+Loop Termination: Video
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../LoopTermination/LoopTerminationSelfTest.html" > 
+Loop Termination: Self Test
+</a>
+
+</nav>
+<!-- End Sidebar---------->
+ 
+<!-- Start overlay ---------------------------------->
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large"
+  onclick="w3_close()"
+  style="cursor:pointer"
+  title="close side menu"
+  id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+<!-- End overlay ---------------------------------->
+
+    <h1 class="w3-text-teal">Loop Termination: Self Test</h1>
+
+    <!---------------------------------------------------------->
+    <h2 class="w3-text-teal">Question 1</h2>
+    Let \(x\) be a vector of positive integers. Does the following
+    nondeterministic iteration terminate? If so, what is \(x\) upon
+    termination? Prove your answer.
+    <p>
+    \(x\) has \(N\) elements indexed \(j\) where \(0 \leq j < N\).
+    <p>
+    for all \(0 \leq i, j < N\):
+    <p>
+    \(
+    x[j] > x[i] \quad \rightarrow \quad x[j] = x[j] - x[i]
+    \)
+
+    <!---------------------------------------------------------->
+    <h2 class="w3-text-teal">Question 2</h2>
+    <p>
+    This question is related to the distributed algorithm,
+    <i>Diffusing Computations</i>.
+    <p>
+    \(T\) is either empty or is a rooted tree with vertex \(root\) as the
+    root. Associated with each vertex
+    \(v\) on the tree is a variable \(v.parent\) which is
+    \(v\)'s parent in the tree if \(v\) is not the root, and is
+    \(None\) if \(v\) is the root. Because the tree is rooted, \(root\)
+    is an ancestor of all vertices on the tree.
+
+    <p>
+    Also associated with
+    each vertex \(v\) is an integer, \(v.count\), which is the number
+    of \(v\)'s children on the tree.
+    <p>
+    A vertex that is not in \(T\) has a zero count and no parent.
+    <p>
+    Consider the following algorithm:
+    <p>
+    For all vertices <code>v</code>
+    <pre>
+    (v.count == 0) and (v.parent != None)   ->
+                           v.parent.count -= 1
+                           v.parent = None
+    </pre>
+    <p>
+    Does the algorithm terminate? Prove your answer.
+
+    <!---------------------------------------------------------->
+    <h1 class="w3-text-teal">Answers</h1>
+
+    <h2 class="w3-text-teal">Question 1</h2>
+    Yes, the algorithm terminates.
+    <p>
+    An invariant of the algorithm is that all elements of \(x\) are
+    positive integers. Verify that this predicate holds initially and execution of
+all commands maintains this predicate.
+<p>
+Let \(f = \sum_{j} x[j]\)
+<p>
+\(f\) is bounded below by \(N\) because of the invariant.
+\(f\) has an integer value.
+<p>
+Verify that execution of any command with a True guard reduces
+    \(f\). Therefore \(f\) is a variant function, and the algorithm
+terminates.
+
+<p class="w3-text-teal">Termination Condition</p>
+If all the guards are False then all the elements of \(x\) are
+identical. Verify the invariant that the gcd (greatest common divisor)
+of the elements of \(x\) remain unchanged. Therefore, at termination,
+each element of \(x\) is the gcd of initial elements of \(x\).
+
+    <h2 class="w3-text-teal">Question 2</h2>
+Yes, the algorithm terminates.
+<p>
+A guard has value True exactly when \(v\) is a leaf of the tree, and
+executing the command removes \(v\) from the tree.
+<p>
+A variant function is the number of vertices in the tree. This is
+bounded below by 0, and execution of a command with a True guard
+reduces its value.
+<p>
+At termination the tree vanishes.
+
+<p class="w3-text-teal">An alternate variant function</p>
+An alternate variant function is the tree, T, itself. For any graphs
+\(G\), \(G'\), define \(G \leq G'\) exactly when \(G\) is a subraph of
+\(G'\). This variant function is bounded below by the empty tree, and
+the execution of a command with a True guard reduces the function.
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
