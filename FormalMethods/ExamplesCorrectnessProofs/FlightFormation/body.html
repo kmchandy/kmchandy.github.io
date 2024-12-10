@@ -1,0 +1,172 @@
+    <h1 class="w3-text-teal">Self Test: Flight Formation</h1>
+
+    
+    <p>
+    This self test is to prove a concurrent system in
+    which a collection of agents in space, move towards a formation,
+    even though each agent can only communicate with its neighbors.
+
+    
+    <h4 class="w3-text-teal">Specification</h4>
+<p>
+    Agents \(0\) and \(N\) are called anchors. The anchors are
+    stationary while the other agents move so as to create a specified
+    formation. 
+    
+    For \(0 < j < N\), agent \(j\)'s neighbors are agents \(j-1\) and
+    \(j+1\).
+
+    <p>
+    Let agent \(j\)'s location be \(l[j]\), and let its initial value
+    be \(l[j]^{0}\).
+    When the computation terminates, the anchors must be at their
+    initial positions, and the locations of other agents must be 
+    \(\epsilon\)-close to the midpoint of the locations of its
+    neighbors.
+    <p>
+    <ol>
+      <li>
+      Anchors are stationary.
+      <p>
+    \(
+    (l[0] = l[0]^{0}) \wedge (l[N] = l[N]^{0})
+      \)
+      </li>
+      <li>
+      Other agents are approximately at midpoints of their
+    neighbors.
+      \(
+      \forall 0 < j < N :
+      \)
+      \(
+      \quad
+      |l[j] - mid | < \epsilon
+      \)
+      <p>
+      where \(mid = (l[j-1]+ l[j+1])/2 \)
+      </li>
+   </ol>
+   
+<p>
+The figure below shows the desired terminal state.
+
+    <figure>
+    <img src="FlightFormation/Slide2.jpg" alt="Fig2" style="width:80%">>
+    <figcaption>Fig.1 - Desired Terminal State</figcaption>
+    </figure>
+
+
+    <h3 class="w3-text-teal">Agent Actions</h3>
+    
+    <p>
+    Agents \(0\) and \(N\) are stationary.
+    The action of agent \(j\) for \(0 < j < N\) is as follows.
+    If the distance from the agent's location to the midpoint
+    of its neighbors is more than or equal to \(\epsilon\) then the
+    agent moves to  the midpoint; otherwise, the agent
+    does nothing. 
+    </p>
+
+    <p>
+    The action is specified by the following program
+    segment. Let \(l\) be the vector of agents' locations where
+    \(l[j]\) is the location of the \(j\)-th agent.
+    </p>
+    <p>
+    <pre>
+    mid = (l[j-1] + l[j+1])/2.0
+    if |l[j] - mid| >= epsilon:
+         l[j] = mid
+    </pre>
+
+    <p>
+    The program segment is equivalent to the guarded command:
+    <p>
+    \(
+    |l[j] - mid| \geq \epsilon \quad \rightarrow \quad l[j] = mid
+    \)
+
+    <p>
+    The figure below shows an example with agents indexed 0 through
+    5. The figure shows the movement of agent 1 to the midpoint of
+    agents 0 and 2. The figure also shows the movement of agent 4 to the midpoint of
+    agents 3 and 5. All the agents can move simultaneously; however,
+    for simplicity we will assume that only one agent moves at a time.
+
+    <figure>
+    <img src="FlightFormation/Slide1.jpg" alt="Fig1" style="width:80%">>
+    <figcaption>Fig.2 - Movement of Agents</figcaption>
+   </figure>
+
+
+   <p>
+    The next figure shows 3 diagrams from top to bottom. The diagram
+    at the top is the state at some point. The diagram in the middle
+    shows the state after agent 1 (red) moves to the midpoint of
+    agents 0 and 2. The diagram at the bottom shows the state after
+    agent 3 moves to the midpoint of agents 2 and 4. Note that the
+    agents seem to be moving away from the goal of having all agents
+    on the line connecting the stationary agents 0 and 5. 
+
+    <figure>
+    <img src="FlightFormation/Slide3.jpg" alt="Fig3" style="width:80%">>
+    <figcaption>Fig.3 - Movement of Agents</figcaption>
+    </figure>
+
+
+
+<h2 class="w3-text-teal">Self Test: Proof of Correctness</h2>
+    
+    <h5 class="w3-text-teal">Test 1</h5>
+    Give and prove an invariant of the loop.
+    
+    <h5 class="w3-text-teal">Test 2</h5>
+    Prove that the loop terminates by giving a variant function for
+    the loop. 
+    
+    <h5 class="w3-text-teal">Test 3</h5>
+Show that the specification holds upon termination of the loop.
+
+<h3 class="w3-text-teal">Answers</h3>
+   
+<h5 class="w3-text-teal">Answer 1</h5>
+The invariant is: The anchors are stationary.
+
+      <p>
+    \(
+    (l[0] = l[0]^{0}) \wedge (l[N] = l[N]^{0})
+\)
+<h5 class="w3-text-teal">Answer 2</h5>
+<p>
+A variant function \(f\) is the sum of the
+    square of the lengths between neighboring agents.
+    </p>
+    <p>
+\(
+    f(l) = \sum_{j=1}^{N} ((x_{j} - x_{j-1})^{2} + (y_{j} - y_{j-1})^{2})
+    \)
+</p>
+This variant function is bounded below.
+You can show that the execution of any guarded command with a True
+guard reduces the value of the variant function by at least a positive
+constant \(\delta\).
+So, variant function value can decrease for only a finite number of
+    steps. 
+
+<p>
+We leave it to you to determine \(\delta\). The largest
+value of \(\delta\) is immaterial; all you need to do is show that
+there exists a positive value. (Hint: \(\delta\) depends on
+\(\epsilon\) and the initial configuration.)
+</p>
+
+
+<h5 class="w3-text-teal">Answer 3</h5>
+<p>
+We must show that if the invariant holds and all guards are false then
+the specification is satisfied. This is trivial.
+</p>
+
+
+<h1 class="w3-text-teal">Extensions</h1>
+Design a similar algorithm in which agents move in 3-D space.

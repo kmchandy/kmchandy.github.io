@@ -1,0 +1,281 @@
+<title>ReviewOfBasics/ExamplesCorrectnessProofs/ShortestPath/ShortestPath.html</title>
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../../../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../../../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../../../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+
+<nav
+class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5
+w3-animate-left" 
+id="mySidebar">
+
+<a href="javascript:void(0)"
+onclick="w3_close()"
+class="w3-right w3-xlarge w3-padding-large w3-hover-black
+w3-hide-large"
+title="Close Menu">
+<i class="fa fa-remove"></i>
+</a>
+
+<!--END Heading  ---------------------------->
+ 
+<!-- Start Sidebar----------> 
+ 
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../../Introduction/Introduction.html" > 
+CHAPTER: Review Sequential Programming
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../../ExamplesCorrectnessProofs/ExamplesCorrectnessProofs.html" > 
+Correctness Proofs: Examples
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../Sorting/Sorting.html" > 
+Sorting
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../ShortestPath/ShortestPath.html" > 
+Shortest Path
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../AverageOfSensors/AverageOfSensors.html" > 
+Distributed Averaging
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../FlightFormation/FlightFormation.html" > 
+Flight Formation
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../EarliestMeetingTime/EarliestMeetingTime.html" > 
+Schedule Earliest Meeting
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../../../FoundationsOfDistributedSystems/DistributedSystemsIntroduction.html" > 
+Next
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../../LoopTermination/LoopTermination.html" > 
+Previous
+</a>
+
+</nav>
+<!-- End Sidebar---------->
+ 
+<!-- Start overlay ---------------------------------->
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large"
+  onclick="w3_close()"
+  style="cursor:pointer"
+  title="close side menu"
+  id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+<!-- End overlay ---------------------------------->
+<h1 class="w3-text-teal">Self Test: All-points Shortest Paths</h1>
+
+<a href=ShortestPathVideo.mp4><h2 class="w3-text-teal">Video</h2></a>
+
+
+    <p>
+    An edge-weight matrix \(W\) represents a graph \(G\) in which the
+    weight of edge \(i, j\) is \(W[i,j]\).
+    For all \(j\), \(W[j, j] = 0\).
+    The graph has no cycles of negative length.
+    Let \(sp(W)\) be a matrix of the same dimensions
+    as \(W\) and whose \((i, j)\)-th element is the length of the
+    shortest path from vertex \(i\) to vertex \(j\).
+
+    <p>
+    Prove that the following loop terminates and that
+    at termination \(D = sp(W)\).
+
+
+    <pre>
+D = W
+for all i, j, k:
+  D[i,j] + D[j, k] < D[i,k]  ->   D[i,k] = D[i,j] + D[j, k]
+    </pre>
+
+    <h2 class="w3-text-teal">Self Test: Proof of Correctness</h2>
+    
+    <h5 class="w3-text-teal">Test 1</h5>
+    Give and prove an invariant of the loop.
+    
+    <h5 class="w3-text-teal">Test 2</h5>
+    Prove that the loop terminates by giving a variant function for
+    the loop. 
+    
+    <h5 class="w3-text-teal">Test 3</h5>
+    Show that the specification holds upon termination of the loop.
+
+    
+    <h3 class="w3-text-teal">Answers</h3>
+   
+    <h5 class="w3-text-teal">Answer 1</h5>
+    An invariant of the program is:
+    <p>
+    \(D \leq W\)
+    and
+    <br>
+    for all \(i, j\): \(D[i,j]\) is the length of a path from
+    \(i\) to \(j\).
+    
+    <p class="w3-text-teal">Proof</p>
+    The predicate holds initially because \(D = W\). The proof that
+    the execution of every command maintains the predicate is
+    straightforward. 
+
+    <h5 class="w3-text-teal">Answer 2</h5>
+    \(D\) itself is a variant function. The proof is as follows.
+
+    <p>
+    For each \(i, j\), there
+    exist only a bounded number of values for \(D[i,j]\) that satisfy
+    the invariant. This is because there are only a bounded number of
+    cycle-free paths from \(i\) to \(j\). \(D\) is bounded below by
+    the matrix of shortest-path lengths.
+    Therefore \(D\) can decrease only a finite number of times before
+    the lower bound is reached.
+    <p>
+    The execution of any command with a True
+    guard reduces \(D\). The proof is straightforward.
+
+
+<h5 class="w3-text-teal">Answer 3</h5>
+Next we prove that if the invariant holds and all the
+    guards are false then \(D = sp(W)\) where \(sp(W)\) is the matrix
+    of lengths of shortest paths.
+
+<p>
+We prove the result by induction on \(m\), the number of hops in
+shortest paths between vertices.  The result holds for shortest paths
+consisting of a single hop, i.e. if the shortest path from \(i\) to
+\(j\) is along edge \(i, j\) then:
+<p>
+\(
+D[i, j] = sp(W)[i, j]
+\).
+<p>
+Assume that the result holds for all shortest paths with \(m\) hops
+and prove that it
+holds for shortest paths with \(m+1\) hops. Let the shortest path from
+\(i\) to \(k\) take \(m+1\) hops. Let \(j\) be the prefinal vertex on
+this shortest path. Then
+<p>
+\(
+sp(W)[i,k] = sp(W)[i,j] + sp(W)[j, k]
+\)
+The result follows from the induction assumption.
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
