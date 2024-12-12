@@ -134,7 +134,163 @@ Previous
 <div class="w3-row w3-padding-64">
 <div class="w3-twothird w3-container">
 
-<!-- End overlay ---------------------------------->
+  <!-- End overlay ---------------------------------->
+
+
+      
+    <h1 class="w3-text-teal">Review of Predicates</h1>
+    
+ A  
+ <a
+ href="https://en.wikipedia.org/wiki/Predicate_(mathematical_logic)">predicate
+  </a>
+  is a function from a set of objects to 
+  the Boolean constants \(\{True, False\}\).
+  The set of objects is referred to as the universal set.
+  In this course we restrict attention to objects that are states of a
+  system.
+  To begin with consider an example in which the universal set, 
+  \(V\), is the set of the following three students:
+    </p>
+
+  
+    <ol>
+      <li> <i>name</i>: Maya, <i>age</i>: 19, <i>major</i>: CS </li>
+      <li> <i>name</i>: Liu, <i>age</i>: 20, <i>major</i>: Physics </li>
+      <li> <i>name</i>: Eve, <i>age</i>: 21, <i>major</i>: CS </li>
+    </ol>
+
+    <p>
+    \(age > 19\) is a predicate because it is a function from elements
+    of the set to \(\{True, False\}\). The result of applying this function to
+    (Maya, 19, CS) is False, while applying this function to (Liu, 20,
+    Physics) returns True.
+    </p>
+
+    <h3 class="w3-text-teal">Extension or Truth Set of a Predicate</h3>
+    A predicate \(R\) defines a set \(\{v | R(v) \}\) called its
+    <a
+    href="https://en.wikipedia.org/wiki/Extension_(predicate_logic)">extension</a>
+    or its <i>truth set</i>.
+  In the example, the extension of the predicate \(age > 19\) is the
+    set \(\{ (Liu, 20, Physics), (Eve, 21, CS) \}\).
+    </p>
+
+    <p>
+  Predicates can be composed using Boolean operators. For a predicate
+  \(X\), let \(e(X)\) denote its extension. Here are examples of
+    extensions.
+    </p>
+
+    <h4 style="color:red;">Examples</h4>
+    <p>
+    \(
+    e((age > 19) \wedge (major = CS)) \; = \; e(age > 19) \cap e(major
+    = CS) 
+    \)
+    </p>
+    <p>
+    So, 
+    \(
+    e((age > 19) \wedge (major = CS)) \; = \;  \{(Eve, 21, CS)\} 
+    \)
+    </p>
+
+    <p>
+    \(
+    e((age > 20) \vee (major = physics)) = \{(Liu, 20, Physics), (Eve, 21, CS)\}
+    \)
+    </p>
+
+    <p>
+    \(
+    e(\neg (major = physics)) = \{(Maya, 19, CS), (Eve, 21, CS)\}
+    \)
+    </p>
+
+    <p>
+    True, can be viewed as a predicate whose extension is the entire
+    universal set \(V\).  Similarly, False can
+    be viewed as a predicate whose extension is the empty set.
+    </p>
+
+    <h3 class="w3-text-teal">Implication</h3>
+    \(P \Rightarrow Q\) is a predicate which is equivalent to \(\neg P
+    \vee Q\).
+    </p>
+
+    <p style="color:red;">Example</p>
+    <p>
+    \((major = CS) \; \Rightarrow \; (age < 20) \) is a predicate
+    which when applied to Maya is True; when applied to Liu is also
+    True because the antecedent \(major = CS\) doesn't hold for Liu;
+    and when applied to Eve is False because the antecedent is True
+    whereas the consequent, \(age < 20\), is False.
+    </p>
+
+<h3 class="w3-text-teal">Formula as a Predicate or a Boolean</h3>
+<p>
+We use Edsger W. Dijkstra's notation of square
+brackets, \([P]\), to refer to the boolean: <i>\(P\) is universally
+True</i> which means that the the extension of
+\(P\) is the universal set.
+</p>
+
+<p style="color:red;">Example</p>
+    <p>
+\([(major = CS) \; \Rightarrow \; (age < 22)] \)
+</p>
+is a boolean - note the square brackets. It's value is the boolean constant, True,
+exactly when the formula holds universally. In our example,
+ the predicate \((major = CS) \; \Rightarrow \; (age < 22)\)
+holds for all elements - Maya, Liu, and Eve. So, the boolean,
+    \([(major = CS) \; \Rightarrow \; (age < 22)] \)  is
+True.
+</p>
+
+<p style="color:red;">Example</p>
+    <p>
+\(\neg [(major = CS) \; \Rightarrow \; (age < 20)] \)
+</p>
+because \((major = CS) \; \Rightarrow \; (age < 20)\) applied to Eve
+    is False, and so the predicate is not universally True.
+
+<h3 class="w3-text-teal">Equivalence</h3>
+\(P \equiv Q\) is a predicate which holds exactly when both \(P\) and 
+\(Q\) are True, or both are False.
+</p>
+
+<p>
+\(
+(P \equiv Q) \quad \equiv \quad (P \wedge Q) \vee (\neg P \wedge \neg Q)
+\)
+</p>
+
+<p>
+We usually use equivalence in formula that are universally True,
+denoted by \([P \equiv Q]\).
+</p>
+
+<p style="color:red;">Example</p>
+Let \(odd\) be a function on integers that returns True exactly when
+the integer is an odd number.
+</p>
+<p>
+\(
+odd(age) \; \equiv \; (major = CS)
+\)
+</p>
+is a predicate which when applied to Maya and Eve return True because
+both sides of the equivalence are True; and when applied to Liu
+returns True because both sides of the equivalence are False.
+Since the extension of this predicate is the universal set, we write:
+</p>
+
+<p>
+\([odd(age) \; \equiv \; (major = CS)]\)
+</p>
+
+
  <!------------------------------------------------------------>
 <h2 class="w3-text-teal">Predicates on States</h2>
 <!------------------------------------------------------------>
@@ -175,7 +331,7 @@ program for which \(P\) holds; this set is called the
 <a
 href="https://en.wikipedia.org/wiki/Extension_(predicate_logic)">
 extension of predicate \(P\)
-</a> .
+</a> or the <i>truth set</i> of \(P\).
 The extension of \(P\) is the set \(\{s | P(s)\}\).
 We use the phrase "set of states corresponding to \(P\)" for the
 extension of \(P\).
