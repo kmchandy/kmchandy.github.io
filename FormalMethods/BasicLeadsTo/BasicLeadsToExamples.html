@@ -1,0 +1,479 @@
+<title>BasicLeadsTo/BasicLeadsToExamples.html</title>
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+
+<nav
+class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5
+w3-animate-left" 
+id="mySidebar">
+
+<a href="javascript:void(0)"
+onclick="w3_close()"
+class="w3-right w3-xlarge w3-padding-large w3-hover-black
+w3-hide-large"
+title="Close Menu">
+<i class="fa fa-remove"></i>
+</a>
+
+<!--END Heading  ---------------------------->
+ 
+<!-- Start Sidebar----------> 
+ 
+<a class="w3-bar-item w3-button w3-hover-black "
+href="./BasicLeadsTo.html" > 
+Leads-To: Introduction
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../Safety/Safety.html" > 
+Safety
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../Progress/Progress.html" > 
+Progress
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="./BasicLeadsToExamples.html" > 
+Leads-To: Examples
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../../DistributedCollaboration/DiningPhilosophers/DiningPhilosophers.html" > 
+Dining Philosophers
+</a>
+<a class="w3-bar-item w3-button w3-hover-black "
+href="../../DistributedCollaboration/DrinkingPhilosophers/DrinkingPhilosophers.html" > 
+Drinking Philosophers
+</a>
+
+</nav>
+<!-- End Sidebar---------->
+ 
+<!-- Start overlay ---------------------------------->
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large"
+  onclick="w3_close()"
+  style="cursor:pointer"
+  title="close side menu"
+  id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:250px">
+  
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+<!-- End overlay ---------------------------------->
+<h1 class="w3-text-teal">Leads-To: Examples</h2>
+
+<h4 style="color:red;">\(\leadsto\) Basics</h4>
+Which of the following are true? Try to answer these questions on your
+own before looking at the answers.
+<ol>
+  <li>
+  \(P \leadsto P\)
+  </li>
+  <li>
+  \([Q \Rightarrow P] \;  \Rightarrow \; (Q \leadsto P)\)
+  </li>
+  <li>
+  \( ((P \leadsto Q) \wedge [Q \Rightarrow R]) \; \Rightarrow \;
+  (P \leadsto R)\)
+  </li>
+</ol>
+
+<h5 class="w3-text-teal">Answers</h5>
+All are true.
+
+<ol>
+  <li>
+  \(P \leadsto P\)
+  <p>
+  In terms of paths from sets of states, there is a path of zero hops
+  from every state to itself. So, there is a path from each state in P
+  to a state in P.
+  </li>
+  <li>
+  \([Q \Rightarrow P] \;  \Rightarrow \; (Q \leadsto P)\)
+  <p>
+  In terms of paths from sets of states, there is a path of zero hops
+  from every state to itself. So, there is a path from each state in Q
+  to a state in Q, and each state in Q is also in P.
+  So, there is a path from each state in Q to a state in P.
+  </li>
+  <li>
+ \( ((P \leadsto Q) \wedge [Q \Rightarrow R]) \; \Rightarrow \;
+  (P \leadsto R)\)
+  <p>
+  In terms of paths from sets of states, there is a path from each
+  state in P to a state in Q. Because \([Q \Rightarrow R]\), every
+  state in Q is a state in R. So, there is a path from each
+  state in P to a state in R.
+  </li>
+</ol>
+
+
+<h4 style="color:red;">Example: State Transition Diagram</h4>
+
+<figure>
+  <img src="./Final_2022.004.jpg"
+alt="Fig1" style="width:100%">
+  <figcaption>Fig.1 Example</figcaption>
+</figure>
+
+This diagram shows a state transition system with states 1, 2, 3, 4,
+5, 6 and two actions shown as transitions colored blue and red. Our
+convention in drawing these diagrams is that there is exactly one
+transition for each action from each state, and if the transition is
+not shown on the graph then that transition is from a state to
+itself. For example, there is no red edge shown from vertex 5, and the
+convention is that a red edge from vertex 5 back to itself is not
+shown.
+<ol>
+  <li>
+  What is always({3, 4, 5, 6})?
+  </li>
+  <li>
+What is eventually({1, 5, 6})?
+  </li>
+  <li>
+What is eventually(always({3, 4, 5, 6}))?
+  </li>
+  <li>
+What is eventually({1, 5, 6})?
+  </li>
+  <li>
+What is always(eventually({1, 5, 6}))
+  </li>
+  <li>
+  What is always({1, 5, 6})?
+  </li>
+  <li>
+What is eventually(always({1, 5, 6}))?
+  </li>
+</ol>
+
+<h5 class="w3-text-teal">Answers</h5>
+
+<ol>
+  <li>
+  What is always({3, 4, 5, 6})?
+  <p>
+  One way to find always(P), where P is a set of states, is to inspect
+  each state in P in turn and determine if there is a path from that
+  state to a state that is not in P. There is a path from vertex 3 to
+  vertex 2 which is not in {3, 4, 5, 6} so, 3 is not in always({3, 4,
+  5, 6}). Similarly 4 is not in always({3, 4, 5, 6}). All paths from
+  vertices 5, 6 remain for ever in the set {3, 4, 5, 6}, and so 5, 6
+  is in always({3, 4, 5, 6}). Therefore
+  <p>
+   always({3, 4, 5, 6}) = {5, 6}
+  </li>
+  <li>
+  What is eventually({5, 6})?
+  <p>
+  Every state in P is in eventually(P). So 5, 6 are in
+  eventually({5, 6}). We inspect each state that is not in P and
+  determine if all fair paths from the state reach states 5 or 6.
+  <p>
+  A fair path which never reaches 5 or 6 is 1, 3, 2, 4, 1, 3, 2, 4,
+  1,..... So, 1, 2, 3, 4 are not in eventually({5, 6}).
+  <p>
+  Therefore, eventually({5, 6}) = {5, 6}
+  </li>
+  <li>
+What is eventually(always({3, 4, 5, 6}))?
+  <p>
+  always({3, 4, 5, 6}) = {5, 6}
+  <br>
+  eventually({5, 6}) = {5, 6}
+  <br>
+  So, eventually(always({3, 4, 5, 6})) = {5, 6}.
+  <p>
+  A vertex v is in eventually(always(P)) if every infinite fair path
+  from v has the property that the path has a suffix (a tail) in
+  which every vertex in the suffix is in P, i.e., a point in which the
+  path enters P and remains forever thereafter in P. 
+  </li>
+  <li>
+  What is eventually({1, 5, 6})?
+  <p>
+  The answer is obvious; however, I've gone into detail to illustrate
+  how the four rules for proving leads-to are used.
+  <p>
+  {1, 5, 6} is a subset of eventually({1, 5, 6}). What about the other
+  vertices?
+  <p>
+  Every red edge from {4}
+  is to a vertex that is not in {4}. Therefore, fair paths that enter
+  {4} will exit {4} eventually. (We could also have used the argument
+  that every blue edge from {4} is to a vertex not in {4}.)
+  <p>
+  All edges from {4} are to {1, 5, 6}. Therefore, from the basic
+  property, fair paths will not remain for ever in {4}, and when the
+  paths leave {4} they enter {1, 5, 6}. So  {4} \(\leadsto\) {1, 5,
+  6}.
+  <p>
+  {4} \(\leadsto\) {1, 5, 6} implies that {4} is a subset of 
+  eventually({1, 5, 6}).
+  <p>
+  Using the basic property again, {2} \(\leadsto\) {1, 4, 5, 6}.
+  Using the disjunction property and  {4} \(\leadsto\) {1, 5, 6}, we
+  see that {2} \(\leadsto\) {1, 5, 6}.
+  <p>
+  Using similar arguments {3} \(\leadsto\) {1, 5, 6}.
+  <p>
+  Therefore, eventually({1, 5, 6}) = {1, 2, 3, 4, 5, 6}
+  </li>
+  <li>
+  What is always(eventually({1, 5, 6}))?
+  <p>
+  always(eventually({1, 5, 6})) =
+  <br>
+  always({1, 2, 3, 4, 5, 6}) =
+  <br>
+  {1, 2, 3, 4, 5, 6}
+  </li>
+  <li>
+  What is always({1, 5, 6})?
+  <p>
+  always({1, 5, 6}) = {5, 6}
+  </li>
+  <li>
+  What is eventually(always({1, 5, 6}))?
+  <p>
+  eventually(always({1, 5, 6})) =
+  <br>
+  eventually({5, 6}) =
+  <br>
+  {5, 6}
+  </li>
+</ol>
+
+
+<h4 style="color:red;">Example: Proving \(\leadsto\) in a program</h4>
+
+<i> Program P1</i>
+
+<pre>
+begin
+   S0: NOT y   ->   y = True
+   S1: y       ->   x, y = x+1, False
+   S2: y       ->   x, y = x+1, True
+end
+</pre>
+
+<i> Program P2</i>
+
+<pre>
+begin
+   S0: NOT y   ->   y = True
+   S1: y       ->   x, y = x+1, False
+   S2: y       ->   x, y = x+1, True
+   S3: y       ->   y = False
+end
+</pre>
+
+<p>
+S0, S1, S2, S3 are statement labels.
+All commands are executed infinitely often.
+
+<p>
+Is the following statement true or false for each of programs P1 and P2?
+<p>
+\(
+(x = 0) \; \leadsto \; (x > 0)
+\)
+
+<p>
+Is the following statement true or false for each of programs P1 and P2?
+<p>
+\(
+\forall n: (x = 0) \; \leadsto \; (x > n)
+\)
+
+<h5 class="w3-text-teal">Answers</h5>
+For program <i>P1</i>:
+<p>
+For all statements s, and all n:
+<p>
+\(\{y \wedge (x = n) \} \; s \; \{ (y \wedge (x = n)) \vee (x > n) \} \)
+<p>
+There exists a statement (for example S2) which is executed infinitely
+often where
+<p>
+\(
+\{y \wedge (x = n) \} \quad S2 \quad \{ \neg (y \wedge (x = n)) \}
+\)
+<p>
+From the above two formulae and the basic rule for \(\leadsto\):
+<p>
+\(
+(y \wedge (x = n)) \; \leadsto \; (x > n)
+\)
+<p>
+From the atomic property of \(\leadsto\) and because S0 is executed
+infinitely often:
+<p>
+\(
+(\neg y \wedge (x = n)) \; \leadsto \; (y \wedge (x = n))
+\)
+<p>
+From transitivity of \(\leadsto\) and the above two formulae:
+<p>
+\(
+(\neg y \wedge (x = n)) \; \leadsto \; (x > n)
+\)
+<p>
+From disjunction of left-hand sides of \(\leadsto\) and because
+\(
+(x = n) \; \equiv \; ((x = n) \wedge y) \vee (x = n) \wedge \neg y)
+\)
+<p>
+\(
+(x = n) \; \leadsto \; (x > n)
+\)
+<p>
+The formula holds for \(n = 0\), and so:
+<p>
+\(
+(x = 0) \; \leadsto \; (x > 0)
+\)
+<p>
+By induction on \(n\) and transitivity of \(\leadsto\):
+<p>
+\(
+\forall n: \; (x = 0) \; \leadsto \; (x > n)
+\)
+
+<p style="color:red;">Program <i>P2</i></p>
+These formula are not true for program <i>P2</i>. Here is an infinite
+fair path in which \(x = 0\) at every state in the path.
+<p>
+Initially: y = true
+<pre>
+S3; S1; S2; S0;    S3; S1; S2; S0;    S3; S1; S2; S0; ...
+</pre>
+
+<p class="w3-text-teal">What part of the proof for P1 failed for
+P2?</p>
+<p>
+The following triple does not hold for program P2.
+<p>
+For all statements s, and all n:
+<p>
+\(\{y \wedge (x = n) \} \; s \; \{ (y \wedge (x = n)) \vee (x > n) \} \)
+<p>
+Why?
+<p>
+Because with the above precondition for statement S3, the above
+postcondition does not hold because \(x, y = n, False\).
+
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>

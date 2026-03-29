@@ -238,6 +238,104 @@ this shortest path. Then
 sp(W)[i,k] = sp(W)[i,j] + sp(W)[j, k]
 \)
 The result follows from the induction assumption.
+
+
+<h2 class="w3-text-teal">Distributed Systems: Shortest Path
+to Initiator</h2>
+
+Given a distributed system represented by a directed graph in which
+agents are represented as vertices and channels by edges.
+Associated with each edge (u, v) is a number u.W(v) representing the weight
+of the edge.
+
+<p>
+The length of a path is the sum of the weights of edges on the path.
+Edge weights may be positive, negative, or 0; however, the graph has
+no cycles of non-positive length.
+
+<p>
+One of the vertices is the initiator of a
+distributed algorithm by which each agent u determines the shortest path
+from the initiator to agent u.
+Let the initiator be agent X.
+For each agent u there is a path from X to u.
+
+<p>
+Associated with each agent u is a local variable u.d.
+Initially X.d = 0 and for u other than X, u.d is infinity.
+(We can also set u.d to be the sum of all positive edge
+weights in the graph because the length of the shortest path from X to u
+cannot be greater than sum of positive weights.)
+<p>
+When the algorithm terminates u.d will be the length of the shortest
+path from X to u.
+
+<p>
+The algorithm is as follows.
+<p>
+<i>Initialization</i>:
+X.d = 0
+<p>
+Agent X sends the following messages
+<pre>
+for each channel (X, v):
+   send X.d + X.d(v) to v
+
+<p>
+When an agent u gets a message m it carries out the following action:
+<pre>
+if m < u.d:
+  u.d = m
+  for each channel (u, v):
+      send u.d + u.d(v) to v
+
+<p>
+Prove that the algorithm terminates and that at termination u.d is the
+length of the shortest path from X to u.
+
+<p>
+<i>Invariant</i>
+<p>
+u.d is infinity or u.d is the length of some path from X to u.
+<p>
+The proof of the invariant is straightforward.
+
+<p>
+<i>Variant Function</i>
+(S, M) is a variant function where S is the sum over all agents u of
+u.d, and M is the total number of messages in all channels.
+
+<p>
+Proof
+
+<p>
+If agent u gets a message m where m >= u.d then S remains unchanged
+and M decreases by 1.
+
+<p>
+If agent u gets a message m where < u.d then S decreases.
+
+<p>
+So, each step decreases the variant function.
+
+<p>
+The variant function is bounded below by (S*, 0) where S* is the sum
+of the lengths of shortest paths to all vertices.
+The variant function is a tuple of integers which is bounded below and
+so it is a well-founded set.
+Therefore, the computation terminates.
+
+<p>
+<i>Another question</i>: What algorithm would you use by which X can
+determine that computation has terminated?
+
+
+
+
+
+
+
+
 <!--Start Footer--------------------------------------->
 
     <hr class="new1">

@@ -1,0 +1,380 @@
+<title>DistributedSystemModels/Progress.html</title>
+
+<!------------- Start Heading -------------------------------->
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Roboto">
+
+<link rel="stylesheet"
+href="https://www.w3schools.com/lib/w3-theme-blue.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+/* Thick blue border */
+hr.new2 {
+  border: 2px solid blue;
+}
+/* blue border */
+hr.new1 {
+  border: 2px solid blue;
+}
+</style>
+
+
+<body>
+
+
+<div class="w3-top">
+<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+  
+  <a class="w3-bar-item w3-button w3-right w3-hide-large
+  w3-hover-white w3-large w3-theme-l1"
+  href="javascript:void(0)"
+  onclick="w3_open()">
+  <i class="fa fa-bars"></i></a>
+
+  <a href="../index.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Distributed Algorithms
+  </a>
+
+  <a href="../table_of_contents.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Contents
+  </a>
+
+  <a href="../cross_reference.html"
+  class="w3-bar-item w3-button w3-hide-small w3-hover-white">
+  Index
+  </a>
+    
+  </div>
+  </div>
+  
+  <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+  
+<div class="w3-row w3-padding-64">
+<div class="w3-twothird w3-container">
+
+  <!--------------------------------------------------------------->
+  <h2 class="w3-text-teal">Progress</h2>
+
+  We show that a distributed system progresses towards its goals by
+  using the techniques used to prove that <code>while</code> loops terminate
+  execution. 
+
+  Later, we discuss temporal logic, which can be used to prove the
+  correctness of all concurrent programs.
+
+
+
+  <!--------------------------------------------------------------->
+  <h3 class="w3-text-teal">Proving Termination of a Sequential While
+Loop</h3>
+
+We prove that execution of a while loop terminates by using
+<a href="https://en.wikipedia.org/wiki/Loop_variant">
+loop variants</a>. 
+
+A loop variant is a function from states to a well-founded set:
+Each iteration of the loop reduces the value of this function and so
+execution of the loop terminates because the loop variant cannot
+  decrease for an infinite number of steps.
+
+
+<p>
+Let <code>f</code> be a loop variant and <code>Inv</code> an invariant
+of a <code>while</code> loop.
+To prove that the loop terminates we show that for all 
+<code>k</code> :
+If <code>Inv and (f = k)</code> holds before an iteration then <code>f <
+k</code> after the iteration.
+
+
+<p>
+Links to examples of proofs of termination, loop variants, and well-founded sets
+are given <a href="">here</a>.
+A loop variant is also called a measure or a metric.
+
+  <p>
+  In some cases we can prove termination of a distributed system in
+  exactly the same way as we prove termination of a while loop.
+  In other cases we may need to resort to proofs of leads-to described later.
+
+  <!----------------------------------------------->
+  <h5 style="color:red;">Example: Loop Variant for a While Loop</h5>
+
+In the gcd example given earlier, a loop variant is <code>x +
+y</code>. The loop variant is bounded below because <code>x, y</code>
+are positive integers. 
+
+The proof that each iteration of the loop reduces the loop variant is
+straightforward.
+
+  <!--------------------------------------------------------------->
+  <h3 class="w3-text-teal">Progress in a Distributed System</h3>
+
+<p>
+Some distributed systems never terminate and others are designed to
+terminate execution.
+
+In the latter case, we usually prove that a distributed algorithm terminates in the
+exactly the same way that we prove that a sequential while loop terminates.
+
+<p>
+In some cases, distributed algorithms are designed not to terminate.
+In such cases 
+we typically need to show that if a predicate <code>P</code> holds in some
+state of a computation then a predicate
+<code>Q</code> holds then or later.
+For example, if an agent is waiting to acquire access to a file then
+it will eventually get access to the file.
+
+<p>
+We use an extension of loop variants for this purpose.
+
+For convenience the while loop that generates computations is given
+below.
+
+  <pre>
+while there exists a nonempty input channel in the system:
+   select a nonempty channel (u, v) in the system
+   let the head of channel (u, v) be msg
+   v executes receive(msg, u)
+</pre>
+
+<p>
+We introduce the relation <i>leads_to</i> between predicates where
+<code>P leads_to Q</code>, also written as <code>P</code> \(\leadsto\)
+<code>Q</code>, means 
+that if <code>P</code> holds in any state of a computation then 
+<code>Q</code> holds in that state or in a later state of the
+computation.
+<p>
+Let <code>f</code> be a function from the states of the system to a
+well-founded set (exactly the same as a loop variant).
+
+We prove <code>P leads_to Q</code> by showing the following 
+properties called the <i>safety</i> and <i>progress</i> properties of
+the loop variant.
+<p>
+If
+<code>P and (f <= k) and not Q</code>
+<br>
+holds before an execution of the loop body then:
+<ol>
+  <li>
+  <i>Safety</i>: 
+  For any nonempty channel <code>(u, v)</code> after a message is
+  received on the channel the following holds:
+  <br>
+<code>(P and (f <= k)) or Q</code>
+  </li>
+  <li>
+  <i>Progress</i>: 
+  There exists a nonempty channel <code>(u, v)</code> such that after a message is
+  received on the channel the following holds:
+  <br>
+<code>(P and (f < k)) or Q</code>
+  </li>
+</ol>
+ 
+<p>
+The safety property, without the progress property, allows for the possibility
+that
+<br>
+<code>P and (f = k) and not Q</code>
+<br> remains true for ever.
+However, the progress property guarantees that there is a nonempty channel such
+that receiving a message on that channel results in progress.
+
+<p>
+The intuition for this rule is given <a href="">here</a>.
+
+The remainder of this page consists of examples.
+
+<!----------------------------------------------->
+<center>
+<h2 style="color:red;">Examples</h2>
+</center>
+
+
+  <!----------------------------------------------->
+<h5 style="color:red;">Example: greatest common divisor across a network</h5>
+Consider the example given in the page on <a
+href="Invariants.html">invariants</a>: find the gcd of the local
+variables of agents in a strongly connected network.
+The <code>receive</code> function is given again for convenience.
+<pre>
+def receive(message, sender):
+   if n != gcd(n, message):
+      n = gcd(n, message)
+      for successor in successors:
+         send(n, successor)
+</pre>
+
+The problem is to prove that the algorithm terminates.
+
+A proof that the algorithm terminates is based on the following loop
+variant: <code>(N, M)</code> where <code>N</code> is the sum of
+<code>X.n</code> over all 
+agents <code>X</code> and <code>M</code> is the total number of
+messages in channels.
+
+Comparisions of tuples are made
+<a href="https://en.wikipedia.org/wiki/Lexicographic_order">
+lexicographically:</a>
+<br>
+<code>(i, j) < (x, y)</code> exactly when <code>(i < x)</code> or 
+<code>((i = x) and (j < y))</code>.
+
+<p>
+We prove that execution of each <code>receive</code> reduces <code>(N,
+M)</code>. Consider two outcomes of the <code>if</code> statement:
+<ol>
+  <li>
+If <code>n</code> is different from <code>gcd(n, message)</code>
+  then <code>n</code> decreases and therefore <code>N</code> decreases.
+  </li>
+  <li>
+If <code>n = gcd(n, message)</code> then  a message is removed and no
+  messages are sent; this reduces
+<code>M</code> while leaving <code>N</code> unchanged, and so the loop
+  variant decreases.
+  </li>
+</ol>.
+
+
+
+  <!----------------------------------------------->
+<h5 style="color:red;">Example: Eventual Consistency</h5>
+A network of agents consists of a single master database and satellite
+databases.
+
+Each satellite database contains copies, possibly out of synch,
+with the master.
+
+There is a path in the network from the master to all satellites.
+
+The master is the only database that is modified.
+
+<p>
+When the master is modified it assigns a higher version number to the new
+value and sends copies of the new value on its output channels.
+
+When a satellite gets a copy on its input channel, if the version is
+later than the satellite's copy then the satellite updates its
+copy and sends the new value on its output channels.
+
+The system is initialized with all agents at version number
+0.
+
+<p>
+Let <code>A</code> be the master.
+Let <code>x.n</code> be the version number of the copy at a agent
+<code>x</code>.
+An invariant <code>I</code> of the system is:
+<br>
+for all <code>x:  x.n</code> \(\leq \) <code>A.n</code>
+
+<p>
+The problem is to show that if the master version number is some value
+<code>N</code> or greater then all the satellite versions catch up to
+<code>N</code>.
+
+We prove that <code>P</code> leads to <code>Q</code> where
+<br>
+<code>P </code> is  <code>A.n</code> \(\geq\) <code>N</code>
+<br>
+<code>Q </code> is  <code>for all x: x.n </code> \(\geq\)  <code>N</code>
+
+
+<p>
+A loop variant <code>f</code> is the number of satellites whose copies
+have version number less than <code>N</code>.
+
+The loop variant is bounded below. The proof of the safety property of
+the loop variant is straightforward.
+
+<p>
+The proof of the progress property is as follows. If <code>P and not
+Q</code> holds then there is a channel <code>(y, z)</code> where
+<code>y.n</code> \(\geq\) <code>N</code> and <code>z.n</code> \(<\)
+<code>N</code>.
+From invariant <code>Inv_2</code> there is a message in the channel.
+After the message in the channel is received
+<code>z.n</code> \(\geq\) <code>N</code>, and so <code>f</code> is
+reduced. 
+
+
+
+<!---------------------------------------->
+<h5 class="w3-text-teal">Next</h5>
+<!---------------------------------------->
+The 
+<a href="Timelines.html">next webpage</a>
+describes concepts regarding time -- past & future, before & after -- in computations
+and dataflow.
+These concepts are used extensively in our designs of distributed algorithms.
+
+<!--Start Footer--------------------------------------->
+
+    <hr class="new1">
+      <p>K. Mani Chandy,
+      Emeritus Simon Ramo Professor,
+      California Institute of Technology</p>
+    
+</footer>
+    
+
+
+<!-- END MAIN -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
