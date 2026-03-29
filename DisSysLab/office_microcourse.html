@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Your Own Office of AI Agents</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:    #1a1a2e;
+  --orange: #ff6b35;
+  --teal:   #00c9a7;
+  --yellow: #ffd166;
+  --purple: #7b5ea7;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'Courier New', monospace;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font-body);
+  background: var(--ink);
+  overflow: hidden;
+}
+
+/* ── Slide shell ─────────────────────────────────────────────── */
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  transform: translateX(40px);
+  overflow: hidden;
+  padding: 32px 40px 80px;
+  background: var(--ink);
+}
+.slide.active    { opacity: 1; pointer-events: all; transform: translateX(0); }
+.slide.exit-left { opacity: 0; transform: translateX(-40px); }
+
+/* ── Shared: blobs ──────────────────────────────────────────── */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(72px);
+  pointer-events: none;
+}
+
+/* ── Shared: badge ──────────────────────────────────────────── */
+.badge {
+  background: var(--orange);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 100px;
+  margin-bottom: 22px;
+  flex-shrink: 0;
+}
+
+/* ── Shared: headline ───────────────────────────────────────── */
+.headline {
+  font-family: var(--font-display);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.headline em { font-style: normal; color: var(--yellow); }
+
+/* ── Shared: body text ──────────────────────────────────────── */
+.body-text {
+  font-size: clamp(14px, 1.6vw, 17px);
+  line-height: 1.65;
+  color: rgba(255,255,255,0.65);
+  text-align: center;
+  max-width: 580px;
+  margin-bottom: 28px;
+}
+
+/* ── Shared: paper card ─────────────────────────────────────── */
+.paper {
+  background: #12122a;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.paper-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.paper-dots { display: flex; gap: 5px; }
+.pd { width: 10px; height: 10px; border-radius: 50%; }
+.paper-title {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  margin-left: 6px;
+  font-family: var(--font-mono);
+}
+
+/* ── Shared: highlights ─────────────────────────────────────── */
+.hl { border-radius: 4px; padding: 1px 5px; font-weight: 600; }
+.hl-yellow { background: rgba(255,209,102,0.18); color: var(--yellow); }
+.hl-orange { background: rgba(255,107,53,0.18);  color: var(--orange); }
+.hl-teal   { background: rgba(0,201,167,0.18);   color: var(--teal); }
+.hl-purple { background: rgba(123,94,167,0.22);  color: #c4a8f5; }
+
+/* ── Shared: msg dot (animated) ─────────────────────────────── */
+.msg-dot {
+  position: absolute;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+.dot-teal   { background: var(--teal);   box-shadow: 0 0 6px var(--teal); }
+.dot-orange { background: var(--orange); box-shadow: 0 0 6px var(--orange); }
+.dot-purple { background: var(--purple); box-shadow: 0 0 6px var(--purple); }
+
+/* ── Shared: live dot ───────────────────────────────────────── */
+.live-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--teal);
+  animation: pulse 1.2s ease infinite;
+}
+
+/* ── Nav ────────────────────────────────────────────────────── */
+.nav {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 100;
+}
+.nav-btn {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.1s;
+  letter-spacing: 0.02em;
+}
+.nav-btn:hover  { background: rgba(255,255,255,0.2); }
+.nav-btn:active { transform: scale(0.96); }
+.nav-btn.primary { background: var(--orange); border-color: var(--orange); }
+.nav-btn.primary:hover { background: #ff8555; }
+
+.progress { display: flex; gap: 5px; align-items: center; }
+.prog-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,0.22);
+  transition: background 0.2s, transform 0.2s;
+}
+.prog-dot.on { background: var(--orange); transform: scale(1.35); }
+
+/* ── Keyframes ──────────────────────────────────────────────── */
+@keyframes pulse    { 0%,100%{opacity:1} 50%{opacity:0.25} }
+@keyframes fadeUp   { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+@keyframes itemIn   { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+@keyframes ringPulse{ 0%{opacity:0.8;transform:scale(1)} 100%{opacity:0;transform:scale(1.35)} }
+@keyframes pulseGlow{ 0%,100%{box-shadow:0 0 0 rgba(255,107,53,0)} 50%{box-shadow:0 0 18px rgba(255,107,53,0.15)} }
+
+/* ══════════════════════════════════════════════════════════════
+   S1 — Hook
+══════════════════════════════════════════════════════════════ */
+#s1 { justify-content: center; gap: 0; }
+
+.s1-headline {
+  font-family: var(--font-display);
+  font-size: clamp(42px, 7vw, 82px);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.s1-headline em { font-style: normal; color: var(--yellow); }
+
+.s1-body {
+  font-size: clamp(18px, 2.2vw, 24px);
+  color: rgba(255,255,255,0.75);
+  text-align: center;
+  margin-bottom: 36px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.s1-body strong { color: #fff; }
+
+.ticker-frame {
+  width: min(520px, 88vw);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.ticker-bar {
+  background: rgba(255,255,255,0.08);
+  padding: 9px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.ticker-win-dot { width: 8px; height: 8px; border-radius: 50%; }
+.ticker-title { font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 4px; }
+.live-badge { margin-left: auto; display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--teal); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+.ticker-items { padding: 10px 0; max-height: 120px; overflow: hidden; }
+.ticker-item { display: flex; align-items: center; gap: 12px; padding: 7px 16px; font-size: 12.5px; color: rgba(255,255,255,0.75); border-bottom: 1px solid rgba(255,255,255,0.05); animation: itemIn 0.4s ease; }
+.ticker-item:last-child { border-bottom: none; }
+.tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; flex-shrink: 0; letter-spacing: 0.05em; }
+.tag-crit { background: #ff3b30; color: #fff; }
+.tag-high { background: var(--orange); color: #fff; }
+.tag-med  { background: var(--yellow); color: var(--ink); }
+.tag-low  { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.7); }
+.ticker-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ══════════════════════════════════════════════════════════════
+   S2 — Situation Room live
+══════════════════════════════════════════════════════════════ */
+#s2 { padding: 0; justify-content: flex-start; align-items: stretch; }
+
+.s2-topbar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 24px;
+  background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+.s2-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: #fff; }
+.s2-subtitle { font-size: 12px; color: rgba(255,255,255,0.4); margin-left: 4px; }
+.s2-live { margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--teal); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+
+.s2-caption {
+  background: rgba(255,214,102,0.1);
+  border-bottom: 1px solid rgba(255,214,102,0.2);
+  padding: 9px 24px;
+  font-size: 13px;
+  color: var(--yellow);
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.s2-feed-wrap { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+.s2-feed-header { padding: 12px 24px 8px; border-bottom: 1px solid rgba(255,255,255,0.06); flex-shrink: 0; }
+.s2-panel-label { font-size: 9px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+.s2-feed-items { flex: 1; overflow-y: auto; padding: 8px 0; }
+.s2-feed-items::-webkit-scrollbar { width: 4px; }
+.s2-feed-items::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+.feed-item { padding: 10px 24px; border-bottom: 1px solid rgba(255,255,255,0.04); animation: itemIn 0.35s ease; }
+.feed-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+.feed-source { font-size: 9px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.1em; }
+.feed-time { font-size: 9px; color: rgba(255,255,255,0.2); margin-left: auto; }
+.feed-headline { font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.4; margin-bottom: 4px; }
+.feed-summary { font-size: 11px; color: rgba(255,255,255,0.38); line-height: 1.45; }
+
+/* ══════════════════════════════════════════════════════════════
+   S2b — Here's all you wrote
+══════════════════════════════════════════════════════════════ */
+#s2b { justify-content: center; gap: 0; }
+
+.s2b-paper {
+  width: min(560px, 90vw);
+  background: #12122a;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.s2b-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+.s2b-section { display: flex; flex-direction: column; gap: 5px; }
+.s2b-label {
+  font-size: 10px; font-weight: 800; letter-spacing: 0.18em;
+  text-transform: uppercase; margin-bottom: 4px;
+  padding-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.s2b-line { font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.7; padding: 1px 4px; }
+.s2b-mono { font-family: var(--font-mono); font-size: 12px; }
+.s2b-caption {
+  font-size: 16px;
+  color: rgba(255,255,255,0.5);
+  text-align: center;
+  font-style: italic;
+}
+.s2b-caption strong { color: #fff; font-style: normal; }
+
+/* ══════════════════════════════════════════════════════════════
+   S2c — Two role cards
+══════════════════════════════════════════════════════════════ */
+#s2c { gap: 0; }
+
+.s2c-cards {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  max-width: 780px;
+  margin-bottom: 20px;
+}
+.s2c-card {
+  flex: 1;
+  background: #12122a;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.s2c-body { padding: 16px 18px; }
+.s2c-para { font-size: 13px; line-height: 1.75; color: rgba(255,255,255,0.65); }
+.s2c-caption {
+  font-size: 15px;
+  color: rgba(255,255,255,0.5);
+  text-align: center;
+  font-style: italic;
+}
+.s2c-caption strong { color: #fff; font-style: normal; }
+
+/* ══════════════════════════════════════════════════════════════
+   S3 — What is an office
+══════════════════════════════════════════════════════════════ */
+#s3 { gap: 0; }
+
+.s3-punch {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3.2vw, 38px);
+  font-weight: 700;
+  color: rgba(255,255,255,0.85);
+  text-align: center;
+  margin-bottom: 6px;
+  letter-spacing: 0.01em;
+}
+.s3-punch span { color: #fff; font-weight: 900; }
+
+.s3-dim {
+  font-size: 13px;
+  color: rgba(255,255,255,0.3);
+  text-align: center;
+  margin-bottom: 24px;
+  font-style: italic;
+}
+
+.s3-office {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+  max-width: 860px;
+}
+
+.s3-col { display: flex; flex-direction: column; align-items: center; gap: 10px; flex-shrink: 0; }
+.s3-col-label { font-size: 9px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-bottom: 2px; }
+
+.s3-sources-col { width: 120px; }
+.s3-source-node {
+  width: 112px; display: flex; align-items: center; gap: 7px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px; padding: 8px 10px; font-size: 12px; color: rgba(255,255,255,0.75);
+  transition: border-color 0.3s, background 0.3s;
+}
+.s3-source-node.firing { border-color: var(--teal); background: rgba(0,201,167,0.08); }
+.s3-src-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--teal); margin-left: auto; animation: pulse 1.6s ease infinite; }
+
+.s3-arrow-zone { width: 100px; height: 200px; position: relative; flex-shrink: 0; }
+.s3-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.s3-path { fill: none; stroke-width: 1.5; stroke-dasharray: 4 4; }
+
+.s3-agents-col { width: 210px; }
+.s3-desk {
+  width: 200px; background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px;
+  transition: border-color 0.3s, background 0.3s;
+}
+.s3-desk.active { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.09); }
+.s3-desk-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.s3-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.av-analyst { background: linear-gradient(135deg, var(--purple), #a78bfa); }
+.av-editor  { background: linear-gradient(135deg, var(--teal), #34d399); }
+.s3-desk-info { flex: 1; }
+.s3-desk-name { font-size: 13px; font-weight: 600; color: #fff; }
+.s3-desk-role { font-size: 10px; color: rgba(255,255,255,0.35); }
+.s3-inbox { text-align: center; background: rgba(255,255,255,0.06); border-radius: 8px; padding: 4px 8px; min-width: 40px; }
+.s3-inbox-label { font-size: 8px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.1em; }
+.s3-inbox-count { font-size: 16px; font-weight: 700; color: #fff; line-height: 1.2; }
+.s3-desk-status { font-size: 10.5px; color: rgba(255,255,255,0.4); font-style: italic; min-height: 16px; transition: color 0.3s; }
+.s3-desk.active .s3-desk-status { color: var(--teal); font-style: normal; }
+.s3-agent-arrow { font-size: 20px; color: rgba(255,255,255,0.2); margin: 2px 0; }
+
+.s3-outputs-col { width: 120px; }
+.s3-sink-node {
+  width: 112px; display: flex; align-items: center; gap: 7px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px; padding: 8px 10px; font-size: 14px;
+  transition: border-color 0.3s, background 0.3s;
+}
+.s3-sink-node.orange-border { border-color: rgba(255,107,53,0.3); }
+.s3-sink-node.purple-border { border-color: rgba(123,94,167,0.3); }
+.s3-sink-node.flash-orange  { border-color: var(--orange); background: rgba(255,107,53,0.1); }
+.s3-sink-node.flash-purple  { border-color: var(--purple); background: rgba(123,94,167,0.1); }
+.s3-sink-name { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.65); }
+
+/* ══════════════════════════════════════════════════════════════
+   S4 — Messages flow
+══════════════════════════════════════════════════════════════ */
+#s4 { gap: 0; }
+
+.s4-diagram { display: flex; align-items: center; gap: 0; width: 100%; max-width: 820px; margin-bottom: 20px; }
+.s4-panel { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 0 12px; }
+.s4-panel-label { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.s4-divider { width: 1px; height: 220px; background: rgba(255,255,255,0.08); flex-shrink: 0; }
+.s4-fanin-layout, .s4-fanout-layout { display: flex; align-items: center; gap: 0; }
+.s4-sender-col, .s4-receiver-col { display: flex; flex-direction: column; gap: 10px; }
+.s4-agent-node {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px; padding: 7px 11px; font-size: 13px;
+  color: rgba(255,255,255,0.75); font-weight: 500;
+  transition: border-color 0.25s, background 0.25s; position: relative;
+}
+.s4-agent-node span { font-size: 11px; }
+.teal-node.flash   { border-color: var(--teal);   background: rgba(0,201,167,0.1); }
+.orange-node.flash { border-color: var(--orange); background: rgba(255,107,53,0.1); }
+
+.receiver-node, .sender-node {
+  width: 78px; flex-direction: column; justify-content: center;
+  padding: 12px 8px; border-radius: 14px; text-align: center;
+  position: relative; overflow: visible;
+}
+.receiver-node.pulse-active { background: rgba(0,201,167,0.1); }
+.sender-node.pulse-active   { background: rgba(255,107,53,0.1); }
+
+.s4-pulse-ring {
+  position: absolute; inset: -4px; border-radius: 18px;
+  border: 2px solid transparent; opacity: 0; pointer-events: none;
+}
+.teal-ring.ring-go   { border-color: var(--teal);   animation: ringPulse 0.6s ease forwards; }
+.orange-ring.ring-go { border-color: var(--orange); animation: ringPulse 0.6s ease forwards; }
+
+.s4-az { flex-shrink: 0; }
+
+.s4-concept-tag {
+  font-size: 13px; font-weight: 700; letter-spacing: 0.06em;
+  border: 1px solid; border-radius: 100px; padding: 5px 16px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   S5 — Job description
+══════════════════════════════════════════════════════════════ */
+#s5 { gap: 0; }
+
+.s5-layout { display: flex; align-items: center; gap: 36px; width: 100%; max-width: 760px; }
+.s5-paper { width: 320px; flex-shrink: 0; }
+.s5-paper-body { padding: 18px 20px; }
+.s5-line { font-size: 13.5px; line-height: 1.75; color: rgba(255,255,255,0.75); }
+.s5-gap  { margin-top: 10px; }
+
+.s5-labels { display: flex; flex-direction: column; gap: 14px; }
+.s5-label-row {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 14px; font-weight: 600;
+}
+.s5-label-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.s5-label-text { color: rgba(255,255,255,0.8); }
+
+/* ══════════════════════════════════════════════════════════════
+   S6 — Full role
+══════════════════════════════════════════════════════════════ */
+#s6 { gap: 0; }
+
+.s6-paper { width: min(560px, 90vw); }
+.s6-paper-body { padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; }
+.s6-para {
+  font-size: 13.5px; line-height: 1.75; color: rgba(255,255,255,0.72); margin: 0;
+  padding: 10px 12px; border-radius: 8px;
+  border-left: 2px solid rgba(255,255,255,0.07);
+  transition: border-color 0.3s, background 0.3s;
+}
+.s6-para.lit { border-left-color: var(--teal); background: rgba(0,201,167,0.05); }
+
+/* ══════════════════════════════════════════════════════════════
+   S7 — Roles are reusable
+══════════════════════════════════════════════════════════════ */
+#s7 { gap: 0; padding-top: 24px; }
+
+.s7-offices { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 860px; }
+
+.s7-role-source { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.s7-role-card {
+  background: #12122a; border: 1.5px solid rgba(255,209,102,0.35);
+  border-radius: 12px; padding: 10px 18px;
+  display: flex; flex-direction: column; gap: 5px;
+  min-width: 280px; box-shadow: 0 0 24px rgba(255,209,102,0.08);
+}
+.s7-role-header { display: flex; align-items: center; gap: 8px; }
+.s7-role-name { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); font-family: var(--font-mono); }
+.s7-role-tag { margin-left: auto; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; background: rgba(255,209,102,0.15); color: var(--yellow); padding: 2px 8px; border-radius: 100px; }
+.s7-role-snippet { font-size: 12px; color: rgba(255,255,255,0.5); font-style: italic; }
+.s7-copies-label { font-size: 11px; color: rgba(255,255,255,0.25); letter-spacing: 0.05em; }
+
+.s7-instances { display: flex; gap: 14px; width: 100%; justify-content: center; }
+.s7-office-card {
+  flex: 1; max-width: 250px;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px; overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.s7-office-card.highlight { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+.s7-office-header { display: flex; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13px; }
+.s7-office-name { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.8); }
+.s7-office-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+.s7-agent-row { display: flex; }
+.s7-agent-chip {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px; padding: 5px 12px 5px 5px;
+}
+.s7-agent-av { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+.s7-aname { font-size: 12px; font-weight: 600; color: #fff; line-height: 1.2; }
+.s7-arole { font-size: 10px; color: rgba(255,255,255,0.35); }
+.s7-wire { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 2px 0; }
+.s7-wire-text { font-size: 9.5px; color: rgba(255,255,255,0.35); font-style: italic; text-align: center; }
+.s7-wire-line { width: 2px; height: 18px; border-radius: 1px; opacity: 0.4; }
+.teal-wire   { background: var(--teal); }
+.orange-wire { background: var(--orange); }
+.purple-wire { background: var(--purple); }
+
+.s7-library-callout {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(255,209,102,0.1); border: 1.5px solid rgba(255,209,102,0.3);
+  border-radius: 12px; padding: 12px 20px;
+  max-width: 500px; width: 100%;
+}
+.s7-library-icon { font-size: 20px; flex-shrink: 0; }
+.s7-library-text { font-size: 13px; color: var(--yellow); font-weight: 600; line-height: 1.45; }
+
+/* ══════════════════════════════════════════════════════════════
+   S8 — Name your agents
+══════════════════════════════════════════════════════════════ */
+#s8 { gap: 0; }
+
+.s8-declaration {
+  background: #12122a; border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px; overflow: hidden; width: 320px;
+}
+.s8-decl-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; }
+.s8-decl-line {
+  display: flex; align-items: baseline; gap: 6px; font-size: 15px;
+  padding: 8px 12px; border-radius: 8px;
+  border-left: 2px solid rgba(255,255,255,0.06);
+  transition: background 0.3s, border-color 0.3s;
+}
+.s8-decl-line.lit { background: rgba(255,255,255,0.05); border-left-color: rgba(255,255,255,0.25); }
+.s8-decl-name { font-weight: 700; color: #fff; }
+.s8-decl-is   { color: rgba(255,255,255,0.35); font-size: 14px; }
+.s8-decl-role { font-weight: 600; font-size: 14px; }
+.s8-decl-footer { padding: 12px 24px; border-top: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); }
+.s8-footer-note { font-size: 12px; color: rgba(255,255,255,0.3); font-style: italic; }
+
+/* ══════════════════════════════════════════════════════════════
+   S9 — One line, that's a connection
+══════════════════════════════════════════════════════════════ */
+#s9 { gap: 0; }
+
+.s9-wire-block { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; max-width: 640px; margin-bottom: 20px; }
+.s9-wire-label { font-size: 9px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.28); }
+.s9-wire-line-card {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+  background: #12122a; border: 1.5px solid rgba(255,255,255,0.12);
+  border-radius: 12px; padding: 14px 20px; font-size: 14px;
+  width: 100%; justify-content: center;
+  animation: pulseGlow 3s ease infinite;
+}
+.s9-quote  { color: rgba(255,255,255,0.35); font-style: italic; }
+.s9-port   { font-weight: 700; border-radius: 4px; padding: 1px 6px; background: rgba(255,107,53,0.18); color: var(--orange); }
+.s9-dest   { font-weight: 700; border-radius: 4px; padding: 1px 6px; font-family: var(--font-mono); font-size: 12.5px; }
+.teal-dest   { background: rgba(0,201,167,0.15); color: var(--teal); }
+.purple-dest { background: rgba(123,94,167,0.2); color: #c4a8f5; }
+
+.s9-flow-zone { position: relative; width: min(520px,90vw); height: 160px; }
+.s9-flow-node { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.s9-fn-av { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.s9-fn-name { font-size: 9.5px; font-weight: 600; color: rgba(255,255,255,0.5); font-family: var(--font-mono); white-space: nowrap; }
+.s9-sink-node { transform: translateY(-50%); }
+.s9-sink-node.flash-teal   { filter: drop-shadow(0 0 8px var(--teal)); }
+.s9-sink-node.flash-purple { filter: drop-shadow(0 0 8px var(--purple)); }
+
+/* ══════════════════════════════════════════════════════════════
+   S10 — The whole office
+══════════════════════════════════════════════════════════════ */
+#s10 { gap: 0; }
+
+.s10-paper { width: min(560px, 90vw); }
+.s10-body  { padding: 16px 20px; display: flex; flex-direction: column; gap: 14px; }
+.s10-section { display: flex; flex-direction: column; gap: 4px; }
+.s10-section-label { font-size: 10px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 4px; padding-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.s10-code-line { font-size: 12px; font-family: var(--font-mono); padding: 2px 6px; line-height: 1.7; }
+.s10-key   { font-weight: 700; }
+.s10-paren { color: rgba(255,255,255,0.35); }
+.s10-prose-line { font-size: 12.5px; padding: 3px 6px; line-height: 1.7; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px; }
+.s10-agentname { font-weight: 700; color: rgba(255,255,255,0.9); font-family: var(--font-mono); font-size: 11.5px; }
+.s10-verb  { color: rgba(255,255,255,0.35); font-size: 12px; }
+.s10-arrow { color: rgba(255,255,255,0.35); font-size: 11.5px; }
+.s10-role  { font-weight: 600; font-size: 12px; }
+.s10-dest2 { font-weight: 600; color: rgba(255,255,255,0.75); font-size: 11.5px; }
+
+/* ══════════════════════════════════════════════════════════════
+   S11 — Three things
+══════════════════════════════════════════════════════════════ */
+#s11 { gap: 0; }
+
+.s11-cards { display: flex; gap: 16px; width: 100%; max-width: 820px; margin-bottom: 20px; }
+.s11-card {
+  flex: 1; background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09); border-radius: 16px;
+  padding: 22px 18px; display: flex; flex-direction: column; gap: 10px;
+  transition: transform 0.4s, box-shadow 0.4s, border-color 0.4s;
+  position: relative; overflow: hidden;
+}
+.s11-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; opacity: 0; transition: opacity 0.4s; }
+#s11c1::before { background: var(--teal); }
+#s11c2::before { background: var(--yellow); }
+#s11c3::before { background: var(--orange); }
+.s11-card.glow { transform: translateY(-5px); }
+#s11c1.glow { box-shadow: 0 12px 40px rgba(0,201,167,0.2);   border-color: rgba(0,201,167,0.3); }
+#s11c1.glow::before { opacity: 1; }
+#s11c2.glow { box-shadow: 0 12px 40px rgba(255,209,102,0.2); border-color: rgba(255,209,102,0.3); }
+#s11c2.glow::before { opacity: 1; }
+#s11c3.glow { box-shadow: 0 12px 40px rgba(255,107,53,0.2);  border-color: rgba(255,107,53,0.3); }
+#s11c3.glow::before { opacity: 1; }
+
+.s11-card-number { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; font-family: var(--font-display); }
+.s11-card-icon  { font-size: 30px; }
+.s11-card-title { font-size: 22px; font-weight: 800; font-family: var(--font-display); line-height: 1.1; }
+.s11-card-example { font-size: 12px; color: rgba(255,255,255,0.4); font-style: italic; line-height: 1.5; background: rgba(255,255,255,0.04); border-radius: 8px; padding: 8px 10px; border-left: 2px solid rgba(255,255,255,0.1); }
+
+.s11-affirm {
+  width: 100%; max-width: 820px;
+  display: flex; align-items: center; justify-content: center;
+}
+.s11-affirm-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 900; color: #fff; text-align: center;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   S12a — Your turn
+══════════════════════════════════════════════════════════════ */
+#s12a { gap: 0; justify-content: center; }
+
+.s12a-headline {
+  font-family: var(--font-display);
+  font-size: clamp(64px, 12vw, 120px);
+  font-weight: 900; color: #fff;
+  text-align: center; line-height: 1;
+  margin-bottom: 20px;
+}
+.s12a-headline em { font-style: normal; color: var(--orange); }
+
+.s12a-link-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--orange); color: #fff;
+  border-radius: 100px; padding: 14px 32px;
+  font-size: 16px; font-weight: 700; text-decoration: none;
+  font-family: var(--font-body);
+  transition: background 0.2s, transform 0.1s;
+  margin-bottom: 24px;
+}
+.s12a-link-btn:hover  { background: #ff8555; }
+.s12a-link-btn:active { transform: scale(0.97); }
+
+.s12a-closing {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2.5vw, 26px);
+  font-weight: 700; color: rgba(255,255,255,0.55);
+  text-align: center; line-height: 1.4;
+}
+.s12a-closing em { font-style: normal; color: rgba(255,255,255,0.85); }
+
+/* ══════════════════════════════════════════════════════════════
+   S12b — Three steps
+══════════════════════════════════════════════════════════════ */
+#s12b { gap: 0; }
+
+.s12b-steps { display: flex; gap: 16px; width: 100%; max-width: 900px; margin-bottom: 20px; align-items: flex-start; }
+.s12b-step {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 12px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px; padding: 18px 16px;
+  transition: transform 0.4s, box-shadow 0.4s, border-color 0.4s;
+}
+.s12b-step.glow-teal   { transform: translateY(-4px); border-color: rgba(0,201,167,0.35);   box-shadow: 0 10px 36px rgba(0,201,167,0.15); }
+.s12b-step.glow-yellow { transform: translateY(-4px); border-color: rgba(255,209,102,0.35); box-shadow: 0 10px 36px rgba(255,209,102,0.15); }
+.s12b-step.glow-orange { transform: translateY(-4px); border-color: rgba(255,107,53,0.35);  box-shadow: 0 10px 36px rgba(255,107,53,0.15); }
+
+.s12b-step-num {
+  width: 36px; height: 36px; border-radius: 10px; border: 1.5px solid;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 800; font-family: var(--font-display); flex-shrink: 0;
+}
+.s12b-step-body { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+.s12b-step-title { font-size: 15px; font-weight: 700; line-height: 1.2; }
+.s12b-step-desc  { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.55; }
+
+.s12b-link-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(0,201,167,0.12); border: 1px solid rgba(0,201,167,0.3);
+  color: var(--teal); border-radius: 8px; padding: 8px 14px;
+  font-size: 12.5px; font-weight: 600; text-decoration: none;
+  transition: background 0.2s; font-family: var(--font-body);
+}
+.s12b-link-btn:hover { background: rgba(0,201,167,0.2); }
+.s12b-step-hint { font-size: 10.5px; color: rgba(255,255,255,0.28); font-style: italic; }
+
+.s12b-template {
+  background: #0d0d1f; border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px; padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.s12b-tmpl-line { font-size: 12px; line-height: 1.7; display: flex; gap: 6px; flex-wrap: wrap; }
+.s12b-tmpl-gap  { margin-top: 4px; }
+.s12b-tmpl-plain { color: rgba(255,255,255,0.4); font-style: italic; }
+.s12b-tmpl-key   { color: var(--yellow); font-weight: 700; font-family: var(--font-mono); flex-shrink: 0; }
+.s12b-tmpl-val   { color: rgba(255,255,255,0.8); }
+
+.s12b-copy-btn {
+  background: rgba(255,209,102,0.1); border: 1px solid rgba(255,209,102,0.25);
+  color: var(--yellow); font-family: var(--font-body); font-size: 12px; font-weight: 600;
+  padding: 7px 14px; border-radius: 8px; cursor: pointer; transition: background 0.2s;
+}
+.s12b-copy-btn:hover { background: rgba(255,209,102,0.18); }
+
+.s12b-closing {
+  width: 100%; max-width: 900px;
+  display: flex; align-items: center; gap: 14px;
+  background: linear-gradient(135deg, rgba(255,107,53,0.12) 0%, rgba(0,201,167,0.09) 100%);
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 14px 20px;
+}
+.s12b-closing-icon  { font-size: 26px; flex-shrink: 0; }
+.s12b-closing-title { font-family: var(--font-display); font-size: 17px; font-weight: 900; color: #fff; margin-bottom: 2px; }
+.s12b-closing-sub   { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ S1 — Hook ═══════════════════════════════════════════ -->
+<section class="slide active" id="s1">
+  <div class="blob" style="width:420px;height:420px;background:var(--orange);top:-80px;right:-80px;opacity:0.18;"></div>
+  <div class="blob" style="width:300px;height:300px;background:var(--teal);bottom:-60px;left:-40px;opacity:0.18;"></div>
+  <div class="blob" style="width:200px;height:200px;background:var(--yellow);top:40%;left:20%;opacity:0.1;"></div>
+
+  <div class="badge">DisSysLab · Micro-Course</div>
+
+  <h1 class="s1-headline">What if Claude worked<br>for you <em>24/7?</em></h1>
+
+  <p class="s1-body"><strong>Build a team of AI agents. They never stop.</strong></p>
+
+  <div class="ticker-frame">
+    <div class="ticker-bar">
+      <div class="ticker-win-dot" style="background:#ff5f57;"></div>
+      <div class="ticker-win-dot" style="background:#ffbd2e;"></div>
+      <div class="ticker-win-dot" style="background:#28c840;"></div>
+      <span class="ticker-title">Situation Room — Live</span>
+      <span class="live-badge"><span class="live-dot"></span>Live</span>
+    </div>
+    <div class="ticker-items" id="ticker1">
+      <div class="ticker-item"><span class="tag tag-crit">CRITICAL</span><span class="ticker-text">Fed signals surprise rate cut — markets reacting</span></div>
+      <div class="ticker-item"><span class="tag tag-high">HIGH</span><span class="ticker-text">OpenAI announces GPT-5 release date</span></div>
+      <div class="ticker-item"><span class="tag tag-med">MEDIUM</span><span class="ticker-text">Python 3.14 beta drops with JIT improvements</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ S2 — Situation Room live ═════════════════════════════ -->
+<section class="slide" id="s2">
+  <div class="s2-topbar">
+    <span style="font-size:16px;">🏛️</span>
+    <span class="s2-title">Situation Room</span>
+    <span class="s2-subtitle">— running on someone's laptop right now</span>
+    <span class="s2-live"><span class="live-dot"></span> Live</span>
+  </div>
+  <div class="s2-caption">
+    <strong>Describe a situation room in English.</strong> This is what you get.
+  </div>
+  <div class="s2-feed-wrap">
+    <div class="s2-feed-header"><div class="s2-panel-label">Briefings — newest first</div></div>
+    <div class="s2-feed-items" id="s2-feed"></div>
+  </div>
+</section>
+
+<!-- ═══════════════ S2b — Here's all you wrote ═══════════════════════════ -->
+<section class="slide" id="s2b">
+  <div class="blob" style="width:300px;height:300px;background:var(--teal);top:-80px;right:-60px;opacity:0.12;"></div>
+  <div class="blob" style="width:240px;height:240px;background:var(--yellow);bottom:-60px;left:-40px;opacity:0.1;"></div>
+
+  <div class="badge">The complete office</div>
+  <h1 class="headline" style="font-size:clamp(32px,5vw,60px);margin-bottom:6px;">Here's <em>all you wrote.</em></h1>
+
+  <div class="s2b-paper">
+    <div class="paper-header">
+      <div class="paper-dots"><div class="pd" style="background:#ff5f57;"></div><div class="pd" style="background:#ffbd2e;"></div><div class="pd" style="background:#28c840;"></div></div>
+      <span class="paper-title">office.md</span>
+    </div>
+    <div class="s2b-body">
+      <div class="s2b-section">
+        <div class="s2b-label" style="color:var(--teal);">Sources</div>
+        <div class="s2b-line s2b-mono">bluesky(max_posts=None, lifetime=None)</div>
+        <div class="s2b-line s2b-mono">al_jazeera(max_articles=10, poll_interval=600)</div>
+        <div class="s2b-line s2b-mono">bbc_world(max_articles=10, poll_interval=600)</div>
+      </div>
+      <div class="s2b-section">
+        <div class="s2b-label" style="color:var(--purple);">Sinks</div>
+        <div class="s2b-line s2b-mono">intelligence_display(max_items=8)</div>
+        <div class="s2b-line s2b-mono">jsonl_recorder(path="situation_room.jsonl")</div>
+      </div>
+      <div class="s2b-section">
+        <div class="s2b-label" style="color:var(--yellow);">Agents</div>
+        <div class="s2b-line">Alex is an analyst.</div>
+        <div class="s2b-line">Morgan is an editor.</div>
+      </div>
+      <div class="s2b-section">
+        <div class="s2b-label" style="color:var(--orange);">Connections</div>
+        <div class="s2b-line">bluesky's destination is Alex.</div>
+        <div class="s2b-line">al_jazeera's destination is Alex.</div>
+        <div class="s2b-line">bbc_world's destination is Alex.</div>
+        <div class="s2b-line">Alex's editor is Morgan.</div>
+        <div class="s2b-line">Alex's discard is jsonl_recorder.</div>
+        <div class="s2b-line">Morgan's situation_room are intelligence_display and jsonl_recorder.</div>
+      </div>
+    </div>
+  </div>
+  <p class="s2b-caption" style="margin-top:16px;">No code. <strong>Two plain English documents.</strong></p>
+</section>
+
+<!-- ═══════════════ S2c — Two role cards ════════════════════════════════ -->
+<section class="slide" id="s2c">
+  <div class="blob" style="width:300px;height:300px;background:var(--orange);top:-80px;left:-60px;opacity:0.11;"></div>
+  <div class="blob" style="width:240px;height:240px;background:var(--purple);bottom:-60px;right:-40px;opacity:0.12;"></div>
+
+  <div class="badge">The job descriptions</div>
+  <h1 class="headline" style="font-size:clamp(30px,4.5vw,56px);margin-bottom:6px;"><em>Plain English.</em> That's it.</h1>
+
+  <div class="s2c-cards">
+    <div class="s2c-card">
+      <div class="paper-header">
+        <div class="paper-dots"><div class="pd" style="background:#ff5f57;"></div><div class="pd" style="background:#ffbd2e;"></div><div class="pd" style="background:#28c840;"></div></div>
+        <span class="paper-title">analyst.md</span>
+      </div>
+      <div class="s2c-body">
+        <p class="s2c-para">You are a <span class="hl hl-yellow">news analyst</span> who receives posts and articles from social media and news sources. Your job is to assess whether each item is relevant to current world events. If relevant, <span class="hl hl-orange">send to editor.</span> Otherwise send to discard.</p>
+      </div>
+    </div>
+    <div class="s2c-card">
+      <div class="paper-header">
+        <div class="paper-dots"><div class="pd" style="background:#ff5f57;"></div><div class="pd" style="background:#ffbd2e;"></div><div class="pd" style="background:#28c840;"></div></div>
+        <span class="paper-title">editor.md</span>
+      </div>
+      <div class="s2c-body">
+        <p class="s2c-para">You are an <span class="hl hl-yellow">editor</span> who receives classified articles from the analyst. Your job is to rewrite each article as a concise briefing note with a priority rating. <span class="hl hl-orange">Send to situation_room.</span></p>
+      </div>
+    </div>
+  </div>
+  <p class="s2c-caption"></p>
+</section>
+
+<!-- ═══════════════ S3 — What is an office ══════════════════════════════ -->
+<section class="slide" id="s3">
+  <div class="blob" style="width:380px;height:380px;background:var(--teal);top:-100px;left:-80px;opacity:0.12;"></div>
+  <div class="blob" style="width:280px;height:280px;background:var(--purple);bottom:-60px;right:-40px;opacity:0.14;"></div>
+
+  <div class="badge">What is an office?</div>
+  <h1 class="headline" style="font-size:clamp(32px,5vw,60px);margin-bottom:10px;">A team that <em>never clocks out.</em></h1>
+
+  <div class="s3-punch">
+    <span>Cooperating agents.</span> <span>Working continuously.</span> <span>Forever.</span>
+  </div>
+  <p class="s3-dim">You describe the agents. DisSysLab handles everything else.</p>
+
+  <div class="s3-office">
+    <div class="s3-col s3-sources-col">
+      <div class="s3-col-label">Sources</div>
+      <div class="s3-source-node" id="src-bluesky"><span>🦋</span><span style="font-size:11px;font-weight:500;">BlueSky</span><span class="s3-src-dot"></span></div>
+      <div class="s3-source-node" id="src-alj"><span>📡</span><span style="font-size:11px;font-weight:500;">Al Jazeera</span><span class="s3-src-dot"></span></div>
+      <div class="s3-source-node" id="src-bbc"><span>📺</span><span style="font-size:11px;font-weight:500;">BBC World</span><span class="s3-src-dot"></span></div>
+    </div>
+
+    <div class="s3-arrow-zone" id="az-left">
+      <svg class="s3-svg" viewBox="0 0 100 200" preserveAspectRatio="none">
+        <path class="s3-path" d="M0,33 C50,33 50,100 100,100" stroke="rgba(0,201,167,0.3)"/>
+        <path class="s3-path" d="M0,100 C50,100 50,100 100,100" stroke="rgba(0,201,167,0.3)"/>
+        <path class="s3-path" d="M0,167 C50,167 50,100 100,100" stroke="rgba(0,201,167,0.3)"/>
+      </svg>
+      <div class="msg-dot dot-teal" id="s3-ma1"></div>
+      <div class="msg-dot dot-teal" id="s3-ma2"></div>
+      <div class="msg-dot dot-teal" id="s3-ma3"></div>
+    </div>
+
+    <div class="s3-col s3-agents-col">
+      <div class="s3-col-label">Agents</div>
+      <div class="s3-desk" id="desk-alex">
+        <div class="s3-desk-top">
+          <div class="s3-avatar av-analyst">🔍</div>
+          <div class="s3-desk-info"><div class="s3-desk-name">Alex</div><div class="s3-desk-role">analyst</div></div>
+          <div class="s3-inbox"><div class="s3-inbox-label">inbox</div><div class="s3-inbox-count" id="alex-count">0</div></div>
+        </div>
+        <div class="s3-desk-status" id="alex-status">Watching sources…</div>
+      </div>
+      <div class="s3-agent-arrow">↓</div>
+      <div class="s3-desk" id="desk-morgan">
+        <div class="s3-desk-top">
+          <div class="s3-avatar av-editor">✏️</div>
+          <div class="s3-desk-info"><div class="s3-desk-name">Morgan</div><div class="s3-desk-role">editor</div></div>
+          <div class="s3-inbox"><div class="s3-inbox-label">inbox</div><div class="s3-inbox-count" id="morgan-count">0</div></div>
+        </div>
+        <div class="s3-desk-status" id="morgan-status">Ready…</div>
+      </div>
+    </div>
+
+    <div class="s3-arrow-zone" id="az-right">
+      <svg class="s3-svg" viewBox="0 0 100 200" preserveAspectRatio="none">
+        <path class="s3-path" d="M0,100 C50,100 50,50 100,50"  stroke="rgba(255,107,53,0.35)"/>
+        <path class="s3-path" d="M0,100 C50,100 50,150 100,150" stroke="rgba(123,94,167,0.35)"/>
+      </svg>
+      <div class="msg-dot dot-orange" id="s3-mb1"></div>
+      <div class="msg-dot dot-purple" id="s3-mb2"></div>
+    </div>
+
+    <div class="s3-col s3-outputs-col">
+      <div class="s3-col-label">Outputs</div>
+      <div class="s3-sink-node orange-border"><span>📊</span><span class="s3-sink-name">Dashboard</span></div>
+      <div style="height:28px;"></div>
+      <div class="s3-sink-node purple-border"><span>💾</span><span class="s3-sink-name">Archive</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ S4 — Messages flow ══════════════════════════════════ -->
+<section class="slide" id="s4">
+  <div class="blob" style="width:340px;height:340px;background:var(--orange);top:-80px;right:-60px;opacity:0.13;"></div>
+  <div class="blob" style="width:260px;height:260px;background:var(--teal);bottom:-60px;left:-40px;opacity:0.12;"></div>
+
+  <h1 class="headline" style="font-size:clamp(30px,5vw,60px);margin-bottom:28px;"><em>Connect any agent to any agent.</em></h1>
+
+  <div class="s4-diagram">
+    <div class="s4-panel">
+      <div class="s4-panel-label" style="color:var(--teal);">Many → One</div>
+      <div class="s4-fanin-layout">
+        <div class="s4-sender-col">
+          <div class="s4-agent-node teal-node" id="fi-a">📰 <span>News</span></div>
+          <div class="s4-agent-node teal-node" id="fi-b">🦋 <span>Social</span></div>
+          <div class="s4-agent-node teal-node" id="fi-c">📡 <span>Feeds</span></div>
+        </div>
+        <div class="s4-az" id="az-fanin" style="width:90px;height:180px;position:relative;">
+          <svg style="position:absolute;inset:0;width:100%;height:100%;" viewBox="0 0 90 180" preserveAspectRatio="none">
+            <path d="M0,30 C45,30 45,90 90,90"  fill="none" stroke="rgba(0,201,167,0.25)" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <path d="M0,90 C45,90 45,90 90,90"  fill="none" stroke="rgba(0,201,167,0.25)" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <path d="M0,150 C45,150 45,90 90,90" fill="none" stroke="rgba(0,201,167,0.25)" stroke-width="1.5" stroke-dasharray="4 4"/>
+          </svg>
+          <div class="msg-dot dot-teal" id="fi-dot-a"></div>
+          <div class="msg-dot dot-teal" id="fi-dot-b"></div>
+          <div class="msg-dot dot-teal" id="fi-dot-c"></div>
+        </div>
+        <div class="s4-agent-node receiver-node" id="fi-recv" style="border-color:rgba(0,201,167,0.4);">
+          <div style="font-size:22px;">🔍</div>
+          <div style="font-size:11px;font-weight:600;color:#fff;">Analyst</div>
+          <div class="s4-pulse-ring teal-ring" id="fi-ring"></div>
+        </div>
+      </div>
+      <div class="s4-concept-tag" style="background:rgba(0,201,167,0.1);border-color:rgba(0,201,167,0.25);color:var(--teal);">Fanin</div>
+    </div>
+
+    <div class="s4-divider"></div>
+
+    <div class="s4-panel">
+      <div class="s4-panel-label" style="color:var(--orange);">One → Many</div>
+      <div class="s4-fanout-layout">
+        <div class="s4-agent-node sender-node" id="fo-send" style="border-color:rgba(255,107,53,0.4);">
+          <div style="font-size:22px;">✏️</div>
+          <div style="font-size:11px;font-weight:600;color:#fff;">Editor</div>
+          <div class="s4-pulse-ring orange-ring" id="fo-ring"></div>
+        </div>
+        <div class="s4-az" id="az-fanout" style="width:90px;height:180px;position:relative;">
+          <svg style="position:absolute;inset:0;width:100%;height:100%;" viewBox="0 0 90 180" preserveAspectRatio="none">
+            <path d="M0,90 C45,90 45,40 90,40"  fill="none" stroke="rgba(255,107,53,0.25)" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <path d="M0,90 C45,90 45,90 90,90"  fill="none" stroke="rgba(255,107,53,0.25)" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <path d="M0,90 C45,90 45,140 90,140" fill="none" stroke="rgba(255,107,53,0.25)" stroke-width="1.5" stroke-dasharray="4 4"/>
+          </svg>
+          <div class="msg-dot dot-orange" id="fo-dot-a"></div>
+          <div class="msg-dot dot-orange" id="fo-dot-b"></div>
+          <div class="msg-dot dot-orange" id="fo-dot-c"></div>
+        </div>
+        <div class="s4-receiver-col">
+          <div class="s4-agent-node orange-node" id="fo-r1">📊 <span>Dashboard</span></div>
+          <div class="s4-agent-node orange-node" id="fo-r2">💾 <span>Archive</span></div>
+          <div class="s4-agent-node orange-node" id="fo-r3">📧 <span>Alerts</span></div>
+        </div>
+      </div>
+      <div class="s4-concept-tag" style="background:rgba(255,107,53,0.1);border-color:rgba(255,107,53,0.25);color:var(--orange);">Fanout</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ S5 — Job description ════════════════════════════════ -->
+<section class="slide" id="s5">
+  <div class="blob" style="width:360px;height:360px;background:var(--yellow);top:-100px;left:-80px;opacity:0.1;"></div>
+  <div class="blob" style="width:260px;height:260px;background:var(--purple);bottom:-60px;right:-40px;opacity:0.13;"></div>
+
+  <div class="badge">How do you describe an agent?</div>
+  <h1 class="headline" style="font-size:clamp(28px,4.5vw,56px);margin-bottom:28px;">An agent has a role.<br><em>The role is a job description.</em></h1>
+
+  <div class="s5-layout">
+    <div class="s5-paper paper">
+      <div class="paper-header">
+        <div class="paper-dots"><div class="pd" style="background:#ff5f57;"></div><div class="pd" style="background:#ffbd2e;"></div><div class="pd" style="background:#28c840;"></div></div>
+        <span class="paper-title">analyst.md</span>
+      </div>
+      <div class="s5-paper-body">
+        <div class="s5-line">You are a <span class="hl hl-yellow">news analyst</span> who receives</div>
+        <div class="s5-line">posts and articles from social media</div>
+        <div class="s5-line">and news sources.</div>
+        <div class="s5-line s5-gap">Your job is to decide if each item is</div>
+        <div class="s5-line">relevant to current world events.</div>
+        <div class="s5-line s5-gap"><span class="hl hl-orange">Send to editor</span> if relevant.</div>
+        <div class="s5-line">Otherwise send to discard.</div>
+      </div>
+    </div>
+
+    <div class="s5-labels">
+      <div class="s5-label-row">
+        <div class="s5-label-dot" style="background:var(--yellow);"></div>
+        <div class="s5-label-text" style="color:var(--yellow);">Who they are</div>
+      </div>
+      <div class="s5-label-row">
+        <div class="s5-label-dot" style="background:rgba(255,255,255,0.4);"></div>
+        <div class="s5-label-text" style="color:rgba(255,255,255,0.65);">What their job is</div>
+      </div>
+      <div class="s5-label-row">
+        <div class="s5-label-dot" style="background:var(--orange);"></div>
+        <div class="s5-label-text" style="color:var(--orange);">Where to send results</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ S6 — Full role ══════════════════════════════════════ -->
+<section class="slide" id="s6">
+  <div class="blob" style="width:320px;height:320px;background:var(--teal);top:-80px;right:-60px;opacity:0.11;"></div>
+  <div class="blob" style="width:280px;height:280px;background:var(--orange);bottom:-60px;left:-40px;opacity:0.12;"></div>
+
+  <div class="badge">A real job description</div>
+  <h1 class="headline" style="font-size:clamp(28px,4.5vw,56px);margin-bottom:16px;">Job Description.<br><em>It's that simple.</em></h1>
+
+  <div class="s6-paper paper">
+    <div class="paper-header">
+      <div class="paper-dots"><div class="pd" style="background:#ff5f57;"></div><div class="pd" style="background:#ffbd2e;"></div><div class="pd" style="background:#28c840;"></div></div>
+      <span class="paper-title">analyst.md</span>
+    </div>
+    <div class="s6-paper-body">
+      <p class="s6-para" id="s6p1">You are a <span class="hl hl-yellow">news analyst</span> who receives posts and articles from social media and news sources.</p>
+      <p class="s6-para" id="s6p2">Your job is to assess whether each item is relevant to current world events — politics, economics, science, technology, or humanitarian issues that a senior analyst would want to know about.</p>
+      <p class="s6-para" id="s6p3">For each item, rate its importance: CRITICAL for breaking news requiring immediate attention, HIGH for significant developments, MEDIUM for notable but not urgent, LOW for background information.</p>
+      <p class="s6-para" id="s6p4">If the item is relevant, <span class="hl hl-orange">send to editor</span> with your importance rating and a one-sentence summary. If not relevant, send to discard.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ S7 — Roles are reusable ═════════════════════════════ -->
+<section class="slide" id="s7">
+  <div class="blob" style="width:350px;height:350px;background:var(--purple);top:-80px;right:-60px;opacity:0.13;"></div>
+  <div class="blob" style="width:260px;height:260px;background:var(--yellow);bottom:-60px;left:-40px;opacity:0.1;"></div>
+
+  <div class="badge">Roles are reusable</div>
+  <h1 class="headline" style="font-size:clamp(26px,4.2vw,52px);margin-bottom:14px;">A role is a job description.<br><em>Not a person.</em></h1>
+
+  <div class="s7-offices">
+    <div class="s7-role-source">
+      <div class="s7-role-card">
+        <div class="s7-role-header">
+          <span style="font-size:16px;">🔍</span>
+          <span class="s7-role-name">analyst.md</span>
+          <span class="s7-role-tag">Role</span>
+        </div>
+        <div class="s7-role-snippet">"…if relevant, <span class="hl hl-orange" style="font-size:11px;">send to editor</span>…"</div>
+      </div>
+      <div class="s7-copies-label">used in 3 offices ↓</div>
+    </div>
+
+    <div class="s7-instances">
+      <div class="s7-office-card" id="s7o1">
+        <div class="s7-office-header" style="background:rgba(0,201,167,0.12);border-color:rgba(0,201,167,0.25);">
+          <span>📰</span><span class="s7-office-name">News Office</span>
+        </div>
+        <div class="s7-office-body">
+          <div class="s7-agent-row">
+            <div class="s7-agent-chip" style="border-color:rgba(0,201,167,0.3);">
+              <span class="s7-agent-av" style="background:linear-gradient(135deg,var(--purple),#a78bfa);">🔍</span>
+              <div><div class="s7-aname">Alex</div><div class="s7-arole">analyst</div></div>
+            </div>
+          </div>
+          <div class="s7-wire">
+            <span class="s7-wire-text">"Alex's editor is <strong>Morgan</strong>"</span>
+            <div class="s7-wire-line teal-wire"></div>
+          </div>
+          <div class="s7-agent-row">
+            <div class="s7-agent-chip" style="border-color:rgba(0,201,167,0.3);">
+              <span class="s7-agent-av" style="background:linear-gradient(135deg,var(--teal),#34d399);">✏️</span>
+              <div><div class="s7-aname">Morgan</div><div class="s7-arole">editor</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="s7-office-card" id="s7o2">
+        <div class="s7-office-header" style="background:rgba(255,107,53,0.12);border-color:rgba(255,107,53,0.25);">
+          <span>🏆</span><span class="s7-office-name">Sports Office</span>
+        </div>
+        <div class="s7-office-body">
+          <div class="s7-agent-row">
+            <div class="s7-agent-chip" style="border-color:rgba(255,107,53,0.3);">
+              <span class="s7-agent-av" style="background:linear-gradient(135deg,var(--purple),#a78bfa);">🔍</span>
+              <div><div class="s7-aname">Jordan</div><div class="s7-arole">analyst</div></div>
+            </div>
+          </div>
+          <div class="s7-wire">
+            <span class="s7-wire-text">"Jordan's editor is <strong>Sam</strong>"</span>
+            <div class="s7-wire-line orange-wire"></div>
+          </div>
+          <div class="s7-agent-row">
+            <div class="s7-agent-chip" style="border-color:rgba(255,107,53,0.3);">
+              <span class="s7-agent-av" style="background:linear-gradient(135deg,var(--orange),#fbbf24);">👔</span>
+              <div><div class="s7-aname">Sam</div><div class="s7-arole">CEO</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="s7-office-card" id="s7o3">
+        <div class="s7-office-header" style="background:rgba(123,94,167,0.12);border-color:rgba(123,94,167,0.25);">
+          <span>🔬</span><span class="s7-office-name">Science Office</span>
+        </div>
+        <div class="s7-office-body">
+          <div class="s7-agent-row">
+            <div class="s7-agent-chip" style="border-color:rgba(123,94,167,0.3);">
+              <span class="s7-agent-av" style="background:linear-gradient(135deg,var(--purple),#a78bfa);">🔍</span>
+              <div><div class="s7-aname">Riley</div><div class="s7-arole">analyst</div></div>
+            </div>
+          </div>
+          <div class="s7-wire">
+            <span class="s7-wire-text">"Riley's editor is <strong>Dana</strong>"</span>
+            <div class="s7-wire-line purple-wire"></div>
+          </div>
+          <div class="s7-agent-row">
+            <div class="s7-agent-chip" style="border-color:rgba(123,94,167,0.3);">
+              <span class="s7-agent-av" style="background:linear-gradient(135deg,var(--purple),#6366f1);">🛡️</span>
+              <div><div class="s7-aname">Dana</div><div class="s7-arole">security</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="s7-library-callout">
+      <span class="s7-library-icon">📚</span>
+      <span class="s7-library-text">The analyst role is identical in all three offices.<br>Only the wiring changes.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ S8 — Name your agents ═══════════════════════════════ -->
+<section class="slide" id="s8">
+  <div class="blob" style="width:380px;height:380px;background:var(--orange);top:-90px;right:-70px;opacity:0.11;"></div>
+  <div class="blob" style="width:260px;height:260px;background:var(--teal);bottom:-60px;left:-40px;opacity:0.12;"></div>
+
+  <div class="badge">The org chart</div>
+  <h1 class="headline" style="font-size:clamp(28px,4.5vw,56px);margin-bottom:28px;">Name your agents.<br><em>Give each one a role.</em></h1>
+
+  <div class="s8-declaration">
+    <div class="paper-header">
+      <div class="paper-dots"><div class="pd" style="background:#ff5f57;"></div><div class="pd" style="background:#ffbd2e;"></div><div class="pd" style="background:#28c840;"></div></div>
+      <span class="paper-title">office.md — Agents</span>
+    </div>
+    <div class="s8-decl-body">
+      <div class="s8-decl-line" id="s8l1"><span class="s8-decl-name">Alex</span><span class="s8-decl-is">is an</span><span class="s8-decl-role" style="color:var(--teal);">analyst.</span></div>
+      <div class="s8-decl-line" id="s8l2"><span class="s8-decl-name">Morgan</span><span class="s8-decl-is">is an</span><span class="s8-decl-role" style="color:var(--orange);">editor.</span></div>
+      <div class="s8-decl-line" id="s8l3"><span class="s8-decl-name">Mia</span><span class="s8-decl-is">is an</span><span class="s8-decl-role" style="color:var(--orange);">editor.</span></div>
+      <div class="s8-decl-line" id="s8l4"><span class="s8-decl-name">Sam</span><span class="s8-decl-is">is a</span><span class="s8-decl-role" style="color:var(--purple);">reporter.</span></div>
+    </div>
+    <div class="s8-decl-footer"><span class="s8-footer-note">One line per agent. That's it.</span></div>
+  </div>
+</section>
+
+<!-- ═══════════════ S9 — One line, that's a connection ══════════════════ -->
+<section class="slide" id="s9">
+  <div class="blob" style="width:340px;height:340px;background:var(--teal);top:-80px;left:-60px;opacity:0.11;"></div>
+  <div class="blob" style="width:280px;height:280px;background:var(--purple);bottom:-60px;right:-40px;opacity:0.13;"></div>
+
+  <div class="badge">Wiring the office</div>
+  <h1 class="headline" style="font-size:clamp(28px,4.5vw,56px);margin-bottom:16px;">Write one line.<br><em>Make a connection.</em></h1>
+
+  <div class="s9-wire-block">
+    <div class="s9-wire-label">office.md — Connections</div>
+    <div class="s9-wire-line-card">
+      <span class="s9-quote">"Morgan's</span>
+      <span class="s9-port">situation_room</span>
+      <span class="s9-quote">are</span>
+      <span class="s9-dest teal-dest">intelligence_display</span>
+      <span class="s9-quote">and</span>
+      <span class="s9-dest purple-dest">jsonl_recorder</span>
+      <span class="s9-quote">."</span>
+    </div>
+  </div>
+
+  <div class="s9-flow-zone" id="s9-flow">
+    <svg style="position:absolute;inset:0;width:100%;height:100%;" viewBox="0 0 200 160" preserveAspectRatio="none">
+      <path d="M0,80 C60,80 60,80 100,80"          fill="none" stroke="rgba(255,107,53,0.3)"  stroke-width="1.5" stroke-dasharray="4 4"/>
+      <path d="M100,80 C140,80 140,40 200,40"       fill="none" stroke="rgba(0,201,167,0.3)"   stroke-width="1.5" stroke-dasharray="4 4"/>
+      <path d="M100,80 C140,80 140,120 200,120"     fill="none" stroke="rgba(123,94,167,0.3)"  stroke-width="1.5" stroke-dasharray="4 4"/>
+    </svg>
+    <div class="s9-flow-node s9-morgan-node" style="left:0;top:50%;transform:translateY(-50%);">
+      <div class="s9-fn-av" style="background:linear-gradient(135deg,var(--teal),#34d399);">✏️</div>
+      <div class="s9-fn-name">Morgan</div>
+    </div>
+    <div class="s9-flow-node s9-sink-node" id="s9-sink-display" style="right:0;top:17%;">
+      <div class="s9-fn-av" style="background:rgba(0,201,167,0.2);font-size:12px;">📊</div>
+      <div class="s9-fn-name" style="color:var(--teal);">intelligence_display</div>
+    </div>
+    <div class="s9-flow-node s9-sink-node" id="s9-sink-jsonl" style="right:0;bottom:17%;">
+      <div class="s9-fn-av" style="background:rgba(123,94,167,0.2);font-size:12px;">💾</div>
+      <div class="s9-fn-name" style="color:var(--purple);">jsonl_recorder</div>
+    </div>
+    <div class="msg-dot dot-orange" id="s9d-left"></div>
+    <div class="msg-dot dot-teal"   id="s9d-top"></div>
+    <div class="msg-dot dot-purple" id="s9d-bot"></div>
+  </div>
+</section>
+
+<!-- ═══════════════ S10 — The whole office ══════════════════════════════ -->
+<section class="slide" id="s10">
+  <div class="blob" style="width:320px;height:320px;background:var(--teal);top:-80px;right:-60px;opacity:0.1;"></div>
+  <div class="blob" style="width:260px;height:260px;background:var(--yellow);bottom:-60px;left:-40px;opacity:0.1;"></div>
+
+  <div class="badge">The complete office</div>
+  <h1 class="headline" style="font-size:clamp(26px,4vw,50px);margin-bottom:18px;">The whole office.<br><em>One screen. Plain English.</em></h1>
+
+  <div class="s10-paper paper">
+    <div class="paper-header">
+      <div class="paper-dots"><div class="pd" style="background:#ff5f57;"></div><div class="pd" style="background:#ffbd2e;"></div><div class="pd" style="background:#28c840;"></div></div>
+      <span class="paper-title">office.md</span>
+    </div>
+    <div class="s10-body">
+      <div class="s10-section">
+        <div class="s10-section-label" style="color:var(--teal);">Sources</div>
+        <div class="s10-code-line"><span class="s10-key" style="color:var(--teal);">bluesky</span><span class="s10-paren">(max_posts=None, lifetime=None)</span></div>
+        <div class="s10-code-line"><span class="s10-key" style="color:var(--teal);">al_jazeera</span><span class="s10-paren">(max_articles=10, poll_interval=600)</span></div>
+        <div class="s10-code-line"><span class="s10-key" style="color:var(--teal);">bbc_world</span><span class="s10-paren">(max_articles=10, poll_interval=600)</span></div>
+      </div>
+      <div class="s10-section">
+        <div class="s10-section-label" style="color:var(--purple);">Sinks</div>
+        <div class="s10-code-line"><span class="s10-key" style="color:var(--purple);">intelligence_display</span><span class="s10-paren">(max_items=8)</span></div>
+        <div class="s10-code-line"><span class="s10-key" style="color:var(--purple);">jsonl_recorder</span><span class="s10-paren">(path="situation_room.jsonl")</span></div>
+      </div>
+      <div class="s10-section">
+        <div class="s10-section-label" style="color:var(--yellow);">Agents</div>
+        <div class="s10-prose-line"><span class="s10-agentname">Alex</span><span class="s10-verb">is an</span><span class="s10-role" style="color:var(--yellow);">analyst.</span></div>
+        <div class="s10-prose-line"><span class="s10-agentname">Morgan</span><span class="s10-verb">is an</span><span class="s10-role" style="color:var(--yellow);">editor.</span></div>
+      </div>
+      <div class="s10-section">
+        <div class="s10-section-label" style="color:var(--orange);">Connections</div>
+        <div class="s10-prose-line"><span class="s10-agentname">bluesky</span><span class="s10-arrow">'s destination is</span><span class="s10-dest2">Alex.</span></div>
+        <div class="s10-prose-line"><span class="s10-agentname">al_jazeera</span><span class="s10-arrow">'s destination is</span><span class="s10-dest2">Alex.</span></div>
+        <div class="s10-prose-line"><span class="s10-agentname">bbc_world</span><span class="s10-arrow">'s destination is</span><span class="s10-dest2">Alex.</span></div>
+        <div class="s10-prose-line"><span class="s10-agentname">Alex</span><span class="s10-arrow">'s editor is</span><span class="s10-dest2">Morgan.</span></div>
+        <div class="s10-prose-line"><span class="s10-agentname">Alex</span><span class="s10-arrow">'s discard is</span><span class="s10-dest2">jsonl_recorder.</span></div>
+        <div class="s10-prose-line"><span class="s10-agentname">Morgan</span><span class="s10-arrow">'s situation_room are</span><span class="s10-dest2">intelligence_display and jsonl_recorder.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ S11 — Three things ══════════════════════════════════ -->
+<section class="slide" id="s11">
+  <div class="blob" style="width:400px;height:400px;background:var(--orange);top:-100px;right:-80px;opacity:0.12;"></div>
+  <div class="blob" style="width:300px;height:300px;background:var(--teal);bottom:-80px;left:-60px;opacity:0.12;"></div>
+
+  <div class="badge">You've got this</div>
+  <h1 class="headline" style="font-size:clamp(26px,4.2vw,52px);margin-bottom:22px;">Three things.<br><em>That's all you write.</em></h1>
+
+  <div class="s11-cards">
+    <div class="s11-card" id="s11c1">
+      <div class="s11-card-number" style="background:rgba(0,201,167,0.15);color:var(--teal);">1</div>
+      <div class="s11-card-icon">📋</div>
+      <div class="s11-card-title" style="color:var(--teal);">Roles</div>
+      <div class="s11-card-example">"You are a news analyst who receives posts and decides if they're relevant…"</div>
+    </div>
+    <div class="s11-card" id="s11c2">
+      <div class="s11-card-number" style="background:rgba(255,209,102,0.15);color:var(--yellow);">2</div>
+      <div class="s11-card-icon">👥</div>
+      <div class="s11-card-title" style="color:var(--yellow);">Agents</div>
+      <div class="s11-card-example">"Alex is an analyst.<br>Morgan is an editor."</div>
+    </div>
+    <div class="s11-card" id="s11c3">
+      <div class="s11-card-number" style="background:rgba(255,107,53,0.15);color:var(--orange);">3</div>
+      <div class="s11-card-icon">🔗</div>
+      <div class="s11-card-title" style="color:var(--orange);">Connections</div>
+      <div class="s11-card-example">"Alex's editor is Morgan."</div>
+    </div>
+  </div>
+
+  <div class="s11-affirm">
+    <div class="s11-affirm-title">That's everything.</div>
+  </div>
+</section>
+
+<!-- ═══════════════ S12a — Your turn ════════════════════════════════════ -->
+<section class="slide" id="s12a">
+  <div class="blob" style="width:500px;height:500px;background:var(--orange);top:-120px;right:-100px;opacity:0.14;"></div>
+  <div class="blob" style="width:360px;height:360px;background:var(--teal);bottom:-100px;left:-80px;opacity:0.13;"></div>
+  <div class="blob" style="width:200px;height:200px;background:var(--yellow);top:38%;left:28%;opacity:0.08;"></div>
+
+  <h1 class="s12a-headline">Your<br><em>turn.</em></h1>
+
+  <a class="s12a-link-btn"
+     href="https://github.com/kmchandy/DisSysLab"
+     target="_blank" rel="noopener noreferrer">
+    🚀 Start building →
+  </a>
+
+  <p class="s12a-closing">
+    Your first office will be simple.<br>
+    <em>That's perfect.</em>
+  </p>
+</section>
+
+<!-- ═══════════════ S12b — Three steps ══════════════════════════════════ -->
+<section class="slide" id="s12b">
+  <div class="blob" style="width:340px;height:340px;background:var(--purple);top:-80px;right:-60px;opacity:0.12;"></div>
+  <div class="blob" style="width:260px;height:260px;background:var(--teal);bottom:-60px;left:-40px;opacity:0.11;"></div>
+
+  <div class="badge">How to start</div>
+  <h1 class="headline" style="font-size:clamp(28px,4.5vw,54px);margin-bottom:20px;">Three steps.<br><em>Under five minutes.</em></h1>
+
+  <div class="s12b-steps">
+    <div class="s12b-step" id="s12bs1">
+      <div class="s12b-step-num" style="background:rgba(0,201,167,0.15);color:var(--teal);border-color:rgba(0,201,167,0.3);">1</div>
+      <div class="s12b-step-body">
+        <div class="s12b-step-title" style="color:var(--teal);">Get the context file</div>
+        <div class="s12b-step-desc">This teaches Claude the DisSysLab framework so it can write your app.</div>
+        <a class="s12b-link-btn" href="https://github.com/kmchandy/DisSysLab/blob/main/CLAUDE_CONTEXT.md" target="_blank" rel="noopener noreferrer">📄 Open CLAUDE_CONTEXT.md →</a>
+        <div class="s12b-step-hint">Click "Raw" on the GitHub page → copy all → paste into a new Claude conversation.</div>
+      </div>
+    </div>
+    <div class="s12b-step" id="s12bs2">
+      <div class="s12b-step-num" style="background:rgba(255,209,102,0.15);color:var(--yellow);border-color:rgba(255,209,102,0.3);">2</div>
+      <div class="s12b-step-body">
+        <div class="s12b-step-title" style="color:var(--yellow);">Describe your app</div>
+        <div class="s12b-step-desc">Tell Claude what you want using this template:</div>
+        <div class="s12b-template">
+          <div class="s12b-tmpl-line"><span class="s12b-tmpl-plain">I want to build a DisSysLab app that:</span></div>
+          <div class="s12b-tmpl-line s12b-tmpl-gap"><span class="s12b-tmpl-key">SOURCE:</span><span class="s12b-tmpl-val">monitor Hacker News RSS feed</span></div>
+          <div class="s12b-tmpl-line"><span class="s12b-tmpl-key">PROCESSING:</span><span class="s12b-tmpl-val">filter short articles, analyze sentiment</span></div>
+          <div class="s12b-tmpl-line"><span class="s12b-tmpl-key">OUTPUT:</span><span class="s12b-tmpl-val">print results to console</span></div>
+        </div>
+        <button class="s12b-copy-btn" onclick="copyTemplate()"><span id="copy-label">📋 Copy template</span></button>
+      </div>
+    </div>
+    <div class="s12b-step" id="s12bs3">
+      <div class="s12b-step-num" style="background:rgba(255,107,53,0.15);color:var(--orange);border-color:rgba(255,107,53,0.3);">3</div>
+      <div class="s12b-step-body">
+        <div class="s12b-step-title" style="color:var(--orange);">Claude builds and runs it</div>
+        <div class="s12b-step-desc">Claude writes your complete app. The compiler runs it automatically. Your office starts running — and never stops.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="s12b-closing">
+    <span class="s12b-closing-icon">✨</span>
+    <div>
+      <div class="s12b-closing-title">Your first office will be simple. That's perfect.</div>
+      <div class="s12b-closing-sub">Add more agents, more sources, more connections — one line at a time.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ NAV ══════════════════════════════════════════════════ -->
+<nav class="nav">
+  <button class="nav-btn" id="prevBtn" onclick="go(-1)" style="visibility:hidden">← Back</button>
+  <div class="progress" id="progress"></div>
+  <button class="nav-btn primary" id="nextBtn" onclick="go(1)">Next →</button>
+</nav>
+
+<script>
+const TOTAL = 14;
+let cur = 0;
+const slides = document.querySelectorAll('.slide');
+
+// Progress dots
+const prog = document.getElementById('progress');
+for (let i = 0; i < TOTAL; i++) {
+  const d = document.createElement('div');
+  d.className = 'prog-dot' + (i === 0 ? ' on' : '');
+  prog.appendChild(d);
+}
+
+function go(dir) {
+  const next = cur + dir;
+  if (next < 0 || next >= slides.length) return;
+  if (slides[cur]) { slides[cur].classList.remove('active'); if (dir > 0) slides[cur].classList.add('exit-left'); }
+  cur = next;
+  setTimeout(() => {
+    slides.forEach(s => s.classList.remove('exit-left'));
+    if (slides[cur]) slides[cur].classList.add('active');
+  }, 60);
+  updateNav();
+}
+
+function updateNav() {
+  document.getElementById('prevBtn').style.visibility = cur === 0 ? 'hidden' : 'visible';
+  const last = cur >= slides.length - 1;
+  const btn = document.getElementById('nextBtn');
+  btn.textContent = last ? 'Start building →' : 'Next →';
+  btn.onclick = last ? () => window.open('https://github.com/kmchandy/DisSysLab','_blank') : () => go(1);
+  document.querySelectorAll('.prog-dot').forEach((d,i) => d.classList.toggle('on', i === cur));
+}
+
+// ── Bezier dot animation (shared) ──────────────────────────────────────
+function animDot(dotEl, x0,y0, x1,y1, x2,y2, x3,y3, dur, onDone) {
+  dotEl.style.opacity = '1';
+  const t0 = performance.now();
+  function frame(now) {
+    const t = Math.min((now-t0)/dur, 1), u = 1-t;
+    dotEl.style.left = (u*u*u*x0+3*u*u*t*x1+3*u*t*t*x2+t*t*t*x3-4.5)+'px';
+    dotEl.style.top  = (u*u*u*y0+3*u*u*t*y1+3*u*t*t*y2+t*t*t*y3-4.5)+'px';
+    if (t < 1) requestAnimationFrame(frame);
+    else { dotEl.style.opacity='0'; if(onDone) onDone(); }
+  }
+  requestAnimationFrame(frame);
+}
+
+// ── S1 ticker ──────────────────────────────────────────────────────────
+const tickerData = [
+  ['CRITICAL','Fed signals surprise rate cut — markets reacting'],
+  ['HIGH','OpenAI announces GPT-5 release date'],
+  ['MEDIUM','Python 3.14 beta drops with JIT improvements'],
+  ['HIGH','BlueSky hits 10M daily active users'],
+  ['MEDIUM','New EU AI Act enforcement guidance published'],
+  ['CRITICAL','Major undersea cable cut — internet disruptions'],
+  ['LOW','GitHub releases Copilot for CLI tools'],
+];
+let t1i = 3;
+setInterval(() => {
+  const el = document.getElementById('ticker1'); if(!el) return;
+  const [tag,text] = tickerData[t1i++ % tickerData.length];
+  const cls = tag==='CRITICAL'?'tag-crit':tag==='HIGH'?'tag-high':tag==='MEDIUM'?'tag-med':'tag-low';
+  const d = document.createElement('div'); d.className='ticker-item';
+  d.innerHTML=`<span class="tag ${cls}">${tag}</span><span class="ticker-text">${text}</span>`;
+  el.insertBefore(d,el.firstChild); if(el.children.length>3) el.removeChild(el.lastChild);
+}, 2800);
+
+// ── S2 feed ────────────────────────────────────────────────────────────
+const feedData = [
+  {priority:'CRITICAL',source:'BBC World',headline:'G7 emergency summit called over trade shock',summary:'Morgan: Immediate diplomatic implications. Monitor for 48h.'},
+  {priority:'HIGH',source:'Al Jazeera',headline:'AI regulation vote passes in European Parliament',summary:'Morgan: Significant for tech sector. Enforcement begins Q3.'},
+  {priority:'HIGH',source:'BlueSky',headline:'GPT-5 benchmarks leak — AGI discussion resurges',summary:'Morgan: High engagement. Source credibility uncertain.'},
+  {priority:'MEDIUM',source:'BBC World',headline:'Renewable energy hits 40% of UK grid for first time',summary:'Morgan: Positive milestone. Low immediate action required.'},
+  {priority:'MEDIUM',source:'Al Jazeera',headline:'WHO releases updated pandemic preparedness guidelines',summary:'Morgan: Routine update. Archive for reference.'},
+  {priority:'CRITICAL',source:'BlueSky',headline:'Breaking: Major exchange halts trading — systems down',summary:'Morgan: Market impact imminent. Escalate immediately.'},
+  {priority:'LOW',source:'BBC World',headline:'New species of deep-sea fish discovered off Azores',summary:'Morgan: Interesting but low relevance. Filed.'},
+  {priority:'HIGH',source:'Al Jazeera',headline:'Ceasefire negotiations resume in Geneva',summary:'Morgan: Developing situation. Monitoring required.'},
+];
+let fi=0;
+function addFeed() {
+  const item=feedData[fi++%feedData.length], feed=document.getElementById('s2-feed'); if(!feed)return;
+  const cls=item.priority==='CRITICAL'?'tag-crit':item.priority==='HIGH'?'tag-high':item.priority==='MEDIUM'?'tag-med':'tag-low';
+  const now=new Date(), t=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+  const d=document.createElement('div'); d.className='feed-item';
+  d.innerHTML=`<div class="feed-meta"><span class="tag ${cls}">${item.priority}</span><span class="feed-source">${item.source}</span><span class="feed-time">${t}</span></div><div class="feed-headline">${item.headline}</div><div class="feed-summary">${item.summary}</div>`;
+  feed.insertBefore(d,feed.firstChild); while(feed.children.length>12) feed.removeChild(feed.lastChild);
+}
+addFeed(); addFeed(); addFeed();
+setInterval(addFeed, 3200);
+
+// ── S3 office animation ────────────────────────────────────────────────
+let alexC=0, morganC=0, s3srcI=0;
+const alexSt=['Reading BlueSky post…','Checking Al Jazeera…','Scanning BBC feed…','Marked HIGH — forwarding to Morgan…','Discarding low relevance…','Flagged CRITICAL — alerting Morgan…'];
+const morganSt=['Writing briefing note…','Formatting summary…','Sending to dashboard…','Archiving to file…','Reviewing item…'];
+const srcIds=['src-bluesky','src-alj','src-bbc'], srcYs=[33,100,167];
+const dotIds=['s3-ma1','s3-ma2','s3-ma3'];
+
+function fireS3() {
+  const i=s3srcI%3; s3srcI++;
+  const srcEl=document.getElementById(srcIds[i]); if(srcEl){srcEl.classList.add('firing');setTimeout(()=>srcEl.classList.remove('firing'),500);}
+  const alexDesk=document.getElementById('desk-alex'); if(!alexDesk)return;
+  alexDesk.classList.add('active');
+  document.getElementById('alex-status').textContent=alexSt[Math.floor(Math.random()*alexSt.length)];
+  alexC++; document.getElementById('alex-count').textContent=alexC;
+  const zone=document.getElementById('az-left'); if(!zone)return;
+  const zr=zone.getBoundingClientRect(), W=zr.width, H=zr.height;
+  const sy=srcYs[i]/200*H, cy=H/2;
+  animDot(document.getElementById(dotIds[i]), 0,sy, W*0.5,sy, W*0.5,cy, W,cy, 600, ()=>{
+    alexDesk.classList.remove('active');
+    setTimeout(()=>{
+      const mDesk=document.getElementById('desk-morgan'); if(!mDesk)return;
+      mDesk.classList.add('active');
+      document.getElementById('morgan-status').textContent=morganSt[Math.floor(Math.random()*morganSt.length)];
+      morganC++; document.getElementById('morgan-count').textContent=morganC;
+      const rzone=document.getElementById('az-right'); if(!rzone)return;
+      const rzr=rzone.getBoundingClientRect(), RW=rzr.width, RH=rzr.height;
+      const choice=Math.random();
+      const sinks=document.querySelectorAll('#s3 .s3-sink-node');
+      if(choice<0.5){
+        animDot(document.getElementById('s3-mb1'),0,RH/2,RW*0.5,RH/2,RW*0.5,RH*0.25,RW,RH*0.25,550,()=>{if(sinks[0]){sinks[0].classList.add('flash-orange');setTimeout(()=>sinks[0].classList.remove('flash-orange'),400);}mDesk.classList.remove('active');});
+      } else if(choice<0.8){
+        animDot(document.getElementById('s3-mb2'),0,RH/2,RW*0.5,RH/2,RW*0.5,RH*0.75,RW,RH*0.75,550,()=>{if(sinks[1]){sinks[1].classList.add('flash-purple');setTimeout(()=>sinks[1].classList.remove('flash-purple'),400);}mDesk.classList.remove('active');});
+      } else {
+        animDot(document.getElementById('s3-mb1'),0,RH/2,RW*0.5,RH/2,RW*0.5,RH*0.25,RW,RH*0.25,550,()=>{if(sinks[0]){sinks[0].classList.add('flash-orange');setTimeout(()=>sinks[0].classList.remove('flash-orange'),400);}});
+        animDot(document.getElementById('s3-mb2'),0,RH/2,RW*0.5,RH/2,RW*0.5,RH*0.75,RW,RH*0.75,620,()=>{if(sinks[1]){sinks[1].classList.add('flash-purple');setTimeout(()=>sinks[1].classList.remove('flash-purple'),400);}mDesk.classList.remove('active');});
+      }
+    },200);
+  });
+}
+setInterval(fireS3,2200); setTimeout(fireS3,800);
+
+// ── S4 fanin/fanout ────────────────────────────────────────────────────
+function pulseRing(id){const r=document.getElementById(id);if(!r)return;r.classList.remove('ring-go');void r.offsetWidth;r.classList.add('ring-go');}
+function flashNode(id,cls){const el=document.getElementById(id);if(!el)return;el.classList.add(cls);setTimeout(()=>el.classList.remove(cls),420);}
+
+const fiSenders=['fi-a','fi-b','fi-c'], fiDots=['fi-dot-a','fi-dot-b','fi-dot-c'], fiYs=[30,90,150];
+let fiI=0;
+function fireFanin(){
+  const i=fiI%3; fiI++;
+  flashNode(fiSenders[i],'flash');
+  const zone=document.getElementById('az-fanin'); if(!zone)return;
+  const zr=zone.getBoundingClientRect(), W=zr.width, H=zr.height;
+  const sy=fiYs[i]/180*H;
+  animDot(document.getElementById(fiDots[i]),0,sy,W*0.5,sy,W*0.5,H/2,W,H/2,540,()=>{
+    pulseRing('fi-ring');
+    const r=document.getElementById('fi-recv');if(r){r.classList.add('pulse-active');setTimeout(()=>r.classList.remove('pulse-active'),400);}
+  });
+}
+
+const foRecvIds=['fo-r1','fo-r2','fo-r3'], foDots=['fo-dot-a','fo-dot-b','fo-dot-c'], foYs=[40,90,140];
+const foPatterns=[[0],[1],[2],[0,1],[1,2],[0,2],[0,1,2]]; let foP=0;
+function fireFanout(){
+  pulseRing('fo-ring');
+  const s=document.getElementById('fo-send');if(s){s.classList.add('pulse-active');setTimeout(()=>s.classList.remove('pulse-active'),400);}
+  const zone=document.getElementById('az-fanout');if(!zone)return;
+  const zr=zone.getBoundingClientRect(),W=zr.width,H=zr.height;
+  foPatterns[foP++%foPatterns.length].forEach((ri,delay)=>{
+    const ey=foYs[ri]/180*H;
+    setTimeout(()=>animDot(document.getElementById(foDots[ri]),0,H/2,W*0.5,H/2,W*0.5,ey,W,ey,520,()=>flashNode(foRecvIds[ri],'flash')),delay*80);
+  });
+}
+setInterval(fireFanin,1800); setInterval(fireFanout,2500); setTimeout(fireFanin,500); setTimeout(fireFanout,1300);
+
+// ── S6 paragraph cycle ─────────────────────────────────────────────────
+let s6i=0;
+function cycleS6(){
+  document.querySelectorAll('.s6-para').forEach(el=>el.classList.remove('lit'));
+  const p=document.getElementById('s6p'+(s6i+1)); if(p)p.classList.add('lit');
+  s6i=(s6i+1)%4;
+}
+cycleS6(); setInterval(cycleS6,2000);
+
+// ── S7 office card cycle ───────────────────────────────────────────────
+const s7offices=['s7o1','s7o2','s7o3']; let s7i=0;
+function cycleS7(){
+  s7offices.forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('highlight');});
+  const el=document.getElementById(s7offices[s7i]);if(el)el.classList.add('highlight');
+  s7i=(s7i+1)%3;
+}
+cycleS7(); setInterval(cycleS7,1800);
+
+// ── S8 declaration cycle ───────────────────────────────────────────────
+const s8steps=[{line:'s8l1'},{line:'s8l2'},{line:'s8l3'},{line:'s8l4'}]; let s8i=0;
+function cycleS8(){
+  s8steps.forEach(s=>{const l=document.getElementById(s.line);if(l)l.classList.remove('lit');});
+  const l=document.getElementById(s8steps[s8i].line); if(l)l.classList.add('lit');
+  s8i=(s8i+1)%s8steps.length;
+}
+cycleS8(); setInterval(cycleS8,1600);
+
+// ── S9 flow animation ──────────────────────────────────────────────────
+function fireS9(){
+  const zone=document.getElementById('s9-flow');if(!zone)return;
+  const zr=zone.getBoundingClientRect(),W=zr.width,H=zr.height,mx=W*0.5,my=H*0.5;
+  animDot(document.getElementById('s9d-left'),0,my,W*0.3,my,W*0.5,my,mx,my,400,()=>{
+    animDot(document.getElementById('s9d-top'),mx,my,W*0.7,my,W*0.85,H*0.2,W,H*0.17,400,()=>{const el=document.getElementById('s9-sink-display');if(el){el.classList.add('flash-teal');setTimeout(()=>el.classList.remove('flash-teal'),400);}});
+    animDot(document.getElementById('s9d-bot'),mx,my,W*0.7,my,W*0.85,H*0.8,W,H*0.83,420,()=>{const el=document.getElementById('s9-sink-jsonl');if(el){el.classList.add('flash-purple');setTimeout(()=>el.classList.remove('flash-purple'),400);}});
+  });
+}
+setInterval(fireS9,2400); setTimeout(fireS9,600);
+
+// ── S11 card cycle ─────────────────────────────────────────────────────
+const s11cards=['s11c1','s11c2','s11c3']; let s11p=0;
+function cycleS11(){
+  s11cards.forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('glow');});
+  if(s11p<3){const el=document.getElementById(s11cards[s11p]);if(el)el.classList.add('glow');}
+  else if(s11p===3){s11cards.forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('glow');});}
+  s11p=(s11p+1)%5;
+}
+cycleS11(); setInterval(cycleS11,1400);
+
+// ── S12b step cycle ────────────────────────────────────────────────────
+const s12bsteps=[{id:'s12bs1',cls:'glow-teal'},{id:'s12bs2',cls:'glow-yellow'},{id:'s12bs3',cls:'glow-orange'}]; let s12i=0;
+function cycleS12b(){
+  s12bsteps.forEach(s=>{const el=document.getElementById(s.id);if(el)el.classList.remove(s.cls);});
+  const s=s12bsteps[s12i]; const el=document.getElementById(s.id); if(el)el.classList.add(s.cls);
+  s12i=(s12i+1)%s12bsteps.length;
+}
+cycleS12b(); setInterval(cycleS12b,1800);
+
+// ── Copy template ──────────────────────────────────────────────────────
+function copyTemplate(){
+  const text='I want to build a DisSysLab app that:\n\nSOURCE: monitor Hacker News RSS feed\nPROCESSING: filter short articles, analyze sentiment\nOUTPUT: print results to console';
+  navigator.clipboard.writeText(text).then(()=>{
+    const l=document.getElementById('copy-label');if(l){l.textContent='✓ Copied!';setTimeout(()=>l.textContent='📋 Copy template',2000);}
+  }).catch(()=>{const r=document.createRange();r.selectNode(document.getElementById('s12b-template'));window.getSelection().removeAllRanges();window.getSelection().addRange(r);});
+}
+</script>
+</body>
+</html>
