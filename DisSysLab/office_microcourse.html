@@ -20,17 +20,26 @@
   --font-mono:    'Courier New', monospace;
 }
 
+html {
+  background: #1a1a2e;
+}
+
 html, body {
-  height: 100%;
+  height: 100vh;
+  width: 100vw;
   font-family: var(--font-body);
   background: var(--ink);
   overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 /* ── Slide shell ─────────────────────────────────────────────── */
 .slide {
-  position: absolute;
-  inset: 0;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1366,7 +1375,7 @@ html, body {
       <div class="s12b-step-body">
         <div class="s12b-step-title" style="color:var(--teal);">Get the context file</div>
         <div class="s12b-step-desc">This teaches Claude the DisSysLab framework so it can write your app.</div>
-        <a class="s12b-link-btn" href="https://github.com/kmchandy/DisSysLab/blob/main/CLAUDE_CONTEXT_OFFICE.md" target="_blank" rel="noopener noreferrer">📄 Open CLAUDE_CONTEXT_OFFICE.md →</a>
+        <a class="s12b-link-btn" href="https://github.com/kmchandy/DisSysLab/blob/main/CLAUDE_CONTEXT.md" target="_blank" rel="noopener noreferrer">📄 Open CLAUDE_CONTEXT.md →</a>
         <div class="s12b-step-hint">Click "Raw" on the GitHub page → copy all → paste into a new Claude conversation.</div>
       </div>
     </div>
