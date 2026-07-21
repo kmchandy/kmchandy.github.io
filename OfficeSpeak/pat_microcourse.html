@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OfficeSpeak — Build a Team in Plain English</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:    #1a1a2e;
+  --paper:  #faf8f3;
+  --orange: #ff6b35;
+  --teal:   #00c9a7;
+  --yellow: #ffd166;
+  --purple: #7b5ea7;
+  --teal-deep:   #00947d;
+  --orange-deep: #d13d0e;
+  --yellow-deep: #b8860b;
+  --purple-deep: #5b3f87;
+  --text-body:   rgba(26,26,46,0.78);
+  --text-muted:  rgba(26,26,46,0.55);
+  --text-faint:  rgba(26,26,46,0.38);
+  --surface-tint: rgba(26,26,46,0.04);
+  --surface-border: rgba(26,26,46,0.1);
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'Courier New', monospace;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font-body);
+  background: var(--paper);
+  overflow: hidden;
+  color: var(--ink);
+}
+
+/* ── Slide shell (same mechanics as DisSysLab's micro-course) ────── */
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  transform: translateX(40px);
+  overflow: hidden;
+  padding: 32px 40px 90px;
+  background: var(--paper);
+  color: var(--ink);
+}
+.slide.active    { opacity: 1; pointer-events: all; transform: translateX(0); }
+.slide.exit-left { opacity: 0; transform: translateX(-40px); }
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(72px);
+  pointer-events: none;
+}
+
+.badge {
+  background: var(--orange);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 7px 18px;
+  border-radius: 100px;
+  margin-bottom: 22px;
+  flex-shrink: 0;
+}
+.badge.alt { background: var(--purple); }
+
+.headline {
+  font-family: var(--font-display);
+  font-weight: 900;
+  line-height: 1.08;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 16px;
+}
+.headline em { font-style: normal; color: var(--orange-deep); }
+
+.body-text {
+  font-size: clamp(20px, 2.3vw, 25px);
+  line-height: 1.6;
+  color: var(--text-body);
+  font-weight: 500;
+  text-align: center;
+  max-width: 640px;
+  margin-bottom: 26px;
+}
+.body-text strong { color: var(--ink); font-weight: 700; }
+
+/* dark "screen" card, used for chat / diagram mockups */
+.paper {
+  background: #12122a;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 18px 40px rgba(26,26,46,0.16);
+}
+.paper-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.paper-dots { display: flex; gap: 5px; }
+.pd { width: 10px; height: 10px; border-radius: 50%; }
+.paper-title {
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+  margin-left: 6px;
+  font-family: var(--font-mono);
+}
+
+.hl { border-radius: 4px; padding: 1px 6px; font-weight: 700; }
+.hl-orange { background: rgba(255,107,53,0.18);  color: var(--orange-deep); }
+.hl-teal   { background: rgba(0,201,167,0.18);   color: var(--teal-deep); }
+
+.msg-dot {
+  position: absolute;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+.dot-teal   { background: var(--teal);   box-shadow: 0 0 6px var(--teal); }
+.dot-orange { background: var(--orange); box-shadow: 0 0 6px var(--orange); }
+.dot-purple { background: var(--purple); box-shadow: 0 0 6px var(--purple); }
+
+/* ── Nav ──────────────────────────────────────────────────────── */
+.nav {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 100;
+}
+.nav-btn {
+  background: #ffffff;
+  border: 1.5px solid rgba(26,26,46,0.18);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  padding: 9px 22px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.1s, border-color 0.18s;
+  letter-spacing: 0.02em;
+  box-shadow: 0 1px 2px rgba(26,26,46,0.05);
+}
+.nav-btn:hover  { background: rgba(26,26,46,0.05); border-color: rgba(26,26,46,0.3); }
+.nav-btn:active { transform: scale(0.96); }
+.nav-btn.primary { background: var(--orange); border-color: var(--orange-deep); color: #fff; }
+.nav-btn.primary:hover { background: var(--orange-deep); border-color: var(--orange-deep); }
+
+.progress { display: flex; gap: 6px; align-items: center; }
+.prog-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(26,26,46,0.25);
+  transition: background 0.2s, transform 0.2s;
+}
+.prog-dot.on { background: var(--orange); transform: scale(1.45); }
+
+@keyframes pulse    { 0%,100%{opacity:1} 50%{opacity:0.25} }
+@keyframes fadeUp   { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+@keyframes glowPulse{ 0%,100%{box-shadow:0 0 0 rgba(255,107,53,0)} 50%{box-shadow:0 0 20px rgba(255,107,53,0.25)} }
+
+/* ══════════════════════ S1 — Hook ══════════════════════ */
+#s1 .blob1 { width: 380px; height: 380px; background: var(--yellow); opacity: .28; top: -120px; left: -120px; }
+#s1 .blob2 { width: 320px; height: 320px; background: var(--teal);   opacity: .22; bottom: -100px; right: -100px; }
+.s1-headline {
+  font-family: var(--font-display);
+  font-size: clamp(38px, 6vw, 64px);
+  font-weight: 900;
+  line-height: 1.08;
+  text-align: center;
+  margin-bottom: 20px;
+  max-width: 820px;
+}
+.s1-headline em { font-style: normal; color: var(--orange-deep); }
+.s1-diagram { display:flex; align-items:center; gap: 18px; margin-top: 8px; position: relative; }
+.s1-box {
+  font-family: var(--font-mono); font-size: 16px; font-weight: 700;
+  background:#12122a; color:#fff; border:1px solid rgba(255,255,255,0.12);
+  border-radius: 10px; padding: 12px 16px; white-space:nowrap;
+}
+.s1-arrow { color: var(--text-faint); font-size: 20px; }
+.s1-arrows { display:flex; flex-direction:column; align-items:center; gap:6px; }
+.s1-arrow-line { display:flex; flex-direction:column; align-items:center; line-height:1; }
+.s1-arrow-line .glyph { color: var(--text-faint); font-size: 18px; }
+.s1-arrow-line .cap { font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color: var(--text-faint); margin-top:3px; }
+
+/* ══════════════════════ S2 — what is an office ══════════════════════ */
+.office-svg-wrap { background:#12122a; border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding: 26px 30px; box-shadow: 0 18px 40px rgba(26,26,46,0.16); }
+.office-svg-wrap text { font-family: var(--font-body); }
+
+/* ══════════════════════ S3 — the story ══════════════════════ */
+.quote-card {
+  background: #fff;
+  border: 1px solid var(--surface-border);
+  border-left: 6px solid var(--orange);
+  border-radius: 14px;
+  padding: 30px 36px;
+  max-width: 640px;
+  box-shadow: 0 12px 30px rgba(26,26,46,0.08);
+  font-family: var(--font-display);
+  font-size: clamp(21px, 2.7vw, 28px);
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.quote-attrib { margin-top: 16px; font-family: var(--font-body); font-size: 16px; font-weight: 600; color: var(--text-muted); text-align: right; }
+
+/* ══════════════════════ S4 — chat mockup ══════════════════════ */
+.chat-window { width: min(620px, 92vw); }
+.chat-body { padding: 22px 22px 26px; }
+.chat-bubble {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 16px 18px;
+  color: rgba(255,255,255,0.9);
+  font-size: 17px;
+  line-height: 1.6;
+}
+.chat-typing { display:inline-flex; gap:4px; margin-left: 4px; }
+.chat-typing span { width:5px; height:5px; border-radius:50%; background: var(--teal); animation: pulse 1s ease infinite; }
+.chat-typing span:nth-child(2){ animation-delay:.15s } .chat-typing span:nth-child(3){ animation-delay:.3s }
+
+/* ══════════════════════ S5 — the team ══════════════════════ */
+.s5-caption { font-size: 18px; color: var(--text-muted); max-width: 560px; text-align:center; margin-top: 18px; }
+
+/* ══════════════════════ S6 — assumptions ══════════════════════ */
+.assume-list { display:flex; flex-direction:column; gap:12px; max-width: 600px; width: 100%; }
+.assume-item {
+  background:#12122a; border:1px solid rgba(255,255,255,0.12); border-radius:12px;
+  padding:14px 18px; font-size:18px; color: rgba(255,255,255,0.82); line-height:1.5;
+  display:flex; gap:12px; align-items:flex-start;
+}
+.assume-item .mark { flex-shrink:0; font-weight:900; color: rgba(255,255,255,0.32); font-family: var(--font-display); }
+.assume-item strong { color:#fff; font-weight:700; }
+.assume-item.flag { border-color: var(--orange); box-shadow: 0 0 0 rgba(255,107,53,0); animation: glowPulse 2.2s ease infinite; }
+.assume-item.flag .mark { color: var(--orange); }
+.assume-item.flag strong { color: var(--orange); }
+
+/* ══════════════════════ S7 — correction bubble ══════════════════════ */
+.correct-bubble {
+  background: var(--ink); color:#fff; border-radius: 18px 18px 4px 18px;
+  padding: 22px 26px; max-width: 560px; font-size: 19px; line-height:1.6; font-weight:500;
+  box-shadow: 0 14px 30px rgba(26,26,46,0.18);
+}
+.correct-tag { font-size:13px; letter-spacing:.08em; text-transform:uppercase; color: var(--yellow); font-weight:700; margin-bottom:10px; }
+
+/* ══════════════════════ S9 — the loop ══════════════════════ */
+.loop-wrap { position:relative; width: min(460px, 88vw); height: 300px; }
+.loop-node {
+  position:absolute; background:#fff; border:2px solid var(--ink); border-radius: 100px;
+  padding: 10px 20px; font-weight:700; font-size:16px; font-family: var(--font-body);
+  transform: translate(-50%,-50%);
+}
+
+/* ══════════════════════ S10 — run it ══════════════════════ */
+.run-card { background:#12122a; border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding: 22px 26px; max-width:560px; color: rgba(255,255,255,0.85); font-size:17px; line-height:1.7; }
+.run-card .k { color: var(--teal); font-weight:700; }
+
+/* ══════════════════════ S11 — try it steps ══════════════════════ */
+.steps-row { display:flex; gap: 18px; flex-wrap: wrap; justify-content:center; max-width: 780px; }
+.step-card {
+  background:#fff; border:1px solid var(--surface-border); border-radius:14px;
+  padding: 22px 20px; width: 220px; text-align:center;
+  transition: box-shadow .3s, border-color .3s;
+}
+.step-card .num {
+  width:34px; height:34px; border-radius:50%; background: var(--ink); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-weight:700; margin: 0 auto 12px;
+  font-family: var(--font-display);
+}
+.step-card h3 { font-size: 18px; margin-bottom: 6px; }
+.step-card p { font-size: 15.5px; color: var(--text-muted); line-height:1.5; }
+.step-card.glow { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(255,107,53,0.15); }
+
+/* ══════════════════════ S12 — end ══════════════════════ */
+.s12-links { display:flex; gap:14px; flex-wrap:wrap; justify-content:center; margin-top: 8px; }
+.s12-link {
+  display:inline-flex; align-items:center; gap:8px;
+  background:#fff; border:1.5px solid var(--surface-border); color:var(--ink);
+  padding: 12px 22px; border-radius: 100px; text-decoration:none; font-weight:700; font-size:16.5px;
+  transition: border-color .2s, transform .15s;
+}
+.s12-link:hover { border-color: var(--orange); transform: translateY(-1px); }
+.s12-link.primary { background: var(--ink); color:#fff; border-color: var(--ink); }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ S1 — HOOK ═══════════════ -->
+<section class="slide active" id="s1">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="badge">OfficeSpeak</div>
+  <h1 class="s1-headline">Build a team of workers<br>who work for you 24/7.<br><em>In plain English.</em></h1>
+  <p class="body-text" style="max-width:560px;">No code. No jargon. You say what you want done — an assistant turns
+    it into a team that does it, and <strong>explains it back to you</strong> so you can fix anything that's wrong.</p>
+  <div class="s1-diagram">
+    <div class="s1-box">you</div>
+    <div class="s1-arrows">
+      <div class="s1-arrow-line"><span class="glyph">→</span><span class="cap">English</span></div>
+      <div class="s1-arrow-line"><span class="glyph">←</span><span class="cap">English</span></div>
+    </div>
+    <div class="s1-box">builder</div>
+    <div class="s1-arrow">→</div>
+    <div class="s1-box" style="background:var(--orange-deep);">working team</div>
+  </div>
+</section>
+
+<!-- ═══════════════ S2 — WHAT IS AN OFFICE ═══════════════ -->
+<section class="slide" id="s2">
+  <div class="badge">The idea</div>
+  <h1 class="headline" style="font-size:clamp(30px,5vw,54px);">A team of specialists.<br><em>That never clocks out.</em></h1>
+  <p class="body-text">We call it an <strong>office</strong>. Each worker has one job and a name.
+    Information comes in through a <strong>source</strong>, gets passed worker to worker, and results go out
+    through a <strong>sink</strong> — a file, an email, a screen.</p>
+  <div class="office-svg-wrap">
+    <svg width="460" height="150" viewBox="0 0 460 150">
+      <defs>
+        <marker id="arrow2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="rgba(255,255,255,0.5)"/>
+        </marker>
+      </defs>
+      <rect x="10" y="55" width="90" height="40" rx="8" fill="none" stroke="var(--teal)" stroke-width="2"/>
+      <text x="55" y="80" fill="#fff" font-size="18" font-weight="700" text-anchor="middle">source</text>
+      <line x1="100" y1="75" x2="168" y2="75" stroke="rgba(255,255,255,0.5)" stroke-width="2" marker-end="url(#arrow2)"/>
+      <rect x="170" y="30" width="120" height="90" rx="10" fill="none" stroke="#fff" stroke-width="2"/>
+      <text x="230" y="71" fill="#fff" font-size="18" font-weight="700" text-anchor="middle">workers</text>
+      <text x="230" y="92" fill="rgba(255,255,255,0.6)" font-size="14" text-anchor="middle">(the office)</text>
+      <line x1="290" y1="75" x2="358" y2="75" stroke="rgba(255,255,255,0.5)" stroke-width="2" marker-end="url(#arrow2)"/>
+      <rect x="360" y="55" width="90" height="40" rx="8" fill="none" stroke="var(--orange)" stroke-width="2"/>
+      <text x="405" y="80" fill="#fff" font-size="18" font-weight="700" text-anchor="middle">sink</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ═══════════════ S3 — THE STORY ═══════════════ -->
+<section class="slide" id="s3">
+  <div class="badge alt">The example</div>
+  <h1 class="headline" style="font-size:clamp(26px,4.2vw,44px);">Here's a real one,<br><em>start to finish.</em></h1>
+  <div class="quote-card">
+    "Once each period my club gets a batch of market data, forecasts, and news,
+    plus our decisions from last period. Two analysts each read it and recommend
+    a plan — one value-investing, one chasing emerging opportunities. A manager
+    weighs both, proposes a plan, checks the taxes and fees with an accountant,
+    then writes the final plan to a file."
+    <div class="quote-attrib">— what someone actually typed in, word for word</div>
+  </div>
+</section>
+
+<!-- ═══════════════ S4 — YOU JUST TYPE IT ═══════════════ -->
+<section class="slide" id="s4">
+  <div class="badge">Step 1</div>
+  <h1 class="headline" style="font-size:clamp(28px,4.5vw,50px);">You just <em>describe it.</em></h1>
+  <div class="paper chat-window">
+    <div class="paper-header">
+      <div class="paper-dots"><div class="pd" style="background:#ff5f56"></div><div class="pd" style="background:#ffbd2e"></div><div class="pd" style="background:#27c93f"></div></div>
+      <div class="paper-title">claude.ai — OfficeSpeak project</div>
+    </div>
+    <div class="chat-body">
+      <div class="chat-bubble">"Once each period my club gets a batch of market data... two analysts
+        recommend a plan... a manager checks the cost with an accountant... writes the final plan to a file."</div>
+      <div style="margin-top:14px; color:rgba(255,255,255,0.4); font-size:13px;">assistant is building your team<span class="chat-typing"><span></span><span></span><span></span></span></div>
+    </div>
+  </div>
+  <p class="body-text" style="margin-top:22px;">No special words or technical terms. Just say it the way
+    you'd tell a person.</p>
+</section>
+
+<!-- ═══════════════ S5 — THE TEAM ═══════════════ -->
+<section class="slide" id="s5">
+  <div class="badge">Step 2</div>
+  <h1 class="headline" style="font-size:clamp(26px,4.2vw,46px);">It builds the <em>team.</em></h1>
+  <div class="office-svg-wrap" style="position:relative;">
+    <svg width="560" height="270" viewBox="0 0 560 270">
+      <defs>
+        <marker id="arrow5" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="rgba(255,255,255,0.55)"/>
+        </marker>
+      </defs>
+      <!-- Feed -->
+      <rect x="20" y="115" width="90" height="40" rx="8" fill="none" stroke="var(--teal)" stroke-width="2"/>
+      <text x="65" y="140" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">market data</text>
+      <!-- to Val / Oppo -->
+      <line x1="110" y1="125" x2="178" y2="60" stroke="rgba(255,255,255,0.5)" stroke-width="1.6" marker-end="url(#arrow5)"/>
+      <line x1="110" y1="145" x2="178" y2="205" stroke="rgba(255,255,255,0.5)" stroke-width="1.6" marker-end="url(#arrow5)"/>
+      <rect x="180" y="35" width="110" height="42" rx="8" fill="none" stroke="#fff" stroke-width="2"/>
+      <text x="235" y="62" fill="#fff" font-size="16" font-weight="700" text-anchor="middle">value</text>
+      <rect x="180" y="185" width="110" height="42" rx="8" fill="none" stroke="#fff" stroke-width="2"/>
+      <text x="235" y="212" fill="#fff" font-size="16" font-weight="700" text-anchor="middle">opportunity</text>
+      <!-- to manager -->
+      <line x1="290" y1="56" x2="358" y2="118" stroke="rgba(255,255,255,0.5)" stroke-width="1.6" marker-end="url(#arrow5)"/>
+      <line x1="290" y1="206" x2="358" y2="150" stroke="rgba(255,255,255,0.5)" stroke-width="1.6" marker-end="url(#arrow5)"/>
+      <rect x="360" y="115" width="110" height="40" rx="8" fill="none" stroke="var(--yellow)" stroke-width="2"/>
+      <text x="415" y="140" fill="#fff" font-size="16" font-weight="700" text-anchor="middle">manager</text>
+      <!-- manager <-> accountant -->
+      <line x1="470" y1="128" x2="530" y2="70" stroke="rgba(255,255,255,0.5)" stroke-width="1.6" marker-end="url(#arrow5)"/>
+      <line x1="530" y1="80" x2="472" y2="132" stroke="rgba(255,255,255,0.35)" stroke-width="1.4" stroke-dasharray="3,3"/>
+      <rect x="472" y="35" width="82" height="40" rx="8" fill="none" stroke="var(--purple)" stroke-width="2"/>
+      <text x="513" y="60" fill="#fff" font-size="13.5" font-weight="700" text-anchor="middle">accountant</text>
+      <!-- manager to file -->
+      <line x1="415" y1="155" x2="415" y2="205" stroke="rgba(255,255,255,0.5)" stroke-width="1.6" marker-end="url(#arrow5)"/>
+      <rect x="365" y="207" width="100" height="38" rx="8" fill="none" stroke="var(--orange)" stroke-width="2"/>
+      <text x="415" y="231" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">the file</text>
+      <!-- shared ledger -->
+      <rect x="230" y="118" width="0" height="0"/>
+      <line x1="415" y1="115" x2="415" y2="95" stroke="rgba(255,255,255,0.35)" stroke-width="1.4" stroke-dasharray="3,3"/>
+      <rect x="365" y="85" width="100" height="0" fill="none"/>
+    </svg>
+    <div id="s5-dot1" class="msg-dot dot-teal"></div>
+    <div id="s5-dot2" class="msg-dot dot-orange"></div>
+    <div id="s5-dot3" class="msg-dot dot-teal"></div>
+    <div id="s5-dot4" class="msg-dot dot-orange"></div>
+    <div id="s5-dot5" class="msg-dot dot-purple"></div>
+  </div>
+  <p class="s5-caption">Each period lets one batch in. Both analysts read it and recommend a plan;
+    the manager weighs both, checks the cost with the accountant, and writes the final plan down.</p>
+</section>
+
+<!-- ═══════════════ S6 — ASSUMPTIONS ═══════════════ -->
+<section class="slide" id="s6">
+  <div class="badge">The important part</div>
+  <h1 class="headline" style="font-size:clamp(26px,4.2vw,46px);">It tells you <em>what it assumed.</em></h1>
+  <div class="assume-list">
+    <div class="assume-item"><span class="mark">—</span><span>The two analysts are treated equally, and the manager has the final say.</span></div>
+    <div class="assume-item"><span class="mark">—</span><span>The office handles one period fully before starting the next, so the shared portfolio stays consistent.</span></div>
+    <div class="assume-item flag"><span class="mark">—</span><span><strong>The accountant works out the taxes from the proposed plan alone — it does not look at what the club currently holds.</strong></span></div>
+  </div>
+  <p class="body-text" style="margin-top:20px;">That third one is a real gap. <span class="hl hl-orange">This is exactly what to look for.</span></p>
+</section>
+
+<!-- ═══════════════ S7 — CORRECT IT ═══════════════ -->
+<section class="slide" id="s7">
+  <div class="badge">Step 3</div>
+  <h1 class="headline" style="font-size:clamp(26px,4.2vw,46px);">You <em>correct it.</em><br>In plain English.</h1>
+  <div class="correct-bubble">
+    <div class="correct-tag">what you type back</div>
+    "The accountant has to see what we currently hold — otherwise the tax
+    numbers are guesses. Taxes depend on what we paid for what we own."
+  </div>
+  <p class="body-text" style="margin-top:24px;">No need to say it perfectly, or use the right words.
+    Just react to what's in front of you.</p>
+</section>
+
+<!-- ═══════════════ S8 — WHAT CHANGED ═══════════════ -->
+<section class="slide" id="s8">
+  <div class="badge">Step 4</div>
+  <h1 class="headline" style="font-size:clamp(26px,4.2vw,46px);">It shows you <em>exactly what changed.</em></h1>
+  <div class="office-svg-wrap">
+    <svg width="420" height="150" viewBox="0 0 420 150">
+      <defs>
+        <marker id="arrow8" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="var(--teal)"/>
+        </marker>
+      </defs>
+      <rect x="20" y="55" width="120" height="40" rx="8" fill="none" stroke="var(--yellow)" stroke-width="2"/>
+      <text x="80" y="79" fill="#fff" font-size="17" font-weight="700" text-anchor="middle">manager</text>
+      <rect x="280" y="55" width="120" height="40" rx="8" fill="none" stroke="var(--purple)" stroke-width="2"/>
+      <text x="340" y="79" fill="#fff" font-size="17" font-weight="700" text-anchor="middle">accountant</text>
+      <line x1="140" y1="75" x2="272" y2="75" stroke="rgba(255,255,255,0.3)" stroke-width="1.4" stroke-dasharray="3,3"/>
+      <line x1="150" y1="30" x2="290" y2="30" stroke="var(--teal)" stroke-width="2.4" marker-end="url(#arrow8)" style="animation: glowPulse 1.6s ease infinite;"/>
+      <text x="220" y="18" fill="var(--teal)" font-size="14" font-weight="700" text-anchor="middle">new: "what do we hold?"</text>
+    </svg>
+  </div>
+  <p class="body-text" style="margin-top:20px;">"One new link: before it prices anything, the accountant now looks
+    up what the club currently holds and what we paid for it, and uses that for the tax math.
+    <strong>Nothing else about the office changes.</strong>"</p>
+</section>
+
+<!-- ═══════════════ S9 — THE LOOP ═══════════════ -->
+<section class="slide" id="s9">
+  <div class="badge">The whole idea</div>
+  <h1 class="headline" style="font-size:clamp(28px,4.5vw,50px);">Describe. Explain.<br><em>Correct. Repeat.</em></h1>
+  <div class="loop-wrap">
+    <svg width="100%" height="100%" viewBox="0 0 460 300" style="position:absolute; inset:0;">
+      <circle cx="230" cy="150" r="105" fill="none" stroke="rgba(26,26,46,0.15)" stroke-width="2" stroke-dasharray="4,7"/>
+    </svg>
+    <div class="loop-node" style="left:230px; top:35px; border-color:var(--orange-deep);">You describe</div>
+    <div class="loop-node" style="left:365px; top:225px; border-color:var(--purple-deep);">It explains</div>
+    <div class="loop-node" style="left:95px; top:225px; border-color:var(--teal-deep);">You correct</div>
+  </div>
+  <p class="body-text">You never have to get it perfect up front. It's easier to react to a real team
+    in front of you than to describe a correct one from nothing.</p>
+</section>
+
+<!-- ═══════════════ S10 — WHEN IT'S READY TO RUN ═══════════════ -->
+<section class="slide" id="s10">
+  <div class="badge">Later, optional</div>
+  <h1 class="headline" style="font-size:clamp(26px,4.2vw,46px);">When it's right,<br><em>it can actually run.</em></h1>
+  <div class="run-card">
+    Once you're happy with the team and its explanation, <span class="k">Stage 2</span> turns it into a
+    real, running system — no guessing, nothing hidden: every piece gets checked against real
+    examples before it's trusted to run on its own. For our investment club, that really produced
+    numbers: <span class="k">period 1 → buy 8 shares, fee $8.00</span>,
+    <span class="k">period 2 → buy 16 shares, fee $16.80</span>, and so on — the fee correctly
+    growing from what the club already held, exactly as you asked.
+  </div>
+  <p class="body-text" style="margin-top:20px;">You don't have to do this part yourself — right now,
+    that just means sending it to us.</p>
+</section>
+
+<!-- ═══════════════ S11 — TRY IT YOURSELF ═══════════════ -->
+<section class="slide" id="s11">
+  <div class="badge">Your turn</div>
+  <h1 class="headline" style="font-size:clamp(26px,4.2vw,46px);">Try it <em>yourself.</em></h1>
+  <div class="steps-row">
+    <div class="step-card" id="s11c1"><div class="num">1</div><h3>Set up</h3><p>Create a claude.ai Project and add the OfficeSpeak instructions. About 10 minutes, nothing to install.</p></div>
+    <div class="step-card" id="s11c2"><div class="num">2</div><h3>Describe</h3><p>Say what you want your office to watch and decide — your own idea, in your own words.</p></div>
+    <div class="step-card" id="s11c3"><div class="num">3</div><h3>Read &amp; correct</h3><p>Read the explanation and the "Things I assumed" list. Fix anything wrong. Repeat.</p></div>
+  </div>
+</section>
+
+<!-- ═══════════════ S12 — END ═══════════════ -->
+<section class="slide" id="s12">
+  <div class="blob blob1" style="background:var(--teal); opacity:.2;"></div>
+  <h1 class="headline" style="font-size:clamp(38px,6vw,64px);">You're <em>ready.</em></h1>
+  <p class="body-text">Everything in this course is the real, full walkthrough in
+    <strong>README.md</strong> — this was just the short, visual version of Stage 1.
+    There's a Stage 2 microcourse too, if you want to see it actually run.</p>
+  <div class="s12-links">
+    <a class="s12-link primary" href="https://github.com/kmchandy/OfficeSpeak/blob/main/README.md" target="_blank" rel="noopener">📖 Read the full walkthrough</a>
+    <a class="s12-link" href="stage2_microcourse.html">▶️ Stage 2 microcourse</a>
+    <a class="s12-link" href="https://github.com/kmchandy/OfficeSpeak/blob/main/GETTING_THE_FILES.md" target="_blank" rel="noopener">⬇️ Get the files</a>
+    <a class="s12-link" href="https://github.com/kmchandy/OfficeSpeak" target="_blank" rel="noopener">⭐ GitHub</a>
+  </div>
+</section>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav class="nav">
+  <button class="nav-btn" id="prevBtn" onclick="go(-1)" style="visibility:hidden">← Back</button>
+  <div class="progress" id="progress"></div>
+  <button class="nav-btn primary" id="nextBtn" onclick="go(1)">Next →</button>
+</nav>
+
+<script>
+let cur = 0;
+const slides = document.querySelectorAll('.slide');
+const TOTAL = slides.length;
+
+const prog = document.getElementById('progress');
+for (let i = 0; i < TOTAL; i++) {
+  const d = document.createElement('div');
+  d.className = 'prog-dot' + (i === 0 ? ' on' : '');
+  prog.appendChild(d);
+}
+
+function go(dir) {
+  const next = cur + dir;
+  if (next < 0 || next >= slides.length) return;
+  if (slides[cur]) { slides[cur].classList.remove('active'); if (dir > 0) slides[cur].classList.add('exit-left'); }
+  cur = next;
+  setTimeout(() => {
+    slides.forEach(s => s.classList.remove('exit-left'));
+    if (slides[cur]) slides[cur].classList.add('active');
+  }, 60);
+  updateNav();
+}
+
+function updateNav() {
+  document.getElementById('prevBtn').style.visibility = cur === 0 ? 'hidden' : 'visible';
+  const last = cur >= slides.length - 1;
+  document.getElementById('nextBtn').style.visibility = last ? 'hidden' : 'visible';
+  document.querySelectorAll('.prog-dot').forEach((d,i) => d.classList.toggle('on', i === cur));
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight') go(1);
+  if (e.key === 'ArrowLeft') go(-1);
+});
+
+// ── shared bezier dot animation ─────────────────────────────────────────
+function animDot(dotEl, x0,y0, x1,y1, x2,y2, x3,y3, dur, onDone) {
+  if (!dotEl) return;
+  dotEl.style.opacity = '1';
+  const t0 = performance.now();
+  function frame(now) {
+    const t = Math.min((now-t0)/dur, 1), u = 1-t;
+    dotEl.style.left = (u*u*u*x0+3*u*u*t*x1+3*u*t*t*x2+t*t*t*x3-4.5)+'px';
+    dotEl.style.top  = (u*u*u*y0+3*u*u*t*y1+3*u*t*t*y2+t*t*t*y3-4.5)+'px';
+    if (t < 1) requestAnimationFrame(frame);
+    else { dotEl.style.opacity='0'; if(onDone) onDone(); }
+  }
+  requestAnimationFrame(frame);
+}
+
+// S5 — two dots flowing feed -> analysts -> manager, on a loop
+function fireS5() {
+  const d1 = document.getElementById('s5-dot1'); // market data -> value
+  const d2 = document.getElementById('s5-dot2'); // market data -> opportunity
+  const d3 = document.getElementById('s5-dot3'); // value -> manager
+  const d4 = document.getElementById('s5-dot4'); // opportunity -> manager
+  const d5 = document.getElementById('s5-dot5'); // manager <-> accountant, then manager -> file
+
+  // leg 1: market data to both analysts, in parallel
+  animDot(d1, 65,135, 90,100, 150,65, 235,56, 650);
+  animDot(d2, 65,135, 90,170, 150,200, 235,206, 650, () => {
+    // leg 2: both analysts' recommendations to the manager, in parallel
+    animDot(d3, 235,56, 300,80, 360,110, 415,135, 550);
+    animDot(d4, 235,206, 300,180, 360,150, 415,135, 550, () => {
+      // leg 3: manager asks the accountant
+      animDot(d5, 415,135, 450,105, 480,75, 513,55, 480, () => {
+        // leg 4: accountant's reply back to the manager
+        animDot(d5, 513,55, 480,90, 450,120, 415,135, 480, () => {
+          // leg 5: manager writes the final plan to the file
+          d5.className = 'msg-dot dot-orange';
+          animDot(d5, 415,135, 415,170, 415,200, 415,226, 480, () => {
+            d5.className = 'msg-dot dot-purple';
+          });
+        });
+      });
+    });
+  });
+}
+setInterval(fireS5, 3800); setTimeout(fireS5, 500);
+
+// S9 — a dot cycling around the describe/explain/correct loop
+function fireS9() {
+  const zone = document.getElementById('s9') ? document.querySelector('#s9 .loop-wrap') : null;
+  if (!zone) return;
+  let dot = document.getElementById('s9-dot');
+  if (!dot) {
+    dot = document.createElement('div');
+    dot.id = 's9-dot';
+    dot.className = 'msg-dot dot-orange';
+    zone.appendChild(dot);
+  }
+  animDot(dot, 230,45, 300,80, 365,150, 365,215, 500, () => {
+    animDot(dot, 365,215, 260,260, 160,260, 95,215, 500, () => {
+      animDot(dot, 95,215, 130,150, 180,70, 230,45, 500);
+    });
+  });
+}
+setInterval(fireS9, 2100); setTimeout(fireS9, 700);
+
+// S11 — cycle a glow across the three step cards
+const s11cards = ['s11c1','s11c2','s11c3']; let s11p = 0;
+function cycleS11() {
+  s11cards.forEach(id => { const el = document.getElementById(id); if (el) el.classList.remove('glow'); });
+  const el = document.getElementById(s11cards[s11p]); if (el) el.classList.add('glow');
+  s11p = (s11p + 1) % s11cards.length;
+}
+cycleS11(); setInterval(cycleS11, 1300);
+</script>
+</body>
+</html>
