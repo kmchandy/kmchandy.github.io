@@ -7,3 +7,10 @@ Informal algorithm descriptions allow reader to understand key ideas quickly.
 The descriptions have enough detail to allow readers to construct formal
 proofs. The website is used in undergraduate classes taken by students with an 
 elementary knowledge of graphs.
+
+## OfficeSpeak
+
+**[Try OfficeSpeak →](OfficeSpeak/)** — describe a distributed system in plain
+English and watch it get built, explained, and corrected in a conversation, no
+programming required. Built on [DisSysLab](https://github.com/kmchandy/DisSysLab),
+the runtime behind the algorithms on this site.

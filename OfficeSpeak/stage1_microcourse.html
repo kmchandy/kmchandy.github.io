@@ -211,6 +211,14 @@ html, body {
 .office-svg-wrap { background:#12122a; border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding: 26px 30px; box-shadow: 0 18px 40px rgba(26,26,46,0.16); }
 .office-svg-wrap text { font-family: var(--font-body); }
 
+/* ══════════════════════ already-built showcase ══════════════════════ */
+.example-grid { display:grid; grid-template-columns: repeat(2, minmax(220px,1fr)); gap:14px; max-width:640px; width:100%; }
+.example-card { background:#fff; border:1px solid var(--surface-border); border-left:5px solid var(--teal); border-radius:12px; padding:16px 18px; text-align:left; box-shadow: 0 8px 20px rgba(26,26,46,0.06); }
+.example-card .ex-name { font-family: var(--font-display); font-weight:900; font-size:16px; color:var(--ink); margin-bottom:4px; }
+.example-card .ex-desc { font-size:14px; line-height:1.45; color: var(--text-body); }
+.chip-row { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; max-width:600px; }
+.chip { background:#fff; border:1px solid var(--surface-border); border-radius:100px; padding:8px 18px; font-size:15px; font-weight:600; color:var(--ink); box-shadow: 0 4px 10px rgba(26,26,46,0.05); }
+
 /* ══════════════════════ S3 — the story ══════════════════════ */
 .quote-card {
   background: #fff;
@@ -328,6 +336,8 @@ html, body {
     <div class="s1-arrow">→</div>
     <div class="s1-box" style="background:var(--orange-deep);">working team</div>
   </div>
+  <p class="body-text" style="margin-top:16px;font-size:15px;color:var(--text-muted);">And then run
+    the office 24 × 7 — that's Stage 2, coming up after this.</p>
 </section>
 
 <!-- ═══════════════ S2 — WHAT IS AN OFFICE ═══════════════ -->
@@ -335,7 +345,7 @@ html, body {
   <div class="badge">The idea</div>
   <h1 class="headline" style="font-size:clamp(30px,5vw,54px);">A team of specialists.<br><em>That never clocks out.</em></h1>
   <p class="body-text">We call it an <strong>office</strong>. Each worker has one job and a name.
-    Information comes in through a <strong>source</strong>, gets passed worker to worker, and results go out
+    Information comes in through a <strong>source</strong>, is passed among workers, and results go out
     through a <strong>sink</strong> — a file, an email, a screen.</p>
   <div class="office-svg-wrap">
     <svg width="460" height="150" viewBox="0 0 460 150">
@@ -355,6 +365,43 @@ html, body {
       <text x="405" y="80" fill="#fff" font-size="18" font-weight="700" text-anchor="middle">sink</text>
     </svg>
   </div>
+</section>
+
+<!-- ═══════════════ S2b — ALREADY BUILT: THE GALLERY ═══════════════ -->
+<section class="slide" id="s2b">
+  <div class="badge alt">Already built</div>
+  <h1 class="headline" style="font-size:clamp(28px,4.5vw,50px);">This isn't<br><em>the first office.</em></h1>
+  <p class="body-text" style="margin-bottom:18px;">Dozens of offices like this are already built and
+    running. A few real examples:</p>
+  <div class="example-grid">
+    <div class="example-card"><div class="ex-name">News &amp; markets</div>
+      <div class="ex-desc">Watches headlines, prices, and social posts, and flags what matters.</div></div>
+    <div class="example-card"><div class="ex-name">Wardrobe assistant</div>
+      <div class="ex-desc">Checks your calendar and the weather, and suggests what to wear.</div></div>
+    <div class="example-card"><div class="ex-name">Bird songs</div>
+      <div class="ex-desc">Listens to backyard audio and identifies the species singing.</div></div>
+    <div class="example-card"><div class="ex-name">Inbox triage</div>
+      <div class="ex-desc">Sorts incoming email so the important ones don't get lost.</div></div>
+  </div>
+</section>
+
+<!-- ═══════════════ S2c — ALREADY BUILT: REACH + EXPLAIN ═══════════════ -->
+<section class="slide" id="s2c">
+  <div class="badge alt">Already built</div>
+  <h1 class="headline" style="font-size:clamp(28px,4.5vw,50px);">It can already<br><em>reach a lot.</em></h1>
+  <div class="chip-row" style="margin-bottom:22px;">
+    <div class="chip">Weather</div>
+    <div class="chip">Stock prices</div>
+    <div class="chip">News feeds</div>
+    <div class="chip">Email</div>
+    <div class="chip">Calendar</div>
+    <div class="chip">Slack</div>
+    <div class="chip">Web search</div>
+    <div class="chip">and more</div>
+  </div>
+  <p class="body-text">If it needs something that's not on this list yet, it can often still reach it —
+    or we can add it. And once your office is running, you can ask it to explain exactly what
+    happened, step by step, in plain English — even days later.</p>
 </section>
 
 <!-- ═══════════════ S3 — THE STORY ═══════════════ -->

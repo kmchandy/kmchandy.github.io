@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OfficeSpeak — Build a Distributed System in Plain English</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:    #1a1a2e;
+  --paper:  #faf8f3;
+  --orange: #ff6b35;
+  --teal:   #00c9a7;
+  --yellow: #ffd166;
+  --purple: #7b5ea7;
+  --teal-deep:   #00947d;
+  --orange-deep: #d13d0e;
+  --yellow-deep: #b8860b;
+  --purple-deep: #5b3f87;
+  --text-body:   rgba(26,26,46,0.78);
+  --text-muted:  rgba(26,26,46,0.55);
+  --surface-tint: rgba(26,26,46,0.045);
+  --surface-border: rgba(26,26,46,0.1);
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'Courier New', monospace;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.wrap { max-width: 980px; margin: 0 auto; padding: 0 28px; }
+
+/* ── Hero ─────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  padding: 88px 0 64px;
+  overflow: hidden;
+  text-align: center;
+}
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+}
+.hero h1 {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(40px, 7vw, 72px);
+  line-height: 1.05;
+  margin-bottom: 20px;
+}
+.hero h1 em { font-style: normal; color: var(--orange-deep); }
+.hero p.sub {
+  position: relative;
+  max-width: 620px;
+  margin: 0 auto 40px;
+  font-size: clamp(17px, 2vw, 20px);
+  color: var(--text-body);
+}
+.hero-ctas {
+  position: relative;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 26px;
+  border-radius: 100px;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  border: 2px solid transparent;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn.primary { background: var(--orange); color: #fff; box-shadow: 0 6px 18px rgba(255,107,53,0.35); }
+.btn.secondary { background: #fff; color: var(--ink); border-color: var(--surface-border); }
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--surface-border); }
+
+/* ── Section shell ────────────────────────────────────── */
+section { padding: 56px 0; }
+section.alt { background: rgba(26,26,46,0.03); }
+h2.section-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(26px, 3.6vw, 36px);
+  margin-bottom: 12px;
+  text-align: center;
+}
+p.section-lede {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 40px;
+  color: var(--text-body);
+  font-size: 16px;
+}
+
+/* ── Stat cards ───────────────────────────────────────── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 18px;
+}
+.stat-card {
+  background: #fff;
+  border: 1px solid var(--surface-border);
+  border-radius: 16px;
+  padding: 26px 22px;
+}
+.stat-card .num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 34px;
+  color: var(--teal-deep);
+  margin-bottom: 6px;
+}
+.stat-card .label { font-weight: 600; margin-bottom: 6px; }
+.stat-card .detail { font-size: 14px; color: var(--text-muted); }
+
+/* ── Gallery categories ──────────────────────────────── */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+.gallery-card {
+  background: #fff;
+  border: 1px solid var(--surface-border);
+  border-radius: 16px;
+  padding: 24px;
+}
+.gallery-card .tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 12px;
+  border-radius: 100px;
+  margin-bottom: 12px;
+}
+.gallery-card p { color: var(--text-body); font-size: 14.5px; }
+.gallery-card p strong { color: var(--ink); }
+.tag.news   { background: rgba(255,107,53,0.15); color: var(--orange-deep); }
+.tag.perso  { background: rgba(0,201,167,0.15); color: var(--teal-deep); }
+.tag.sense  { background: rgba(123,94,167,0.15); color: var(--purple-deep); }
+.tag.demo   { background: rgba(255,209,102,0.25); color: var(--yellow-deep); }
+
+/* ── Feature list ─────────────────────────────────────── */
+.feature-row {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--surface-border);
+}
+.feature-row:last-child { border-bottom: none; }
+.feature-row .icon {
+  flex-shrink: 0;
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: var(--surface-tint);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 19px;
+}
+.feature-row h3 { font-size: 16.5px; margin-bottom: 4px; }
+.feature-row p { font-size: 14.5px; color: var(--text-body); }
+.feature-row code {
+  font-family: var(--font-mono);
+  background: var(--surface-tint);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+/* ── Path cards (Stage 1 / Stage 2) ──────────────────── */
+.path-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+.path-card {
+  background: #fff;
+  border: 1px solid var(--surface-border);
+  border-radius: 18px;
+  padding: 30px;
+}
+.path-card .badge {
+  display: inline-block;
+  background: var(--ink);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 5px 14px;
+  border-radius: 100px;
+  margin-bottom: 14px;
+}
+.path-card h3 { font-family: var(--font-display); font-size: 22px; margin-bottom: 8px; }
+.path-card p { color: var(--text-body); font-size: 14.5px; margin-bottom: 18px; }
+
+/* ── Footer ───────────────────────────────────────────── */
+footer {
+  padding: 48px 0 70px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+footer a { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="blob" style="width:420px;height:420px;top:-140px;left:-120px;background:var(--teal);opacity:.18;"></div>
+  <div class="blob" style="width:380px;height:380px;top:20px;right:-140px;background:var(--orange);opacity:.14;"></div>
+  <div class="wrap">
+    <h1>Build a distributed system<br>by <em>describing it in English.</em></h1>
+    <p class="sub">OfficeSpeak turns a plain-English description into a small,
+      always-on team of software workers — an <strong>office</strong> — that
+      passes messages, keeps state, and reacts to the world. No programming
+      needed to try it. Runs on the <a href="https://github.com/kmchandy/DisSysLab">DisSysLab</a> engine.</p>
+    <div class="hero-ctas">
+      <a class="btn primary" href="stage1_microcourse.html">▶ 2-minute visual tour</a>
+      <a class="btn secondary" href="https://github.com/kmchandy/OfficeSpeak/blob/main/README.md" target="_blank" rel="noopener">📖 Full walkthrough</a>
+      <a class="btn ghost" href="https://github.com/kmchandy/OfficeSpeak" target="_blank" rel="noopener">⭐ GitHub</a>
+    </div>
+  </div>
+</div>
+
+<section class="alt">
+  <div class="wrap">
+    <h2 class="section-title">This is not a demo of one example</h2>
+    <p class="section-lede">Real, verified groundwork already exists — the walkthrough
+      you'll try is one story through a much bigger, working system.</p>
+    <div class="stats">
+      <div class="stat-card">
+        <div class="num">33</div>
+        <div class="label">example offices, running today</div>
+        <div class="detail">24 gallery apps + 9 direct examples — real code, actually run</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">20 + 500</div>
+        <div class="label">sources &amp; sinks</div>
+        <div class="detail">20 registered out of the box, plus 500+ MCP servers reachable beyond that</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">100%</div>
+        <div class="label">crash-recoverable</div>
+        <div class="detail">real global snapshots — no lost or duplicate messages on resume</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">English</div>
+        <div class="label">for building <em>and</em> debugging</div>
+        <div class="detail">describe it, correct it, and later ask it to explain a checkpoint or a run — all in plain English</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="section-title">A working gallery, not a single example</h2>
+    <p class="section-lede">A sample of what's already built and running in DisSysLab's gallery —
+      see <code>FEATURES.md</code> for the full, categorized list.</p>
+    <div class="gallery-grid">
+      <div class="gallery-card">
+        <span class="tag news">Sense &amp; respond</span>
+        <p><strong>News, markets, and social monitoring</strong> — the largest cluster:
+          competitor watch, stock and weather monitors, an arXiv radar, inbox
+          triage, situation-room briefings, a Kalshi market watcher.</p>
+      </div>
+      <div class="gallery-card">
+        <span class="tag perso">Personal &amp; productivity</span>
+        <p><strong>Everyday assistants</strong> — a wardrobe assistant that checks
+          your calendar and the weather, a job hunter that filters postings and
+          runs parallel analysts, a lead qualifier, a ticket router.</p>
+      </div>
+      <div class="gallery-card">
+        <span class="tag sense">Perception</span>
+        <p><strong>Beyond text</strong> — backyard bird-song identification from
+          audio, wildlife camera-trap image classification, a loudness monitor
+          for a simple sense-detect-respond example.</p>
+      </div>
+      <div class="gallery-card">
+        <span class="tag demo">Multi-agent structure</span>
+        <p><strong>Validation fixtures and demos</strong> — a three-agent debate
+          panel that reaches consensus, an investment-club office (analysts,
+          manager, accountant), an office made of two other offices.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <h2 class="section-title">Built-in distributed-systems guarantees</h2>
+    <p class="section-lede">The properties every generated office gets for free —
+      never specified by the person describing it, never seen as implementation detail.</p>
+    <div class="feature-row">
+      <div class="icon">🔁</div>
+      <div><h3>Distributed termination detection</h3>
+        <p>Correct even with feedback loops in the agent network — not a fixed
+          reply-count cap.</p></div>
+    </div>
+    <div class="feature-row">
+      <div class="icon">📸</div>
+      <div><h3>Consistent checkpoint &amp; resume</h3>
+        <p>A genuine global-snapshot consistent cut across every concurrently
+          running agent, including messages caught mid-flight — <code>dsl run --snapshot-interval N</code>.</p></div>
+    </div>
+    <div class="feature-row">
+      <div class="icon">🕵️</div>
+      <div><h3>Explain a run, in English</h3>
+        <p><code>dsl explain-trace</code> merges every agent's activity log,
+          ordered by a physical-time-grounded logical clock, into one causal
+          story — narrated by Claude, not a template.</p></div>
+    </div>
+    <div class="feature-row">
+      <div class="icon">🗂️</div>
+      <div><h3>Explain a checkpoint, in English</h3>
+        <p><code>dsl show-checkpoint</code> — what every worker's memory held,
+          and what messages were still in transit, at one instant.</p></div>
+    </div>
+    <div class="feature-row">
+      <div class="icon">🧪</div>
+      <div><h3>Isolated worker testing</h3>
+        <p>Test one computational worker alone on hand-picked inputs to localize
+          a bug — no concurrency in the picture.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="section-title">Two stages, and it's normal to stop after the first</h2>
+    <div class="path-grid">
+      <div class="path-card">
+        <span class="badge">Stage 1</span>
+        <h3>Describe it</h3>
+        <p>No installation, no Python, no terminal. A conversation with Claude
+          on claude.ai builds your office, explains it back — including what
+          it assumed — and lets you correct it in plain English.</p>
+        <a class="btn secondary" href="stage1_microcourse.html">▶ Watch the 2-minute tour</a>
+      </div>
+      <div class="path-card">
+        <span class="badge">Stage 2</span>
+        <h3>Run it for real</h3>
+        <p>Turns your description into an actually-running system, with real
+          numbers. Needs a computer with Python, or someone who has one —
+          right now, that can just be us.</p>
+        <a class="btn secondary" href="stage2_microcourse.html">▶ Watch the 2-minute tour</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>OfficeSpeak is research software from the same author as
+      <a href="https://github.com/kmchandy/DisSysLab">DisSysLab</a>. Rough
+      edges are exactly what we're looking for —
+      <a href="https://github.com/kmchandy/OfficeSpeak/blob/main/README.md">read the full walkthrough</a>
+      or <a href="https://github.com/kmchandy/OfficeSpeak">see the code</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>

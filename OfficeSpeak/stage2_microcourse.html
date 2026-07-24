@@ -38,7 +38,7 @@ html, body {
   color: var(--ink);
 }
 
-/* ── Slide shell (same mechanics as pat_microcourse.html) ────── */
+/* ── Slide shell (same mechanics as stage1_microcourse.html) ────── */
 .slide {
   position: absolute;
   inset: 0;
@@ -160,8 +160,15 @@ html, body {
 /* ══════════════════════ S2 — recap diagram ══════════════════════ */
 .office-svg-wrap { background:#12122a; border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding: 22px 26px; box-shadow: 0 18px 40px rgba(26,26,46,0.16); }
 
-/* ══════════════════════ S3 — hand-off file ══════════════════════ */
-.code-card { width: min(560px, 92vw); font-family: var(--font-mono); font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.85); white-space: pre; overflow-x:auto; }
+/* ══════════════════════ agent-kinds ══════════════════════ */
+.kind-grid { display:grid; grid-template-columns: repeat(2, minmax(220px,1fr)); gap:14px; max-width:640px; width:100%; }
+.kind-card { background:#12122a; border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:18px 20px; text-align:left; }
+.kind-card .kind-name { font-family: var(--font-display); font-weight:900; font-size:18px; color:#fff; margin-bottom:6px; }
+.kind-card .kind-desc { font-size:14.5px; line-height:1.5; color: rgba(255,255,255,0.8); }
+.kind-card .kind-ex { font-size:13px; line-height:1.45; color: rgba(255,255,255,0.5); margin-top:8px; font-style: italic; }
+
+/* ══════════════════════ S — hand-off file ══════════════════════ */
+.code-card { width: min(620px, 92vw); font-family: var(--font-mono); font-size: 15.5px; line-height: 1.75; color: rgba(255,255,255,0.92); white-space: pre-wrap; word-break: break-word; }
 .code-card .blank { color: var(--orange); font-weight: 700; }
 .code-card .kw { color: var(--teal); }
 
@@ -211,7 +218,8 @@ html, body {
   <div class="badge">OfficeSpeak · Stage 2</div>
   <h1 class="headline" style="font-size:clamp(34px,5.4vw,58px);">From a description<br>to <em>real, running code.</em></h1>
   <p class="body-text">Stage 1 got you a team, explained and corrected in plain English.
-    Stage 2 turns that into something that actually runs — checked, not guessed, every step of the way.</p>
+    Stage 2 turns that into something that actually runs — checked, not guessed, every step of the way.
+    The result is a Python program.</p>
   <div class="s1-diagram">
     <div class="s1-box">described team</div>
     <div class="s1-arrow">→</div>
@@ -256,51 +264,116 @@ html, body {
     <div id="s2-dot2" class="msg-dot dot-orange"></div>
   </div>
   <p class="body-text" style="margin-top:20px;">This exact team, described, explained, and corrected in Stage 1.
-    It ended with one file — a <strong>hand-off file</strong> — with two kinds of blanks still open.</p>
+    It ended with one file — a <strong>hand-off file that is a program template</strong> — with two kinds
+    of blanks still open.</p>
 </section>
 
-<!-- ═══════════════ S3 — THE HAND-OFF FILE ═══════════════ -->
+<!-- ═══════════════ S3 — AGENT KINDS ═══════════════ -->
 <section class="slide" id="s3">
+  <div class="badge">The vocabulary</div>
+  <h1 class="headline" style="font-size:clamp(26px,4.2vw,46px);">Every worker is<br><em>one of four kinds.</em></h1>
+  <div class="kind-grid">
+    <div class="kind-card">
+      <div class="kind-name">Source</div>
+      <div class="kind-desc">Gets information from outside the office.</div>
+      <div class="kind-ex">e.g. the weather source polls a public forecast API.</div>
+    </div>
+    <div class="kind-card">
+      <div class="kind-name">Sink</div>
+      <div class="kind-desc">Puts information outside the office.</div>
+      <div class="kind-ex">e.g. jsonl_recorder writes each result to a file.</div>
+    </div>
+    <div class="kind-card">
+      <div class="kind-name">Transform</div>
+      <div class="kind-desc">Does the actual thinking. Specified either as an LLM prompt or as a Python function.</div>
+      <div class="kind-ex">prompt: "decide if this news item is relevant, and why" (VAL) &middot; Python: a fee calculator (ACCOUNTANT)</div>
+    </div>
+    <div class="kind-card">
+      <div class="kind-name">Coordinator</div>
+      <div class="kind-desc">Standard, pre-built OfficeSpeak workers — never something you specify or that gets generated.</div>
+      <div class="kind-ex">e.g. merge_synch, gate, select</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ S4 — THE FIRST BLANK: WHICH SOURCE/SINK ═══════════════ -->
+<section class="slide" id="s4">
   <div class="badge">What Stage 1 hands off</div>
-  <h1 class="headline" style="font-size:clamp(26px,4.2vw,46px);">One file.<br><em>Two kinds of blanks.</em></h1>
+  <h1 class="headline" style="font-size:clamp(26px,4.2vw,46px);">One blank:<br><em>which source or sink?</em></h1>
+  <p class="body-text" style="margin-bottom:10px;">Stage 1 writes this file automatically the moment its
+    conversation ends. Every worker's name, job description, and message shape from that conversation is
+    already in it — but which real, registered source or sink each one maps to is still open.</p>
+  <div class="paper code-card">
+    <div class="paper-header">
+      <div class="paper-dots"><div class="pd" style="background:#ff5f56"></div><div class="pd" style="background:#ffbd2e"></div><div class="pd" style="background:#27c93f"></div></div>
+      <div class="paper-title">investment_club_handoff.py</div>
+    </div>
+    <div class="paper-body">dict(name=<span class="kw">"RECOMMEND"</span>, kind=<span class="kw">"sink"</span>, ...
+     registered_as=<span class="blank">None</span>)</div>
+  </div>
+  <p class="body-text" style="margin-top:22px;"><span class="blank" style="color:var(--orange-deep);">registered_as=None</span> —
+    what's left? Match it against the registry, or register something new if nothing fits (next).</p>
+</section>
+
+<!-- ═══════════════ S5 — THE SECOND BLANK: CAN IT BE TRUSTED ═══════════════ -->
+<section class="slide" id="s5">
+  <div class="badge">What Stage 1 hands off</div>
+  <h1 class="headline" style="font-size:clamp(26px,4.2vw,46px);">The other blank:<br><em>can it be trusted?</em></h1>
+  <p class="body-text" style="margin-bottom:10px;">The same file also marks every worker's actual code or
+    prompt as unapproved, until it's tested.</p>
   <div class="paper code-card">
     <div class="paper-header">
       <div class="paper-dots"><div class="pd" style="background:#ff5f56"></div><div class="pd" style="background:#ffbd2e"></div><div class="pd" style="background:#27c93f"></div></div>
       <div class="paper-title">investment_club_handoff.py</div>
     </div>
     <div class="paper-body">dict(name=<span class="kw">"ACCOUNTANT"</span>, kind=<span class="kw">"transform"</span>, ...
-     body_fn=<span class="blank">None</span>, approved=<span class="blank">False</span>)
-
-dict(name=<span class="kw">"RECOMMEND"</span>, kind=<span class="kw">"sink"</span>, ...
-     registered_as=<span class="blank">None</span>)</div>
+     body_fn=<span class="blank">None</span>, approved=<span class="blank">False</span>)</div>
   </div>
-  <p class="body-text" style="margin-top:22px;"><span class="blank" style="color:var(--orange-deep);">registered_as=None</span> —
-    needs matching to something real. <span class="blank" style="color:var(--orange-deep);">approved=False</span> —
-    needs real code (or a real prompt), checked before it's trusted.</p>
+  <p class="body-text" style="margin-top:22px;"><span class="blank" style="color:var(--orange-deep);">approved=False</span> —
+    what's left? Verify that this worker can be trusted, one test at a time.</p>
 </section>
 
-<!-- ═══════════════ S4 — MATCH ═══════════════ -->
-<section class="slide" id="s4">
+<!-- ═══════════════ S6 — MATCH: CLEAN CASE ═══════════════ -->
+<section class="slide" id="s6">
   <div class="badge">Step 1</div>
   <h1 class="headline" style="font-size:clamp(26px,4.2vw,46px);">Match it to <em>something real.</em></h1>
+  <p class="body-text" style="margin-bottom:6px;">The quoted phrase below is Pat's own words from Stage 1 —
+    carried straight through into the hand-off file as this worker's description, not written by whoever
+    does this matching step.</p>
   <div class="match-row">
     <div class="match-card clean"><span class="icon">✅</span>
       <div><span class="tag">clean match</span><br>"writes the final plan to a file" → <strong>jsonl_recorder</strong>
         (path="recommendations.jsonl") — appends one line of JSON per period. No credentials needed.</div>
     </div>
+  </div>
+</section>
+
+<!-- ═══════════════ S7 — MATCH: NOTHING FITS ═══════════════ -->
+<section class="slide" id="s7">
+  <div class="badge">Step 1, continued</div>
+  <h1 class="headline" style="font-size:clamp(26px,4.2vw,46px);">Or flag it.<br><em>Never guess.</em></h1>
+  <div class="match-row">
     <div class="match-card flag"><span class="icon">🚩</span>
       <div><span class="tag">nothing fits</span><br>"a batch of market data, forecasts, and news" — no registered
         source polls Yahoo/Bloomberg/news and bundles it. <strong>Flagged, not guessed</strong> — stands in as a
         fixed test sequence for now, kicked off by the registered <strong>starter</strong>.</div>
     </div>
   </div>
-  <p class="body-text" style="margin-top:22px;">"Nothing fits" is a normal, common outcome here — not a failure.</p>
+  <p class="body-text" style="margin-top:22px;">"Nothing fits" is a normal, common outcome here — not a failure. And
+    it's rarer than the built-in list alone suggests: <strong>mcp_source</strong>/<strong>mcp_sink</strong> can
+    already reach any server in the <a href="https://modelcontextprotocol.info/tools/registry/" target="_blank" rel="noopener">MCP Registry</a>
+    (500+ community servers — Google Drive, Notion, Postgres, Discord, and more), so check there before
+    concluding it's unsupported. What's left, if truly nothing fits? Specify and register a new source or
+    sink — a small Python class, following an existing entry's pattern, not a redesign. See
+    <code>phase3_source_sink_matching.md</code>'s "When nothing fits" for the full order of checks.</p>
 </section>
 
-<!-- ═══════════════ S5 — APPROVE A WORKER ═══════════════ -->
-<section class="slide" id="s5">
+<!-- ═══════════════ S8 — TEST EACH WORKER ═══════════════ -->
+<section class="slide" id="s8">
   <div class="badge">Step 2</div>
-  <h1 class="headline" style="font-size:clamp(26px,4.2vw,44px);">Test it <em>before trusting it.</em></h1>
+  <h1 class="headline" style="font-size:clamp(26px,4.2vw,44px);">Test <em>each worker.</em></h1>
+  <p class="body-text" style="margin-bottom:10px;">Here's the accountant, tested alone: one message in, and
+    everything it does before answering.</p>
   <div class="approve-wrap">
     <div class="paper term-card">
       <div class="paper-header">
@@ -319,8 +392,8 @@ dict(name=<span class="kw">"RECOMMEND"</span>, kind=<span class="kw">"sink"</spa
     current holdings first, exactly as asked. Only after a real test like this does it get approved.</p>
 </section>
 
-<!-- ═══════════════ S6 — GENERATE AND RUN ═══════════════ -->
-<section class="slide" id="s6">
+<!-- ═══════════════ S9 — GENERATE AND RUN ═══════════════ -->
+<section class="slide" id="s9">
   <div class="badge">Step 3</div>
   <h1 class="headline" style="font-size:clamp(28px,4.5vw,50px);">One command.<br><em>Then run it.</em></h1>
   <div class="paper term-card" style="width:min(600px,92vw);">
@@ -338,10 +411,12 @@ dict(name=<span class="kw">"RECOMMEND"</span>, kind=<span class="kw">"sink"</spa
     worker. Then it builds, then it runs.</p>
 </section>
 
-<!-- ═══════════════ S7 — REAL OUTPUT ═══════════════ -->
-<section class="slide" id="s7">
+<!-- ═══════════════ S10 — REAL OUTPUT ═══════════════ -->
+<section class="slide" id="s10">
   <div class="badge orange">The result</div>
   <h1 class="headline" style="font-size:clamp(28px,4.5vw,50px);">Real numbers.<br><em>Not a mockup.</em></h1>
+  <p class="body-text" style="margin-bottom:10px;">This isn't another isolated test — it's the whole office,
+    actually running, start to finish.</p>
   <div class="paper term-card" style="width:min(600px,92vw);">
     <div class="paper-header">
       <div class="paper-dots"><div class="pd" style="background:#ff5f56"></div><div class="pd" style="background:#ffbd2e"></div><div class="pd" style="background:#27c93f"></div></div>
@@ -357,15 +432,13 @@ dict(name=<span class="kw">"RECOMMEND"</span>, kind=<span class="kw">"sink"</spa
     period — exactly the correction from Stage 1, now provably true, not just described.</p>
 </section>
 
-<!-- ═══════════════ S8 — END ═══════════════ -->
-<section class="slide" id="s8">
+<!-- ═══════════════ S11 — END ═══════════════ -->
+<section class="slide" id="s11">
   <div class="blob" style="width:340px;height:340px;background:var(--purple);opacity:.18;top:-100px;right:-100px;"></div>
   <h1 class="headline" style="font-size:clamp(36px,5.8vw,60px);">Checked.<br><em>Then trusted to run.</em></h1>
-  <p class="body-text">You don't have to do this part yourself. Right now, that just means sending your
-    Stage 1 hand-off file to us.</p>
   <div class="s8-links">
     <a class="s8-link primary" href="https://github.com/kmchandy/OfficeSpeak/blob/main/README.md" target="_blank" rel="noopener">📖 Read the full walkthrough</a>
-    <a class="s8-link" href="pat_microcourse.html">◀ Back to Stage 1</a>
+    <a class="s8-link" href="stage1_microcourse.html">◀ Back to Stage 1</a>
     <a class="s8-link" href="https://github.com/kmchandy/OfficeSpeak" target="_blank" rel="noopener">⭐ GitHub</a>
   </div>
 </section>
